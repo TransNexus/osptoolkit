@@ -730,7 +730,7 @@ OSPPAuthRspMessageIdFromElement(
         if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrMessageId)
         {
             /* we found the message attribute. Get the value */
-            (unsigned char *)*ospvMessageId = (unsigned char *)OSPPXMLAttrGetValue(attr);
+            *ospvMessageId = (unsigned char *)OSPPXMLAttrGetValue(attr);
             break;
 
         }
@@ -757,7 +757,7 @@ OSPPAuthRspComponentIdFromElement(
         if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrComponentId)
         {
             /* we found the component attribute. Get the value */
-            (unsigned char *)*ospvComponentId = (unsigned char *)OSPPXMLAttrGetValue(attr);
+            *ospvComponentId = (unsigned char *)OSPPXMLAttrGetValue(attr);
             break;
         }
     }
