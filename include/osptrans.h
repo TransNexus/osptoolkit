@@ -82,9 +82,10 @@ typedef struct _OSPTTRANS
     OSPE_TRANS_STATE            State;
     OSPTUINT64                  TransactionID;
     OSPTBOOL                    HasTransactionID;
+    OSPTBOOL                    HasGetDestSucceeded;
     unsigned                    Counter;
     unsigned                    Duration;
-    const char                  *NetworkId;
+    char                        *NetworkId;
     unsigned                    SizeOfDetailLog;
     void                        *DetailLog;
     OSPTSTATISTICS              *TNStatistics;
