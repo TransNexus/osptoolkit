@@ -94,3 +94,18 @@ Version 2.5.6
 
 ---------------------------------------------------------------------------
 
+Version 2.6.0
+
+  * Improved handling of HTTP and OSP codes.
+  * MsgQueueDelete function now deletes mutex and cond var used by the Queue.
+  * Added call start time to UsageIndication messages.
+  * Added OpenSSL crypto lib support as an alternative to using existing crypto functionality.
+  * Removed documentation from the build.
+  * API CHANGES:
+    * New type OSPTCERT defined in "include/ospdatatypes.h"
+    * OSPPTransactionReportUsage function:
+      * Added StartTime of type OSPTTIME
+    * OSPPProviderNew function:
+      * Changed the type of ospvLocalCertificate from (const void *) to (const OSPTCERT *)
+      * Changed the type of ospvAuthorityCertificates from (const void *[]) to (const OSPTCERT *[])
+
