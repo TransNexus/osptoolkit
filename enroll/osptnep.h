@@ -126,8 +126,8 @@ extern "C"
                        (in hexadecimal)\n\
 \n\
   [retrieve and request params]\n\
-  -cacert <cert>       base64-encoded authority certificate\n\
-  -certreq <pkcs10>    base64-encoded certificate request\n\
+  -cacert <cert>       Name of the file containing PEM encoded authority certificate\n\
+  -certreq <pkcs10>    Name of the file containing PEM encoded certificate request\n\
   -customer <custID>   TransNexus-assigned customer number\n\
   -device <devID>      TransNexus-assigned device id\n\
   -nonce <nonce>       random value to increase security\n\
