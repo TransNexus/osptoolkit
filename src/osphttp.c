@@ -376,6 +376,18 @@ osppHttpSetupAndMonitor(
             {
                 OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() remove connection requested\n"));
 #ifndef _WIN32
+                /*
+                 * The connection mutex as locked above is needs to be unlocked
+                 * if the connection is shutting down or a time out event has occured.
+                 * - Solaris does not seem to give a probem if this mutex is left locked
+                 *   or is unlocked before it is destroyed.Eitherways, it is fine. 
+                 * - Linux needs this mutex to be unlocked before it can be destroyed. 
+                 * - Windows seems to have a problem if it is unlocked before it is destroyed
+                 *   Because of this problem, there is an error message that pops up on
+                 *   Windows if this function call is made before destroying the mutex. 
+                 *   And to prevent that log message, the below written function call is made 
+                 *   for all the other OS but Windows.
+                 */
                 OSPM_MUTEX_UNLOCK(httpconn->Mutex, errorcode);
 #endif
                 osppHttpRemoveConnection(httpconn);
@@ -546,6 +558,18 @@ osppHttpSetupAndMonitor(
            */
           OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() remove connection requested\n"));
 #ifndef _WIN32
+         /*
+          * The connection mutex as locked above is needs to be unlocked
+          * if the connection is shutting down or a time out event has occured.
+          * - Solaris does not seem to give a probem if this mutex is left locked
+          * or is unlocked before it is destroyed. 
+          * - Linux needs this mutex to be unlocked before it can be destroyed. 
+          * - Windows seems to have a problem if it is unlocked before it is destroyed
+          *   Because of this problem, there is an error message that pops up on
+          *   Windows if this function call is made before destroying the mutex. 
+          *   And to prevent that log message, the below written function call is made 
+          *   for all the other OS but Windows.
+          */
           OSPM_MUTEX_UNLOCK(httpconn->Mutex, errorcode);
 #endif
           osppHttpRemoveConnection(httpconn);
