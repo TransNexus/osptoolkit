@@ -340,6 +340,7 @@ Version 3.1
   multiple providers as well.  
 * Modified the openssl initialization procedure to accomodate the OSP Server requirements.. 
 * Implemented Performance optimizations in idle connection selection procedure and transaction handover logic.
+* Fixed a potential race condition that could have occured during the shutdown phase. For details, look at comments in function - osppHttpRemoveConnection.
 * As a result of the above mentioned changes, the following API's have changed:
   - OSPPProviderNew
   - OSPPProviderSetServicePoints
