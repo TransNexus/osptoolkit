@@ -521,6 +521,11 @@ OSPPCommSignalAllConnections(
 
     if (ospvComm != (OSPTCOMM *)OSPC_OSNULL)
     {
+        /*
+         * Lock COMM object while iterating though the list
+         * of HTTP connections and signaling them to exit.
+         */
+        OSPM_MUTEX_LOCK(ospvComm->Mutex,errorcode);
         httpconn = (OSPTHTTP *)OSPPListFirst(
             (OSPTLIST *)&(ospvComm->HttpConnList));
     }
@@ -542,6 +547,15 @@ OSPPCommSignalAllConnections(
             }
         } while (httpconn != (OSPTHTTP *)OSPC_OSNULL);
     }
+
+    if (ospvComm != (OSPTCOMM *)OSPC_OSNULL)
+    {
+        /*
+         * Finished iterating, unlocking...
+         */
+        OSPM_MUTEX_UNLOCK(ospvComm->Mutex,errorcode);assert(errorcode == OSPC_ERR_NO_ERROR);
+    }
+
     return;
 }
 
