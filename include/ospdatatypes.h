@@ -189,6 +189,12 @@ typedef enum {
     OSPC_AUDIT_UPPER_BOUND
 } OSPE_AUDIT_STATE;
 
+typedef enum
+{
+    OSPC_E164=0,
+    OSPC_SIP,
+    OSPC_URL
+}OSPE_NUMBERING_FORMAT;
 
 #include "ospcallid.h"
 

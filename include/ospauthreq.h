@@ -64,7 +64,7 @@ extern "C"
 
     OSPTAUTHREQ   *OSPPAuthReqNew(void);
     void           OSPPAuthReqDelete(OSPTAUTHREQ **);
-    int            OSPPAuthReqToElement(OSPTAUTHREQ *, OSPTXMLELEM **);
+    int            OSPPAuthReqToElement(OSPTAUTHREQ *, OSPTXMLELEM **, void *);
     unsigned       OSPPAuthReqHasMessageId(OSPTAUTHREQ *);
 
     unsigned       OSPPAuthReqHasTimestamp(OSPTAUTHREQ *);

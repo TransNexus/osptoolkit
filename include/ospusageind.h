@@ -72,7 +72,7 @@ extern "C"
 
     OSPTUSAGEIND    *OSPPUsageIndNew(void);
     void            OSPPUsageIndDelete( OSPTUSAGEIND **);
-    int             OSPPUsageIndToElement(OSPTLIST *, OSPTXMLELEM **);
+    int             OSPPUsageIndToElement(OSPTLIST *, OSPTXMLELEM **, void *);
     void            OSPPUsageIndSetCallId(OSPTUSAGEIND *, OSPTCALLID *);
 
     void      OSPPUsageIndMoveSourceAlt(OSPTUSAGEIND *, OSPTLIST *);
