@@ -2132,6 +2132,9 @@ OSPPTransactionRequestAuthorisation(
 
                                 if (errorcode == OSPC_ERR_NO_ERROR) 
                                 {
+                                    /* Set transaction state */
+                                    OSPPTransactionSetState(trans, OSPC_AUTH_REQUEST_BLOCK);
+
                                     errorcode = OSPPTransactionProcessReturn(
                                         trans, msginfo);
 
