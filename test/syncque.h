@@ -44,8 +44,8 @@
 #ifndef _SYNCQUE_H
 #define _SYNCQUE_H
 
-#include "osp.h"
-#include "osplist.h"
+#include "osp/osp.h"
+#include "osp/osplist.h"
 
 
 /*-------------------------------------------*/
