@@ -336,6 +336,8 @@ Version 3.1
   ospvSource/ospvSourceDevice/ospvDestination/ospvDestinationDevice that was passed in the RequestAuth/
   ValidateAuth/BuildUsageFromScratch/InitializeAtDevice APIs. This API provides the application
   with a mechanism of reporting Usage with addresses different from those that were used while calling the APIs.
+* Test#102 in the test application has been removed. Test#100 has been modified to test
+  multiple providers as well.  
 * As a result of the above mentioned changes, the following API's have changed:
   - OSPPProviderNew
   - OSPPProviderSetServicePoints
