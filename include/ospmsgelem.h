@@ -36,7 +36,7 @@
 typedef enum
 {
     ospeElemUnknown = OSPC_MSGPARTUNKNOWN,
-	ospeElemAlmostOutOfResources,
+    ospeElemAlmostOutOfResources,
     ospeElemAmount,
     ospeElemAuthCnf,
     ospeElemAuthInd,
@@ -45,7 +45,7 @@ typedef enum
     ospeElemAuthRzp,
     ospeElemAuthURL,
     ospeElemCallId,
-	ospeElemCapInd,
+    ospeElemCapInd,
     ospeElemCode,
     ospeElemCurrency,
     ospeElemDesc,
