@@ -38,8 +38,10 @@
 #include "ospreauthreq.h"
 #include "ospreauthrsp.h"
 #include "ospstatistics.h"
+#include "ospcapcnf.h"
 #include "ospmsg.h"
 #include "ospfail.h"
+
 
 /*
  * Transaction States
@@ -51,6 +53,9 @@ typedef enum
     OSPC_AUTH_REQUEST_BLOCK,
     OSPC_AUTH_REQUEST_FAIL,
     OSPC_AUTH_REQUEST_SUCCESS,
+    OSPC_CAP_IND_BLOCK,
+    OSPC_CAP_IND_FAIL,
+    OSPC_CAP_IND_SUCCESS,
     OSPC_VALIDATE_AUTH_FAIL,
     OSPC_VALIDATE_AUTH_SUCCESS,
     OSPC_GET_DEST_FAIL,
@@ -79,6 +84,7 @@ typedef struct _OSPTTRANS
     OSPTAUTHCNF                 *AuthCnf;
     OSPTLIST                    UsageInd;      /* list of OSPTUSAGEIND*/
     OSPTUSAGECNF                *UsageCnf;
+    OSPTCAPCNF                  *CapCnf;
     OSPE_TRANS_STATE            State;
     OSPTUINT64                  TransactionID;
     OSPTBOOL                    HasTransactionID;
@@ -147,6 +153,7 @@ void           OSPPTransactionDeleteUsageCnf(OSPTTRANS *);
 void           OSPPTransactionDeleteStatistics(OSPTTRANS *);
 void           OSPPTransactionDeleteReauthReq(OSPTTRANS *);
 void           OSPPTransactionDeleteReauthRsp(OSPTTRANS *);
+void           OSPPTransactionDeleteCapCnf(OSPTTRANS *);
 
 void           OSPPTransactionGetAccumAllowed(OSPTTRANS *, OSPTBOOL *);
 OSPTTRANS     *OSPPTransactionGetContext(OSPTTRANHANDLE, int *);
