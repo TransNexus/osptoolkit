@@ -127,8 +127,7 @@ Version 2.6.2
   * Ported the GETHOSTBYNAME function for Linux.
   * This Release has been tested with MS .NET.
   * This release requires no special instructions for compiling Openssl on Windows.
-  * Support for reporting the network identifier incorporated
-  * Memory leaks and bugs fixed
+
 ---------------------------------------------------------------------------
 
 Version 2.7
