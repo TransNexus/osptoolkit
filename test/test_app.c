@@ -2051,7 +2051,6 @@ testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
     int i,errorcode = 0;
-    extern char *OSPVBuildVersion; 
     int trans_to_run,num_providers;
     int build_new_trans=0;
 
@@ -2187,7 +2186,7 @@ testAPI(int apinumber)
         break;
 #ifndef _WIN32
         case 42:
-        printf("OSP Version: %s\n", OSPVBuildVersion);
+        errorcode = testNotImplemented();
         break;
 #endif
         case 43:
@@ -2342,7 +2341,7 @@ testMenu()
       printf("Miscellaneous Tests\n");
       printf("---------------------------------------------------------------------\n");
       printf("39) GetDestinationProtocol            40) IsDestOSPEnabled\n");
-      printf("41) %-6d Test Calls                 42) Show Version\n", num_test_calls);
+      printf("41) %-6d Test Calls                 42) Not Implemented\n", num_test_calls);
       printf("43) BuildUsageFromScratch(OGW)        44) BuildUsageFromScratch(TGW)\n");
       printf("45) GetLookAheadInfoIfPresent         46) ModifyDeviceIdentifiers\n");
       printf("99) Sleep for 2 seconds\n");
