@@ -86,6 +86,9 @@ extern "C"
             unsigned, OSPTCALLID *[], const char *[], unsigned *, unsigned *, 
             void *);
 
+    int OSPPTransactionIndicateCapabilities(OSPTTRANHANDLE, const char *, 
+            const char *, unsigned, unsigned *, void *);
+
     int OSPPTransactionRequestReauthorisation(OSPTTRANHANDLE, unsigned, unsigned *,           
             void *, unsigned *,unsigned *,unsigned *, void *);
 
