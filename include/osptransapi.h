@@ -41,6 +41,8 @@ extern "C"
 
     /* Function Prototypes */
 
+    int OSPPTransactionSetNetworkId(OSPTTRANHANDLE,const char *);
+
     int OSPPTransactionAccumulateOneWayDelay(OSPTTRANHANDLE, unsigned, 
             unsigned, unsigned, float);
 
