@@ -364,3 +364,4 @@ Version 3.1.1
 * Fixed a race condition in the 'MsgInfo' object. The problem arose because OSPPMsgInfoWaitForMsg function could have
   been called even when the MsgInfo structure was deleted. As a fix, we now call this function only when the IsNonBlocking
   parameter of the MsgInfo structure is set to FALSE. 
+* The toolkit now, by default, uses mtmalloc for memory allocation.
