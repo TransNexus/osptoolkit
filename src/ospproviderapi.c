@@ -634,9 +634,9 @@ OSPPProviderNew(
     const char           *ospvServicePoints[],       /* In  - Svc pts strings         */
     const char           *ospvAuditURL,             /* In  - Audit URL string         */
     const OSPTPRIVATEKEY *ospvLocalPrivateKey,       /* In  - Private key obj ptr     */
-    const void           *ospvLocalCertificate,     /* In  - Local cert ptr          */
+    const OSPTCERT       *ospvLocalCertificate,     /* In  - Local cert ptr          */
     unsigned             ospvNumberOfAuthorityCertificates, /* In  - Auth cert nt            */
-    const void           *ospvAuthorityCertificates[],       /* In  - Auth certs              */
+    const OSPTCERT       *ospvAuthorityCertificates[],       /* In  - Auth certs              */
     unsigned             ospvLocalValidation,       /* In  - Local validation or not */
     unsigned             ospvSSLLifetime,           /* In  - SSL lifetime            */
     unsigned             ospvHTTPMaxConnections,     /* In  - Max connections         */
@@ -826,7 +826,7 @@ OSPPProviderNew(
                 errorcode = OSPPProviderSetLocalKeys(
                     *ospvProvider, 
                     ospvLocalPrivateKey, 
-                    ospvLocalCertificate);
+                    ospvLocalCertificate->CertData);
             }
 
             if (errorcode == OSPC_ERR_NO_ERROR)
@@ -911,7 +911,7 @@ int
 OSPPProviderSetAuthorityCertificates(
     OSPTPROVHANDLE  ospvProvider,                       /* In - Provider handle       */
     unsigned        ospvNumberOfAuthorityCertificates,   /* In - Number of auth certs  */
-    const void      *ospvAuthorityCertificates[])       /* In - Ptr to auth cert bufs */
+    const OSPTCERT  *ospvAuthorityCertificates[])       /* In - Ptr to auth cert bufs */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
     int          errorcode = OSPC_ERR_NO_ERROR;
@@ -921,7 +921,7 @@ OSPPProviderSetAuthorityCertificates(
     if (errorcode == OSPC_ERR_NO_ERROR)
         errorcode = OSPPSecSetAuthorityCertificates( provider->Security, 
                                                      ospvNumberOfAuthorityCertificates, 
-                                                     (unsigned char **)ospvAuthorityCertificates);
+                                                     ospvAuthorityCertificates);
 
     return errorcode;
 }
