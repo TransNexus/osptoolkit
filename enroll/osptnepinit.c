@@ -1594,7 +1594,7 @@ int OSPPHexToBinary (
                 ( nextWord  && OSPC_LONG_TO_BYTE_MASK ) ));
 
             ospvBinaryStr[ (*ospvBinaryStrLen)++ ] = 
-                ( nextWord & OSPC_LONG_TO_BYTE_MASK );
+                (unsigned char)( nextWord & OSPC_LONG_TO_BYTE_MASK );
         }
         OSPM_DBGMISC(( "final binary encoding:\n" ));
         OSPPDumpHex( ospvBinaryStr, *ospvBinaryStrLen );
