@@ -159,3 +159,17 @@ Version 2.8.3
 
  * Removed a Mutex Lock trace for Windows.
  * Modified a log message
+---------------------------------------------------------------------------
+
+Version 2.9.0
+
+ * Implemented 2 New API's :-
+ * 1. OSPPTransactionGetDestProtocol - Reports the Protocol Information at the Current destination.
+ *                                     Return Values are: SIP, H323_LRQ, H323_Setup, Undefined and Unknown.
+ * 2. OSPPTransactionIsDestOSPEnabled - Reports whether the destination is OSP Enabled or Not.
+ *                                      Return Values are: True, False, Undefined and Unknown.
+ * Implemented a compile time flag - OSP_ALLOW_DUP_TXN, to enable reuse of transactions during token validation. This is to overcome the limitation we previously had where a token with the same transaction id could not be validated twice. This compile time flag either enables or disables repeat validations. This is particularly helpful in the fail over cases when we can get a Second Call Setup message for the same call.
+ * Renamed a macro - 'min', to tr_min.
+ * Modified the String comparison macro - OSPM_STRCMP, to ignore the case of the strings being compared.
+ * Modified the token Validation procedure to check for an exact match between the Calling number passed in the API and the calling number in the token.Until now an empty calling number in the API and non empty calling number in the token ( or vice versa) did not generate a Validation Failure. However now, there has to be an exact match between the 2 numbers for the Validation process to pass. 
+ * Added 4 new functions to the test app - GetCallingNumber, GetCalledNumber, SetCallingNumber, SetCalledNumber. The Set functions allow the user to change the calling and called numbers on the fly. The Test App starts with the configuration in the test.cfg file as default. However, there is now an option of changing these values at run time. The Get functions display the currently configured value.  
