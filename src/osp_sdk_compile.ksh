@@ -13,13 +13,13 @@
 #   consent of TransNexus, LLC.                                      
 #                                     
 #
-# $Date: 2003/06/25 19:25:28 $
+# $Date: 2004/02/15 01:18:00 $
 #
-# $Id: osp_sdk_compile.ksh,v 1.6 2003/06/25 19:25:28 vmathur Exp $
+# $Id: osp_sdk_compile.ksh,v 1.7 2004/02/15 01:18:00 vmathur Exp $
 #
 # $RCSfile: osp_sdk_compile.ksh,v $
 #
-# $Revision: 1.6 $
+# $Revision: 1.7 $
 #
 # $Source: /tmp/OSPclient/osptoolkit/src/Attic/osp_sdk_compile.ksh,v $
 #
@@ -35,10 +35,6 @@
 # Modes:
 #  -o client   => Build an OSP Client Library (default)
 #
-# Token Security:
-#  -o secure_token     => Issue signed <TokenInfo> tokens (default)
-#  -o non_secure_token => Issue clear text <TokenInfo> tokens
-#
 # S/MIME Message Support:
 #  -o smime   => Produce S/MIME Requests and Verify Responses
 #
@@ -51,12 +47,10 @@
 #
 # Performance:
 #  -o optimized      => Use -O3 level compiler optimization (default)
-#  -o hardware_accel => Enable hardware crypto acceleration (default)
 #
 # Diagnostics:
 #  -o debug             => Enable full OSP debugging
 #  -o with_symbols      => Use -g (w/gcc) compiler debug option 
-#  -o no_hardware_accel => Disable hardware crypto acceleration
 #  -o gprof             => Enable gprof profiling
 #
 # Compiler:
@@ -78,17 +72,13 @@
 # Production: 
 #   -p [client] => Build a production target for client. 
 #      Enables the following flags:
-#      -o gcc -o optimized -o hardware_accel -o secure_token
+#      -o gcc -o optimized
 #
 # Development:
 #   -d [client] => Build a development target for client. 
 #      Enables the following flags:
-#      -o gcc -o debug -o with_symbols -o secure_token
+#      -o gcc -o debug -o with_symbols
 #
-# Non-Secure:
-#   -n [client] => Build a non-secure target for client. 
-#      Enables the following flags:
-#      -o gcc -o debug -o with_symbols -o cdata_only
 #
 
 # command line options
@@ -101,7 +91,7 @@ RELEASE_TAG=DEV
 # compiler flags
 # 
 # GNU gcc/g++
-GNU_COMMON_FLAGS="-Wall -D_GNU_SOURCE -DOSP_ALLOW_DUP_TXN -DOSPC_FASTMSG_DESC"
+GNU_COMMON_FLAGS="-Wall -D_GNU_SOURCE -DOSP_ALLOW_DUP_TXN"
 GNU_OPTIMIZED="-O3 $GNU_COMMON_FLAGS"
 GNU_DEBUG="-g $GNU_COMMON_FLAGS"
 GNU_GPROF="-pg $GNU_DEBUG"
@@ -131,12 +121,10 @@ set -A BLD_CLIENT     1 clnt 1 OSP_MODE=-DOSP_SDK
 #
 # All Build Options (modes excluded)
 #
-BLD_VARS="BLD_SEC_TOK BLD_CFLAGS BLD_HW_ACCEL"
+BLD_VARS="BLD_CFLAGS"
 BLD_VARS="${BLD_VARS} BLD_DEBUG BLD_CDATA_ONLY BLD_GCC BLD_GPLUSPLUS"
 BLD_VARS="${BLD_VARS} BLD_SSL_CL_ATH BLD_SPRO BLD_SMIME"
 
-set -A BLD_SEC_TOK    1 stok  1 OSP_TOKEN=-DOSPC_USE_SIGNED_TOKEN
-set -A BLD_HW_ACCEL   1 hwe   1 OSPC_HW_ACCEL=-DOSPC_HW_ACCEL
 set -A BLD_DEBUG      0 dbg   1 OSPC_DEBUG=-DOSPC_DEBUG
 set -A BLD_CDATA_ONLY 0 cdat  1 OSPC_USE_CDATA_ONLY=-DOSPC_USE_CDATA_ONLY
 set -A BLD_SSL_CL_ATH 0 sslc  1 OSPC_ENABLE_SSL_CLIENT_AUTHENTICATION=-DOSPC_ENABLE_SSL_CLIENT_AUTHENTICATION
@@ -156,17 +144,14 @@ function Usage
     cat <<-[] 
 where options are: 
    -p [client] => Build a production target for client.
-   Enables the following flags: -o gcc -o optimized -o hardware_accel -o secure_token
+   Enables the following flags: -o gcc -o optimized
 
    -d [client] => Build a development target for client.
-   Enables the following flags: -o gcc -o debug -o with_symbols -o secure_token
-
-   -n [client] => Build a non-secure target for client.
-   Enables the following flags: -o gcc -o debug -o with_symbols -o cdata_only
+   Enables the following flags: -o gcc -o debug -o with_symbols
 
    -o option -o option .... => Override options
-   Option flags are: secure_token non_secure_token b64_encode cdata_only smime nodebug
-                     optimized hardware_accel no_hardware_accel debug with_symbols
+   Option flags are: b64_encode cdata_only smime nodebug
+                     optimized debug with_symbols
                      use_gcc use_gplusplus use_spro clean_only dest_dir=dir ssl_client_auth
 	
    -t release_tag => CVS Release Tag.  Added to ospversion.c to identify CVS tag in code.
@@ -178,9 +163,7 @@ where options are:
 function ShowOptions
 {
     echo "BLD_CLIENT     = $BLD_CLIENT"
-    echo "BLD_SEC_TOK    = $BLD_SEC_TOK"
     echo "BLD_CFLAGS     = $BLD_CFLAGS"
-    echo "BLD_HW_ACCEL   = $BLD_HW_ACCEL"
     echo "BLD_DEBUG      = $BLD_DEBUG"
     echo "BLD_CDATA_ONLY = $BLD_CDATA_ONLY"
     echo "BLD_GCC        = $BLD_GCC"
@@ -191,10 +174,6 @@ function ShowOptions
 function SetAdditionalOptions
 {
     case "$1" in
-    secure_token)       BLD_SEC_TOK=1
-                        ;;
-    non_secure_token)   BLD_SEC_TOK=0
-                        ;;
     b64_encode)         BLD_CDATA_ONLY=0
                         ;;
     cdata_only)         BLD_CDATA_ONLY=1
@@ -204,10 +183,6 @@ function SetAdditionalOptions
     optimized)          BLD_OPTIMIZED=1
                         BLD_CC_DEBUG=0
                         BLD_CFLAGS[1]=${BLD_OPTIMIZED[1]}
-                        ;;
-    hardware_accel)     BLD_HW_ACCEL=1
-                        ;;
-    no_hardware_accel)  BLD_HW_ACCEL=0
                         ;;
     debug)              BLD_DEBUG=1
                         ;;
@@ -304,19 +279,9 @@ function SetOptions
             SetAdditionalOptions "with_symbols"
             SetAdditionalOptions "use_gcc"
             SetAdditionalOptions "debug"
-            SetAdditionalOptions "no_hardware_accel"
             SetMode "$OPTARG"
             ;;
         
-        n)  # non-secure #
-            SetAdditionalOptions "with_symbols"
-            SetAdditionalOptions "use_gcc"
-            SetAdditionalOptions "debug"
-            SetAdditionalOptions "no_hardware_accel"
-            SetAdditionalOptions "non_secure_token"
-            SetMode "$OPTARG"
-            ;;
-
         o)  SetAdditionalOptions "$OPTARG"
             ;;
 
@@ -443,7 +408,6 @@ function DoMenu
         -----------------------------
         1. Client Production Library
         2. Client Development Library
-        3. Client Non-Secure Library
 
         q. Quit
         - - - - - - - - - - - - - - -
