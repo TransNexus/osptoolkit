@@ -66,6 +66,7 @@ typedef struct _OSPTSVCPT
                                 /* bit 2: 0 - ok        1 - degraded */
     char              *HostName;
     char              *URI;
+    unsigned long      MaxMsgAllowed;
 } OSPTSVCPT;
 
 /*-------------------------------------------*/
@@ -85,12 +86,16 @@ typedef struct _OSPTCOMM
     unsigned            HttpRetryDelay;
     unsigned            HttpRetryLimit;
     unsigned            HttpTimeout;
+    OSPTUINT64          ConnSelectionHttpTimeout;
     OSPTSVCPT           *ServicePointList;
     OSPTSVCPT           *AuditURL;
     unsigned            HttpConnCount;
     struct _OSPTHTTP    *HttpConnList;
     int                 ShutdownTimeLimit;            
     OSPTSEC             *Security;
+    int                 RoundRobinIndex;
+    OSPTMUTEX           HttpSelectMutex;
+    OSPTCONDVAR         HttpSelCondVar;
 } OSPTCOMM;
 
 #define OSPPCommAddTransaction(comm,msginfo)  \
@@ -111,6 +116,7 @@ extern "C"
     int      OSPPCommSetRetryDelay(OSPTCOMM *, unsigned);
     int      OSPPCommSetRetryLimit(OSPTCOMM *, unsigned);
     int      OSPPCommSetTimeout(OSPTCOMM *, unsigned);
+    int      OSPPCommSetConnSelectionTimeout(OSPTCOMM *, OSPTUINT64);
     int      OSPPCommGetMaxConnections(OSPTCOMM *, unsigned *);
     int      OSPPCommSetMaxConnections(OSPTCOMM *, unsigned);
     int      OSPPCommIncrementHttpConnCount(OSPTCOMM *);
@@ -131,6 +137,7 @@ extern "C"
     int      OSPPCommParseSvcPt(const char *ospvURL, OSPTSVCPT  **ospvSvcPt, unsigned   ospvIndex);
     int      OSPPCommValidateSvcPts(unsigned ospvNumberOfServicePoints, const char **ospvServicePoint);
 	int      OSPPCommUpdateURLs(OSPTCOMM *, unsigned, const char **);
+    int      OSPPCommGetNumberOfTransactions(OSPTCOMM *, unsigned *);
 
 #ifdef __cplusplus
 }
