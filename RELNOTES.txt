@@ -124,6 +124,8 @@ Version 2.6.2
   * Updated the Windows project files to Compile with MultiThreaded DLL libraries, Use standard libraries and to have the ..\crypto path in the Include directives.
   * Did changes to improve the log messages.
   * Modified the Makefile and the shell script to include changes for Linux compilation.
-  * Ported the GETHOSTBYNAME function to Linux.
+  * Ported the GETHOSTBYNAME function for Linux.
   * This Release has been tested with MS .NET.
   * This release requires no special instructions for compiling Openssl on Windows.
+  * Support for reporting the network identifier incorporated
+  * Memory leaks and bugs fixed
