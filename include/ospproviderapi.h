@@ -61,6 +61,7 @@ extern "C"
     int OSPPProviderSetLocalKeys(OSPTPROVHANDLE, const OSPTPRIVATEKEY *, const void *);
     int OSPPProviderSetLocalValidation(OSPTPROVHANDLE, unsigned);
     int OSPPProviderSetServicePoints(OSPTPROVHANDLE, unsigned, const char *[]);
+	int OSPPProviderSetCapabilitiesURLs(OSPTPROVHANDLE, unsigned, const char *[]);
     int OSPPProviderSetSSLLifetime(OSPTPROVHANDLE, unsigned);
 
 #ifdef __cplusplus
