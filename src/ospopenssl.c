@@ -491,6 +491,8 @@ int OSPPSSLLoadCerts(OSPTSEC *security)
                                 if((x509=d2i_X509(NULL,&ca,certlen))!=OSPC_OSNULL) 
                                 {
                                     SSL_CTX_add_client_CA(*ctx,x509);
+                                    /* decrement reference count */
+                                    X509_free(x509);
                                 } 
                                 else 
                                 {
@@ -520,6 +522,9 @@ int OSPPSSLLoadCerts(OSPTSEC *security)
                         {
                             if(SSL_CTX_use_certificate(*ctx,x509)>0) 
                             {
+                                /* decrement reference count */
+                                X509_free(x509);
+
                                 if(certlen>OSPC_MAX_CERT_BUFFER)
                                 {
                                     errorcode=OSPC_ERR_SEC_CERTIFICATE_TOO_BIG;
