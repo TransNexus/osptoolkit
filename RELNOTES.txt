@@ -116,3 +116,14 @@ Version 2.6.1
   * Upgraded TEP enrollment to use the API changes introduced in 2.6.0
   * Fixed memory leaks in the ospopenssl module.
   * Reduced compile time warnings.
+
+---------------------------------------------------------------------------
+
+Version 2.6.2
+
+  * Updated the Windows project files to Compile with MultiThreaded DLL libraries, Use standard libraries and to have the ..\crypto path in the Include directives.
+  * Did changes to improve the log messages.
+  * Modified the Makefile and the shell script to include changes for Linux compilation.
+  * Ported the GETHOSTBYNAME function to Linux.
+  * This Release has been tested with MS .NET.
+  * This release requires no special instructions for compiling Openssl on Windows.
