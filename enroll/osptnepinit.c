@@ -610,6 +610,24 @@ int OSPPInitNonSSLCommMgrParams(
         }
     }
 
+    /* If ( there weren't any problems ) then
+     *  o set the http max connections 
+     *  o record any errors. 
+     */
+    if ( retVal == OSPC_ERR_NO_ERROR )
+    {
+        retVal = 
+            OSPPCommSetMaxConnections( 
+                ospvCommOut, 
+                ospvCommParamsIn->HTTPMaxConnections );
+        
+        if ( retVal != OSPC_ERR_NO_ERROR )
+        {
+            OSPM_DBGERRORLOG( 
+                retVal,
+                 "Unable to set HTTP Max connections." );
+        }
+    }
         
     /* If ( there weren't any problems ) then
      *  o set the http timeout
@@ -628,6 +646,17 @@ int OSPPInitNonSSLCommMgrParams(
                 retVal,
                  "Unable to set HTTP timeout." );
         }
+        retVal = 
+            OSPPCommSetConnSelectionTimeout( 
+                ospvCommOut, 
+                ospvCommParamsIn->HTTPTimeout );
+        
+        if ( retVal != OSPC_ERR_NO_ERROR )
+        {
+            OSPM_DBGERRORLOG( 
+                retVal,
+                 "Unable to set Connection Selection timeout." );
+        }
     }
 
     /* Now set the service point and record any errors: */
@@ -640,6 +669,10 @@ int OSPPInitNonSSLCommMgrParams(
                 ospvCommOut, 
                 1, 
                 (const char**)&(ospvServicePtUrlIn) );
+
+        retVal = OSPPCommMgrSetSPMessageCount(
+                ospvCommOut,
+                NULL);
 
         if ( retVal != OSPC_ERR_NO_ERROR )
         {
