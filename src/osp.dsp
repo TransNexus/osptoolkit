@@ -166,6 +166,14 @@ SOURCE=.\ospcallid.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\ospcapcnf.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\ospcapind.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\ospciscoext.c
 # End Source File
 # Begin Source File
@@ -415,6 +423,14 @@ SOURCE=..\include\ospb64.h
 # Begin Source File
 
 SOURCE=..\include\ospbfr.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\ospcapcnf.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\ospcapind.h
 # End Source File
 # Begin Source File
 
