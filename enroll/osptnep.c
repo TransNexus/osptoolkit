@@ -26,7 +26,7 @@
 #include "osptnep.h"
 #include "ospb64.h"
 
-#define HW_ENABLE 1
+#define HW_ENABLE 0
 
 /*
  * Enroll this device. This will consist of:
