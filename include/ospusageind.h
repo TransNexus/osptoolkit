@@ -39,6 +39,7 @@ typedef struct
 {
     OSPTLISTLINK      ospmUsageIndLink;
     OSPTTIME          ospmUsageIndTimestamp;
+    OSPTTIME          ospmUsageIndStartTime;
     unsigned char     *ospmUsageIndMessageId;
     unsigned char     *ospmUsageIndComponentId;
     unsigned          ospmUsageIndRole;
@@ -247,6 +248,9 @@ extern "C"
     unsigned       OSPPUsageIndHasDuration(OSPTUSAGEIND *);
     void           OSPPUsageIndSetDuration(OSPTUSAGEIND *, int ospvDuration);
     int            OSPPUsageIndGetDuration(OSPTUSAGEIND *);
+
+    void           OSPPUsageIndSetStartTime(OSPTUSAGEIND *, OSPTTIME ospvStartTime);
+    OSPTTIME       OSPPUsageIndGetStartTime(OSPTUSAGEIND *);
 
     unsigned       OSPPUsageIndHasTNCustId(OSPTUSAGEIND *ospvUsageInd);
     void           OSPPUsageIndSetTNCustId(OSPTUSAGEIND *, unsigned long);

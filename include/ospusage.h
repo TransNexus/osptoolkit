@@ -52,7 +52,7 @@
  *-----------------------------------------------------------------------*/
 
 unsigned OSPPUsageFromElement(OSPTXMLELEM *, unsigned *);
-unsigned OSPPUsageToElement(unsigned, OSPTXMLELEM **);
+unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTXMLELEM **);
 
 #endif
 

@@ -1456,6 +1456,7 @@ int
 OSPPTransactionReportUsage(
     OSPTTRANHANDLE          ospvTransaction,            /* In - Transaction handle */
     unsigned                ospvDuration,               /* In - Length of call */
+    OSPTTIME                ospvStartTime,              /* In - Call start time */
     unsigned                ospvLossPacketsSent,        /* In - Packets not received by peer */ 
     signed                  ospvLossFractionSent,       /* In - Fraction of packets not received by peer */
     unsigned                ospvLossPacketsReceived,    /* In - Packets not received that were expected */
@@ -1594,6 +1595,7 @@ OSPPTransactionReportUsage(
                             {
                                 /* Set Duration */
                                 OSPPUsageIndSetDuration(usage, (int)ospvDuration);
+                                OSPPUsageIndSetStartTime(usage, ospvStartTime);
 
                                 /* Get Stats */
                                 if(OSPPTransactionHasStatistics(trans))
@@ -1641,6 +1643,7 @@ OSPPTransactionReportUsage(
             {
                 OSPPListNew(&(trans->UsageInd));
                 OSPPUsageIndSetDuration(usage, (int)ospvDuration);
+								OSPPUsageIndSetStartTime(usage, ospvStartTime);
                 OSPPListAppend(&(trans->UsageInd), usage);
                 usage = OSPC_OSNULL;
             }

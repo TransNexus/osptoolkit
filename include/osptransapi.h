@@ -71,7 +71,7 @@ extern "C"
             const char *, const char *, unsigned, const void *, unsigned,
             const void *, unsigned *, unsigned *, unsigned *, void *);
 
-    int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, unsigned, signed,
+    int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, unsigned, signed,
             unsigned, signed, unsigned *, void *);
 
     int OSPPTransactionRequestAuthorisation(OSPTTRANHANDLE, const char *, 

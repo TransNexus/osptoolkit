@@ -714,6 +714,42 @@ unsigned                                    /* returns alt info size */
 
 #endif /* OSPC_DEBUG */
 
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndSetStartTime() - Set Call Start Time
+ *-----------------------------------------------------------------------*/
+void                                       /* nothing returned */
+OSPPUsageIndSetStartTime(
+    OSPTUSAGEIND *ospvUsageInd,
+    OSPTTIME      ospvStartTime
+)
+{
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        (ospvUsageInd)->ospmUsageIndStartTime = ospvStartTime;
+    }
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageGetGetStartTime() - Set Call Start Time
+ *-----------------------------------------------------------------------*/
+OSPTTIME                                    /* call start time */
+OSPPUsageIndGetStartTime(
+    OSPTUSAGEIND *ospvUsageInd
+)
+{
+		OSPTTIME ospvStartTime = 0;
+
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        ospvStartTime = (ospvUsageInd)->ospmUsageIndStartTime;
+    }
+
+		return(ospvStartTime);
+}
+
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPUsageIndSetComponentId() - creates space and copies in the string.
@@ -848,6 +884,7 @@ OSPTUSAGEIND *                                 /* returns pointer or NULL */
 
         OSPPListLinkNew (&(ospvUsageInd->ospmUsageIndLink));
         ospvUsageInd->ospmUsageIndTimestamp = (OSPTTIME)0;
+        ospvUsageInd->ospmUsageIndStartTime = (OSPTTIME)0;
         ospvUsageInd->ospmUsageIndTransactionId = (OSPTTRXID)OSPC_OSNULL;
         ospvUsageInd->ospmUsageIndCallId = (OSPTCALLID *)OSPC_OSNULL;
         ospvUsageInd->ospmUsageIndSourceNumber[0] = '\0';
@@ -1256,7 +1293,8 @@ OSPPUsageIndToElement(
             if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasDuration(usage))
             {
                 ospvErrCode = OSPPUsageToElement(
-                    (unsigned)OSPPUsageIndGetDuration(usage), &subelem);
+                    (unsigned)OSPPUsageIndGetDuration(usage),
+                    OSPPUsageIndGetStartTime(usage),&subelem);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
                     OSPPXMLElemAddChild(usgindelem, subelem);
