@@ -48,7 +48,7 @@ extern "C"
     int OSPPProviderGetNumberOfServicePoints(OSPTPROVHANDLE, unsigned *);
     int OSPPProviderGetServicePoints(OSPTPROVHANDLE, unsigned, unsigned, char *[]);
     int OSPPProviderGetSSLLifetime(OSPTPROVHANDLE, unsigned *);
-    int OSPPProviderNew(unsigned, const char *[], const char *, const OSPTPRIVATEKEY *,
+    int OSPPProviderNew(unsigned, const char *[], unsigned long *,const char *, const OSPTPRIVATEKEY *,
             const OSPTCERT *, unsigned, const OSPTCERT *[], unsigned, unsigned, unsigned, 
             unsigned, unsigned, unsigned, unsigned, const char *, const char *, 
             OSPTPROVHANDLE *);
@@ -60,9 +60,10 @@ extern "C"
     int OSPPProviderSetHTTPTimeout(OSPTPROVHANDLE, unsigned);
     int OSPPProviderSetLocalKeys(OSPTPROVHANDLE, const OSPTPRIVATEKEY *, const void *);
     int OSPPProviderSetLocalValidation(OSPTPROVHANDLE, unsigned);
-    int OSPPProviderSetServicePoints(OSPTPROVHANDLE, unsigned, const char *[]);
-	int OSPPProviderSetCapabilitiesURLs(OSPTPROVHANDLE, unsigned, const char *[]);
+    int OSPPProviderSetServicePoints(OSPTPROVHANDLE, unsigned,unsigned long *, const char *[]);
+	int OSPPProviderSetCapabilitiesURLs(OSPTPROVHANDLE, unsigned,unsigned long *, const char *[]);
     int OSPPProviderSetSSLLifetime(OSPTPROVHANDLE, unsigned);
+    int OSPPProviderSetSPMessageCount(void *,unsigned long*);
 
 #ifdef __cplusplus
 }

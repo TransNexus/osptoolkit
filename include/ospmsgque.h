@@ -53,6 +53,7 @@ extern "C"
     int  OSPPMsgQueueAddTransaction(OSPTMSGQUEUE *, OSPTMSGINFO *);
     void OSPPMsgQueueIncrementNumberOfTransactions(OSPTMSGQUEUE *);
     void OSPPMsgQueueDecrementNumberOfTransactions(OSPTMSGQUEUE *);
+    int  OSPPMsgQueueGetNumberOfTransactions(OSPTMSGQUEUE *, unsigned *);
 
 #ifdef __cplusplus
 }
