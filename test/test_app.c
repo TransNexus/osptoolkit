@@ -932,14 +932,14 @@ testOSPPTransactionSetServiceAndPricingInfo()
     OSPT_PRICING_INFO PricingInfo2;
     OSPT_PRICING_INFO    *ospvPricingInfo[MAX_PRICING_INFO_ALLOWED];
 
-    PricingInfo1.amount = 10;
-    PricingInfo1.increment = 0.02;
-    OSPM_STRCPY((char *)PricingInfo1.unit,(const char *)"sec");
+    PricingInfo1.amount = 0.10f;
+    PricingInfo1.increment = 60;
+    OSPM_STRCPY((char *)PricingInfo1.unit,(const char *)"s");
     OSPM_STRCPY((char *)PricingInfo1.currency,(const char *)"USD");
 
-    PricingInfo2.amount = 15;
-    PricingInfo2.increment = 0.03;
-    OSPM_STRCPY((char *)PricingInfo2.unit,(const char *)"sec");
+    PricingInfo2.amount = 0.15f;
+    PricingInfo2.increment = 10;
+    OSPM_STRCPY((char *)PricingInfo2.unit,(const char *)"s");
     OSPM_STRCPY((char *)PricingInfo2.currency,(const char *)"EUR");
 
     ospvPricingInfo[0] = &PricingInfo1;
