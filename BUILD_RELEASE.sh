@@ -39,6 +39,9 @@ echo $0                   		>> $LIST_OF_EXCLUDED_FILES
 echo $LIST_OF_EXCLUDED_FILES	>> $LIST_OF_EXCLUDED_FILES
 echo "BUILDs"									>> $LIST_OF_EXCLUDED_FILES
 
+# Do NOT include documentation folder
+echo "doc"										>> $LIST_OF_EXCLUDED_FILES
+
 
 
 ##
