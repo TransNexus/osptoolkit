@@ -607,7 +607,6 @@ int cha_engine_init()
     {
       if( ENGINE_set_default(eng,ENGINE_METHOD_ALL) != 0)
       {
-        ENGINE_finish(eng);
         /* Success */
         break;
       }
@@ -619,11 +618,6 @@ int cha_engine_init()
     /* Iterated though all supported engines and failed to set any of them */
     errorcode=OSPC_ERR_SEC_MODULE;
     OSPM_DBGERRORLOG(errorcode, "Failed to set hardware engine support");
-  }
-  else
-  {
-     ENGINE_free(eng);
-     eng= OSPC_OSNULL;
   }
 
   OSPM_DBGEXIT(("EXIT : cha_engine_init() (%d)\n", errorcode));
