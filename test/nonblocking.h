@@ -36,8 +36,8 @@
  *  NonBlockingQueueMonitor must be created using NonBlockingQueueMonitorNew.
  *  This method allocates space, initializes private variables and starts
  *  consumer/work threads which will be responsible for making blocking calls.
- *	NOTE: Number of work/consumer threads should not exceed the maximum number
- *	of HTTP connections set in the OSPPProviderNew.
+ *  NOTE: Number of work/consumer threads should not exceed the maximum number
+ *  of HTTP connections set in the OSPPProviderNew.
  *
  *  When the non-blocking API is no longer needed the NonBlockingQueueMonitor
  *  should be deleted using NonBlockingQueueMonitorDelete.  This method
@@ -95,6 +95,9 @@ typedef struct _NBMONITOR
   OSPTCONDVAR   CondVarNoActiveWorkThreads; 
   unsigned      NumberOfWorkThreads;
   unsigned      NumberOfActiveWorkThreads;
+  /* apply only to Auth Requests */
+  unsigned      MaxQueSize;
+  unsigned      MaxQueWaitMS;
 
 } NBMONITOR;
 
@@ -105,7 +108,9 @@ extern "C"
 #endif
     int NonBlockingQueueMonitorNew(
             NBMONITOR       **nbMonitor,                  /* In\Out - NBMonitor Pointer */
-            unsigned        NumberOfWorkThreads);
+            unsigned        NumberOfWorkThreads,          /* Max number of concurent tool kit requets */
+            unsigned        MaxQueSize,                   /* Apply only to AuthReq, limit number of requets in the queue */
+            unsigned        MaxQueWaitMS);                /* Apply only to AuthReq, queue expiration time in ms */
 
     int NonBlockingQueueMonitorBlockWhileQueueNotEmpty(
             NBMONITOR       *nbMonitor);                  /* In     - NBMonitor Pointer */
@@ -115,6 +120,7 @@ extern "C"
 
     int OSPPTransactionRequestAuthorisation_nb(
             NBMONITOR       *nbMonitor,                   /* In - NBMonitor Pointer   */
+            int             ShouldBlock,                  /* In - 1 WILL block, 0 - will NOT block */
             int             *OSPErrorCode,                /* Out- Error code returned by the blocking function */
             OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction Handle  */
             const char      *ospvSource,                  /* In - Source of call      */
@@ -131,6 +137,7 @@ extern "C"
 
     int OSPPTransactionReportUsage_nb(
             NBMONITOR       *nbMonitor,                   /* In - NBMonitor Pointer   */
+            int             ShouldBlock,                  /* In - 1 WILL block, 0 - will NOT block */
             int             *OSPErrorCode,                /* Out- Error code returned by the blocking function */
             OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction handle */
             unsigned        ospvDuration,                 /* In - Length of call */

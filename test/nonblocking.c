@@ -37,6 +37,8 @@ void      NonBlockingQueueMonitorIncrementActiveWorkThreadCounter(NBMONITOR *);
 void      NonBlockingQueueMonitorDecrementActiveWorkThreadCounter(NBMONITOR *);
 unsigned  NonBlockingQueueMonitorGetActiveWorkThreadCounter(NBMONITOR *);
 
+unsigned long long GetDeltaMS(OSPTTIME FromTimeSec,unsigned int FromTimeMS,OSPTTIME ToTimeSec,unsigned int ToTimeMS);
+
 typedef struct _NBAUTHREQ
 {
   OSPTTRANHANDLE  ospvTransaction;              /* In - Transaction Handle  */
@@ -88,7 +90,6 @@ typedef union _OSPMESSAGE
 typedef struct _NBDATA
 {
   OSPTLISTLINK    NextItem;
-  char            bla_1[1000];
   int             MessageType;
   int             *ErrorCode;
   union
@@ -96,18 +97,94 @@ typedef struct _NBDATA
     NBAUTHREQ       AuthReq;
     NBUSEIND        UseInd;
   } Message;
-  char            bla_2[1000];
+  int             ShouldBlock;                  /* Ussed to indicate if the caller is blocked */
+  OSPTMUTEX       Mutex;                        /* Used to wake up blocked call */
+  OSPTCONDVAR     CondVar;                      /* Used to wake up blocked call */
+
+  /* Stats */
+  OSPTTIME        InQuequeTime;
+  unsigned int    InQuequeTimeMS;
+  OSPTTIME        OutQuequeTime;
+  unsigned int    OutQuequeTimeMS;
+  OSPTTIME        OutToolKitTime;
+  unsigned int    OutToolKitTimeMS;
+
 } NBDATA;
+
+
+int newNBDATA(NBDATA**    nbData, int MessageType);
+int deleteNBDATA(NBDATA*  nbData);
+
+
+/*
+ * Allocate memory
+ * Set MessageType
+ * Init Mutex and CondVar
+ */
+int newNBDATA(NBDATA** nbData, int MessageType)
+{
+  int     errorcode = OSPC_ERR_NO_ERROR;
+
+  OSPM_MALLOC((*nbData), NBDATA, sizeof(NBDATA));
+
+  if( (*nbData) != (NBDATA *)OSPC_OSNULL ) 
+  {
+    OSPM_MEMSET((*nbData), 0, sizeof(NBDATA));
+
+    (*nbData)->MessageType = MessageType;
+
+    OSPM_MUTEX_INIT((*nbData)->Mutex, OSPC_OSNULL, errorcode );
+
+    if( OSPC_ERR_NO_ERROR == errorcode )
+    {
+      OSPM_CONDVAR_INIT((*nbData)->CondVar, OSPC_OSNULL, errorcode);
+    }
+  }
+  else
+  {
+    errorcode = OSPC_ERR_MSGQ_NO_MEMORY;
+  }
+
+  return( errorcode );
+}
+
+
+/*
+ * Destroy Mutex and CondVar
+ * De-allocate memory
+ */
+int deleteNBDATA(NBDATA* nbData)
+{
+  int     errorcode = OSPC_ERR_NO_ERROR;
+
+  //  check input
+  if( nbData == OSPC_OSNULL )
+  {
+      errorcode = OSPC_ERR_UTIL_INVALID_ARG;
+  }
+  else
+  {
+    OSPM_MUTEX_DESTROY(   nbData->Mutex,  errorcode);
+    OSPM_CONDVAR_DESTROY( nbData->CondVar,errorcode);
+    OSPM_FREE(            nbData );
+  }
+
+  return( errorcode );
+}
+
+
 
 
 int
 NonBlockingQueueMonitorNew(
       NBMONITOR       **nbMonitor,
-      unsigned        NumberOfWorkThreads)
+      unsigned        NumberOfWorkThreads,
+      unsigned        MaxQueSize,
+      unsigned        MaxQueWaitMS)
 {
 
-  					int errorcode = OSPC_ERR_NO_ERROR;
-	unsigned	int i 				= 0;
+            int errorcode = OSPC_ERR_NO_ERROR;
+  unsigned  int i         = 0;
 
   //  check input
   if( (nbMonitor == OSPC_OSNULL) || (NumberOfWorkThreads > MAX_WORK_THREAD_NUM) )
@@ -127,6 +204,8 @@ NonBlockingQueueMonitorNew(
 
         //  Init memeber variables
         (*nbMonitor)->NumberOfWorkThreads       = NumberOfWorkThreads;
+        (*nbMonitor)->MaxQueSize                = MaxQueSize;
+        (*nbMonitor)->MaxQueWaitMS              = MaxQueWaitMS;
         (*nbMonitor)->NumberOfActiveWorkThreads = 0;
         (*nbMonitor)->TimeToShutDown            = 0;  
 
@@ -181,8 +260,8 @@ NonBlockingQueueMonitorDelete(
             NBMONITOR       **nbMonitor)
 {
 
-  					int errorcode = OSPC_ERR_NO_ERROR;
-  unsigned	int i         = 0;
+            int errorcode = OSPC_ERR_NO_ERROR;
+  unsigned  int i         = 0;
 
   //  check input
   if( (nbMonitor == OSPC_OSNULL) || (*nbMonitor == OSPC_OSNULL) )
@@ -203,14 +282,10 @@ NonBlockingQueueMonitorDelete(
     {
       NBDATA* nbData    = OSPC_OSNULL;
 
-      OSPM_MALLOC(nbData, NBDATA, sizeof(NBDATA));
+      errorcode = newNBDATA(&nbData, MESSAGE_TYPE_TIME_TO_EXIT);
 
-      if( nbData != (NBDATA *)OSPC_OSNULL ) 
+      if( errorcode == OSPC_ERR_NO_ERROR )
       {
-        OSPM_MEMSET(nbData, 0, sizeof(NBDATA));
-
-        // fill out the data structure
-        nbData->MessageType = MESSAGE_TYPE_TIME_TO_EXIT;
         errorcode = SyncQueueAddTransaction( (*nbMonitor)->SyncQue,nbData);
       }
       else
@@ -356,9 +431,12 @@ NonBlockingQueueMonitorBlockWhileQueueNotEmpty(
 OSPTTHREADRETURN
 WorkThread(void *arg)
 {
-  NBMONITOR *nbMonitor    = (NBMONITOR *)arg;
-  NBDATA    *transaction  = NULL;
-  int       TimeToExit    = 0;
+  NBMONITOR *nbMonitor      = (NBMONITOR *)arg;
+  NBDATA    *transaction    = NULL;
+  int       TimeToExit      = 0;
+  int       errorcode       = 0;
+  unsigned long long QTime  = 0;
+  unsigned long long TKTime = 0;
 
   while( TimeToExit == 0 )
   {
@@ -369,6 +447,12 @@ WorkThread(void *arg)
     {
         NonBlockingQueueMonitorIncrementActiveWorkThreadCounter(nbMonitor);
 
+        // Time stamp OUT QUEUE
+        OSPPOSTimeGetTime(&transaction->OutQuequeTime,&transaction->OutQuequeTimeMS);
+
+        // Calculate Queue time
+        QTime = GetDeltaMS(transaction->InQuequeTime,transaction->InQuequeTimeMS,transaction->OutQuequeTime,transaction->OutQuequeTimeMS);
+
         /*
          * What kind of message is it? (AuthReq or UseInd)
         */
@@ -378,19 +462,33 @@ WorkThread(void *arg)
               TimeToExit = 1;
               break;
           case MESSAGE_TYPE_AUTH_REQ:   //  AuthorisationRequest
-              *(transaction->ErrorCode) = OSPPTransactionRequestAuthorisation( 
-                                                        transaction->Message.AuthReq.ospvTransaction,
-                                                        transaction->Message.AuthReq.ospvSource,
-                                                        transaction->Message.AuthReq.ospvSourceDevice,
-                                                        transaction->Message.AuthReq.ospvCallingNumber,
-                                                        transaction->Message.AuthReq.ospvCalledNumber,
-                                                        transaction->Message.AuthReq.ospvUser,
-                                                        transaction->Message.AuthReq.ospvNumberOfCallIds,
-                                                        transaction->Message.AuthReq.ospvCallIds,
-                                                        transaction->Message.AuthReq.ospvPreferredDestinations,
-                                                        transaction->Message.AuthReq.ospvNumberOfDestinations,
-                                                        transaction->Message.AuthReq.ospvSizeOfDetailLog,
-                                                        transaction->Message.AuthReq.ospvDetailLog);
+              /* 
+               * Make sure that the request has not expired
+               */
+              if( QTime < nbMonitor->MaxQueWaitMS )
+              {
+                *(transaction->ErrorCode) = OSPPTransactionRequestAuthorisation( 
+                                                          transaction->Message.AuthReq.ospvTransaction,
+                                                          transaction->Message.AuthReq.ospvSource,
+                                                          transaction->Message.AuthReq.ospvSourceDevice,
+                                                          transaction->Message.AuthReq.ospvCallingNumber,
+                                                          transaction->Message.AuthReq.ospvCalledNumber,
+                                                          transaction->Message.AuthReq.ospvUser,
+                                                          transaction->Message.AuthReq.ospvNumberOfCallIds,
+                                                          transaction->Message.AuthReq.ospvCallIds,
+                                                          transaction->Message.AuthReq.ospvPreferredDestinations,
+                                                          transaction->Message.AuthReq.ospvNumberOfDestinations,
+                                                          transaction->Message.AuthReq.ospvSizeOfDetailLog,
+                                                          transaction->Message.AuthReq.ospvDetailLog);
+              }
+              else
+              {
+                /*
+                 * AuthRequest has expired
+                 */
+                printf("AUTH REQ EXPIRED\n");
+                *(transaction->ErrorCode) = -1;
+              }
               break;
           case MESSAGE_TYPE_USE_IND:    //  UseageReport
               *(transaction->ErrorCode) = OSPPTransactionReportUsage(       
@@ -407,10 +505,53 @@ WorkThread(void *arg)
               break;
         }
 
-        OSPM_FREE(transaction);
-        transaction = OSPC_OSNULL;
+        /*
+         * Log a message
+         */
+        if( MESSAGE_TYPE_TIME_TO_EXIT != transaction->MessageType)
+        {
+          // Time stamp OUT ToolKit
+          OSPPOSTimeGetTime(&transaction->OutToolKitTime,&transaction->OutToolKitTimeMS);
+
+          // Calculate TK time
+          TKTime = GetDeltaMS(transaction->OutQuequeTime,transaction->OutQuequeTimeMS,transaction->OutToolKitTime,transaction->OutToolKitTimeMS);
+
+          printf("[%3llu] InQ[%llu:%3llu] OutQ[%llu:%3llu] OutTK[%llu:%3llu] QTime[%7llu] TKTime[%7llu] QSize[%5u] MsgType[%d]\n",
+                (long long unsigned)pthread_self(),
+                (long long unsigned)transaction->InQuequeTime,
+                (long long unsigned)transaction->InQuequeTimeMS,
+                (long long unsigned)transaction->OutQuequeTime,
+                (long long unsigned)transaction->OutQuequeTimeMS,
+                (long long unsigned)transaction->OutToolKitTime,
+                (long long unsigned)transaction->OutToolKitTimeMS,
+                QTime,
+                TKTime,
+                SyncQueueGetNumberOfTransactions(nbMonitor->SyncQue),
+                transaction->MessageType);
+        }
+
+        /*
+         *  This is a bit odd.  If the caller wants to wait, 
+         *    it is responsible for deleting nbData.
+         *  Oterwise, the work thread will clean up
+         */
+        if( 1 == transaction->ShouldBlock )
+        {
+          /*
+           *  Yes, wake it up
+           */
+          OSPM_CONDVAR_SIGNAL(transaction->CondVar,errorcode);
+        }
+        else
+        {
+          /*
+           *  No, we are responsible for cleaning up
+           */
+          deleteNBDATA(transaction);
+        }
 
         NonBlockingQueueMonitorDecrementActiveWorkThreadCounter(nbMonitor);
+
     }
     else
     {
@@ -432,6 +573,7 @@ WorkThread(void *arg)
 int
 OSPPTransactionRequestAuthorisation_nb(
         NBMONITOR       *nbMonitor,                   /* In - NBMonitor Pointer   */
+        int             ShouldBlock,                  /* In - 1 WILL block, 0 - will NOT block */
         int             *OSPErrorCode,                /* Out- Error code returned by the blocking function */
         OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction Handle  */
         const char      *ospvSource,                  /* In - Source of call      */
@@ -449,20 +591,32 @@ OSPPTransactionRequestAuthorisation_nb(
   int     errorcode = OSPC_ERR_NO_ERROR;
   NBDATA* nbData    = OSPC_OSNULL;
 
-  if( nbMonitor->TimeToShutDown == 0 )
+  if( nbMonitor->TimeToShutDown == 1  )
+  {
+    /*
+     * Q is shutting down
+     */
+    errorcode = -1;
+  }
+  else if( SyncQueueGetNumberOfTransactions(nbMonitor->SyncQue) > nbMonitor->MaxQueSize )
+  {
+    /*
+     * There are already to many requests in the Q
+     */
+    errorcode = -1;
+  }
+  else
   {
     /*
      * allocate space
      * the space will be deallocated by one of the working thread
     */
-    OSPM_MALLOC(nbData, NBDATA, sizeof(NBDATA));
+    errorcode = newNBDATA(&nbData,MESSAGE_TYPE_AUTH_REQ);
 
-    if( nbData != (NBDATA *)OSPC_OSNULL ) 
+    if( OSPC_ERR_NO_ERROR == errorcode )
     {
-      OSPM_MEMSET(nbData, 0, sizeof(NBDATA));
-
       // fill out the data structure
-      nbData->MessageType                                 = MESSAGE_TYPE_AUTH_REQ;
+      nbData->ShouldBlock                                 = ShouldBlock;
       nbData->ErrorCode                                   = OSPErrorCode;
       nbData->Message.AuthReq.ospvTransaction             = ospvTransaction;
       nbData->Message.AuthReq.ospvSource                  = ospvSource;
@@ -477,18 +631,45 @@ OSPPTransactionRequestAuthorisation_nb(
       nbData->Message.AuthReq.ospvSizeOfDetailLog         = ospvSizeOfDetailLog;
       nbData->Message.AuthReq.ospvDetailLog               = ospvDetailLog;
 
+      // time stamp (AuthReq) IN QUEUE event
+      OSPPOSTimeGetTime(&nbData->InQuequeTime,&nbData->InQuequeTimeMS);
+
       // put a new message to the non-blocking queue
       *(nbData->ErrorCode)  = OSPC_AUTH_REQUEST_BLOCK;
       errorcode             = SyncQueueAddTransaction(nbMonitor->SyncQue,nbData);
+
+      if( OSPC_ERR_NO_ERROR == errorcode )
+      {
+        /*
+         *  This is a bit odd.  If the caller wants to wait, 
+         *    it is responsible for deleting nbData.
+         *  Oterwise, the work thread will clean up
+         */
+        if( 1 == nbData->ShouldBlock )
+        {
+          /*
+           * SHOULD wait
+           */
+          OSPM_MUTEX_LOCK(nbData->Mutex, errorcode);
+            while( (*(nbData->ErrorCode) == OSPC_AUTH_REQUEST_BLOCK) && (OSPC_ERR_NO_ERROR == errorcode) )
+            {
+              OSPM_CONDVAR_WAIT(nbData->CondVar, nbData->Mutex, errorcode);
+            }
+          OSPM_MUTEX_UNLOCK(nbData->Mutex, errorcode);
+          deleteNBDATA(nbData);
+        }
+        else
+        {
+          /*
+           * should NOT wait
+           */
+        }
+      }
     }
     else
     {
       errorcode = OSPC_ERR_MSGQ_NO_MEMORY;
     }
-  }
-  else
-  {
-    errorcode = -1;
   }
 
   return errorcode;
@@ -503,6 +684,7 @@ OSPPTransactionRequestAuthorisation_nb(
 
 int OSPPTransactionReportUsage_nb(
         NBMONITOR       *nbMonitor,                   /* In - NBMonitor Pointer   */
+        int             ShouldBlock,                  /* In - 1 WILL block, 0 - will NOT block */
         int             *OSPErrorCode,                /* Out- Error code returned by the blocking function */
         OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction handle */
         unsigned        ospvDuration,                 /* In - Length of call */
@@ -522,14 +704,12 @@ int OSPPTransactionReportUsage_nb(
      * allocate space
      * the space will be deallocated by one of the working thread
     */
-    OSPM_MALLOC(nbData, NBDATA, sizeof(NBDATA));
+    errorcode = newNBDATA(&nbData,MESSAGE_TYPE_USE_IND);
 
-    if( nbData != (NBDATA *)OSPC_OSNULL ) 
+    if( OSPC_ERR_NO_ERROR == errorcode )
     {
-      OSPM_MEMSET(nbData, 0, sizeof(NBDATA));
-
       // fill out the data structure
-      nbData->MessageType                                 = MESSAGE_TYPE_USE_IND;
+      nbData->ShouldBlock                                 = ShouldBlock;
       nbData->ErrorCode                                   = OSPErrorCode;
       nbData->Message.UseInd.ospvTransaction              = ospvTransaction;
       nbData->Message.UseInd.ospvDuration                 = ospvDuration;
@@ -540,9 +720,40 @@ int OSPPTransactionReportUsage_nb(
       nbData->Message.UseInd.ospvSizeOfDetailLog          = ospvSizeOfDetailLog;
       nbData->Message.UseInd.ospvDetailLog                = ospvDetailLog;
 
+      // time stamp (UseInd) IN QUEUE event
+      OSPPOSTimeGetTime(&nbData->InQuequeTime,&nbData->InQuequeTimeMS);
+
       // put a new message to the non-blocking queue
       *(nbData->ErrorCode)  = OSPC_REPORT_USAGE_BLOCK;
       errorcode             = SyncQueueAddTransaction(nbMonitor->SyncQue,nbData);
+
+      if( OSPC_ERR_NO_ERROR == errorcode )
+      {
+        /*
+         *  This is a bit odd.  If the caller wants to wait, 
+         *    it is responsible for deleting nbData.
+         *  Oterwise, the work thread will clean up
+         */
+        if( 1 == ShouldBlock )
+        {
+          /*
+           * SHOULD wait
+           */
+          OSPM_MUTEX_LOCK(nbData->Mutex, errorcode);
+            while( (*(nbData->ErrorCode) == OSPC_REPORT_USAGE_BLOCK) && (OSPC_ERR_NO_ERROR == errorcode) )
+            {
+              OSPM_CONDVAR_WAIT(nbData->CondVar, nbData->Mutex, errorcode);
+            }
+          OSPM_MUTEX_UNLOCK(nbData->Mutex, errorcode);
+          deleteNBDATA(nbData);
+        }
+        else
+        {
+          /*
+           * should NOT wait
+           */
+        }
+      }
     }
     else
     {
@@ -558,3 +769,7 @@ int OSPPTransactionReportUsage_nb(
 }
 
 
+unsigned long long GetDeltaMS(OSPTTIME FromTimeSec,unsigned int FromTimeMS,OSPTTIME ToTimeSec,unsigned int ToTimeMS)
+{
+  return( 1000*(ToTimeSec-FromTimeSec) + (ToTimeMS-FromTimeMS) );
+}
