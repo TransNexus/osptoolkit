@@ -51,7 +51,6 @@ const OSPTMSGDESC OSPVAttrDescs[] =
 
 const unsigned OSPVNumAttrDesc = sizeof(OSPVAttrDescs)/sizeof(OSPTMSGDESC);
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPMsgGetAttrName() - get an attribute name from a part value
@@ -89,5 +88,4 @@ OSPTMSGATTRPART                           /* returns part */
     }
     return(ospvPart);
 }
-#endif /* OSPC_DEBUG */
 

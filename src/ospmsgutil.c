@@ -709,7 +709,6 @@ OSPPMsgTXToElement(
 /*-----------------------------------------------------------------------*
  * OSPPMsgTimeFromElement() - extract time value from an element
  *-----------------------------------------------------------------------*/
-#ifdef OSPC_DEBUG
 unsigned                        /* returns error code */
 OSPPMsgTimeFromElement(
     OSPTXMLELEM *ospvElem,      /* input is XML element */
@@ -733,7 +732,6 @@ OSPPMsgTimeFromElement(
     }
     return(ospvErrCode);
 }
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*

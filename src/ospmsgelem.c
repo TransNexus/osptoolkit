@@ -109,7 +109,6 @@ const OSPTMSGDESC OSPVElemDescs[] =
 
 const unsigned OSPVNumElemDesc = sizeof(OSPVElemDescs)/sizeof(OSPTMSGDESC);
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPMsgGetElemName() - get an element name from a part value
@@ -149,5 +148,4 @@ OSPTMSGELEMPART                           /* returns part */
     }
     return(ospvPart);
 }
-#endif /* OSPC_DEBUG */
 

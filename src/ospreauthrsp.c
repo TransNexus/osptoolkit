@@ -44,7 +44,6 @@
  * OSPPReauthRspSetTimestamp() - sets the timestamp for an reauthorisation response
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPReauthRspSetTimestamp
 void                                       /* nothing returned */
 OSPPReauthRspSetTimestamp(
     OSPTREAUTHRSP *ospvReauthRsp,
@@ -163,7 +162,6 @@ OSPPReauthRspHasComponentId(
   return (ospvReauthRsp->ospmReauthRspComponentId != OSPC_OSNULL);
 }
 
-#endif /* OSPC_DEBUG */
 
 OSPTTNAUDIT *
 OSPPReauthRspGetTNAudit(

@@ -59,7 +59,6 @@ OSPTMSGPART
     return(ospvPart);
 }
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPMsgDescGetName() - find a name from a part
@@ -114,4 +113,3 @@ OSPPMsgDescGetName(
     }
     return(ospvName);
 }
-#endif /* PSOC_DEBUG */

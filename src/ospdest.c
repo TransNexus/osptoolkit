@@ -38,25 +38,6 @@
 #include "ospdest.h"
 #include "ospusage.h"
 
-#ifdef OSPC_DEBUG
-/**/
-/*-----------------------------------------------------------------------*
- * OSPPDestHasNumber() - does the destination include a called number?
- *-----------------------------------------------------------------------*/
-unsigned                            /* returns non-zero if number exists */
-OSPPDestHasNumber(
-    OSPTDEST *ospvDest              /* destination effected */
-)
-{
-    unsigned ospvHasNumber = OSPC_FALSE;
-
-    if (ospvDest != OSPC_OSNULL) 
-    {
-        ospvHasNumber = ((ospvDest)->ospmDestNumber[0] != '\0');
-    }
-    return(ospvHasNumber);
-}
-
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPDestSetOSPVersion() - set the OSP Version for a destination
@@ -117,6 +98,25 @@ OSPPDestSetProtocol(
             }
         }
     }
+}
+
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPDestHasNumber() - does the destination include a called number?
+ *-----------------------------------------------------------------------*/
+unsigned                            /* returns non-zero if number exists */
+OSPPDestHasNumber(
+    OSPTDEST *ospvDest              /* destination effected */
+)
+{
+    unsigned ospvHasNumber = OSPC_FALSE;
+
+    if (ospvDest != OSPC_OSNULL) 
+    {
+        ospvHasNumber = ((ospvDest)->ospmDestNumber[0] != '\0');
+    }
+    return(ospvHasNumber);
 }
 
 
@@ -648,7 +648,6 @@ OSPPDestGetTNFailReason(
     }
     return(ospvTNFailReason);
 }
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*

@@ -43,7 +43,6 @@
 #include "ospcallid.h"
 #include "osputils.h"
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPReauthReqHasTimestamp() - Does authorisation request have a valid timestamp?
@@ -418,7 +417,6 @@ OSPPReauthReqGetComponentId(
 
     return componentstring;
 }
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*
