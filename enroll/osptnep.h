@@ -28,6 +28,9 @@
 #include "ospsocket.h"
 
 #include "openssl/ssl.h"
+#include "openssl/bio.h"
+#include "openssl/pem.h"
+#include "openssl/evp.h"
 
 #include "osptnepdatatypes.h"
 #include "osptneperrno.h"
