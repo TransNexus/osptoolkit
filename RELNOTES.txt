@@ -146,3 +146,10 @@ Version 2.8.1
 
  * Updated test app to use PEM encoded crypto files for the following test_app.c functions - SetAuthorityCertificates, SetLocalKeys.
  * Makefile changes in the enroll and test Makefiles
+---------------------------------------------------------------------------
+
+Version 2.8.2
+
+ * Bug fix for Linux. Problem because of trying to delete the mutex when it was locked
+ * Alcatel bug fix and support of SetServicePoints API in test_app
+ * Log message changes for Linux and windows
