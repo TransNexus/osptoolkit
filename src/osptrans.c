@@ -722,6 +722,22 @@ OSPPTransactionDeleteUsageInd(
     return;
 }
 
+
+
+/*
+ * If the transaction has a CapCnf component, it will be deleted
+ * and the pointer set to NULL
+ */
+void
+OSPPTransactionDeleteCapCnf(
+    OSPTTRANS  *ospvTrans /* In - Pointer to transaction */
+)
+{
+    OSPPCapCnfDelete( &(ospvTrans->CapCnf) );
+}
+
+
+
 /*  Make sure accumulation is allowed in this state 
 */
 void         
@@ -883,6 +899,9 @@ OSPPTransactionGetDeleteAllowed(
         case    OSPC_INITIALIZE_FAIL:
         case    OSPC_REINITIALIZE_FAIL:
         case    OSPC_REPORT_USAGE_FAIL:
+        case    OSPC_CAP_IND_FAIL:
+        case    OSPC_CAP_IND_SUCCESS:
+
         *ospvDeleteAllowed = OSPC_TRUE;
         break;
 
@@ -1512,6 +1531,7 @@ OSPPTransactionPrepareAndQueMessage(
     unsigned        sizeofoutmsg     = 0;
     OSPTSEC         *security        = OSPC_OSNULL;
     OSPTPROVIDER    *provider        = OSPC_OSNULL;
+    OSPTCOMM        *commManager     = OSPC_OSNULL;
 
 
 
@@ -1612,7 +1632,22 @@ OSPPTransactionPrepareAndQueMessage(
             OSPPMsgInfoAssignRequestMsg(*ospvMsgInfo,
                 outgoingmessage, sizeofoutmsg);
 
-            errorcode = OSPPCommAddTransaction(ospvTrans->Provider->Comm,
+            /*
+             * Decide which manager to handof the message too.
+             * Assign CapabilitiesIndication to the new CommForCapabilities
+             * manager.  For all other types of messages, preserver the original
+             * behaviour and assign the messages to the main manager - Comm
+             */
+            if (OSPC_CAP_IND_BLOCK == ospvTrans->State)
+            {
+                commManager = ospvTrans->Provider->CommForCapabilities;
+            }
+            else
+            {
+                commManager = ospvTrans->Provider->Comm;
+            }
+
+            errorcode = OSPPCommAddTransaction(commManager,
                 *ospvMsgInfo);
 
             if (errorcode == OSPC_ERR_NO_ERROR)
@@ -1764,6 +1799,10 @@ OSPPTransactionProcessReturn(
                 ospvTrans->ReauthRsp = (OSPTREAUTHRSP*)resultrsp;
                 ospvTrans->TransactionID = ospvTrans->ReauthRsp->ospmReauthRspTrxId;
                 ospvTrans->HasTransactionID = OSPC_TRUE;
+                break;
+
+                case OSPC_MSG_CAPCNF:
+                ospvTrans->CapCnf =(OSPTCAPCNF*)resultrsp;
                 break;
 
                 /*
