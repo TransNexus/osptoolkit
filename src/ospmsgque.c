@@ -91,9 +91,13 @@ void
 OSPPMsgQueueDelete(
     OSPTMSGQUEUE **ospvMsgQueue)
 {
+		int errorcode = OSPC_ERR_NO_ERROR;
 
     if (*ospvMsgQueue != (OSPTMSGQUEUE *)OSPC_OSNULL)
     {
+				OSPM_MUTEX_DESTROY((*ospvMsgQueue)->Mutex, errorcode);
+			  OSPM_CONDVAR_DESTROY((*ospvMsgQueue)->CondVar, errorcode);
+
         OSPM_FREE(*ospvMsgQueue);
         *ospvMsgQueue = (OSPTMSGQUEUE *)OSPC_OSNULL;
     }
