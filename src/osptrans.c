@@ -339,7 +339,8 @@ OSPPTransactionBuildUsage(
             {
                 if (OSPPListFirst(&(ospvDest->ospmUpdatedSourceAddr)) != NULL)
                 {
-                    OSPPUsageIndCopySourceAlt(*ospvUsage, 
+                    OSPPUsageIndMergeSourceAlt(*ospvUsage, 
+                        &((*ospvTrans->AuthReq).ospmAuthReqSourceAlternate),
                         &(ospvDest->ospmUpdatedSourceAddr));
                 }
                 else if (OSPPAuthReqHasSourceAlt(ospvTrans->AuthReq))
@@ -358,7 +359,7 @@ OSPPTransactionBuildUsage(
             {
                 if (OSPPListFirst(&(ospvDest->ospmUpdatedDeviceInfo)) != NULL)
                 {
-                    OSPPUsageIndCopySourceAlt(*ospvUsage, 
+                    OSPPUsageIndCopyDeviceInfo(*ospvUsage, 
                         &(ospvDest->ospmUpdatedDeviceInfo));
                 }
                 else if (ospvTrans->AuthReq->ospmAuthReqDeviceInfo != NULL)
