@@ -92,13 +92,8 @@ OSPPSSLWrapInit(void *ospvRef)
         SSL_load_error_strings();
 				OpenSSL_add_all_digests();
         
-/* The following macro definition is to fix an anomaly between
-   openssl and OSP. The anomaly only occurs on Windows */
-#ifdef _WIN32
-        bio_stdout=BIO_new_fp((FILE *)SSLGetSSLstdout(),BIO_NOCLOSE);
-#else
         bio_stdout=BIO_new_fp(stdout,BIO_NOCLOSE);
-#endif
+
         /*
         **  Seed random generator
         */
