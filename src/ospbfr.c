@@ -268,7 +268,6 @@ OSPPBfrReadBlock(
     return(ospvRead);
 }
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPBfrDelete() - free an allocated buffer
@@ -419,4 +418,3 @@ OSPPBfrPeekByteN(
     }
     return(ospvByte);
 }
-#endif /* OSPC_DEBUG */

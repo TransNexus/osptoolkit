@@ -224,7 +224,6 @@ OSPPCallIdToElement(
     return(ospvErrCode);
 }
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPCallIdGetSize() - returns size of call ID value
@@ -262,5 +261,4 @@ OSPPCallIdGetValue(
     return(ospvVal);
 }
 
-#endif /* OSPC_DEBUG */
 

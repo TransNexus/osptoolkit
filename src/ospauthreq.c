@@ -37,7 +37,6 @@
 #include "ospauthreq.h"
 #include "osputils.h"
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPAuthReqHasTimestamp() - Does authorisation request have a valid timestamp?
@@ -541,7 +540,6 @@ OSPPAuthReqHasComponentId(
   return (ospvAuthReq->ospmAuthReqComponentId != OSPC_OSNULL);
 }
 
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*

@@ -131,7 +131,6 @@ OSPTALTINFO *                           /* returns ptr to altinfo or null */
 }
 
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPAltInfoDelete() - destroy a altinfo object
@@ -200,7 +199,6 @@ OSPPAltInfoGetValue(
     return(ospvVal);
 }
 
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*

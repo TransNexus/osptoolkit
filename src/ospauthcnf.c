@@ -58,7 +58,6 @@ OSPPAuthCnfDelete(
     }
 }
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPAuthCnfHasStatus() - does the authorisation confirmation have
@@ -79,5 +78,4 @@ OSPPAuthCnfHasStatus(
     return(ospvHasStatus);
 }
 
-#endif /* OSPC_DEBUG */
 

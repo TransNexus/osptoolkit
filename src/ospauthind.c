@@ -39,8 +39,6 @@
 #include "ospauthind.h"
 #include "osputils.h"
 
-#ifdef OSPC_DEBUG
-
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPAuthIndSetTimestamp() - sets the timestamp for an authorisation indication
@@ -469,7 +467,6 @@ OSPPAuthIndHasDest(
     }
 }
 
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*
