@@ -46,6 +46,10 @@
 #include "ospx509.h"
 #include "osptrans.h"
 #include "nonblocking.h"
+#include "openssl/bio.h"
+#include "openssl/pem.h"
+#include "openssl/evp.h"
+
 
 #ifdef  WIN32
 #define _Open   _open
@@ -154,6 +158,9 @@ int quietmode = 0;
 unsigned numdestinations = NUM_CALL_IDS;
 int num_test_calls = 500;
 
+OSPTCERT TheAuthCert;
+unsigned char Reqbuf[4096],LocalBuf[4096],AuthBuf[4096];
+
 /************ Local prototypes */
 static off_t  FileSizeGet(int fd);
 static int    FileArrayRead(unsigned char ***array,size_t *arrayNum, 
@@ -219,43 +226,72 @@ char msg[100];
 char customer_id[64];
 char device_id[64];
 
-    FileArrayDelete(&certs, &certssizes, NUM_CA_CERTS);
-    (void)FileArrayRead(&certs, &NUM_CA_CERTS,&certssizes, "cert","dat",99);
-    if (!quietmode)
-        printf("Loaded %u CA certificates\n",NUM_CA_CERTS);
+    int length;
+    unsigned char *temp;
+    BIO *bioIn = NULL;
+    RSA *pKey;
+    X509 *lcert,*cacert;
 
-    FileArrayDelete(&localcerts, &localcertssizes, NUM_LOCAL_CERTS);
-    (void)FileArrayRead(&localcerts,&NUM_LOCAL_CERTS,&localcertssizes, 
-                        "localcert","dat",1);
-    if (!quietmode)
-        printf("Loaded %u local certificates\n",NUM_LOCAL_CERTS);
+    temp = Reqbuf;
 
-    FileArrayDelete(&pkeys, &pkeyssizes, NUM_PKEYS);
-    (void)FileArrayRead(&pkeys,&NUM_PKEYS,&pkeyssizes, "pkey","dat",1);
-    if (!quietmode)
-        printf("Loaded %u private keys\n",NUM_PKEYS);
-
-    privatekey.PrivateKeyData=pkeys[0];
-    privatekey.PrivateKeyLength = pkeyssizes[0];
-
-    localcert.CertData=localcerts[0];
-    localcert.CertDataLength = localcertssizes[0];
-    
-    if (!quietmode)
+    bioIn = BIO_new_file("pkey.pem","r");
+    pKey = PEM_read_bio_RSAPrivateKey(bioIn,NULL,NULL,NULL);
+    length = i2d_RSAPrivateKey(pKey,&temp);
+    if (pKey == NULL || length == 0)
     {
-       for (i = 0 ; i < (int)NUM_CA_CERTS ; i++)
-       {
-					OSPM_MALLOC(authCerts[i], OSPTCERT, sizeof(OSPTCERT));
-					authCerts[i]->CertData=certs[i];
-					authCerts[i]->CertDataLength = certssizes[i];
-    
-         sprintf(msg, "Loaded Authority Certificate %02d", i);
-         OSPTNLOGDUMP(certs[i], certssizes[i], msg);
-       }
-
-       OSPTNLOGDUMP(localcerts[0], localcertssizes[0], "Loaded Local Certificate");
-       OSPTNLOGDUMP(pkeys[0], pkeyssizes[0], "Loaded Private Key");
+        printf("Failed to parse the Private Key from the File - pkey.pem \n");
+        return 0;
     }
+    else
+    {
+        privatekey.PrivateKeyData = Reqbuf;
+        privatekey.PrivateKeyLength = length;
+        printf ("Loaded 1 Private Key \n");
+    }
+
+
+    temp = NULL;
+    temp = LocalBuf;
+    length = 0;
+
+    bioIn = BIO_new_file("localcert.pem","r");
+    lcert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
+    length = i2d_X509(lcert,&temp);
+
+    if (lcert == NULL || length == 0)
+    {
+        printf("Failed to parse the Local Certificate from the File - localcert.pem \n");
+        return 0;
+    }
+    else
+    {
+        localcert.CertData = LocalBuf;
+        localcert.CertDataLength = length;
+        printf ("Loaded 1 Local Certificate \n");
+    }
+
+    temp = NULL;
+    temp = AuthBuf;
+    length = 0;
+
+    bioIn = BIO_new_file("cacert.pem","r");
+    cacert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
+    length = i2d_X509(cacert,&temp);
+
+    if (cacert == NULL || length == 0)
+    {
+        printf("Failed to parse the Authority Certificate from the File - cacert.pem \n");
+        return 0;
+    }
+    else
+    {
+        TheAuthCert.CertData = AuthBuf;
+        TheAuthCert.CertDataLength = length;
+        authCerts[0] = &TheAuthCert;
+        printf ("Loaded 1 Auhorization Certificate \n");
+    }
+    NUM_CA_CERTS = 1;
+
 
     sprintf(customer_id, "%ld", custid);
     sprintf(device_id, "%ld", devid);
