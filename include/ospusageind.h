@@ -79,6 +79,7 @@ extern "C"
     void      OSPPUsageIndMoveDeviceInfo(OSPTUSAGEIND *, OSPTLIST *); 
     void      OSPPUsageIndMoveDestinationAlt(OSPTUSAGEIND *, OSPTLIST *);
     void      OSPPUsageIndCopySourceAlt(OSPTUSAGEIND *, OSPTLIST *);
+    void      OSPPUsageIndMergeSourceAlt(OSPTUSAGEIND *, OSPTLIST *,OSPTLIST *);
     void      OSPPUsageIndCopyDeviceInfo(OSPTUSAGEIND *, OSPTLIST *); 
     void      OSPPUsageIndSetComponentId(OSPTUSAGEIND *, unsigned char *);
 
