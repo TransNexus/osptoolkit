@@ -85,6 +85,21 @@ OSPPCapIndDelete(
             OSPPListDelete(&(pTmp->ospmDeviceInfo));
         }        
         
+        /* Release Source Alterntaes */
+        if (OSPC_OSNULL != pTmp->ospmSrcAlternate)
+        {
+            while(!OSPPListEmpty(&(pTmp->ospmSrcAlternate)))
+            {
+                altinfo = (OSPTALTINFO *)OSPPListRemove(&(pTmp->ospmSrcAlternate));
+                if(altinfo != OSPC_OSNULL)
+                {
+                    OSPPAltInfoDelete(&altinfo);
+                }
+            }  
+
+            OSPPListDelete(&(pTmp->ospmSrcAlternate));
+        }        
+
         /* Release the structure itself */
         OSPM_FREE(pTmp);
             
@@ -160,19 +175,19 @@ OSPPCapIndNew(
      */
     if (OSPC_ERR_NO_ERROR == errorcode)
     {
-        /* Initialize the list */
-        OSPPListNew(&(capInd->ospmDeviceInfo));
-        
         /* Add Source if it is present */
          if (OSPC_OSNULL != ospvSource && strlen(ospvSource) > 0)
         {
+            /* Initialize the list */
+            OSPPListNew(&(capInd->ospmSrcAlternate));
+
             altinfo = OSPPAltInfoNew(strlen(ospvSource), 
                                      (const unsigned char *)ospvSource,
                                       ospeTransport);
 
             if(OSPC_OSNULL != altinfo)
             {
-                OSPPListAppend((OSPTLIST *)&(capInd->ospmDeviceInfo),
+                OSPPListAppend((OSPTLIST *)&(capInd->ospmSrcAlternate),
                                 altinfo);
             }
         }
@@ -180,9 +195,10 @@ OSPPCapIndNew(
         /* Add SourceDevice if it is present */
          if (OSPC_OSNULL != ospvSourceDevice && strlen(ospvSourceDevice) > 0)
         {
+            OSPPListNew(&(capInd->ospmDeviceInfo));
             altinfo = OSPPAltInfoNew(strlen(ospvSourceDevice), 
                                      (const unsigned char *)ospvSourceDevice,
-                                      ospeH323);
+                                      ospeTransport);
 
             if(OSPC_OSNULL != altinfo)
             {
@@ -380,6 +396,18 @@ OSPPCapIndToElement(
         OSPPXMLElemAddChild(capindelem, elem);
     }
     
+     /*
+     * 
+     * Create/Add SrcAltTransport elements
+     * 
+     */
+    for(altinfo = (OSPTALTINFO *)OSPPListFirst( &(ospvCapInd->ospmSrcAlternate) );
+        altinfo!= (OSPTALTINFO *)OSPC_OSNULL;
+        altinfo = (OSPTALTINFO *)OSPPListNext( &(ospvCapInd->ospmSrcAlternate),altinfo))
+    {
+        OSPPAltInfoToElement(altinfo, &elem, ospeElemSrcAlt);
+        OSPPXMLElemAddChild(capindelem, elem);
+    }
     
     /*
      * 

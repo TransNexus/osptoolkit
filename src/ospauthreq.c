@@ -584,6 +584,18 @@ OSPPAuthReqDelete(OSPTAUTHREQ **ospvAuthReq)
 
         OSPPListDelete(&((*ospvAuthReq)->ospmAuthReqCallId));
 
+        while(!OSPPListEmpty(&((*ospvAuthReq)->ospmAuthReqDeviceInfo)))
+        {
+            altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvAuthReq)->ospmAuthReqDeviceInfo));
+            if(altinfo != OSPC_OSNULL)
+            {
+                OSPM_FREE(altinfo);
+                altinfo = OSPC_OSNULL;
+            }
+        }  
+
+        OSPPListDelete(&((*ospvAuthReq)->ospmAuthReqDeviceInfo));
+
         while(!OSPPListEmpty(&((*ospvAuthReq)->ospmAuthReqSourceAlternate)))
         {
             altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvAuthReq)->ospmAuthReqSourceAlternate));
@@ -782,6 +794,24 @@ OSPPAuthReqToElement(
         {
             OSPPXMLElemAddChild(authreqelem, elem);
             elem = OSPC_OSNULL;
+        }
+
+        if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
+            (ospvAuthReq->ospmAuthReqDeviceInfo != NULL))
+        {
+            /*
+             *
+             * Create/Add DeviceInfo elements
+             *
+             */
+            for(altinfo = (OSPTALTINFO *)OSPPListFirst( &(ospvAuthReq->ospmAuthReqDeviceInfo));
+            altinfo!= (OSPTALTINFO *)OSPC_OSNULL;
+            altinfo = (OSPTALTINFO *)OSPPListNext( &(ospvAuthReq->ospmAuthReqDeviceInfo), altinfo))
+            {
+                OSPPAltInfoToElement(altinfo, &elem, ospeElemDeviceInfo);
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
         }
 
         /* add the source alternates */
