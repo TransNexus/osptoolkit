@@ -42,6 +42,17 @@ typedef struct _OSPTMSGINFO
     OSPTCONDVAR         CondVar;
     int                 ErrorCode;
     unsigned char       Flags;
+    /*
+     * By default the flag is set to False (memset to 0s in OSPPMsgInfoNew)
+     * and does not alter current behavior.  However, when the flag is set to True
+     * the following two functions should behave differently.
+     * 
+     * OSPPMsgInfoProcessResponse should delete the structure instead of
+     * signaling that the response is ready for processing.
+     * 
+     * OSPPMsgInfoWaitForMsg should return immediately instead of waiting for
+     * a signal from OSPPMsgInfoProcessResponse.
+     */ 
     int                 IsNonBlocking;
 } OSPTMSGINFO;
 
