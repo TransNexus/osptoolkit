@@ -14,11 +14,11 @@
 ;#
 ;# $Author: dmitry $
 ;#
-;# $Date: 2002/02/22 14:16:14 $
+;# $Date: 2004/01/26 13:36:40 $
 ;#
-;# $Header: /tmp/OSPclient/osptoolkit/src/osp.def,v 1.1 2002/02/22 14:16:14 dmitry Exp $
+;# $Header: /tmp/OSPclient/osptoolkit/src/osp.def,v 1.2 2004/01/26 13:36:40 dmitry Exp $
 ;#
-;# $Id: osp.def,v 1.1 2002/02/22 14:16:14 dmitry Exp $
+;# $Id: osp.def,v 1.2 2004/01/26 13:36:40 dmitry Exp $
 ;#
 ;# $Locker:  $
 ;#
@@ -26,13 +26,16 @@
 ;#
 ;# $RCSfile: osp.def,v $
 ;#
-;# $Revision: 1.1 $
+;# $Revision: 1.2 $
 ;#
 ;# $Source: /tmp/OSPclient/osptoolkit/src/osp.def,v $
 ;#
 ;# $State: Exp $
 ;#
 ;# $Log: osp.def,v $
+;# Revision 1.2  2004/01/26 13:36:40  dmitry
+;# Added two new API calls
+;#
 ;# Revision 1.1  2002/02/22 14:16:14  dmitry
 ;# Moved and restructured OSP Toolkit files from "osp" to "osptoolkit".
 ;#
@@ -125,6 +128,7 @@ EXPORTS
 	OSPPProviderGetSSLLifetime
 	OSPPProviderNew
 	OSPPProviderSetAuthorityCertificates
+	OSPPProviderSetCapabilitiesURLs
 	OSPPProviderSetHTTPMaxConnections
 	OSPPProviderSetHTTPPersistence
 	OSPPProviderSetHTTPRetryDelay
@@ -139,6 +143,7 @@ EXPORTS
 	OSPPTransactionDelete
 	OSPPTransactionGetFirstDestination
 	OSPPTransactionGetNextDestination
+    OSPPTransactionIndicateCapabilities
     OSPPTransactionInitializeAtDevice
     OSPPTransactionRecordFailure
     OSPPTransactionReinitializeAtDevice
