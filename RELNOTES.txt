@@ -218,3 +218,11 @@ Version 2.9.2
  * Changed the code to eliminate all the warnings that popped up while compiling the toolkit with the SUN 'cc' compiler.
  * Changed test_app to not use 'gets'.
  * Added a section in the 'Toolkit Porting Guide' document which details the current memory allocation scheme implemented in the toolkit, and outlines how some other schemes can be used to improve the toolkit efficiency.
+---------------------------------------------------------------------------
+
+Version 2.9.3
+
+* Implemented Subscriber Id and PIN in the Authorization Request message. The calling card information can now be passed to the Server for authorization.
+* Added a new function (RequestSuggestedAuthorization, CLI function #30) to the test_app. Implemented reporting of suggested route's in the test_app. 
+* Eased the restriction on reporting TC Codes in the GetNextDestination API. The toolkit now supports 0 as a valid TC Code.
+* This version of the toolkit is also tested with unsigned tokens.
