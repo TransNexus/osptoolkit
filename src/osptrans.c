@@ -1906,11 +1906,30 @@ OSPPTransactionRequestNew(
 
             if((ospvSource != OSPC_OSNULL) ||
                 (ospvSourceDevice != OSPC_OSNULL) ||
+                (ospvTrans->NetworkId !=OSPC_OSNULL) ||
                 (ospvUser != OSPC_OSNULL))
             {
 
                 /* source alternates - create a linked list */
                 OSPPListNew((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqSourceAlternate));
+
+                if(ospvTrans->NetworkId != OSPC_OSNULL)
+                {
+
+                    altinfo = OSPPAltInfoNew(strlen(ospvTrans->NetworkId), 
+                        (const char *)ospvTrans->NetworkId,
+                        ospeNetwork);
+
+                    if(altinfo != OSPC_OSNULL)
+                    {
+
+                        OSPPListAppend(
+                            (OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqSourceAlternate),
+                            (void *)altinfo);
+                    }
+                }
+
+                altinfo = OSPC_OSNULL;
 
                 if(ospvSource != OSPC_OSNULL)
                 {
