@@ -125,7 +125,7 @@ unsigned TCcode=0;
 
 
 NBMONITOR *nbMonitor    = NULL;
-#define WORK_THREAD_NUM 40    /* make sure that this number does not exceed DEF_HTTP_MAXCONN */
+int WORK_THREAD_NUM=30;    /* make sure that this number does not exceed DEF_HTTP_MAXCONN */
 #define TOKEN_SIZE      2000
 #define TEST_ERROR 1
 #define FILE_OPEN_ERROR 2
@@ -186,9 +186,8 @@ static int    FileArrayRead(unsigned char ***array,size_t *arrayNum,
 static void    FileArrayDelete(unsigned char ***array,int **filesizes, 
                               size_t num);
 int testTestCalls(void);
-int testNonBlockingPerformanceTest();
+OSPTTHREADRETURN testNonBlockingPerformanceTest(void *);
 int testNonBlockingPerformanceTestForCapabilities();
-OSPTTHREADRETURN testMultipleProviders(void *);
 
 
 /*----------------------------------------------*
@@ -2203,12 +2202,9 @@ testAPI(int apinumber)
         errorcode = testSetCallId();
         break;
         case 100:
+#if 0
         errorcode = testNonBlockingPerformanceTest();
-        break;
-        case 101:
-        errorcode = testNonBlockingPerformanceTestForCapabilities();
-        break;
-        case 102:
+#endif
         printf("Enter the number of Providers to be created .. ");
         scanf("%d",&num_providers);
         if (num_providers > OSPC_MAX_PROVIDERS)
@@ -2220,10 +2216,15 @@ testAPI(int apinumber)
         {
             printf("Enter the number of Transactions to be run .. ");
             scanf("%d",&trans_to_run);
-            if (trans_to_run > OSPC_MAX_TRANS)
+            if ( 2 * trans_to_run > OSPC_MAX_TRANS)
             {
                errorcode =  OSPC_ERR_TRAN_NO_TRANS_SPACE;
                printf("Cannot run the test. The entered value is greater than the maximum transactions allowed\n");
+            }
+
+            if ((errorcode == 0) && (trans_to_run > MAX_QUEUE_SIZE))
+            {
+               printf("Warning !!! The toolkit may not be able to process - %d calls because the maximum queue size is - %d \n",trans_to_run,MAX_QUEUE_SIZE);
             }
 
             /*
@@ -2233,9 +2234,11 @@ testAPI(int apinumber)
             {
                 OSPM_CREATE_THREAD(MultProviderThrId[i],
                                    NULL,
-                                   testMultipleProviders,
+                                   testNonBlockingPerformanceTest,
                                    (void *)&trans_to_run,
                                    errorcode);
+
+                printf("Created Thread [%d] with thread id: [%d]\n",i,MultProviderThrId[i]);
             }
             for (i=0;i<num_providers;i++)
             {
@@ -2243,196 +2246,15 @@ testAPI(int apinumber)
             }
         }
         break;
+        case 101:
+        errorcode = testNonBlockingPerformanceTestForCapabilities();
+        break;
         default:
         errorcode = -1;
     }
 
     return errorcode;
 }
-
-OSPTTHREADRETURN
-testMultipleProviders(void *arg)
-{
-   unsigned char tmp_ret_cid[CALL_ID_SZ];
-   OSPTPROVHANDLE provHandle;
-   void     *tmp_callid                    = NULL;
-   OSPTTRANHANDLE transId[OSPC_MAX_TRANS];
-   OSPTTHREADID thr_id;
-   unsigned tmp_tokensize                  = TOKEN_SZ;
-   register int i = 0, j = 0;
-   int errorcode = OSPC_ERR_NO_ERROR;
-   time_t start_time, end_time;
-   char msg[100];
-   unsigned detaillogsize   = 0;
-   char     tmp_token[TOKEN_SZ]          = { "" };
-   void     *t_token                     = NULL;
-   char     tmp_callednumber[CALLED_NUM_SZ];
-   char     tmp_dest[DESTINATION_SZ]       = { "" };
-   char     tmp_destdev[DESTINATION_SZ]    = { "" };
-   char     tmp_validafter[TIMESTAMP_SZ],tmp_validuntil[TIMESTAMP_SZ];
-   unsigned tmp_timelimit                  = 0;
-   unsigned tmp_callidsize                 = CALL_ID_SZ;
-   OSPTTRANS  *trans           = OSPC_OSNULL;
-#define LOCAL_NUM_CALL_IDS 1
-   static  OSPTCALLID *callids[LOCAL_NUM_CALL_IDS];
-   unsigned tmp_numdestinations = LOCAL_NUM_CALL_IDS;
-   unsigned char *val[LOCAL_NUM_CALL_IDS] = {  (unsigned char *)"1"};
-   unsigned    lens[LOCAL_NUM_CALL_IDS] =  {   1  };
-   unsigned int authorised=0;
-   int *test_calls = (int *)arg;
-   int num_test_calls = *test_calls;
-
-
-
-   time(&start_time);
-   
-   thr_id = OSPM_THR_SELF();
-   errorcode = testOSPPProviderNew(&provHandle);
-   printf("Thread Id: %d, ProviderNew returned: %d, ProviderId: %d\n",thr_id,errorcode,provHandle);
-
-   for (i=0;i<num_test_calls && errorcode == OSPC_ERR_NO_ERROR;i++)
-   {
-       /*
-        * Create transactions
-        */
-        errorcode = OSPPTransactionNew(
-                                      provHandle,
-                                      &transId[i]);
-        printf("Thread Id: %d, TransactionNew returned: %d, TransId: %d\n",thr_id,errorcode,transId[i]);
-   }
-
-   i=0;
-   while (i < num_test_calls && errorcode == OSPC_ERR_NO_ERROR)
-   {
-       /*
-        * Request Auth
-        */
-       callids[0] = OSPPCallIdNew(lens[0], (const unsigned char *)val[0]);
-       tmp_numdestinations = LOCAL_NUM_CALL_IDS;
-       errorcode = OSPPTransactionRequestAuthorisation(
-                                                  transId[i],
-                                                  SourceIP,
-                                                  SourceDevIP,
-                                                  callingnumber,
-                                                  (OSPE_NUMBERING_FORMAT)CallingNumFormat,
-                                                  callednumber,
-                                                  (OSPE_NUMBERING_FORMAT)CalledNumFormat,
-                                                  "919404556#4444",
-                                                  LOCAL_NUM_CALL_IDS,
-                                                  callids,
-                                                  (const char **)NULL,
-                                                  &tmp_numdestinations,
-                                                  &detaillogsize,
-                                                  (void *)NULL);
-       printf("Thread Id: %d, OSPPTransactionRequestAuthorisation returned: %d\n",thr_id,errorcode);
-
-       if (errorcode == OSPC_ERR_NO_ERROR)
-       {
-           /*
-            * Get the destination
-            */
-           t_token  = (void *)tmp_token;
-           tmp_tokensize = TOKEN_SZ;
-           OSPM_MEMSET(tmp_ret_cid, 0, CALL_ID_SZ);
-           tmp_callid = (void *)tmp_ret_cid;  
-
-           errorcode = OSPPTransactionGetFirstDestination(
-                                      transId[i],
-                                      /* TIMESTAMP_SZ,*/
-                                      0,
-                                      tmp_validafter,
-                                      tmp_validuntil,
-                                      &tmp_timelimit,
-                                      &tmp_callidsize,
-                                      tmp_callid,
-                                      strlen(callednumber) + 1,
-                                      tmp_callednumber,
-                                      DESTINATION_SZ,
-                                      tmp_dest,
-                                      DESTINATION_SZ,
-                                      tmp_destdev,
-                                      &tmp_tokensize,
-                                      t_token);
-           OSPM_SPRINTF(msg, "DEST = %s", tmp_dest);
-           printf("Thread Id: %d, OSPPTransactionGetFirstDestination returned: %d, dest : %s\n",thr_id,errorcode,msg);
-
-           if (errorcode == OSPC_ERR_NO_ERROR)
-           {
-               /*
-                * Validate Auth
-                */
-               trans = OSPPTransactionGetContext(transId[i], &errorcode);
-               OSPPTransactionDeleteResponse(trans);
-               errorcode = OSPPTransactionValidateAuthorisation(
-                                                           transId[i],
-                                                           SourceIP,
-                                                           tmp_dest,
-                                                           SourceDevIP,
-                                                           tmp_destdev,
-                                                           callingnumber,
-                                                           (OSPE_NUMBERING_FORMAT)CallingNumFormat,
-                                                           tmp_callednumber,
-                                                           (OSPE_NUMBERING_FORMAT)CalledNumFormat,
-                                                           tmp_callidsize,
-                                                           tmp_ret_cid,
-                                                           tmp_tokensize,
-                                                           tmp_token,
-                                                           &authorised,
-                                                           &tmp_timelimit,
-                                                           &detaillogsize,
-                                                           (void *)NULL,
-                                                           tokenalgo);
-               printf("Thread Id: %d, OSPPTransactionValidateAuthorisation returned: %d, authorised: %d\n",thr_id,errorcode,authorised);
-               OSPPCallIdDelete(&(callids[0])); 
-
-               if (errorcode == OSPC_ERR_NO_ERROR)
-               {
-                   /*
-                    * Report Usage
-                    */
-                   errorcode = OSPPTransactionReportUsage(
-                                                transId[i],
-                                                30,
-                                                time(NULL)-10,
-                                                1,
-                                                2,
-                                                100,
-                                                10,
-                                                &detaillogsize,
-                                                (void *)NULL);
-                   printf("Thread Id: %d, OSPPTransactionReportUsage returned: %d\n",thr_id,errorcode);
-               }
-                      
-           }
-
-       }
-       i++; 
-       if (i == num_test_calls)
-       {
-          printf("Thread Id: %d,Completed all tests. Will delete transactions Now !\n",thr_id);
-       }
-   }
-
-   for (i=0;i<num_test_calls && errorcode == OSPC_ERR_NO_ERROR;i++)
-   {
-       /*
-        * Delete Txn
-        */
-        errorcode = OSPPTransactionDelete(transId[i]);
-        printf("Thread Id: %d, OSPPTransactionDelete returned: %d\n",thr_id,errorcode);
-   }
-
-   errorcode = OSPPProviderDelete(
-        provHandle,
-        DEF_TIME_LIMIT);
-   printf("Thread Id: %d, OSPPProviderDelete returned: %d\n",thr_id,errorcode);
-
-   time(&end_time);
-   printf("Thread Id: %d,Elapsed Time: %d seconds\n",thr_id, end_time - start_time);
-   OSPTTHREADRETURN_NULL(); 
-}
-
-
 
 int
 testTestCalls()
@@ -2518,7 +2340,6 @@ testMenu()
       printf("---------------------------------------------------------------------\n");
       printf("100) Run Multiple calls\n");
       printf("101) Run Multiple Capabilities Indications\n");
-      printf("102) Test Multiple Providers\n");
       printf("---------------------------------------------------------------------\n");
       printf("Enter function number or 'q' to quit => ");
     }
@@ -2707,6 +2528,7 @@ GetConfiguration()
                                                                                     if (strncmp(inbuf,"DEF_HTTP_MAXCONN=",17) == 0)
                                                                                     {
                                                                                         DEF_HTTP_MAXCONN = atoi(&inbuf[17]);
+                                                                                        WORK_THREAD_NUM = DEF_HTTP_MAXCONN;
                                                                                     }
                                                                                     else
                                                                                     {
@@ -3020,7 +2842,8 @@ off_t Fretval;
 * Returns       : 0 on Success 
 *
 ********************************************************/
-int testNonBlockingPerformanceTest()
+OSPTTHREADRETURN
+testNonBlockingPerformanceTest(void *arg)
 {
     int      errorcode       = 0;
     unsigned detaillogsize   = 0;
@@ -3038,30 +2861,41 @@ int testNonBlockingPerformanceTest()
     unsigned        *CallIdsLen = NULL;
     int             i = 0;
 
+    OSPTPROVHANDLE provHandle;
+    OSPTTHREADID thr_id;
+    int *test_calls = (int *)arg;
+    int num_test_calls = *test_calls;
+    char **Tokens;
+    NBMONITOR *nbMonitor    = NULL;
+
+   char     Localcallednumber[CALLED_NUM_SZ];
+   char     Localdest[DESTINATION_SZ]       = { "" };
+   char     Localdestdev[DESTINATION_SZ]    = { "" };
+   char     Localvalidafter[TIMESTAMP_SZ],Localvaliduntil[TIMESTAMP_SZ];
+   unsigned Localtimelimit                  = 0;
+
     /*
      * Used for calculating performance
-    */
+     */
     time_t start_time, end_time;
+    time_t thr_start_time, thr_end_time;
 
-    fflush(stdin);
-    printf("Enter the number of Simultaneous Calls : ");
-    scanf("%d",&TEST_NUM);
-    
-    if ( (2 * TEST_NUM) > OSPC_MAX_TRANS)
-        printf("Warning !! The toolkit may not be able to process - %d Calls because the maximum transactions that can be created is - %d \n",TEST_NUM,OSPC_MAX_TRANS);
+   time(&thr_start_time);
+   thr_id = OSPM_THR_SELF();
+   printf("Thread Id: %d Started\n",thr_id);
 
-    if (TEST_NUM > MAX_QUEUE_SIZE)
-        printf("Warning !! The toolkit may not be able to process - %d Calls because the maximum queue size is - %d \n",TEST_NUM,MAX_QUEUE_SIZE);
+   NonBlockingQueueMonitorNew(&nbMonitor,WORK_THREAD_NUM,MAX_QUEUE_SIZE,(500*1000));
 
+   OSPM_STRCPY(Localcallednumber,callednumber);
 
-    Tokens = (char **) malloc (sizeof(char *) * TEST_NUM);
+    Tokens = (char **) malloc (sizeof(char *) * num_test_calls);
     if (Tokens == NULL)
     {
         printf("Malloc Failed !! Exiting ! \n");
         exit (0);
     }
 
-    for (i=0;i<TEST_NUM;i++)
+    for (i=0;i<num_test_calls;i++)
     {
         Tokens[i] = (char *) malloc (sizeof(char) * TOKEN_SIZE);
         if (Tokens[i] == NULL)
@@ -3074,16 +2908,16 @@ int testNonBlockingPerformanceTest()
     /*
      * Allocate Memory
      */
-     OErrorCodes = (int *)malloc((sizeof(int)*TEST_NUM));
-     TErrorCodes = (int *)malloc((sizeof(int)*TEST_NUM));
-     OTransactionHandles = (OSPTTRANHANDLE *)malloc((sizeof(OSPTTRANHANDLE)*TEST_NUM));
-     TTransactionHandles = (OSPTTRANHANDLE *)malloc((sizeof(OSPTTRANHANDLE)*TEST_NUM));
-     NumOfDestinations = (unsigned *)malloc((sizeof(unsigned)*TEST_NUM));
-     authorised = (unsigned *)malloc((sizeof(unsigned)*TEST_NUM));
-     TokenSizes = (unsigned *)malloc((sizeof(unsigned)*TEST_NUM));
-     CallIds = (OSPTCALLID **)malloc((sizeof(OSPTCALLID *) * TEST_NUM));
-     CallIdsNum = (unsigned *)malloc((sizeof(unsigned)*TEST_NUM));
-     CallIdsLen = (unsigned *)malloc((sizeof(unsigned)*TEST_NUM));
+     OErrorCodes = (int *)malloc((sizeof(int)*num_test_calls));
+     TErrorCodes = (int *)malloc((sizeof(int)*num_test_calls));
+     OTransactionHandles = (OSPTTRANHANDLE *)malloc((sizeof(OSPTTRANHANDLE)*num_test_calls));
+     TTransactionHandles = (OSPTTRANHANDLE *)malloc((sizeof(OSPTTRANHANDLE)*num_test_calls));
+     NumOfDestinations = (unsigned *)malloc((sizeof(unsigned)*num_test_calls));
+     authorised = (unsigned *)malloc((sizeof(unsigned)*num_test_calls));
+     TokenSizes = (unsigned *)malloc((sizeof(unsigned)*num_test_calls));
+     CallIds = (OSPTCALLID **)malloc((sizeof(OSPTCALLID *) * num_test_calls));
+     CallIdsNum = (unsigned *)malloc((sizeof(unsigned)*num_test_calls));
+     CallIdsLen = (unsigned *)malloc((sizeof(unsigned)*num_test_calls));
 
      if ((OErrorCodes == NULL) || (TErrorCodes == NULL) || (OTransactionHandles == NULL)
         || (TTransactionHandles == NULL) || (NumOfDestinations == NULL) || (TokenSizes == NULL)
@@ -3101,7 +2935,7 @@ int testNonBlockingPerformanceTest()
     /*
      * Init variables
     */
-    for(i = 0; i < TEST_NUM; i++)
+    for(i = 0; i < num_test_calls; i++)
     {
       /*
        * authorization codes
@@ -3134,21 +2968,23 @@ int testNonBlockingPerformanceTest()
 
     }
 
+   errorcode = testOSPPProviderNew(&provHandle);
+   printf("Thread Id: %d, ProviderNew returned: %d, ProviderId: %d\n",thr_id,errorcode,provHandle);
 
 
     /* 
      * Phase I Creating new transactions / 2 (O + T) transactions for every call
     */
     printf("\n\n");
-    printf("Phase I (Source and Destination): OSPPTransactionNew.\n");
+    printf("Thread Id: %d, Phase I (Source and Destination): OSPPTransactionNew.\n",thr_id);
     time(&start_time);
-    for(i = 0; i < TEST_NUM; i++)
+    for(i = 0; i < num_test_calls; i++)
     {
-        if( (errorcode=OSPPTransactionNew(OSPVProviderHandle, &OTransactionHandles[i])) != OSPC_ERR_NO_ERROR ||
-            (errorcode=OSPPTransactionNew(OSPVProviderHandle, &TTransactionHandles[i])) != OSPC_ERR_NO_ERROR )
+        if( (errorcode=OSPPTransactionNew(provHandle, &OTransactionHandles[i])) != OSPC_ERR_NO_ERROR ||
+            (errorcode=OSPPTransactionNew(provHandle, &TTransactionHandles[i])) != OSPC_ERR_NO_ERROR )
         {
           printf("OSPPTransactionNew failed, aborting the test.\n");
-          return errorcode;
+          exit(0);
         }
     }
     time(&end_time);
@@ -3160,9 +2996,9 @@ int testNonBlockingPerformanceTest()
      * Phase II Sending AuthorizationRequests
     */
     printf("\n\n");
-    printf("Phase II (Source): OSPPTransactionRequestAuthorisation.\n");
+    printf("Thread Id: %d,Phase II (Source): OSPPTransactionRequestAuthorisation.\n",thr_id);
     time(&start_time);
-    for(i = 0; i < TEST_NUM; i++)
+    for(i = 0; i < num_test_calls; i++)
     {
         errorcode = OSPPTransactionRequestAuthorisation_nb( nbMonitor,
                                                             0, /* DON'T BLOCK */
@@ -3185,7 +3021,7 @@ int testNonBlockingPerformanceTest()
         if(errorcode != OSPC_ERR_NO_ERROR) 
         {
           printf("OSPPTransactionRequestAuthorisation_nb failed, aborting the test.\n");
-          return errorcode;
+          exit (0);
         }
     }
 
@@ -3200,12 +3036,12 @@ int testNonBlockingPerformanceTest()
     printf("Time elapsed <%d>\n",end_time - start_time);
 
     printf("Checking ReturnCodes.\n");
-    for(i = 0; i < TEST_NUM; i++)
+    for(i = 0; i < num_test_calls; i++)
     {
       if( OErrorCodes[i] != OSPC_ERR_NO_ERROR ) 
       {
         printf("OSPPTransactionRequestAuthorisation failed transaction/code = <%d>/<%d>, aborting the test.\n", i,OErrorCodes[i]);
-        return OErrorCodes[i];
+        exit (0);
       }
     }
 
@@ -3216,33 +3052,33 @@ int testNonBlockingPerformanceTest()
      * Phase III (Source) Getting 1st destination
     */
     printf("\n\n");
-    printf("Phase III (Source): OSPPTransactionGetFirstDestination.\n");
+    printf("Thread Id: %d,Phase III (Source): OSPPTransactionGetFirstDestination.\n",thr_id);
     time(&start_time);
-    for(i = 0; i < TEST_NUM; i++)
+    for(i = 0; i < num_test_calls; i++)
     {
 
 
         errorcode = OSPPTransactionGetFirstDestination( OTransactionHandles[i],
                                                         /* TIMESTAMP_SZ,*/
                                                         0,
-                                                        validafter,
-                                                        validuntil,
-                                                        &timelimit,
+                                                        Localvalidafter,
+                                                        Localvaliduntil,
+                                                        &Localtimelimit,
                                                         &CallIdsLen[i],
                                                         CallIds[i],
-                                                        strlen(callednumber) + 1,
-                                                        callednumber,
+                                                        strlen(Localcallednumber) + 1,
+                                                        Localcallednumber,
                                                         DESTINATION_SZ,
-                                                        dest,
+                                                        Localdest,
                                                         DESTINATION_SZ,
-                                                        destdev,
+                                                        Localdestdev,
                                                         &TokenSizes[i],
                                                         Tokens[i]);
 
         if(errorcode != OSPC_ERR_NO_ERROR) 
         {
           printf("OSPPTransactionGetFirstDestination failed, aborting the test.\n");
-          return errorcode;
+          exit (0);
         }
     }
 
@@ -3256,28 +3092,28 @@ int testNonBlockingPerformanceTest()
      * Phase III (Destination) Validate destination
     */
     printf("\n\n");
-    printf("Phase III (Destination): OSPPTransactionValidateAuthorisation.\n");
+    printf("Thread Id: %d,Phase III (Destination): OSPPTransactionValidateAuthorisation.\n",thr_id);
     time(&start_time);
-    for(i = 0; i < TEST_NUM; i++)
+    for(i = 0; i < num_test_calls; i++)
     {
         errorcode = OSPPTransactionValidateAuthorisation_nb( nbMonitor,
                                                             0, /* DON'T BLOCK */
                                                             &TErrorCodes[i],
                                                             TTransactionHandles[i],
                                                             SourceIP,
-                                                            dest,
+                                                            Localdest,
                                                             NULL,
                                                             NULL,
                                                             callingnumber,
                                                             CallingNumFormat,
-                                                            callednumber,
+                                                            Localcallednumber,
                                                             CalledNumFormat,
                                                             CallIds[i]->ospmCallIdLen,
                                                             CallIds[i]->ospmCallIdVal,
                                                             TokenSizes[i],
                                                             Tokens[i],
                                                             &authorised[i],
-                                                            &timelimit,
+                                                            &Localtimelimit,
                                                             &detaillogsize,
                                                             (void *)NULL,
                                                             tokenalgo);
@@ -3285,7 +3121,7 @@ int testNonBlockingPerformanceTest()
         if(errorcode != OSPC_ERR_NO_ERROR)
         {
           printf("OSPPTransactionValidateAuthorisation_nb failed, aborting the test.\n");
-          return errorcode;
+          exit (0);
         }
     }
 
@@ -3300,12 +3136,12 @@ int testNonBlockingPerformanceTest()
     printf("Time elapsed <%d>\n",end_time - start_time);
 
     printf("Checking ReturnCodes.\n");
-    for(i = 0; i < TEST_NUM; i++)
+    for(i = 0; i < num_test_calls; i++)
     {
       if( TErrorCodes[i] != OSPC_ERR_NO_ERROR ) 
       {
         printf("OSPPTransactionValidateAuthorisation failed transaction/code = <%d>/<%d>, aborting the test.\n", i,TErrorCodes[i]);
-        return TErrorCodes[i];
+        exit(0);
       }
     }
 
@@ -3314,9 +3150,9 @@ int testNonBlockingPerformanceTest()
      * Phase IV Sending 2 (Source and Destination) UsageIndications for each call
     */
     printf("\n\n");
-    printf("Phase IV (Source and Destination): OSPPTransactionReportUsage.\n");
+    printf("Thread Id: %d,Phase IV (Source and Destination): OSPPTransactionReportUsage.\n",thr_id);
     time(&start_time);
-    for(i = 0; i < TEST_NUM; i++)
+    for(i = 0; i < num_test_calls; i++)
     {
         errorcode = OSPPTransactionReportUsage_nb(  nbMonitor,
                                                     0, /* DON'T BLOCK */
@@ -3333,7 +3169,7 @@ int testNonBlockingPerformanceTest()
         if(errorcode != OSPC_ERR_NO_ERROR) 
         {
           printf("OSPPTransactionReportUsage_nb failed, aborting the test.\n");
-          return errorcode;
+          exit(0);
         }
 
 
@@ -3352,7 +3188,7 @@ int testNonBlockingPerformanceTest()
         if(errorcode != OSPC_ERR_NO_ERROR) 
         {
           printf("OSPPTransactionReportUsage_nb failed, aborting the test.\n");
-          return errorcode;
+          exit(0);
         }
     }
 
@@ -3367,18 +3203,18 @@ int testNonBlockingPerformanceTest()
 
 
     printf("Checking ReturnCodes.\n");
-    for(i = 0; i < TEST_NUM; i++)
+    for(i = 0; i < num_test_calls; i++)
     {
       if( OErrorCodes[i] != OSPC_ERR_NO_ERROR ) 
       {
         printf("Source OSPPTransactionReportUsage failed transaction/code = <%d>/<%d>, aborting the test.\n", i,OErrorCodes[i]);
-        return OErrorCodes[i];
+        exit(0);
       }
 
       if( TErrorCodes[i] != OSPC_ERR_NO_ERROR ) 
       {
         printf("Destination OSPPTransactionReportUsage failed transaction/code = <%d>/<%d>, aborting the test.\n", i,TErrorCodes[i]);
-        return TErrorCodes[i];
+        exit(0);
       }
     }
 
@@ -3386,15 +3222,15 @@ int testNonBlockingPerformanceTest()
      * Phase V Deleting transactions
     */
     printf("\n\n");
-    printf("Phase V: OSPPTransactionDelete.\n");
+    printf("Thread Id: %d,Phase V: OSPPTransactionDelete.\n",thr_id);
     time(&start_time);
-    for(i = 0; i < TEST_NUM; i++)
+    for(i = 0; i < num_test_calls; i++)
     {
         if( (errorcode=OSPPTransactionDelete(OTransactionHandles[i])) != OSPC_ERR_NO_ERROR ||
             (errorcode=OSPPTransactionDelete(TTransactionHandles[i])) != OSPC_ERR_NO_ERROR )
         {
           printf("OSPPTransactionDelete failed, aborting the test.\n");
-          return errorcode;
+          exit(0);
         }
         OSPPCallIdDelete(&CallIds[i]);
     }
@@ -3428,7 +3264,7 @@ int testNonBlockingPerformanceTest()
     if (CallIdsLen != NULL)
        free(CallIdsLen);
 
-    for (i=0;i<TEST_NUM;i++)
+    for (i=0;i<num_test_calls;i++)
     {
        if (Tokens[i] != NULL)
        {
@@ -3442,7 +3278,22 @@ int testNonBlockingPerformanceTest()
     if (authorised != NULL)
        free(authorised);
 
-    return errorcode;
+   errorcode = OSPPProviderDelete(
+        provHandle,
+        DEF_TIME_LIMIT);
+
+   if (errorcode != 0)
+   {
+      printf("OSPPProviderDelete failed, aborting the test.\n");
+      exit(0);
+   }
+   time(&thr_end_time);
+   printf("Thread Id: %d,Elapsed Time: %d seconds\n",thr_id, thr_end_time - thr_start_time);
+
+   NonBlockingQueueMonitorDelete(&nbMonitor);
+
+   OSPTTHREADRETURN_NULL();
+
 }
 
 
