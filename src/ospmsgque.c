@@ -133,6 +133,7 @@ OSPPMsgQueueAddTransaction(
     OSPTMSGINFO  *ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTBOOL IsNonBlocking = OSPC_FALSE;
 
     if (ospvMsgQueue == OSPC_OSNULL)
     {
@@ -153,6 +154,13 @@ OSPPMsgQueueAddTransaction(
 
     if (errorcode == OSPC_ERR_NO_ERROR)
     {
+        /*
+         * Save the value becuase, if non blocking, the
+         * structure maybe released before we get to
+         * the wait function
+         */
+        IsNonBlocking = ospvMsgInfo->IsNonBlocking;
+
         /*
          * add the item to the message queue list
          */
@@ -179,7 +187,10 @@ OSPPMsgQueueAddTransaction(
          * wait for transaction response from the
          * the communication manager
          */
-        errorcode = OSPPMsgInfoWaitForMsg(ospvMsgInfo);
+        if (OSPC_FALSE == IsNonBlocking)
+        {
+           errorcode = OSPPMsgInfoWaitForMsg(ospvMsgInfo);
+        }
     }
     return errorcode;
 }

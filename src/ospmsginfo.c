@@ -160,20 +160,17 @@ OSPPMsgInfoWaitForMsg(
 
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoWaitForMsg()\n"));
 
-    if (ospvMsgInfo->IsNonBlocking == OSPC_FALSE)
+    OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errorcode);
+    if (errorcode == OSPC_ERR_NO_ERROR)
     {
-        OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errorcode);
-        if (errorcode == OSPC_ERR_NO_ERROR)
-        {
-            while (ospvMsgInfo->ResponseMsg == OSPC_OSNULL &&
+       while (ospvMsgInfo->ResponseMsg == OSPC_OSNULL &&
                 ospvMsgInfo->ErrorCode == OSPC_ERR_NO_ERROR)
-            {
-                OSPM_CONDVAR_WAIT(ospvMsgInfo->CondVar, ospvMsgInfo->Mutex,
+       {
+           OSPM_CONDVAR_WAIT(ospvMsgInfo->CondVar, ospvMsgInfo->Mutex,
                     errorcode);
-            }
+       }
 
             OSPM_MUTEX_UNLOCK(ospvMsgInfo->Mutex, errorcode);
-        }
     }
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoWaitForMsg()\n"));
     return errorcode;
