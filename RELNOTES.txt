@@ -179,6 +179,7 @@ Version 2.9.0
 
 Version 2.9.1
 
+ * All the macro implementation used in Production mode have been removed.
  * Removed all compilation warnings that used to pop up previously. The code now is warnings free for all the compilation modes if the openssl version being used is 0.97 or up. There will be a warning in the fn: d2i_RSAPublicKey that will appear if the openssl version is 0.96c or below.
  * Fixed a bug for 2.9.0 compilation on Windows. Turns out that 'strcasecmp' function does not work on windows. The code was modified to use 'stricmp' for case comparison on windows.
  * Modified the test_app for the following:
