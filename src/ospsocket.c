@@ -71,7 +71,7 @@ OSPPSockConnect(
     OSPTSSLSESSION      **ospvSSLSession)
 {
     int  errorcode = OSPC_ERR_NO_ERROR;
-    unsigned char ErrStr[200];
+    char ErrStr[200];
 
     /*
      * set the connection socket. 
@@ -760,7 +760,7 @@ OSPPSockRead(
     unsigned        length      = 0;
     struct timeval  timeout;
     unsigned        socktimeout = 0;
-    unsigned char   ErrStr[200];
+    char   ErrStr[200];
 
     OSPM_DBGENTER(("ENTER: OSPPSockRead()\n"));
 

@@ -713,7 +713,7 @@ OSPPHttpVerifyResponse(
     OSPTHTTP *ospvHttp)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
-    unsigned char ErrStr[200];
+    char ErrStr[200];
 
     /* Before verifying the response, change all the characters
      * to lowercase. 

@@ -810,7 +810,7 @@ OSPPCommParseSvcPt(
     unsigned short secport    = OSPC_COMM_DEFAULT_SECURE_PORT,
                    nonsecport = OSPC_COMM_DEFAULT_NONSECURE_PORT;
     unsigned int   length     = 0;
-    unsigned char  ErrStr[100];
+    char  ErrStr[100];
 
     if (ospvURL == (char *)OSPC_OSNULL)
     {
