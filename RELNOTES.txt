@@ -214,7 +214,7 @@ Version 2.9.1
 
 Version 2.9.2
 
- * Modified the test_app to run any number of test calls. Prior to this release the Option#100 in the test_app CLI ran 1000 calls. The interface now asks the user to input the number of calls that need to be run. This number can be anything as long as the maximum simltaneous transactions are not exceeded and the toolkit queue size limit is not exceeded.
+ * Modified the test_app to run any number of test calls. Prior to this release the Option#100 in the test_app CLI ran 1000 calls. The interface now asks the user to input the number of calls that need to be run. This number can be anything as long as the maximum simltaneous transactions are not exceeded and the toolkit queue size limit is not exceeded. By default the maximum number of calls that can be run is 20,000.
  * Changed the code to eliminate all the warnings that popped up while compiling the toolkit with the SUN 'cc' compiler.
- * Changed test_app to use 'scanf' instead of 'gets'.
+ * Changed test_app to not use 'gets'.
  * Added a section in the 'Toolkit Porting Guide' document which details the current memory allocation scheme implemented in the toolkit, and outlines how some other schemes can be used to improve the toolkit efficiency.
