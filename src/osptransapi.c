@@ -3166,7 +3166,7 @@ OSPPTransactionValidateAuthorisation(
     OSPTDEST            *dest       = OSPC_OSNULL;
     int                 BAllowDupTransId = OSPC_TRUE;
     token_algo_t        tokenAlgo = (token_algo_t)ospvTokenAlgo;
-    OSPTBOOL            IsTokenSigned;
+    OSPTBOOL            IsTokenSigned=OSPC_FALSE;
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
