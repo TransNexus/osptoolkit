@@ -21,7 +21,7 @@
 
 
 
-#include "osposincl.h"
+#include "osp/osposincl.h"
 #include "openssl/ssl.h"
 
 #ifdef __cplusplus

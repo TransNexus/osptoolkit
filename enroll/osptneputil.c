@@ -21,10 +21,10 @@
 
 
 
-#include "osp.h"
-#include "ospasn1.h"
-#include "osperrno.h"
-#include "osplist.h"
+#include "osp/osp.h"
+#include "osp/ospasn1.h"
+#include "osp/osperrno.h"
+#include "osp/osplist.h"
 
 #include "osptneputil.h"
 #include "osptnep.h"

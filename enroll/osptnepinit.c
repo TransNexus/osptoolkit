@@ -21,14 +21,14 @@
 
 
 
-#include "ospcomm.h"
-#include "ospssl.h"
-#include "ospsecurity.h"
-#include "ospb64.h"
+#include "osp/ospcomm.h"
+#include "osp/ospssl.h"
+#include "osp/ospsecurity.h"
+#include "osp/ospb64.h"
 
 #include "osptnep.h"
 #include "osptnepinit.h"
-#include "ospcryptowrap.h"
+#include "osp/ospcryptowrap.h"
 
 /* 
  * Initialize the Enrollment Parameter object sent in. All of the

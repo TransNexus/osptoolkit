@@ -23,7 +23,7 @@
 
 
 
-#include "ospasn1.h"
+#include "osp/ospasn1.h"
 
 /*************************************************************************
  * Structure definitions:

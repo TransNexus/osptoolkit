@@ -21,13 +21,13 @@
 
 
 
-#include "ospmsginfo.h"
-#include "osp.h"
-#include "ospssl.h"
-#include "osputils.h"
-#include "ospcomm.h"
-#include "ospsecurity.h"
-#include "ospb64.h"
+#include "osp/ospmsginfo.h"
+#include "osp/osp.h"
+#include "osp/ospssl.h"
+#include "osp/osputils.h"
+#include "osp/ospcomm.h"
+#include "osp/ospsecurity.h"
+#include "osp/ospb64.h"
 
 #include "osptnep.h"
 #include "osptnepenroll.h"

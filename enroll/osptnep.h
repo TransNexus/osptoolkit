@@ -21,11 +21,11 @@
 
 
 
-#include "osposincl.h" 
-#include "ospcomm.h"
-#include "ospossys.h"
-#include "osputils.h"
-#include "ospsocket.h"
+#include "osp/osposincl.h" 
+#include "osp/ospcomm.h"
+#include "osp/ospossys.h"
+#include "osp/osputils.h"
+#include "osp/ospsocket.h"
 
 #include "openssl/ssl.h"
 #include "openssl/bio.h"

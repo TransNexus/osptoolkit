@@ -21,10 +21,10 @@
 
 
  
-#include "ospcomm.h"
-#include "ospmsginfo.h"
+#include "osp/ospcomm.h"
+#include "osp/ospmsginfo.h"
 #include "osptnep.h"
-#include "ospb64.h"
+#include "osp/ospb64.h"
 
 #define HW_ENABLE 0
 

@@ -21,7 +21,7 @@
 
 
 
-#include "osposincl.h"
+#include "osp/osposincl.h"
 #include "openssl/ssl.h"
 
 /* This is the "operation" parameter that is sent in each request: */

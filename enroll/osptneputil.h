@@ -21,7 +21,7 @@
 
 
 
-#include "osposincl.h"
+#include "osp/osposincl.h"
 
 #ifdef __cplusplus
 extern "C"
