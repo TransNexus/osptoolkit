@@ -1002,6 +1002,75 @@ OSPPCommSetAuditFlag(
     return;
 }
 
+
+/*
+ * Validate Input - at least one valid URL is required
+ * Signal to all current connections to exit, and then set
+ * the new set of URLs
+ */
+int
+OSPPCommUpdateURLs(
+    OSPTCOMM        *ospvCommManager,          /* In - Provider handle     */
+    unsigned        ospvNumberOfURLs,          /* In - New svc url cnt     */
+    const char      *ospvURLs[])               /* In - New svc url strings */
+{
+    int            errorcode = OSPC_ERR_NO_ERROR;
+    int            timeLimit = 0;
+    unsigned char  origFlags = ospvCommManager->Flags;
+
+    /*
+     * Check input parameters, we want at least one URL
+     */
+    if (ospvNumberOfURLs <= 0 ||
+        ospvURLs == OSPC_OSNULL)
+    {
+        errorcode = OSPC_ERR_PROV_INVALID_VALUE;
+        OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPCommUpdateURLs");
+        OSPM_DBGERRORLOG(errorcode, "At least one URLs is required");
+    }
+
+
+    /*
+     * Make sure the URLs are valid
+     */
+    if (OSPC_ERR_NO_ERROR == errorcode)
+    {
+        errorcode = OSPPCommValidateSvcPts(ospvNumberOfURLs,ospvURLs);
+    }
+
+
+
+    /*
+     * Signal to the manager to shut down, wait for the operation to complete,
+     * and then update the service points
+     */
+    if (OSPC_ERR_NO_ERROR == errorcode)
+    {
+        OSPPCommShutdownConnections(ospvCommManager, timeLimit);
+    
+        while (ospvCommManager->HttpConnCount > 0)
+        {
+            /* OSPM_DBGMISC(( "waiting another sec...\n" )); */
+            OSPM_SLEEP(1);
+        }
+
+        /*
+         * All HTTP connection have exited, restore the Flag
+         * It was set to SHUTDOWN state by a call to OSPPCommShutdownConnections
+         */
+        ospvCommManager->Flags = origFlags;
+
+
+        errorcode =OSPPCommSetServicePoints(ospvCommManager, 
+                                            ospvNumberOfURLs,
+                                            ospvURLs);
+    }
+
+    return errorcode;
+}
+
+
+
 int
 OSPPCommSetServicePoints(
     OSPTCOMM *ospvComm,
