@@ -162,9 +162,9 @@ Version 2.9.0
  *                                     Return Values are: SIP, H323_LRQ, H323_Setup, Undefined and Unknown.
  * 2. OSPPTransactionIsDestOSPEnabled - Reports whether the destination is OSP Enabled or Not.
  *                                      Return Values are: True, False, Undefined and Unknown.
- * Implemented a compile time flag - OSP_ALLOW_DUP_TXN, to enable reuse of transactions during token validation. This is to overcome the limitation we previously had where 2 token's with the same transaction id could not be validated. This compile time flag either enables or disables repeat validations. This is particularly helpful in the fail over cases when we can get a Second Call Setup message for the same call.
+ * Implemented a compile time flag - OSP_ALLOW_DUP_TXN, to enable reuse of transactions during token validation.The purpose of this feature is to overcome the limitation where 2 token's with the same transaction id could not be validated. This compile time flag either enables or disables repeat validations. This is particularly helpful in the fail over cases when we can get a Second Call Setup message for the same call.
  * Renamed a macro - 'min', to tr_min, to avoid a conflict with the Open Source H323 library.
- * Implemented a new String comparison macro - OSPM_STRCASECMP, to ignore the case of the strings being compared. When examining the value of the critical attributes in the OSP messages, we ignore the case.As per the protocol, thevalues should all be lowercase, however for backward compatibility, we are doing it this way.  
+ * Implemented a new String comparison macro - OSPM_STRCASECMP, to ignore the case of the strings being compared. When examining the value of the critical attributes in the OSP messages, we ignore the case.As per the protocol, the values should all be lowercase, however for backward compatibility, both upper and lower case are acceptable.  
  * Modified the token Validation procedure to check for an exact match between the Calling number passed in the API and the calling number in the token.Until now an empty calling number in the API and non empty calling number in the token did not generate a Validation Failure. However now, there has to be an exact match between the 2 numbers for the Validation process to pass. A similar logic holds for the Called Number as well.  
  * Added 4 new functions to the test app - GetCallingNumber, GetCalledNumber, SetCallingNumber, SetCalledNumber. The Set functions allow the user to change the calling and called numbers on the fly. The Test App starts with the configuration in the test.cfg file as default. However, there is now an option of changing these values at run time. The Get functions display the currently configured value.  
  * Removed a Mutex Lock Error Log Message for Windows. The mutex_unlock call in function - osppHttpSetupAndMonitor, file - osphttp.c,behaves slightly differently for different OS:
@@ -175,3 +175,37 @@ Version 2.9.0
       before destroying the mutex. And to prevent that log message, the above mentioned function 
       call is made for all the other OS but Windows.
  * In case the client is not able to connect with the Server, the toolkit prints out log messages explaining the probable cause.The port numbers printed are now converted from network to host byte order before they are printed. This is done because of some problems seen on Linux while reporting the Port Numbers as such.
+---------------------------------------------------------------------------
+
+Version 2.9.1
+
+ * Removed all compilation warnings that used to pop up previously. The code now is warnings free for all the compilation modes if the openssl version being used is 0.97 or up. There will be a warning in the fn: d2i_RSAPublicKey that will appear if the openssl version is 0.96c or below.
+ * Fixed a bug for 2.9.0 compilation on Windows. Turns out that 'strcasecmp' function does not work on windows. The code was modified to use 'stricmp' for case comparison on windows.
+ * Modified the test_app for the following:
+   1. test_app dumped core when the Private Key file - 'pkey.pem' was not present in the specified 
+      directory. Fixed this to generate an error instead. 
+   2. Prior to this release, multiple calls to fn 24 - TransactionDelete, did not generate any error
+      in the test_app. So the following sequence - 1,23,24,24,24 or 1,24 did not generate any error 
+      on the test_app interface forcing the user to wrongly beleive that transactions can be deleted 
+      at will. This is now fixed, so either of the sequence mentioned above will now generate an 
+      appropriate error message.  
+   3. Calling fn 31 - ValidateTransaction, after calling fn 24 - DeleteTransaction dumped core. This
+      has been fixed to generate an appropriate error message since calling ValidateTransaction for a 
+      deleted transaction handle does not make sense. 
+   4. Calling fn 32 - ReportUsageIndication, after calling fn 24 - DeleteTransaction did not generate
+      any error. So the following sequence - 1,23,29,27,32,24,32 did not generate any error on the
+      test_app interface forcing the user to wrongly beleive that usage can be reported even after 
+      deleting the transaction.This is now fixed to generate an appropriate error message.
+   5. Modified the test_app to read the Network Identifier from the CLI instead of it being
+      hardcoded in the test_app as before. The ResetNetworkId function has been removed and the
+      SetNetworkId can be called twice to try and attempt a change in the Network Identifier. 
+ * There was a bug in the toolkit that allowed the user to Delete Transactions without Reporting Usage even if there has been a successful call to 'GetFirstDestination'. So, the following sequence of fn calls was allowed: 1,23,29, 27(Succeeds),28(Fails because only one destination was reported), 24. This is incorrect as the device should report usage if the GetFirstDestination call has succeeded.This release fixes that bug and requires the device to report usage if a call to GetFirstDestination has succeeded.
+ * Fixed the compilation bug that did not let the 2.9.0 version to be run in production mode.
+ * Defined OSP_SDK in 'enroll.dsp'.Without this flag defined, some the debug functionality was not getting included for the enroll utility(on windows platform), which meant missing log messages in the debug mode.
+ * Fixed an ambiguos Log message for Windows. When the 'gethostbyname' function call failed on Windows, the variable - errno was not getting updated, because of which the log message indicated that there was no error.
+ * Introduced a state in the transaction state machine to prevent Deletion of a Transaction while Authorization has been requested and response not received back yet. In addition to Deletion, this state facilitates the application to error out if it calls ReportUsage,GetFirstDestination or GetNextDestination API's while the Authorization Request is in progress.The same concept works for ReportUsage also. 
+ * Fixed a memory leak that occured when test_app ran 1000 calls and some of the responses started timing out. The OSPM_INET_NTOA macro is removed (for both Windows and Unix implementations) and defined as a function to fix the bug.
+ * Added a library - 'dl' in the makefile for Enroll and Test_app for Linux compilation in the Release Mode.It is required for some openssl functions.  
+ * Fixed a bug which was introduced in the 2.8.2 release of the toolkit. The new bug caused the OSPPProviderDelete call made after attempting multiple calls to hang and never return to the application. The bug is fixed in this release. 
+ * Added all pthread specific configuration (that was required on Windows) to the test.dsp, enroll.dsp and osp.dsp files. Now there is no need for manual configuration of pthreads on Windows.
+ * Changed toolkit to report Translated Number (As returned in the Authorization Response) in the Usage Indication rather than the originally requested number.If the server returns no Called number in the Authorization Response or returns an empty called number in the Authorization Response, the toolkit sends the original called number (As sent in the Authorization Request) in the Usage Indication.
