@@ -208,7 +208,7 @@ typedef enum
 
 typedef struct
 {
-    unsigned amount;
+    float amount;
     unsigned increment;
     unsigned char unit[OSPC_UNITSIZE];
     unsigned char currency[OSPC_CURRENCYSIZE]; 

@@ -725,7 +725,7 @@ unsigned OSPPAuthReqAddPricingInfo(
 
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        ospvErrCode = OSPPMsgNumToElement(PricingInfo.amount,
+        ospvErrCode = OSPPMsgFloatToElement(PricingInfo.amount,
                 (const unsigned char *)OSPPMsgGetElemName(ospeElemAmount), &elem);
 
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
