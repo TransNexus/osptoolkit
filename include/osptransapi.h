@@ -126,6 +126,15 @@ extern "C"
         OSPE_DEST_PROT      *ospvLookAheadDestProt, /* Out */
         OSPE_DEST_OSP_ENABLED       *ospvLookAheadDestOSPStatus); /* Out */
 
+    int
+    OSPPTransactionModifyDeviceIdentifiers(
+        OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */
+        const char      *ospvSource,        /* In - optional */
+        const char      *ospvSourceDevice,  /* In - optional */
+        const char      *ospvDestination,   /* In - optional */
+        const char      *ospvDestinationDevice);  /* In - optional */
+
+
 #ifdef __cplusplus
 }
 #endif
