@@ -357,295 +357,295 @@ SOURCE=.\ospxmlutil.c
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\include\osp.h
+SOURCE=..\include\osp\osp.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospaltinfo.h
+SOURCE=..\include\osp\ospaltinfo.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospasn1.h
+SOURCE=..\include\osp\ospasn1.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospasn1ids.h
+SOURCE=..\include\osp\ospasn1ids.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospaudit.h
+SOURCE=..\include\osp\ospaudit.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospauthcnf.h
+SOURCE=..\include\osp\ospauthcnf.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospauthind.h
+SOURCE=..\include\osp\ospauthind.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospauthreq.h
+SOURCE=..\include\osp\ospauthreq.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospauthrsp.h
+SOURCE=..\include\osp\ospauthrsp.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospb64.h
+SOURCE=..\include\osp\ospb64.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospbfr.h
+SOURCE=..\include\osp\ospbfr.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospcapcnf.h
+SOURCE=..\include\osp\ospcapcnf.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospcapind.h
+SOURCE=..\include\osp\ospcapind.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospcallid.h
+SOURCE=..\include\osp\ospcallid.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospciscoext.h
+SOURCE=..\include\osp\ospciscoext.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospcode.h
+SOURCE=..\include\osp\ospcode.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospcomm.h
+SOURCE=..\include\osp\ospcomm.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospconfig.h
+SOURCE=..\include\osp\ospconfig.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospcrypto.h
+SOURCE=..\include\osp\ospcrypto.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospcryptowrap.h
+SOURCE=..\include\osp\ospcryptowrap.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospcustomdebug.h
+SOURCE=..\include\osp\ospcustomdebug.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospdatatypes.h
+SOURCE=..\include\osp\ospdatatypes.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospdebug.h
+SOURCE=..\include\osp\ospdebug.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospdest.h
+SOURCE=..\include\osp\ospdest.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osperrno.h
+SOURCE=..\include\osp\osperrno.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospfail.h
+SOURCE=..\include\osp\ospfail.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osphttp.h
+SOURCE=..\include\osp\osphttp.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospinit.h
+SOURCE=..\include\osp\ospinit.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospkeys.h
+SOURCE=..\include\osp\ospkeys.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osplist.h
+SOURCE=..\include\osp\osplist.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospmime.h
+SOURCE=..\include\osp\ospmime.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospmsg.h
+SOURCE=..\include\osp\ospmsg.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospmsgattr.h
+SOURCE=..\include\osp\ospmsgattr.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospmsgdesc.h
+SOURCE=..\include\osp\ospmsgdesc.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospmsgelem.h
+SOURCE=..\include\osp\ospmsgelem.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospmsginfo.h
+SOURCE=..\include\osp\ospmsginfo.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospmsgpart.h
+SOURCE=..\include\osp\ospmsgpart.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospmsgque.h
+SOURCE=..\include\osp\ospmsgque.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osposincl.h
+SOURCE=..\include\osp\osposincl.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospossys.h
+SOURCE=..\include\osp\ospossys.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospostime.h
+SOURCE=..\include\osp\ospostime.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osppkcs1.h
+SOURCE=..\include\osp\osppkcs1.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osppkcs7.h
+SOURCE=..\include\osp\osppkcs7.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osppkcs8.h
+SOURCE=..\include\osp\osppkcs8.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospprovider.h
+SOURCE=..\include\osp\ospprovider.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospproviderapi.h
+SOURCE=..\include\osp\ospproviderapi.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospreauthreq.h
+SOURCE=..\include\osp\ospreauthreq.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospreauthrsp.h
+SOURCE=..\include\osp\ospreauthrsp.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospsecurity.h
+SOURCE=..\include\osp\ospsecurity.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospsocket.h
+SOURCE=..\include\osp\ospsocket.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospssl.h
+SOURCE=..\include\osp\ospssl.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospsslsess.h
+SOURCE=..\include\osp\ospsslsess.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospstatistics.h
+SOURCE=..\include\osp\ospstatistics.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospstatus.h
+SOURCE=..\include\osp\ospstatus.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osptnaudit.h
+SOURCE=..\include\osp\osptnaudit.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osptnlog.h
+SOURCE=..\include\osp\osptnlog.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osptnprobe.h
+SOURCE=..\include\osp\osptnprobe.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osptoken.h
+SOURCE=..\include\osp\osptoken.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osptokeninfo.h
+SOURCE=..\include\osp\osptokeninfo.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osptrans.h
+SOURCE=..\include\osp\osptrans.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osptransapi.h
+SOURCE=..\include\osp\osptransapi.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osptransids.h
+SOURCE=..\include\osp\osptransids.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospusage.h
+SOURCE=..\include\osp\ospusage.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospusagecnf.h
+SOURCE=..\include\osp\ospusagecnf.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospusageind.h
+SOURCE=..\include\osp\ospusageind.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\osputils.h
+SOURCE=..\include\osp\osputils.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospx500.h
+SOURCE=..\include\osp\ospx500.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospx509.h
+SOURCE=..\include\osp\ospx509.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospxml.h
+SOURCE=..\include\osp\ospxml.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospxmlattr.h
+SOURCE=..\include\osp\ospxmlattr.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospxmldoc.h
+SOURCE=..\include\osp\ospxmldoc.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospxmlelem.h
+SOURCE=..\include\osp\ospxmlelem.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\include\ospxmltype.h
+SOURCE=..\include\osp\ospxmltype.h
 # End Source File
 # End Group
 # End Target

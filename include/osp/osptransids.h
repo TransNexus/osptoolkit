@@ -49,7 +49,7 @@ typedef struct _OSPTTRANSID                  /* info about a transaction ID */
     struct _OSPTTRANSID    *ospmTransactionIdNewerPtr;   /* more recent in list */
 }OSPTTRANSID;
 
-#include "ospprovider.h"
+#include "osp/ospprovider.h"
 
 #ifdef __cplusplus
 extern "C" 
