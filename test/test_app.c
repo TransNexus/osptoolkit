@@ -1356,12 +1356,12 @@ testOSPPTransactionInitializeAtDevice(int IsSource)
     unsigned        detaillogsize   = 0,
                     authorised      = OSPC_TRAN_NOT_AUTHORISED,
                     timelimit       = 0;
-    unsigned char   token2[TOKEN_SZ],
-
-                    callid = (void *)c_id,
-                    token  = (void *)c_token;
+    unsigned char   token2[TOKEN_SZ];
     OSPT_PRICING_INFO PricingInfo;
     OSPT_PRICING_INFO    *ospvPricingInfo[MAX_PRICING_INFO_ALLOWED];
+
+                    callid = (void *)c_id;
+                    token  = (void *)c_token;
 
     PricingInfo.amount = 10;
     PricingInfo.increment = 2;
