@@ -1923,7 +1923,7 @@ int OSPPCreateEnrollmentRequestBody(
                      ospvEnrollParamsIn->Function,
                      OSPM_STRLEN( (const char *)ospvEnrollParamsIn->Function ),
                      OSPC_FALSE );
-        OSPM_PRINTF( "output buffer after operation: %s\n", *ospvRequestBfrOut ); 
+        OSPM_PRINTTOERR(( stderr,"\noutput buffer after operation: %s\n", *ospvRequestBfrOut));
         if ( retVal != OSPC_ERR_NO_ERROR )
         {    
             retVal = OSPC_ERR_ENROLL_APPENDING_NAME_VALUE_PAIR;
@@ -1943,7 +1943,7 @@ int OSPPCreateEnrollmentRequestBody(
                      ospvEnrollParamsIn->Nonce,
                      ospvEnrollParamsIn->NonceLen, 
                      OSPC_TRUE );
-        OSPM_PRINTF( "output buffer after nonce: %s\n", *ospvRequestBfrOut ); 
+        OSPM_PRINTTOERR((stderr,"output buffer after nonce: %s\n", *ospvRequestBfrOut ));
 
         if ( retVal != OSPC_ERR_NO_ERROR )
         {    
