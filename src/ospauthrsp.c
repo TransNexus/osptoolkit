@@ -38,7 +38,6 @@
 #include "ospstatus.h"
 #include "osputils.h"
 
-#ifdef OSPC_DEBUG
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -307,7 +306,6 @@ OSPPAuthRspHasComponentId(
   return (ospvAuthRsp->ospmAuthRspComponentId != OSPC_OSNULL);
 }
 
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -732,7 +730,7 @@ OSPPAuthRspMessageIdFromElement(
         if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrMessageId)
         {
             /* we found the message attribute. Get the value */
-            *ospvMessageId = (unsigned char *)OSPPXMLAttrGetValue(attr);
+            (unsigned char *)*ospvMessageId = (unsigned char *)OSPPXMLAttrGetValue(attr);
             break;
 
         }
@@ -759,7 +757,7 @@ OSPPAuthRspComponentIdFromElement(
         if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrComponentId)
         {
             /* we found the component attribute. Get the value */
-            *ospvComponentId = (unsigned char *)OSPPXMLAttrGetValue(attr);
+            (unsigned char *)*ospvComponentId = (unsigned char *)OSPPXMLAttrGetValue(attr);
             break;
         }
     }
