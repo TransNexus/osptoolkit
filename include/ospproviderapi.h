@@ -48,11 +48,11 @@ extern "C"
     int OSPPProviderGetNumberOfServicePoints(OSPTPROVHANDLE, unsigned *);
     int OSPPProviderGetServicePoints(OSPTPROVHANDLE, unsigned, unsigned, char *[]);
     int OSPPProviderGetSSLLifetime(OSPTPROVHANDLE, unsigned *);
-    int OSPPProviderNew(unsigned, const char *[], const char *, const OSPTPRIVATEKEY *, 
-            const void *, unsigned, const void *[], unsigned, unsigned, unsigned, 
+    int OSPPProviderNew(unsigned, const char *[], const char *, const OSPTPRIVATEKEY *,
+            const OSPTCERT *, unsigned, const OSPTCERT *[], unsigned, unsigned, unsigned, 
             unsigned, unsigned, unsigned, unsigned, const char *, const char *, 
             OSPTPROVHANDLE *);
-    int OSPPProviderSetAuthorityCertificates(OSPTPROVHANDLE, unsigned, const void *[]);
+    int OSPPProviderSetAuthorityCertificates(OSPTPROVHANDLE, unsigned, const OSPTCERT *[]);
     int OSPPProviderSetHTTPMaxConnections(OSPTPROVHANDLE, unsigned);
     int OSPPProviderSetHTTPPersistence(OSPTPROVHANDLE, unsigned);
     int OSPPProviderSetHTTPRetryDelay(OSPTPROVHANDLE, unsigned);
