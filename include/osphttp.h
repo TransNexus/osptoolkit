@@ -74,7 +74,7 @@ extern "C"
     int      OSPPHttpNew(OSPTCOMM *, OSPTHTTP **);
     void     OSPPHttpDelete(OSPTHTTP **ospvHttp);
     int      OSPPHttpRequestHandoff(OSPTCOMM *, OSPTMSGQUEUE *);
-    int      OSPPHttpVerifyResponse(char *, int *);
+    int      OSPPHttpVerifyResponse(char *, int *,OSPTHTTP *ospvHttp);
     void     OSPPHttpParseHeader(unsigned char *, unsigned char **, unsigned *, int , int *);
     OSPTSEC *OSPPHttpGetSecurity(OSPTHTTP *);
     int osppHttpGetIdleHttpConn(OSPTHTTP **,OSPTHTTP **,unsigned,int,int);
