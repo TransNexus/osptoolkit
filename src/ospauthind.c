@@ -510,6 +510,10 @@ OSPTAUTHIND *                              /* returns pointer or NULL */
         OSPPListNew (&(ospvAuthInd->ospmAuthIndSourceAlternate));
         OSPPListNew(&(ospvAuthInd->ospmAuthIndDestinationAlternate));
         OSPPListNew(&(ospvAuthInd->ospmAuthIndDeviceInfo));
+        ospvAuthInd->ospmAuthIndHasSrcAltBeenModified = OSPC_FALSE;
+        ospvAuthInd->ospmAuthIndHasDeviceInfoBeenModified = OSPC_FALSE;
+        ospvAuthInd->ospmAuthIndHasDestBeenModified = OSPC_FALSE;
+        ospvAuthInd->ospmAuthIndHasDestDevBeenModified = OSPC_FALSE;
 
     }
     return(ospvAuthInd);

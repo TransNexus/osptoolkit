@@ -330,19 +330,42 @@ OSPPTransactionBuildUsage(
             }
 
             /* Get Source Alternates (copying a pointer) */    
-            if ((errorcode == OSPC_ERR_NO_ERROR) && 
-                OSPPAuthReqHasSourceAlt(ospvTrans->AuthReq))
+            /* If the dest has a list of SrcAlt, use that list 
+             * because that is the updated list.
+             * else, use the one in the AuthReq
+             */
+            
+            if (errorcode == OSPC_ERR_NO_ERROR)  
             {
-                OSPPUsageIndCopySourceAlt(*ospvUsage, 
-                    &((*ospvTrans->AuthReq).ospmAuthReqSourceAlternate));
+                if (OSPPListFirst(&(ospvDest->ospmUpdatedSourceAddr)) != NULL)
+                {
+                    OSPPUsageIndCopySourceAlt(*ospvUsage, 
+                        &(ospvDest->ospmUpdatedSourceAddr));
+                }
+                else if (OSPPAuthReqHasSourceAlt(ospvTrans->AuthReq))
+                {
+                    OSPPUsageIndCopySourceAlt(*ospvUsage, 
+                        &((*ospvTrans->AuthReq).ospmAuthReqSourceAlternate));
+                }
             }
 
             /* Get Device Info (copying a pointer) */    
-            if ((errorcode == OSPC_ERR_NO_ERROR) && 
-                (ospvTrans->AuthReq->ospmAuthReqDeviceInfo != NULL))
+            /* If the dest has a list of DevInfo, use that list 
+             * because that is the updated list.
+             * else, use the one in the AuthReq
+             */
+            if (errorcode == OSPC_ERR_NO_ERROR)
             {
-                OSPPUsageIndCopyDeviceInfo(*ospvUsage, 
-                    &((*ospvTrans->AuthReq).ospmAuthReqDeviceInfo));
+                if (OSPPListFirst(&(ospvDest->ospmUpdatedDeviceInfo)) != NULL)
+                {
+                    OSPPUsageIndCopySourceAlt(*ospvUsage, 
+                        &(ospvDest->ospmUpdatedDeviceInfo));
+                }
+                else if (ospvTrans->AuthReq->ospmAuthReqDeviceInfo != NULL)
+                {
+                    OSPPUsageIndCopyDeviceInfo(*ospvUsage, 
+                        &((*ospvTrans->AuthReq).ospmAuthReqDeviceInfo));
+                }
             }
 
 
@@ -380,6 +403,16 @@ OSPPTransactionBuildUsage(
             {
                 dest = OSPPDestGetAddr(ospvDest);
                 altinfo = OSPPAltInfoNew(strlen((const char *)dest),dest,ospeTransport);
+
+                OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
+                altinfo = OSPC_OSNULL;
+                dest = NULL;
+            }
+            if ((errorcode == OSPC_ERR_NO_ERROR) &&
+                OSPPDestDevHasAddr(ospvDest))
+            {
+                dest = OSPPDestDevGetAddr(ospvDest);
+                altinfo = OSPPAltInfoNew(strlen((const char *)dest),dest,ospeH323);
 
                 OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
                 altinfo = OSPC_OSNULL;
@@ -923,6 +956,36 @@ OSPTTRANS *
 
     return transctxt;
 }
+
+/*
+ * determine if modification of device identifiers is allowed or not 
+ * depending on transaction state.
+ *
+ * returns void.
+ */
+void
+OSPPTransactionGetIsModifyDeviceIdAllowed(
+    OSPTTRANS   *ospvTrans,           /* In - Pointer to transaction */
+    OSPTBOOL    *ospvModifyAllowed)   /* Out - Indicates permission to modify */
+{
+
+    switch(ospvTrans->State)
+    {
+        case    OSPC_GET_DEST_SUCCESS:
+        case    OSPC_VALIDATE_AUTH_SUCCESS:
+        case    OSPC_INITIALIZE_SUCCESS:
+        case    OSPC_REINITIALIZE_SUCCESS:
+        *ospvModifyAllowed = OSPC_TRUE;
+        break;
+
+        default:
+        /* For all other states, set it to FALSE */
+        *ospvModifyAllowed = OSPC_FALSE;
+    }
+
+    return;
+}
+
 
 /*
  * determine if delete is allowed or not depending on transaction state.

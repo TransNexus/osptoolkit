@@ -74,7 +74,11 @@ typedef struct
     OSPTLISTLINK      ospmDestLink;
     unsigned char     ospmDestNumber[OSPC_E164NUMSIZE];
     unsigned char     ospmDestAddr[OSPC_SIGNALADDRSIZE];
+    OSPTBOOL          ospmHasDestAddrBeenModified;
     unsigned char     ospmDestDevAddr[OSPC_SIGNALADDRSIZE];
+    OSPTBOOL          ospmHasDestDevAddrBeenModified;
+    OSPTLIST          ospmUpdatedSourceAddr;
+    OSPTLIST          ospmUpdatedDeviceInfo;
     OSPTTIME          ospmDestValidAfter;
     OSPTTIME          ospmDestValidUntil;
     OSPTLIST          ospmDestTokens;

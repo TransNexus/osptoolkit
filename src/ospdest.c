@@ -37,6 +37,7 @@
 #include "osptoken.h"
 #include "ospdest.h"
 #include "ospusage.h"
+#include "ospaltinfo.h"
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -669,7 +670,11 @@ OSPPDestNew()
         ospvDest->ospmDestProtocol = OSPE_DEST_PROT_UNDEFINED;
         ospvDest->ospmDestOSPVersion = OSPE_OSP_UNDEFINED;
         OSPPListNew(&(ospvDest->ospmDestTokens));
+        OSPPListNew(&(ospvDest->ospmUpdatedSourceAddr));
+        OSPPListNew(&(ospvDest->ospmUpdatedDeviceInfo));
         ospvDest->ospmDestHasLimit = OSPC_FALSE;
+        ospvDest->ospmHasDestAddrBeenModified = OSPC_FALSE;
+        ospvDest->ospmHasDestDevAddrBeenModified = OSPC_FALSE;
 
     }
 
@@ -685,6 +690,7 @@ OSPPDestDelete(
 {
     /*   OSPTTOKEN *token, *otoken = OSPC_OSNULL; */
     OSPTTOKEN *tmptoken = OSPC_OSNULL;
+    OSPTALTINFO *altinfo        = OSPC_OSNULL;
 
     if (*ospvDest != OSPC_OSNULL) 
     {
@@ -704,6 +710,30 @@ OSPPDestDelete(
             }
         }
         OSPPListDelete((OSPTLIST *)&((*ospvDest)->ospmDestTokens));
+
+        while (!OSPPListEmpty((OSPTLIST *)&((*ospvDest)->ospmUpdatedSourceAddr))) 
+        {
+            altinfo = (OSPTALTINFO *)OSPPListRemove(
+                (OSPTLIST *)&((*ospvDest)->ospmUpdatedSourceAddr));
+            if (altinfo != (OSPTALTINFO *)OSPC_OSNULL) 
+            {
+                OSPM_FREE(altinfo);
+                altinfo = OSPC_OSNULL;
+            }
+        }
+        OSPPListDelete((OSPTLIST *)&((*ospvDest)->ospmUpdatedSourceAddr));
+
+        while (!OSPPListEmpty((OSPTLIST *)&((*ospvDest)->ospmUpdatedDeviceInfo))) 
+        {
+            altinfo = (OSPTALTINFO *)OSPPListRemove(
+                (OSPTLIST *)&((*ospvDest)->ospmUpdatedDeviceInfo));
+            if (altinfo != (OSPTALTINFO *)OSPC_OSNULL) 
+            {
+                OSPM_FREE(altinfo);
+                altinfo = OSPC_OSNULL;
+            }
+        }
+        OSPPListDelete((OSPTLIST *)&((*ospvDest)->ospmUpdatedDeviceInfo));
         /* finally delete the object */
         OSPM_FREE(*ospvDest);
         *ospvDest = OSPC_OSNULL;
