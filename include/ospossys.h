@@ -528,7 +528,8 @@
 #define OSPM_TOLOWER(c)             tolower(c)
 
 #define OSPM_STRCPY(s1,s2)          strcpy((s1), (s2))
-#define OSPM_STRCMP(s1,s2)          strcasecmp((s1), (s2))
+#define OSPM_STRCMP(s1,s2)          strcmp((s1), (s2))
+#define OSPM_STRCASECMP(s1,s2)      strcasecmp((s1), (s2))
 #define OSPM_STRNCMP(s1,s2,n)       strncmp((s1), (s2), (n))
 #define OSPM_STRLEN(s)              ((s != OSPC_OSNULL)? strlen(s) : 0)
 #define OSPM_STRNCAT(s1,s2,n)       strncat((s1), (s2), (n))
