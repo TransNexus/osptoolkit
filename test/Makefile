@@ -33,7 +33,7 @@ OBJS	= nonblocking.o syncque.o test_app.o
 	$(CC) $(CFLAGS) $(SSLINC) $(<) -c
 
 all: 	$(OBJS)
-	$(CC) $(PROFILE) $(OBJS) -o ../bin/test_app \
+	$(PURE) $(CC) $(PROFILE) $(OBJS) -o ../bin/test_app \
 	$(ARLIBDIR)/libosp.a $(LFLAGS) -L$(ARLIBDIR) $(ARLIB) $(SSL)
 
 clean :
