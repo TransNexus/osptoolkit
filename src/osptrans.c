@@ -1090,6 +1090,19 @@ OSPPTransactionGetDestination(
                 /* put the failure reason into the destination failure code field 
                  * and move current destination pointer to next dest
                  */
+
+                /*
+                 * We had set the ospvFailureReason parameter to DEFAULT_GETNEXTDEST_NO_ERROR when
+                 * we had received the application had passed OSPC_FAIL_NONE in the ospvFailureReason.
+                 * This was done to identify the parent calling function as GetNext rather than Getfirst
+                 * Having done that, now we need to log the FailReason as the actual value thatwas passed.
+                 * So, change it back to NONE 
+                 */
+                if (ospvFailureReason == DEFAULT_GETNEXTDEST_NO_ERROR)
+                {
+                    ospvFailureReason = OSPC_FAIL_NONE;
+                }
+
                 OSPPDestSetTNFailReason(ospvTrans->CurrentDest, ospvFailureReason);
 
                 ospvTrans->CurrentDest = dest;
