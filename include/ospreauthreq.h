@@ -54,6 +54,7 @@ typedef struct
     OSPTLIST          ospmReauthReqTokens;
     unsigned long     ospmReauthReqTNCustId;
     unsigned long     ospmReauthReqTNDeviceId;
+    OSPTLIST          ospmReauthReqDevInfo;
 }
 OSPTREAUTHREQ;
 
