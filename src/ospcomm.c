@@ -810,6 +810,7 @@ OSPPCommParseSvcPt(
     unsigned short secport    = OSPC_COMM_DEFAULT_SECURE_PORT,
                    nonsecport = OSPC_COMM_DEFAULT_NONSECURE_PORT;
     unsigned int   length     = 0;
+    unsigned char  ErrStr[100];
 
     if (ospvURL == (char *)OSPC_OSNULL)
     {
@@ -919,9 +920,10 @@ OSPPCommParseSvcPt(
     OSPPSockGetHostIP(svcpt->HostName, &(svcpt->IpAddr));
     if (!svcpt->IpAddr)
     {
+        sprintf(ErrStr,"Host not found. Invalid Address: %s",svcpt->HostName);
+        OSPM_DBGERRORLOG(OSPC_ERR_COMM_PARSER, ErrStr);
         OSPM_FREE(svcpt->HostName);
         OSPM_FREE(svcpt);
-        OSPM_DBGERRORLOG(OSPC_ERR_COMM_PARSER, "host not found");
         return OSPC_ERR_COMM_PARSER;
     }
 
