@@ -284,7 +284,7 @@ int testOSPPloadPemPrivateKey(unsigned char *FileName, unsigned char *buffer, in
     int length = 0;
     unsigned char *temp;
     BIO *bioIn = NULL;
-    RSA *pKey;
+    RSA *pKey = NULL;
     int retVal = OSPC_ERR_NO_ERROR;
 
     temp = buffer;
@@ -863,24 +863,13 @@ int
 testOSPPTransactionSetNetworkId()
 {
     int errorcode = 0;
+    char NetId[128];
 
+    printf("Enter the Network Identifier : ");
+    gets(NetId);
     errorcode = OSPPTransactionSetNetworkId(
         OSPVTransactionHandle,
-        "termid01");
-
-    return errorcode;
-
-}
-
-
-int 
-testOSPPTransactionSetNewNetworkId()
-{
-    int errorcode = 0;
-
-    errorcode = OSPPTransactionSetNetworkId(
-        OSPVTransactionHandle,
-        "termidNew");
+        NetId);
 
     return errorcode;
 
@@ -902,6 +891,13 @@ int
 testOSPPTransactionDelete()
 {
     int errorcode = 0;
+
+    if ((OSPVTransactionHandle == OSPC_TRAN_HANDLE_INVALID) && 
+        (tranhandle2 == OSPC_TRAN_HANDLE_INVALID))
+    {
+        printf("No Transaction to Delete \n");
+        errorcode = OSPC_ERR_TRAN_HANDLE_INVALID;
+    }
 
     if(OSPVTransactionHandle != OSPC_TRAN_HANDLE_INVALID){
 
@@ -1425,7 +1421,7 @@ int
 testSetCalledNumber()
 {
     int errorcode = 0;
-    printf("Enter the new value for Calling number : ");
+    printf("Enter the new value for Called number : ");
     gets(callednumber);
     if (!strcmp(callednumber,""))
     {
@@ -1452,33 +1448,35 @@ testOSPPTransactionValidateAuthorisation()
 
     trans = OSPPTransactionGetContext(OSPVTransactionHandle, &errorcode);
     
-    OSPPTransactionDeleteResponse(trans);
-
-
-    if(errorcode == 0)
+    if (errorcode == 0)
     {
-        errorcode = OSPPTransactionValidateAuthorisation(
-            OSPVTransactionHandle,
-            "[1.1.1.1]",
-            dest,
-            "[2.2.2.2]",
-            destdev,
-            callingnumber,
-            callednumber,
-            callidsize,
-            ret_cid,
-            tokensize,
-            c_token,
-            &authorised,
-            &timelimit,
-            &detaillogsize,
-            (void *)NULL);
+        OSPPTransactionDeleteResponse(trans);
+
+        if(errorcode == 0)
+        {
+            errorcode = OSPPTransactionValidateAuthorisation(
+                OSPVTransactionHandle,
+                "[1.1.1.1]",
+                dest,
+                "[2.2.2.2]",
+                destdev,
+                callingnumber,
+                callednumber,
+                callidsize,
+                ret_cid,
+                tokensize,
+                c_token,
+                &authorised,
+                &timelimit,
+                &detaillogsize,
+                (void *)NULL);
+        }
+
+        if (errorcode == 0 &&!quietmode)
+            printf("authorised = %u\n", authorised);
+
+        testFreeCallIds();
     }
-
-    if (errorcode == 0 &&!quietmode)
-        printf("authorised = %u\n", authorised);
-
-    testFreeCallIds();
 
     return errorcode;
 }
@@ -1489,8 +1487,8 @@ testOSPPTransactionReportUsage()
     int      errorcode     = 0;
     unsigned detaillogsize = 0;
 
-    if(OSPVTransactionHandle != OSPC_TRAN_HANDLE_INVALID){
-        
+      if(OSPVTransactionHandle != OSPC_TRAN_HANDLE_INVALID){
+       
         if (!quietmode)
             printf("\nReporting Usage for OSPVTransactionHandle %d\n",(int)OSPVTransactionHandle);
 
@@ -1505,7 +1503,7 @@ testOSPPTransactionReportUsage()
             &detaillogsize,
             (void *)NULL);
     }
-
+  
     if(tranhandle2 != OSPC_TRAN_HANDLE_INVALID){
 
         printf("\nReporting Usage for tranhandle2\n");
@@ -1522,6 +1520,11 @@ testOSPPTransactionReportUsage()
             (void *)NULL);
     }
 
+    if ((tranhandle2 == OSPC_TRAN_HANDLE_INVALID) && (OSPVTransactionHandle == OSPC_TRAN_HANDLE_INVALID))
+    {
+        printf("Transaction handle invalid\n");
+        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    }
     return errorcode;
 }
 
@@ -1847,7 +1850,7 @@ testAPI(int apinumber)
         errorcode = testOSPPTransactionRecordFailure();
         break;
         case 37:
-        errorcode = testOSPPTransactionSetNewNetworkId();
+        errorcode = testNotImplemented();
         break;
         case 38:
         errorcode = testOSPPTransactionGetDestProtocol();
@@ -1954,7 +1957,7 @@ testMenu()
       printf("---------------------------------------------------------------------\n");
       printf("Miscellaneous Tests\n");
       printf("---------------------------------------------------------------------\n");
-      printf("37) Reset NetworkId                   38) GetDestinationProtocol\n");
+      printf("37) For future Enhancements           38) GetDestinationProtocol\n");
       printf("39) IsDestOSPEnabled	              40) For future Enhancements\n");
       printf("41) %-6d Test Calls                 42) Show Version\n", num_test_calls);
       printf("99) Sleep for 2 seconds\n");
