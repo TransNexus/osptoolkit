@@ -698,6 +698,14 @@ OSPPSecSetAuthorityCertificates(
 										OSPM_DBGERRORLOG(errorcode, "Failed to decode X509 cert");
 										OpenSSLErrorLog(errorcode);
 									}
+
+									/*
+									**	At this time, there are two references to the X509 object - 
+									**	this pointer and the X509_STORE.
+									**	This call will decrement the reference counter, but
+									**	will NOT release the object.
+									*/
+									X509_free(newX509Cert);
 								}
 								else
 								{
