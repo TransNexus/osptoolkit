@@ -30,7 +30,7 @@ rm -f *.tar *.gz
 LIST_OF_EXCLUDED_FILES="exclude_while_taring"
 
 # CVS dirs
-find . -name CVS -type dir 		 > $LIST_OF_EXCLUDED_FILES
+find . -name CVS -type dir | cut -b 3-   > $LIST_OF_EXCLUDED_FILES
 
 # This script
 echo $0                   		>> $LIST_OF_EXCLUDED_FILES
