@@ -27,44 +27,17 @@
 #include "osp.h"
 #include "ospfail.h"
 
+/*
+ * Will return success as long as ospvFailureReason is between
+ * OSPC_FAIL_NONE (0) and OSPC_FAIL_GENERAL (999)
+ */
 int
 OSPPFailReasonFind(enum OSPEFAILREASON ospvFailureReason)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    switch(ospvFailureReason)
+    if( (ospvFailureReason < OSPC_FAIL_NONE) || (ospvFailureReason > OSPC_FAIL_GENERAL) )
     {
-
-        case OSPC_FAIL_NONE:
-        case OSPC_FAIL_LUSER_DISC:  
-        case OSPC_FAIL_LUSER_ADMIN:  
-        case OSPC_FAIL_LOCAL_NORSRC: 
-        case OSPC_FAIL_LOCAL_NOAUTH: 
-        case OSPC_FAIL_LOCAL_BADAUTH:
-        case OSPC_FAIL_LOCAL_BADROUTE:
-        case OSPC_FAIL_LOCAL_ADMIN:   
-        case OSPC_FAIL_NET_UNREACH:   
-        case OSPC_FAIL_NET_BADPATH:   
-        case OSPC_FAIL_NET_BADPERF:   
-        case OSPC_FAIL_NET_ADMIN:     
-        case OSPC_FAIL_REMOTE_GENERAL:
-        case OSPC_FAIL_REMOTE_NORESP: 
-        case OSPC_FAIL_REMOTE_TCPFIN: 
-        case OSPC_FAIL_REMOTE_BADSEC: 
-        case OSPC_FAIL_REMOTE_BADCOMM:
-        case OSPC_FAIL_REMOTE_REFUSE: 
-        case OSPC_FAIL_REMOTE_NORSRC: 
-        case OSPC_FAIL_REMOTE_INT:   
-        case OSPC_FAIL_REMOTE_EXT:    
-        case OSPC_FAIL_ADMIN:         
-        case OSPC_FAIL_RUSER_BUSY:    
-        case OSPC_FAIL_RUSER_NETBUSY: 
-        case OSPC_FAIL_RUSER_UNAVAIL: 
-        case OSPC_FAIL_RUSER_DISC: 
-        case OSPC_FAIL_RUSER_ADMIN:
-        case OSPC_FAIL_GENERAL:
-        break;
-        default:
         errorcode = OSPC_ERR_FAILRSN_INVALID;
         OSPM_DBGERRORLOG(errorcode, "Failure code invalid");
     }
