@@ -59,6 +59,49 @@ OSPPDestHasNumber(
 
 /**/
 /*-----------------------------------------------------------------------*
+ * OSPPDestSetOSPVersion() - set the OSP Version for a destination
+ *-----------------------------------------------------------------------*/
+void                                       /* nothing returned */
+OSPPDestSetOSPVersion(
+    OSPTDEST            *ospvDest,         /* destination to set */
+    const unsigned char *ospvVersion       /* Version (as string) */
+)
+{
+    if (!(OSPM_STRCMP(ospvVersion,"0.0.0")))
+      ospvDest->ospmDestOSPVersion = OSPE_OSP_FALSE;
+    else
+    if (!(OSPM_STRCMP(ospvVersion,"")))
+      ospvDest->ospmDestOSPVersion = OSPE_OSP_UNKNOWN;
+    else
+      ospvDest->ospmDestOSPVersion = OSPE_OSP_TRUE;
+}
+
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPDestSetProtocol() - set the Protocol for a destination
+ *-----------------------------------------------------------------------*/
+void                                       /* nothing returned */
+OSPPDestSetProtocol(
+    OSPTDEST            *ospvDest,         /* destination to set */
+    const unsigned char *ospvProt           /* Protocol (as string) */
+)
+{
+    if (!(OSPM_STRCMP(ospvProt,"sip")))
+      ospvDest->ospmDestProtocol = OSPE_DEST_PROT_SIP;
+    else
+    if (!(OSPM_STRCMP(ospvProt,"h323-LRQ")))
+      ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_LRQ;
+    else
+    if (!(OSPM_STRCMP(ospvProt,"h323-Q931")))
+      ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_SETUP;
+    else
+      ospvDest->ospmDestProtocol = OSPE_DEST_PROT_UNKNOWN;
+}
+
+
+/**/
+/*-----------------------------------------------------------------------*
  * OSPPDestSetNumber() - set the called number for a destination
  *-----------------------------------------------------------------------*/
 void                                       /* nothing returned */
@@ -76,7 +119,7 @@ OSPPDestSetNumber(
         {
             OSPM_MEMCPY((ospvDest)->ospmDestNumber, 
                 (ospvNum), 
-                min(OSPC_E164NUMSIZE,OSPM_STRLEN((const char *)ospvNum)+1));
+                tr_min(OSPC_E164NUMSIZE,OSPM_STRLEN((const char *)ospvNum)+1));
         }
     }
 }
@@ -135,7 +178,7 @@ OSPPDestSetAddr(
         if (ospvAddr != OSPC_OSNULL) 
         {
             OSPM_MEMCPY((ospvDest)->ospmDestAddr, (ospvAddr), 
-                min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1));
+                tr_min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1));
         }
     }
 }
@@ -194,7 +237,7 @@ OSPPDestDevSetAddr(
         if (ospvAddr != OSPC_OSNULL) 
         {
             OSPM_MEMCPY((ospvDest)->ospmDestDevAddr, (ospvAddr), 
-                min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1));
+                tr_min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1));
         }
     }
 }
@@ -356,7 +399,7 @@ OSPPDestSetAuthority(
         {
             OSPM_STRNCPY((char *)((ospvDest)->ospmDestAuthority),
                 (const char *)(ospvAuth), 
-                min(OSPM_STRLEN((const char *)ospvAuth)+1,OSPC_URLSIZE-1));
+                tr_min(OSPM_STRLEN((const char *)ospvAuth)+1,OSPC_URLSIZE-1));
         }
     }
 }
@@ -696,6 +739,14 @@ OSPPDestFromElement(
         {
             switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem)))
             {
+                case ospeElemDestProtocol:
+                	OSPPDestSetProtocol(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
+                	break;
+
+                case ospeElemDestOSPVersion:
+                	OSPPDestSetOSPVersion(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
+                	break;
+
                 case ospeElemDestInfo:
                 OSPPDestSetNumber(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
