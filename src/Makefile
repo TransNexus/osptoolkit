@@ -14,7 +14,7 @@ MKDEP    = /usr/openwin/bin/makedepend
 # and instead using gcc, please comment the line below for proper 
 # compilation.
 #
-GCCFLAGS = -Wall -D_GNU_SOURCE -fPIC
+#GCCFLAGS = -Wall -D_GNU_SOURCE -fPIC
 
 #
 # CFLAGS definition
@@ -67,9 +67,6 @@ install: build
 
 clean   :
 	rm -f $(OBJS) $(ARLIB)
-
-depend  :
-	$(MKDEP) -I$(INCLDIR) *.c
 
 # DO NOT DELETE
 
