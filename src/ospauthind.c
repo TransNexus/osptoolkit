@@ -510,6 +510,7 @@ OSPTAUTHIND *                              /* returns pointer or NULL */
         OSPPListNew (&(ospvAuthInd->ospmAuthIndSourceAlternate));
         OSPPListNew(&(ospvAuthInd->ospmAuthIndDestinationAlternate));
         OSPPListNew(&(ospvAuthInd->ospmAuthIndDeviceInfo));
+        ospvAuthInd->ospmAuthIndHasDestNetworkIdInToken = OSPC_FALSE;
 
     }
     return(ospvAuthInd);

@@ -67,7 +67,7 @@ typedef enum
 #define DEST_OSP_UNKNOWN ""
 #define DEFAULT_GETNEXTDEST_NO_ERROR 99999
 
-
+#define OSPC_NETWORKIDSIZE OSPC_E164NUMSIZE
 
 typedef struct
 {
@@ -89,6 +89,7 @@ typedef struct
     unsigned          ospmDestTNFailReasonInd;
     OSPE_DEST_PROT    ospmDestProtocol;
     OSPE_DEST_OSP_ENABLED ospmDestOSPVersion;
+    unsigned char     ospmDestNetworkId[OSPC_NETWORKIDSIZE];
 }
 OSPTDEST;
 
@@ -125,6 +126,10 @@ extern "C"
     unsigned       OSPPDestDevHasAddr(OSPTDEST *);
     void           OSPPDestDevSetAddr(OSPTDEST *, const unsigned char *);
     unsigned char *OSPPDestDevGetAddr(OSPTDEST *);
+
+    unsigned       OSPPDestHasNetworkAddr(OSPTDEST *);
+    void           OSPPDestSetNetworkAddr(OSPTDEST *, const unsigned char *);
+    unsigned char *OSPPDestGetNetworkAddr(OSPTDEST *);
 
     unsigned       OSPPDestHasValidAfter(OSPTDEST *);
     void           OSPPDestSetValidAfter(OSPTDEST *, OSPTTIME);

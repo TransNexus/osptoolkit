@@ -639,6 +639,152 @@ OSPPAuthReqDelete(OSPTAUTHREQ **ospvAuthReq)
     return;
 }
 
+/*^L*/
+/*-----------------------------------------------------------------------*
+ * OSPPAuthReqAddServiceInfo() - Add service type to usage detail
+ *-----------------------------------------------------------------------*/
+unsigned OSPPAuthReqAddServiceInfo(
+    OSPTXMLELEM **ospvElem,         /* where to put XML element pointer */
+    OSPE_SERVICE_TYPE ServiceType
+)
+{
+    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    OSPTXMLELEM  *elem = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL)
+    {
+        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        /* create the parent element */
+        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemService), "");
+        if (*ospvElem == OSPC_OSNULL)
+        {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        if (ServiceType == OSPC_VOICE)
+        {
+            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemServiceType), "voice");
+        }
+        else
+        {
+            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemServiceType), "data");
+        }
+        if (elem == OSPC_OSNULL)
+        {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        OSPPXMLElemAddChild(*ospvElem, elem);
+    }
+
+    /* if for any reason we found an error - destroy any elements created */
+    if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL))
+    {
+        OSPPXMLElemDelete(ospvElem);
+    }
+
+    return(ospvErrCode);
+
+}
+
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPAuthReqAddPricingInfo() - adds pricing info to an xml element
+ *-----------------------------------------------------------------------*/
+unsigned OSPPAuthReqAddPricingInfo(
+    OSPTXMLELEM **ospvElem,         /* where to put XML element pointer */
+    OSPT_PRICING_INFO PricingInfo
+)
+{
+    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    OSPTXMLELEM  *elem = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL)
+    {
+        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        /* create the parent element */
+        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemPricingInd), "");
+        if (*ospvElem == OSPC_OSNULL)
+        {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        ospvErrCode = OSPPMsgNumToElement(PricingInfo.amount,
+                (const unsigned char *)OSPPMsgGetElemName(ospeElemAmount), &elem);
+
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+           OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* now add the increment */
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        ospvErrCode = OSPPMsgNumToElement(PricingInfo.increment,
+                (const unsigned char *)OSPPMsgGetElemName(ospeElemIncrement), &elem);
+    
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+           OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+ 
+    /* now we need to add units */
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemUnit),(const char *)PricingInfo.unit);
+        if (elem == OSPC_OSNULL)
+        {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+ 
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* add currency */
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemCurrency),(const char *)PricingInfo.currency);
+        if (elem == OSPC_OSNULL)
+        {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* if for any reason we found an error - destroy any elements created */
+    if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL))
+    {
+        OSPPXMLElemDelete(ospvElem);
+    }
+    return(ospvErrCode);
+}
+
+
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPAuthReqToElement() - create an XML element from an authorisation request
@@ -660,6 +806,7 @@ OSPPAuthReqToElement(
     char         random[OSPC_MAX_RANDOM];
     OSPTBOOL     isbase64     = OSPC_TRUE;
     OSPTTRANS   *trans = (OSPTTRANS *)ospvtrans;
+    int i;
 
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
 
@@ -907,19 +1054,52 @@ OSPPAuthReqToElement(
             }
         }
 
-        /* now add the service */
-        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        /*
+         * Add the pricing information
+         */
+        if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
+            (trans->IsPricingInfoPresent))
         {
-            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemService),"");
-            if (elem == OSPC_OSNULL)
+            for (i=0;i<trans->NumOfPricingInfoElements;i++)
             {
-                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+                ospvErrCode = OSPPAuthReqAddPricingInfo(&elem,trans->PricingInfo[i]);
+                if (ospvErrCode == OSPC_ERR_NO_ERROR)
+                {
+                    OSPPXMLElemAddChild(authreqelem, elem);
+                    elem = OSPC_OSNULL;
+                }
+                else
+                {
+                    break;
+                }
             }
         }
-        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+
+        /* now add the service */
+        if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (trans->IsServiceInfoPresent == OSPC_TRUE))
         {
-            OSPPXMLElemAddChild(authreqelem, elem);
-            elem = OSPC_OSNULL;
+            ospvErrCode = OSPPAuthReqAddServiceInfo(&elem,trans->ServiceType);
+            if (ospvErrCode == OSPC_ERR_NO_ERROR)
+            {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+        else
+        {
+            if (ospvErrCode == OSPC_ERR_NO_ERROR)
+            {
+                elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemService),"");
+                if (elem == OSPC_OSNULL)
+                {
+                    ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+                }
+            }
+            if (ospvErrCode == OSPC_ERR_NO_ERROR)
+            {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
         }
 
         /* now add the max destinations */

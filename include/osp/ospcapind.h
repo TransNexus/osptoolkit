@@ -57,7 +57,7 @@ extern "C"
      *  function prototypes
      *-----------------------------------------------------------------------*/
     unsigned       OSPPGenerateUniqueId(OSPTTRANS*, unsigned char **);
-    unsigned       OSPPCapIndNew(OSPTCAPIND**, OSPTTRANS*, const char*, const char*, unsigned);
+    unsigned       OSPPCapIndNew(OSPTCAPIND**, OSPTTRANS*, const char*, const char *, const char*, unsigned);
     void           OSPPCapIndDelete(OSPTCAPIND **);
   int            OSPPCapIndToElement(OSPTCAPIND *, OSPTXMLELEM **);
 

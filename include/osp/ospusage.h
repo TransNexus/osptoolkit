@@ -38,7 +38,11 @@
  *-----------------------------------------------------------------------*/
 
 unsigned OSPPUsageFromElement(OSPTXMLELEM *, unsigned *);
-unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, OSPTXMLELEM **);
+unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned, OSPTXMLELEM **);
+unsigned OSPPAddConfIdToUsageElement(unsigned char *,OSPTXMLELEM **);
+
+unsigned OSPPAddServiceTypeToUsageElement(OSPE_SERVICE_TYPE,OSPTXMLELEM **);
+unsigned OSPPAddPricingInfoToUsageElement(OSPT_PRICING_INFO,OSPTXMLELEM **);
 
 #endif
 

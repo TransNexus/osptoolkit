@@ -104,6 +104,8 @@ int OSPPBase64DecodeWrap(const unsigned char *, unsigned *, unsigned char *);
 
 unsigned OSPPMsgTimeFromElement(OSPTXMLELEM *, OSPTTIME *);
 
+unsigned OSPPMsgBinFromASCIIElement(unsigned char *,unsigned *, unsigned char **);
+
 #ifdef __cplusplus
 }
 #endif

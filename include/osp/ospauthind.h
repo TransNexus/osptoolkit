@@ -52,6 +52,7 @@ typedef struct
     OSPTBOOL          ospmAuthIndHasTimeLimit;
     unsigned          ospmAuthIndTimeLimit;
     OSPTDEST          *ospmAuthIndDest;
+    OSPTBOOL          ospmAuthIndHasDestNetworkIdInToken;
 }
 OSPTAUTHIND;
 

@@ -324,6 +324,12 @@ OSPPTransactionBuildUsage(
                     errorcode = OSPC_ERR_TRAN_SOURCE_NUMBER_NOT_FOUND;
                     OSPM_DBGERRORLOG(errorcode, "Source number not found");
                      */
+                    if(OSPPAuthReqHasSourceNumber(ospvTrans->AuthReq))
+                    {
+
+                        OSPPUsageIndSetSourceNumber(*ospvUsage, 
+                        OSPPAuthReqGetSourceNumber(ospvTrans->AuthReq));
+                    }
                 }
             }
 
@@ -416,6 +422,15 @@ OSPPTransactionBuildUsage(
                 OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
                 altinfo = OSPC_OSNULL;
             }
+            if ((errorcode == OSPC_ERR_NO_ERROR) &&
+                OSPPDestHasNetworkAddr(ospvDest))
+            {
+                dest = OSPPDestGetNetworkAddr(ospvDest);
+                altinfo = OSPPAltInfoNew(strlen((const char *)dest),dest,ospeNetwork);
+
+                OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
+                altinfo = OSPC_OSNULL;
+            }
 
             /* Get Destination Alternates */
             if ((errorcode == OSPC_ERR_NO_ERROR) && 
@@ -426,6 +441,28 @@ OSPPTransactionBuildUsage(
             /* Function above may be patterned after OSPPUsageIndMoveDestinationAlt */
             }
 
+            /* Move pricing information to Usage Ind structure */
+            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->IsPricingInfoPresent))
+            {
+                (*ospvUsage)->osmpUsageIndPricingInfo.amount = ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].amount;
+                (*ospvUsage)->osmpUsageIndPricingInfo.increment = ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].increment;
+                OSPM_STRCPY((char *)(*ospvUsage)->osmpUsageIndPricingInfo.unit,(const char *)ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].unit);
+                OSPM_STRCPY((char *)(*ospvUsage)->osmpUsageIndPricingInfo.currency,(const char *)ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].currency);
+               
+                /*
+                 * Now increment the current pointer so that it points
+                 * to the next value
+                 */
+                ospvTrans->CurrentPricingInfoElement++;
+                (*ospvUsage)->ospmUsageIndIsPricingInfoPresent = OSPC_TRUE;
+            }
+
+            /* Move Service Info to the usage structure */
+            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->IsServiceInfoPresent))
+            {
+                (*ospvUsage)->osmpUsageIndServiceType = ospvTrans->ServiceType;
+                (*ospvUsage)->osmpUsageIndIsServiceInfoPresent = OSPC_TRUE;
+            }
         }
         else if(ospvType == OSPC_MSG_AIND)
         {
@@ -507,6 +544,29 @@ OSPPTransactionBuildUsage(
             {
                 OSPPUsageIndMoveDestinationAlt(*ospvUsage, 
                     &(ospvTrans->AuthInd->ospmAuthIndDestinationAlternate));
+            }
+
+            /* Move pricing information to Usage Ind structure */
+            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->IsPricingInfoPresent))
+            {
+                (*ospvUsage)->osmpUsageIndPricingInfo.amount = ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].amount;
+                (*ospvUsage)->osmpUsageIndPricingInfo.increment = ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].increment;
+                OSPM_STRCPY((char *)(*ospvUsage)->osmpUsageIndPricingInfo.unit,(const char *)ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].unit);
+                OSPM_STRCPY((char *)(*ospvUsage)->osmpUsageIndPricingInfo.currency,(const char *)ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].currency);
+               
+                /*
+                 * Now increment the current pointer so that it points
+                 * to the next value
+                 */
+                ospvTrans->CurrentPricingInfoElement++;
+                (*ospvUsage)->ospmUsageIndIsPricingInfoPresent = OSPC_TRUE;
+            }
+
+            /* Move Service Info to the usage structure */
+            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->IsServiceInfoPresent))
+            {
+                (*ospvUsage)->osmpUsageIndServiceType = ospvTrans->ServiceType;
+                (*ospvUsage)->osmpUsageIndIsServiceInfoPresent = OSPC_TRUE;
             }
         }
         else
@@ -1160,7 +1220,7 @@ OSPPTransactionGetDestination(
     OSPTTIME      validtime   = 0;
     unsigned char *destnum    = OSPC_OSNULL,
                   *sigaddr    = OSPC_OSNULL,
-                  *callingnum = OSPC_OSNULL;
+                  *callingnum = '\0';
     OSPTTOKEN     *token      = OSPC_OSNULL;
 
     if ((ospvSizeOfCalledNumber == 0) || (ospvCalledNumber == NULL))
@@ -1394,28 +1454,38 @@ OSPPTransactionGetDestination(
                 {
                     /*
                      * The source number is not present in the destination.
-                     * Not much we can do. Just return an empty calling number
+                     * See if it was present in the AuthReq.
                      */
-                     ospvCallingNumber[0] = '\0';
+                    if(OSPPAuthReqHasDestNumber(ospvTrans->AuthReq))
+                    {
+                        callingnum = OSPPAuthReqGetSourceNumber(ospvTrans->AuthReq);
+                    }
+                    else
+                    {
+                       /*
+                        * If neither the destination nor the AuthReq had calling number
+                        * we will return back an empty string.
+                        */
+                    }
                 }
                 else
                 {
                     callingnum = (unsigned char *)OSPPDestGetSrcNumber(dest);
-                    if (ospvSizeOfCallingNumber < strlen((const char *)callingnum)+1)
-                    {
-                        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                }
+                if (ospvSizeOfCallingNumber < strlen((const char *)callingnum)+1)
+                {
+                    errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
                         OSPM_DBGERRORLOG(errorcode, 
                             "not enough space for calling number");
-                    }
-                    else
-                    {
-                        /*
-                         * Get the calling number 
-                         */
-                        OSPM_MEMCPY(ospvCallingNumber, 
+                }
+                else
+                {
+                    /*
+                     * Get the calling number 
+                     */
+                    OSPM_MEMCPY(ospvCallingNumber, 
                             callingnum,
                             strlen((const char *)callingnum)+1);
-                    }
                 }
             }
         }
@@ -1488,7 +1558,6 @@ OSPPTransactionGetDestination(
                 }
             }
         }
-
 
         if (errorcode == OSPC_ERR_NO_ERROR)
         {

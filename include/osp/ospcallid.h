@@ -65,6 +65,7 @@ extern "C"
 
     unsigned       OSPPCallIdGetSize(OSPTCALLID *);
     unsigned char *OSPPCallIdGetValue(OSPTCALLID *);
+    unsigned       OSPPCallIdFromASCIIElement(unsigned char *,OSPTCALLID  **);
 
 
 #ifdef __cplusplus

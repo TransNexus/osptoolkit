@@ -121,6 +121,55 @@ OSPTCALLID *                           /* returns ptr to call ID or null */
 
 /**/
 /*-----------------------------------------------------------------------*
+ * OSPPCallIdFromASCIIElement() - create a call id from an ASCII element
+ *-----------------------------------------------------------------------*/
+
+unsigned                          /* returns error code */
+OSPPCallIdFromASCIIElement(
+    unsigned char *ospvElem,        /* input is ASCII element */
+    OSPTCALLID **ospvCallId       /* where to put CallID pointer */
+)
+{
+    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned char *callIdValue = OSPC_OSNULL;
+    unsigned      callIdLen = 0;
+
+    if (ospvElem   == OSPC_OSNULL) 
+    {
+        ospvErrCode = OSPC_ERR_ASCII_NO_ELEMENT;
+    }
+    if (ospvCallId == OSPC_OSNULL) 
+    {
+        ospvErrCode = OSPC_ERR_DATA_NOCALLID;
+    }
+
+    /* start by assuming we will fail */
+    *ospvCallId = OSPC_OSNULL;
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) 
+    {
+        ospvErrCode = OSPPMsgBinFromASCIIElement(ospvElem, &callIdLen, &callIdValue);
+
+        /* create the CallId structure */
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            *ospvCallId = OSPPCallIdNew(callIdLen, callIdValue);
+            if (*ospvCallId == OSPC_OSNULL)
+            {
+                ospvErrCode = OSPC_ERR_DATA_NOCALLID;
+            }
+        }
+    }
+
+    if(callIdValue != OSPC_OSNULL)
+    {
+        OSPM_FREE(callIdValue);
+    }
+
+    return(ospvErrCode);
+}
+
+/**/
+/*-----------------------------------------------------------------------*
  * OSPPCallIdFromElement() - create a call id from an XML element
  *-----------------------------------------------------------------------*/
 

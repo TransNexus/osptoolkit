@@ -35,6 +35,7 @@
 #include "osp/ospsslsess.h"
 
 #include <openssl/x509.h>
+#include <openssl/safestack.h>
 
 /* defines for Local or Remote validation */
 #define OSPC_LOCAL  0x05
@@ -54,6 +55,7 @@ typedef struct _OSPTSEC
     unsigned            NumberOfAuthorityCertificates;
     OSPTASN1OBJECT      *AuthorityCertInfo[OSPC_SEC_MAX_AUTH_CERTS];
 		X509_STORE					*AuthorityCertStore;
+    STACK_OF(X509)      *AuthorityCertStack;
     OSPTASN1OBJECT      *LocalCertInfo;
     OSPTASN1OBJECT      *PrivateKeyInfo;
     OSPTASN1OBJECT      *DigestAlgorithm;

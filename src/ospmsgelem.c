@@ -110,7 +110,12 @@ const OSPTMSGDESC OSPVElemDescs[] =
     { ospeElemDestOSPVersion,     "OSPVersion" },
     { ospeElemEndTime,        "EndTime" },
     { ospeElemAlertTime,        "AlertTime" },
-    { ospeElemPostDialDelay,        "PostDialDelay" }
+    { ospeElemPostDialDelay,        "PostDialDelay" },
+    { ospeElemConnectTime,        "ConnectTime" },
+    { ospeElemReleaseSource,        "ReleaseSource" },
+    { ospeElemServiceType,        "ServiceType" },
+    { ospeElemGroup,        "Group" },
+    { ospeElemGroupId,        "GroupId" }
 };
 
 

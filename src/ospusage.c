@@ -124,6 +124,204 @@ OSPPUsageFromElement(
     return(ospvErrCode);
 }
 
+/*^L*/
+/*-----------------------------------------------------------------------*
+ * OSPPAddServiceTypeToUsageElement() - adds service info to an xml element
+ *-----------------------------------------------------------------------*/
+unsigned OSPPAddServiceTypeToUsageElement(
+    OSPE_SERVICE_TYPE ServiceType,
+    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+)
+{
+    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    OSPTXMLELEM  *elem = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL)
+    {
+        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        /* create the parent element */
+        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemService), "");
+        if (*ospvElem == OSPC_OSNULL)
+        {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        if (ServiceType == OSPC_VOICE)
+        {
+            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemServiceType), "voice");
+        }
+        else
+        {
+            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemServiceType), "data");
+        }
+        if (elem == OSPC_OSNULL)
+        {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        OSPPXMLElemAddChild(*ospvElem, elem);
+    }
+
+    /* if for any reason we found an error - destroy any elements created */
+    if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL))
+    {
+        OSPPXMLElemDelete(ospvElem);
+    }
+
+    return(ospvErrCode);
+}
+
+
+/*^L*/
+/*-----------------------------------------------------------------------*
+ * OSPPAddPricingInfoToUsageElement() - adds pricing info to an xml element
+ *-----------------------------------------------------------------------*/
+unsigned OSPPAddPricingInfoToUsageElement(
+    OSPT_PRICING_INFO PricingInfo,
+    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+)
+{
+    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    OSPTXMLELEM  *elem = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL)
+    {
+        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        /* create the parent element */
+        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemPricingInd), "");
+        if (*ospvElem == OSPC_OSNULL)
+        {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        ospvErrCode = OSPPMsgNumToElement(PricingInfo.amount,
+                (const unsigned char *)OSPPMsgGetElemName(ospeElemAmount), &elem);
+
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* now add the increment */
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        ospvErrCode = OSPPMsgNumToElement(PricingInfo.increment,
+                (const unsigned char *)OSPPMsgGetElemName(ospeElemIncrement),&elem);
+
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* now we need to add units */
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemUnit),(const char *)PricingInfo.unit);
+        if (elem == OSPC_OSNULL)
+        {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* add currency */
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemCurrency),(const char *)PricingInfo.currency);
+        if (elem == OSPC_OSNULL)
+        {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* if for any reason we found an error - destroy any elements created */
+    if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL))
+    {
+            OSPPXMLElemDelete(ospvElem);
+    }
+    return(ospvErrCode);
+}
+
+
+/*^L*/
+/*-----------------------------------------------------------------------*
+ * OSPPAddConfIdToUsageElement() - Add conf ID to usage  
+ *-----------------------------------------------------------------------*/
+unsigned OSPPAddConfIdToUsageElement(
+    unsigned char *ospvConferenceId,
+    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+)
+{
+    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    OSPTXMLELEM  *elem = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL)
+    {
+        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        /* create the parent element */
+        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemGroup), "");
+        if (*ospvElem == OSPC_OSNULL)
+        {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        if (ospvConferenceId && ospvConferenceId[0] != '\0')
+        {
+            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemGroupId),(const char *)ospvConferenceId);
+            if (elem == OSPC_OSNULL)
+            {
+                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            }
+        }
+    }
+
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        OSPPXMLElemAddChild(*ospvElem, elem);
+    }
+
+    /* if for any reason we found an error - destroy any elements created */
+    if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL))
+    {
+        OSPPXMLElemDelete(ospvElem);
+    }
+
+    return(ospvErrCode);
+
+}
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -136,8 +334,10 @@ OSPPUsageToElement(
 		OSPTTIME		  ospvStartTime,	 /* optional, if not 0, call start time */
 		OSPTTIME		  ospvEndTime,	 /* optional, if not 0, call end time */
 		OSPTTIME		  ospvAlertTime,	 /* optional, if not 0, call alert time */
+		OSPTTIME		  ospvConnectTime,	 /* optional, if not 0, call connect time */
     unsigned      ospvIsPDDInfoPresnt,       /* Is PDD info present variable */
     unsigned      ospvPostDialDelay,       /* PDD value */
+    unsigned      ospvReleaseSource,       /* Rel Src value */
     OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
 )
 {
@@ -157,20 +357,6 @@ OSPPUsageToElement(
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         }
-    }
-    /* now add the children - start with the service */
-    /* the service is blank for basic service */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-    {
-        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemService), "");
-        if (elem == OSPC_OSNULL)
-        {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-    }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-    {
-        OSPPXMLElemAddChild(*ospvElem, elem);
     }
 
     /* now add the amount (which is the usage) */
@@ -231,11 +417,22 @@ OSPPUsageToElement(
         }
     }
 
-    /* optional (if not null) call end time */
+    /* optional (if not null) call alert time */
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvAlertTime != 0))
     {
         ospvErrCode = OSPPMsgTimeToElement(ospvAlertTime,
                                           (const unsigned char *)OSPPMsgGetElemName(ospeElemAlertTime), &elem);
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* optional (if not null) call connect time */
+    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvConnectTime != 0))
+    {
+        ospvErrCode = OSPPMsgTimeToElement(ospvConnectTime,
+                                          (const unsigned char *)OSPPMsgGetElemName(ospeElemConnectTime), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(*ospvElem, elem);
@@ -247,6 +444,17 @@ OSPPUsageToElement(
     {
         ospvErrCode = OSPPMsgNumToElement(ospvPostDialDelay,
             (const unsigned char *)OSPPMsgGetElemName(ospeElemPostDialDelay), &elem);
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* now add the Rel src */
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        ospvErrCode = OSPPMsgNumToElement(ospvReleaseSource,
+            (const unsigned char *)OSPPMsgGetElemName(ospeElemReleaseSource), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(*ospvElem, elem);

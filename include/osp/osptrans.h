@@ -72,6 +72,8 @@ typedef enum
     OSPC_ACCUMULATE_FAIL
 } OSPE_TRANS_STATE;
 
+#define MAX_PRICING_INFO_ALLOWED 10
+
 /*-------------------------------------------*/
 /* transaction typedef                       */
 /*-------------------------------------------*/ 
@@ -104,7 +106,12 @@ typedef struct _OSPTTRANS
     OSPTTOKENLOOKAHEADINFO      TokenLookAheadInfo;
     OSPE_NUMBERING_FORMAT       CallingNumberFormat;
     OSPE_NUMBERING_FORMAT       CalledNumberFormat;
-
+    OSPTBOOL                    IsServiceInfoPresent;
+    OSPE_SERVICE_TYPE           ServiceType;
+    OSPTBOOL                    IsPricingInfoPresent;
+    unsigned                    NumOfPricingInfoElements;
+    unsigned                    CurrentPricingInfoElement;
+    OSPT_PRICING_INFO           PricingInfo[MAX_PRICING_INFO_ALLOWED];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

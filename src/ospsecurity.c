@@ -661,7 +661,7 @@ OSPPSecSetAuthorityCertificates(
     {
 	/* Create X509_STORE */
     	ospvSecurity->AuthorityCertStore = X509_STORE_new();
-
+        ospvSecurity->AuthorityCertStack = sk_X509_new_null();
 
         /* Create new certificate list */
         for (i = 0 ; i < ospvNumberOfAuthorityCertificates ; i++)
@@ -688,6 +688,7 @@ OSPPSecSetAuthorityCertificates(
 
 		if( newX509Cert != OSPC_OSNULL )
 		{
+                        sk_X509_push(ospvSecurity->AuthorityCertStack,newX509Cert);
 			if( 1 == X509_STORE_add_cert(ospvSecurity->AuthorityCertStore,newX509Cert) )
 			{
 				/* Success */
@@ -761,7 +762,7 @@ OSPPSecSignatureVerify(
 
 			/* verify message and extract xml token */
 			if( 1==PKCS7_verify(signedData,
-					OSPC_OSNULL,
+					ospvSecurity->AuthorityCertStack,
 					ospvSecurity->AuthorityCertStore,
 					OSPC_OSNULL,
 					mem_bio_out,
@@ -1071,6 +1072,7 @@ OSPPSecDeleteAuthorityCertificates(
 
 				/* Free X509 Store */
 				X509_STORE_free(ospvSecurity->AuthorityCertStore);
+        sk_X509_free(ospvSecurity->AuthorityCertStack);
 
         /* Delete certificates from the list */
         for (   i = 0 ; 

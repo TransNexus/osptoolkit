@@ -78,7 +78,7 @@ extern "C"
             const char *,const char *,unsigned, const void *, unsigned,
             const void *, unsigned *, unsigned *, unsigned *, void *,unsigned);
 
-    int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned, signed,
+    int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned, unsigned char *,unsigned, signed,
             unsigned, signed, unsigned *, void *);
 
     int OSPPTransactionRequestAuthorisation(OSPTTRANHANDLE, const char *, 
@@ -86,7 +86,7 @@ extern "C"
             unsigned, OSPTCALLID *[], const char *[], unsigned *, unsigned *, 
             void *);
 
-    int OSPPTransactionIndicateCapabilities(OSPTTRANHANDLE, const char *, 
+    int OSPPTransactionIndicateCapabilities(OSPTTRANHANDLE, const char *, const char *,
             const char *, unsigned, unsigned *, void *);
 
     int OSPPTransactionRequestReauthorisation(OSPTTRANHANDLE, unsigned, unsigned *,           
@@ -133,6 +133,16 @@ extern "C"
         const char      *ospvSourceDevice,  /* In - optional */
         const char      *ospvDestination,   /* In - optional */
         const char      *ospvDestinationDevice);  /* In - optional */
+
+    int
+    OSPPTransactionGetDestNetworkId(OSPTTRANHANDLE  ospvTransaction,/* In - Transaction handle */
+                                char*    ospvNetworkId);
+
+int
+OSPPTransactionSetServiceAndPricingInfo(
+    OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */
+    OSPE_SERVICE_TYPE ospvServiceType, /* In- type of service, 0-voice, 1-data */
+    OSPT_PRICING_INFO    *ospvPricingInfo[]); /* In- Pricing Info */
 
 
 #ifdef __cplusplus

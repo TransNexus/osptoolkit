@@ -53,6 +53,8 @@ typedef struct
     int               ospmTokenInfoDuration;
     OSPTBOOL          ospmTokenInfoIsLookAheadInfoPresent;
     OSPTTOKENLOOKAHEADINFO ospmTokenLookAheadInfo;
+    OSPTBOOL          ospmTokenInfoIsDstNetworkIdPresent;
+    char              dstNetworkId[OSPC_E164NUMSIZE];
 }
 OSPTTOKENINFO;
 
@@ -108,6 +110,9 @@ extern "C"
     void           OSPPTokenInfoSetLookAheadOSPVersion(OSPTTOKENLOOKAHEADINFO *,const unsigned char *);
     OSPE_DEST_OSP_ENABLED OSPPTokenInfoGetLookAheadOSPVersion(OSPTTOKENLOOKAHEADINFO *);
 
+    unsigned char*     OSPPTokenInfoGetDstNetworkId(OSPTTOKENINFO *);
+
+    unsigned OSPPParseTokenInfoFromASCIIToken(unsigned char *,unsigned,OSPTTOKENINFO **);
 
 #ifdef __cplusplus
 }

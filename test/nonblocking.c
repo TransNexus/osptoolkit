@@ -65,8 +65,11 @@ typedef struct _NBUSEIND
   OSPTTIME        ospvStartTime;                /* In - StartTime of call */
   OSPTTIME        ospvEndTime;                  /* In - EndTime of call */
   OSPTTIME        ospvAlertTime;                /* In - AlertTime of call */
+  OSPTTIME        ospvConnectTime;              /* In - ConnectTime of call */
   unsigned        ospvIsPDDInfoPresent;         /* In - Is PDD info present*/
   unsigned        ospvPostDialDelay;            /* In - PDD */
+  unsigned        ospvReleaseSource;            /* In - Rel Src */
+  unsigned char   ospvConferenceId[OSPC_CONFIDSIZE]; /* In - ConferenceId */
   unsigned        ospvLossPacketsSent;          /* In - Packets not received by peer */
   signed          ospvLossFractionSent;         /* In - Fraction of packets not received by peer */
   unsigned        ospvLossPacketsReceived;      /* In - Packets not received that were expected */
@@ -81,6 +84,7 @@ typedef struct _NBCAPIND
   OSPTTRANHANDLE  ospvTransaction;              /* In - Transaction Handle  */
   const char      *ospvSource;                  /* In - Source of call      */
   const char      *ospvSourceDevice;            /* In - SourceDevice of call*/
+  const char      *ospvSourceNetworkId;         /* In - NetworkId of call*/
   unsigned         ospvAlmostOutOfResources;    /* In - A Boolean flag indicating device's availability */
   unsigned        *ospvSizeOfDetailLog;         /* In\Out - Max size of detail log \ Actual size of detail log */
   void            *ospvDetailLog;               /* In\Out - Location of detail log storage */
@@ -548,8 +552,11 @@ WorkThread(void *arg)
                                                         transaction->Message.UseInd.ospvStartTime,
                                                         transaction->Message.UseInd.ospvEndTime,
                                                         transaction->Message.UseInd.ospvAlertTime,
+                                                        transaction->Message.UseInd.ospvConnectTime,
                                                         transaction->Message.UseInd.ospvIsPDDInfoPresent,
                                                         transaction->Message.UseInd.ospvPostDialDelay,
+                                                        transaction->Message.UseInd.ospvReleaseSource,
+                                                        transaction->Message.UseInd.ospvConferenceId,
                                                         transaction->Message.UseInd.ospvLossPacketsSent,
                                                         transaction->Message.UseInd.ospvLossFractionSent,
                                                         transaction->Message.UseInd.ospvLossPacketsReceived,
@@ -562,6 +569,7 @@ WorkThread(void *arg)
                                                         transaction->Message.CapInd.ospvTransaction,
                                                         transaction->Message.CapInd.ospvSource,
                                                         transaction->Message.CapInd.ospvSourceDevice,
+                                                        transaction->Message.CapInd.ospvSourceNetworkId,
                                                         transaction->Message.CapInd.ospvAlmostOutOfResources,
                                                         transaction->Message.CapInd.ospvSizeOfDetailLog,
                                                         transaction->Message.CapInd.ospvDetailLog);
@@ -910,8 +918,11 @@ int OSPPTransactionReportUsage_nb(
         OSPTTIME        ospvStartTime,                /* In - StartTime of call */
         OSPTTIME        ospvEndTime,                  /* In - EndTime of call */
         OSPTTIME        ospvAlertTime,                /* In - AlertTime of call */
+        OSPTTIME        ospvConnectTime,              /* In - ConnectTime of call */
         unsigned        ospvIsPDDInfoPresent,         /* In - Is PDD info available*/
         unsigned        ospvPostDialDelay,            /* In - PDD */
+        unsigned        ospvReleaseSource,            /* In - Release Src */
+        unsigned char   *ospvConferenceId,            /* In - ConferenceId */
         unsigned        ospvLossPacketsSent,          /* In - Packets not received by peer */
         signed          ospvLossFractionSent,         /* In - Fraction of packets not received by peer */
         unsigned        ospvLossPacketsReceived,      /* In - Packets not received that were expected */
@@ -940,8 +951,14 @@ int OSPPTransactionReportUsage_nb(
       nbData->Message.UseInd.ospvStartTime                = ospvStartTime;
       nbData->Message.UseInd.ospvEndTime                  = ospvEndTime;
       nbData->Message.UseInd.ospvAlertTime                = ospvAlertTime;
+      nbData->Message.UseInd.ospvConnectTime              = ospvConnectTime;
       nbData->Message.UseInd.ospvIsPDDInfoPresent         = ospvIsPDDInfoPresent;
       nbData->Message.UseInd.ospvPostDialDelay            = ospvPostDialDelay;
+      nbData->Message.UseInd.ospvReleaseSource            = ospvReleaseSource;
+      if (ospvConferenceId)
+      {
+          OSPM_STRCPY((char *)nbData->Message.UseInd.ospvConferenceId,(const char *)ospvConferenceId);
+      }
       nbData->Message.UseInd.ospvLossPacketsSent          = ospvLossPacketsSent;
       nbData->Message.UseInd.ospvLossFractionSent         = ospvLossFractionSent;
       nbData->Message.UseInd.ospvLossPacketsReceived      = ospvLossPacketsReceived;
@@ -1005,6 +1022,7 @@ OSPPTransactionIndicateCapabilities_nb(
         OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction Handle  */
         const char      *ospvSource,                  /* In - Source of call      */
         const char      *ospvSourceDevice,            /* In - SourceDevice of call*/
+        const char      *ospvSourceNetworkId,         /* In - NetworkId of call*/
         unsigned         ospvAlmostOutOfResource,     /* In - A Boolean flag indicating device's availability */
         unsigned        *ospvSizeOfDetailLog,         /* In\Out - Max size of detail log \ Actual size of detail log */
         void            *ospvDetailLog)               /* In\Out - Location of detail log storage */
@@ -1043,6 +1061,7 @@ OSPPTransactionIndicateCapabilities_nb(
       nbData->Message.CapInd.ospvSource                  = ospvSource;
       nbData->Message.CapInd.ospvSourceDevice            = ospvSourceDevice;
       nbData->Message.CapInd.ospvAlmostOutOfResources    = ospvAlmostOutOfResource;
+      nbData->Message.CapInd.ospvSourceNetworkId         = ospvSourceNetworkId;
       nbData->Message.CapInd.ospvSizeOfDetailLog         = ospvSizeOfDetailLog;
       nbData->Message.CapInd.ospvDetailLog               = ospvDetailLog;
 

@@ -106,7 +106,12 @@ typedef enum
     ospeElemDestOSPVersion,
     ospeElemEndTime,
     ospeElemAlertTime,
-    ospeElemPostDialDelay
+    ospeElemPostDialDelay,
+    ospeElemConnectTime,
+    ospeElemReleaseSource,
+    ospeElemServiceType,
+    ospeElemGroup,
+    ospeElemGroupId
 }
 OSPTMSGELEMPART;
 

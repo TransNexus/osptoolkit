@@ -189,12 +189,30 @@ typedef enum {
     OSPC_AUDIT_UPPER_BOUND
 } OSPE_AUDIT_STATE;
 
+#define OSPC_CURRENCYSIZE 5 /* We support only 3 digit Currency codes */
+#define OSPC_CONFIDSIZE 128 /* Same as Call Id Size */
+#define OSPC_UNITSIZE 20
+
 typedef enum
 {
     OSPC_E164=0,
     OSPC_SIP,
     OSPC_URL
 }OSPE_NUMBERING_FORMAT;
+
+typedef enum
+{
+    OSPC_VOICE=0,
+    OSPC_DATA
+}OSPE_SERVICE_TYPE;
+
+typedef struct
+{
+    unsigned amount;
+    unsigned increment;
+    unsigned char unit[OSPC_UNITSIZE];
+    unsigned char currency[OSPC_CURRENCYSIZE]; 
+}OSPT_PRICING_INFO;
 
 #include "ospcallid.h"
 

@@ -40,6 +40,50 @@
 
 /**/
 /*-----------------------------------------------------------------------*
+ * OSPPMsgBinFromASCIIElement() - extract binary data from an ASCII element
+ *-----------------------------------------------------------------------*/
+unsigned                          /* returns error code */
+OSPPMsgBinFromASCIIElement(
+    unsigned char   *ospvElem,      /* input is ASCII element */
+    unsigned      *ospvDataLen,   /* in: max size  out: actual size */
+    unsigned char **ospvData      /* where to put binary data */
+)
+
+{
+    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned outlen = 0;
+    unsigned char *encodeddata = OSPC_OSNULL;
+
+    if (ospvElem    == OSPC_OSNULL) 
+    {
+        ospvErrCode = OSPC_ERR_ASCII_NO_ELEMENT;
+    }
+
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) 
+    {
+        /* as long as there's no error, we know the encoding to use */
+        encodeddata = (unsigned char *)ospvElem;
+
+        /* Allocate memory 3/4 that of the encoded data for the decoded data.
+         * The reason for the 3/4 or 0.75, is due to the way base64 encodes
+         * data. The result is the unencoded data is 3/4 that of the data
+         * when encoded.
+         */
+         outlen = (unsigned int)ceil((0.75)*OSPM_STRLEN((char *)encodeddata));
+         OSPM_MALLOC(*ospvData, unsigned char, outlen + 1);
+         OSPM_MEMSET(*ospvData, 0, outlen + 1);
+
+         /* decode the base64 */
+         ospvErrCode = OSPPBase64Decode((const char *)encodeddata,
+                    OSPM_STRLEN((char *)encodeddata), *ospvData, &outlen);
+
+         *ospvDataLen = outlen;
+    }
+    return(ospvErrCode);
+}
+
+/**/
+/*-----------------------------------------------------------------------*
  * OSPPMsgBinFromElement() - extract binary data from an element
  *-----------------------------------------------------------------------*/
 

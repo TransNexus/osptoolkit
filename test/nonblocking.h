@@ -146,8 +146,11 @@ extern "C"
             OSPTTIME        ospvStartTime,                /* In - StartTime of call */
             OSPTTIME        ospvEndTime,                  /* In - EndTime of call */
             OSPTTIME        ospvAlertTime,                /* In - AlertTime of call */
+            OSPTTIME        ospvConnectTime,              /* In - ConnectTime of call */
             unsigned        ospvIsPDDInfoPresent,         /* In - Is PDD present*/
             unsigned        ospvPostDialDelay,            /* In - PDD */
+            unsigned        ospvReleaseSource,            /* In - Rel Src*/
+            unsigned char   *ospvConferenceId,            /* In - Conference Id*/
             unsigned        ospvLossPacketsSent,          /* In - Packets not received by peer */
             signed          ospvLossFractionSent,         /* In - Fraction of packets not received by peer */
             unsigned        ospvLossPacketsReceived,      /* In - Packets not received that were expected */
@@ -162,6 +165,7 @@ extern "C"
             OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction Handle  */
             const char      *ospvSource,                  /* In - Source of call      */
             const char      *ospvSourceDevice,            /* In - SourceDevice of call*/
+            const char      *ospvSourceNetworkId,         /* In - NetworkId of call*/
             unsigned         ospvAlmostOutOfResource,     /* In - A Boolean flag indicating device's availability */
             unsigned        *ospvSizeOfDetailLog,         /* In\Out - Max size of detail log \ Actual size of detail log */
             void            *ospvDetailLog);              /* In\Out - Location of detail log storage */

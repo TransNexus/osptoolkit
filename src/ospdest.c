@@ -297,6 +297,64 @@ OSPPDestDevHasAddr(
     return(ospvHasAddr);
 }
 
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPDestHasNetworkAddr() - does a destination have a Network Addr?
+ *-----------------------------------------------------------------------*/
+unsigned                                   /* returns non-zero if exists */
+OSPPDestHasNetworkAddr(
+    OSPTDEST *ospvDest                     /* destination in question */
+)
+{
+    unsigned ospvHasAddr = OSPC_FALSE;
+    if (ospvDest != OSPC_OSNULL) 
+    {
+        ospvHasAddr = (ospvDest->ospmDestNetworkId[0] != '\0');
+    }
+    return(ospvHasAddr);
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPDestSetNetworkAddr() - sets the network address for a destination 
+ *  device
+ *-----------------------------------------------------------------------*/
+void                                       /* nothing returned */
+OSPPDestSetNetworkAddr(
+    OSPTDEST            *ospvDest,         /* destination */
+    const unsigned char *ospvAddr          /* network address as string */
+)
+{
+    size_t  len;
+
+    len=0;
+    if (ospvDest != OSPC_OSNULL) 
+    {
+        if (ospvAddr != OSPC_OSNULL) 
+        {
+            OSPM_MEMCPY((ospvDest)->ospmDestNetworkId, (ospvAddr), 
+                tr_min(OSPC_NETWORKIDSIZE,OSPM_STRLEN((const char *)ospvAddr)+1));
+        }
+    }
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPDestGetNetworkAddr() - returns the network address for a destination
+ *  device
+ *-----------------------------------------------------------------------*/
+unsigned char *                      /* returns address as string */
+OSPPDestGetNetworkAddr(
+    OSPTDEST *ospvDest                     /* destination in question */
+)
+{
+    unsigned char *ospvAddr = OSPC_OSNULL;
+    if  (ospvDest != OSPC_OSNULL) 
+    {
+        ospvAddr = ((ospvDest)->ospmDestNetworkId);
+    }
+    return(ospvAddr);
+}
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -864,7 +922,7 @@ OSPPDestFromElement(
                 break;
                 case ospeElemDestAlt:
                 /*                OSPPDestSetAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem)); */
-                OSPPDestDevSetAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
+                OSPPDestSetNetworkAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
                 case ospeElemDestSigAddr:
                 /*                OSPPDestDevSetAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem)); */

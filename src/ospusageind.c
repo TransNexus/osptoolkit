@@ -319,6 +319,69 @@ OSPPUsageIndGetSourceNumber(
 
 /**/
 /*-----------------------------------------------------------------------*
+ * OSPPUsageIndSetConferenceId() - set the conference id
+ *-----------------------------------------------------------------------*/
+void                                /* nothing returned */
+OSPPUsageIndSetConferenceId(
+    OSPTUSAGEIND *ospvUsageInd,     /* usage indication to set */
+    unsigned char *ospvConferenceId /* conference id to set to */
+)
+{
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        if (ospvConferenceId  != OSPC_OSNULL)
+        {
+            OSPM_STRCPY((char *)(ospvUsageInd)->ospmUsageIndConferenceId, 
+                (const char *)(ospvConferenceId));
+        }
+    }
+    return;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndGetIsConfIdPresent() - Checks if conf id is present.
+ *-----------------------------------------------------------------------*/
+int
+OSPPUsageIndGetIsConfIdPresent(
+    OSPTUSAGEIND *ospvUsageInd                     /* usage ind */
+)
+{
+    unsigned ospvIsConfIdPresent = 0;
+
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        if (ospvUsageInd->ospmUsageIndConferenceId[0] == '\0')
+        {
+           ospvIsConfIdPresent = OSPC_FALSE;
+        }
+        else
+        {
+           ospvIsConfIdPresent = OSPC_TRUE;
+        }
+    }
+    return ospvIsConfIdPresent;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndGetConferenceId() - returns the conf id
+ *-----------------------------------------------------------------------*/
+unsigned char *
+OSPPUsageIndGetConferenceId(
+    OSPTUSAGEIND *ospvUsageInd                     /* usage ind */
+)
+{
+    unsigned char *ospvConferenceId = OSPC_OSNULL;
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        ospvConferenceId = ospvUsageInd->ospmUsageIndConferenceId;
+    }
+    return ospvConferenceId;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
  * OSPPUsageIndSetDestNumber() - set the destination number
  *-----------------------------------------------------------------------*/
 void                                /* nothing returned */
@@ -446,6 +509,44 @@ OSPPUsageIndGetIsPDDInfoPresent(
         ospvIsPDDInfoPresent = ospvUsageInd->ospvUsageIndIsPDDInfoPresent;
     }
     return ospvIsPDDInfoPresent;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndSetReleaseSource() - set the Rel Src
+ *-----------------------------------------------------------------------*/
+void                                /* nothing returned */
+OSPPUsageIndSetReleaseSource(
+    OSPTUSAGEIND *ospvUsageInd,     /* usage indication to set */
+    unsigned ospvReleaseSource /* Rel Src to set to */
+)
+{
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        if (ospvReleaseSource  >= 0)
+        {
+            ospvUsageInd->ospmUsageIndReleaseSource = ospvReleaseSource;
+        }
+    }
+    return;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndGetReleaseSource() - returns the Rel Src for a usage ind
+ *-----------------------------------------------------------------------*/
+unsigned
+OSPPUsageIndGetReleaseSource(
+    OSPTUSAGEIND *ospvUsageInd                     /* usage ind */
+)
+{
+    int ospvReleaseSource = 0;
+
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        ospvReleaseSource = ospvUsageInd->ospmUsageIndReleaseSource;
+    }
+    return ospvReleaseSource;
 }
 
 /**/
@@ -858,6 +959,41 @@ OSPPUsageIndGetEndTime(
 
 /**/
 /*-----------------------------------------------------------------------*
+ * OSPPUsageIndSetConnectTime() - Set Call Connect Time
+ *-----------------------------------------------------------------------*/
+void                                       /* nothing returned */
+OSPPUsageIndSetConnectTime(
+    OSPTUSAGEIND *ospvUsageInd,
+    OSPTTIME      ospvConnectTime
+)
+{
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        (ospvUsageInd)->ospmUsageIndConnectTime = ospvConnectTime;
+    }
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndGetConnectTime() - Get Call Connect Time
+ *-----------------------------------------------------------------------*/
+OSPTTIME                                    /* call connect time */
+OSPPUsageIndGetConnectTime(
+    OSPTUSAGEIND *ospvUsageInd
+)
+{
+		OSPTTIME ospvConnectTime = 0;
+
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        ospvConnectTime = (ospvUsageInd)->ospmUsageIndConnectTime;
+    }
+
+		return(ospvConnectTime);
+}
+
+/**/
+/*-----------------------------------------------------------------------*
  * OSPPUsageIndSetAlertTime() - Set Call Alert Time
  *-----------------------------------------------------------------------*/
 void                                       /* nothing returned */
@@ -1175,6 +1311,13 @@ OSPTUSAGEIND *                                 /* returns pointer or NULL */
         OSPPListLinkNew (&(ospvUsageInd->ospmUsageIndLink));
         ospvUsageInd->ospmUsageIndTimestamp = (OSPTTIME)0;
         ospvUsageInd->ospmUsageIndStartTime = (OSPTTIME)0;
+        ospvUsageInd->ospmUsageIndAlertTime = (OSPTTIME)0;
+        ospvUsageInd->ospmUsageIndEndTime = (OSPTTIME)0;
+        ospvUsageInd->ospmUsageIndConnectTime = (OSPTTIME)0;
+        ospvUsageInd->ospvUsageIndIsPDDInfoPresent = 0;
+        ospvUsageInd->ospmUsageIndPostDialDelay = 0;
+        ospvUsageInd->ospmUsageIndReleaseSource = 0;
+        ospvUsageInd->ospmUsageIndConferenceId[0] = '\0';
         ospvUsageInd->ospmUsageIndTransactionId = (OSPTTRXID)OSPC_OSNULL;
         ospvUsageInd->ospmUsageIndCallId = (OSPTCALLID *)OSPC_OSNULL;
         ospvUsageInd->ospmUsageIndSourceNumber[0] = '\0';
@@ -1189,6 +1332,8 @@ OSPTUSAGEIND *                                 /* returns pointer or NULL */
         ospvUsageInd->ospmUsageIndTNStats = OSPC_OSNULL;
         ospvUsageInd->ospmUsageIndComponentId = OSPC_OSNULL;
         ospvUsageInd->ospmUsageIndMessageId = OSPC_OSNULL;
+        ospvUsageInd->ospmUsageIndIsPricingInfoPresent = OSPC_FALSE;
+        ospvUsageInd->osmpUsageIndIsServiceInfoPresent = OSPC_FALSE;
     }
 
     return ospvUsageInd;
@@ -1637,14 +1782,56 @@ OSPPUsageIndToElement(
                 }
             }
 
+            /*
+             * Add Pricing Info 
+             */
+            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (usage->ospmUsageIndIsPricingInfoPresent == OSPC_TRUE))
+            {
+                ospvErrCode = OSPPAddPricingInfoToUsageElement(usage->osmpUsageIndPricingInfo,
+                              &subelem);
+                if (ospvErrCode == OSPC_ERR_NO_ERROR)
+                {
+                    OSPPXMLElemAddChild(usgindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /*
+             * Add Service Info
+             */
+            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (usage->osmpUsageIndIsServiceInfoPresent == OSPC_TRUE))
+            {
+                ospvErrCode = OSPPAddServiceTypeToUsageElement(usage->osmpUsageIndServiceType,
+                              &subelem);
+                if (ospvErrCode == OSPC_ERR_NO_ERROR)
+                {
+                    OSPPXMLElemAddChild(usgindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /*
+             * Add conference id if present 
+             */
+            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndGetIsConfIdPresent(usage)))
+            {
+                ospvErrCode = OSPPAddConfIdToUsageElement(OSPPUsageIndGetConferenceId(usage),&subelem);
+                if (ospvErrCode == OSPC_ERR_NO_ERROR)
+                {
+                    OSPPXMLElemAddChild(usgindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
             /* add usage detail (if appropriate) */
             if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasDuration(usage))
             {
                 ospvErrCode = OSPPUsageToElement(
                     (unsigned)OSPPUsageIndGetDuration(usage),
                     OSPPUsageIndGetStartTime(usage),OSPPUsageIndGetEndTime(usage),
-                    OSPPUsageIndGetAlertTime(usage),OSPPUsageIndGetIsPDDInfoPresent(usage),
-                    OSPPUsageIndGetPostDialDelay(usage),&subelem);
+                    OSPPUsageIndGetAlertTime(usage),OSPPUsageIndGetConnectTime(usage),
+                    OSPPUsageIndGetIsPDDInfoPresent(usage),
+                    OSPPUsageIndGetPostDialDelay(usage),OSPPUsageIndGetReleaseSource(usage),&subelem);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
                     OSPPXMLElemAddChild(usgindelem, subelem);

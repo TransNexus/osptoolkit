@@ -406,3 +406,15 @@ Version 3.2.0
   authorization response was longer than the actual called number.  
 * This release of the toolkit supports calling number translation.
 * The toolkit now uses port 7080 to communicate with the NexOSS rather than 8080.
+---------------------------------------------------------------------------
+
+Version 3.3.0
+* Added facility to report network Id in the CapEx messages.
+* Added support for smaller ASCII token.
+* Added Service, Currency and Pricing Elements to AuthReq and CDRs. There is a new API - 
+  OSPPTransactionSetServiceAndPricingInfo, which should be used to configure
+  this information.
+* Added Conference Id, Call Release Source, and Connect Time to CDRs.
+* Added support for Trunk Groups in AuthReq message. The OSPPTransactionGetDestNetworkId
+  API can be used to retreive the NetworkId information reported back by the 
+  OSP Server in the AuthRsp or that was included in the token.

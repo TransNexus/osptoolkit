@@ -924,6 +924,35 @@ testOSPPProviderGetNumberOfServicePoints()
     return errorcode;
 }
 
+int
+testOSPPTransactionSetServiceAndPricingInfo()
+{
+    int errorcode = 0;
+    OSPT_PRICING_INFO PricingInfo;
+    OSPT_PRICING_INFO PricingInfo2;
+    OSPT_PRICING_INFO    *ospvPricingInfo[MAX_PRICING_INFO_ALLOWED];
+
+    PricingInfo.amount = 10;
+    PricingInfo.increment = 2;
+    OSPM_STRCPY((char *)PricingInfo.unit,(const char *)"sec");
+    OSPM_STRCPY((char *)PricingInfo.currency,(const char *)"USD");
+
+    PricingInfo2.amount = 15;
+    PricingInfo2.increment = 3;
+    OSPM_STRCPY((char *)PricingInfo2.unit,(const char *)"sec");
+    OSPM_STRCPY((char *)PricingInfo2.currency,(const char *)"EUR");
+
+    ospvPricingInfo[0] = &PricingInfo;
+    ospvPricingInfo[1] = NULL;
+
+    errorcode = OSPPTransactionSetServiceAndPricingInfo(
+        OSPVTransactionHandle,
+        OSPC_VOICE, /* voice */
+        ospvPricingInfo);
+
+    return errorcode;
+}
+
 int 
 testOSPPTransactionSetNetworkId()
 {
@@ -1250,7 +1279,17 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
     int             errorcode       = 0;
     unsigned        detaillogsize   = 0;
     OSPTUINT64 server_txn_id;
+    OSPT_PRICING_INFO PricingInfo;
+    OSPT_PRICING_INFO    *ospvPricingInfo[MAX_PRICING_INFO_ALLOWED];
     server_txn_id=2111133232;
+
+    PricingInfo.amount = 10;
+    PricingInfo.increment = 2;
+    OSPM_STRCPY((char *)PricingInfo.unit,(const char *)"sec");
+    OSPM_STRCPY((char *)PricingInfo.currency,(const char *)"USD");
+
+    ospvPricingInfo[0] = &PricingInfo;
+    ospvPricingInfo[1] = NULL;
 
     callid = (void *)c_id;
 
@@ -1268,6 +1307,12 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
         }
     }
 
+    if (errorcode == OSPC_ERR_NO_ERROR){
+    errorcode = OSPPTransactionSetServiceAndPricingInfo(
+        OSPVTransactionHandle,
+        OSPC_VOICE, /* voice */
+        ospvPricingInfo);
+    }
 
     if (errorcode == OSPC_ERR_NO_ERROR){
 
@@ -1311,10 +1356,21 @@ testOSPPTransactionInitializeAtDevice(int IsSource)
     unsigned        detaillogsize   = 0,
                     authorised      = OSPC_TRAN_NOT_AUTHORISED,
                     timelimit       = 0;
-    unsigned char   token2[TOKEN_SZ];
+    unsigned char   token2[TOKEN_SZ],
 
-                    callid = (void *)c_id;
+                    callid = (void *)c_id,
                     token  = (void *)c_token;
+    OSPT_PRICING_INFO PricingInfo;
+    OSPT_PRICING_INFO    *ospvPricingInfo[MAX_PRICING_INFO_ALLOWED];
+
+    PricingInfo.amount = 10;
+    PricingInfo.increment = 2;
+    OSPM_STRCPY((char *)PricingInfo.unit,(const char *)"sec");
+    OSPM_STRCPY((char *)PricingInfo.currency,(const char *)"USD");
+
+    ospvPricingInfo[0] = &PricingInfo;
+    ospvPricingInfo[1] = NULL;
+
 
     OSPM_MEMSET(token2, 0, TOKEN_SZ);
 
@@ -1328,6 +1384,14 @@ testOSPPTransactionInitializeAtDevice(int IsSource)
             OSPVProviderHandle,
             &OSPVTransactionHandle);
     }
+
+    if (errorcode == OSPC_ERR_NO_ERROR){
+    errorcode = OSPPTransactionSetServiceAndPricingInfo(
+        OSPVTransactionHandle,
+        OSPC_VOICE, /* voice */
+        ospvPricingInfo);
+    }
+
 
     tokensize = TOKEN_SZ;
 
@@ -1470,7 +1534,7 @@ testOSPPTransactionRequestSuggestedAuthorisation()
 {
     int      errorcode       = 0;
     unsigned detaillogsize   = 0;
-    char *preferredDest[] = {"1.1.1.1"};
+    char *preferredDest[] = {{"172.16.4.10"},{"172.16.4.10"}};
 
     errorcode = testInitializeCallIds(); 
 
@@ -1551,6 +1615,7 @@ testOSPPTransactionIndicateCapabilities()
         OSPVTransactionHandle,
         SourceIP,
         SourceDevIP,
+        "SrcNetworkId",
         almostOutOfResources,
         &detaillogsize,
         (void *)NULL);
@@ -1846,8 +1911,11 @@ testOSPPTransactionReportUsage()
 						time(NULL)-10,
 						time(NULL)+20,
 						time(NULL)-10,
+						time(NULL)-8,
             IS_PDD_INFO_AVAILABLE,
 	    1, /* PDD */
+            0, /* Release Source */
+            (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id*/
             1,
             2,
             100,
@@ -1866,8 +1934,11 @@ testOSPPTransactionReportUsage()
 						time(NULL)-10,
 						time(NULL)+20,
 						time(NULL)-10,
+						time(NULL)-8,
             IS_PDD_INFO_AVAILABLE,
 	    1, /* PDD */
+            0, /* Release Source */
+            (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id*/
             1,
             2,
             100,
@@ -2262,6 +2333,9 @@ testAPI(int apinumber)
         case 54:
         errorcode = testSetCallId();
         break;
+        case 55:
+        errorcode = testOSPPTransactionSetServiceAndPricingInfo();
+        break;
         case 100:
         printf("Enter the number of Providers to be created .. ");
         scanf("%d",&num_providers);
@@ -2394,6 +2468,7 @@ testMenu()
       printf("50) Set Calling Number                51) Set Called Number\n");
       printf("52) Get Calling Number                53) Get Called Number\n");
       printf("54) Set CallId to Empty for Token Validation\n");
+      printf("55) Set Pricing and Service Info\n");
       printf("---------------------------------------------------------------------\n");
       printf("Performance tests\n");
       printf("---------------------------------------------------------------------\n");
@@ -3275,8 +3350,11 @@ testNonBlockingPerformanceTest(void *arg)
 						time(NULL)-10,
 						time(NULL)+20,
 						time(NULL)-10,
+						time(NULL)-8,
             					    IS_PDD_INFO_AVAILABLE,
                                                     1, /* PDD*/
+                                                    3, /* Release Source */
+                                                    (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id*/
                                                     1,
                                                     2,
                                                     100,
@@ -3298,8 +3376,11 @@ testNonBlockingPerformanceTest(void *arg)
 						time(NULL)-10,
 						time(NULL)+20,
 						time(NULL)-10,
+						time(NULL)-8,
             					    IS_PDD_INFO_AVAILABLE,
                                                     1, /* PDD*/
+                                                    3, /* Release Source */
+                                                    (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id*/
                                                     1,
                                                     2,
                                                     100,
@@ -3511,6 +3592,7 @@ int testNonBlockingPerformanceTestForCapabilities()
                                                             OTransactionHandles[i],
                                                             SourceIP,
                                                             SourceDevIP,
+                                                            "SrcNetworkId",
                                                             i%2,
                                                             &detaillogsize,
                                                             (void *)NULL);

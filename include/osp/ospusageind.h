@@ -42,8 +42,11 @@ typedef struct
     OSPTTIME          ospmUsageIndStartTime;
     OSPTTIME          ospmUsageIndEndTime;
     OSPTTIME          ospmUsageIndAlertTime;
+    OSPTTIME          ospmUsageIndConnectTime;
     OSPTTIME          ospmUsageIndPostDialDelay;
     OSPTBOOL          ospvUsageIndIsPDDInfoPresent;
+    unsigned          ospmUsageIndReleaseSource;
+    unsigned char     ospmUsageIndConferenceId[OSPC_CONFIDSIZE]; /* This is in chararcters */
     unsigned char     *ospmUsageIndMessageId;
     unsigned char     *ospmUsageIndComponentId;
     unsigned          ospmUsageIndRole;
@@ -61,6 +64,10 @@ typedef struct
     unsigned          ospmUsageIndTNFailReason;
     unsigned          ospmUsageIndTNFailReasonInd;
     OSPTSTATISTICS    *ospmUsageIndTNStats;
+    OSPTBOOL          ospmUsageIndIsPricingInfoPresent;
+    OSPT_PRICING_INFO osmpUsageIndPricingInfo;
+    OSPTBOOL          osmpUsageIndIsServiceInfoPresent;
+    OSPE_SERVICE_TYPE osmpUsageIndServiceType;
 }
 OSPTUSAGEIND;
 
@@ -112,6 +119,9 @@ extern "C"
     void           OSPPUsageIndSetSourceNumber(OSPTUSAGEIND *,unsigned char *);
     unsigned char *OSPPUsageIndGetSourceNumber(OSPTUSAGEIND *);
 
+    void           OSPPUsageIndSetCurrency(OSPTUSAGEIND *,unsigned char *);
+    unsigned char *OSPPUsageIndGetCurrency(OSPTUSAGEIND *);
+
     void           OSPPUsageIndSetDestNumber(OSPTUSAGEIND *,unsigned char *);
     unsigned char *OSPPUsageIndGetDestNumber(OSPTUSAGEIND *);
 
@@ -150,12 +160,18 @@ extern "C"
     void           OSPPUsageIndSetEndTime(OSPTUSAGEIND *, OSPTTIME ospvEndTime);
     OSPTTIME       OSPPUsageIndGetEndTime(OSPTUSAGEIND *);
 
+    void           OSPPUsageIndSetConnectTime(OSPTUSAGEIND *, OSPTTIME ospvEndTime);
+    OSPTTIME       OSPPUsageIndGetConnectTime(OSPTUSAGEIND *);
     void           OSPPUsageIndSetAlertTime(OSPTUSAGEIND *, OSPTTIME ospvEndTime);
     OSPTTIME       OSPPUsageIndGetAlertTime(OSPTUSAGEIND *);
     void           OSPPUsageIndSetPostDialDelay(OSPTUSAGEIND *, int ospvPostDialDelay);
     int            OSPPUsageIndGetPostDialDelay(OSPTUSAGEIND *);
     void           OSPPUsageIndSetIsPDDInfoPresent(OSPTUSAGEIND *, unsigned ospvIsPDDInfoPresent);
     int            OSPPUsageIndGetIsPDDInfoPresent(OSPTUSAGEIND *);
+    void           OSPPUsageIndSetReleaseSource(OSPTUSAGEIND *, unsigned ospvReleaseSource);
+    unsigned       OSPPUsageIndGetReleaseSource(OSPTUSAGEIND *);
+    void           OSPPUsageIndSetConferenceId(OSPTUSAGEIND *,unsigned char *);
+    unsigned char * OSPPUsageIndGetConferenceId(OSPTUSAGEIND *);
 #ifdef __cplusplus
 }
 #endif

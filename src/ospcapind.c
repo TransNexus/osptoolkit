@@ -124,6 +124,7 @@ OSPPCapIndNew(
     OSPTTRANS   *ospvTrans,                 /* In - Transaction Pointer */
     const char  *ospvSource,                /* In - Source of call      */
     const char  *ospvSourceDevice,          /* In - SourceDevice of call*/
+    const char  *ospvSourceNetworkId,       /* In - NetworkId of call. Could be trunk grp*/
     unsigned     ospvAlmostOutOfResources)  /* In - Boolean indicator of availability */
 {
     int         errorcode       = OSPC_ERR_NO_ERROR;
@@ -206,7 +207,26 @@ OSPPCapIndNew(
                                 altinfo);
             }
         }
-        
+
+        /* Add Network info if it is present */
+         if (OSPC_OSNULL != ospvSourceNetworkId && strlen(ospvSourceNetworkId) > 0)
+        {
+            /* Initialize the list only if the list has not been initialized above*/
+            if (strlen(ospvSource)==0)
+            {
+                OSPPListNew(&(capInd->ospmSrcAlternate));
+            }
+
+            altinfo = OSPPAltInfoNew(strlen(ospvSourceNetworkId), 
+                                     (const unsigned char *)ospvSourceNetworkId,
+                                      ospeNetwork);
+
+            if(OSPC_OSNULL != altinfo)
+            {
+                OSPPListAppend((OSPTLIST *)&(capInd->ospmSrcAlternate),
+                                altinfo);
+            }
+        }
     }
     
     
