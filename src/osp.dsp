@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=osp - Win32 Debug_Non_Secure
+CFG=osp - Win32 Debug_Secure
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,13 +13,12 @@ CFG=osp - Win32 Debug_Non_Secure
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "osp.mak" CFG="osp - Win32 Debug_Non_Secure"
+!MESSAGE NMAKE /f "osp.mak" CFG="osp - Win32 Debug_Secure"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "osp - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE "osp - Win32 Debug_Secure" (based on "Win32 (x86) Static Library")
-!MESSAGE "osp - Win32 Debug_Non_Secure" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -75,36 +74,12 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
-!ELSEIF  "$(CFG)" == "osp - Win32 Debug_Non_Secure"
-
-# PROP BASE Use_MFC 0
-# PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "Debug_Non_Secure"
-# PROP BASE Intermediate_Dir "Debug_Non_Secure"
-# PROP BASE Target_Dir ""
-# PROP Use_MFC 0
-# PROP Use_Debug_Libraries 1
-# PROP Output_Dir "..\lib"
-# PROP Intermediate_Dir "Debug_Non_Secure"
-# PROP Target_Dir ""
-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /I "..\crypto" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "OSP_SDK" /D "BSAFE" /D "OSPC_DEBUG" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W3 /Gm /GX /Zi /Od /I "../include" /I "../crypto" /I "..\pthread\include" /D "_POSIX_THREADS" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "OSP_SDK" /D "OSPC_DEBUG" /YX /FD /GZ /c
-# ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-LIB32=link.exe -lib
-# ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo
-
 !ENDIF 
 
 # Begin Target
 
 # Name "osp - Win32 Release"
 # Name "osp - Win32 Debug_Secure"
-# Name "osp - Win32 Debug_Non_Secure"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
