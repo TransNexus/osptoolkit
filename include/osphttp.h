@@ -62,6 +62,8 @@ typedef struct _OSPTHTTP
     OSPTSSIZE_T         ByteCount;
     unsigned char       Flags;
     OSPTMSGINFO         *MsgInfoList;
+    OSPTSVCPT           *ServicePointList;
+    unsigned long        CurrentMsgCount;
 } OSPTHTTP;
 
 #ifdef __cplusplus
@@ -75,6 +77,12 @@ extern "C"
     int      OSPPHttpVerifyResponse(char *, int *);
     void     OSPPHttpParseHeader(unsigned char *, unsigned char **, unsigned *, int , int *);
     OSPTSEC *OSPPHttpGetSecurity(OSPTHTTP *);
+    int osppHttpGetIdleHttpConn(OSPTHTTP **,OSPTHTTP **,unsigned,int,int);
+    void osppHttpCopySPList(OSPTCOMM *,OSPTHTTP **,int );
+    void osppHttpGetServicePointList(OSPTHTTP *,OSPTSVCPT **);
+    void osppHttpDeleteServicePointList(OSPTSVCPT **,int);
+
+
 
 #ifdef __cplusplus
 }
