@@ -238,7 +238,7 @@ Version 2.10.0
   #4   tests OSPProviderSetServicePoints
   #14  tests OSPPProviderSetCapabilitiesURLs
   #37  tests a single call to OSPPTransactionIndicateCapabilities
-  #101 tests multiples calls to OSPPTransactionIndicateCapabilities in parallel
+  #101 tests multiple calls to OSPPTransactionIndicateCapabilities in parallel
 * Fixed a bug in XML-encoding logic for empty elements with attributes.  The toolkit will correctly encode 
   empty calling number.
 * Fixed a bug in OSPProviderSetServicePoints.  The function can be used for updating the list of service points
