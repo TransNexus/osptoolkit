@@ -56,7 +56,6 @@
  * the macro definition in osplist.h.
  */
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*/
 /* OSPPListLinkNew() - initialize a list link                            */
@@ -71,44 +70,6 @@ OSPPListLinkNew(
         /* just NULL out the link pointer */
         ospvLink->ospmLinkNext = OSPC_OSNULL;
     }
-}
-
-/**/
-/*-----------------------------------------------------------------------*/
-/* OSPPListLinkDelete() - destroy a list link                            */
-/*-----------------------------------------------------------------------*/
-void                               /* no return value */
-OSPPListLinkDelete(
-    OSPTLISTLINK *ospvLink         /* address of link to initialize */
-)
-{
-    if (ospvLink != OSPC_OSNULL) 
-    {
-        /* make sure the item's not on a list somewhere */
-        if (OSPPListLinkIsolated(ospvLink)) 
-        {
-            /* just NULL out the link pointer */
-            ospvLink->ospmLinkNext = OSPC_OSNULL;
-        }
-    }
-}
-
-/**/
-/*-----------------------------------------------------------------------*/
-/* OSPPListLinkIsolated() - check to see if a link is isolated           */
-/*-----------------------------------------------------------------------*/
-unsigned                           /* non-zero if empty, zero otherwise */
-OSPPListLinkIsolated(
-    OSPTLISTLINK *ospvLink         /* address of link to check */
-)
-{
-    unsigned ospvIsolated = OSPC_TRUE;
-
-    if (ospvLink != OSPC_OSNULL) 
-    {
-        ospvIsolated = (ospvLink->ospmLinkNext == OSPC_OSNULL);
-    }
-    return(ospvIsolated);
 }
 
 /**/
@@ -263,7 +224,6 @@ OSPPListMove(
     }
 }
 
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*/
