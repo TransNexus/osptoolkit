@@ -95,7 +95,6 @@
 #define CERT_SZ          1024
 #define PKEY_SZ          1024
 
-#define FAILURE_REASON  OSPC_FAIL_TEMPORARY_FAILURE
 
 /*----------------------------------------------*
  *            request info globals              *
@@ -122,6 +121,7 @@ token_algo_t tokenalgo=TOKEN_ALGO_SIGNED;
 char *SourceIP=NULL,*SourceDevIP=NULL,*DstIP=NULL,*DstDevIP=NULL;
 unsigned almostOutOfResources=0;
 unsigned hardwareSupport=0;
+unsigned TCcode=0;
 
 
 
@@ -129,10 +129,11 @@ NBMONITOR *nbMonitor    = NULL;
 #define WORK_THREAD_NUM 40    /* make sure that this number does not exceed DEF_HTTP_MAXCONN */
 #define TOKEN_SIZE      2000
 #define TEST_ERROR 1
+#define FILE_OPEN_ERROR 2
 #define MAX_QUEUE_SIZE 10000
 int TEST_NUM=0;
 char      **Tokens;
-
+int CallingNumFormat=0,CalledNumFormat=0;
 
 /*----------------------------------------------*
  *            service point globals             *
@@ -157,7 +158,7 @@ static  size_t  NUM_CA_CERTS=0;
 static  size_t  NUM_LOCAL_CERTS=0;
 static  size_t  NUM_PKEYS=0;
 static  unsigned char  **certs=NULL;
-static  OSPTCERT				*authCerts[10];
+static  OSPTCERT				*authCerts[OSPC_SEC_MAX_AUTH_CERTS];
 static  int           *certssizes=NULL;
 static  unsigned char  **localcerts=NULL;
 static  int             *localcertssizes=NULL;
@@ -170,8 +171,8 @@ int quietmode = 0;
 unsigned numdestinations = NUM_CALL_IDS;
 int num_test_calls = 500;
 
-OSPTCERT TheAuthCert;
-unsigned char Reqbuf[4096],LocalBuf[4096],AuthBuf[4096];
+OSPTCERT TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
+unsigned char Reqbuf[4096],LocalBuf[4096],AuthBuf[OSPC_SEC_MAX_AUTH_CERTS][4096];
 
 /************ Local prototypes */
 static off_t  FileSizeGet(int fd);
@@ -244,8 +245,7 @@ int testOSPPloadPemCert(unsigned char *FileName, unsigned char *buffer, int *len
     bioIn = BIO_new_file((const char*)FileName,"r");
     if (bioIn == NULL)
     {
-        printf("Failed to find the File - %s \n",FileName);
-        retVal = TEST_ERROR;
+        retVal = FILE_OPEN_ERROR;
     }
     else
     {
@@ -303,7 +303,7 @@ int testOSPPloadPemPrivateKey(unsigned char *FileName, unsigned char *buffer, in
     if (bioIn == NULL)
     {
         printf("Failed to find the File - %s \n",FileName);
-        retVal = TEST_ERROR;
+        retVal = FILE_OPEN_ERROR;
     }
     else
     {
@@ -356,11 +356,12 @@ testOSPPSetServicePoints()
 int
 testOSPPProviderNew(OSPTPROVHANDLE *ProvHandle)
 {
-int errorcode = 0;
+int i,errorcode = 0;
 const char **servpts;
 
 char customer_id[64];
 char device_id[64];
+char searchstr[20];
 
     int length = 0;
 
@@ -388,23 +389,49 @@ char device_id[64];
          return errorcode;
     }
 
-
-    length = 0;
-    errorcode = testOSPPloadPemCert((unsigned char *)"cacert.pem", (unsigned char *)AuthBuf,&length);
-    if (errorcode == OSPC_ERR_NO_ERROR)
+    i=0;
+    while (i<OSPC_SEC_MAX_AUTH_CERTS)
     {
-        TheAuthCert.CertData = AuthBuf;
-        TheAuthCert.CertDataLength = length;
-        authCerts[0] = &TheAuthCert;
-        printf ("Loaded 1 Authorization Certificate \n");
+        sprintf(searchstr,"cacert_%d.pem",i); 
+        length = 0;
+        errorcode = testOSPPloadPemCert((unsigned char *)searchstr, (unsigned char *)AuthBuf[i],&length);
+        if (errorcode == OSPC_ERR_NO_ERROR)
+        {
+            TheAuthCert[i].CertData = AuthBuf[i];
+            TheAuthCert[i].CertDataLength = length;
+            authCerts[i] = &(TheAuthCert[i]);
+            i++;
+            printf ("Loaded %d Authorization Certificate \n",i);
+        }
+        else
+        {
+             if (errorcode == FILE_OPEN_ERROR)
+             {
+                 /*
+                  * If i!=0 then we have read at least one cacert.
+                  * No problem in that case.
+                  * Otherwise return an error
+                  */
+                 if (i==0)
+                 {
+                     printf("Failed to find the File - %s \n",searchstr);
+                     return errorcode;
+                 }
+                 else
+                 {
+                     /*
+                      * Break out of thew loop
+                      */
+                     break;
+                 }
+             }
+             else
+             {
+                 return errorcode;
+             }
+        }
     }
-    else
-    {
-         return errorcode;
-    }
-
-
-    NUM_CA_CERTS = 1;
+    NUM_CA_CERTS = i;
 
 
     sprintf(customer_id, "%ld", custid);
@@ -515,22 +542,52 @@ testOSPPProviderSetAuthorityCertificates()
 {
     int errorcode = 0;
     int length = 0;
+    int i;
+    char searchstr[20];
 
-    errorcode = testOSPPloadPemCert((unsigned char *)"cacert.pem", (unsigned char *)AuthBuf,&length);
-    if (errorcode == OSPC_ERR_NO_ERROR)
+    i=0;
+    while (i<OSPC_SEC_MAX_AUTH_CERTS)
     {
-        TheAuthCert.CertData = AuthBuf;
-        TheAuthCert.CertDataLength = length;
-        authCerts[0] = &TheAuthCert;
-        printf ("Read 1 Auhorization Certificate \n");
+        sprintf(searchstr,"cacert_%d.pem",i); 
+        length = 0;
+        errorcode = testOSPPloadPemCert((unsigned char *)searchstr, (unsigned char *)AuthBuf[i],&length);
+        if (errorcode == OSPC_ERR_NO_ERROR)
+        {
+            TheAuthCert[i].CertData = AuthBuf[i];
+            TheAuthCert[i].CertDataLength = length;
+            authCerts[i] = &(TheAuthCert[i]);
+            i++;
+            printf ("Read %d Authorization Certificate \n",i);
+        }
+        else
+        {
+             if (errorcode == FILE_OPEN_ERROR)
+             {
+                 /*
+                  * If i!=0 then we have read at least one cacert.
+                  * No problem in that case.
+                  * Otherwise return an error
+                  */
+                 if (i==0)
+                 {
+                     printf("Failed to find the File - %s \n",searchstr);
+                     return errorcode;
+                 }
+                 else
+                 {
+                     /*
+                      * Break out of thew loop
+                      */
+                     break;
+                 }
+             }
+             else
+             {
+                 return errorcode;
+             }
+        }
     }
-    else
-    {
-         return errorcode;
-    }
-
-    NUM_CA_CERTS = 1;
-
+    NUM_CA_CERTS = i;
 
     errorcode = OSPPProviderSetAuthorityCertificates(
         OSPVProviderHandle,
@@ -1084,7 +1141,7 @@ testOSPPTransactionGetNextDestination()
 
     errorcode = OSPPTransactionGetNextDestination(
         OSPVTransactionHandle,
-        OSPC_FAIL_NONE,
+        (OSPEFAILREASON)TCcode,
         TIMESTAMP_SZ,
         validafter,
         validuntil,
@@ -1201,11 +1258,11 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
         (unsigned long long)server_txn_id,/* Some hard coded Server Tx Id */
         IsSource, SourceIP,
         DstIP, SourceDevIP,
-        NULL, callingnumber,
-        callednumber, 
+        NULL, callingnumber,(OSPE_NUMBERING_FORMAT)CallingNumFormat,
+        callednumber,(OSPE_NUMBERING_FORMAT)CalledNumFormat,
         callidsize,
         callid,
-        OSPC_FAIL_TEMPORARY_FAILURE,
+        (OSPEFAILREASON)TCcode,
         &detaillogsize,
         NULL);
     }
@@ -1263,8 +1320,8 @@ testOSPPTransactionInitializeAtDevice(int IsSource)
         tranhandle2,
         IsSource, SourceIP,
         DstIP, SourceDevIP,
-        NULL, callingnumber,
-        callednumber, 
+        NULL, callingnumber,(OSPE_NUMBERING_FORMAT)CallingNumFormat,
+        callednumber,(OSPE_NUMBERING_FORMAT)CalledNumFormat, 
         callidsize,
         callid,
         tokensize,
@@ -1308,7 +1365,7 @@ testOSPPTransactionRecordFailure()
 
     errorcode = OSPPTransactionRecordFailure(
                         OSPVTransactionHandle,
-                        OSPC_FAIL_NO_ROUTE_TO_NETWORK);
+                        (OSPEFAILREASON)TCcode);
 
 
     if(errorcode == OSPC_ERR_NO_ERROR){
@@ -1346,7 +1403,7 @@ testOSPPTransactionReinitializeAtDevice()
     if(errorcode == OSPC_ERR_NO_ERROR){
         errorcode = OSPPTransactionReinitializeAtDevice(
                                                 tranhandle2,
-                                                FAILURE_REASON,
+                                                (OSPEFAILREASON)TCcode,
                                                 IsSource,
                                                 SourceIP,
                                                 DstIP,
@@ -1406,7 +1463,9 @@ testOSPPTransactionRequestSuggestedAuthorisation()
         SourceIP,
         SourceDevIP, /* Some random IP address that would probably not be in the Server */
         callingnumber,
+        (OSPE_NUMBERING_FORMAT)CallingNumFormat,
         callednumber,
+        (OSPE_NUMBERING_FORMAT)CalledNumFormat,
         "919404556#4444",
         NUM_CALL_IDS,
         callids,
@@ -1441,7 +1500,9 @@ testOSPPTransactionRequestAuthorisation()
         SourceIP,
         SourceDevIP,
         callingnumber,
+        (OSPE_NUMBERING_FORMAT)CallingNumFormat,
         callednumber,
+        (OSPE_NUMBERING_FORMAT)CalledNumFormat,
         "919404556#4444",
         NUM_CALL_IDS,
         callids,
@@ -1560,6 +1621,16 @@ testSetCallingNumber()
         printf("WARNING : You have set an Empty Calling Number !!\n");
     }
     printf("Calling Number Set to the new value\n");
+    return errorcode;
+}
+
+int
+testSetCallId()
+{
+    int errorcode = 0;
+
+    strcpy((char *)ret_cid,"");
+    printf("Call Id Set to the Empty for Validate Authorization \n");
     return errorcode;
 }
 
@@ -1683,7 +1754,9 @@ testOSPPTransactionValidateAuthorisation()
                 SourceDevIP,
                 destdev,
                 callingnumber,
+                (OSPE_NUMBERING_FORMAT)CallingNumFormat,
                 callednumber,
+                (OSPE_NUMBERING_FORMAT)CalledNumFormat,
                 callidsize,
                 ret_cid,
                 tokensize,
@@ -1955,7 +2028,7 @@ testOSPPSecKeyObjectCreateDelete()
 int
 testAPI(int apinumber)
 {
-    pthread_t MultProviderThrId[OSPC_MAX_PROVIDERS];
+    OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
     int i,errorcode = 0;
     extern char *OSPVBuildVersion; 
     int trans_to_run,num_providers;
@@ -2121,6 +2194,9 @@ testAPI(int apinumber)
         case 53:
         errorcode = testGetCalledNumber();
         break;
+        case 54:
+        errorcode = testSetCallId();
+        break;
         case 100:
         errorcode = testNonBlockingPerformanceTest();
         break;
@@ -2158,7 +2234,7 @@ testAPI(int apinumber)
             }
             for (i=0;i<num_providers;i++)
             {
-                pthread_join(MultProviderThrId[i],NULL);
+                OSPM_THR_JOIN(MultProviderThrId[i],NULL);
             }
         }
         break;
@@ -2176,7 +2252,7 @@ testMultipleProviders(void *arg)
    OSPTPROVHANDLE provHandle;
    void     *tmp_callid                    = NULL;
    OSPTTRANHANDLE transId[OSPC_MAX_TRANS];
-   pthread_t thr_id;
+   OSPTTHREADID thr_id;
    unsigned tmp_tokensize                  = TOKEN_SZ;
    register int i = 0, j = 0;
    int errorcode = OSPC_ERR_NO_ERROR;
@@ -2205,7 +2281,7 @@ testMultipleProviders(void *arg)
 
    time(&start_time);
    
-   thr_id = pthread_self();
+   thr_id = OSPM_THR_SELF();
    errorcode = testOSPPProviderNew(&provHandle);
    printf("Thread Id: %d, ProviderNew returned: %d, ProviderId: %d\n",thr_id,errorcode,provHandle);
 
@@ -2233,7 +2309,9 @@ testMultipleProviders(void *arg)
                                                   SourceIP,
                                                   SourceDevIP,
                                                   callingnumber,
+                                                  (OSPE_NUMBERING_FORMAT)CallingNumFormat,
                                                   callednumber,
+                                                  (OSPE_NUMBERING_FORMAT)CalledNumFormat,
                                                   "919404556#4444",
                                                   LOCAL_NUM_CALL_IDS,
                                                   callids,
@@ -2287,7 +2365,9 @@ testMultipleProviders(void *arg)
                                                            SourceDevIP,
                                                            tmp_destdev,
                                                            callingnumber,
+                                                           (OSPE_NUMBERING_FORMAT)CallingNumFormat,
                                                            tmp_callednumber,
+                                                           (OSPE_NUMBERING_FORMAT)CalledNumFormat,
                                                            tmp_callidsize,
                                                            tmp_ret_cid,
                                                            tmp_tokensize,
@@ -2427,6 +2507,7 @@ testMenu()
       printf("---------------------------------------------------------------------\n");
       printf("50) Set Calling Number                51) Set Called Number\n");
       printf("52) Get Calling Number                53) Get Called Number\n");
+      printf("54) Set CallId to Empty for Token Validation\n");
       printf("---------------------------------------------------------------------\n");
       printf("Performance tests\n");
       printf("---------------------------------------------------------------------\n");
@@ -2583,6 +2664,27 @@ GetConfiguration()
                                                                 if (strncmp(inbuf,"HWSUPPORT=",10) == 0)
                                                                 {
                                                                     hardwareSupport = atoi(&inbuf[10]);
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (strncmp(inbuf,"TCCODE=",7) == 0)
+                                                                    {
+                                                                        TCcode = atoi(&inbuf[7]);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (strncmp(inbuf,"CALLING_NUM_FORMAT=",19) == 0)
+                                                                        {
+                                                                            CallingNumFormat = atoi(&inbuf[19]);
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (strncmp(inbuf,"CALLED_NUM_FORMAT=",18) == 0)
+                                                                            {
+                                                                                CalledNumFormat = atoi(&inbuf[18]);
+                                                                            }
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -3028,7 +3130,9 @@ int testNonBlockingPerformanceTest()
                                                             SourceIP,
                                                             SourceDevIP,
                                                             callingnumber,
+                                                            CallingNumFormat,
                                                             callednumber,
+                                                            CalledNumFormat,
                                                             "919404556#4444",
                                                             CallIdsNum[i],
                                                             &CallIds[i],
@@ -3124,7 +3228,9 @@ int testNonBlockingPerformanceTest()
                                                             NULL,
                                                             NULL,
                                                             callingnumber,
+                                                            CallingNumFormat,
                                                             callednumber,
+                                                            CalledNumFormat,
                                                             CallIds[i]->ospmCallIdLen,
                                                             CallIds[i]->ospmCallIdVal,
                                                             TokenSizes[i],
