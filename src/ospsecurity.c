@@ -36,6 +36,7 @@
 
 #include <openssl/pkcs7.h>
 #include <openssl/bio.h>
+#include <openssl/err.h>
 
 /* PROTOTYPES FOR LOCAL FUNCTIONS */
 int
