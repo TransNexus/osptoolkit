@@ -125,13 +125,8 @@ OSPPXMLAttrDelete(
 {
     if(*ospvAttr != OSPC_OSNULL)
     {
-        /* check to make sure the attribute's not on a list somewhere */
-        if(OSPPListLinkIsolated(&((*ospvAttr)->ospmXMLAttrLink)))
-        {
-            OSPPListLinkDelete(&((*ospvAttr)->ospmXMLAttrLink));
             OSPM_FREE(*ospvAttr);
             *ospvAttr = OSPC_OSNULL;
-        }
     }
 }
 
@@ -141,7 +136,6 @@ OSPPXMLAttrDelete(
  * OSPPXMLAttrGetName()
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLAttrGetName
 const char *
 OSPPXMLAttrGetName(
     OSPTXMLATTR *ospvAttr
@@ -157,14 +151,12 @@ OSPPXMLAttrGetName(
 
     return(ospvName);
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLAttrGetValue()
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLAttrGetValue
 const char *
 OSPPXMLAttrGetValue(
     OSPTXMLATTR *ospvAttr
@@ -178,5 +170,4 @@ OSPPXMLAttrGetValue(
     }
     return(ospvValue);
 }
-#endif
 
