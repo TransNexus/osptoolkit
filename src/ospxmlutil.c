@@ -577,7 +577,6 @@ OSPPXMLDocReadChar(
 }
 
 
-#ifdef OSPC_DEBUG
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -645,7 +644,6 @@ OSPPXMLDocPeekCharN(
     return;
 }
 
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -958,7 +956,7 @@ OSPPXMLDereference(
             }
             else
             {
-                *ospvCharData++;
+                ospvCharData++;
             }
             dataCnt++;
         }

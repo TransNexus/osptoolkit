@@ -40,7 +40,6 @@
 #include "ospstatistics.h"
 #include "osputils.h"
 
-#ifdef OSPC_DEBUG
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -549,7 +548,6 @@ OSPPUsageIndSetTNFailReason(
     {
         (ospvUsageInd)->ospmUsageIndTNFailReason    = (ospvTNFailReason);
         (ospvUsageInd)->ospmUsageIndTNFailReasonInd = 1;
-        OSPPUsageIndSetDuration(ospvUsageInd,0);
     }
 }
 
@@ -712,7 +710,6 @@ unsigned                                    /* returns alt info size */
     return(ospvAltInfoSize);
 }
 
-#endif /* OSPC_DEBUG */
 
 
 /**/

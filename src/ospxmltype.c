@@ -313,7 +313,6 @@ const unsigned char OSPVXMLCType[] =
  * OSPPXMLIsChar() - is a byte a valid XML character
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLIsChar
 unsigned              /* returns non-zero if true */
 OSPPXMLIsChar(
     unsigned char ospvChar
@@ -327,14 +326,12 @@ OSPPXMLIsChar(
     }
     return(ospvIs);
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLIsSpace() - is a byte a valid XML space character
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLIsSpace
 unsigned              /* returns non-zero if true */
 OSPPXMLIsSpace(
     unsigned char ospvChar
@@ -348,14 +345,12 @@ OSPPXMLIsSpace(
     }
     return(ospvIs);
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLIsLetter() - is a byte a valid XML letter character
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLIsLetter
 unsigned              /* returns non-zero if true */
 OSPPXMLIsLetter(
     unsigned char ospvChar
@@ -369,14 +364,12 @@ OSPPXMLIsLetter(
     }
     return(ospvIs);
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLIsDigit() - is a byte a valid XML digit character
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLIsDigit
 unsigned              /* returns non-zero if true */
 OSPPXMLIsDigit(
     unsigned char ospvChar
@@ -390,14 +383,12 @@ OSPPXMLIsDigit(
     }
     return(ospvIs);
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLIsName() - is a byte a valid XML name character
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLIsName
 unsigned              /* returns non-zero if true */
 OSPPXMLIsName(
     unsigned char ospvChar
@@ -411,14 +402,12 @@ OSPPXMLIsName(
     }
     return(ospvIs);
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLIsName1() - is byte valid as first character in XML name
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLIsName1
 unsigned              /* returns non-zero if true */
 OSPPXMLIsName1(
     unsigned char ospvChar
@@ -432,6 +421,5 @@ OSPPXMLIsName1(
     }
     return(ospvIs);
 }
-#endif
 
 

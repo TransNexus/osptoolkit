@@ -80,7 +80,6 @@ OSPPUsageCnfDelete(OSPTUSAGECNF **ospvUsageCnf)
     }
 }
 
-#ifdef OSPC_DEBUG
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -142,7 +141,6 @@ OSPTSTATUS *                                 /* returns pointer to dest */
     return(ospvStatus);
 }
 
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*
