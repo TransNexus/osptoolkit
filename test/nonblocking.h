@@ -160,6 +160,28 @@ extern "C"
             unsigned        *ospvSizeOfDetailLog,         /* In\Out - Max size of detail log \ Actual size of detail log */
             void            *ospvDetailLog);              /* In\Out - Location of detail log storage */
 
+   int OSPPTransactionValidateAuthorisation_nb(
+            NBMONITOR       *nbMonitor,                   /* In - NBMonitor Pointer   */
+            int             ShouldBlock,                  /* In - 1 WILL block, 0 - will NOT
+block */
+            int             *OSPErrorCode,                /* Out- Error code returned by the blocking function */
+            OSPTTRANHANDLE      ospvTransaction,        /* In - Transaction handle */
+            const char          *ospvSource,            /* In - Source of call */
+            const char          *ospvDestination,       /* In - Destination for call */
+            const char          *ospvSourceDevice,      /* In - SourceDevice of call */
+            const char          *ospvDestinationDevice, /* In - DestinationDevice for call */
+            const char          *ospvCallingNumber,     /* In - Calling number string*/
+            const char          *ospvCalledNumber,      /* In - Called number string */
+            unsigned            ospvSizeOfCallId,       /* In - Size of call id value */
+            const void          *ospvCallId,            /* In - Call Id for this call */
+            unsigned            ospvSizeOfToken,        /* In - Size of authorization token */
+            const void          *ospvToken,             /* In - Authorisation token */
+            unsigned            *ospvAuthorised,        /* Out - Call authorisation indicator */
+            unsigned            *ospvTimeLimit,         /* Out - Number of seconds call is authorised for */
+            unsigned            *ospvSizeOfDetailLog,   /* In\Out - Max size of detail log \ Actual size of detail log */
+            void                *ospvDetailLog,         /* In\Out - Location of detail log storage */
+            unsigned            ospvTokenAlgo);         /* In - Algorithm to be used for Validating Token */
+
 #ifdef __cplusplus
 }
 #endif

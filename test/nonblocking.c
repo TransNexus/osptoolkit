@@ -81,12 +81,32 @@ typedef struct _NBCAPIND
 } NBCAPIND;
 
 
+typedef struct _NBVALIDATEAUTH
+{
+  OSPTTRANHANDLE  ospvTransaction;              /* In - Transaction Handle  */
+  const char      *ospvSource;                  /* In - Source of call      */
+  const char      *ospvDestination;             /* In - Dest of call      */
+  const char      *ospvSourceDevice;            /* In - SourceDevice of call*/
+  const char      *ospvDestinationDevice;       /* In - DestDevice of call      */
+  const char      *ospvCallingNumber;           /* In - Calling number      */
+  const char      *ospvCalledNumber;            /* In - Called number       */
+  unsigned        ospvSizeOfCallId;             /* In - Size of call id value */
+  const void      *ospvCallId;                  /* In - Call Id for this call */
+  unsigned        ospvSizeOfToken;              /* In - Size of authorization token */
+  const void      *ospvToken;                   /* In - Authorisation token */
+  unsigned        *ospvAuthorised;              /* Out - Call authorisation indicator */
+  unsigned        *ospvTimeLimit;               /* Out - Number of seconds call is authorised for */
+  unsigned        *ospvSizeOfDetailLog;         /* In\Out - Max size of detail log \ Actual size of detail log */
+  void            *ospvDetailLog;               /* In\Out - Location of detail log storage */
+  unsigned        ospvTokenAlgo;            /*In - Algorithm to be used for Validating Token */
+} NBVALIDATEAUTH;
 
 typedef union _OSPMESSAGE
 {
   NBAUTHREQ       AuthReq;
   NBUSEIND        UseInd;
   NBCAPIND        CapInd;
+  NBVALIDATEAUTH  ValidateAuth;
 } OSPMESSAGE;
 
 
@@ -98,6 +118,7 @@ typedef union _OSPMESSAGE
 #define MESSAGE_TYPE_AUTH_REQ       1
 #define MESSAGE_TYPE_USE_IND        2
 #define MESSAGE_TYPE_CAP_IND        3
+#define MESSAGE_TYPE_VALIDATE_AUTH  4
 #define MESSAGE_TYPE_TIME_TO_EXIT   10
 
 typedef struct _NBDATA
@@ -110,6 +131,7 @@ typedef struct _NBDATA
     NBAUTHREQ       AuthReq;
     NBUSEIND        UseInd;
     NBCAPIND        CapInd;
+    NBVALIDATEAUTH  ValidateAuth;
   } Message;
   int             ShouldBlock;                  /* Ussed to indicate if the caller is blocked */
   OSPTMUTEX       Mutex;                        /* Used to wake up blocked call */
@@ -525,6 +547,39 @@ WorkThread(void *arg)
                                                         transaction->Message.CapInd.ospvSizeOfDetailLog,
                                                         transaction->Message.CapInd.ospvDetailLog);
                 break;
+          case MESSAGE_TYPE_VALIDATE_AUTH:   //  ValidationRequest
+              /* 
+               * Make sure that the request has not expired
+               */
+              if( QTime < nbMonitor->MaxQueWaitMS )
+              {
+                *(transaction->ErrorCode) = OSPPTransactionValidateAuthorisation( 
+                                                          transaction->Message.ValidateAuth.ospvTransaction,
+                                                          transaction->Message.ValidateAuth.ospvSource,
+                                                          transaction->Message.ValidateAuth.ospvDestination,
+                                                          transaction->Message.ValidateAuth.ospvSourceDevice,
+                                                          transaction->Message.ValidateAuth.ospvDestinationDevice,
+                                                          transaction->Message.ValidateAuth.ospvCallingNumber,
+                                                          transaction->Message.ValidateAuth.ospvCalledNumber,
+                                                          transaction->Message.ValidateAuth.ospvSizeOfCallId,
+                                                          transaction->Message.ValidateAuth.ospvCallId,
+                                                          transaction->Message.ValidateAuth.ospvSizeOfToken,
+                                                          transaction->Message.ValidateAuth.ospvToken,
+                                                          transaction->Message.ValidateAuth.ospvAuthorised,
+                                                          transaction->Message.ValidateAuth.ospvTimeLimit,
+                                                          transaction->Message.ValidateAuth.ospvSizeOfDetailLog,
+                                                          transaction->Message.ValidateAuth.ospvDetailLog,
+                                                          transaction->Message.ValidateAuth.ospvTokenAlgo);
+              }
+              else
+              {
+                /*
+                 * Validate Req has expired
+                 */
+                OSPM_DBGPRINTF("VALIDATE REQ EXPIRED\n");
+                *(transaction->ErrorCode) = -1;
+              }
+              break;
           default:
               break;
         }
@@ -589,6 +644,118 @@ WorkThread(void *arg)
 
 
 
+int
+OSPPTransactionValidateAuthorisation_nb(
+    NBMONITOR       *nbMonitor,                   /* In - NBMonitor Pointer   */
+    int             ShouldBlock,                  /* In - 1 WILL block, 0 - will NOT block */
+    int             *OSPErrorCode,                /* Out- Error code returned by the blocking function */
+    OSPTTRANHANDLE      ospvTransaction,        /* In - Transaction handle */
+    const char          *ospvSource,            /* In - Source of call */
+    const char          *ospvDestination,       /* In - Destination for call */
+    const char          *ospvSourceDevice,      /* In - SourceDevice of call */
+    const char          *ospvDestinationDevice, /* In - DestinationDevice for call */
+    const char          *ospvCallingNumber,     /* In - Calling number string*/
+    const char          *ospvCalledNumber,      /* In - Called number string */
+    unsigned            ospvSizeOfCallId,       /* In - Size of call id value */
+    const void          *ospvCallId,            /* In - Call Id for this call */
+    unsigned            ospvSizeOfToken,        /* In - Size of authorization token */
+    const void          *ospvToken,             /* In - Authorisation token */
+    unsigned            *ospvAuthorised,        /* Out - Call authorisation indicator */
+    unsigned            *ospvTimeLimit,         /* Out - Number of seconds call is authorised for */
+    unsigned            *ospvSizeOfDetailLog,         /* In\Out - Max size of detail log \ Actual size of detail log */
+    void                *ospvDetailLog,               /* In\Out - Location of detail log storage */
+    unsigned            ospvTokenAlgo)           /*In - Algorithm to be used for Validating Token */
+{
+  int     errorcode = OSPC_ERR_NO_ERROR;
+  NBDATA* nbData    = OSPC_OSNULL;
+
+  if( nbMonitor->TimeToShutDown == 1  )
+  {
+    /*
+     * Q is shutting down
+     */
+    errorcode = -1;
+  }
+  else if( SyncQueueGetNumberOfTransactions(nbMonitor->SyncQue) > nbMonitor->MaxQueSize )
+  {
+    /*
+     * There are already to many requests in the Q
+     */
+    errorcode = -1;
+  }
+  else
+  {
+    /*
+     * allocate space
+     * the space will be deallocated by one of the working thread
+    */
+    errorcode = newNBDATA(&nbData,MESSAGE_TYPE_VALIDATE_AUTH);
+
+    if( OSPC_ERR_NO_ERROR == errorcode )
+    {
+      // fill out the data structure
+      nbData->ShouldBlock                                 = ShouldBlock;
+      nbData->ErrorCode                                   = OSPErrorCode;
+      nbData->Message.ValidateAuth.ospvTransaction        = ospvTransaction;
+      nbData->Message.ValidateAuth.ospvSource             = ospvSource;
+      nbData->Message.ValidateAuth.ospvDestination        = ospvDestination;
+      nbData->Message.ValidateAuth.ospvSourceDevice       = ospvSourceDevice;
+      nbData->Message.ValidateAuth.ospvDestinationDevice  = ospvDestinationDevice;
+      nbData->Message.ValidateAuth.ospvCallingNumber      = ospvCallingNumber;
+      nbData->Message.ValidateAuth.ospvCalledNumber       = ospvCalledNumber;
+      nbData->Message.ValidateAuth.ospvSizeOfCallId       = ospvSizeOfCallId;
+      nbData->Message.ValidateAuth.ospvCallId             = ospvCallId;
+      nbData->Message.ValidateAuth.ospvSizeOfToken        = ospvSizeOfToken;
+      nbData->Message.ValidateAuth.ospvToken              = ospvToken;
+      nbData->Message.ValidateAuth.ospvAuthorised         = ospvAuthorised;
+      nbData->Message.ValidateAuth.ospvTimeLimit          = ospvTimeLimit;
+      nbData->Message.ValidateAuth.ospvSizeOfDetailLog    = ospvSizeOfDetailLog;
+      nbData->Message.ValidateAuth.ospvDetailLog          = ospvDetailLog;
+      nbData->Message.ValidateAuth.ospvTokenAlgo          = ospvTokenAlgo;
+
+      // time stamp (AuthReq) IN QUEUE event
+      OSPPOSTimeGetTime(&nbData->InQuequeTime,&nbData->InQuequeTimeMS);
+
+      // put a new message to the non-blocking queue
+      *(nbData->ErrorCode)  = OSPC_AUTH_REQUEST_BLOCK;
+      errorcode             = SyncQueueAddTransaction(nbMonitor->SyncQue,nbData);
+
+      if( OSPC_ERR_NO_ERROR == errorcode )
+      {
+        /*
+         *  This is a bit odd.  If the caller wants to wait, 
+         *    it is responsible for deleting nbData.
+         *  Oterwise, the work thread will clean up
+         */
+        if( 1 == nbData->ShouldBlock )
+        {
+          /*
+           * SHOULD wait
+           */
+          OSPM_MUTEX_LOCK(nbData->Mutex, errorcode);
+            while( (*(nbData->ErrorCode) == OSPC_AUTH_REQUEST_BLOCK) && (OSPC_ERR_NO_ERROR == errorcode) )
+            {
+              OSPM_CONDVAR_WAIT(nbData->CondVar, nbData->Mutex, errorcode);
+            }
+          OSPM_MUTEX_UNLOCK(nbData->Mutex, errorcode);
+          deleteNBDATA(nbData);
+        }
+        else
+        {
+          /*
+           * should NOT wait
+           */
+        }
+      }
+    }
+    else
+    {
+      errorcode = OSPC_ERR_MSGQ_NO_MEMORY;
+    }
+  }
+
+  return errorcode;
+}
 
 
 
