@@ -418,8 +418,10 @@ int OSPPInitSSLCommMgrParams(
 {
     int retVal = OSPC_ERR_NO_ERROR;
 
-		OSPTCERT caCert;
-		const OSPTCERT *caCerts[1] = {&caCert};
+    OSPTCERT caCert;
+    const OSPTCERT *caCerts[1];
+
+    caCerts[0] = &caCert;
 
 
     OSPM_DBGENTER(( "ENTER: OSPPInitSSLCommMgrParams\n" ));
