@@ -708,6 +708,10 @@ OSPPSockProcessRequest(
             }
         }
     }
+		else
+		{
+				OSPM_DBGERRORLOG(*ospvError, "connection reset by peer");
+		}
 
     /* If the Connection-Type indicated "close" in the MIME header, 
      * then close the connection.
@@ -755,6 +759,10 @@ OSPPSockRead(
                 *ospvBufferSz - length, errorcode);
             length += ospvHttp->ByteCount;
         }
+				else
+				{
+						OSPM_DBGERRORLOG(errorcode, "response timed out");
+				}
     } while (errorcode == OSPC_ERR_NO_ERROR &&
         ospvHttp->ByteCount > 0 && length < *ospvBufferSz);
 
@@ -763,7 +771,10 @@ OSPPSockRead(
         OSPM_DBGNET(
             ("NET  : OSPPSockRead() failed len = <%d> bufsz = <%d> err = <%d>\n", 
             length, *ospvBufferSz, errorcode));
+
         errorcode = OSPC_ERR_SOCK_RECV_FAILED;
+
+				OSPM_DBGERRORLOG(errorcode,"connection reset by peer");
     }
     *ospvBufferSz = length;
     OSPM_DBGEXIT(("EXIT : OSPPSockRead() (%d)\n", errorcode));

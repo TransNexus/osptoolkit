@@ -131,6 +131,10 @@ OSPPUtilGetErrorFromStatus(
         case 401:
             errorcode = OSPC_ERR_TRAN_UNAUTHORIZED;
             break;
+        case 404:
+            errorcode = OSPC_ERR_TRAN_NOT_FOUND;
+						OSPM_DBGERRORLOG(errorcode, "OSP Response Status: 404 Route Not Found");
+            break;
         case 410:
             errorcode = OSPC_ERR_TRAN_CHAR_ENC_NOT_SUPD;
             break;

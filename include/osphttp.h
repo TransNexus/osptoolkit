@@ -32,9 +32,12 @@
 #define OSPC_HTTP_CONTENT_TYPE      2
 #define OSPC_HTTP_CONNECTION_TYPE   3
 
-#define OSPC_HTTP_200_OK            "200 "
-#define OSPC_HTTP_100_CONTINUE      "100 continue"
-#define OSPC_HTTP_503_SERV_UNAVAIL  "503 service unavailable"
+#define OSPC_HTTP_200_OK            " 200 "
+#define OSPC_HTTP_100_CONTINUE      " 100 continue"
+#define OSPC_HTTP_503_SERV_UNAVAIL  " 503"
+#define OSPC_HTTP_400_BAD_REQUEST   " 400"
+#define OSPC_HTTP_401_UNAUTHORIZED  " 401"
+#define OSPC_HTTP_404_NOT_FOUND     " 404"
 #define OSPC_HTTP_HEADER_MSG_FMT    "POST %s HTTP/1.1\r\nHost: %s\r\ncontent-type: %s\r\nContent-Length: %d\r\nConnection: Keep-Alive\r\n\r\n"
 
 #define OSPC_SOCK_CONNECTED_MASK    0xFE
