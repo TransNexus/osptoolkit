@@ -338,6 +338,7 @@ Version 3.1
   with a mechanism of reporting Usage with addresses different from those that were used while calling the APIs.
 * Test#102 in the test application has been removed. Test#100 has been modified to test
   multiple providers as well.  
+* Modified the openssl initialization procedure to accomodate the OSP Server requirements.. 
 * As a result of the above mentioned changes, the following API's have changed:
   - OSPPProviderNew
   - OSPPProviderSetServicePoints
