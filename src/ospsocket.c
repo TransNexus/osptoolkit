@@ -84,7 +84,7 @@ OSPPSockConnect(
         {
             errorcode = OSPC_ERR_SOCK_CONNECT_FAILED;
             OSPM_INET_NTOA(ospvIpAddr, ipstr);
-            OSPM_DBGERROR(("connect to %s failed, error = %d\n", ipstr, errorcode));
+            OSPM_DBGERROR(("%s to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",strerror(errno), ipstr, ospvPort,errorcode));
             OSPPSockClose(OSPC_FALSE, ospvSockFd, ospvSSLSession);
         }
         else
@@ -94,16 +94,15 @@ OSPPSockConnect(
              * long to wait for a connection
              */
             errorcode = OSPPSockWaitTillReady(*ospvSockFd, OSPC_FALSE, ospvTimeout);
+            if (errorcode != OSPC_ERR_NO_ERROR)
+            {
+                errorcode = OSPC_ERR_SOCK_CONNECT_FAILED;
+                OSPM_INET_NTOA(ospvIpAddr, ipstr);
+                OSPM_DBGERROR(("%s to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",strerror(errno), ipstr, ospvPort,errorcode));
+                OSPPSockClose(OSPC_FALSE, ospvSockFd, ospvSSLSession);
+            }
         }
 
-        if (errorcode != OSPC_ERR_NO_ERROR)
-        {
-            errorcode = OSPC_ERR_SOCK_CONNECT_FAILED;
-            OSPM_INET_NTOA(ospvIpAddr, ipstr);
-            OSPM_DBGERROR(("connect to %s failed, error = %d\n",
-                ipstr, errorcode));
-            OSPPSockClose(OSPC_FALSE, ospvSockFd, ospvSSLSession);
-        }
     }
 
     return errorcode;
@@ -534,15 +533,18 @@ OSPPSockProcessRequest(
         ** be returned by the function.
         */
 
-        if (*ospvError != OSPC_ERR_NO_ERROR)
+        if ((*ospvError != OSPC_ERR_NO_ERROR))
         {
-            OSPM_DBGERRORLOG(*ospvError, "http recv init header failed");
+            if ((*ospvError != OSPC_ERR_SOCK_SELECT_FAILED) && (*ospvError != OSPC_ERR_SOCK_RECV_FAILED) && (*ospvError != OSPC_ERR_SSL_READ_FAILED))
+            {
+                OSPM_DBGERRORLOG(*ospvError, "http recv init header failed");
+            }
         }
         else if ((*ospvError = OSPPHttpVerifyResponse(recvheadbuf, &responsetype)) !=
             OSPC_ERR_NO_ERROR)
         {
-            OSPM_DBGERRORLOG(*ospvError, "http response unexpected");
-            OSPM_DBGERROR(("expected 1XX or 2xx code: received = [%s]\n", recvheadbuf));
+            if (*ospvError == OSPC_ERR_HTTP_BAD_REQUEST)
+                OSPM_DBGERRORLOG(*ospvError, "http response unexpected: Server unavailable at the URL specified.Modify URL and try again.");
         }
         else 
         {
@@ -737,6 +739,7 @@ OSPPSockRead(
     unsigned        length      = 0;
     struct timeval  timeout;
     unsigned        socktimeout = 0;
+    char*           ipstr       = OSPC_OSNULL;
 
     OSPM_DBGENTER(("ENTER: OSPPSockRead()\n"));
 
@@ -759,13 +762,16 @@ OSPPSockRead(
                 *ospvBufferSz - length, errorcode);
             length += ospvHttp->ByteCount;
         }
-				else
-				{
-						OSPM_DBGERRORLOG(errorcode, "response timed out");
-				}
+        else
+        {
+            OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr,ipstr);
+            OSPM_DBGERROR(("Response timed out. Server uvavailable on %s:%d Error = %d\n",ipstr,ospvHttp->ServicePoint->Port,errorcode));
+        }
+
     } while (errorcode == OSPC_ERR_NO_ERROR &&
         ospvHttp->ByteCount > 0 && length < *ospvBufferSz);
 
+    if (errorcode != OSPC_ERR_SOCK_SELECT_FAILED)
     if (length != *ospvBufferSz || errorcode != OSPC_ERR_NO_ERROR)
     {
         OSPM_DBGNET(
@@ -773,8 +779,8 @@ OSPPSockRead(
             length, *ospvBufferSz, errorcode));
 
         errorcode = OSPC_ERR_SOCK_RECV_FAILED;
-
-				OSPM_DBGERRORLOG(errorcode,"connection reset by peer");
+        OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr,ipstr);
+        OSPM_DBGERROR(("Connection reset by peer on %s:%d Error = %d\n",ipstr,ospvHttp->ServicePoint->Port,errorcode));
     }
     *ospvBufferSz = length;
     OSPM_DBGEXIT(("EXIT : OSPPSockRead() (%d)\n", errorcode));
