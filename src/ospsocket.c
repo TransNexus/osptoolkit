@@ -502,6 +502,7 @@ OSPPSockProcessRequest(
     unsigned char  *ospvConnectionBuffer        = OSPC_OSNULL;
     unsigned char  *tmpContentBuffer            = OSPC_OSNULL;
     unsigned       tmpContentBufferSz           = 0;
+    char           ErrStr[200];
 
     OSPM_DBGENTER(("ENTER: OSPPSockProcessRequest()\n"));
 
@@ -733,7 +734,8 @@ OSPPSockProcessRequest(
     }
 		else
 		{
-				OSPM_DBGERRORLOG(*ospvError, "connection reset by peer");
+                    sprintf(ErrStr,"Connection to application has been reset. IP address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr));
+                    OSPM_DBGERRORLOG(*ospvError,ErrStr);
 		}
 
     /* If the Connection-Type indicated "close" in the MIME header, 
