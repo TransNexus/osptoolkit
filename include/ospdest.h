@@ -47,6 +47,11 @@ typedef enum
     OSPE_DEST_PROT_UNKNOWN=16 /*Could not be understood by the Client as Sent by the Server */
 }OSPE_DEST_PROT;
 
+#define DEST_PROT_SIP "sip"
+#define DEST_PROT_H323_LRQ "h323-LRQ"
+#define DEST_PROT_H323_Q931 "h323-Q931"
+
+
 /*-----------------------------------------------------------------------*
  * Destination OSP Enabled Data Type
  *-----------------------------------------------------------------------*/
@@ -57,6 +62,11 @@ typedef enum
     OSPE_OSP_FALSE = 256, /* Destination os Not OSP Enabled */
     OSPE_OSP_UNKNOWN = 512 /*Could not be understood by the Client as Sent by the Server */
 }OSPE_DEST_OSP_ENABLED;
+
+#define DEST_OSP_DIABLED "0.0.0"
+#define DEST_OSP_UNKNOWN ""
+
+
 
 typedef struct
 {
