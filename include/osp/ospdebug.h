@@ -173,7 +173,7 @@
                   (ospvErrCode), (ospvErrText), __FILE__, __LINE__))
 
 #else       /* Use customized debug code */
-#   include    "ospcustomdebug.h"
+#   include    "osp/ospcustomdebug.h"
 #endif  /* OSP_SDK */
 
 
