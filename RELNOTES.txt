@@ -347,3 +347,16 @@ Version 3.1
   - OSPPProviderSetCapabilitiesURLs
 * Updated connection error and http error log messages to include IP addresses.
 * Disabled hardware support for enrollment.
+---------------------------------------------------------------------------
+
+Version 3.1.1
+* Removed compilation warnings on Sun compiler.
+* Fixed a bug in OSPPProviderNew API because of which the toolkit would crash if the 'ospvMessageCount' was configured
+  as NULL and the number of SP's exceeded one.
+* The toolkit now, by default, allows deletion of a transaction even without reporting usage.If the user does not want this
+  feature, the user can uncomment the - OSP_NO_DELETE_CHECK definition in the osp_sdk_compile.ksh script.
+* Modified XML parsing for optimal performance. Removed functions - OSPPXMLDocIsComment, OSPPXMLDocIsPI, and OSPPXMLDocIsCdata.
+  Since the server never includes Comments, Processing Instructions, or CData, we can safely skip these checks. 
+* Fixed a bug because of which OSPPProviderDelete API, when called during the life of a connection, would give a 
+  'mutex destroy failed' error.
+* mtmalloc has been made the default memory allocation scheme for the osp toolkit.
