@@ -160,6 +160,15 @@ typedef struct _OSPTPRIVATEKEY
 
 
 /*-------------------------------------------*/
+/* Security - Cert                           */
+/*-------------------------------------------*/
+typedef struct _OSPTCERT
+{
+    unsigned char *CertData;
+    unsigned CertDataLength;
+} OSPTCERT;
+
+/*-------------------------------------------*/
 /* Misc Lock Modes                           */
 /*-------------------------------------------*/
 typedef enum _OSPELOCKMODE
