@@ -26,22 +26,22 @@
  * osptransapi.cpp - API functions for transaction object.
  */
 
-#include "osp.h"
-#include "osptrans.h"
-#include "ospprovider.h"
-#include "ospxml.h"
-#include "ospmsginfo.h"
-#include "ospdest.h"
-#include "ospstatus.h"
-#include "ospusageind.h"
-#include "ospauthind.h"
-#include "osptokeninfo.h"
-#include "ospmsg.h"
-#include "ospfail.h"
-#include "osputils.h"
-#include "osptnprobe.h"
-#include "ospstatistics.h"
-#include "ospcapind.h"
+#include "osp/osp.h"
+#include "osp/osptrans.h"
+#include "osp/ospprovider.h"
+#include "osp/ospxml.h"
+#include "osp/ospmsginfo.h"
+#include "osp/ospdest.h"
+#include "osp/ospstatus.h"
+#include "osp/ospusageind.h"
+#include "osp/ospauthind.h"
+#include "osp/osptokeninfo.h"
+#include "osp/ospmsg.h"
+#include "osp/ospfail.h"
+#include "osp/osputils.h"
+#include "osp/osptnprobe.h"
+#include "osp/ospstatistics.h"
+#include "osp/ospcapind.h"
 
 
 /*
@@ -3664,6 +3664,7 @@ OSPPTransactionValidateAuthorisation(
     OSPE_DEST_OSP_ENABLED dstOSPStatus;
     OSPE_DEST_PROT dstProt;
     unsigned char *CallIdValue = OSPC_OSNULL;
+    unsigned char *AuthIndCallId = OSPC_OSNULL;
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
@@ -3673,8 +3674,6 @@ OSPPTransactionValidateAuthorisation(
         (ospvDestinationDevice == (const char *)OSPC_OSNULL)) ||
         (ospvCallingNumber == (const char *)OSPC_OSNULL) ||
         (ospvCalledNumber == (const char *)OSPC_OSNULL)  ||
-        (ospvSizeOfCallId == 0)                          ||
-        (ospvCallId == (const void *)OSPC_OSNULL)        ||
         (ospvSizeOfToken == 0)                           ||
         (ospvToken == (const void *)OSPC_OSNULL)         ||
         ((ospvCallingNumberFormat != OSPC_E164) && (ospvCallingNumberFormat != OSPC_SIP) && (ospvCallingNumberFormat != OSPC_URL)) ||
@@ -3729,6 +3728,61 @@ OSPPTransactionValidateAuthorisation(
             &errorcode);
     }
 
+    /*
+     * Validate the signature and get the call id from the token
+     */
+        errorcode = OSPPTransactionGetProvider(trans, &provider);
+
+        if (errorcode == OSPC_ERR_NO_ERROR)
+        {
+            errorcode = OSPPProviderGetSecurity(provider, &security);
+        }
+
+        if ((errorcode == OSPC_ERR_NO_ERROR) &&(IsTokenSigned == OSPC_TRUE))
+        {
+            errorcode = OSPPSecSignatureVerify(security,
+                &tokenmsg, &sizeoftokenmsg,
+                (unsigned char *)ospvToken, ospvSizeOfToken,
+                OSPC_SEC_SIGNATURE_AND_CONTENT);
+
+	    #ifdef OSPC_VALIDATE_TOKEN_CERT_SUBJECT_NAME
+            if(errorcode == OSPC_ERR_NO_ERROR)
+            {
+                errorcode = OSPPTransactionValidateTokenCert(trans, (unsigned char *)ospvToken, ospvSizeOfToken);
+            }
+	    #endif
+
+        }
+
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (IsTokenSigned == OSPC_FALSE))
+        {
+            /* just copy the token content into the token msg. No sig present */
+            OSPM_MALLOC(tokenmsg, unsigned char, ospvSizeOfToken);
+            if (tokenmsg != OSPC_OSNULL)
+            {
+                OSPM_MEMCPY(tokenmsg, ospvToken, ospvSizeOfToken);
+                sizeoftokenmsg = ospvSizeOfToken;
+                errorcode = OSPC_ERR_NO_ERROR;
+            }
+            else
+            {
+                errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
+            }
+        }
+
+        /*
+         * Parse the Token into a TokenInfo structure
+         */
+        if (errorcode == OSPC_ERR_NO_ERROR)
+        {
+            errorcode = OSPPXMLMessageParse( (unsigned char *)tokenmsg,
+                sizeoftokenmsg, 
+                (void **)&tokeninfo, &dtype);
+        }
+
+
+
+
     /* Is there an AuthInd here already?
      * If so, we are only adding the token
      */
@@ -3744,13 +3798,36 @@ OSPPTransactionValidateAuthorisation(
             {
 
                 OSPPAuthIndSetTimestamp(authind, time(OSPC_OSNULL));
-                callid = OSPPCallIdNew(ospvSizeOfCallId, 
-                    (const unsigned char *)ospvCallId);
- 
+
+                if ((ospvSizeOfCallId > 0) && (ospvCallId != NULL))
+                {
+                    callid = OSPPCallIdNew(ospvSizeOfCallId, 
+                       (const unsigned char *)ospvCallId);
+                }
+                else
+                {
+                    /*
+                     * Copy the callId from the token.
+                     */
+                    callid = OSPPCallIdNew(OSPPTokenInfoGetCallIdSize(tokeninfo), 
+                       (const unsigned char *)OSPPTokenInfoGetCallIdValue(tokeninfo));
+                }
+
                 if (callid != (OSPTCALLID *)OSPC_OSNULL)
                 {
+                   OSPPAuthIndSetCallId(authind, callid);
+                   OSPPCallIdDelete(&callid);
+                }
+                else
+                {
+                   errorcode = OSPC_ERR_TRAN_CALLID_NOT_FOUND;
+                   OSPM_DBGERRORLOG(errorcode, "callid is null");
+                }
+
+
+                if (errorcode == OSPC_ERR_NO_ERROR)
+                {
                     OSPPAuthIndSetRole(authind,OSPC_DESTINATION);
-                    OSPPAuthIndSetCallId(authind, callid);
                     OSPPAuthIndSetSourceNumber(authind, 
                         (const unsigned char *)ospvCallingNumber);
                     trans->CallingNumberFormat = ospvCallingNumberFormat;
@@ -3760,16 +3837,7 @@ OSPPTransactionValidateAuthorisation(
                     trans->CalledNumberFormat = ospvCalledNumberFormat;
 
                     OSPPListNew(&(authind->ospmAuthIndTokens));
-                    OSPPCallIdDelete(&callid);
-                }
-                else
-                {
-                    errorcode = OSPC_ERR_TRAN_CALLID_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "callid is null");
-                }
 
-                if (errorcode == OSPC_ERR_NO_ERROR)
-                {
                  /* create the destination object */
                     dest = OSPPDestNew(); 
 
@@ -3779,9 +3847,12 @@ OSPPTransactionValidateAuthorisation(
                     }
                     else
                     {
-                        OSPPDestSetCallId(dest, 
+                        if ((ospvCallId != NULL) && (ospvSizeOfCallId > 0))
+                        {
+                            OSPPDestSetCallId(dest, 
                                           (const unsigned char *)ospvCallId,
                                           ospvSizeOfCallId);
+                        }
 
                         OSPPDestSetNumber(dest, (const unsigned char *)ospvCalledNumber);
 
@@ -4006,6 +4077,7 @@ OSPPTransactionValidateAuthorisation(
      */
     if (errorcode == OSPC_ERR_NO_ERROR) 
     {
+#if 0
         /*
          * Verify Token Signature and pull off Tokeninfo message
          */
@@ -4057,7 +4129,7 @@ OSPPTransactionValidateAuthorisation(
                 sizeoftokenmsg, 
                 (void **)&tokeninfo, &dtype);
         }
-
+#endif
         /*
          * If Forward Route information is present, 
          * Store it in the transaction object
@@ -4122,9 +4194,9 @@ OSPPTransactionValidateAuthorisation(
                      * Verify CallId
                      */
                     CallIdValue = OSPPTokenInfoGetCallIdValue(tokeninfo);
-                    if (CallIdValue != OSPC_OSNULL)
+                    if ((CallIdValue != OSPC_OSNULL) && ((AuthIndCallId=OSPPAuthIndGetCallIdValue(trans->AuthInd)) != OSPC_OSNULL) && (ospvSizeOfCallId > 0))
                     {
-                        retcode = OSPM_MEMCMP(OSPPAuthIndGetCallIdValue(trans->AuthInd),
+                        retcode = OSPM_MEMCMP(AuthIndCallId,
                                   CallIdValue, ospvSizeOfCallId); 
                     }
 
