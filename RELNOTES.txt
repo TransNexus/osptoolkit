@@ -365,3 +365,22 @@ Version 3.1.1
   been called even when the MsgInfo structure was deleted. As a fix, we now call this function only when the IsNonBlocking
   parameter of the MsgInfo structure is set to FALSE. 
 * The test_app now, by default (only on Solaris), uses mtmalloc for memory allocation.
+---------------------------------------------------------------------------
+
+Version 3.1.2
+* Modified the build script so that the tar file now includes one main directory.
+* The header files have now been moved from the include directory to the /osp directory
+  within include.
+* The Makefile in the /src directory has been modified to build the toolkit directly. 
+  The toolkit should be compiled by running - make in the /src directory instead of 
+  running the osp_sdk_compile.ksh script.
+* The makefile can also be used to build and install the osp library.
+* Fixed a xml encoding bug in the ospusageind.c file.
+* Added compile time flag: fPIC for compilation using gcc. 
+* The ValidateAuth API has been fixed to accept NULL values for ospvCallId, 
+  ospvSizeOfCallId, and ospvDetailLog parameters of the API.
+* The GetFirstDestination and GetNextDestiantion APIs have been fixed to accept NULL 
+  values for ospvCallId, ospvSizeOfCallId, ospvCalledNumber, ospvCalledNumber, and 
+  ospvTimeLimit parameters of the API.
+* The RequestAuthorization API has been fixed to accept NULL value for the ospvDetailLog
+  parameter of the API.
