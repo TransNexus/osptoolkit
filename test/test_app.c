@@ -121,6 +121,7 @@ NBMONITOR *nbMonitor    = NULL;
 #define WORK_THREAD_NUM 40    /* make sure that this number does not exceed DEF_HTTP_MAXCONN */
 #define TEST_NUM        1000
 #define TOKEN_SIZE      2000
+#define TEST_ERROR 1
 char      Tokens[TEST_NUM][TOKEN_SIZE];
 
 
@@ -214,6 +215,117 @@ testNotImplemented()
   return(0);
 }
 
+/*----------------------------------------------*
+ *               Loads the Certificate          *
+ *----------------------------------------------*/
+int testOSPPloadPemCert(unsigned char *FileName, unsigned char *buffer, int *len)
+{
+    int length = 0;
+    unsigned char *temp;
+    BIO *bioIn = NULL;
+    X509 *cert=NULL;
+    int retVal = OSPC_ERR_NO_ERROR;
+
+    temp = buffer;
+    bioIn = BIO_new_file((const char*)FileName,"r");
+    if (bioIn == NULL)
+    {
+        printf("Failed to find the File - %s \n",FileName);
+        retVal = TEST_ERROR;
+    }
+    else
+    {
+        cert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
+        if (cert == NULL)
+        {
+            printf("Failed to parse the Certificate from the File - %s \n",FileName);
+            retVal = TEST_ERROR;
+        }
+        else
+        {
+            length = i2d_X509(cert,&temp);
+            if (cert == 0)
+            {
+                printf("Failed to parse the Certificate from the File - %s ,Length = 0\n",FileName);
+                retVal = TEST_ERROR;
+            }
+            else
+            {
+               *len = length;
+            }
+        }
+    }
+
+    if (bioIn != NULL)
+    {
+        BIO_free(bioIn);
+    }
+
+    if (cert != NULL)
+    {
+        X509_free(cert);
+    }
+    return retVal;    
+}
+
+
+
+
+
+/*----------------------------------------------*
+ *               Loads the Private Key          *
+ *----------------------------------------------*/
+int testOSPPloadPemPrivateKey(unsigned char *FileName, unsigned char *buffer, int *len)
+{
+    int length = 0;
+    unsigned char *temp;
+    BIO *bioIn = NULL;
+    RSA *pKey;
+    int retVal = OSPC_ERR_NO_ERROR;
+
+    temp = buffer;
+
+    bioIn = BIO_new_file((const char*)FileName,"r");
+    if (bioIn == NULL)
+    {
+        printf("Failed to find the File - %s \n",FileName);
+        retVal = TEST_ERROR;
+    }
+    else
+    {
+        pKey = PEM_read_bio_RSAPrivateKey(bioIn,NULL,NULL,NULL);
+        if (pKey == NULL)
+        {
+            printf("Failed to parse the Private Key from the File - pkey.pem \n");
+            retVal = TEST_ERROR;
+        }
+        else
+        {
+            length = i2d_RSAPrivateKey(pKey,&temp);
+            if (length == 0)
+            {
+                printf("Failed to parse the Private Key from the File - pkey.pem, length = 0\n");
+                retVal = TEST_ERROR;
+            }
+            else
+            {
+                *len = length;
+                printf ("Loaded 1 Private Key \n");
+            }   
+        }
+    }
+    if (bioIn != NULL)
+    {
+        BIO_free(bioIn);
+    }
+
+    if (pKey != NULL)
+    {
+       RSA_free(pKey);
+    }
+    return retVal;    
+}
+
 
 int
 testOSPPProviderNew()
@@ -228,68 +340,47 @@ char device_id[64];
 
     int length = 0;
     unsigned char *temp;
-    BIO *bioIn = NULL;
-    RSA *pKey;
-    X509 *lcert,*cacert;
 
-    temp = Reqbuf;
-
-    bioIn = BIO_new_file("pkey.pem","r");
-    pKey = PEM_read_bio_RSAPrivateKey(bioIn,NULL,NULL,NULL);
-    length = i2d_RSAPrivateKey(pKey,&temp);
-    if (pKey == NULL || length == 0)
-    {
-        printf("Failed to parse the Private Key from the File - pkey.pem \n");
-        return 0;
-    }
-    else
+    errorcode = testOSPPloadPemPrivateKey((unsigned char *)"pkey.pem", (unsigned char *)Reqbuf,&length);
+    if (errorcode == OSPC_ERR_NO_ERROR)
     {
         privatekey.PrivateKeyData = Reqbuf;
         privatekey.PrivateKeyLength = length;
-        printf ("Loaded 1 Private Key \n");
-    }
-
-
-    temp = NULL;
-    temp = LocalBuf;
-    length = 0;
-
-    bioIn = BIO_new_file("localcert.pem","r");
-    lcert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
-    length = i2d_X509(lcert,&temp);
-
-    if (lcert == NULL || length == 0)
-    {
-        printf("Failed to parse the Local Certificate from the File - localcert.pem \n");
-        return 0;
     }
     else
+    {
+         return errorcode;
+    }
+
+   length = 0;
+    errorcode = testOSPPloadPemCert((unsigned char *)"localcert.pem", (unsigned char *)LocalBuf,&length);
+    if (errorcode == OSPC_ERR_NO_ERROR)
     {
         localcert.CertData = LocalBuf;
         localcert.CertDataLength = length;
         printf ("Loaded 1 Local Certificate \n");
     }
-
-    temp = NULL;
-    temp = AuthBuf;
-    length = 0;
-
-    bioIn = BIO_new_file("cacert.pem","r");
-    cacert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
-    length = i2d_X509(cacert,&temp);
-
-    if (cacert == NULL || length == 0)
-    {
-        printf("Failed to parse the Authority Certificate from the File - cacert.pem \n");
-        return 0;
-    }
     else
+    {
+         return errorcode;
+    }
+
+
+    length = 0;
+    errorcode = testOSPPloadPemCert((unsigned char *)"cacert.pem", (unsigned char *)AuthBuf,&length);
+    if (errorcode == OSPC_ERR_NO_ERROR)
     {
         TheAuthCert.CertData = AuthBuf;
         TheAuthCert.CertDataLength = length;
         authCerts[0] = &TheAuthCert;
         printf ("Loaded 1 Auhorization Certificate \n");
     }
+    else
+    {
+         return errorcode;
+    }
+
+
     NUM_CA_CERTS = 1;
 
 
@@ -406,31 +497,20 @@ testOSPPProviderSetAuthorityCertificates()
     int errorcode = 0;
     int length = 0;
     unsigned char *temp;
-    BIO *bioIn = NULL;
-    RSA *pKey;
-    X509 *lcert,*cacert;
 
-
-    temp = NULL;
-    temp = AuthBuf;
-    length = 0;
-
-    bioIn = BIO_new_file("cacert.pem","r");
-    cacert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
-    length = i2d_X509(cacert,&temp);
-
-    if (cacert == NULL || length == 0)
-    {
-        printf("Failed to parse the Authority Certificate from the File - cacert.pem \n");
-        return 0;
-    }
-    else
+    errorcode = testOSPPloadPemCert((unsigned char *)"cacert.pem", (unsigned char *)AuthBuf,&length);
+    if (errorcode == OSPC_ERR_NO_ERROR)
     {
         TheAuthCert.CertData = AuthBuf;
         TheAuthCert.CertDataLength = length;
         authCerts[0] = &TheAuthCert;
         printf ("Read 1 Auhorization Certificate \n");
     }
+    else
+    {
+         return errorcode;
+    }
+
     NUM_CA_CERTS = 1;
 
 
@@ -617,55 +697,40 @@ testOSPPProviderSetLocalKeys()
 {
     int errorcode = 0;
     int length;
-    unsigned char *temp;
-    BIO *bioIn = NULL;
-    RSA *pKey;
-    X509 *lcert,*cacert;
 
-    bioIn = BIO_new_file("pkey.pem","r");
+    errorcode = testOSPPloadPemPrivateKey((unsigned char *)"pkey.pem", (unsigned char *) Reqbuf,&length);
 
-    temp = Reqbuf;
-    length = 0;
-
-    pKey = PEM_read_bio_RSAPrivateKey(bioIn,NULL,NULL,NULL);
-    length = i2d_RSAPrivateKey(pKey,&temp);
-    if (pKey == NULL || length == 0)
-    {
-        printf("Failed to parse the Private Key from the File - pkey.pem \n");
-        return 0;
-    }
-    else
+    if (errorcode == OSPC_ERR_NO_ERROR)
     {
         privatekey.PrivateKeyData = Reqbuf;
         privatekey.PrivateKeyLength = length;
-        printf ("Read 1 Private Key \n");
-    }
+        length = 0;
 
-    temp = NULL;
-    temp = LocalBuf;
-    length = 0;
-
-    bioIn = BIO_new_file("localcert.pem","r");
-    lcert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
-    length = i2d_X509(lcert,&temp);
-
-    if (lcert == NULL || length == 0)
-    {
-        printf("Failed to parse the Local Certificate from the File - localcert.pem \n");
-        return 0;
+        errorcode = testOSPPloadPemCert((unsigned char *)"localcert.pem", (unsigned char *)LocalBuf,&length);
+        if (errorcode == OSPC_ERR_NO_ERROR)
+        {
+            localcert.CertData = LocalBuf;
+            localcert.CertDataLength = length;
+            printf ("Read 1 Local Certificate \n");
+            localcerts = &(localcert.CertData);
+        }
+        else
+        {
+            printf("testOSPPloadPemCertreturned Error ! \n");
+        } 
     }
     else
     {
-        localcert.CertData = LocalBuf;
-        localcert.CertDataLength = length;
-        printf ("Read 1 Local Certificate \n");
-        localcerts = &(localcert.CertData);
+        printf("testOSPPloadPemPrivateKey returned Error ! \n");
     }
 
-    errorcode = OSPPProviderSetLocalKeys(
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    {
+        errorcode = OSPPProviderSetLocalKeys(
         OSPVProviderHandle,
         &privatekey,
         localcerts[0]);
+    }
 
     return errorcode;
 }
