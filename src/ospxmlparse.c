@@ -537,9 +537,11 @@ OSPPXMLDocGetContent(
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
     unsigned char char1 = '\0';
     unsigned char char2 = '\0';
+#if 0
     unsigned      isComment = OSPC_FALSE;
     unsigned      isPI = OSPC_FALSE;
     unsigned      isCdata = OSPC_FALSE;
+#endif
     unsigned      cnt;
     OSPTXMLELEM  *elem = OSPC_OSNULL;
 
@@ -574,6 +576,7 @@ OSPPXMLDocGetContent(
         /* first take care of any whitespace */
         ospvErrCode = OSPPXMLDocSkipWhite(ospvBfrAddr, ospvEncoding);
 
+#if 0
         /* see if there's a comment - if so, skip it */
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
@@ -592,6 +595,7 @@ OSPPXMLDocGetContent(
             ospvErrCode = OSPPXMLDocIsPI(ospvBfrAddr, ospvEncoding,
                 &isPI);
         }
+
         if ((ospvErrCode == OSPC_ERR_NO_ERROR) && isPI)
         {
             ospvErrCode = OSPPXMLDocSkipPI(ospvBfrAddr, ospvEncoding);
@@ -604,12 +608,14 @@ OSPPXMLDocGetContent(
             ospvErrCode = OSPPXMLDocIsCdata(ospvBfrAddr, ospvEncoding,
                 &isCdata);
         }
+
         if ((ospvErrCode == OSPC_ERR_NO_ERROR) && isCdata)
         {
             ospvErrCode = OSPPXMLDocGetCdata(ospvBfrAddr, ospvEncoding,
                 ospvValBfr);
             continue;
         }
+#endif
 
         /* we need a look at the next two characters for several cases */
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
@@ -978,6 +984,7 @@ OSPPXMLDocSkipAllMisc(
         /* first take care of any whitespace */
         ospvErrCode = OSPPXMLDocSkipWhite(ospvBfrAddr, ospvEncoding);
 
+#if 0
         /* Misc can be either comments ... */
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
@@ -991,6 +998,7 @@ OSPPXMLDocSkipAllMisc(
             ospvErrCode = OSPPXMLDocIsPI(ospvBfrAddr, ospvEncoding,
                 &isPI);
         }
+#endif
 
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
@@ -1165,6 +1173,7 @@ OSPPXMLDocSkipMarkupDecl(
          * Now take a peek at what's next. We need to handle several
          * possibilities.
          */
+#if 0
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             ospvErrCode = OSPPXMLDocIsComment(ospvBfrAddr, ospvEncoding,
@@ -1175,6 +1184,7 @@ OSPPXMLDocSkipMarkupDecl(
             ospvErrCode = OSPPXMLDocIsPI(ospvBfrAddr, ospvEncoding,
                 &isPI);
         }
+#endif
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             ospvErrCode = OSPPXMLDocIsElementDecl(ospvBfrAddr, ospvEncoding,
