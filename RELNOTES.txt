@@ -354,9 +354,13 @@ Version 3.1.1
 * Fixed a bug in OSPPProviderNew API because of which the toolkit would crash if the 'ospvMessageCount' was configured
   as NULL and the number of SP's exceeded one.
 * The toolkit now, by default, allows deletion of a transaction even without reporting usage.If the user does not want this
-  feature, the user can uncomment the - OSP_NO_DELETE_CHECK definition in the osp_sdk_compile.ksh script.
-* Modified XML parsing for optimal performance. Removed functions - OSPPXMLDocIsComment, OSPPXMLDocIsPI, and OSPPXMLDocIsCdata.
+  feature, the user can uncomment the - OSP_NO_DELETE_CHECK definition in the osp_sdk_compile.ksh script (if running on Solaris/Linux), 
+  or the osp.dsp file (if running on Windows).
+* Modified XML parsing for optimal performance. Functions - OSPPXMLDocIsComment, OSPPXMLDocIsPI, and OSPPXMLDocIsCdata 
+  only get included if flag - COMPLETE_XML_PARSING is defined.
   Since the server never includes Comments, Processing Instructions, or CData, we can safely skip these checks. 
 * Fixed a bug because of which OSPPProviderDelete API, when called during the life of a connection, would give a 
   'mutex destroy failed' error.
-* mtmalloc has been made the default memory allocation scheme for the osp toolkit.
+* Fixed a race condition in the 'MsgInfo' object. The problem arose because OSPPMsgInfoWaitForMsg function could have
+  been called even when the MsgInfo structure was deleted. As a fix, we now call this function only when the IsNonBlocking
+  parameter of the MsgInfo structure is set to FALSE. 
