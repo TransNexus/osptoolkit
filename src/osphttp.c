@@ -582,6 +582,13 @@ osppHttpSetupAndMonitor(
      */
     OSPPHttpDelete(&httpconn);
 
+    /*
+     * The BitReset function removed from here was erroneously introduced in 2.8.2 and was not present
+     * in the previous versions. Because of this, the ProviderDelete function call hung if multiple calls 
+     * were run. In this function, we reset the HTTP_SHUTDOWN bit, because of which other threads do not get to
+     * know that the Provider is being Deleted, and thus do not take down their connections, thereby making the
+     * function call to hang and never return back to an application.
+     */
     OSPM_DBGEXIT(("EXIT : osppHttpSetupAndMonitor()\n"));
 
     OSPTTHREADRETURN_NULL();
