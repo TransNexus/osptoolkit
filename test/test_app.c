@@ -855,11 +855,14 @@ testOSPPProviderGetNumberOfServicePoints()
 int 
 testOSPPTransactionSetNetworkId()
 {
-    int errorcode = 0;
+    int errorcode = 0,i=0;
     char NetId[128];
 
     printf("Enter the Network Identifier : ");
-    scanf("%s",NetId);
+    fflush(stdin);
+    while ((NetId[i]=getchar()) != '\n')
+      i++;
+    NetId[i] = '\0';
     errorcode = OSPPTransactionSetNetworkId(
         OSPVTransactionHandle,
         NetId);
