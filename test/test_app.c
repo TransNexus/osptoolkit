@@ -64,12 +64,12 @@
 
 
 #define LOCAL_VALIDATION      1
-#define DEF_SSL_LIFETIME      300  /* Do not change */
+#define DEF_SSL_LIFETIME      300
 #define DEF_HTTP_MAXCONN      50
-#define DEF_HTTP_PERSIST      60000  /* Do not change */
+#define DEF_HTTP_PERSIST      60000
 #define DEF_HTTP_RETRYDELAY   0
 #define DEF_HTTP_RETRYLIMIT   1
-#define DEF_HTTP_TIMEOUT      (60 * 1000) /* Do not change */
+#define DEF_HTTP_TIMEOUT      (60 * 1000)
 #define DEF_TIME_LIMIT        4
 #define DEF_CUST_ID           1000L
 #define DEF_DEVICE_ID         1000L
