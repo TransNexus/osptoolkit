@@ -263,8 +263,6 @@ OSPPTransactionBuildUsage(
     int             errorcode   = OSPC_ERR_NO_ERROR;
     unsigned char   *dest       = OSPC_OSNULL;
     OSPTALTINFO     *altinfo    = OSPC_OSNULL;
-    unsigned char   *EMPTY_NUMBER = "";
-    unsigned char   *dest_number = OSPC_OSNULL;
 
     *ospvUsage = OSPPUsageIndNew();
 
@@ -315,9 +313,9 @@ OSPPTransactionBuildUsage(
             /* Get Destination Number (Called) */
             if(errorcode == OSPC_ERR_NO_ERROR)
             {
-                if ((OSPPDestHasNumber(ospvDest)) && (OSPM_STRCMP((dest_number = OSPPDestGetNumber(ospvDest)),EMPTY_NUMBER)))
+                if (OSPPDestHasNumber(ospvDest)) 
                 {
-                    OSPPUsageIndSetDestNumber(*ospvUsage,dest_number);
+                    OSPPUsageIndSetDestNumber(*ospvUsage,OSPPDestGetNumber(ospvDest));
                 }
                 else
                 {
