@@ -527,6 +527,7 @@ char *OSPM_INET_NTOA(OSPTIPADDR ip);
 
 #define OSPM_STRCPY(s1,s2)          strcpy((s1), (s2))
 #define OSPM_STRCMP(s1,s2)          strcmp((s1), (s2))
+#define OSPM_STRDUP(s1)             strdup(s1)
 
 #ifdef _WIN32
 #define OSPM_STRCASECMP(s1,s2)      stricmp((s1), (s2))
