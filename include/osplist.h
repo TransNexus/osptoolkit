@@ -57,38 +57,6 @@ typedef OSPTLISTLINK *OSPTLIST;
 
 /**/
 /*-----------------------------------------------------------------------*/
-/* macros that emulate functions                                         */
-/*-----------------------------------------------------------------------*/
-#ifndef OSPC_DEBUG
-/* 
- * Note: all macros are also implemented as functions in osplist.c. For
- * implementation details, see the comments in that file. To replace a
- * macro with a true function, simply comment out the macro definition
- * below.
- */
-
-#define OSPPListLinkNew(ospvLink)      ((ospvLink)->ospmLinkNext = OSPC_OSNULL)
-#define OSPPListLinkDelete(ospvLink)   ((ospvLink)->ospmLinkNext = OSPC_OSNULL)
-#define OSPPListLinkIsolated(ospvLink) ((ospvLink)->ospmLinkNext == OSPC_OSNULL)
-
-#define OSPPListNew(ospvList)    (*(ospvList) = OSPC_OSNULL)
-#define OSPPListDelete(ospvList) (*(ospvList) = OSPC_OSNULL)
-#define OSPPListEmpty(ospvList)  (*ospvList == OSPC_OSNULL)
-#define OSPPListLast(ospvList)   (*(ospvList))
-
-#define OSPPListFirst(ospvList)  (OSPPListEmpty(ospvList) ? \
-    (OSPTLISTLINK *) OSPC_OSNULL : ((OSPTLISTLINK *)(*(ospvList)))->ospmLinkNext)
-
-#define OSPPListNext(ospvList,ospvItem) \
-    ( (OSPPListLast(ospvList)==((void *)(ospvItem))) ? OSPC_OSNULL : \
-        ((void *)((OSPTLISTLINK *)(ospvItem))->ospmLinkNext) )
-#define OSPPListMove(ospvDst,ospvSrc) \
-    { *(ospvDst) = *(ospvSrc); OSPPListNew(ospvSrc); }
-
-#endif
-
-/**/
-/*-----------------------------------------------------------------------*/
 /* true macros                                                           */
 /*-----------------------------------------------------------------------*/
 #define OSPPListItemInList(List,InItem,ItemFld,ItemSize,PtrType,Found) { \
@@ -121,11 +89,7 @@ extern "C"
     unsigned  OSPPListCount(OSPTLIST *);
     void     *OSPPListNextToLast(OSPTLIST *);
 
-#ifdef OSPC_DEBUG
-
     void      OSPPListLinkNew (OSPTLISTLINK *);
-    void      OSPPListLinkDelete (OSPTLISTLINK *);
-    unsigned  OSPPListLinkIsolated (OSPTLISTLINK *);
     void      OSPPListNew (OSPTLIST *);
     void      OSPPListDelete (OSPTLIST *);
     unsigned  OSPPListEmpty (OSPTLIST *);
@@ -134,7 +98,6 @@ extern "C"
     void     *OSPPListNext (OSPTLIST *, void *);
     void      OSPPListMove (OSPTLIST *, OSPTLIST *);
 
-#endif /* OSPC_DEBUG */
 
 #ifdef __cplusplus
 }
