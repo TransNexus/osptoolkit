@@ -534,6 +534,17 @@ osppHttpSetupAndMonitor(
                 assert(errorcode == OSPC_ERR_NO_ERROR);
             }
         }
+
+        if ( OSPC_SOCK_INVALID == httpconn->SockFd )
+        {
+          /*
+           * Connection is no longer valid
+           * time to quit this thread
+           */
+          OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() remove connection requested\n"));
+          osppHttpRemoveConnection(httpconn);
+          break;
+        }
     }
 
     /*
