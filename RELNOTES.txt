@@ -345,3 +345,5 @@ Version 3.1
   - OSPPProviderNew
   - OSPPProviderSetServicePoints
   - OSPPProviderSetCapabilitiesURLs
+* Updated connection error and http error log messages to include IP addresses.
+* Disabled hardware support for enrollment.
