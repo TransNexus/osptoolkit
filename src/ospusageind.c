@@ -294,7 +294,7 @@ OSPPUsageIndSetSourceNumber(
         {
             OSPM_STRNCPY((char *)(ospvUsageInd)->ospmUsageIndSourceNumber, 
                 (const char *)(ospvSourceNumber),
-                min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvSourceNumber)+1));
+                tr_min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvSourceNumber)+1));
         }
     }
     return;
@@ -333,7 +333,7 @@ OSPPUsageIndSetDestNumber(
         {
             OSPM_STRNCPY((char *)(ospvUsageInd)->ospmUsageIndDestNumber, 
                 (const char *)(ospvDestNumber), 
-                min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvDestNumber)+1));
+                tr_min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvDestNumber)+1));
         }
     }
     return;

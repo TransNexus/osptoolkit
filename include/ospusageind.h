@@ -112,7 +112,7 @@ OSPTUSAGEIND;
 #define OSPPUsageIndSetSourceNumber(ospvUsageInd,ospvSourceNumber) \
     OSPM_STRNCPY((char *)(ospvUsageInd)->ospmUsageIndSourceNumber, \
         (const char *)(ospvSourceNumber), \
-        min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvSourceNumber)+1))
+        tr_min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvSourceNumber)+1))
 #define OSPPUsageIndGetSourceNumber(ospvUsageInd) \
         (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndSourceNumber):OSPC_OSNULL
 
@@ -131,7 +131,7 @@ OSPTUSAGEIND;
 #define OSPPUsageIndSetDestNumber(ospvUsageInd,ospvDestNumber) \
     OSPM_STRNCPY((char *)(ospvUsageInd)->ospmUsageIndDestNumber, \
         (const char *)(ospvDestNumber),  \
-        min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvDestNumber)+1))
+        tr_min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvDestNumber)+1))
 #define OSPPUsageIndGetDestNumber(ospvUsageInd) \
     (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndDestNumber):OSPC_OSNULL
 

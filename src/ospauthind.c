@@ -182,7 +182,7 @@ OSPPAuthIndSetSourceNumber(
         {
             OSPM_STRNCPY((char *)(ospvAuthInd)->ospmAuthIndSourceNumber, 
                 (const char *)(ospvNum), 
-                min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1));
+                tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1));
         }
     }
 }
@@ -242,7 +242,7 @@ OSPPAuthIndSetDestNumber(
         {
             OSPM_STRNCPY((char *)(ospvAuthInd)->ospmAuthIndDestNumber, 
                 (const char *)(ospvNum), 
-                min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1));
+                tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1));
         }
     }
 }

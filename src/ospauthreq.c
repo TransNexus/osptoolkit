@@ -181,7 +181,7 @@ OSPPAuthReqSetSourceNumber(
         {
             OSPM_STRNCPY((char *)(ospvAuthReq)->ospmAuthReqSourceNumber, 
                 (const char *)(ospvNum), 
-                min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1));
+                tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1));
         }
     }
 }
@@ -363,7 +363,7 @@ OSPPAuthReqSetDestNumber(
         {
             OSPM_STRNCPY((char *)(ospvAuthReq)->ospmAuthReqDestNumber, 
                 (const char *)(ospvNum), 
-                min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1));
+                tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1));
         }
     }
 }
