@@ -413,7 +413,7 @@ OSPPCommSetConnSelectionTimeout(
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
     }
     else
-        ospvComm->ConnSelectionHttpTimeout = ospvTimeout;
+        ospvComm->ConnSelectionTimeout = ospvTimeout;
 
     return errorcode;
 }

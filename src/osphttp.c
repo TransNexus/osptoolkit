@@ -849,7 +849,7 @@ osppHttpSelectConnection(
         /*
          * We cannot add a new one. So, check to find an idle connection
          */
-        errorcode = osppHttpGetIdleHttpConn(&(ospvComm->HttpConnList),&(*ospvHttp),(ospvComm->ConnSelectionHttpTimeout/1000),maxcount,ospvComm->RoundRobinIndex);
+        errorcode = osppHttpGetIdleHttpConn(&(ospvComm->HttpConnList),&(*ospvHttp),(ospvComm->ConnSelectionTimeout/1000),maxcount,ospvComm->RoundRobinIndex);
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
             ospvComm->RoundRobinIndex = ((ospvComm->RoundRobinIndex)+1) % maxcount;
