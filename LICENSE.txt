@@ -1,0 +1,128 @@
+OSP Toolkit Software License Agreement
+
+THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS TRANSNEXUS PUBLIC
+LICENSE ("AGREEMENT").  ANY USE OF THE PROGRAM OR USE, REPRODUCTION OR 
+DISTRIBUTION OF A DERIVATIVE WORK OF THE PROGRAM CONSTITUTES LICENSEE'S 
+ACCEPTANCE OF THIS AGREEMENT.
+
+1. GRANT OF RIGHTS
+a) Subject to the terms of this Agreement, TransNexus grants to Licensee a 
+limited, non-exclusive, worldwide, royalty-free copyright license to use 
+the TransNexus OSP Toolkit ("Program") to prepare derivative works of the 
+Program ("Derivative Works") and to reproduce, use, distribute and sublicense
+the Derivative Works.
+
+b) Licensee understands that although TransNexus grants the license as set 
+forth herein, no assurances are provided by TransNexus that the Program does 
+not infringe the patent or other intellectual property rights of any other 
+entity. TransNexus disclaims any liability to Licensee for claims brought by 
+any other entity based on infringement of intellectual property rights or 
+otherwise. As a condition to exercising the rights and licenses granted 
+hereunder, each Licensee hereby assumes sole responsibility to secure any 
+other intellectual property rights needed, if any. For example, if a third 
+party patent license is required to allow Licensee to use the Program or to 
+use, reproduce or distribute Derivative Works, it is Licensee's 
+responsibility to acquire that license before taking any such action.
+
+2. REQUIREMENTS
+A Licensee may choose to distribute Derivative Works under its own license 
+agreement, provided that:
+
+a) The name "TransNexus" must not be used to endorse or promote products 
+derived from the Program without prior written permission.
+
+b) Products derived from the Program may not be called "TransNexus", nor may 
+"TransNexus" appear in their name, without prior written permission of 
+TransNexus.
+
+3. COMMERCIAL DISTRIBUTION
+Commercial distributors of software may accept certain responsibilities with 
+respect to end users, business partners and the like. While this license is 
+intended to facilitate the commercial preparation, use and distribution of 
+Derivative Works, the Licensee who includes one or more Derivative Works in a 
+commercial product offering should do so in a manner which does not create 
+potential liability for TransNexus. Therefore, if a Licensee includes a 
+Derivative Work in a commercial product offering, such Licensee ("Commercial
+Licensee") hereby agrees to defend and indemnify TransNexus against any losses,
+damages and costs (collectively "Losses") arising from claims, lawsuits and 
+other legal actions brought by a third party against TransNexus to the extent
+caused by the acts or omissions of such Commercial Licensee in connection with
+its distribution of the Derivative Work in a commercial product offering. 
+TransNexus will: a) promptly notify the Commercial Licensee in writing of such
+claim, and b) allow the Commercial Licensee to control, and cooperate with the 
+Commercial Licensee in, the defense and any related settlement negotiations. 
+TransNexus may participate in any such claim at its own expense. For example, 
+a Licensee might include a Derivative Work in a commercial product offering, 
+Product X. That Licensee is then a Commercial Licensee. If that Commercial 
+Licensee then makes performance claims, or offers warranties related to 
+Product X, those performance claims and warranties are such Commercial 
+Licensee's responsibility alone. Under this section, the Commercial Licensee
+would have to defend claims against TransNexus related to those performance 
+claims and warranties, and if a court requires TransNexus to pay any damages 
+as a result, the Commercial Licensee must pay those damages.
+
+4. NO WARRANTY
+EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, THE PROGRAM IS PROVIDED ON AN
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR 
+IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE, 
+NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Each 
+Licensee is solely responsible for determining the appropriateness of using the
+Program and using, reproducing, or distributing Derivative Works and assumes 
+all risks associated with its exercise of rights under this Agreement, 
+including but not limited to the risks and costs of program errors, compliance
+with applicable laws, damage to or loss of data, software programs or 
+equipment, and unavailability or interruption of operations.
+
+5. DISCLAIMER OF LIABILITY
+EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, NEITHER LICENSEE NOR 
+TRANSNEXUS SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING WITHOUT LIMITATION 
+LOST PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+IN ANY WAY OUT OF THE USE OF THE PROGRAM OR USE, REPRODUCTION OR DISTRIBUTION
+OF DERIVATIVE WORKS OR THE EXERCISE OF ANY RIGHTS GRANTED HEREUNDER, EVEN IF 
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+6. GENERAL
+If any provision of this Agreement is invalid or unenforceable under applicable
+law, it shall not affect the validity or enforceability of the remainder of the
+terms of this Agreement, and without further action by the parties hereto, such
+provision shall be reformed to the minimum extent necessary to make such 
+provision valid and enforceable. If Licensee institutes patent litigation 
+against TransNexus with respect to a patent applicable to software (including
+a cross-claim or counterclaim in a lawsuit), then any patent licenses granted
+by TransNexus to such Licensee under this Agreement shall terminate as of the
+date such litigation is filed. In addition, If Licensee institutes patent 
+litigation against any entity (including a cross-claim or counterclaim in a
+lawsuit) alleging that the Program itself (excluding combinations of the 
+Program with other software or hardware) infringes such Licensee's patent(s),
+then such Licensee's rights granted under Section 1 shall terminate as of the
+date such litigation is filed. All Licensee's rights under this Agreement 
+shall terminate if it fails to comply with any of the material terms or 
+conditions of this Agreement and does not cure such failure in a reasonable
+period of time after becoming aware of such noncompliance. If all Licensee's
+rights under this Agreement terminate, Licensee agrees to cease use of the
+Program and use, reproduction or distribution of Derivative Works as soon as
+reasonably practicable (and not later than 30 days from the termination date).
+However, Licensee's obligations under this Agreement and any licenses granted
+by Licensee relating to the Program or Derivative Works shall continue and 
+survive.  TransNexus may publish new versions (including revisions) of this
+Agreement from time to time. Each new version of the Agreement will be given
+a distinguishing version number.  Derivative Works may always be distributed
+by the Licensee subject to the version of the Agreement under which the
+underlying Program was received.  After a new version of the Agreement is
+published, TransNexus may elect to distribute the Program under the new
+version. No one other than TransNexus has the right to modify this Agreement. 
+Except as expressly stated in Section 1 above, Licensee receives no rights or
+licenses to the intellectual property of TransNexus under this Agreement, 
+whether expressly, by implication, estoppel or otherwise. All rights in the 
+Program not expressly granted under this Agreement are reserved by TransNexus.
+
+This Agreement is governed by the laws of the State of Georgia, USA; 
+notwithstanding any conflicts of law provision, and the intellectual property
+laws of the United States of America. No party to this Agreement will bring 
+a legal action under this Agreement more than one year after the cause of 
+action arose. Each party waives its rights to a jury trial in any resulting 
+litigation. TransNexus, Inc. is a Delaware corporation located at 
+1140 Hammond Drive, NE
+Atlanta, GA 30328, USA.

@@ -1,0 +1,81 @@
+---------------------------------------------------------------------------
+--- COPYRIGHT (c) 2002 by TransNexus, Inc.                              ---
+---                                                                     ---
+--- This software is property of TransNexus, Inc.                       ---
+--- This software is freely available under license from TransNexus.    ---
+--- The license terms and conditions for free use of this software by   ---
+--- third parties are defined in the OSP Toolkit Software License       ---
+--- Agreement (LICENSE.txt).  Any use of this software by third         ---
+--- parties, which does not comply with the terms and conditions of the ---
+--- OSP Toolkit Software License Agreement is prohibited without        ---
+--- the prior, express, written consent of TransNexus, Inc.             ---
+---                                                                     ---
+--- Thank you for using the OSP ToolKit(TM).  Please report any bugs,   ---
+--- suggestions or feedback to support@transnexus.com                   ---
+---                                                                     ---
+---------------------------------------------------------------------------
+
+
+
+---------------------------------------------------------------------------
+Version 2.5.1
+
+  * Added -D for BSAFE String Functions within Makefile
+  * Initial work on port of ospopenssl.c includes SSLeay
+  * New version of license agreement for LICENSE.txt
+  * Added critical = False for TN extensions for OSP messages
+  * Added T_strcpy, T_strcmp, T_strlen callbacks for BSAFE
+  * Changed the way headers were identified within HTTP messages
+  * Fixed a couple of bad references in the client auth code.
+  * Changed formatting, and added osp macros for client auth code.
+  * Changes in detecting header types within ospsocket.c
+  * Added OSP macros in ospxml.c
+  * Created separate OSPM_GETSOCKERR macro for Unix and Windows
+
+---------------------------------------------------------------------------
+
+Version 2.5.2
+
+  * Added code to improve message queuing.
+  * Added code to eliminate memory leaks.
+  * Made the HTTP reader case-insensitive.
+  * Several functions were changed to their macro equivalents.
+  * Changed case on content-types within HTTP messages.
+  * Eliminated some compiler warnings.
+  * Implemented "subscriber" type in SourceAlternate messages.
+
+---------------------------------------------------------------------------
+
+Version 2.5.4
+
+  * Added parenthesis to variables contained in macros.
+  * Eliminated unnecessary macros.
+  * Corrected macro OSPM_GETHOSTBYNAME to accept empty values.
+  * Eliminated a potential memory leak in OSPPTransactionDelete.
+  * Corrected a conditional statement in OSPPTransIdRemove.
+  * Added code for ASN.1 parser to recognize boolean tags.
+  * Changes were made in order to eliminate the fixed size of altinfo,
+    token, and callid structures.
+  * Corrected a TransNexus Extension attribute (critical should equal
+    "false")
+  * Corrected a buffer overflow error when constructing an enrollment
+    request.
+  * Added the "-function" command to the enroll's help screen.
+  * Added option to compile the Toolkit with POSIX threads on Win32
+    platforms.
+  * Added a new module to the test_app that implements non-blocking API for
+    the Toolkit.
+
+---------------------------------------------------------------------------
+
+Version 2.5.5
+
+  * Changed the Toolkit to use the cryptographic algorithms
+    within OpenSSL rather than BSAFE.
+  * Updated Project and Make files.
+  * Added "How to build the Toolkit" document.
+  * New version of license agreement for LICENSE.txt
+
+---------------------------------------------------------------------------
+
+
