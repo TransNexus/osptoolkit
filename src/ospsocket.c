@@ -84,7 +84,11 @@ OSPPSockConnect(
         {
             errorcode = OSPC_ERR_SOCK_CONNECT_FAILED;
             OSPM_INET_NTOA(ospvIpAddr, ipstr);
-            OSPM_DBGERROR(("%s to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",strerror(errno), ipstr, ospvPort,errorcode));
+#ifdef _WIN32
+            OSPM_DBGERROR(("Could not connect to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",ipstr, ntohs(ospvPort),errorcode));
+#else
+            OSPM_DBGERROR(("%s to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",strerror(errno), ipstr, ntohs(ospvPort),errorcode));
+#endif
             OSPPSockClose(OSPC_FALSE, ospvSockFd, ospvSSLSession);
         }
         else
@@ -98,7 +102,11 @@ OSPPSockConnect(
             {
                 errorcode = OSPC_ERR_SOCK_CONNECT_FAILED;
                 OSPM_INET_NTOA(ospvIpAddr, ipstr);
-                OSPM_DBGERROR(("%s to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",strerror(errno), ipstr, ospvPort,errorcode));
+#ifdef _WIN32
+            OSPM_DBGERROR(("Could not connect to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",ipstr, ntohs(ospvPort),errorcode));
+#else
+                OSPM_DBGERROR(("%s to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",strerror(errno), ipstr, ntohs(ospvPort),errorcode));
+#endif
                 OSPPSockClose(OSPC_FALSE, ospvSockFd, ospvSSLSession);
             }
         }
@@ -780,7 +788,11 @@ OSPPSockRead(
 
         errorcode = OSPC_ERR_SOCK_RECV_FAILED;
         OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr,ipstr);
+#ifdef _XOPEN_SOURCE
+        OSPM_DBGERROR(("Connection reset by peer on %s:%d Error = %d\n",ipstr,ntohs(ospvHttp->ServicePoint->Port),errorcode));
+#else
         OSPM_DBGERROR(("Connection reset by peer on %s:%d Error = %d\n",ipstr,ospvHttp->ServicePoint->Port,errorcode));
+#endif
     }
     *ospvBufferSz = length;
     OSPM_DBGEXIT(("EXIT : OSPPSockRead() (%d)\n", errorcode));
