@@ -140,3 +140,8 @@ Version 2.7
 Version 2.8
 
   * Modified the enrollment procedure to read PEM format files instead of dat. The enrollment prodedure has now been much simplified by removing the cumbersome tasks of copying the keys and editing files. It is a 3 step procedure with no practical differences for the different platforms.
+---------------------------------------------------------------------------
+
+Version 2.8
+
+ * Updated test app to use PEM encoded crypto files for the following test_app.c functions - GetAuthorityCertificates, SetAuthorityCertificates, SetLocalKeys.
