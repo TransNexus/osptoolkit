@@ -288,7 +288,7 @@ OSPPSSLWrapGetData(
     if (expected != (int)*ospvLength)
     {
                                 sslerr = SSL_get_error(conref, bytesread);
-                                OSPM_DBGERRORLOG(sslerr, "SSL_read() failed");
+                                OSPM_DBGERRORLOG(sslerr, "SSL_read() failed, Connection Reset by Peer");
                                 errorcode = OSPC_ERR_SSL_READ_FAILED;
     }
     
