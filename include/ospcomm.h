@@ -129,6 +129,7 @@ extern "C"
     OSPTSEC *OSPPCommGetSecurity(OSPTCOMM *);
     void     OSPPCommSignalAllConnections(OSPTCOMM *ospvComm);
     int      OSPPCommParseSvcPt(const char *ospvURL, OSPTSVCPT  **ospvSvcPt, unsigned   ospvIndex);
+    int      OSPPCommValidateSvcPts(unsigned ospvNumberOfServicePoints, const char **ospvServicePoint);
 
 #ifdef __cplusplus
 }

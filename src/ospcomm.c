@@ -1095,3 +1095,43 @@ OSPPCommDelete(
     return; 
 }
 
+int OSPPCommValidateSvcPts(unsigned ospvNumberOfServicePoints, const char **ospvServicePoint)
+{
+    int       errorcode    = OSPC_ERR_NO_ERROR;
+    unsigned  count        = 0;
+    OSPTSVCPT *svcpt       = OSPC_OSNULL;
+
+    /*
+     * Iterate through all Svc points and see if we can parse them
+    */
+    for (count = 0;  count < ospvNumberOfServicePoints; count++) 
+    {
+        errorcode = OSPPCommParseSvcPt(ospvServicePoint[count],
+                                       &svcpt,
+                                       count+1);
+
+        /*
+         * Now free the Svc point
+        */
+        if (svcpt != (OSPTSVCPT *)OSPC_OSNULL)
+        {
+            if (svcpt->HostName)
+                OSPM_FREE(svcpt->HostName);
+
+            if (svcpt->URI)
+                OSPM_FREE(svcpt->URI);
+
+            OSPM_FREE(svcpt);
+        }
+
+        /* Break on error */
+        if (errorcode != OSPC_ERR_NO_ERROR)
+            break;
+    }
+
+    return( errorcode );
+}
+
+
+
+

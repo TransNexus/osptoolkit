@@ -659,6 +659,7 @@ OSPPProviderNew(
 
     if((ospvNumberOfServicePoints <= 0)         ||
        (ospvServicePoints == OSPC_OSNULL)       ||
+       (OSPPCommValidateSvcPts(ospvNumberOfServicePoints,ospvServicePoints) != OSPC_ERR_NO_ERROR) ||
        (ospvLocalPrivateKey == OSPC_OSNULL)     ||
        (ospvLocalCertificate == OSPC_OSNULL)    ||
        (ospvNumberOfAuthorityCertificates <= 0) ||
@@ -672,6 +673,7 @@ OSPPProviderNew(
        (ospvHTTPTimeout < 0))
     {
         errorcode = OSPC_ERR_PROV_INVALID_VALUE;
+        OSPM_DBGERRORLOG(errorcode, "Invalid input value");
     }
     else
     {
@@ -878,7 +880,13 @@ OSPPProviderNew(
                 OSPPTransIdInit(provider);
             }
         }
-    }
+        else
+        {
+          /*
+          ** Failed to create a new provider handle
+          */
+        }
+    } /* end of valid values */
     return errorcode;
 }
 
