@@ -57,7 +57,7 @@ OSPPTransactionBuildReauthRequest(
     OSPTALTINFO *altinfo    = OSPC_OSNULL,
         *altinfo2   = OSPC_OSNULL;
     OSPTTIME    timestamp   = 0;
-
+ 
     if(ospvTrans == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_TRAN_TRANSACTION_NOT_FOUND;
@@ -177,6 +177,30 @@ OSPPTransactionBuildReauthRequest(
             else
             {
                 errorcode = OSPC_ERR_TRAN_DEST_NUMBER_NOT_FOUND;
+            }
+        }
+
+        if(errorcode == OSPC_ERR_NO_ERROR)
+        {
+            /* Get device info from trans->AuthReq->ospmAuthReqDeviceInfo */
+            if(ospvTrans->AuthReq->ospmAuthReqDeviceInfo != NULL)
+            {
+                for(altinfo = (OSPTALTINFO *)OSPPListFirst( &(ospvTrans->AuthReq->ospmAuthReqDeviceInfo));
+                    altinfo!= (OSPTALTINFO *)OSPC_OSNULL;
+                    altinfo = (OSPTALTINFO *)OSPPListNext( &(ospvTrans->AuthReq->ospmAuthReqDeviceInfo), altinfo))
+                {
+
+                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), 
+                        OSPPAltInfoGetValue(altinfo), 
+                        OSPPAltInfoGetType(altinfo));
+
+                    if(altinfo2 != OSPC_OSNULL)
+                    {
+                        OSPPListAppend(&(ospvTrans->ReauthReq->ospmReauthReqDevInfo), altinfo2);
+                    }
+                    altinfo = OSPC_OSNULL;
+                    altinfo2 = OSPC_OSNULL;
+                }
             }
         }
 
@@ -313,6 +337,15 @@ OSPPTransactionBuildUsage(
                     &((*ospvTrans->AuthReq).ospmAuthReqSourceAlternate));
             }
 
+            /* Get Device Info (copying a pointer) */    
+            if ((errorcode == OSPC_ERR_NO_ERROR) && 
+                (ospvTrans->AuthReq->ospmAuthReqDeviceInfo != NULL))
+            {
+                OSPPUsageIndCopyDeviceInfo(*ospvUsage, 
+                    &((*ospvTrans->AuthReq).ospmAuthReqDeviceInfo));
+            }
+
+
             /* Get Destination Number (Called) */
             if(errorcode == OSPC_ERR_NO_ERROR)
             {
@@ -406,6 +439,17 @@ OSPPTransactionBuildUsage(
                 OSPPUsageIndMoveSourceAlt(*ospvUsage, 
                     &(ospvTrans->AuthInd->ospmAuthIndSourceAlternate));
             }
+
+
+            /* Get Device Info (copying a pointer) */
+            if ((errorcode == OSPC_ERR_NO_ERROR) &&
+                (ospvTrans->AuthInd->ospmAuthIndDeviceInfo != NULL))
+            {
+                OSPPUsageIndMoveDeviceInfo(*ospvUsage,
+                    &(ospvTrans->AuthInd->ospmAuthIndDeviceInfo));
+            }
+
+
 
             /* Destination Number (CALLED) */
             if(errorcode == OSPC_ERR_NO_ERROR)
@@ -1973,13 +2017,27 @@ OSPPTransactionRequestNew(
            */
             OSPPAuthReqSetSourceNumber(ospvTrans->AuthReq, (const unsigned char *)ospvCallingNumber);
 
+            if(ospvSourceDevice != OSPC_OSNULL && strlen(ospvSourceDevice) > 0)
+            {
+                OSPPListNew((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqDeviceInfo));
+                altinfo = OSPPAltInfoNew(strlen(ospvSourceDevice),
+                                     (const unsigned char *)ospvSourceDevice,
+                                      ospeTransport);
+
+                if(OSPC_OSNULL != altinfo)
+                {
+                    OSPPListAppend((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqDeviceInfo),
+                                altinfo);
+                }
+                altinfo = OSPC_OSNULL;
+            }
+
             /* --------------------------------------
              * ospmAuthReqSourceAlternate (SourceAlternate)
              * --------------------------------------
              */
 
             if((ospvSource != OSPC_OSNULL) ||
-                (ospvSourceDevice != OSPC_OSNULL) ||
                 (ospvTrans->NetworkId !=OSPC_OSNULL) ||
                 (ospvUser != OSPC_OSNULL))
             {
@@ -2040,22 +2098,6 @@ OSPPTransactionRequestNew(
                 }
 
                 altinfo = OSPC_OSNULL;
-
-                if(ospvSourceDevice != OSPC_OSNULL)
-                {
-
-                    altinfo = OSPPAltInfoNew(strlen(ospvSourceDevice),
-                        (const unsigned char *)ospvSourceDevice,
-                        ospeH323);
-
-                    if(altinfo != OSPC_OSNULL)
-                    {
-
-                        OSPPListAppend(
-                            (OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqSourceAlternate),
-                            (void *)altinfo);
-                    }
-                }
             }
             else
             {

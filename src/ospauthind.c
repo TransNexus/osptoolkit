@@ -509,6 +509,7 @@ OSPTAUTHIND *                              /* returns pointer or NULL */
         OSPPListNew(&ospvAuthInd->ospmAuthIndTokens);
         OSPPListNew (&(ospvAuthInd->ospmAuthIndSourceAlternate));
         OSPPListNew(&(ospvAuthInd->ospmAuthIndDestinationAlternate));
+        OSPPListNew(&(ospvAuthInd->ospmAuthIndDeviceInfo));
 
     }
     return(ospvAuthInd);
@@ -566,6 +567,17 @@ OSPPAuthIndDelete(OSPTAUTHIND **ospvAuthInd)
 
         OSPPListDelete(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate));
 
+        while(!OSPPListEmpty(&((*ospvAuthInd)->ospmAuthIndDeviceInfo)))
+        {
+            altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndDeviceInfo));
+            if(altinfo != OSPC_OSNULL)
+            {
+                OSPM_FREE(altinfo);
+                altinfo = OSPC_OSNULL;
+            }
+        }  
+
+        OSPPListDelete(&((*ospvAuthInd)->ospmAuthIndDeviceInfo));
         OSPPDestDelete(&((*ospvAuthInd)->ospmAuthIndDest));
 
         OSPM_FREE(*ospvAuthInd);

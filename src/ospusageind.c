@@ -776,6 +776,30 @@ OSPPUsageIndSetComponentId(
 
 /**/
 /*-----------------------------------------------------------------------*
+ * OSPPUsageIndMoveDeviceinfo() - move the device info list from list
+ *-----------------------------------------------------------------------*/
+void                                /* nothing returned */
+OSPPUsageIndMoveDeviceInfo(
+    OSPTUSAGEIND *ospvUsageInd,     /* usage indication to set */
+    OSPTLIST     *ospvList          /* list to move */
+    )
+{
+    if((ospvUsageInd != OSPC_OSNULL) &&
+        (ospvList != OSPC_OSNULL))
+    {
+
+        OSPPListNew(&(ospvUsageInd->ospmUsageIndDeviceInfo));
+
+        OSPPListMove(&(ospvUsageInd->ospmUsageIndDeviceInfo),
+            ospvList);
+    }
+
+    return;
+}
+
+
+/**/
+/*-----------------------------------------------------------------------*
  * OSPPUsageIndMoveSourceAlt() - move the source alt list from list
  *-----------------------------------------------------------------------*/
 void                                /* nothing returned */
@@ -796,6 +820,51 @@ OSPPUsageIndMoveSourceAlt(
 
     return;
 }
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndCopyDeviceInfo() - Copy the device info list
+ *-----------------------------------------------------------------------*/
+void                                /* nothing returned */
+OSPPUsageIndCopyDeviceInfo(
+    OSPTUSAGEIND *ospvUsageInd,     /* usage indication to set */
+    OSPTLIST     *ospvList          /* list to move */
+    )
+{
+    OSPTALTINFO *altinfo1    = OSPC_OSNULL,
+        *altinfo2    = OSPC_OSNULL;
+
+    if((ospvUsageInd != OSPC_OSNULL) &&
+        (ospvList != OSPC_OSNULL))
+    {
+
+        OSPPListNew(&(ospvUsageInd->ospmUsageIndDeviceInfo));
+
+
+        for(altinfo1 = (OSPTALTINFO *)OSPPListFirst(ospvList);
+            altinfo1 != OSPC_OSNULL;
+            altinfo1 = (OSPTALTINFO *)OSPPListNext(ospvList, altinfo1))
+        {
+
+            altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1),
+                OSPPAltInfoGetValue(altinfo1),
+                OSPPAltInfoGetType(altinfo1));
+            if(altinfo2 != OSPC_OSNULL)
+            {
+                OSPPListAppend(&(ospvUsageInd)->ospmUsageIndDeviceInfo, altinfo2);
+            }
+            altinfo2 = OSPC_OSNULL;
+        }
+    }
+
+    if(altinfo2 != OSPC_OSNULL)
+    {
+        OSPPAltInfoDelete(&altinfo2);
+    }
+
+    return;
+}
+
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -892,6 +961,7 @@ OSPTUSAGEIND *                                 /* returns pointer or NULL */
         ospvUsageInd->ospmUsageIndTNFailReasonInd = 0;
         OSPPListNew (&(ospvUsageInd->ospmUsageIndSourceAlternate));
         OSPPListNew(&(ospvUsageInd->ospmUsageIndDestinationAlternate));
+        OSPPListNew(&(ospvUsageInd->ospmUsageIndDeviceInfo));
         ospvUsageInd->ospmUsageIndTNStats = OSPC_OSNULL;
         ospvUsageInd->ospmUsageIndComponentId = OSPC_OSNULL;
         ospvUsageInd->ospmUsageIndMessageId = OSPC_OSNULL;
@@ -929,6 +999,15 @@ OSPPUsageIndDelete(OSPTUSAGEIND **ospvUsageInd)
         }  
 
         OSPPListDelete(&((*ospvUsageInd)->ospmUsageIndSourceAlternate));
+
+        while(!OSPPListEmpty(&((*ospvUsageInd)->ospmUsageIndDeviceInfo)))
+        {
+            altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvUsageInd)->ospmUsageIndDeviceInfo));
+            OSPM_FREE(altinfo);
+            altinfo = OSPC_OSNULL;
+        }  
+
+        OSPPListDelete(&((*ospvUsageInd)->ospmUsageIndDeviceInfo));
 
         while(!OSPPListEmpty(&((*ospvUsageInd)->ospmUsageIndDestinationAlternate)))
         {
@@ -1220,6 +1299,23 @@ OSPPUsageIndToElement(
             {
                 OSPPXMLElemAddChild(usgindelem, subelem);
                 subelem = OSPC_OSNULL;
+            }
+
+            /* add the device info */
+            if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
+                  (usage->ospmUsageIndDeviceInfo != NULL))
+            {
+                for(altinfo = (OSPTALTINFO *)OSPPListFirst( &(usage->ospmUsageIndDeviceInfo));
+                           altinfo!= (OSPTALTINFO *)OSPC_OSNULL;
+                           altinfo = (OSPTALTINFO *)OSPPListNext( &(usage->ospmUsageIndDeviceInfo), altinfo))
+                {
+                     ospvErrCode = OSPPAltInfoToElement(altinfo, &subelem, ospeElemDeviceInfo);
+                     if (ospvErrCode == OSPC_ERR_NO_ERROR)
+                     {
+                         OSPPXMLElemAddChild(usgindelem, subelem);
+                         subelem = OSPC_OSNULL;
+                     }
+                }
             }
 
             /* add the source alternates */
