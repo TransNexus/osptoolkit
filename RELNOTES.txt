@@ -293,3 +293,24 @@ Version 2.11.1
 * Modified the enroll utility to call OSPPInit function to initialize the OSP TOolkit library. Previously the enroll utility depended on SSLWrapInit function to initialize openssl. Now, it makes use of the OSPPInit function that internally initializes openssl.
 * Modified the test_app to NOT create a new transaction eveytime when the BuildUsageFromScratch API is called.
 * Removed the hardcoded values for token algorithm in the OSPPTransactionInitializeAtDevice and OSPPTransactionReinitializeAtDevice function.
+---------------------------------------------------------------------------
+
+Version 3.0
+* The toolkit now supports look ahead routing. A look ahead route is a route embedded within the OSP token 
+  and used by proxy devices to terminate the call without having to go to the OSP Server again. When a proxy
+  device gets a INVITE/Setup message with a token in it, the device can validate the token, retrieve the 
+  look ahead route embedded within the token and use it to terminate the call. This prevents the Proxy from
+  doing a Route Authorization request. Refer to the implementation guides in the toolkit documentation for further details.
+* Call Id is now optional for token validation when the token does not contain one. 
+  If the token contains a CallId then the application needs to pass it in the ValidateAuthorization API. 
+  If the token does not contain the call id, then the application need not pass it in the API. 
+  In that case, the application can get away by passing an empty string - "".
+* The toolkit is now fully SIP compliant. It now supports calling and called number in the following three 
+  forms: e.164 numbers, SIP URI's, and URL's. URL's can be most useful when the application wants to report
+  a e.164 number in its ENUM form.
+* The toolkit has been modified to enroll with multiple servers and validate tokens from multiple OSP Servers.
+  The enroll.sh script has been modified to take a list of OSP servers as input and obtain CA certificates from the different servers.
+  The test application has been modified to read the multiple CA certificates and load them in the toolkit.
+* The test application configuration file - test.cfg has been modified with the following configuration parameters: 
+  TC Code to be reported in the usage indication, Format of the Calling Number (e.164/SIP/URL), and
+  Format of the Called Number (e.164/SIP/URL).
