@@ -382,11 +382,10 @@ OSPPSSLVerifyCallback(int ok, X509_STORE_CTX *ctx)
     depth=  X509_STORE_CTX_get_error_depth(ctx);
     
     X509_NAME_oneline(X509_get_subject_name(err_cert),buf,256);
-    BIO_printf(bio_stdout,"depth=%d %s\n",depth,buf);
+    OSPM_PRINTTOERR((stderr,"depth=%d %s\n",depth,buf));
     if (!ok)
     {
-        BIO_printf(bio_stdout,"verify error:num=%d:%s\n",err,
-            X509_verify_cert_error_string(err));
+        OSPM_PRINTTOERR((stderr,"verify error:num=%d:%s\n",err,X509_verify_cert_error_string(err)));
         if (verify_depth >= depth || err == X509_V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT)
         {
             ok=1;
@@ -417,7 +416,7 @@ OSPPSSLVerifyCallback(int ok, X509_STORE_CTX *ctx)
         BIO_printf(bio_stdout,"\n");
         break;
     }
-    BIO_printf(bio_stdout,"verify return:%d\n",ok);
+    OSPM_PRINTTOERR((stderr,"verify return:%d\n",ok));
     return(ok);
 }
 
@@ -508,7 +507,7 @@ int OSPPSSLLoadCerts(OSPTSEC *security)
                         &certlen,&certbuf[0]))!=OSPC_ERR_NO_ERROR) 
                     {
                         errorcode=OSPC_ERR_SEC_LOCAL_CERTINFO_UNDEFINED;
-                        OSPM_DBGERRORLOG(errorcode, "Unable to get Local Certificate");
+                        OSPM_PRINTTOERR((stderr,"Unable to get Local Certificate\n"));
                     }
                     else
                     {
