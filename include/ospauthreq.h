@@ -96,7 +96,7 @@ OSPTAUTHREQ;
     (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqSourceNumber[0] != '\0'):OSPC_FALSE
 #define OSPPAuthReqSetSourceNumber(ospvAuthReq,ospvNum) \
     OSPM_STRNCPY((ospvAuthReq)->ospmAuthReqSourceNumber, (ospvNum), \
-    min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
+    tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
 #define OSPPAuthReqGetSourceNumber(ospvAuthReq) \
     (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqSourceNumber):OSPC_OSNULL
 
@@ -104,7 +104,7 @@ OSPTAUTHREQ;
     (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqDestNumber[0] != '\0'):OSPC_FALSE
 #define OSPPAuthReqSetDestNumber(ospvAuthReq,ospvNum) \
     OSPM_STRNCPY((ospvAuthReq)->ospmAuthReqDestNumber, (ospvNum), \
-    min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
+    tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
 #define OSPPAuthReqGetDestNumber(ospvAuthReq) \
     (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqDestNumber):OSPC_OSNULL
 

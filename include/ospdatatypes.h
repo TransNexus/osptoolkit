@@ -109,8 +109,8 @@ typedef unsigned char   OSPTBOOL;
 typedef int OSPTPROVHANDLE;
 typedef int OSPTTRANHANDLE;
 
-#ifndef min
-#define min(a,b) ((a) < (b) ? (a) : (b)) 
+#ifndef tr_min
+#define tr_min(a,b) ((a) < (b) ? (a) : (b)) 
 #endif
 
 /*-------------------------------------------*/

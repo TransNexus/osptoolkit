@@ -130,7 +130,7 @@ ospvAuthInd->ospmAuthIndDest = ospvDest;
 
 #define OSPPAuthIndSetDestNumber(ospvAuthInd,ospvNum) \
     OSPM_STRNCPY((ospvAuthInd)->ospmAuthIndDestNumber, (ospvNum), \
-    min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
+    tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
 
 #define OSPPAuthIndSetRole(ospvAuthInd,ospvRole) \
     (ospvAuthInd)->ospmAuthIndRole = (ospvRole); \
@@ -138,7 +138,7 @@ ospvAuthInd->ospmAuthIndDest = ospvDest;
 
 #define OSPPAuthIndSetSourceNumber(ospvAuthInd,ospvNum) \
     OSPM_STRNCPY((ospvAuthInd)->ospmAuthIndSourceNumber, (ospvNum), \
-    min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
+    tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
 
 #define OSPPAuthIndSetTimestamp(ospvAuthInd,ospvTime) \
     (ospvAuthInd)->ospmAuthIndTimestamp = (ospvTime)
