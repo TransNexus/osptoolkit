@@ -83,6 +83,7 @@ OSPPProviderDelete(
              * communication resources and message queues
              */
             OSPPCommSetShutdown(&(provider->Comm), ospvTimeLimit); 
+            OSPPCommSetShutdown(&(provider->CommForCapabilities), ospvTimeLimit);
             OSPPSSLSessionCleanup((void *)provider->Security);
 
             OSPPSecDelete(&provider->Security);
@@ -742,6 +743,14 @@ OSPPProviderNew(
                      */
                     errorcode = OSPPCommNew(&(provider->Comm));
                 }
+                
+                if (errorcode == OSPC_ERR_NO_ERROR)
+                {
+                    /*
+                     * initialize the CommForCapabilities object
+                     */
+                    errorcode = OSPPCommNew(&(provider->CommForCapabilities));
+                }
 
                 if (errorcode == OSPC_ERR_NO_ERROR)
                 {
@@ -751,6 +760,14 @@ OSPPProviderNew(
                     OSPPCommSetSecurity(provider->Comm, provider->Security);
                 }
 
+                if (errorcode == OSPC_ERR_NO_ERROR)
+                {
+                    /*
+                     * set security for the Comm object
+                     */
+                    OSPPCommSetSecurity(provider->CommForCapabilities, provider->Security);
+                }
+                
                 if (errorcode == OSPC_ERR_NO_ERROR)
                 {
                     /*
@@ -784,6 +801,18 @@ OSPPProviderNew(
                 ospvNumberOfServicePoints, 
                 ospvServicePoints);
 
+            if (errorcode == OSPC_ERR_NO_ERROR)
+            {
+                /*
+                 * set the capabilities URLs configured
+                 * use the same set of service points as for the main manager
+                 */
+                errorcode = OSPPProviderSetCapabilitiesURLs(
+                    *ospvProvider,  
+                    ospvNumberOfServicePoints, 
+                    ospvServicePoints);
+            }
+               
             if (errorcode == OSPC_ERR_NO_ERROR)
 
                 /*
@@ -957,6 +986,8 @@ OSPPProviderSetHTTPMaxConnections(
     if (errorcode == OSPC_ERR_NO_ERROR)
         errorcode = OSPPCommSetMaxConnections(provider->Comm,
                                               ospvHTTPMaxConnections);
+    if (errorcode == OSPC_ERR_NO_ERROR)
+        errorcode = OSPPCommSetMaxConnections(provider->CommForCapabilities,ospvHTTPMaxConnections);
 
     return errorcode;
 }
@@ -992,6 +1023,8 @@ OSPPProviderSetHTTPPersistence(
     if (errorcode == OSPC_ERR_NO_ERROR)
         errorcode = OSPPCommSetPersistence(provider->Comm,ospvHTTPPersistence);
 
+    if (errorcode == OSPC_ERR_NO_ERROR)
+        errorcode = OSPPCommSetPersistence(provider->CommForCapabilities,ospvHTTPPersistence);
     return errorcode;
 }
 
@@ -1022,6 +1055,9 @@ OSPPProviderSetHTTPRetryDelay(
 
     if (errorcode == OSPC_ERR_NO_ERROR) 
         errorcode = OSPPCommSetRetryDelay(provider->Comm,ospvHTTPRetryDelay);
+
+    if (errorcode == OSPC_ERR_NO_ERROR) 
+        errorcode = OSPPCommSetRetryDelay(provider->CommForCapabilities,ospvHTTPRetryDelay);
 
     return errorcode;
 }
@@ -1054,6 +1090,10 @@ OSPPProviderSetHTTPRetryLimit(
     if (errorcode == OSPC_ERR_NO_ERROR)
         errorcode = OSPPCommSetRetryLimit(provider->Comm,ospvHTTPRetryLimit);
 
+    if (errorcode == OSPC_ERR_NO_ERROR)
+       errorcode = OSPPCommSetRetryLimit(provider->CommForCapabilities,ospvHTTPRetryLimit);
+
+
     return errorcode;
 }
 
@@ -1085,6 +1125,9 @@ OSPPProviderSetHTTPTimeout(
 
     if (errorcode == OSPC_ERR_NO_ERROR) 
         errorcode = OSPPCommSetTimeout(provider->Comm, ospvHTTPTimeout);
+
+    if (errorcode == OSPC_ERR_NO_ERROR) 
+        errorcode = OSPPCommSetTimeout(provider->CommForCapabilities, ospvHTTPTimeout);
 
     return errorcode;
 }
@@ -1226,7 +1269,6 @@ OSPPProviderSetLocalValidation(
  *      Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  *
  */
-
 int
 OSPPProviderSetServicePoints(
     OSPTPROVHANDLE  ospvProvider,              /* In - Provider handle    */
@@ -1235,28 +1277,56 @@ OSPPProviderSetServicePoints(
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
     int          errorcode = OSPC_ERR_NO_ERROR;
-    int          ospvTimeLimit = 0;
 
-
-    provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
+    if (OSPC_ERR_NO_ERROR == errorcode)
     {
-        OSPPCommShutdownConnections(provider->Comm, ospvTimeLimit);
-    
-        while ((provider->Comm->Flags) & OSPC_COMM_HTTPSHUTDOWN_BIT)
-        {
-            /* OSPM_DBGMISC(( "waiting another sec...\n" )); */
-            OSPM_SLEEP(1);
-        }
+        provider = OSPPProviderGetContext(ospvProvider, &errorcode);
+    }
 
-        errorcode =OSPPCommSetServicePoints(provider->Comm, 
-                                            ospvNumberOfServicePoints,
-                                            ospvServicePoints);
+
+    if (OSPC_ERR_NO_ERROR == errorcode)
+    {
+        errorcode = OSPPCommUpdateURLs( provider->Comm,
+                                        ospvNumberOfServicePoints,
+                                        ospvServicePoints);
+    }
+
+    return errorcode;
+
+}
+
+
+/*
+ * 
+ * Save as OSPPProviderSetServicePoints only updates the set of URLs used
+ * for exchanging capabilities messages.
+ *
+ */
+int
+OSPPProviderSetCapabilitiesURLs(
+    OSPTPROVHANDLE  ospvProvider,              /* In - Provider handle     */
+    unsigned        ospvNumberOfURLs,          /* In - New svc url cnt     */
+    const char      *ospvCapabilitiesURLs[])   /* In - New svc url strings */
+{
+    OSPTPROVIDER *provider = OSPC_OSNULL;
+    int          errorcode = OSPC_ERR_NO_ERROR;
+
+    if (OSPC_ERR_NO_ERROR == errorcode)
+    {
+        provider = OSPPProviderGetContext(ospvProvider, &errorcode);
+    }
+
+
+    if (OSPC_ERR_NO_ERROR == errorcode)
+    {
+        errorcode = OSPPCommUpdateURLs( provider->CommForCapabilities,
+                                        ospvNumberOfURLs,
+                                        ospvCapabilitiesURLs);
     }
 
     return errorcode;
 }
+
 
 /* 
  * OSPPProviderSetSSLLifetime()
