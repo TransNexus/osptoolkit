@@ -486,7 +486,7 @@ WorkThread(void *arg)
                 /*
                  * AuthRequest has expired
                  */
-                printf("AUTH REQ EXPIRED\n");
+                OSPM_DBGPRINTF("AUTH REQ EXPIRED\n");
                 *(transaction->ErrorCode) = -1;
               }
               break;
@@ -516,8 +516,7 @@ WorkThread(void *arg)
           // Calculate TK time
           TKTime = GetDeltaMS(transaction->OutQuequeTime,transaction->OutQuequeTimeMS,transaction->OutToolKitTime,transaction->OutToolKitTimeMS);
 
-          printf("[%3llu] InQ[%llu:%3llu] OutQ[%llu:%3llu] OutTK[%llu:%3llu] QTime[%7llu] TKTime[%7llu] QSize[%5u] MsgType[%d]\n",
-                (long long unsigned)pthread_self(),
+          OSPM_DBGPRINTF("InQ[%llu:%3llu] OutQ[%llu:%3llu] OutTK[%llu:%3llu] QTime[%7llu] TKTime[%7llu] QSize[%5u] MsgType[%d]\n",
                 (long long unsigned)transaction->InQuequeTime,
                 (long long unsigned)transaction->InQuequeTimeMS,
                 (long long unsigned)transaction->OutQuequeTime,
