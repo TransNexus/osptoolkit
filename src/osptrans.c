@@ -263,6 +263,8 @@ OSPPTransactionBuildUsage(
     int             errorcode   = OSPC_ERR_NO_ERROR;
     unsigned char   *dest       = OSPC_OSNULL;
     OSPTALTINFO     *altinfo    = OSPC_OSNULL;
+    unsigned char   *EMPTY_NUMBER = "";
+    unsigned char   *dest_number = OSPC_OSNULL;
 
     *ospvUsage = OSPPUsageIndNew();
 
@@ -313,17 +315,27 @@ OSPPTransactionBuildUsage(
             /* Get Destination Number (Called) */
             if(errorcode == OSPC_ERR_NO_ERROR)
             {
-
-                if(OSPPAuthReqHasDestNumber(ospvTrans->AuthReq))
+                if ((OSPPDestHasNumber(ospvDest)) && (OSPM_STRCMP((dest_number = OSPPDestGetNumber(ospvDest)),EMPTY_NUMBER)))
                 {
-
-                    OSPPUsageIndSetDestNumber(*ospvUsage, 
-                        OSPPAuthReqGetDestNumber(ospvTrans->AuthReq));
+                    OSPPUsageIndSetDestNumber(*ospvUsage,dest_number);
                 }
                 else
                 {
-                    errorcode = OSPC_ERR_TRAN_DEST_NUMBER_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Dest number not found");
+                    /*
+                     * There was no destination number in the AuthRsp, or it was empty
+                     * Use the number in the AuthReq.
+                     */
+                    if(OSPPAuthReqHasDestNumber(ospvTrans->AuthReq))
+                    {
+
+                        OSPPUsageIndSetDestNumber(*ospvUsage, 
+                        OSPPAuthReqGetDestNumber(ospvTrans->AuthReq));
+                    }
+                    else
+                    {
+                        errorcode = OSPC_ERR_TRAN_DEST_NUMBER_NOT_FOUND;
+                        OSPM_DBGERRORLOG(errorcode, "Dest number not found");
+                    }
                 }
             }
 
@@ -868,7 +880,6 @@ OSPPTransactionGetDeleteAllowed(
         case    OSPC_TRANSNEW:
         case    OSPC_AUTH_REQUEST_FAIL:
         case    OSPC_AUTH_REQUEST_SUCCESS:
-        case    OSPC_REPORT_USAGE_BLOCK:
         case    OSPC_REPORT_USAGE_SUCCESS:
         case    OSPC_VALIDATE_AUTH_FAIL:
         case    OSPC_INITIALIZE_FAIL:
@@ -877,6 +888,7 @@ OSPPTransactionGetDeleteAllowed(
         *ospvDeleteAllowed = OSPC_TRUE;
         break;
 
+        case    OSPC_REPORT_USAGE_BLOCK:
         case    OSPC_AUTH_REQUEST_BLOCK:
         case    OSPC_VALIDATE_AUTH_SUCCESS:
         case    OSPC_GET_DEST_SUCCESS:
