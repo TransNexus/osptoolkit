@@ -398,7 +398,14 @@ OSPPTransactionBuildUsage(
         else if(ospvType == OSPC_MSG_AIND)
         {
             /* Terminating */
-            OSPPUsageIndSetRole(*ospvUsage, OSPC_DESTINATION);
+            if (ospvTrans->WasLookAheadInfoGivenToApp == OSPC_TRUE)
+            {
+                OSPPUsageIndSetRole(*ospvUsage, OSPC_OTHER);
+            }
+            else
+            {
+                OSPPUsageIndSetRole(*ospvUsage, OSPC_DESTINATION);
+            }
 
             /* Get CallId */
             if(OSPPAuthIndHasCallId(ospvTrans->AuthInd))

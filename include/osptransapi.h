@@ -116,6 +116,14 @@ extern "C"
     unsigned   *ospvSizeOfDetailLog,   /* In/Out - Max size of detail log\ Actual size of detail log */
     void           *ospvDetailLog);         /* In - Pointer to storage for detail log */
 
+    int
+    OSPPTransactionGetLookAheadInfoIfPresent(
+        OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */
+        OSPTBOOL    *ospvIsLookAheadInfoPresent, /* Out */
+        char        *ospvLookAheadDestination, /* Out */
+        OSPE_DEST_PROT      *ospvLookAheadDestProt, /* Out */
+        OSPE_DEST_OSP_ENABLED       *ospvLookAheadDestOSPStatus); /* Out */
+
 #ifdef __cplusplus
 }
 #endif

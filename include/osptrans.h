@@ -41,6 +41,7 @@
 #include "ospcapcnf.h"
 #include "ospmsg.h"
 #include "ospfail.h"
+#include "osptokeninfo.h"
 
 
 /*
@@ -97,6 +98,10 @@ typedef struct _OSPTTRANS
     OSPTSTATISTICS              *TNStatistics;
     OSPTREAUTHREQ               *ReauthReq;
     OSPTREAUTHRSP               *ReauthRsp;
+    OSPTBOOL                    WasLookAheadInfoGivenToApp;
+    OSPTBOOL                    TokenInfoIsLookAheadInfoPresent;
+    OSPTTOKENLOOKAHEADINFO      TokenLookAheadInfo;
+
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

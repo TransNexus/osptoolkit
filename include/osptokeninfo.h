@@ -34,6 +34,14 @@
 #include "ospcallid.h"
 #include "osptoken.h"
 
+typedef struct 
+{
+    unsigned char    lookAheadDest[OSPC_SIGNALADDRSIZE];
+    OSPE_DEST_PROT   lookAheadDestProt;
+    OSPE_DEST_OSP_ENABLED  lookAheadDestOSPStatus;
+}OSPTTOKENLOOKAHEADINFO;
+
+
 typedef struct
 {
     unsigned char     ospmTokenInfoSourceNumber[OSPC_E164NUMSIZE];
@@ -43,6 +51,8 @@ typedef struct
     OSPTTIME          ospmTokenInfoValidUntil;
     OSPTTRXID         ospmTokenInfoTrxId;
     int               ospmTokenInfoDuration;
+    OSPTBOOL          ospmTokenInfoIsLookAheadInfoPresent;
+    OSPTTOKENLOOKAHEADINFO ospmTokenLookAheadInfo;
 }
 OSPTTOKENINFO;
 
@@ -86,6 +96,15 @@ extern "C"
 
     void           OSPPTokenInfoSetDuration(OSPTTOKENINFO *, int);
     int            OSPPTokenInfoGetDuration(OSPTTOKENINFO *);
+
+    void           OSPPTokenInfoSetLookAheadDestAlt(OSPTTOKENLOOKAHEADINFO *,const unsigned char *);
+    unsigned char* OSPPTokenInfoGetLookAheadDestAlt(OSPTTOKENLOOKAHEADINFO *);
+    
+    void           OSPPTokenInfoSetLookAheadDestProtocol(OSPTTOKENLOOKAHEADINFO *, const unsigned char *);
+    OSPE_DEST_PROT OSPPTokenInfoGetLookAheadDestProtocol(OSPTTOKENLOOKAHEADINFO *);
+
+    void           OSPPTokenInfoSetLookAheadOSPVersion(OSPTTOKENLOOKAHEADINFO *,const unsigned char *);
+    OSPE_DEST_OSP_ENABLED OSPPTokenInfoGetLookAheadOSPVersion(OSPTTOKENLOOKAHEADINFO *);
 
 
 #ifdef __cplusplus

@@ -40,6 +40,155 @@
 
 /**/
 /*-----------------------------------------------------------------------*
+ * OSPPTokenInfoSetLookAheadDestAlt() - sets the look ahead route
+ *-----------------------------------------------------------------------*/
+void                                /* nothing returned */
+OSPPTokenInfoSetLookAheadDestAlt(
+    OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo,     /* token info to set */
+    const unsigned char *ospvLookAheadRoute /* Look Ahead Route */
+)
+{
+    if (ospvTokenLookAheadInfo != OSPC_OSNULL)
+    {
+        if (ospvLookAheadRoute  != OSPC_OSNULL)
+        {
+            OSPM_STRNCPY(ospvTokenLookAheadInfo->lookAheadDest, (ospvLookAheadRoute), OSPC_SIGNALADDRSIZE-1);
+        }
+    }
+    return;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPTokenInfoGetLookAheadDestAlt() - returns the look ahead route. 
+ *-----------------------------------------------------------------------*/
+unsigned char*
+OSPPTokenInfoGetLookAheadDestAlt(
+    OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo   /* token info */
+)
+{
+    unsigned char* ospvLookAheadDest= OSPC_OSNULL;
+
+    if (ospvTokenLookAheadInfo != OSPC_OSNULL)
+    {
+        ospvLookAheadDest = ospvTokenLookAheadInfo->lookAheadDest;
+    }
+    return ospvLookAheadDest;
+}
+
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPTokenInfoSetLookAheadDestProtocol() - sets the destination protocol for the 
+ *                                  look ahead route.
+ *-----------------------------------------------------------------------*/
+void                                /* nothing returned */
+OSPPTokenInfoSetLookAheadDestProtocol(
+    OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo,     /* token info to set */
+    const unsigned char *ospvLookAheadDestProt
+)
+{
+    if (ospvTokenLookAheadInfo != OSPC_OSNULL)
+    {
+       if (!(OSPM_STRCMP((const char *)ospvLookAheadDestProt,DEST_PROT_SIP)))
+       {
+          ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_SIP;
+       }
+       else 
+       {
+           if (!(OSPM_STRCMP((const char *)ospvLookAheadDestProt,DEST_PROT_H323_LRQ)))
+           {
+               ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_H323_LRQ;
+           }
+           else
+           {
+               if (!(OSPM_STRCMP((const char *)ospvLookAheadDestProt,DEST_PROT_H323_Q931)))
+               {
+                   ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_H323_SETUP;
+               }
+               else
+               {
+                   ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_UNKNOWN;
+               }
+           }
+       }
+    }
+    return;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPTokenInfoGetLookAheadDestProtocol() - returns the destination Protocol for the
+                                           look ahead route. 
+ *-----------------------------------------------------------------------*/
+OSPE_DEST_PROT
+OSPPTokenInfoGetLookAheadDestProtocol(
+    OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo /* token info */
+)
+{
+    OSPE_DEST_PROT ospvLookAheadDestOSPProt=OSPE_DEST_PROT_UNDEFINED;
+
+    if (ospvTokenLookAheadInfo != OSPC_OSNULL)
+    {
+       ospvLookAheadDestOSPProt = ospvTokenLookAheadInfo->lookAheadDestProt;
+    }
+    return ospvLookAheadDestOSPProt;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPTokenInfoSetLookAheadOSPVersion() - sets the destination OSPVersion for the 
+ *                                look ahead route.
+ *-----------------------------------------------------------------------*/
+void                                /* nothing returned */
+OSPPTokenInfoSetLookAheadOSPVersion(
+    OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo,     /* token info to set */
+    const unsigned char *ospvLookAheadDestOSPStatus /* Look Ahead Dest OSPVer */
+)
+{
+    if (ospvTokenLookAheadInfo != OSPC_OSNULL)
+    {
+        if (!(OSPM_STRCMP((const char *)ospvLookAheadDestOSPStatus,DEST_OSP_DIABLED)))
+        {
+            ospvTokenLookAheadInfo->lookAheadDestOSPStatus = OSPE_OSP_FALSE;
+        }
+        else
+        {
+            if (!(OSPM_STRCMP((const char *)ospvLookAheadDestOSPStatus,DEST_OSP_UNKNOWN)))
+            {
+                ospvTokenLookAheadInfo->lookAheadDestOSPStatus = OSPE_OSP_UNKNOWN;
+            }
+            else
+            {
+                ospvTokenLookAheadInfo->lookAheadDestOSPStatus = OSPE_OSP_TRUE;
+            }
+        }
+
+    }
+    return;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPTokenInfoGetLookAheadOSPVersion() - returns the destination OSPVersion for the
+                                           look ahead route. 
+ *-----------------------------------------------------------------------*/
+OSPE_DEST_OSP_ENABLED
+OSPPTokenInfoGetLookAheadOSPVersion(
+    OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo               /* token info */
+)
+{
+    OSPE_DEST_OSP_ENABLED ospvLookAheadDestOSPStatus=OSPE_OSP_UNDEFINED;
+
+    if (ospvTokenLookAheadInfo != OSPC_OSNULL)
+    {
+        ospvLookAheadDestOSPStatus = ospvTokenLookAheadInfo->lookAheadDestOSPStatus;
+    }
+    return ospvLookAheadDestOSPStatus;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
  * OSPPTokenInfoSetSourceNumber() - set the source number
  *-----------------------------------------------------------------------*/
 void                                /* nothing returned */
@@ -377,6 +526,10 @@ OSPTTOKENINFO *                                 /* returns pointer or NULL */
         ospvTokenInfo->ospmTokenInfoValidUntil = OSPC_TIMEMAX;
         ospvTokenInfo->ospmTokenInfoTrxId = (OSPTTRXID)OSPC_OSNULL;
         ospvTokenInfo->ospmTokenInfoDuration = -1;
+        ospvTokenInfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_FALSE;
+        ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDestProt = OSPE_DEST_PROT_UNDEFINED;
+        ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDestOSPStatus = OSPE_OSP_UNDEFINED;
+        ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDest[0] = '\0';
     }
 
     return ospvTokenInfo;
@@ -455,6 +608,21 @@ OSPPTokenInfoFromElement(
                 break;
 
                 case ospeElemTokenInfo:
+                break;
+
+                case ospeElemDestAlt:
+                tokeninfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_TRUE;
+                OSPPTokenInfoSetLookAheadDestAlt(&(tokeninfo->ospmTokenLookAheadInfo), (const unsigned char *)OSPPXMLElemGetValue(elem));
+                break;
+
+                case ospeElemDestProtocol:
+                tokeninfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_TRUE;
+                OSPPTokenInfoSetLookAheadDestProtocol(&(tokeninfo->ospmTokenLookAheadInfo), (const unsigned char *)OSPPXMLElemGetValue(elem));
+                break;
+
+                case ospeElemDestOSPVersion:
+                tokeninfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_TRUE;
+                OSPPTokenInfoSetLookAheadOSPVersion(&(tokeninfo->ospmTokenLookAheadInfo), (const unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
 
                 case ospeElemSrcInfo:

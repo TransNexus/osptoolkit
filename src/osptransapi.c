@@ -43,6 +43,91 @@
 #include "ospstatistics.h"
 #include "ospcapind.h"
 
+
+/*
+ * OSPPTransactionGetLookAheadInfoIfPresent():
+ * This API should be called after calling ValidateAuthorization.
+ * The API takes the transaction id as the input and returns the LookAhead 
+ * information if present in the token. If the LookAhead information is present 
+ * in the token, ospvIsLookAheadInfoPresent is set to TRUE and the 
+ * corresponding values are also set. If the information is not present, 
+ * ospvIsLookAheadInfoPresent is set to FALSE. 
+ */
+int 
+OSPPTransactionGetLookAheadInfoIfPresent(
+    OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */
+    OSPTBOOL	*ospvIsLookAheadInfoPresent, /* Out */
+    char        *ospvLookAheadDestination, /* Out */
+    OSPE_DEST_PROT	*ospvLookAheadDestProt, /* Out */
+    OSPE_DEST_OSP_ENABLED	*ospvLookAheadDestOSPStatus) /* Out */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans=NULL;
+    OSPTAUTHIND **ospvAuthInd;
+    unsigned char *destinfo;
+    OSPTALTINFO   *altinfo = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+  
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    {
+        *ospvIsLookAheadInfoPresent = trans->TokenInfoIsLookAheadInfoPresent;
+
+        if (trans->TokenInfoIsLookAheadInfoPresent == OSPC_TRUE)
+        {
+            trans->WasLookAheadInfoGivenToApp = OSPC_TRUE;
+
+            /*
+             * Copy the LookAhead info into the variables passed
+             */
+            destinfo = OSPPTokenInfoGetLookAheadDestAlt(&(trans->TokenLookAheadInfo));
+            OSPM_MEMCPY(ospvLookAheadDestination,destinfo,strlen((const char *)destinfo)+1);
+ 
+            *ospvLookAheadDestProt = OSPPTokenInfoGetLookAheadDestProtocol(&(trans->TokenLookAheadInfo));
+
+            *ospvLookAheadDestOSPStatus = OSPPTokenInfoGetLookAheadOSPVersion(&(trans->TokenLookAheadInfo));
+
+            /*
+             * Now, we need to overwrite the destiantionAlt 
+             * for usage reporting with the look ahead address
+             * First, delete the old list.
+             */
+            ospvAuthInd = &(trans)->AuthInd;
+            while(!OSPPListEmpty(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate)))
+            {
+                altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate));
+                if(altinfo != OSPC_OSNULL)
+                {
+                    OSPM_FREE(altinfo);
+                    altinfo = OSPC_OSNULL;
+                }
+            }
+
+            OSPPListDelete(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate));
+
+           /*
+            * Create a new list of destiantion Alt
+            */
+           OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate));
+           altinfo =
+                OSPPAltInfoNew(OSPM_STRLEN(destinfo),
+                (const unsigned char *)destinfo,
+                ospeTransport);
+
+           if(altinfo != OSPC_OSNULL)
+           {
+               OSPPListAppend(
+                   (OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),
+                   (void *)altinfo);
+           }
+
+        }
+    } 
+  
+   return errorcode;
+}
+
+
 /*
  * OSPPTransactionGetDestProtocol() :
  * Reports the Protocol Information at the Current destination. 
@@ -3167,6 +3252,8 @@ OSPPTransactionValidateAuthorisation(
     int                 BAllowDupTransId = OSPC_TRUE;
     token_algo_t        tokenAlgo = (token_algo_t)ospvTokenAlgo;
     OSPTBOOL            IsTokenSigned=OSPC_FALSE;
+    OSPE_DEST_OSP_ENABLED dstOSPStatus;
+    OSPE_DEST_PROT dstProt;
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
@@ -3554,6 +3641,33 @@ OSPPTransactionValidateAuthorisation(
                 sizeoftokenmsg, 
                 (void **)&tokeninfo, &dtype);
         }
+
+        /*
+         * If Forward Route information is present, 
+         * Store it in the transaction object
+         */
+        trans->TokenInfoIsLookAheadInfoPresent = tokeninfo->ospmTokenInfoIsLookAheadInfoPresent; 
+        if (tokeninfo->ospmTokenInfoIsLookAheadInfoPresent == OSPC_TRUE)
+        {
+            /*
+             * Set the destination
+             */
+           OSPPTokenInfoSetLookAheadDestAlt(&(trans->TokenLookAheadInfo),
+                                            OSPPTokenInfoGetLookAheadDestAlt(&(tokeninfo->ospmTokenLookAheadInfo))); 
+ 
+           /*
+            * Set the destination Protocol
+            */
+           dstProt = OSPPTokenInfoGetLookAheadDestProtocol(&(tokeninfo->ospmTokenLookAheadInfo));
+           trans->TokenLookAheadInfo.lookAheadDestProt = dstProt;
+            
+          /* 
+           * Set the OSP Version
+           */
+          dstOSPStatus = OSPPTokenInfoGetLookAheadOSPVersion(&(tokeninfo->ospmTokenLookAheadInfo));
+          trans->TokenLookAheadInfo.lookAheadDestOSPStatus =  dstOSPStatus;
+        }
+
 
         if (errorcode == OSPC_ERR_NO_ERROR && dtype == OSPC_MSG_TOKINFO)
         {
