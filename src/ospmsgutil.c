@@ -846,7 +846,7 @@ OSPPMsgElemIsCritical(
             if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrCritical)
             {
                 /* we found an critical attribute - is it false? */
-                if (OSPM_STRCMP(OSPPXMLAttrGetValue(attr), "False") == 0)
+                if (OSPM_STRCASECMP(OSPPXMLAttrGetValue(attr), "False") == 0)
                 {
                     /* yes, change our return value */
                     ospvIsCritical = OSPC_FALSE;
