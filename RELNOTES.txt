@@ -144,4 +144,5 @@ Version 2.8
 
 Version 2.8
 
- * Updated test app to use PEM encoded crypto files for the following test_app.c functions - GetAuthorityCertificates, SetAuthorityCertificates, SetLocalKeys.
+ * Updated test app to use PEM encoded crypto files for the following test_app.c functions - SetAuthorityCertificates, SetLocalKeys.
+ * Makefile changes in the enroll and test Makefiles
