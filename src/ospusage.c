@@ -205,16 +205,16 @@ OSPPUsageToElement(
         OSPPXMLElemAddChild(*ospvElem, elem);
     }
 
-	  /* optional (if not null) call start time */
-		if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvStartTime != 0))
-		{
-				ospvErrCode = OSPPMsgTimeToElement(ospvStartTime,
-						(const unsigned char *)OSPPMsgGetElemName(ospeElemStartTime), &elem);
-		}
-		if (ospvErrCode == OSPC_ERR_NO_ERROR)
-		{
-				OSPPXMLElemAddChild(*ospvElem, elem);
-		}
+    /* optional (if not null) call start time */
+    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvStartTime != 0))
+    {
+        ospvErrCode = OSPPMsgTimeToElement(ospvStartTime,
+                                          (const unsigned char *)OSPPMsgGetElemName(ospeElemStartTime), &elem);
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
 
     /* if for any reason we found an error - destroy any elements created */
     if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL))
