@@ -1037,16 +1037,28 @@ OSPPTransactionGetNextDestination(
 
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
-        if (ospvFailureReason == OSPC_FAIL_NONE) 
-        {
-            errorcode = OSPC_ERR_TRAN_INVALID_FAILURE_CODE;
-            OSPM_DBGERRORLOG(errorcode, "failure code invalid");
-        }
-
+        /*
+         * In ver2.9.3, we have removed the check to not accept 0 as a TC Code. 
+         * The toolkit now accepts 0.
+         */
         /* Now check for acceptable failure code */
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             errorcode = OSPPFailReasonFind(ospvFailureReason);
+        }
+
+        /*
+         * If the FailureReason = 0, change it to DEFAULT_GETNEXTDEST_NO_ERROR, which is a NONNULL value.
+         * This is being done because both the - GetFirst and GetNext function calls internally call
+         * GetDestination. This function expects ospvFailureReason to be 0 when the parent calling function 
+         * is GetFirst and NonZero when the parent calling function is GetNext.
+         * To avoid too many changes in the Toolkit, we are overwriting the value 0 with a unique 
+         * NonZero value here. When we have to actually set the Error Code in the destination structure,
+         * we will convert it back to 0. Probably not the best method, but continuing like this now.
+         */
+        if (ospvFailureReason == OSPC_FAIL_NONE)
+        {
+            ospvFailureReason = DEFAULT_GETNEXTDEST_NO_ERROR;
         }
 
 
@@ -1414,17 +1426,14 @@ OSPPTransactionRecordFailure(
     if((errorcode == OSPC_ERR_NO_ERROR) &&
         (trans != (OSPTTRANS *)OSPC_OSNULL))
     {
-
-        if (ospvFailureReason == OSPC_FAIL_NONE) 
+        /*
+         * The failurereason should be either 0 or a positive value. This is the only 
+         * restriction we have now. 
+         */
+        if (ospvFailureReason < OSPC_FAIL_NONE)
         {
-            errorcode = OSPC_ERR_TRAN_INVALID_FAILURE_CODE;
-            OSPM_DBGERRORLOG(errorcode, "failure code invalid");
-        }
-
-        if(errorcode == OSPC_ERR_NO_ERROR)
-        {
-
-            errorcode = OSPPFailReasonFind(ospvFailureReason);
+            errorcode = OSPC_ERR_FAILRSN_INVALID;
+            OSPM_DBGERRORLOG(errorcode, "Failure code invalid");
         }
 
         if(errorcode == OSPC_ERR_NO_ERROR)
@@ -1564,12 +1573,10 @@ OSPPTransactionReinitializeAtDevice(
 
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
 
-        /* First make sure they sent us a failure code */
-        if (ospvFailureReason == OSPC_FAIL_NONE) 
-        {
-            errorcode = OSPC_ERR_FAILRSN_NO_DATA;
-            OSPM_DBGERRORLOG(errorcode, "Failure code missing");
-        }
+        /*
+         * In ver2.9.3, we have removed the check to not accept 0 as a TC Code.
+         * The toolkit now accepts 0.
+         */
 
         /* Set failure reason for current destination, validate token and add new
            destination. only on OGW
