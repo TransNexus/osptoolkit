@@ -286,3 +286,4 @@ Version 2.11
   UsageIndication, CapabilityIndication, and Request Reauthorization messages. 
 * This release includes an enrollment script that works on Linux and Solaris, and automates the device 
   enrollment procedure with the Server.
+* Fixed a bug because of which the toolkit would crash when SSL was used for communication with the Server.Added a mutex used to streamline access to the LoadCert function in ospopenssl.c file.
