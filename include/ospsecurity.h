@@ -34,6 +34,8 @@
 #include "ospx509.h"
 #include "ospsslsess.h"
 
+#include <openssl/x509.h>
+
 /* defines for Local or Remote validation */
 #define OSPC_LOCAL  0x05
 #define OSPC_REMOTE 0x06
@@ -43,6 +45,7 @@
 #define OSPC_SEC_SIGNATURE_AND_CONTENT 0
 #define OSPC_SEC_SIGNATURE_ONLY 1
 
+
 /*-------------------------------------------*/
 /* security typedef                          */
 /*-------------------------------------------*/ 
@@ -50,6 +53,7 @@ typedef struct _OSPTSEC
 {
     unsigned            NumberOfAuthorityCertificates;
     OSPTASN1OBJECT      *AuthorityCertInfo[OSPC_SEC_MAX_AUTH_CERTS];
+		X509_STORE					*AuthorityCertStore;
     OSPTASN1OBJECT      *LocalCertInfo;
     OSPTASN1OBJECT      *PrivateKeyInfo;
     OSPTASN1OBJECT      *DigestAlgorithm;
@@ -61,6 +65,8 @@ typedef struct _OSPTSEC
     OSPTMUTEX           SSLSessionMutex;
     void                *ContextRef;
 } OSPTSEC;
+
+
 
 #ifdef __cplusplus
 extern "C" 
@@ -134,7 +140,7 @@ extern "C"
     OSPPSecSetAuthorityCertificates(
         OSPTSEC         *ospvSecurity,
         unsigned        ospvNumberOfAuthorityCertificates,
-        unsigned char   *ospvAuthorityCertificates[]);
+        const OSPTCERT  *ospvAuthorityCertificates[]);
 
     int 
     OSPPSecSignatureCreate(
