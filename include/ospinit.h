@@ -27,7 +27,7 @@
 #ifndef _OSP_INIT_H
 #define _OSP_INIT_H
 
-#define OSPC_MAX_PROVIDERS  1
+#define OSPC_MAX_PROVIDERS  10
 #define OSPC_NO_PROVIDERS   -1
 
 #ifdef __cplusplus
@@ -35,8 +35,12 @@ extern "C"
 {
 #endif
 
-    int  OSPPInit(void);
+    int  OSPPInit(OSPTBOOL hw_enabled);
     void OSPPCleanup(void);
+    void OSPPOpenSSLInit(OSPTBOOL hw_enabled);
+    void OSPPOpenSSLCleanUp(void);
+    void OSPPInitSSLMultiThread(void);
+    void OSPPOpenSSLMultiThreadCleanUp(void);
 
 #ifdef __cplusplus
 }
