@@ -161,23 +161,7 @@ OSPPXMLDocAddElem(
         ospvErrCode = OSPPXMLDocAddElemName(ospvElem, ospvBfrAddr);
     }
 
-    /**** STEP 3: if no children or contents, add trailer */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-    {
-        /*
-         * Empty elements have neither children or content; they
-         * can, however, include attributes (so we don't bother to
-         * check for attributes or not).
-         */
-        child = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvElem);
-        if ((child == OSPC_OSNULL) && (vallen == 0))
-        {
-            /* if the element is empty, go ahead and add the trailer */
-            ospvErrCode = OSPPXMLDocAddChar(ospvBfrAddr, OSPC_XMLDOC_TRAILER);
-        }
-    }
-
-    /**** STEP 4: add the attributes */
+    /**** STEP 3: add the attributes */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         /* the "for" loop steps through each attribute */
@@ -199,6 +183,22 @@ OSPPXMLDocAddElem(
             {
                 ospvErrCode = OSPPXMLDocAddAttr(attr, ospvBfrAddr);
             }
+        }
+    }
+
+    /**** STEP 4: if no children or contents, add trailer */
+    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+    {
+        /*
+         * Empty elements have neither children or content; they
+         * can, however, include attributes (so make sure the step
+         * followes adding attributes
+         */
+        child = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvElem);
+        if ((child == OSPC_OSNULL) && (vallen == 0))
+        {
+            /* if the element is empty, go ahead and add the trailer */
+            ospvErrCode = OSPPXMLDocAddChar(ospvBfrAddr, OSPC_XMLDOC_TRAILER);
         }
     }
 
