@@ -385,3 +385,24 @@ Version 3.1.2
 * The RequestAuthorization API has been fixed to accept NULL value for the ospvDetailLog
   parameter of the API.
 * openssl.cnf file is now packaged with the toolkit tarball.
+---------------------------------------------------------------------------
+
+Version 3.2.0
+* The toolkit can report the following information in the CDRs: AlertTime, EndTime, 
+  Source Trunk Group, Destination Trunk Group, CIC, and Post Dial Delay. 
+* Renamed the OSPPTransactionSetNetworkId API, and modified it to include the destination
+  trunk group information too. 
+* Modified the ReportUsage API to report positive duration even when the TC Code 
+  being reported is not 1016.
+* Modified test.cfg to include a new parameter - IS_PDD_INFO_AVAILABLE. It will be 
+  used 
+  to decided whether the Post Dial Delay information should be reported in the usage.
+* Modified the API: OSPPTransactionModifyDeviceIdentifiers to enable to the user 
+  to call this API again.
+* Added a new option in the test_app menu: ModifyDeviceIndentifiersAgain.
+  Using this option, the user can call the OSPPTransactionModifyDeviceIdentifiers API
+  again with a different set of values. The API can now be called multiple times.
+* Fixed a bug because of which test app would crash if the translated number in the 
+  authorization response was longer than the actual called number.  
+* This release of the toolkit supports calling number translation.
+* The toolkit now uses port 7080 to communicate with the NexOSS rather than 8080.
