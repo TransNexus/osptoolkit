@@ -16,7 +16,7 @@ include ospcflags.inc
 LFLAGS   = -lsocket -lnsl -lpthread
 SOFLAGS  = -shared 
 SOOBJ    = libosp.so
-AR       = /usr/ccs/bin/ar
+#AR       = /usr/ccs/bin/ar
 ARLIB    = $(TARGETDIR)/libosp.a
 #LINT     = /opt/SUNWspro/bin/lint
 MKDEP    = /usr/openwin/bin/makedepend
@@ -66,7 +66,7 @@ OBJS    =   osppkcs1.o osppkcs8.o osppkcs7.o ospcryptowrap.o ospasn1ids.o \
 # $(LINT) $(<) ; $(CC) $(CFLAGS) $(CRYPTOCFLAGS) $(SSLCFLAGS) $(<) -c
 
 libosp  : $(OBJS)
-	$(AR) -r $(ARLIB) $(OBJS)
+	ar -r $(ARLIB) $(OBJS)
 
 clean   :
 	rm -f $(OBJS) $(ARLIB)
