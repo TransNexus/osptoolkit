@@ -138,8 +138,10 @@ char      **Tokens;
 
 char *auditurl = NULL;
 char *servicepoints[MAX_SERVICE_POINTS];
+char *capURLs[MAX_SERVICE_POINTS];
 
 int   num_serv_points = 0;
+int   num_capURLs = 0;
 
 long custid = DEF_CUST_ID;
 long devid  = DEF_DEVICE_ID;
@@ -176,6 +178,7 @@ static void    FileArrayDelete(unsigned char ***array,int **filesizes,
                               size_t num);
 int testTestCalls(void);
 int testNonBlockingPerformanceTest();
+int testNonBlockingPerformanceTestForCapabilities();
 
 /*----------------------------------------------*
  *              accumulate table                *
@@ -1388,6 +1391,45 @@ testOSPPTransactionRequestAuthorisation()
     return errorcode;
 }
 
+
+int
+testOSPPTransactionIndicateCapabilities()
+{
+    int      errorcode       = 0;
+    unsigned detaillogsize   = 0;
+
+    if (errorcode == OSPC_ERR_NO_ERROR) 
+        errorcode = OSPPTransactionIndicateCapabilities(
+        OSPVTransactionHandle,
+        "[1.1.1.1]",
+        "[2.2.2.2]",
+        0,
+        &detaillogsize,
+        (void *)NULL);
+
+    return errorcode;
+}
+
+int
+testOSPPProviderSetCapabilitiesURLs()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPProviderSetCapabilitiesURLs(OSPVProviderHandle,num_capURLs,(const char **)capURLs);
+
+    return errorcode;
+}
+
+int
+testOSPPProviderSetServicePoints()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPProviderSetServicePoints(OSPVProviderHandle,num_serv_points,(const char **)servicepoints);
+
+    return errorcode;
+}
+
 int
 testOSPPTransactionRequestReauthorisation()
 {
@@ -1789,8 +1831,7 @@ testAPI(int apinumber)
         /*errorcode = testOSPPProviderGetAuthorityCertificates();*/
         break;
         case 4:
-        errorcode = testNotImplemented();
-        /*errorcode = testOSPPProviderSetAuthorityCertificates();*/
+        errorcode = testOSPPProviderSetServicePoints();
         break;
         case 5:
         errorcode = testOSPPProviderGetHTTPMaxConnections();
@@ -1820,8 +1861,7 @@ testAPI(int apinumber)
         errorcode = testNotImplemented();
         break;
         case 14:
-        errorcode = testNotImplemented();
-        /*errorcode = testOSPPProviderSetLocalKeys();*/
+        errorcode = testOSPPProviderSetCapabilitiesURLs();
         break;
         case 15:
         errorcode = testOSPPProviderGetLocalValidation();
@@ -1893,7 +1933,7 @@ testAPI(int apinumber)
         errorcode = testOSPPTransactionRecordFailure();
         break;
         case 37:
-        errorcode = testNotImplemented();
+        errorcode = testOSPPTransactionIndicateCapabilities();
         break;
         case 38:
         errorcode = testOSPPTransactionGetDestProtocol();
@@ -1926,6 +1966,9 @@ testAPI(int apinumber)
         break;
         case 100:
         errorcode = testNonBlockingPerformanceTest();
+        break;
+        case 101:
+        errorcode = testNonBlockingPerformanceTestForCapabilities();
         break;
         default:
         errorcode = -1;
@@ -1977,12 +2020,12 @@ testMenu()
       printf("\nProvider API functions\n");
       printf("---------------------------------------------------------------------\n");
       printf(" 1) New                                2) Delete\n");
-      printf(" 3) For future Enhancements            4) For future Enhancements\n");
+      printf(" 3) For future Enhancements            4) SetServicePoints\n");
       printf(" 5) GetHTTPMaxConnections              6) SetHTTPMaxConnections\n");
       printf(" 7) GetHTTPPersistence                 8) SetHTTPPersistence\n");
       printf(" 9) GetHTTPRetryDelay                 10) SetHTTPRetryDelay\n");
       printf("11) GetHTTPTimeout                    12) SetHTTPTimeout\n");
-      printf("13) For future Enhancements           14) For future Enhancements\n");
+      printf("13) For future Enhancements           14) SetCapabilitiesURLs\n");
       printf("15) GetLocalValidation                16) SetLocalValidation\n");
       printf("17) GetServicePoints                  18) SetServicePoints\n");
       printf("19) GetSSLLifetime                    20) SetSSLLifetime\n");
@@ -1997,10 +2040,11 @@ testMenu()
       printf("31) ValidateAuthorisation             32) ReportUsage\n");
       printf("33) TransactionInitializeAtDevice(OGW)34) TransactionInitialize(TGW)\n");
       printf("35) SetNetworkId                      36) TransactionRecordFailure\n");
+      printf("37) IndicateCapabilities\n");
       printf("---------------------------------------------------------------------\n");
       printf("Miscellaneous Tests\n");
       printf("---------------------------------------------------------------------\n");
-      printf("37) For future Enhancements           38) GetDestinationProtocol\n");
+      printf("38) GetDestinationProtocol\n");
       printf("39) IsDestOSPEnabled	              40) For future Enhancements\n");
       printf("41) %-6d Test Calls                 42) Show Version\n", num_test_calls);
       printf("99) Sleep for 2 seconds\n");
@@ -2013,6 +2057,7 @@ testMenu()
       printf("Performance tests\n");
       printf("---------------------------------------------------------------------\n");
       printf("100) Run Multiple calls\n");
+      printf("101) Run Multiple Capabilities Indications\n");
       printf("---------------------------------------------------------------------\n");
       printf("Enter function number or 'q' to quit => ");
     }
@@ -2058,6 +2103,18 @@ GetConfiguration()
                     if (num_serv_points == MAX_SERVICE_POINTS)
                     {
                         fprintf(stderr, "Too many service points configured. Max = %d\n",
+                            MAX_SERVICE_POINTS);
+                        errorcode = 1;
+                        break;
+                    }
+                }
+                else if (strncmp(inbuf, "CapURL=", strlen("CapURL=")) == 0)
+                {
+                    capURLs[num_capURLs++] = _Strdup(&inbuf[strlen("CapURL=")]);
+
+                    if (num_capURLs == MAX_SERVICE_POINTS)
+                    {
+                        fprintf(stderr, "Too many capabilities URLs configured. Max = %d\n",
                             MAX_SERVICE_POINTS);
                         errorcode = 1;
                         break;
@@ -2120,6 +2177,11 @@ CleanupServicePoints()
     {
         free(servicepoints[i]);
     }
+	
+    for (i = 0; i < num_capURLs; i++)
+    {
+        free(capURLs[i]);
+    }
     free(auditurl);
     return;
 }
@@ -2178,7 +2240,7 @@ main(int argc, char *argv[])
     OSPPCleanup();
     CleanupServicePoints();
     printf("Program Over.\n");
-    exit(0);
+    return(0);
 }
 
 
@@ -2767,4 +2829,160 @@ int testNonBlockingPerformanceTest()
 
     return errorcode;
 }
+
+
+
+
+
+int testNonBlockingPerformanceTestForCapabilities()
+{
+    int      errorcode       = 0;
+    unsigned detaillogsize   = 0;
+
+
+    int             *OErrorCodes = NULL;
+    OSPTTRANHANDLE  *OTransactionHandles = NULL;
+    int             i = 0;
+
+    /*
+     * Used for calculating performance
+    */
+    time_t start_time, end_time;
+
+    fflush(stdin);
+    printf("Enter the number of Simultaneous Calls : ");
+    scanf("%d",&TEST_NUM);
+    
+    if ( (TEST_NUM) > OSPC_MAX_TRANS)
+        printf("Warning !! The toolkit may not be able to process - %d Calls because the maximum transactions that can be created is - %d \n",TEST_NUM,OSPC_MAX_TRANS);
+
+    if (TEST_NUM > MAX_QUEUE_SIZE)
+        printf("Warning !! The toolkit may not be able to process - %d Calls because the maximum queue size is - %d \n",TEST_NUM,MAX_QUEUE_SIZE);
+
+
+
+    /*
+     * Allocate Memory
+     */
+     OErrorCodes = (int *)malloc((sizeof(int)*TEST_NUM));
+     OTransactionHandles = (OSPTTRANHANDLE *)malloc((sizeof(OSPTTRANHANDLE)*TEST_NUM));
+
+     if ((OErrorCodes == NULL) || (OTransactionHandles == NULL))
+    {
+        printf("Malloc Failed !! Exiting ! \n");
+        exit (0);
+    }
+
+
+    /*
+     * Start non-blocking Queue/Monitor
+    */
+
+    /*
+     * Init variables
+    */
+    for(i = 0; i < TEST_NUM; i++)
+    {
+      /*
+       * ErrorCodes
+      */
+      OErrorCodes[i]            = 0;
+    }
+
+
+
+    /* 
+     * Phase I Creating new transactions transactions for every call
+    */
+    printf("\n\n");
+    printf("Phase I OSPPTransactionNew.\n");
+    time(&start_time);
+    for(i = 0; i < TEST_NUM; i++)
+    {
+        if( (errorcode=OSPPTransactionNew(OSPVProviderHandle, &OTransactionHandles[i])) != OSPC_ERR_NO_ERROR)
+        {
+          printf("OSPPTransactionNew failed, aborting the test.\n");
+          return errorcode;
+        }
+    }
+    time(&end_time);
+    printf("Time elapsed <%d>\n",end_time - start_time);
+
+
+
+    /* 
+     * Phase II Sending CapabilitiesIndication
+    */
+    printf("\n\n");
+    printf("Phase II OSPPTransactionIndicateCapabilities.\n");
+    time(&start_time);
+    for(i = 0; i < TEST_NUM; i++)
+    {
+        errorcode = OSPPTransactionIndicateCapabilities_nb( nbMonitor,
+                                                            0, /* DON'T BLOCK */
+                                                            &OErrorCodes[i],
+                                                            OTransactionHandles[i],
+                                                            "[1.1.1.1]",
+                                                            "[2.2.2.2]",
+                                                            i%2,
+                                                            &detaillogsize,
+                                                            (void *)NULL);
+
+        if(errorcode != OSPC_ERR_NO_ERROR) 
+        {
+          printf("OSPPTransactionIndicateCapabilities_nb failed, aborting the test.\n");
+          return errorcode;
+        }
+    }
+
+    /* 
+     * Wait
+    */
+    printf("Waiting on queued up transactions\n");
+    NonBlockingQueueMonitorBlockWhileQueueNotEmpty(nbMonitor);
+
+
+    time(&end_time);
+    printf("Time elapsed <%d>\n",end_time - start_time);
+
+    printf("Checking ReturnCodes.\n");
+    for(i = 0; i < TEST_NUM; i++)
+    {
+      if( OErrorCodes[i] != OSPC_ERR_NO_ERROR ) 
+      {
+        printf("OSPPTransactionIndicateCapabilities failed transaction/code = <%d>/<%d>, aborting the test.\n", i,OErrorCodes[i]);
+        return OErrorCodes[i];
+      }
+    }
+
+
+
+
+
+    /* 
+     * Phase V Deleting transactions
+    */
+    printf("\n\n");
+    printf("Phase V: OSPPTransactionDelete.\n");
+    time(&start_time);
+    for(i = 0; i < TEST_NUM; i++)
+    {
+        if( (errorcode=OSPPTransactionDelete(OTransactionHandles[i])) != OSPC_ERR_NO_ERROR )
+        {
+          printf("OSPPTransactionDelete failed, aborting the test.\n");
+          return errorcode;
+        }
+    }
+    time(&end_time);
+    printf("Time elapsed <%d>\n",end_time - start_time);
+
+    if (OErrorCodes != NULL)
+       free(OErrorCodes);
+
+    if (OTransactionHandles != NULL)
+       free(OTransactionHandles);
+
+    return errorcode;
+}
+
 /* EOF */
