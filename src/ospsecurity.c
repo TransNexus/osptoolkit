@@ -34,6 +34,9 @@
 #include "ospsecurity.h"
 #include "osptnlog.h"
 
+#include <openssl/pkcs7.h>
+#include <openssl/bio.h>
+
 /* PROTOTYPES FOR LOCAL FUNCTIONS */
 int
 OSPPSecTestContext(
@@ -61,6 +64,9 @@ int
 OSPPSecGetLocalCertInfo(
     OSPTSEC *ospvSecurity,
     OSPTASN1OBJECT **ospvLocalCertInfo);
+
+
+void OpenSSLErrorLog(long errorcode);
 
 /**************************************/
 /* IMPLEMENTATION OF MEMBER FUNCTIONS */
@@ -616,12 +622,14 @@ int
 OSPPSecSetAuthorityCertificates(
     OSPTSEC         *ospvSecurity,
     unsigned        ospvNumberOfAuthorityCertificates,
-    unsigned char    *ospvAuthorityCertificates[])
+    const OSPTCERT  *ospvAuthorityCertificates[])
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTASN1OBJECT *newCertInfo = OSPC_OSNULL;
     unsigned i = 0;
     unsigned certCount;
+		X509 *newX509Cert = OSPC_OSNULL;
+		unsigned char *p = OSPC_OSNULL;
 
 
     errorcode = OSPPSecLock(ospvSecurity, OSPE_LOCK_WRITE);
@@ -650,6 +658,10 @@ OSPPSecSetAuthorityCertificates(
     /* Add certificates to certificate list */
     if (errorcode == OSPC_ERR_NO_ERROR)
     {
+				/* Create X509_STORE */
+    		ospvSecurity->AuthorityCertStore = X509_STORE_new();
+
+
         /* Create new certificate list */
         for (i = 0 ; i < ospvNumberOfAuthorityCertificates ; i++)
         {
@@ -662,8 +674,39 @@ OSPPSecSetAuthorityCertificates(
             if (errorcode == OSPC_ERR_NO_ERROR)
             {
                 /* Create/initialize a new certInfo for new local certificate */
-                errorcode = OSPPX509CertCreate( ospvAuthorityCertificates[i],
+                errorcode = OSPPX509CertCreate( ospvAuthorityCertificates[i]->CertData,
                     &newCertInfo);
+
+								/* Convert DER encoded cert to X509 object */
+
+								/* p is a temporary pointer, it will be updated by the functions */
+								p = ospvAuthorityCertificates[i]->CertData;
+								newX509Cert = d2i_X509(	OSPC_OSNULL,
+																				&p,
+																				ospvAuthorityCertificates[i]->CertDataLength);
+
+								if( newX509Cert != OSPC_OSNULL )
+								{
+									if( 1 == X509_STORE_add_cert(ospvSecurity->AuthorityCertStore,newX509Cert) )
+									{
+										/* Success */
+										errorcode=OSPC_ERR_NO_ERROR;
+									}
+									else
+									{
+										errorcode=OSPC_ERR_X509_STORE_ERROR;
+										OSPM_DBGERRORLOG(errorcode, "Failed to decode X509 cert");
+										OpenSSLErrorLog(errorcode);
+									}
+								}
+								else
+								{
+									errorcode=OSPC_ERR_X509_DECODING_ERROR;
+									OSPM_DBGERRORLOG(errorcode, "d2i_X509 failed");
+									OpenSSLErrorLog(errorcode);
+								}
+
+
             }
 
             if (errorcode == OSPC_ERR_NO_ERROR)
@@ -693,6 +736,59 @@ OSPPSecSignatureVerify(
       int ospvSignatureOnly)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
+		PKCS7 *signedData = OSPC_OSNULL;
+		unsigned char *p = ospvSignature;
+
+		BIO		*mem_bio_out= OSPC_OSNULL;
+		char	*tokenBuf		= OSPC_OSNULL;
+
+		/* decode signed data */
+		signedData = d2i_PKCS7(OSPC_OSNULL,&p, ospvSignatureLength);
+
+		if(signedData != OSPC_OSNULL)
+		{
+			/* it will be used for storing decoded xml token */
+			mem_bio_out	= BIO_new(BIO_s_mem());
+
+			/* verify message and extract xml token */
+			if( 1==PKCS7_verify(signedData,
+													OSPC_OSNULL,
+													ospvSecurity->AuthorityCertStore,
+													OSPC_OSNULL,
+													mem_bio_out,
+													PKCS7_NOCHAIN) )
+			{
+				/* Success, copy extracted message to output parameters */
+				*ospvContentLength = BIO_get_mem_data(mem_bio_out,&tokenBuf);
+
+
+				OSPM_MALLOC(*ospvContent, unsigned char, *ospvContentLength);
+				OSPM_MEMCPY(*ospvContent, tokenBuf, *ospvContentLength);  
+			}
+			else
+			{
+				errorcode = OSPC_ERR_PKCS7_INVALID_SIGNATURE;
+				OpenSSLErrorLog(errorcode);
+				OSPM_DBGERRORLOG(errorcode, "Failed to verify signature");
+			}
+
+			/* release resources */
+			BIO_free(mem_bio_out);
+			PKCS7_free(signedData);
+		}
+		else
+		{
+			errorcode = OSPC_ERR_PKCS7_INVALID_SIGNATURE;
+			OpenSSLErrorLog(errorcode);
+			OSPM_DBGERRORLOG(errorcode, "Failed to decode signature");
+		}
+
+
+
+
+
+
+#if 0
     OSPTASN1OBJECT *signatureObject = OSPC_OSNULL;
     OSPTASN1OBJECT **authorityCertInfos = OSPC_OSNULL;
     OSPTASN1ELEMENTINFO *el=OSPC_OSNULL;
@@ -796,6 +892,7 @@ OSPPSecSignatureVerify(
     }
     OSPPASN1ObjectDelete(&signatureObject);
 
+#endif
     return errorcode;
 }
 
@@ -962,6 +1059,10 @@ OSPPSecDeleteAuthorityCertificates(
 
     if (errorcode == OSPC_ERR_NO_ERROR)
     {
+
+				/* Free X509 Store */
+				X509_STORE_free(ospvSecurity->AuthorityCertStore);
+
         /* Delete certificates from the list */
         for (   i = 0 ; 
             ospvSecurity->NumberOfAuthorityCertificates;
@@ -1334,4 +1435,23 @@ OSPPSecGetSignerCertSubjectName(
     }
 
     return errorcode;
+}
+
+void OpenSSLErrorLog(long errorcode)
+{
+	BIO		*mem_bio	= OSPC_OSNULL;
+	char	*p				= OSPC_OSNULL;
+	long  len				=	0;
+
+	mem_bio	= BIO_new(BIO_s_mem());
+
+	ERR_print_errors(mem_bio);
+
+	len = BIO_get_mem_data(mem_bio,&p);
+
+	p[len] = OSPC_OSNULL;
+
+	OSPM_DBGERRORLOG(errorcode,p);
+
+	BIO_free(mem_bio);
 }
