@@ -319,3 +319,20 @@ Version 3.0
   - OSPPTransactionInitializeAtDevice
   - OSPPTransactionRequestAuthorisation
   - OSPPTransactionValidateAuthorisation
+---------------------------------------------------------------------------
+
+Version 3.1
+* The toolkit has been modified to support load balancing among the different SP's configured. Each 
+  message (Authorization Req, Usage Ind, or Cap Ind) is now sent to a different OSP Server, 
+  based on the load and the SP availability. For further details on the implementation, 
+  refer to the toolkit documentation. 
+* As a part of Load Balancing changes, the maximum number of Http Connections that can be opened
+  is now made configurable within test.cfg file. Also, the maximum number of messages that can 
+  be sent over a connection is made configurable. 
+  This configuration is on a per Service Point basis.
+* Removed compilation warnings for windows.
+* Implemented multi-threading for openssl on Windows.
+* As a result of the above mentioned changes, the following API's have changed:
+  - OSPPProviderNew
+  - OSPPProviderSetServicePoints
+  - OSPPProviderSetCapabilitiesURLs
