@@ -46,7 +46,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <grp.h>
-#include <malloc.h>
+#include <mtmalloc.h>
 
 
 #ifdef OSPTNLOGDEBUG
