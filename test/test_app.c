@@ -105,8 +105,10 @@ unsigned callidsize                 = CALL_ID_SZ;
 void     *callid                    = NULL;
 unsigned char ret_cid[CALL_ID_SZ];
 unsigned char c_id[CALL_ID_SZ+1]    = { "1234567890123456"};
-char     *callednumber              = { "14048724799" };
-char     *callingnumber             = { "14045551212" };
+char     callednumber[CALL_ID_SZ];
+char     callingnumber[CALL_ID_SZ];
+/*char     *callednumber              = { "14048724799" };
+char     *callingnumber             = { "14045551212" };*/
 char     dest[DESTINATION_SZ]       = { "" };
 char     destdev[DESTINATION_SZ]    = { "" };
 unsigned tokensize                  = TOKEN_SZ;
@@ -962,6 +964,68 @@ testOSPPTransactionAccumulateRoundTripDelay()
 }
 
 int
+testOSPPTransactionGetDestProtocol()
+{
+    OSPE_DEST_PROT dest_prot;
+    int   errorcode  = OSPC_ERR_NO_ERROR;
+    
+    errorcode = OSPPTransactionGetDestProtocol(OSPVTransactionHandle,&dest_prot);    
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    {
+       switch (dest_prot)
+       {
+           case 0 :
+                      printf("Destination Protocol is Not Configured at Server \n");
+                      break;
+           case 2 :
+                      printf("Destination Protocol is SIP \n");
+                      break;
+           case 4 :
+                      printf("Destination Protocol is h323-LRQ \n");
+                      break;
+           case 8 :
+                      printf("Destination Protocol is h323-Q931\n");
+                      break;
+           case 16:
+                      printf("Destination Protocol is Unknown \n");
+                      break;
+       }
+    }
+    return errorcode;
+
+}
+
+int 
+testOSPPTransactionIsDestOSPEnabled()
+{
+    OSPE_DEST_OSP_ENABLED dest_osp_ver;
+    int   errorcode  = OSPC_ERR_NO_ERROR;
+
+    errorcode = OSPPTransactionIsDestOSPEnabled(OSPVTransactionHandle,&dest_osp_ver);
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    {
+       switch (dest_osp_ver)
+       {
+           case 0 :
+                      printf("Destination OSP Version Not Configured at Server \n");
+                      break;
+           case 128 :
+                      printf("Destination is OSP Enabled\n");
+                      break;
+           case 256 :
+                      printf("Destination is Not OSP Enabled\n");
+                      break;
+           case 512 :
+                      printf("Destination OSP Status is Unknown \n");
+                      break;
+       }
+    }
+    return errorcode;
+
+}
+
+
+int
 testOSPPTransactionGetFirstDestination()
 {
 
@@ -1324,6 +1388,50 @@ testOSPPTransactionRequestReauthorisation()
     printf("\nErrorcode = %d. \nAuthorised = %u. \nTimelimit = %u. \nToken = %s.",
             errorcode, authorised, timelimit, token);
 
+    return errorcode;
+}
+
+int
+testGetCallingNumber()
+{
+     int errorcode = 0;
+     printf("The Current Calling Number is : %s \n",callingnumber);
+     return errorcode;
+}
+
+int
+testGetCalledNumber()
+{
+     int errorcode = 0;
+     printf("The Current Called Number is : %s \n",callednumber);
+     return errorcode;
+}
+
+int
+testSetCallingNumber()
+{
+    int errorcode = 0;
+    printf("Enter the new value for Calling number : ");
+    gets(callingnumber);
+    if (!strcmp(callingnumber,""))
+    {
+        printf("WARNING : You have set an Empty Calling Number !!\n");
+    }
+    printf("Calling Number Set to the new value\n");
+    return errorcode;
+}
+
+int
+testSetCalledNumber()
+{
+    int errorcode = 0;
+    printf("Enter the new value for Calling number : ");
+    gets(callednumber);
+    if (!strcmp(callednumber,""))
+    {
+        printf("WARNING : You have set an Empty Called Number !!\n");
+    }
+    printf("Called Number Set to the new value\n");
     return errorcode;
 }
 
@@ -1742,10 +1850,10 @@ testAPI(int apinumber)
         errorcode = testOSPPTransactionSetNewNetworkId();
         break;
         case 38:
-        errorcode = testNotImplemented();
+        errorcode = testOSPPTransactionGetDestProtocol();
         break;
         case 39:
-        errorcode = testNotImplemented();
+        errorcode = testOSPPTransactionIsDestOSPEnabled();
         break;
         case 40:
         errorcode = testNotImplemented();
@@ -1758,6 +1866,18 @@ testAPI(int apinumber)
         printf("OSP Version: %s\n", OSPVBuildVersion);
         break;
 #endif
+        case 50:
+        errorcode = testSetCallingNumber();
+        break;
+        case 51:
+        errorcode = testSetCalledNumber();
+        break;
+        case 52:
+        errorcode = testGetCallingNumber();
+        break;
+        case 53:
+        errorcode = testGetCalledNumber();
+        break;
         case 100:
         errorcode = testNonBlockingPerformanceTest();
         break;
@@ -1834,10 +1954,15 @@ testMenu()
       printf("---------------------------------------------------------------------\n");
       printf("Miscellaneous Tests\n");
       printf("---------------------------------------------------------------------\n");
-      printf("37) Reset NetworkId                   38) For future Enhancements\n");
-      printf("39) For future Enhancements           40) For future Enhancements\n");
+      printf("37) Reset NetworkId                   38) GetDestinationProtocol\n");
+      printf("39) IsDestOSPEnabled	              40) For future Enhancements\n");
       printf("41) %-6d Test Calls                 42) Show Version\n", num_test_calls);
       printf("99) Sleep for 2 seconds\n");
+      printf("---------------------------------------------------------------------\n");
+      printf("Configuration Parameters \n");
+      printf("---------------------------------------------------------------------\n");
+      printf("50) Set Calling Number                51) Set Called Number\n");
+      printf("52) Get Calling Number                53) Get Called Number\n");
       printf("---------------------------------------------------------------------\n");
       printf("Performance tests\n");
       printf("---------------------------------------------------------------------\n");
@@ -1859,7 +1984,7 @@ GetConfiguration()
 {
     FILE *fp = NULL;
     int errorcode = 0;
-    char inbuf[512];
+    char inbuf[512],*tmp;
 
     if ((fp = fopen(CONFIG_FILENAME, "r")) == (FILE *)NULL)
     {
@@ -1908,13 +2033,19 @@ GetConfiguration()
                         {
                             if (strncmp(inbuf, "CALLED=", 7) == 0)
                             {
-                                callednumber = _Strdup(&inbuf[7]);
+                                  tmp = _Strdup(&inbuf[7]);
+                                  strcpy(callednumber,tmp);
+                                  free(tmp);
+                                  tmp = NULL;
                             }
                             else
                             {
                                 if (strncmp(inbuf, "CALLING=", 8) == 0)
                                 {
-                                    callingnumber = _Strdup(&inbuf[8]);
+                                      tmp = _Strdup(&inbuf[8]);
+                                      strcpy(callingnumber,tmp);
+                                      free(tmp);
+                                      tmp = NULL;
                                 }
                                 else
                                 {
