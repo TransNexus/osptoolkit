@@ -25,17 +25,17 @@
  * osptokeninfo.c - OSP token info functions
  */
 
-#include "osp.h"
-#include "osperrno.h"
-#include "ospbfr.h"
-#include "osplist.h"
-#include "ospxmlattr.h"
-#include "ospxmlelem.h"
-#include "ospmsgattr.h"
-#include "ospmsgelem.h"
-#include "osptokeninfo.h"
-#include "ospusage.h"
-#include "osputils.h"
+#include "osp/osp.h"
+#include "osp/osperrno.h"
+#include "osp/ospbfr.h"
+#include "osp/osplist.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospmsgelem.h"
+#include "osp/osptokeninfo.h"
+#include "osp/ospusage.h"
+#include "osp/osputils.h"
 
 
 /**/
@@ -320,6 +320,24 @@ OSPTCALLID *
         ospvCallId = ospvTokenInfo->ospmTokenInfoCallId;
     }
     return ospvCallId;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPTokenInfoGetCallIdSize() - returns the call id size for a token info
+ *-----------------------------------------------------------------------*/
+unsigned
+    OSPPTokenInfoGetCallIdSize(
+    OSPTTOKENINFO *ospvTokenInfo                     /* token info */
+    )
+{
+    unsigned ospvCallIdSize = 0;
+
+    if (ospvTokenInfo != OSPC_OSNULL)
+    {
+        ospvCallIdSize = OSPPCallIdGetSize(((ospvTokenInfo)->ospmTokenInfoCallId));
+    }
+    return(ospvCallIdSize);
 }
 
 /**/
