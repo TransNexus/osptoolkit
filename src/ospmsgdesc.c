@@ -75,17 +75,6 @@ OSPPMsgDescGetName(
     if (ospvPart != OSPC_MSGPARTUNKNOWN) 
     {
 
-        /*
-         * The OSPPMsgDescGetName includes two different implementations: the
-         * first is safer and the second has higher performance. The safer option
-         * does an exhaustive search through the descriptors array. The second
-         * simply uses the part ID as an index into that array. The risk with the
-         * second approach is that it requires that the array be built correctly,
-         * with elements in the precise, right order. If you enable the second
-         * approach, it is essential to test the array ordering using the the code
-         * in the included main() procedures in the individual components.
-         */
-
         /* alternate approach - faster, but array must be built appropriately */
         if ((unsigned)ospvPart < ospvNumDesc) 
         {
