@@ -414,21 +414,14 @@ osppHttpSetupAndMonitor(
                      * out from the main loop.
                      */
                      OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() remove connection requested\n"));
-#ifndef _WIN32
                      /*
                       * The connection mutex as locked above is needs to be unlocked
                       * if the connection is shutting down or a time out event has occured.
-                      * - Solaris does not seem to give a probem if this mutex is left locked
-                      *   or is unlocked before it is destroyed.Eitherways, it is fine. 
-                      * - Linux needs this mutex to be unlocked before it can be destroyed. 
-                      * - Windows seems to have a problem if it is unlocked before it is destroyed
-                      *   Because of this problem, there is an error message that pops up on
-                      *   Windows if this function call is made before destroying the mutex. 
-                      *   And to prevent that log message, the below written function call is made 
-                      *   for all the other OS but Windows.
+                      * In the previous releases, the MUTEX UNLOCK call was commented
+                      * for Windows. However, to prevent a log while destroying the mutex,
+                      * the UNLOCK call is now done for all the OS.
                       */
                      OSPM_MUTEX_UNLOCK(httpconn->Mutex, errorcode);
-#endif
                      osppHttpRemoveConnection(httpconn);
                      break;
                 }
@@ -880,7 +873,7 @@ osppHttpSelectConnection(
         /*
          * We cannot add a new one. So, check to find an idle connection
          */
-        errorcode = osppHttpGetIdleHttpConn(&(ospvComm->HttpConnList),&(*ospvHttp),(ospvComm->ConnSelectionTimeout/1000),maxcount,ospvComm->RoundRobinIndex);
+        errorcode = osppHttpGetIdleHttpConn(&(ospvComm->HttpConnList),&(*ospvHttp),(unsigned int)(ospvComm->ConnSelectionTimeout/1000),maxcount,ospvComm->RoundRobinIndex);
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
             ospvComm->RoundRobinIndex = ((ospvComm->RoundRobinIndex)+1) % maxcount;
@@ -1099,8 +1092,7 @@ osppHttpCopySPList(
                     *svcptitem  = OSPC_OSNULL,
                     *newroot    = OSPC_OSNULL,
                     *newsvcptnode    = OSPC_OSNULL;
-    unsigned  numsvcpts;
-    int i=0;
+    int  i=0,numsvcpts;
 
     /*
      * get a pointer to the service point list
@@ -1128,7 +1120,7 @@ osppHttpCopySPList(
         }
     }
 
-    OSPPCommGetNumberOfServicePoints(ospvComm,&numsvcpts);
+    OSPPCommGetNumberOfServicePoints(ospvComm,(unsigned *)&numsvcpts);
 
     /*
      * construct the new service point list
