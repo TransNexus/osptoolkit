@@ -1582,6 +1582,78 @@ testSetCalledNumber()
 }
 
 int
+testOSPPTransactionGetLookAheadInfoIfPresent()
+{
+    int         errorcode       = 0;
+    OSPE_DEST_PROT   DestProt=OSPE_DEST_PROT_UNDEFINED;
+    OSPE_DEST_OSP_ENABLED DestOSPStatus=OSPE_OSP_UNDEFINED;
+    char     LookAheadDest[DESTINATION_SZ]       = { "" };
+    OSPTBOOL IsLookAheadInfoPresent=OSPC_FALSE;
+    
+    if (errorcode == 0)
+    {
+        if(errorcode == 0)
+        {
+            errorcode = OSPPTransactionGetLookAheadInfoIfPresent(
+                OSPVTransactionHandle,
+                &IsLookAheadInfoPresent,
+                LookAheadDest,
+                &DestProt,
+                &DestOSPStatus);
+        }
+
+        if (errorcode == 0 && IsLookAheadInfoPresent)
+        {
+           printf("Look Ahead Info Present .. \nLookAheadDest = %s\n",LookAheadDest);
+           switch (DestProt)
+           {
+               case OSPE_DEST_PROT_UNDEFINED :
+                      printf("Destination Protocol is Not Configured at Server \n");
+                      break;
+               case OSPE_DEST_PROT_SIP :
+                      printf("Destination Protocol is SIP \n");
+                      break;
+               case OSPE_DEST_PROT_H323_LRQ :
+                      printf("Destination Protocol is h323-LRQ \n");
+                      break;
+               case OSPE_DEST_PROT_H323_SETUP :
+                      printf("Destination Protocol is h323-Q931\n");
+                      break;
+               case OSPE_DEST_PROT_UNKNOWN:
+                      printf("Destination Protocol is Unknown \n");
+                      break;
+           }
+
+           switch (DestOSPStatus)
+           {
+               case OSPE_OSP_UNDEFINED :
+                      printf("Destination OSP Version Not Configured at Server \n");
+                      break;
+               case OSPE_OSP_TRUE :
+                      printf("Destination is OSP Enabled\n");
+                      break;
+               case OSPE_OSP_FALSE :
+                      printf("Destination is Not OSP Enabled\n");
+                      break;
+               case OSPE_OSP_UNKNOWN :
+                      printf("Destination OSP Status is Unknown \n");
+                      break;
+           }
+
+        }
+        else  if (errorcode == 0 && (!IsLookAheadInfoPresent))
+        {
+          printf("Look Ahead Info Not Present\n");
+        }
+        printf("errorcode = %d\n", errorcode);
+
+    }
+
+    return errorcode;
+}
+
+
+int
 testOSPPTransactionValidateAuthorisation()
 {
     int         errorcode       = 0;
@@ -2034,6 +2106,9 @@ testAPI(int apinumber)
         scanf("%d",&build_new_trans);
         errorcode = testBuildUsageFromScratch(OSPC_DESTINATION,build_new_trans);
         break;
+        case 45:
+        errorcode = testOSPPTransactionGetLookAheadInfoIfPresent();
+        break;
         case 50:
         errorcode = testSetCallingNumber();
         break;
@@ -2345,6 +2420,7 @@ testMenu()
       printf("39) GetDestinationProtocol            40) IsDestOSPEnabled\n");
       printf("41) %-6d Test Calls                 42) Show Version\n", num_test_calls);
       printf("43) BuildUsageFromScratch(OGW)        44) BuildUsageFromScratch(TGW)\n");
+      printf("45) GetLookAheadInfoIfPresent\n");
       printf("99) Sleep for 2 seconds\n");
       printf("---------------------------------------------------------------------\n");
       printf("Configuration Parameters \n");
