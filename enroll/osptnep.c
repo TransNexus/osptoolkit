@@ -174,9 +174,8 @@ int main ( int argc, char* argv[] )
             }
             else
             {
-                OSPM_PRINTF( 
-                    "CA certificate received: %s\n", 
-                    enrollParams.CACertB64 );
+                OSPM_PRINTTOERR((stderr,"\nCA certificate received\n"));
+                OSPM_PRINTF("-----BEGIN CERTIFICATE-----\r\n%s\r\n-----END CERTIFICATE-----\r\n",enrollParams.CACertB64 );
             }
         }
                 
@@ -232,9 +231,6 @@ int main ( int argc, char* argv[] )
     {
         OSPM_FREE( localCert );
     }
-
-    OSPM_PRINTF( "Press any key to continue." );
-    getchar();
 
     return retVal;
 
@@ -328,6 +324,12 @@ int OSPPEnrollParseParameters (
     /* The index into the list of arguments: */
     int   argvIndex  = 0;
 
+    int len;
+    unsigned char buf[4096],buf2[4096],*temp;
+    unsigned char Reqbuf[4096],Reqbuf2[4096];
+    BIO *bioIn = OSPC_OSNULL;
+    X509 *cert = OSPC_OSNULL;
+    X509_REQ *certreq = OSPC_OSNULL;
 
     OSPM_DBGENTER(( "ENTER: OSPPEnrollParseParameters\n" ));
 
@@ -499,42 +501,90 @@ int OSPPEnrollParseParameters (
         
                     else if ( OSPM_STRCMP( nextArg, OSPC_ENROLL_CACERT_PARAM ) == 0 )
                     {
-                        retVal = 
-                            OSPPCopyString( 
-                                &(enrollParams->CACertB64 ), 
-                                (unsigned char *)ospvArgv[ argvIndex + 1 ] );
-    
-                        if ( ( retVal != OSPC_ERR_NO_ERROR ) ||
-                             ( enrollParams->CACertB64 == OSPC_OSNULL ) )
-                        {
-                            retVal = OSPC_ERR_ENROLL_PARAMS_CACERT;
-                            OSPM_DBGERRORLOG( 
-                                retVal, 
-                                "Unable to copy the CA's certificate.\n" );
-                        }
-    
-                        else
-                        {
-                            enrollParams->CACertB64Len = 
-                                OSPM_STRLEN( (const char *)enrollParams->CACertB64 );
-                        }
+                            bioIn = BIO_new_file(ospvArgv[ argvIndex + 1 ],"r");
+                            if (bioIn == OSPC_OSNULL )
+                            {
+                                retVal = OSPC_ERR_ENROLL_PARAMS_CACERT;
+                                OSPM_DBGERROR(("Error in Opening the File : %s. File does not exist \n",ospvArgv[ argvIndex + 1 ]));
+                            }
+                            else
+                            {
+                                temp = buf;
+                                cert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
+                                len = i2d_X509(cert,&temp);
+                                EVP_EncodeBlock(buf2,buf,len);
+                                
+                                if ((cert == NULL) || (len == 0))
+                                {
+                                    retVal = OSPC_ERR_ENROLL_PARAMS_CACERT;
+                                    OSPM_DBGERROR(("Unable to Read the File : %s. File contains Garbage !\n",ospvArgv[ argvIndex + 1 ]));
+
+                                }
+                                else
+                                {
+                                    OSPPCopyString(&(enrollParams->CACertB64 ),
+                                                (unsigned char *)buf2);
+                                }
+                                if ( ( retVal != OSPC_ERR_NO_ERROR ) ||
+                                     ( enrollParams->CACertB64 == OSPC_OSNULL ) )
+                                {
+                                    retVal = OSPC_ERR_ENROLL_PARAMS_CACERT;
+                                    OSPM_DBGERRORLOG(
+                                        retVal,
+                                        "Unable to copy the CA's certificate.\n" );
+                                }
+                                else
+                                {
+                                    enrollParams->CACertB64Len = strlen(buf2);
+                                    X509_free(cert);
+                                    temp = NULL;
+                                    BIO_free(bioIn);
+                                    len = 0;
+                                }
+                            }
                     }
     
                     else if ( OSPM_STRCMP( nextArg, OSPC_ENROLL_CERTREQ_PARAM ) == 0 )
                     {
-                        retVal = 
-                            OSPPCopyString( 
-                                &(enrollParams->CertReq ), 
-                                (unsigned char *)ospvArgv[ argvIndex + 1 ] );
-    
-                        if ( ( retVal != OSPC_ERR_NO_ERROR ) ||
-                             ( enrollParams->CertReq == OSPC_OSNULL ) )
-                        {
-                            retVal = OSPC_ERR_ENROLL_PARAMS_CERTREQ;
-                            OSPM_DBGERRORLOG( 
-                                retVal, 
-                                "Unable to copy the cert request.\n" );
-                        }
+                            bioIn = BIO_new_file(ospvArgv[ argvIndex + 1 ],"r");
+                            if (bioIn == OSPC_OSNULL )
+                            {
+                                retVal = OSPC_ERR_ENROLL_PARAMS_CERTREQ;
+                                OSPM_DBGERROR(("Error in Opening the File : %s. File does not exist \n",ospvArgv[ argvIndex + 1 ]));
+                            }
+                            else
+                            {
+                                temp = Reqbuf;
+                                certreq = PEM_read_bio_X509_REQ(bioIn,NULL,NULL,NULL);
+                                len = i2d_X509_REQ(certreq,&temp);
+                                EVP_EncodeBlock(Reqbuf2,Reqbuf,len);
+                                if ((certreq == NULL) || (len == 0))
+                                {
+                                    retVal = OSPC_ERR_ENROLL_PARAMS_CACERT;
+                                    OSPM_DBGERROR(("Unable to Read the File : %s. File contains Garbage !\n",ospvArgv[ argvIndex + 1 ]));
+
+                                }
+                                else
+                                {
+                                    OSPPCopyString(&(enrollParams->CertReq ),
+                                                (unsigned char *)Reqbuf2);
+                                }
+                                if ( ( retVal != OSPC_ERR_NO_ERROR ) ||
+                                     ( enrollParams->CertReq == OSPC_OSNULL ) )
+                                {
+                                    retVal = OSPC_ERR_ENROLL_PARAMS_CERTREQ;
+                                    OSPM_DBGERRORLOG(
+                                        retVal,
+                                        "Unable to copy the cert request.\n" );
+                                }
+                                else
+                                {
+                                    X509_REQ_free(certreq);
+                                    BIO_free(bioIn);
+                                    temp = NULL;
+                                    len = 0;
+                                }
+                            }
                     }
     
                     else if ( OSPM_STRCMP( nextArg, OSPC_ENROLL_CA_FPRINT_PARAM ) == 0 )
@@ -735,6 +785,7 @@ int OSPPPrintB64Text(
 		 *    That is, print 64 characters per line and print a CRLF at the 
 		 *    end:
 		 */
+        OSPM_PRINTF( "-----BEGIN CERTIFICATE-----\r\n");
         for ( printIndex = 0; 
               printIndex < ospvTextBlockLen; 
               printIndex += columnsPerLine )
@@ -745,6 +796,7 @@ int OSPPPrintB64Text(
 				columnsPerLine );
             OSPM_PRINTF( "%s\r\n", outputText );
         }
+        OSPM_PRINTF( "-----END CERTIFICATE-----");
     }
 
     OSPM_DBGEXIT(( "EXIT: OSPPPrintB64Text\n" ));
@@ -777,7 +829,7 @@ void OSPPPrintCertAndStatus(
      */
     if ( ospvEnrollStatus == OSPC_ENROLL_STATUS_OK ) 
     {
-        OSPM_PRINTF( "The certificate request was successful.\n" );
+        OSPM_PRINTTOERR((stderr,"The certificate request was successful.\n"));
 
         if ( ( ospvCert != OSPC_OSNULL ) &&
              ( ospvCertLen > 0 ) )
