@@ -69,16 +69,18 @@ OSPPTransactionGetDestProtocol(
 
     if (trans != (OSPTTRANS*) NULL) 
     {
-        dest = (OSPTDEST *)trans->CurrentDest;
+        dest = trans->CurrentDest;
         if (trans->State == OSPC_GET_DEST_SUCCESS)
         {
-            if (dest == NULL)
+            if (dest == (OSPTDEST *)NULL)
             {
                errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
             }
             else
+            {
                *ospvDestinationProtocol = dest->ospmDestProtocol;
+            }
         }
         else
         {
@@ -116,16 +118,18 @@ OSPPTransactionIsDestOSPEnabled(
 
     if (trans != (OSPTTRANS*) NULL) 
     {
-        dest = (OSPTDEST *)trans->CurrentDest;
+        dest = trans->CurrentDest;
         if (trans->State == OSPC_GET_DEST_SUCCESS)
         {
-            if (dest == NULL)
+            if (dest == (OSPTDEST *)NULL)
             {
                errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
             }
             else
+            {
                *ospvDestinationOSPStatus = dest->ospmDestOSPVersion;
+            }
         }
         else
         {
@@ -2875,8 +2879,8 @@ OSPPTransactionValidateAuthorisation(
         else
         {
             /* authind already here, make sure it is the right one */
-            retcode = OSPM_MEMCMP(OSPPAuthIndGetDestNumber(trans->AuthInd),
-                ospvCalledNumber, OSPM_STRLEN(ospvCalledNumber));
+            retcode = OSPM_STRCMP(OSPPAuthIndGetDestNumber(trans->AuthInd),
+                                    ospvCalledNumber);
 
             if(retcode != 0)
             {
@@ -2885,8 +2889,8 @@ OSPPTransactionValidateAuthorisation(
             }
             else
             {
-                retcode = OSPM_MEMCMP(OSPPAuthIndGetSourceNumber(trans->AuthInd),
-                    ospvCallingNumber, OSPM_STRLEN(ospvCallingNumber)); 
+               retcode = OSPM_STRCMP(OSPPAuthIndGetSourceNumber(trans->AuthInd),
+                                    ospvCallingNumber);
 
                 if(retcode != 0)
                 {
@@ -2988,9 +2992,6 @@ OSPPTransactionValidateAuthorisation(
             retcode = OSPM_STRCMP(OSPPAuthIndGetSourceNumber(trans->AuthInd),
                                     OSPPTokenInfoGetSourceNumber(tokeninfo));
 
-            /*retcode = OSPM_MEMCMP(OSPPAuthIndGetSourceNumber(trans->AuthInd),
-                OSPPTokenInfoGetSourceNumber(tokeninfo), OSPM_STRLEN(ospvCallingNumber)); */
-
             if (retcode != 0)
             {
                 errorcode = OSPC_ERR_TRAN_TOKEN_INVALID;
@@ -3001,8 +3002,8 @@ OSPPTransactionValidateAuthorisation(
                 /*
                  * Verify Destination Number
                  */
-                retcode = OSPM_MEMCMP(OSPPAuthIndGetDestNumber(trans->AuthInd),
-                    OSPPTokenInfoGetDestNumber(tokeninfo), OSPM_STRLEN(ospvCalledNumber)); 
+                retcode = OSPM_STRCMP(OSPPAuthIndGetDestNumber(trans->AuthInd),
+                                    OSPPTokenInfoGetDestNumber(tokeninfo));
 
                 if (retcode != 0)
                 {
