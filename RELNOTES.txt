@@ -418,3 +418,24 @@ Version 3.3.0
 * Added support for Trunk Groups in AuthReq message. The OSPPTransactionGetDestNetworkId
   API can be used to retreive the NetworkId information reported back by the 
   OSP Server in the AuthRsp or that was included in the token.
+---------------------------------------------------------------------------
+
+Version 3.3.1
+* Added new destination protocol - IAX
+* Added configuration file for openssl - bin/openssl.cnf
+* Added -DOPENSSL_NO_KRB5 flag to makefiles
+* Changed PricingInfo.amount type from int to float
+* Removed a compile time error in test_app
+* Bug-fix in test case #30 - NULL terminated suggested routes
+* Bug-fix in test case #31 - check error code when token algorithm does 
+  not match actual token format.
+
+
+
+
+
+
+
+
+
+
