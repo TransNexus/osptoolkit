@@ -297,8 +297,11 @@ OSPPTransactionBuildUsage(
                 }
                 else
                 {
+                    /*
+                     * It is now acceptable to report source usage indications w/o calling number
                     errorcode = OSPC_ERR_TRAN_SOURCE_NUMBER_NOT_FOUND;
                     OSPM_DBGERRORLOG(errorcode, "Source number not found");
+                     */
                 }
             }
 
@@ -388,8 +391,11 @@ OSPPTransactionBuildUsage(
                 }
                 else
                 {
+                    /*
+                     * It is now acceptable to report dest usage indications w/o calling number
                     errorcode = OSPC_ERR_TRAN_SOURCE_NUMBER_NOT_FOUND;
                     OSPM_DBGERRORLOG(errorcode, "Source number not found");
+                     */
                 }
             }
 
