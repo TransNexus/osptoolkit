@@ -1970,6 +1970,8 @@ OSPPTransactionNew(
     {
         OSPPTransactionSetState(trans, OSPC_TRANSNEW);
         trans->HasGetDestSucceeded = OSPC_FALSE;
+        trans->WasLookAheadInfoGivenToApp = OSPC_FALSE;
+        trans->TokenInfoIsLookAheadInfoPresent = OSPC_FALSE;
     }
 
     return errorcode;
