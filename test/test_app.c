@@ -69,7 +69,7 @@
 #define DEF_HTTP_PERSIST      60000  /* Do not change */
 #define DEF_HTTP_RETRYDELAY   0
 #define DEF_HTTP_RETRYLIMIT   1
-#define DEF_HTTP_TIMEOUT      60000     /* Do not change */
+#define DEF_HTTP_TIMEOUT      (60 * 1000) /* Do not change */
 #define DEF_TIME_LIMIT        4
 #define DEF_CUST_ID           1000L
 #define DEF_DEVICE_ID         1000L
@@ -89,7 +89,7 @@
 #define CERT_SZ          1024
 #define PKEY_SZ          1024
 
-#define FAILURE_REASON  OSPC_FAIL_LUSER_DISC
+#define FAILURE_REASON  OSPC_FAIL_TEMPORARY_FAILURE
 
 /*----------------------------------------------*
  *            request info globals              *
@@ -201,8 +201,8 @@ OSPTTRANHANDLE tranhandle2              = OSPC_TRAN_HANDLE_INVALID;
 int
 testNotImplemented()
 {
-	printf("not implemented\n");
-	return(0);
+  printf("not implemented\n");
+  return(0);
 }
 
 
@@ -855,7 +855,7 @@ testInitializeCallIds()
     int          errorcode = 0;
 
     unsigned char *val[NUM_CALL_IDS] ={  
-		                                     (unsigned char *)"1",
+                                         (unsigned char *)"1",
                                          (unsigned char *)"2",
                                          (unsigned char *)"3",
                                          (unsigned char *)"4",
@@ -863,17 +863,17 @@ testInitializeCallIds()
                                          (unsigned char *)"6",
                                          (unsigned char *)"7",
                                          (unsigned char *)"8"
-																			};
-    unsigned    lens[NUM_CALL_IDS] =  {		
-		                                      1,
-                                      		1,
-                                      		1,
-                                      		1,
-                                      		1,
-                                      		1,
-                                      		1,
-                                      		1
-																			};
+                                      };
+    unsigned    lens[NUM_CALL_IDS] =  {   
+                                          1,
+                                          1,
+                                          1,
+                                          1,
+                                          1,
+                                          1,
+                                          1,
+                                          1
+                                      };
 
 
 
@@ -1452,7 +1452,7 @@ testAPI(int apinumber)
         errorcode = testOSPPProviderSetHTTPTimeout();
         break;
         case 13:
-				errorcode = testNotImplemented();
+        errorcode = testNotImplemented();
         break;
         case 14:
         errorcode = testOSPPProviderSetLocalKeys();
@@ -1467,7 +1467,7 @@ testAPI(int apinumber)
         errorcode = testOSPPProviderGetServicePoints();
         break;
         case 18:
-				errorcode = testNotImplemented();
+        errorcode = testNotImplemented();
         break;
         case 19:
         errorcode = testOSPPProviderGetSSLLifetime();
@@ -1503,7 +1503,7 @@ testAPI(int apinumber)
         errorcode = testOSPPTransactionRequestAuthorisation();
         break;
         case 30:
-				errorcode = testNotImplemented();
+        errorcode = testNotImplemented();
         break;
         case 31:
         errorcode = testOSPPTransactionValidateAuthorisation();
@@ -1521,22 +1521,22 @@ testAPI(int apinumber)
         errorcode = testOSPPTransactionInitializeAtDevice(OSPC_DESTINATION);
         break;
         case 35:
-				errorcode = testNotImplemented();
+        errorcode = testNotImplemented();
         break;
         case 36:
         errorcode = testOSPPTransactionRecordFailure();
         break;
         case 37:
-				errorcode = testNotImplemented();
+        errorcode = testNotImplemented();
         break;
         case 38:
-				errorcode = testNotImplemented();
+        errorcode = testNotImplemented();
         break;
         case 39:
-				errorcode = testNotImplemented();
+        errorcode = testNotImplemented();
         break;
         case 40:
-				errorcode = testNotImplemented();
+        errorcode = testNotImplemented();
         break;
         case 41:
         errorcode = testTestCalls();
@@ -1771,7 +1771,7 @@ main(int argc, char *argv[])
         exit(1);
     }
 
-    NonBlockingQueueMonitorNew(&nbMonitor,WORK_THREAD_NUM);
+    NonBlockingQueueMonitorNew(&nbMonitor,WORK_THREAD_NUM,1000,(500*1000) );
 
     do 
     {
@@ -2023,26 +2023,26 @@ int testNonBlockingPerformanceTest()
     */
     for(i = 0; i < TEST_NUM; i++)
     {
-			/*
-			 * ErrorCodes
-			*/
+      /*
+       * ErrorCodes
+      */
       OErrorCodes[i]            = 0;
       TErrorCodes[i]            = 0;
 
-			/*
-			 * Number of requested (IN) and returned (OUT) destinations
-			*/
+      /*
+       * Number of requested (IN) and returned (OUT) destinations
+      */
       NumOfDestinations[i]      = NUM_CALL_IDS;
 
-			/*
-			 * Prepare space for tokens
-			*/
+      /*
+       * Prepare space for tokens
+      */
       TokenSizes[i]             = TOKEN_SIZE;
       OSPM_MEMSET(Tokens[i], 0, TOKEN_SIZE);
 
-			/*
-			 * Initialize call ids
-			*/
+      /*
+       * Initialize call ids
+      */
       CallIdsNum[i]             = 1;
       CallIdsLen[i]             = strlen("123");
       CallIds[i]                = OSPPCallIdNew(3,(const unsigned char *)"123");
@@ -2080,6 +2080,7 @@ int testNonBlockingPerformanceTest()
     for(i = 0; i < TEST_NUM; i++)
     {
         errorcode = OSPPTransactionRequestAuthorisation_nb( nbMonitor,
+                                                            0, /* DON'T BLOCK */
                                                             &OErrorCodes[i],
                                                             OTransactionHandles[i],
                                                             "[1.1.1.1]",
@@ -2212,6 +2213,7 @@ int testNonBlockingPerformanceTest()
     for(i = 0; i < TEST_NUM; i++)
     {
         errorcode = OSPPTransactionReportUsage_nb(  nbMonitor,
+                                                    0, /* DON'T BLOCK */
                                                     &OErrorCodes[i],
                                                     OTransactionHandles[i],
                                                     30,
@@ -2229,6 +2231,7 @@ int testNonBlockingPerformanceTest()
 
 
         errorcode = OSPPTransactionReportUsage_nb(  nbMonitor,
+                                                    0, /* DON'T BLOCK */
                                                     &TErrorCodes[i],
                                                     TTransactionHandles[i],
                                                     30,
