@@ -48,13 +48,13 @@ OSPPDestSetOSPVersion(
     const unsigned char *ospvVersion       /* Version (as string) */
 )
 {
-    if (!(OSPM_STRCMP(ospvVersion,DEST_OSP_DIABLED)))
+    if (!(OSPM_STRCMP((const char *)ospvVersion,DEST_OSP_DIABLED)))
     {
         ospvDest->ospmDestOSPVersion = OSPE_OSP_FALSE;
     }
     else
     {
-        if (!(OSPM_STRCMP(ospvVersion,DEST_OSP_UNKNOWN)))
+        if (!(OSPM_STRCMP((const char *)ospvVersion,DEST_OSP_UNKNOWN)))
         {
             ospvDest->ospmDestOSPVersion = OSPE_OSP_UNKNOWN;
         }
@@ -76,19 +76,19 @@ OSPPDestSetProtocol(
     const unsigned char *ospvProt           /* Protocol (as string) */
 )
 {
-    if (!(OSPM_STRCMP(ospvProt,DEST_PROT_SIP)))
+    if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_SIP)))
     {
         ospvDest->ospmDestProtocol = OSPE_DEST_PROT_SIP;
     }
     else
     {
-        if (!(OSPM_STRCMP(ospvProt,DEST_PROT_H323_LRQ)))
+        if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_H323_LRQ)))
         {
             ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_LRQ;
         }
         else
         {
-            if (!(OSPM_STRCMP(ospvProt,DEST_PROT_H323_Q931)))
+            if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_H323_Q931)))
             {
                 ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_SETUP;
             }
