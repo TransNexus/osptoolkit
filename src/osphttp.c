@@ -709,9 +709,11 @@ OSPPHttpDecrementConnectionCount(
 int
 OSPPHttpVerifyResponse(
     char     *ospvResponse,
-    int      *ospvResponseType)
+    int      *ospvResponseType,
+    OSPTHTTP *ospvHttp)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
+    unsigned char ErrStr[200];
 
     /* Before verifying the response, change all the characters
      * to lowercase. 
@@ -727,43 +729,47 @@ OSPPHttpVerifyResponse(
      */
 
   	/*
-		 * Try to determine the response type. Anything other than
-		 * 1xx or 2xx will be considered and error.
-		 */
+         * Try to determine the response type. Anything other than
+         * 1xx or 2xx will be considered and error.
+	*/
 
 
-		if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_200_OK) != (char *)OSPC_OSNULL)
-		{
-				*ospvResponseType = 200;
-		}
-    else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_400_BAD_REQUEST) != (char *)OSPC_OSNULL)
-    {
-        errorcode = OSPC_ERR_HTTP_BAD_REQUEST;
-				OSPM_DBGERRORLOG(errorcode, "HTTP Status: 400 Bad Request");
-    }
-    else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_401_UNAUTHORIZED) != (char *)OSPC_OSNULL)
-    {
-        errorcode = OSPC_ERR_HTTP_UNAUTHORIZED;
-				OSPM_DBGERRORLOG(errorcode, "HTTP Status: 401 Unauthorized");
-    }
-    else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_404_NOT_FOUND) != (char *)OSPC_OSNULL)
-    {
-        errorcode = OSPC_ERR_HTTP_NOT_FOUND;
-				OSPM_DBGERRORLOG(errorcode, "HTTP Status: 404 Not Found");
-    }
-    else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_503_SERV_UNAVAIL) != (char *)OSPC_OSNULL)
-    {
-        errorcode = OSPC_ERR_HTTP_SERVICE_UNAVAILABLE;
-				OSPM_DBGERRORLOG(errorcode, "HTTP Status: 503 Service Unavailable");
-    }
-    else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_100_CONTINUE) != (char *)OSPC_OSNULL)
-		{
-				*ospvResponseType = 100;
-		}
-		else
-		{
-				errorcode = OSPC_ERR_HTTP_SERVER_ERROR;
-		}
+	if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_200_OK) != (char *)OSPC_OSNULL)
+	{
+	    *ospvResponseType = 200;
+	}
+        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_400_BAD_REQUEST) != (char *)OSPC_OSNULL)
+        {
+            errorcode = OSPC_ERR_HTTP_BAD_REQUEST;
+            sprintf(ErrStr,"HTTP Status: 400 Bad Request, IP Address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr));
+	    OSPM_DBGERRORLOG(errorcode, ErrStr);
+        }
+        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_401_UNAUTHORIZED) != (char *)OSPC_OSNULL)
+        {
+            errorcode = OSPC_ERR_HTTP_UNAUTHORIZED;
+            sprintf(ErrStr,"HTTP Status: 401 Unauthorized, IP Address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr));
+	    OSPM_DBGERRORLOG(errorcode, ErrStr);
+        }
+        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_404_NOT_FOUND) != (char *)OSPC_OSNULL)
+        {
+            errorcode = OSPC_ERR_HTTP_NOT_FOUND;
+            sprintf(ErrStr,"HTTP Status: 404 Not Found, IP Address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr));
+	    OSPM_DBGERRORLOG(errorcode, ErrStr);
+        }
+        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_503_SERV_UNAVAIL) != (char *)OSPC_OSNULL)
+        {
+            errorcode = OSPC_ERR_HTTP_SERVICE_UNAVAILABLE;
+            sprintf(ErrStr,"HTTP Status: 503 Service Unavailable, IP Address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr));
+	    OSPM_DBGERRORLOG(errorcode, ErrStr);
+        }
+        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_100_CONTINUE) != (char *)OSPC_OSNULL)
+        {
+	    *ospvResponseType = 100;
+	}
+	else
+	{
+	    errorcode = OSPC_ERR_HTTP_SERVER_ERROR;
+	}
 
     return errorcode;
 }
