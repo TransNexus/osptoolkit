@@ -15,7 +15,7 @@ INCLDIRS      = -I./ -I../include -I$(SSLINC)
 #WARNING_FLAGS = -Wall
 CFLAGS        = -g $(WARNING_FLAGS)
 
-MACRO_FLAGS   = -D_POSIX_THREADS -DSOLARIS -DOSPD_DEBUG -DOSP_SDK -DOSPC_DEBUG=1
+MACRO_FLAGS   = -D_POSIX_THREADS -DSOLARIS -DOSPD_DEBUG -DOSP_SDK -DOPENSSL_NO_KRB5 -DOSPC_DEBUG=1
 
 LIBS          = -lnsl -lsocket -ldl -lm -losp $(SSL_LIBS) -lpthread 
 LIBS_LINUX    = -losp $(SSL_LIBS) -lpthread -ldl -lm
@@ -30,14 +30,14 @@ OBJS          = $(CREATED_OBJS) $(OSP_OBJS) $(SSL_OBJS)
 
 # Rule for converting all of the source files into objects:
 .c.o:
-	$(PURIFY) $(CC) -c $(CFLAGS) -c $(MACRO_FLAGS) $(INCLDIRS) $(<) 
+	$(PURIFY) cc -c $(CFLAGS) -c $(MACRO_FLAGS) $(INCLDIRS) $(<) 
 
 # Rule for creating the output executable:
 enroll: $(OBJS)
-	$(PURIFY) $(CC) -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS) $(INCLDIRS)
+	$(PURIFY) cc -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS) $(INCLDIRS)
 
 linux: $(OBJS)
-	$(PURIFY) $(CC) -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS_LINUX) $(INCLDIRS)
+	$(PURIFY) cc -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS_LINUX) $(INCLDIRS)
 
 clean:
 	rm -f $(CREATED_OBJS) $(EXEC)

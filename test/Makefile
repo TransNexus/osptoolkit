@@ -6,9 +6,9 @@ INCLDIR = ../include
 # ***** Platform specific flags ******
 #
 CC         = g++
-CFLAGS     = -g $(PROFILE) -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D_REENTRANT -DOSP_SDK
+CFLAGS     = -g $(PROFILE) -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D_REENTRANT -DOPENSSL_NO_KRB5 -DOSP_SDK
 #CC         = /usr/vws/bin/cc
-#CFLAGS     =  -g -v -xCC -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D_REENTRANT -DOSP_SDK
+#CFLAGS     =  -g -v -xCC -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D_REENTRANT -DOPENSSL_NO_KRB5 -DOSP_SDK
 LFLAGS	   = $(PROFILELIB) -lsocket -lnsl -lpthread -lmtmalloc  -ldl -lm
 LFLAGS_LINUX	   = $(PROFILELIB) -lpthread -lm -ldl
 SOFLAGS    = -shared 
@@ -31,14 +31,14 @@ OBJS	= nonblocking.o syncque.o test_app.o
 .SUFFIXES: .o .c
 
 .c.o:
-	$(CC) $(CFLAGS) $(SSLINC) $(<) -c
+	cc $(CFLAGS) $(SSLINC) $(<) -c
 
 all: 	$(OBJS)
-	$(PURE) $(CC) $(PROFILE) $(OBJS) -o ../bin/test_app \
+	$(PURE) cc $(PROFILE) $(OBJS) -o ../bin/test_app \
 	$(ARLIBDIR)/libosp.a $(LFLAGS) -L$(ARLIBDIR) $(ARLIB) $(SSL)
 
 linux: 	$(OBJS)
-	$(PURE) $(CC) $(PROFILE) $(OBJS) -o ../bin/test_app \
+	$(PURE) cc $(PROFILE) $(OBJS) -o ../bin/test_app \
 	$(ARLIBDIR)/libosp.a $(LFLAGS_LINUX) -L$(ARLIBDIR) $(ARLIB) $(SSL)
 
 clean :
