@@ -773,7 +773,7 @@ OSPPSockRead(
         else
         {
             OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr,ipstr);
-            OSPM_DBGERROR(("Response timed out. Server uvavailable on %s:%d Error = %d\n",ipstr,ospvHttp->ServicePoint->Port,errorcode));
+            OSPM_DBGERROR(("Response timed out. Server unavailable on %s:%d Error = %d\n",ipstr,ntohs(ospvHttp->ServicePoint->Port),errorcode));
         }
 
     } while (errorcode == OSPC_ERR_NO_ERROR &&
@@ -788,11 +788,7 @@ OSPPSockRead(
 
         errorcode = OSPC_ERR_SOCK_RECV_FAILED;
         OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr,ipstr);
-#ifdef _XOPEN_SOURCE
         OSPM_DBGERROR(("Connection reset by peer on %s:%d Error = %d\n",ipstr,ntohs(ospvHttp->ServicePoint->Port),errorcode));
-#else
-        OSPM_DBGERROR(("Connection reset by peer on %s:%d Error = %d\n",ipstr,ospvHttp->ServicePoint->Port,errorcode));
-#endif
     }
     *ospvBufferSz = length;
     OSPM_DBGEXIT(("EXIT : OSPPSockRead() (%d)\n", errorcode));
