@@ -2699,10 +2699,12 @@ OSPPTransactionValidateAuthorisation(
                 OSPC_SEC_SIGNATURE_AND_CONTENT);
         }
 
+	#ifdef OSPC_VALIDATE_TOKEN_CERT_SUBJECT_NAME
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             errorcode = OSPPTransactionValidateTokenCert(trans, (unsigned char *)ospvToken, ospvSizeOfToken);
         }
+	#endif
 #else
         /* just copy the token content into the token msg. No sig present */
         OSPM_MALLOC(tokenmsg, unsigned char, ospvSizeOfToken);
