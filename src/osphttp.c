@@ -582,8 +582,6 @@ osppHttpSetupAndMonitor(
      */
     OSPPHttpDelete(&httpconn);
 
-    comm->Flags &= ~OSPC_COMM_HTTPSHUTDOWN_BIT;
-
     OSPM_DBGEXIT(("EXIT : osppHttpSetupAndMonitor()\n"));
 
     OSPTTHREADRETURN_NULL();
