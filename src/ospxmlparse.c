@@ -537,7 +537,7 @@ OSPPXMLDocGetContent(
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
     unsigned char char1 = '\0';
     unsigned char char2 = '\0';
-#if 0
+#ifdef COMPLETE_XML_PARSING
     unsigned      isComment = OSPC_FALSE;
     unsigned      isPI = OSPC_FALSE;
     unsigned      isCdata = OSPC_FALSE;
@@ -576,7 +576,7 @@ OSPPXMLDocGetContent(
         /* first take care of any whitespace */
         ospvErrCode = OSPPXMLDocSkipWhite(ospvBfrAddr, ospvEncoding);
 
-#if 0
+#ifdef COMPLETE_XML_PARSING
         /* see if there's a comment - if so, skip it */
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
@@ -984,7 +984,7 @@ OSPPXMLDocSkipAllMisc(
         /* first take care of any whitespace */
         ospvErrCode = OSPPXMLDocSkipWhite(ospvBfrAddr, ospvEncoding);
 
-#if 0
+#ifdef COMPLETE_XML_PARSING
         /* Misc can be either comments ... */
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
@@ -1173,7 +1173,7 @@ OSPPXMLDocSkipMarkupDecl(
          * Now take a peek at what's next. We need to handle several
          * possibilities.
          */
-#if 0
+#ifdef COMPLETE_XML_PARSING
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             ospvErrCode = OSPPXMLDocIsComment(ospvBfrAddr, ospvEncoding,
