@@ -65,6 +65,7 @@ typedef enum
 
 #define DEST_OSP_DIABLED "0.0.0"
 #define DEST_OSP_UNKNOWN ""
+#define DEFAULT_GETNEXTDEST_NO_ERROR 99999
 
 
 
