@@ -243,4 +243,5 @@ Version 2.10.0
   empty calling number.
 * Fixed a bug in OSPProviderSetServicePoints.  The function can be used for updating the list of service points
   used for sending Authorization Request and Usage Indication messages.
-
+* Eliminated a race condition in the communication module.
+* Improved resource management - quickly close TCP connection after HTTP persistence times out.
