@@ -44,9 +44,11 @@ typedef enum
     OSPE_DEST_PROT_SIP=2, /* Destination Protocol - SIP */
     OSPE_DEST_PROT_H323_LRQ=4, /*Destination Protocol - H323, Send LRQ to GK to Complete Call */
     OSPE_DEST_PROT_H323_SETUP=8, /*Destination Protocol - H323, Send Setup to Complete Call */
-    OSPE_DEST_PROT_UNKNOWN=16 /*Could not be understood by the Client as Sent by the Server */
+    OSPE_DEST_PROT_IAX=16, /* Destination Protocol - IAX */
+    OSPE_DEST_PROT_UNKNOWN=32 /*Could not be understood by the Client as Sent by the Server */
 }OSPE_DEST_PROT;
 
+#define DEST_PROT_IAX "iax"
 #define DEST_PROT_SIP "sip"
 #define DEST_PROT_H323_LRQ "h323-LRQ"
 #define DEST_PROT_H323_Q931 "h323-Q931"

@@ -94,23 +94,21 @@ OSPPTokenInfoSetLookAheadDestProtocol(
        {
           ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_SIP;
        }
-       else 
+       else if (!(OSPM_STRCMP((const char *)ospvLookAheadDestProt,DEST_PROT_IAX)))
        {
-           if (!(OSPM_STRCMP((const char *)ospvLookAheadDestProt,DEST_PROT_H323_LRQ)))
-           {
-               ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_H323_LRQ;
-           }
-           else
-           {
-               if (!(OSPM_STRCMP((const char *)ospvLookAheadDestProt,DEST_PROT_H323_Q931)))
-               {
-                   ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_H323_SETUP;
-               }
-               else
-               {
-                   ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_UNKNOWN;
-               }
-           }
+          ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_IAX;
+       }
+       else if (!(OSPM_STRCMP((const char *)ospvLookAheadDestProt,DEST_PROT_H323_LRQ)))
+       {
+          ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_H323_LRQ;
+       }
+       else if (!(OSPM_STRCMP((const char *)ospvLookAheadDestProt,DEST_PROT_H323_Q931)))
+       {
+          ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_H323_SETUP;
+       }
+       else
+       {
+          ospvTokenLookAheadInfo->lookAheadDestProt = OSPE_DEST_PROT_UNKNOWN;
        }
     }
     return;

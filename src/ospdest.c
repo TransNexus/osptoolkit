@@ -81,23 +81,21 @@ OSPPDestSetProtocol(
     {
         ospvDest->ospmDestProtocol = OSPE_DEST_PROT_SIP;
     }
+    else if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_IAX)))
+    {
+        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_IAX;
+    }
+    else if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_H323_LRQ)))
+    {
+        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_LRQ;
+    }
+    else if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_H323_Q931)))
+    {
+        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_SETUP;
+    }
     else
     {
-        if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_H323_LRQ)))
-        {
-            ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_LRQ;
-        }
-        else
-        {
-            if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_H323_Q931)))
-            {
-                ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_SETUP;
-            }
-            else
-            {
-                ospvDest->ospmDestProtocol = OSPE_DEST_PROT_UNKNOWN;
-            }
-        }
+        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_UNKNOWN;
     }
 }
 
