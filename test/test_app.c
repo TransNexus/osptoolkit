@@ -1263,7 +1263,7 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
         (OSPTUINT64)server_txn_id,/* Some hard coded Server Tx Id */
         IsSource, SourceIP,
         DstIP, SourceDevIP,
-        NULL, callingnumber,(OSPE_NUMBERING_FORMAT)CallingNumFormat,
+        DstDevIP, callingnumber,(OSPE_NUMBERING_FORMAT)CallingNumFormat,
         callednumber,(OSPE_NUMBERING_FORMAT)CalledNumFormat,
         callidsize,
         callid,
