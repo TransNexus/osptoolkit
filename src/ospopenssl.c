@@ -41,6 +41,12 @@
 #include "openssl/x509.h"
 #include "openssl/ssl.h"
 #include "openssl/err.h"
+#include "openssl/rand.h"
+
+#ifdef OSPC_HW_ACCEL
+  #include "openssl/engine.h"
+#endif
+
 
 #define OSPC_MAX_CERT_BUFFER         4096
 
@@ -51,6 +57,8 @@
 int OSPPSSLVerifyCallback(int ok, X509_STORE_CTX *ctx);
 long bio_dump_cb(BIO *bio, int cmd, const char *argp, int argi, long argl, long ret);
 int OSPPSSLLoadCerts(OSPTSEC *ospvRef);
+int rand_init();
+int cha_engine_init();
 
 /*
 ** BIO_stdout = File handle for output of SSL debugging
@@ -90,6 +98,16 @@ OSPPSSLWrapInit(void *ospvRef)
 #else
         bio_stdout=BIO_new_fp(stdout,BIO_NOCLOSE);
 #endif
+        /*
+        **  Seed random generator
+        */
+        rand_init();
+
+        /*
+        **  Set Cryptographic Hardware Acceleration Engine
+        */
+        cha_engine_init();
+
         ctx = (SSL_CTX **)&(security->ContextRef);
         version = SSLv3_client_method();
         *ctx = SSL_CTX_new(version);
@@ -119,6 +137,11 @@ OSPPSSLWrapCleanup(void *ospvRef)
         ctx = (SSL_CTX **)&(security->ContextRef);
         SSL_CTX_free(*ctx);
     }
+    if (bio_stdout != OSPC_OSNULL)
+		{
+        BIO_free(bio_stdout);
+        bio_stdout = OSPC_OSNULL;
+		}
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapCleanup()\n"));
     return;
 }
@@ -534,3 +557,76 @@ int OSPPSSLLoadCerts(OSPTSEC *security)
     OSPM_DBGEXIT(("EXIT : OSPPSSLLoadCerts() (%d)\n", 0));
     return 0;
 }
+
+/*
+**  Read from ".rnd" file located in the current directory and
+**  seed the PRNG.  If the file does not exist or is smaller
+**  than 128 bits (128 / 8 = 16 bytes) long, an error occures.
+*/
+int rand_init()
+{
+  int  errorcode = OSPC_ERR_NO_ERROR;
+  int  bytesread = -1;
+
+  OSPM_DBGENTER(("ENTER: rand_init()\n"));
+
+  bytesread =  RAND_load_file(".rnd",-1);
+
+  if( bytesread < 16 )
+  {
+    errorcode=OSPC_ERR_SEC_MODULE;
+    OSPM_DBGERRORLOG(errorcode, "Random seed file does not exist or is to small");
+  }
+
+  OSPM_DBGEXIT(("EXIT : rand_init() (%d)\n", errorcode));
+
+  return( errorcode );
+}
+
+
+/*
+**  If compile time flag "hardware_accel" is set,
+**  iterate through all supported engines and set
+**  the first available one for all crypto operations
+*/
+int cha_engine_init()
+{
+  int  errorcode = OSPC_ERR_NO_ERROR;
+
+#ifdef OSPC_HW_ACCEL
+  ENGINE *eng    = OSPC_OSNULL;
+
+  OSPM_DBGENTER(("ENTER: cha_engine_init()\n"));
+
+  for(eng  = ENGINE_get_first();
+      eng != OSPC_OSNULL;
+      eng  = ENGINE_get_next(eng))
+  {
+    /* skip 'openssl' because it is a software engine */
+    if( strcmp("openssl",ENGINE_get_id(eng)) != 0 )
+    {
+      if( ENGINE_set_default(eng,ENGINE_METHOD_ALL) != 0)
+      {
+        /* Success */
+        break;
+      }
+    }
+  }
+
+  if( OSPC_OSNULL == eng )
+  {
+    /* Iterated though all supported engines and failed to set any of them */
+    errorcode=OSPC_ERR_SEC_MODULE;
+    OSPM_DBGERRORLOG(errorcode, "Failed to set hardware engine support");
+  }
+
+  OSPM_DBGEXIT(("EXIT : cha_engine_init() (%d)\n", errorcode));
+#endif
+
+  return( errorcode );
+}
+
+
+
+
+
