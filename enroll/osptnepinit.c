@@ -418,6 +418,9 @@ int OSPPInitSSLCommMgrParams(
 {
     int retVal = OSPC_ERR_NO_ERROR;
 
+		OSPTCERT caCert;
+		const OSPTCERT *caCerts[1] = {&caCert};
+
 
     OSPM_DBGENTER(( "ENTER: OSPPInitSSLCommMgrParams\n" ));
 
@@ -468,11 +471,15 @@ int OSPPInitSSLCommMgrParams(
 
         OSPM_DBGMISC(( "CA cert: \n" ));
         OSPPDumpHex( ospvEnrollParamsIn->CACert, ospvEnrollParamsIn->CACertLen );
+
+				caCert.CertData				= ospvEnrollParamsIn->CACert;
+				caCert.CertDataLength = ospvEnrollParamsIn->CACertLen;
+
         retVal = 
             OSPPSecSetAuthorityCertificates(
                 ospvCommOut->Security, 
                 1,
-                &(ospvEnrollParamsIn->CACert) );
+                caCerts);
 
         if ( retVal != OSPC_ERR_NO_ERROR )
         {
