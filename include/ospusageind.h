@@ -50,6 +50,7 @@ typedef struct
     unsigned char     ospmUsageIndSourceNumber[OSPC_E164NUMSIZE];
     unsigned char     ospmUsageIndDestNumber[OSPC_E164NUMSIZE];
     OSPTLIST          ospmUsageIndSourceAlternate;
+    OSPTLIST          ospmUsageIndDeviceInfo; 
     OSPTLIST          ospmUsageIndDestinationAlternate;
     unsigned long     ospmUsageIndTNCustId;
     unsigned long     ospmUsageIndTNDeviceId;
@@ -75,8 +76,10 @@ extern "C"
     void            OSPPUsageIndSetCallId(OSPTUSAGEIND *, OSPTCALLID *);
 
     void      OSPPUsageIndMoveSourceAlt(OSPTUSAGEIND *, OSPTLIST *);
+    void      OSPPUsageIndMoveDeviceInfo(OSPTUSAGEIND *, OSPTLIST *); 
     void      OSPPUsageIndMoveDestinationAlt(OSPTUSAGEIND *, OSPTLIST *);
     void      OSPPUsageIndCopySourceAlt(OSPTUSAGEIND *, OSPTLIST *);
+    void      OSPPUsageIndCopyDeviceInfo(OSPTUSAGEIND *, OSPTLIST *); 
     void      OSPPUsageIndSetComponentId(OSPTUSAGEIND *, unsigned char *);
 
     unsigned       OSPPUsageIndHasMessageId(OSPTUSAGEIND *);
