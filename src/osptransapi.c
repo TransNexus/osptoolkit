@@ -156,7 +156,7 @@ OSPPTransactionIsDestOSPEnabled(
 int
 OSPPTransactionSetNetworkId(
     OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */
-    char*    ospvNetworkId)      /* In - network specific information     */
+    const char*    ospvNetworkId)      /* In - network specific information     */
 {
     int         errorcode   = OSPC_ERR_NO_ERROR;
     OSPTTRANS   *trans      = OSPC_OSNULL;
