@@ -817,9 +817,10 @@ OSPPTransactionDelete(
  *      destination device identity, then an error is indicated and no 
  *      destination is returned.
  *  ospvDestinationDevice: character string in which to store the identity of 
- *      the destination device in a protocol specific manner (e.g. H.323 
- *      Identifier); this value is optional and, if it is not present, the 
- *      returned string is empty.
+ *      the destination device. The value is expressed as either a DNS name or an IP 
+ *      address enclosed in square brackets, followed by an optional colon and
+ *      TCP port number. Examples of valid destinations include 
+ *                      "gateway1.carrier.com" and "[172.16.1.2]:112".
  *  ospvSizeOfToken: pointer to a variable which, on input, contains the size 
  *      of the memory buffer in which the function should store the 
  *      authorisation token for the destination. If the value is not large 
@@ -990,9 +991,11 @@ OSPPTransactionGetFirstDestination(
  *      destination device identity, then an error is indicated and no 
  *      destination is returned.
  *  ospvDestinationDevice: character string in which to store the identity 
- *      of the destination device in a protocol specific manner (e.g. H.323 
- *      Identifier); this value is optional and, if it is not present, the 
- *      returned string is empty.
+ *      of the destination device. The value is expressed as either a DNS name or an IP 
+ *      address enclosed in square brackets, followed by an optional colon 
+ *      and TCP port number. 
+ *          Examples of valid destinations include "gateway1.carrier.com" and 
+ *                                                          "[172.16.1.2]:112".
  *  ospvSizeOfToken: pointer to a variable which, on input, contains the size 
  *      of the memory buffer in which the function should store the 
  *      authorisation token for the destination. If the value is not large 
@@ -1147,12 +1150,19 @@ OSPPTransactionGetNextDestination(
  *      in square brackets, followed by an optional colon and TCP port number. 
  *      Examples of valid destinations include "gateway1.carrier.com" and 
  *                                                      "[172.16.1.2]:112".
- *  ospvSourceDevice: character string identifying the source device in a 
- *      protocol specific manner (e.g. H.323 Identifier); this string is 
- *      optional and may be empty.
- *  ospvDestinationDevice: character string identifying the destination device 
- *      in a protocol specific manner (e.g. H.323 Identifier); this string is 
- *      optional and may be empty.
+ *  ospvSourceDevice: character string identifying the source device. 
+ *      This could be the previous hop Gateway.
+ *      It is expressed as either a DNS name or an IP address enclosed in square 
+ *      brackets, followed by an optional colon and TCP port number. 
+ *      Examples of valid sources include "gateway1.carrier.com" and 
+ *                                                  "[172.16.1.2]:112".
+ *      This string is optional and may be empty.
+ *  ospvDestinationDevice: character string identifying the destination device. 
+ *      The value is expressed as either a DNS name or an IP address enclosed 
+ *      in square brackets, followed by an optional colon and TCP port number. 
+ *      Examples of valid destinations include "gateway1.carrier.com" and 
+ *                                                      "[172.16.1.2]:112".
+ *      This string is optional and may be empty.
  *  ospvCallingNumber: character string containing the calling party's number 
  *      expressed as a full international number conforming to the ITU E.164 
  *      standard (with no punctuation).
@@ -1573,12 +1583,19 @@ OSPPTransactionBuildUsageFromScratch(
  *      in square brackets, followed by an optional colon and TCP port number. 
  *      Examples of valid destinations include "gateway1.carrier.com" and 
  *                                                      "[172.16.1.2]:112".
- *  ospvSourceDevice: character string identifying the source device in a 
- *      protocol specific manner (e.g. H.323 Identifier); this string is 
- *      optional and may be empty.
- *  ospvDestinationDevice: character string identifying the destination device 
- *      in a protocol specific manner (e.g. H.323 Identifier); this string is 
- *      optional and may be empty.
+ *  ospvSourceDevice: character string identifying the source device. 
+ *      This could be the previous hop Gateway.
+ *      It is expressed as either a DNS name or an IP address enclosed in square 
+ *      brackets, followed by an optional colon and TCP port number. 
+ *      Examples of valid sources include "gateway1.carrier.com" and 
+ *                                                  "[172.16.1.2]:112".
+ *      This string is optional and may be empty.
+ *  ospvDestinationDevice: character string identifying the destination device. 
+ *      The value is expressed as either a DNS name or an IP address enclosed 
+ *      in square brackets, followed by an optional colon and TCP port number. 
+ *      Examples of valid destinations include "gateway1.carrier.com" and 
+ *                                                      "[172.16.1.2]:112".
+ *      This string is optional and may be empty.
  *  ospvCallingNumber: character string containing the calling party's number 
  *      expressed as a full international number conforming to the ITU E.164 
  *      standard (with no punctuation).
@@ -1924,12 +1941,19 @@ OSPPTransactionRecordFailure(
 *       in square brackets, followed by an optional colon and TCP port number. 
 *       Examples of valid destinations include "gateway1.carrier.com" and 
 *           "[172.16.1.2]:112".
-* ospvSourceDevice: character string identifying the source device in a 
-*       protocol specific manner (e.g. H.323 Identifier); this string is 
-*       optional and may be empty.
-* ospvDestinationDevice: character string identifying the destination device 
-*       in a protocol specific manner (e.g. H.323 Identifier); this string is 
-*       optional and may be empty.
+* ospvSourceDevice: character string identifying the source device. 
+*      This could be the previous hop Gateway.
+*      It is expressed as either a DNS name or an IP address enclosed in square 
+*      brackets, followed by an optional colon and TCP port number. 
+*      Examples of valid sources include "gateway1.carrier.com" and 
+*                                                  "[172.16.1.2]:112".
+*      This string is optional and may be empty.
+* ospvDestinationDevice: character string identifying the destination device. 
+*       The value is expressed as either a DNS name or an IP address enclosed 
+*       in square brackets, followed by an optional colon and TCP port number. 
+*       Examples of valid destinations include "gateway1.carrier.com" and 
+*           "[172.16.1.2]:112".
+*      This string is optional and may be empty.
 * ospvCallingNumber: character string containing the calling party's number 
 *       expressed as a full international number conforming to the ITU E.164 
 *       standard (with no punctuation).
@@ -1961,13 +1985,13 @@ OSPPTransactionRecordFailure(
 *       parameter is non-zero, then the library will store a copy of the 
 *       authorisation confirmation obtained from the settlement provider, 
 *       including the settlement provider's digital signature.
- *  ospvTokenAlgo: This can take either of the 3 values - TOKEN_ALGO_SIGNED,
- *      TOKEN_ALGO_UNSIGNED, and TOKEN_ALGO_BOTH. If the value is set to
- *      TOKEN_ALGO_SIGNED the toolkit expects the token to be signed, and
- *      validates the signature as a part of token validation. If the value
- *      is set to TOKEN_ALGO_UNSIGNED, an unsigned token is expected. If the
- *      value is set to TOKEN_ALGO_BOTH, then the toolkit accepts either a
- *      signed token or an unsigned token.
+*  ospvTokenAlgo: This can take either of the 3 values - TOKEN_ALGO_SIGNED,
+*      TOKEN_ALGO_UNSIGNED, and TOKEN_ALGO_BOTH. If the value is set to
+*      TOKEN_ALGO_SIGNED the toolkit expects the token to be signed, and
+*      validates the signature as a part of token validation. If the value
+*      is set to TOKEN_ALGO_UNSIGNED, an unsigned token is expected. If the
+*      value is set to TOKEN_ALGO_BOTH, then the toolkit accepts either a
+*      signed token or an unsigned token.
 * If the provider has been configured to perform local validation, the SDK 
 * library is able to perform this function without network interaction, and, 
 * therefore, does not block for network input or output during its execution. 
@@ -2450,9 +2474,13 @@ OSPPTransactionReportUsage(
  *      brackets, followed by an optional colon and TCP port number. 
  *      Examples of valid sources include "gateway1.carrier.com" and 
  *                                                      "[172.16.1.2]:112".
- *  ospvSourceDevice: character string identifying the source device in a 
- *      protocol specific manner (e.g. H.323 Identifier); this string is 
- *      optional and may be empty.
+ * ospvSourceDevice: character string identifying the source device. 
+ *      This could be the previous hop Gateway.
+ *      It is expressed as either a DNS name or an IP address enclosed in square 
+ *      brackets, followed by an optional colon and TCP port number. 
+ *      Examples of valid sources include "gateway1.carrier.com" and 
+ *                                                  "[172.16.1.2]:112".
+ *      This string is optional and may be empty.
  *  ospvCallingNumber: character string containing the calling party's number 
  *      expressed as a full international number conforming to the ITU E.164 
  *      standard (with no punctuation); if the actual calling party number is 
@@ -3032,12 +3060,19 @@ OSPPTransactionRequestReauthorisation(
  *      in square brackets, followed by an optional colon and TCP port number. 
  *      Examples of valid destinations include "gateway1.carrier.com" and 
  *                                                          "[172.16.1.2]:112".
- *  ospvSourceDevice: character string identifying the source device in a 
- *      protocol specific manner (e.g. H.323 Identifier); this string is 
- *      optional and may be empty.
- *  ospvDestinationDevice: character string identifying the destination device 
- *      in a protocol specific manner (e.g. H.323 Identifier); this string is 
- *      optional and may be empty.
+ * ospvSourceDevice: character string identifying the source device. 
+ *      This could be the previous hop Gateway.
+ *      It is expressed as either a DNS name or an IP address enclosed in square 
+ *      brackets, followed by an optional colon and TCP port number. 
+ *      Examples of valid sources include "gateway1.carrier.com" and 
+ *                                                  "[172.16.1.2]:112".
+ *      This string is optional and may be empty.
+ *  ospvDestinationDevice: character string identifying the destination device. 
+ *      The value is expressed as either a DNS name or an IP address enclosed 
+ *      in square brackets, followed by an optional colon and TCP port number. 
+ *      Examples of valid destinations include "gateway1.carrier.com" and 
+ *                                                          "[172.16.1.2]:112".
+ *      This string is optional and may be empty.
  *  ospvCallingNumber: character string containing the calling party's number 
  *      expressed as a full international number conforming to the ITU E.164 
  *      standard (with no punctuation).
@@ -3741,9 +3776,13 @@ OSPPTransactionValidateReAuthorisation(
  *      brackets, followed by an optional colon and TCP port number. 
  *      Examples of valid sources include "gateway1.carrier.com" and 
  *                                                      "[172.16.1.2]:112".
- *  ospvSourceDevice: character string identifying the source device in a 
- *      protocol specific manner (e.g. H.323 Identifier); this string is 
- *      optional and may be empty.
+ *  ospvSourceDevice: character string identifying the source device. 
+ *      This could be the previous hop Gateway.
+ *      It is expressed as either a DNS name or an IP address enclosed in square 
+ *      brackets, followed by an optional colon and TCP port number. 
+ *      Examples of valid sources include "gateway1.carrier.com" and 
+ *                                                  "[172.16.1.2]:112".
+ *      This string is optional and may be empty.
  * ospvAlmostOutOfResources: a Boolean value to indicate whether or not the  
  *      is about to run out of resources.  The value can also be used to 
  *      indicate that a device is about to go off-line or come on-line.
