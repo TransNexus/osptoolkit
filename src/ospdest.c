@@ -67,13 +67,21 @@ OSPPDestSetOSPVersion(
     const unsigned char *ospvVersion       /* Version (as string) */
 )
 {
-    if (!(OSPM_STRCMP(ospvVersion,"0.0.0")))
-      ospvDest->ospmDestOSPVersion = OSPE_OSP_FALSE;
+    if (!(OSPM_STRCMP(ospvVersion,DEST_OSP_DIABLED)))
+    {
+        ospvDest->ospmDestOSPVersion = OSPE_OSP_FALSE;
+    }
     else
-    if (!(OSPM_STRCMP(ospvVersion,"")))
-      ospvDest->ospmDestOSPVersion = OSPE_OSP_UNKNOWN;
-    else
-      ospvDest->ospmDestOSPVersion = OSPE_OSP_TRUE;
+    {
+        if (!(OSPM_STRCMP(ospvVersion,DEST_OSP_UNKNOWN)))
+        {
+            ospvDest->ospmDestOSPVersion = OSPE_OSP_UNKNOWN;
+        }
+        else
+        {
+            ospvDest->ospmDestOSPVersion = OSPE_OSP_TRUE;
+        }
+    }
 }
 
 
@@ -87,16 +95,28 @@ OSPPDestSetProtocol(
     const unsigned char *ospvProt           /* Protocol (as string) */
 )
 {
-    if (!(OSPM_STRCMP(ospvProt,"sip")))
-      ospvDest->ospmDestProtocol = OSPE_DEST_PROT_SIP;
+    if (!(OSPM_STRCMP(ospvProt,DEST_PROT_SIP)))
+    {
+        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_SIP;
+    }
     else
-    if (!(OSPM_STRCMP(ospvProt,"h323-LRQ")))
-      ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_LRQ;
-    else
-    if (!(OSPM_STRCMP(ospvProt,"h323-Q931")))
-      ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_SETUP;
-    else
-      ospvDest->ospmDestProtocol = OSPE_DEST_PROT_UNKNOWN;
+    {
+        if (!(OSPM_STRCMP(ospvProt,DEST_PROT_H323_LRQ)))
+        {
+            ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_LRQ;
+        }
+        else
+        {
+            if (!(OSPM_STRCMP(ospvProt,DEST_PROT_H323_Q931)))
+            {
+                ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_SETUP;
+            }
+            else
+            {
+                ospvDest->ospmDestProtocol = OSPE_DEST_PROT_UNKNOWN;
+            }
+        }
+    }
 }
 
 
@@ -647,6 +667,8 @@ OSPPDestNew()
         OSPPListLinkNew(&(ospvDest->ospmDestLink));
         ospvDest->ospmDestValidAfter = OSPC_TIMEMIN;
         ospvDest->ospmDestValidUntil = OSPC_TIMEMAX;
+        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_UNDEFINED;
+        ospvDest->ospmDestOSPVersion = OSPE_OSP_UNDEFINED;
         OSPPListNew(&(ospvDest->ospmDestTokens));
         ospvDest->ospmDestHasLimit = OSPC_FALSE;
 
