@@ -1235,13 +1235,25 @@ OSPPProviderSetServicePoints(
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
     int          errorcode = OSPC_ERR_NO_ERROR;
+    int          ospvTimeLimit = 0;
+
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
 
     if (errorcode == OSPC_ERR_NO_ERROR) 
+    {
+        OSPPCommShutdownConnections(provider->Comm, ospvTimeLimit);
+    
+        while ((provider->Comm->Flags) & OSPC_COMM_HTTPSHUTDOWN_BIT)
+        {
+            /* OSPM_DBGMISC(( "waiting another sec...\n" )); */
+            OSPM_SLEEP(1);
+        }
+
         errorcode =OSPPCommSetServicePoints(provider->Comm, 
                                             ospvNumberOfServicePoints,
                                             ospvServicePoints);
+    }
 
     return errorcode;
 }
