@@ -252,7 +252,7 @@ OSPPTransactionSetNetworkId(
                     /*
                      * add to the list
                      */
-                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvNetworkId),(char *)ospvNetworkId,ospeNetwork);
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvNetworkId),(const unsigned char *)ospvNetworkId,ospeNetwork);
                     if(altinfo != OSPC_OSNULL)
                     {
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),(void *)altinfo);
@@ -2826,7 +2826,7 @@ OSPPTransactionValidateAuthorisation(
                         {
 
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->NetworkId), 
-                                (char *)trans->NetworkId,
+                                (const unsigned char *)trans->NetworkId,
                                 ospeNetwork);
 
                             if(altinfo != OSPC_OSNULL)
@@ -2885,7 +2885,7 @@ OSPPTransactionValidateAuthorisation(
         else
         {
             /* authind already here, make sure it is the right one */
-            retcode = OSPM_STRCMP(OSPPAuthIndGetDestNumber(trans->AuthInd),
+            retcode = OSPM_STRCMP((const char *)OSPPAuthIndGetDestNumber(trans->AuthInd),
                                     ospvCalledNumber);
 
             if(retcode != 0)
@@ -2895,7 +2895,7 @@ OSPPTransactionValidateAuthorisation(
             }
             else
             {
-               retcode = OSPM_STRCMP(OSPPAuthIndGetSourceNumber(trans->AuthInd),
+               retcode = OSPM_STRCMP((const char *)OSPPAuthIndGetSourceNumber(trans->AuthInd),
                                     ospvCallingNumber);
 
                 if(retcode != 0)
@@ -2995,8 +2995,8 @@ OSPPTransactionValidateAuthorisation(
             /*
              * Verify Source Number
              */
-            retcode = OSPM_STRCMP(OSPPAuthIndGetSourceNumber(trans->AuthInd),
-                                    OSPPTokenInfoGetSourceNumber(tokeninfo));
+            retcode = OSPM_STRCMP((const char *)OSPPAuthIndGetSourceNumber(trans->AuthInd),
+                                    (const char *)OSPPTokenInfoGetSourceNumber(tokeninfo));
 
             if (retcode != 0)
             {
@@ -3008,8 +3008,8 @@ OSPPTransactionValidateAuthorisation(
                 /*
                  * Verify Destination Number
                  */
-                retcode = OSPM_STRCMP(OSPPAuthIndGetDestNumber(trans->AuthInd),
-                                    OSPPTokenInfoGetDestNumber(tokeninfo));
+                retcode = OSPM_STRCMP((const char *)OSPPAuthIndGetDestNumber(trans->AuthInd),
+                                    (const char *)OSPPTokenInfoGetDestNumber(tokeninfo));
 
                 if (retcode != 0)
                 {

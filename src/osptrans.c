@@ -1933,7 +1933,7 @@ OSPPTransactionRequestNew(
                 {
 
                     altinfo = OSPPAltInfoNew(strlen(ospvTrans->NetworkId), 
-                        (char *)ospvTrans->NetworkId,
+                        (const unsigned char *)ospvTrans->NetworkId,
                         ospeNetwork);
 
                     if(altinfo != OSPC_OSNULL)
