@@ -46,7 +46,7 @@ extern "C"
 
     int OSPPTransactionIsDestOSPEnabled(OSPTTRANHANDLE,OSPE_DEST_OSP_ENABLED *);
 
-    int OSPPTransactionSetNetworkId(OSPTTRANHANDLE,char *);
+    int OSPPTransactionSetNetworkId(OSPTTRANHANDLE,const char *);
 
     int OSPPTransactionAccumulateOneWayDelay(OSPTTRANHANDLE, unsigned, 
             unsigned, unsigned, float);
