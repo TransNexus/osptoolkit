@@ -1278,7 +1278,7 @@ OSPPTransactionGetNextDestination(
 int
 OSPPTransactionBuildUsageFromScratch(
     OSPTTRANHANDLE  ospvTransaction,        /*In - Transaction handle */
-    unsigned long long  ospvServerTransactionId, /*In - OSP Server Transaction Id */
+    OSPTUINT64  ospvServerTransactionId, /*In - OSP Server Transaction Id */
     unsigned        ospvIsSource,           /*In - Is this the ogw or tgw */
     const char     *ospvSource,             /*In - Source of call */
     const char     *ospvDestination,        /*In - Destination for call */

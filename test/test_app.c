@@ -69,7 +69,6 @@
 
 #define LOCAL_VALIDATION      1
 #define DEF_SSL_LIFETIME      300
-#define DEF_HTTP_MAXCONN      50
 #define DEF_HTTP_PERSIST      60000
 #define DEF_HTTP_RETRYDELAY   0
 #define DEF_HTTP_RETRYLIMIT   1
@@ -134,6 +133,11 @@ NBMONITOR *nbMonitor    = NULL;
 int TEST_NUM=0;
 char      **Tokens;
 int CallingNumFormat=0,CalledNumFormat=0;
+unsigned long SPMsgCount[50];
+unsigned long *MsgCount = SPMsgCount;
+int DEF_HTTP_MAXCONN=30;
+unsigned long CapSPMsgCount[50];
+unsigned long *CapMsgCount = CapSPMsgCount;
 
 /*----------------------------------------------*
  *            service point globals             *
@@ -348,7 +352,7 @@ testOSPPSetServicePoints()
 
     servpts = (const char **)&New_ServicePoint;
 
-    errorcode = OSPPProviderSetServicePoints(OSPVProviderHandle,1,servpts);
+    errorcode = OSPPProviderSetServicePoints(OSPVProviderHandle,1,MsgCount,servpts);
     return errorcode;
 }
 
@@ -441,6 +445,7 @@ char searchstr[20];
       errorcode = OSPPProviderNew(
         num_serv_points,
         servpts,
+        MsgCount,
         auditurl,
         (const OSPTPRIVATEKEY *)&privatekey,
         /* Local certificate */
@@ -1141,7 +1146,7 @@ testOSPPTransactionGetNextDestination()
 
     errorcode = OSPPTransactionGetNextDestination(
         OSPVTransactionHandle,
-        (OSPEFAILREASON)TCcode,
+        (enum OSPEFAILREASON)TCcode,
         TIMESTAMP_SZ,
         validafter,
         validuntil,
@@ -1255,14 +1260,14 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
 
         errorcode = OSPPTransactionBuildUsageFromScratch(
         tranhandle2,
-        (unsigned long long)server_txn_id,/* Some hard coded Server Tx Id */
+        (OSPTUINT64)server_txn_id,/* Some hard coded Server Tx Id */
         IsSource, SourceIP,
         DstIP, SourceDevIP,
         NULL, callingnumber,(OSPE_NUMBERING_FORMAT)CallingNumFormat,
         callednumber,(OSPE_NUMBERING_FORMAT)CalledNumFormat,
         callidsize,
         callid,
-        (OSPEFAILREASON)TCcode,
+        (enum OSPEFAILREASON)TCcode,
         &detaillogsize,
         NULL);
     }
@@ -1365,7 +1370,7 @@ testOSPPTransactionRecordFailure()
 
     errorcode = OSPPTransactionRecordFailure(
                         OSPVTransactionHandle,
-                        (OSPEFAILREASON)TCcode);
+                        (enum OSPEFAILREASON)TCcode);
 
 
     if(errorcode == OSPC_ERR_NO_ERROR){
@@ -1403,7 +1408,7 @@ testOSPPTransactionReinitializeAtDevice()
     if(errorcode == OSPC_ERR_NO_ERROR){
         errorcode = OSPPTransactionReinitializeAtDevice(
                                                 tranhandle2,
-                                                (OSPEFAILREASON)TCcode,
+                                                (enum OSPEFAILREASON)TCcode,
                                                 IsSource,
                                                 SourceIP,
                                                 DstIP,
@@ -1544,7 +1549,7 @@ testOSPPProviderSetCapabilitiesURLs()
 {
     int errorcode = 0;
 
-    errorcode = OSPPProviderSetCapabilitiesURLs(OSPVProviderHandle,num_capURLs,(const char **)capURLs);
+    errorcode = OSPPProviderSetCapabilitiesURLs(OSPVProviderHandle,num_capURLs,CapMsgCount,(const char **)capURLs);
 
     return errorcode;
 }
@@ -1554,7 +1559,7 @@ testOSPPProviderSetServicePoints()
 {
     int errorcode = 0;
 
-    errorcode = OSPPProviderSetServicePoints(OSPVProviderHandle,num_serv_points,(const char **)servicepoints);
+    errorcode = OSPPProviderSetServicePoints(OSPVProviderHandle,num_serv_points,MsgCount,(const char **)servicepoints);
 
     return errorcode;
 }
@@ -2533,6 +2538,7 @@ GetConfiguration()
     int errorcode = 0;
     char inbuf[512];
     char tmp_addr[20];
+    int spindex=0,Capspindex=0;
 
     if ((fp = fopen(CONFIG_FILENAME, "r")) == (FILE *)NULL)
     {
@@ -2683,6 +2689,41 @@ GetConfiguration()
                                                                             {
                                                                                 CalledNumFormat = atoi(&inbuf[18]);
                                                                             }
+                                                                            else
+                                                                            {
+                                                                                if (strncmp(inbuf,"MSGCOUNT=",9) == 0)
+                                                                                {
+                                                                                    if (strcmp(&inbuf[9],"NULL") == 0)
+                                                                                    {
+                                                                                        MsgCount=NULL;
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        SPMsgCount[spindex++] = atoi(&inbuf[9]);
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (strncmp(inbuf,"DEF_HTTP_MAXCONN=",17) == 0)
+                                                                                    {
+                                                                                        DEF_HTTP_MAXCONN = atoi(&inbuf[17]);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        if (strncmp(inbuf,"CapMSGCOUNT=",12) == 0)
+                                                                                        {
+                                                                                            if (strcmp(&inbuf[12],"NULL") == 0)
+                                                                                            {
+                                                                                                CapMsgCount=NULL;
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                CapSPMsgCount[Capspindex++] = atoi(&inbuf[12]);
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
@@ -2753,7 +2794,7 @@ main(int argc, char *argv[])
       }
     }
 
-    if ((retcode = OSPPInit(hardwareSupport)) != OSPC_ERR_NO_ERROR) 
+    if ((retcode = OSPPInit((OSPTBOOL)hardwareSupport)) != OSPC_ERR_NO_ERROR) 
     {
         printf("initialization failed. errorcode = %d\n", retcode);
         exit(1);

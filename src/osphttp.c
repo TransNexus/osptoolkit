@@ -111,6 +111,7 @@ OSPPHttpDelete(
     OSPTHTTP **ospvHttp)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTCOMM *comm;
 
     OSPM_DBGENTER(("ENTER: OSPPHttpDelete()\n"));
     if (*ospvHttp)
@@ -121,9 +122,40 @@ OSPPHttpDelete(
         (void)OSPPSockClose(OSPC_TRUE, &((*ospvHttp)->SockFd), &((*ospvHttp)->SSLSession));
 
     }
+
+    comm = (OSPTCOMM *)(*ospvHttp)->Comm;
+ 
+    osppHttpDeleteServicePointList(&(*ospvHttp)->ServicePointList,
+                                   comm->NumberOfServicePoints);
     OSPM_FREE(*ospvHttp);
     *ospvHttp = OSPC_OSNULL;
     OSPM_DBGEXIT(("EXIT : OSPPHttpDelete()\n"));
+    return;
+}
+
+void
+osppHttpDeleteServicePointList(
+    OSPTSVCPT **svcpt,
+    int ospvNumberOfServicePoints)
+{
+    int       count          = 0;
+    OSPTSVCPT *deletesvcpt   = OSPC_OSNULL;
+
+    for (count = 0; count < ospvNumberOfServicePoints; count++)
+    {
+        deletesvcpt = (OSPTSVCPT *)OSPPListRemove((OSPTLIST *)svcpt);
+        if (deletesvcpt != (OSPTSVCPT *)OSPC_OSNULL)
+        {
+            if (deletesvcpt->HostName)
+                OSPM_FREE(deletesvcpt->HostName);
+
+            if (deletesvcpt->URI)
+                OSPM_FREE(deletesvcpt->URI);
+
+            OSPM_FREE(deletesvcpt);
+        }
+    }
+    OSPPListDelete((OSPTLIST *)svcpt);
     return;
 }
 
@@ -408,6 +440,7 @@ osppHttpSetupAndMonitor(
                      */
                     OSPPSockClose(OSPC_FALSE, &(httpconn->SockFd), &(httpconn->SSLSession));
                     connected = OSPC_FALSE;
+                    httpconn->CurrentMsgCount = 0;
 
                     /*
                      * The mutex is locked, and will be locked again at the top of the loop 
@@ -514,6 +547,7 @@ osppHttpSetupAndMonitor(
                         else
                         {
                             connected = OSPC_FALSE;
+                            httpconn->CurrentMsgCount = 0;
                         }
                     }
 
@@ -557,6 +591,40 @@ osppHttpSetupAndMonitor(
                  */
                 httpconn->NumberOfTransactions--;
 
+                /*
+                 * Increment Current Msg Count
+                 */
+                if (httpconn->ServicePoint->MaxMsgAllowed)
+                {
+                   httpconn->CurrentMsgCount++;
+                }
+                /*
+                 * Check if the maximum message limit has been reached for
+                 * the connection.
+                 */
+                if ((httpconn->ServicePoint->MaxMsgAllowed) &&
+                    (httpconn->CurrentMsgCount == httpconn->ServicePoint->MaxMsgAllowed))
+                {
+                    OSPPSockClose(OSPC_FALSE, &(httpconn->SockFd),
+                                              &(httpconn->SSLSession));
+                    connected = OSPC_FALSE;
+                    httpconn->CurrentMsgCount = 0;
+                }
+
+               
+                /*
+                 * Signal the communication manager condition variable.
+                 * This would wake up the function looking for idle connections.
+                 * "osppHttpGetIdleHttpConn"
+                 */
+                 OSPM_MUTEX_LOCK(comm->HttpSelectMutex, tmperror);
+                 if (tmperror == OSPC_ERR_NO_ERROR)
+                 {
+                     OSPM_CONDVAR_SIGNAL(comm->HttpSelCondVar,tmperror);
+                     assert(tmperror == OSPC_ERR_NO_ERROR);
+                     OSPM_MUTEX_UNLOCK(comm->HttpSelectMutex, tmperror);
+                 }
+
                 OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() msg dequeued. queue = %d\n",  
                     httpconn->NumberOfTransactions));
             }
@@ -588,6 +656,7 @@ osppHttpSetupAndMonitor(
              * not break away from the loop and exit the thread.
              */
             connected = OSPC_FALSE;
+            httpconn->CurrentMsgCount = 0;
         }
     } /* Loop until signaled to exit */
 
@@ -719,96 +788,13 @@ osppHttpStartWorker(
     return errorcode;
 }
 
-static
-OSPTHTTP *
-osppHttpIdleCheck(
-    OSPTHTTP **ospvHttpList,
-    OSPTHTTP *ospvHttp)
+void
+osppHttpGetServicePointList(
+    OSPTHTTP *ospvHttp,
+    OSPTSVCPT **ospvSvcPt)
 {
-    OSPM_DBGENTER(("ENTER : osppHttpIdleCheck\n"));
-    do
-    {
-        if (ospvHttp->NumberOfTransactions == 0)
-            break;
-
-        ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList,
-            (void *)ospvHttp);
-
-    } while (ospvHttp != (OSPTHTTP *)OSPC_OSNULL && 
-        ospvHttp->NumberOfTransactions);
-
-    OSPM_DBGEXIT(("EXIT : osppHttpIdleCheck\n"));
-    return ospvHttp;
-}
-
-static
-int
-osppHttpMinTransCheck(
-    OSPTHTTP **ospvHttpList,
-    OSPTHTTP **ospvHttp,
-    unsigned timeout)
-{
-    OSPTTIME     startTime        = 0L;
-    OSPTTIME     currentTime      = 0L;
-    unsigned int startMilliTime   = 0;
-    unsigned int currentMilliTime = 0;
-    unsigned int elapsedTime      = 0;
-
-    int      errorcode = OSPC_ERR_NO_ERROR;
-
-    OSPM_DBGENTER(("ENTER : osppHttpMinTransCheck\n"));
-
-    /* Get a reference time */
-    errorcode = OSPPOSTimeGetTime(&startTime, &startMilliTime);
-
-    while( (errorcode == OSPC_ERR_NO_ERROR) && (*ospvHttp == (OSPTHTTP *)OSPC_OSNULL) )
-    {
-            /* Get the first item in the queue */
-            *ospvHttp = (OSPTHTTP *)OSPPListFirst((OSPTLIST *)ospvHttpList);
-            if(*ospvHttp == OSPC_OSNULL)
-            {
-                errorcode = OSPC_ERR_HTTP_BAD_QUEUE;
-                OSPM_DBGERRORLOG(errorcode, "http msg queue corrupted");
-                break;
-            }
-
-            /* Keep the search going until it gets to the end of the list */
-            while (*ospvHttp != (OSPTHTTP *)OSPC_OSNULL)
-            {
-
-                /* If this item in the list has an empty queue... */
-                if ((*ospvHttp)->NumberOfTransactions == 0)
-                {
-                    /* ...break out of the while loop with ospvHttp pointing */
-                    /* to the item */
-                    break;
-                }
-
-                /* ... if it is not empty, get the next item in the list */
-                *ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList,
-                   (void *)*ospvHttp);
-            }
-
-            /* Get the current time */
-            errorcode = OSPPOSTimeGetTime(&currentTime, &currentMilliTime);
-
-            /* Check to make sure there are no problems... */
-            if(errorcode == OSPC_ERR_NO_ERROR)
-            {
-                /* ...if no problems, calculate the elapsed time in millisieconds */
-                elapsedTime = ((currentTime - startTime) * 1000) + ((int)currentMilliTime - (int)startMilliTime);
-
-                /* Check for time out */
-                if(elapsedTime >= timeout)
-                {
-                  errorcode = OSPC_ERR_HTTP_CONN_SRCH_TIMEOUT;
-                  OSPM_DBGERRORLOG(errorcode, "search for connection timedout");
-                }
-            }
-    }
-
-    OSPM_DBGEXIT(("EXIT : osppHttpMinTransCheck\n"));
-    return errorcode;
+    *ospvSvcPt = ospvHttp->ServicePointList;
+    return;
 }
 
 static
@@ -822,6 +808,7 @@ osppHttpSelectConnection(
     unsigned httpcount  = 0,
              maxcount   = 0;
     int      errorcode  = OSPC_ERR_NO_ERROR;
+    int current_conn_count=0;
 
     OSPM_DBGENTER(("ENTER : osppHttpSelectConnection\n"));
 
@@ -846,62 +833,42 @@ osppHttpSelectConnection(
      */
     *ospvHttp = (OSPTHTTP *)OSPPListFirst(
         (OSPTLIST *)&(ospvComm->HttpConnList));
-    if (*ospvHttp == (OSPTHTTP *)OSPC_OSNULL)
+
+    /*
+     * see if we can add a new one
+     */
+    (void)OSPPCommGetHttpConnCount(ospvComm, &httpcount);
+    (void)OSPPCommGetMaxConnections(ospvComm, &maxcount);
+    if ((*ospvHttp == (OSPTHTTP *)OSPC_OSNULL) || (httpcount < maxcount))
     {
-        /* no current connections */
         createnew = OSPC_TRUE;
+        *ospvHttp = (OSPTHTTP *)OSPC_OSNULL;
     }
     else
     {
         /*
-         * check for idle connections. The first idle HTTP connection
-         * will be returned. If NULL is returned, all queues are busy.
+         * We cannot add a new one. So, check to find an idle connection
          */
-        *ospvHttp = osppHttpIdleCheck(&(ospvComm->HttpConnList), *ospvHttp);
-        if (*ospvHttp == (OSPTHTTP *)OSPC_OSNULL)
+        errorcode = osppHttpGetIdleHttpConn(&(ospvComm->HttpConnList),&(*ospvHttp),(ospvComm->ConnSelectionHttpTimeout/1000),maxcount,ospvComm->RoundRobinIndex);
+        if (errorcode == OSPC_ERR_NO_ERROR)
         {
-            /*
-             * no connections are idle. All are in use
-             */
+            ospvComm->RoundRobinIndex = ((ospvComm->RoundRobinIndex)+1) % maxcount;
+        }
 
-            /*
-             * see if we can add a new one
-             */
-            (void)OSPPCommGetHttpConnCount(ospvComm, &httpcount);
-            (void)OSPPCommGetMaxConnections(ospvComm, &maxcount);
-            if (httpcount < maxcount)
-            {
-                createnew = OSPC_TRUE;
-            }
-            else
-            {
-                /*
-                 * connection limit has been reached. Find a queue with no
-                 * transactions and use it; otherwise, wait for a queue to
-                 * become empty.  The call may time out.
-                 */
-
-                errorcode = osppHttpMinTransCheck(&(ospvComm->HttpConnList),
-                    &(*ospvHttp), ospvComm->HttpTimeout);
-            }
+        /* 
+         * check connection type. make sure it syncs up with the type of
+         * msginfo we are about to send.
+         */
+        if ((ospvMsgInfoType & OSPC_MSGINFO_AUDIT_TYPE) == 0)
+        {
+            if (((*ospvHttp)->Flags & OSPC_HTTP_AUDIT_TYPE) == OSPC_HTTP_AUDIT_TYPE)
+            createnew = OSPC_TRUE;
         }
         else
         {
-            /* 
-             * check connection type. make sure it syncs up with the type of
-             * msginfo we are about to send.
-             */
-            if ((ospvMsgInfoType & OSPC_MSGINFO_AUDIT_TYPE) == 0)
-            {
-                if (((*ospvHttp)->Flags & OSPC_HTTP_AUDIT_TYPE) == OSPC_HTTP_AUDIT_TYPE)
-                       createnew = OSPC_TRUE;
-            }
-            else
-            {
-                if (((*ospvHttp)->Flags & OSPC_HTTP_AUDIT_TYPE) != OSPC_HTTP_AUDIT_TYPE)
-                       createnew = OSPC_TRUE;
-            } 
-        }
+            if (((*ospvHttp)->Flags & OSPC_HTTP_AUDIT_TYPE) != OSPC_HTTP_AUDIT_TYPE)
+            createnew = OSPC_TRUE;
+        } 
     }
 
     if (createnew)
@@ -927,13 +894,29 @@ osppHttpSelectConnection(
 
             OSPPListAppend((OSPTLIST *)&(ospvComm->HttpConnList), 
                 (void *)*ospvHttp);
-            (void)OSPPCommIncrementHttpConnCount(ospvComm);
 
             /*
-             * startup the http connection monitor thread for the
-             * new connection.
+             * Copy the SP list from the CommMgr to the http obj
+             * The current connection counter is used to rotate the list 
+             * by 1 everytime a new connection is created.
              */
-            errorcode = osppHttpStartWorker(*ospvHttp);
+            errorcode = OSPPCommGetHttpConnCount(ospvComm,&current_conn_count); 
+            osppHttpCopySPList(ospvComm,ospvHttp,current_conn_count);
+
+            if (errorcode == OSPC_ERR_NO_ERROR)
+            {
+                (void)OSPPCommIncrementHttpConnCount(ospvComm);
+                errorcode = OSPPCommGetHttpConnCount(ospvComm,&current_conn_count);
+                if ((errorcode == OSPC_ERR_NO_ERROR) && (current_conn_count == maxcount))
+                {
+                   ospvComm->RoundRobinIndex = 0;
+                }
+                /*
+                 * startup the http connection monitor thread for the
+                 * new connection.
+                 */
+                errorcode = osppHttpStartWorker(*ospvHttp);
+            }
         }
 
         if (errorcode != OSPC_ERR_NO_ERROR)
@@ -946,6 +929,216 @@ osppHttpSelectConnection(
 
     OSPM_DBGEXIT(("EXIT : osppHttpSelectConnection\n"));
     return errorcode;
+}
+
+int
+osppHttpGetIdleHttpConn(
+    OSPTHTTP **ospvHttpList,
+    OSPTHTTP **ospvHttp,
+    unsigned timeout,
+    int maxconn,
+    int RoundRobinIndex)
+{
+    int  i, err=0,errorcode = OSPC_ERR_NO_ERROR;
+    OSPTBOOL found=OSPC_FALSE;
+    OSPTCOMM *Comm=NULL;
+
+    /* Get the first item in the queue */
+    *ospvHttp = (OSPTHTTP *)OSPPListFirst((OSPTLIST *)ospvHttpList);
+    Comm = (OSPTCOMM *) (*ospvHttp)->Comm;
+
+    if(*ospvHttp == OSPC_OSNULL)
+    {
+        errorcode = OSPC_ERR_HTTP_BAD_QUEUE;
+        OSPM_DBGERRORLOG(errorcode, "http msg queue corrupted");
+    }
+
+
+   /* Now hop over 'RoundRobinIndex' nodes and then start searching.
+    */
+   if (errorcode == OSPC_ERR_NO_ERROR)
+   {
+       for (i=0;i<RoundRobinIndex;i++)
+       {
+           *ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList,
+                   (void *)*ospvHttp);
+       }
+       if (*ospvHttp == NULL)
+       {
+           *ospvHttp = (OSPTHTTP *)OSPPListFirst((OSPTLIST *)ospvHttpList);
+       }
+   }
+
+   /*
+    * Search for the 'maxconn' number of nodes
+    * We are at the right node now. Start searching from here.
+    */
+   if (errorcode == OSPC_ERR_NO_ERROR)
+   {
+     for (i=0;i<maxconn;i++)
+     {
+       /* If this item in the list has an empty queue... */
+       if ((*ospvHttp)->NumberOfTransactions == 0)
+       {
+           /* ...break out of the while loop with ospvHttp pointing */
+           /* to the item */
+           found = OSPC_TRUE;
+           break;
+       }
+       else
+       {
+           *ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList,
+                   (void *)*ospvHttp);
+           if (*ospvHttp == NULL)
+           {
+               *ospvHttp = (OSPTHTTP *)OSPPListFirst((OSPTLIST *)ospvHttpList);
+           }
+       }
+     }
+   }
+
+   if ((errorcode == OSPC_ERR_NO_ERROR) && (found == OSPC_FALSE))
+   {
+       /*
+        * We went through one iteration and all the queues were full
+        * Now, wait on the condition variable and try iterate again 
+        * when it wakes up
+        */
+      OSPM_MUTEX_LOCK(Comm->HttpSelectMutex, errorcode);
+      if (errorcode == OSPC_ERR_NO_ERROR)
+      {
+          OSPM_CONDVAR_TIMEDWAIT(Comm->HttpSelCondVar,Comm->HttpSelectMutex,timeout,errorcode);
+          OSPM_MUTEX_UNLOCK(Comm->HttpSelectMutex, err);
+          assert(err == OSPC_ERR_NO_ERROR);
+
+          if (errorcode == OSPC_ERR_OS_CONDVAR_TIMEOUT)
+          {
+              *ospvHttp = NULL;
+              errorcode = OSPC_ERR_HTTP_CONN_SRCH_TIMEOUT;
+              OSPM_DBGERRORLOG(errorcode, "search for connection timedout");
+          }
+          else if (errorcode == OSPC_ERR_NO_ERROR)
+          {
+              /*
+               * The condition variable must have been signalled
+               * Search again.
+               */
+              for (i=0;i<maxconn;i++)
+              {
+                  /* If this item in the list has an empty queue... */
+                  if ((*ospvHttp)->NumberOfTransactions == 0)
+                  {
+                      /* ...break out of the while loop with ospvHttp pointing */
+                      /* to the item */
+                      found = OSPC_TRUE;
+                      break;
+                  }
+                  else
+                  {
+                      *ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList,
+                              (void *)*ospvHttp);
+                      if (*ospvHttp == NULL)
+                      {
+                          *ospvHttp = (OSPTHTTP *)OSPPListFirst((OSPTLIST *)ospvHttpList);
+                      }
+                  }
+              }
+              /*
+               * Ideally we should never encounter this section of the code.
+               * After the condition variable has been signalled, 
+               * found should be set to TRUE for one of the nodes. 
+               * However, if this does not happen, then it is an error condition
+               */
+              if (found == OSPC_FALSE)
+              {
+                  errorcode = OSPC_ERR_HTTP_INVALID_COND_IN_HTTP_SEARCH;
+                  OSPM_DBGERRORLOG(errorcode, "search for connection failed.");
+                  *ospvHttp = NULL;
+              }
+          }
+      }
+   }
+   return errorcode;
+}
+
+
+void
+osppHttpCopySPList(
+    OSPTCOMM        *ospvComm,
+    OSPTHTTP        **ospvHttp,
+    int             index)
+{
+    OSPTSVCPT       *svcptlist  = OSPC_OSNULL,
+                    *svcptitem  = OSPC_OSNULL,
+                    *newroot    = OSPC_OSNULL,
+                    *newsvcptnode    = OSPC_OSNULL;
+    int  numsvcpts,i=0;
+
+    /*
+     * get a pointer to the service point list
+     */
+     OSPPCommGetServicePointList(ospvComm,&svcptlist);
+
+     svcptitem  =
+                  (OSPTSVCPT *)OSPPListFirst(
+                  (OSPTLIST *)&svcptlist);
+
+
+    /*
+     * Now hop over the required number of nodes
+     */
+    for (i=0;i<index;i++)
+    {
+        svcptitem  = (OSPTSVCPT *)OSPPListNext(
+                            (OSPTLIST *)&svcptlist,
+                            svcptitem);
+        if (svcptitem == NULL)
+        {
+            svcptitem  =
+                  (OSPTSVCPT *)OSPPListFirst(
+                  (OSPTLIST *)&svcptlist);
+        }
+    }
+
+    OSPPCommGetNumberOfServicePoints(ospvComm,&numsvcpts);
+
+    /*
+     * construct the new service point list
+     */
+    OSPPListNew((OSPTLIST *)&newroot);
+ 
+    for (i=0;i<numsvcpts;i++)
+    {
+        OSPM_MALLOC(newsvcptnode, OSPTSVCPT, sizeof(OSPTSVCPT));
+        OSPM_MEMSET(newsvcptnode, 0, sizeof(OSPTSVCPT));
+    
+        newsvcptnode->MaxMsgAllowed = svcptitem->MaxMsgAllowed;
+        newsvcptnode->Flags = svcptitem->Flags;
+        newsvcptnode->Port = svcptitem->Port;
+        newsvcptnode->Index = svcptitem->Index;
+        newsvcptnode->DegradedTime = svcptitem->DegradedTime;
+        newsvcptnode->IpAddr = svcptitem->IpAddr;
+        newsvcptnode->HostName = OSPM_STRDUP(svcptitem->HostName);
+        newsvcptnode->URI = OSPM_STRDUP(svcptitem->URI);
+
+        OSPPListAppend((OSPTLIST *)&newroot, (void *)newsvcptnode);
+
+        svcptitem  = (OSPTSVCPT *)OSPPListNext(
+                            (OSPTLIST *)&svcptlist,
+                            svcptitem);
+        if (svcptitem == NULL)
+        {
+            svcptitem  =
+                  (OSPTSVCPT *)OSPPListFirst(
+                  (OSPTLIST *)&svcptlist);
+        }
+
+    }
+
+    (*ospvHttp)->ServicePointList = newroot;
+    (*ospvHttp)->CurrentMsgCount = 0;
+
+    return;
 }
 
 

@@ -633,6 +633,9 @@ int
 OSPPProviderNew(
     unsigned             ospvNumberOfServicePoints, /* In  - Svc ptr count           */
     const char           *ospvServicePoints[],       /* In  - Svc pts strings         */
+    unsigned long         *ospvMessageCount,         /* Array of Integers that tell the 
+                                                       toolkit about the maximum messages
+                                                       that can be sent to each SP on a connection */
     const char           *ospvAuditURL,             /* In  - Audit URL string         */
     const OSPTPRIVATEKEY *ospvLocalPrivateKey,       /* In  - Private key obj ptr     */
     const OSPTCERT       *ospvLocalCertificate,     /* In  - Local cert ptr          */
@@ -650,15 +653,26 @@ OSPPProviderNew(
     OSPTPROVHANDLE       *ospvProvider)             /* Out - Handle to new provider  */
 {
     OSPTPROVIDER    *provider   = OSPC_OSNULL;
-    int             errorcode   = OSPC_ERR_NO_ERROR;
+    int             i,errorcode   = OSPC_ERR_NO_ERROR;
     unsigned long   custid      = 0L, 
                     deviceid    = 0L;
+
+    for (i=0;i<ospvNumberOfServicePoints;i++)
+    {
+        if (ospvMessageCount[i]<0)
+        {
+            errorcode = OSPC_ERR_PROV_INVALID_VALUE;
+            OSPM_DBGERRORLOG(errorcode, "Invalid input value for Message count");
+            break;
+        }
+    }
+
 
     /* 
      * check incoming values and reset to defaults if necessary
      */
 
-    if((ospvNumberOfServicePoints <= 0)         ||
+    if((errorcode == OSPC_ERR_NO_ERROR) && ((ospvNumberOfServicePoints <= 0)         ||
        (ospvServicePoints == OSPC_OSNULL)       ||
        (OSPPCommValidateSvcPts(ospvNumberOfServicePoints,ospvServicePoints) != OSPC_ERR_NO_ERROR) ||
        (ospvLocalPrivateKey == OSPC_OSNULL)     ||
@@ -671,7 +685,7 @@ OSPPProviderNew(
        (ospvHTTPRetryDelay < 0)     ||
        (ospvAuditURL == OSPC_OSNULL)    ||
        (ospvHTTPRetryLimit < 0)     ||
-       (ospvHTTPTimeout < 0))
+       (ospvHTTPTimeout < 0)))
     {
         errorcode = OSPC_ERR_PROV_INVALID_VALUE;
         OSPM_DBGERRORLOG(errorcode, "Invalid input value");
@@ -799,6 +813,7 @@ OSPPProviderNew(
             errorcode = OSPPProviderSetServicePoints(
                 *ospvProvider,  
                 ospvNumberOfServicePoints, 
+                ospvMessageCount,
                 ospvServicePoints);
 
             if (errorcode == OSPC_ERR_NO_ERROR)
@@ -810,6 +825,7 @@ OSPPProviderNew(
                 errorcode = OSPPProviderSetCapabilitiesURLs(
                     *ospvProvider,  
                     ospvNumberOfServicePoints, 
+                    ospvMessageCount,
                     ospvServicePoints);
             }
                
@@ -1124,11 +1140,22 @@ OSPPProviderSetHTTPTimeout(
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
 
     if (errorcode == OSPC_ERR_NO_ERROR) 
+    {
         errorcode = OSPPCommSetTimeout(provider->Comm, ospvHTTPTimeout);
+    }
 
     if (errorcode == OSPC_ERR_NO_ERROR) 
         errorcode = OSPPCommSetTimeout(provider->CommForCapabilities, ospvHTTPTimeout);
 
+    if (errorcode == OSPC_ERR_NO_ERROR) 
+    {
+        errorcode = OSPPCommSetConnSelectionTimeout(provider->Comm, ospvHTTPTimeout);
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR) 
+    {
+        errorcode = OSPPCommSetConnSelectionTimeout(provider->CommForCapabilities, ospvHTTPTimeout);
+    }
     return errorcode;
 }
 
@@ -1222,6 +1249,55 @@ OSPPProviderSetLocalValidation(
     return errorcode;
 }
 
+/*
+ * OSPPProviderSetSPMessageCount()
+ * Sets the maximum message count for each SP configured
+ */
+int OSPPProviderSetSPMessageCount(
+    void        *ospvcomm,              /* In - Comm Manager handle    */
+    unsigned long       *ospvMessageCount         /* In - Message count for each SP*/
+)
+{
+    OSPTSVCPT       *svcptlist  = OSPC_OSNULL,
+                    *svcptitem  = OSPC_OSNULL;
+    int         i=0,errorcode = OSPC_ERR_NO_ERROR;
+    OSPTCOMM    *comm = (OSPTCOMM *)ospvcomm;
+
+    /*
+     * get a pointer to the service point list
+     */
+     OSPPCommGetServicePointList(comm,&svcptlist);
+
+     svcptitem  =
+                  (OSPTSVCPT *)OSPPListFirst(
+                  (OSPTLIST *)&svcptlist);
+
+     if (ospvMessageCount != NULL)
+     {
+        while (svcptitem!= (OSPTSVCPT *)OSPC_OSNULL)
+        {
+           svcptitem->MaxMsgAllowed = ospvMessageCount[i++];
+           svcptitem  = (OSPTSVCPT *)OSPPListNext(
+                            (OSPTLIST *)&svcptlist,
+                            svcptitem);
+        }
+     }
+     else
+     {
+        while (svcptitem!= (OSPTSVCPT *)OSPC_OSNULL)
+        {
+           svcptitem->MaxMsgAllowed = 0;
+           svcptitem  = (OSPTSVCPT *)OSPPListNext(
+                            (OSPTLIST *)&svcptlist,
+                            svcptitem);
+        }
+     }
+
+    return errorcode;
+}
+
+
+
 /* 
  * OSPPProviderSetServicePoints()
  *
@@ -1273,6 +1349,7 @@ int
 OSPPProviderSetServicePoints(
     OSPTPROVHANDLE  ospvProvider,              /* In - Provider handle    */
     unsigned        ospvNumberOfServicePoints, /* In - New svc pt cnt     */
+    unsigned long   *ospvMessageCount,          /* In - Message cnt     */
     const char      *ospvServicePoints[])      /* In - New svc pt strings */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
@@ -1291,6 +1368,15 @@ OSPPProviderSetServicePoints(
                                         ospvServicePoints);
     }
 
+    /*
+     * set message counts for all SP
+     */
+     if (errorcode == OSPC_ERR_NO_ERROR)
+     {
+         errorcode = OSPPProviderSetSPMessageCount((void *)provider->Comm,
+                                                    ospvMessageCount);
+     }
+
     return errorcode;
 
 }
@@ -1306,6 +1392,7 @@ int
 OSPPProviderSetCapabilitiesURLs(
     OSPTPROVHANDLE  ospvProvider,              /* In - Provider handle     */
     unsigned        ospvNumberOfURLs,          /* In - New svc url cnt     */
+    unsigned long   *ospvMessageCount,          /* In - Msg count for URL */
     const char      *ospvCapabilitiesURLs[])   /* In - New svc url strings */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
@@ -1323,6 +1410,17 @@ OSPPProviderSetCapabilitiesURLs(
                                         ospvNumberOfURLs,
                                         ospvCapabilitiesURLs);
     }
+
+
+    /*
+     * set message counts for all Comm SP
+     */
+     if (errorcode == OSPC_ERR_NO_ERROR)
+     {
+         errorcode = OSPPProviderSetSPMessageCount((void *)provider->CommForCapabilities,
+                                                    ospvMessageCount);
+     }
+
 
     return errorcode;
 }

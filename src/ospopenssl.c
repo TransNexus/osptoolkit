@@ -59,7 +59,11 @@ int rand_init();
 int cha_engine_init(OSPTBOOL hw_enabled);
 void thread_setup(void);
 unsigned long pthreads_thread_id(void);
+#ifdef _WIN32
+void win32_locking_callback(int mode,int type,const char *file,int line);
+#else
 void pthreads_locking_callback(int mode, int type, char *file,int line);
+#endif
 void thread_cleanup(void);
 
 /*
@@ -146,14 +150,52 @@ OSPPOpenSSLInit(OSPTBOOL hw_enabled)
 ** Global params for openssl multi
 ** thread initialization
 *************************************/
+#ifdef _WIN32
+static HANDLE *lock_cs;
+#else
 static OSPTMUTEX *lock_cs;
 static long *lock_count;
+#endif
 
-void 
-OSPPInitSSLMultiThread(void)
+
+#ifdef _WIN32
+void thread_setup(void)
 {
-    thread_setup();
+    int i;
+
+    lock_cs=OPENSSL_malloc(CRYPTO_num_locks() * sizeof(HANDLE));
+    for (i=0; i<CRYPTO_num_locks(); i++)
+    {
+        lock_cs[i]=CreateMutex(NULL,FALSE,NULL);
+    }
+
+    CRYPTO_set_locking_callback((void (*)(int,int,const char *,int))win32_locking_callback);
+    /* id callback defined */
 }
+
+void thread_cleanup(void)
+{
+    int i;
+
+    CRYPTO_set_locking_callback(NULL);
+    for (i=0; i<CRYPTO_num_locks(); i++)
+        CloseHandle(lock_cs[i]);
+    OPENSSL_free(lock_cs);
+}
+
+void win32_locking_callback(int mode, int type, const char *file, int line)
+{
+    if (mode & CRYPTO_LOCK)
+    {
+        WaitForSingleObject(lock_cs[type],INFINITE);
+    }
+    else
+    {
+        ReleaseMutex(lock_cs[type]);
+    }
+}
+
+#else /* Solaris and Linux */
 
 void thread_setup(void)
 {
@@ -213,6 +255,13 @@ void thread_cleanup(void)
     if (lock_count != NULL)
        OPENSSL_free(lock_count);
 
+}
+#endif
+
+void 
+OSPPInitSSLMultiThread(void)
+{
+    thread_setup();
 }
 
 

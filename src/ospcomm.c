@@ -220,6 +220,18 @@ OSPPCommNew(
             OSPM_MUTEX_INIT((*ospvComm)->Mutex, 0, errorcode);
             /* assert(errorcode == OSPC_ERR_NO_ERROR); */
 
+            /*
+             * Initialize the Mutex to used for Http Obj Selection
+             */
+            if (errorcode == OSPC_ERR_NO_ERROR)
+            {
+                OSPM_MUTEX_INIT((*ospvComm)->HttpSelectMutex, 0, errorcode);
+                if (errorcode == OSPC_ERR_NO_ERROR)
+                {
+                    OSPM_CONDVAR_INIT((*ospvComm)->HttpSelCondVar, NULL, errorcode);
+                }
+            }
+
             if (errorcode == OSPC_ERR_NO_ERROR)
             {
                 /*
@@ -384,6 +396,24 @@ OSPPCommSetRetryLimit(
     }
     else
         ospvComm->HttpRetryLimit = ospvRetryLimit;
+
+    return errorcode;
+}
+
+int
+OSPPCommSetConnSelectionTimeout(
+    OSPTCOMM *ospvComm,
+    OSPTUINT64 ospvTimeout)
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+
+    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL)
+    {
+        errorcode = OSPC_ERR_COMM_INVALID_ARG;
+        OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
+    }
+    else
+        ospvComm->ConnSelectionHttpTimeout = ospvTimeout;
 
     return errorcode;
 }
@@ -1125,6 +1155,8 @@ void
 OSPPCommDelete(
     OSPTCOMM  **ospvComm)
 {
+    int errorcode=0;
+
     /*
      * check the communication manager first: 
      */
@@ -1168,6 +1200,12 @@ OSPPCommDelete(
      * destroy the message queue object
      */
     OSPPMsgQueueDelete(&(*ospvComm)->MsgQueue);
+
+    /*
+     * Destroy the mutex and the condition variable.
+     */
+     OSPM_MUTEX_DESTROY((*ospvComm)->HttpSelectMutex, errorcode);
+     OSPM_CONDVAR_DESTROY((*ospvComm)->HttpSelCondVar, errorcode);
 
     /*
      * destroy the comm object
@@ -1215,6 +1253,14 @@ int OSPPCommValidateSvcPts(unsigned ospvNumberOfServicePoints, const char **ospv
     return( errorcode );
 }
 
+int
+OSPPCommGetNumberOfTransactions(
+    OSPTCOMM *ospvComm,
+    unsigned *ospvNumberOfTransactions)
+{
+    int errorcode = OSPPMsgQueueGetNumberOfTransactions(ospvComm->MsgQueue,ospvNumberOfTransactions);
+    return errorcode;
+}
 
 
 

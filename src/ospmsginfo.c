@@ -128,16 +128,25 @@ OSPPMsgInfoProcessResponse(
         tmperrcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoProcessResponse()\n"));
-    /* 
-     * once signalled, acquire the mutex for the individual
-     * transaction.
-     */
-    OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR)
+
+    if (ospvMsgInfo->IsNonBlocking == OSPC_FALSE)
     {
-        OSPM_CONDVAR_SIGNAL(ospvMsgInfo->CondVar, errorcode);
-        OSPM_MUTEX_UNLOCK(ospvMsgInfo->Mutex, tmperrcode);
+        /* 
+         * once signalled, acquire the mutex for the individual
+         * transaction.
+         */
+        OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errorcode);
+        if (errorcode == OSPC_ERR_NO_ERROR)
+        {
+            OSPM_CONDVAR_SIGNAL(ospvMsgInfo->CondVar, errorcode);
+            OSPM_MUTEX_UNLOCK(ospvMsgInfo->Mutex, tmperrcode);
+        }
     }
+    else
+    {
+        OSPPMsgInfoDelete(&ospvMsgInfo);
+    }
+
 
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoProcessResponse()\n"));
     return errorcode;
@@ -150,17 +159,21 @@ OSPPMsgInfoWaitForMsg(
     int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoWaitForMsg()\n"));
-    OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
-        while (ospvMsgInfo->ResponseMsg == OSPC_OSNULL &&
-            ospvMsgInfo->ErrorCode == OSPC_ERR_NO_ERROR)
-        {
-            OSPM_CONDVAR_WAIT(ospvMsgInfo->CondVar, ospvMsgInfo->Mutex,
-                errorcode);
-        }
 
-        OSPM_MUTEX_UNLOCK(ospvMsgInfo->Mutex, errorcode);
+    if (ospvMsgInfo->IsNonBlocking == OSPC_FALSE)
+    {
+        OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errorcode);
+        if (errorcode == OSPC_ERR_NO_ERROR)
+        {
+            while (ospvMsgInfo->ResponseMsg == OSPC_OSNULL &&
+                ospvMsgInfo->ErrorCode == OSPC_ERR_NO_ERROR)
+            {
+                OSPM_CONDVAR_WAIT(ospvMsgInfo->CondVar, ospvMsgInfo->Mutex,
+                    errorcode);
+            }
+
+            OSPM_MUTEX_UNLOCK(ospvMsgInfo->Mutex, errorcode);
+        }
     }
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoWaitForMsg()\n"));
     return errorcode;

@@ -184,3 +184,37 @@ OSPPMsgQueueAddTransaction(
     return errorcode;
 }
 
+int
+OSPPMsgQueueGetNumberOfTransactions(
+    OSPTMSGQUEUE *ospvMsgQueue,
+    unsigned     *ospvMsgCount)
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+
+    if (ospvMsgQueue == OSPC_OSNULL)
+    {
+        errorcode = OSPC_ERR_UTIL_INVALID_ARG;
+    }
+
+    /*
+     * acquire message queue mutex
+     */
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    {
+        OSPM_MUTEX_LOCK(ospvMsgQueue->Mutex, errorcode);
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    {
+        *ospvMsgCount = ospvMsgQueue->NumberOfTransactions;
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    {
+        /* release msg queue mutex lock */
+        OSPM_MUTEX_UNLOCK(ospvMsgQueue->Mutex, errorcode);
+    }
+
+    return errorcode;
+}
+

@@ -302,7 +302,7 @@ OSPPSockConnectServicePoint(
                     /*
                      * get a pointer to the service point list
                      */
-                    OSPPCommGetServicePointList(comm, &svcptlist);
+                    osppHttpGetServicePointList(ospvHttp, &svcptlist);
 
                     /*
                      * if the http connection has never been connected or
