@@ -71,6 +71,8 @@
 #ifdef _POSIX_THREADS
 /* POSIX thread typedefs, applies to UNIX and WIN32 */
 
+#define OSPM_THR_SELF() pthread_self()
+    
 #define OSPM_CREATE_THREAD(t,a,f,p,e) { \
     e = pthread_create(&t, a, f, p); \
     OSPM_DBG(e,("%s failed. %s\n", "pthread_create", strerror(errno))); \
@@ -146,6 +148,8 @@
 #ifdef  _WIN32 
 #ifndef _POSIX_THREADS
 /* MS Threads */
+#define OSPM_THR_SELF() GetCurrentThreadID()
+
 #define OSPM_CREATE_THREAD(t,a,f,p,e) { \
     t = _beginthread(f,0,(void *)p); \
     OSPM_DBG((t < 0),("%s failed. %d\n", "_beginthread", GetLastError())); \
