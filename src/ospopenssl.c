@@ -90,6 +90,7 @@ OSPPSSLWrapInit(void *ospvRef)
     {
         SSLeay_add_ssl_algorithms();
         SSL_load_error_strings();
+				OpenSSL_add_all_digests();
         
 /* The following macro definition is to fix an anomaly between
    openssl and OSP. The anomaly only occurs on Windows */
