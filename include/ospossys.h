@@ -273,7 +273,7 @@
     if ((pHost = gethostbyname((const char *)h)) == (struct hostent *)NULL) \
     { \
         e = GetLastError(); \
-        OSPM_DBG(e,("%s failed for %s. %s\n", "gethostbyname", h, strerror(errno))); \
+        OSPM_DBG(e,("%s failed for %s. \n", "gethostbyname", h)); \
         ip = 0; \
     } \
     else \
@@ -328,13 +328,6 @@
         OSPM_DBG(e,("Warning: %s to %s failed. %d\n", "connect", inet_ntoa(sin.sin_addr), WSAGetLastError())); \
       } \
     } \
-}
-
-#define OSPM_INET_NTOA(ip, s) { \
-    struct sockaddr_in sin; \
-    sin.sin_family          = AF_INET; \
-    sin.sin_addr.s_addr     = ip; \
-    s = inet_ntoa(sin.sin_addr); \
 }
 
 #define OSPM_CLOSE(s,e) { \
@@ -463,12 +456,6 @@
     } \
 }
 
-#define OSPM_INET_NTOA(ip, s) { \
-    struct in_addr sin; \
-    sin.s_addr     = ip; \
-    s = inet_ntoa(sin); \
-}
-
 #define OSPM_CLOSE(s,e) { \
     e = close(s); \
     OSPM_DBG(e,("%s failed. %s\n", "close", strerror(errno))); \
@@ -488,6 +475,11 @@
     OSPM_DBG(e,("%s failed. %s\n", "socket", strerror(errno))); \
 }
 #endif
+
+/* ----------------------------------*/
+/* Common Winsock/Sockets Functions  */
+/* ----------------------------------*/
+char *OSPM_INET_NTOA(OSPTIPADDR ip);
 
 /* -------------------------------*/
 /* Common Winsock/Sockets Macros  */
@@ -529,7 +521,13 @@
 
 #define OSPM_STRCPY(s1,s2)          strcpy((s1), (s2))
 #define OSPM_STRCMP(s1,s2)          strcmp((s1), (s2))
+
+#ifdef _WIN32
+#define OSPM_STRCASECMP(s1,s2)      stricmp((s1), (s2))
+#else
 #define OSPM_STRCASECMP(s1,s2)      strcasecmp((s1), (s2))
+#endif
+
 #define OSPM_STRNCMP(s1,s2,n)       strncmp((s1), (s2), (n))
 #define OSPM_STRLEN(s)              ((s != OSPC_OSNULL)? strlen(s) : 0)
 #define OSPM_STRNCAT(s1,s2,n)       strncat((s1), (s2), (n))
