@@ -41,7 +41,7 @@
 #include "osputils.h"
 #include "osptnprobe.h"
 #include "ospstatistics.h"
-
+#include "ospcapind.h"
 
 /*
  * OSPPTransactionGetDestProtocol() :
@@ -723,6 +723,8 @@ OSPPTransactionDelete(
             OSPPTransactionDeleteUsageCnf(trans);
 
             OSPPTransactionDeleteStatistics(trans);
+
+            OSPPTransactionDeleteCapCnf(trans);
 
             errorcode = OSPPProviderGetTransactionCollection(trans->Provider, &trancoll);
 
@@ -1930,14 +1932,14 @@ OSPPTransactionReportUsage(
 
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
+            /* Set transaction state */
+            OSPPTransactionSetState(trans, OSPC_REPORT_USAGE_BLOCK);
+
             errorcode = OSPPTransactionPrepareAndQueMessage(
                 trans, xmldoc, sizeofxmldoc, &msginfo);
 
             if (errorcode == OSPC_ERR_NO_ERROR) 
             {
-                /* Set transaction state */
-                OSPPTransactionSetState(trans, OSPC_REPORT_USAGE_BLOCK);
-
                 errorcode = OSPPTransactionProcessReturn(
                     trans, msginfo);
             }
@@ -2134,14 +2136,14 @@ OSPPTransactionRequestAuthorisation(
 
                             if (errorcode == OSPC_ERR_NO_ERROR)
                             {
+                            /* Set transaction state */
+                                OSPPTransactionSetState(trans, OSPC_AUTH_REQUEST_BLOCK);
+
                                 errorcode = OSPPTransactionPrepareAndQueMessage(
                                     trans, xmldoc, sizeofxmldoc, &msginfo);
 
                                 if (errorcode == OSPC_ERR_NO_ERROR) 
-                                {
-                                    /* Set transaction state */
-                                    OSPPTransactionSetState(trans, OSPC_AUTH_REQUEST_BLOCK);
-
+                                {   
                                     errorcode = OSPPTransactionProcessReturn(
                                         trans, msginfo);
 
@@ -3199,6 +3201,222 @@ OSPPTransactionValidateReAuthorisation(
                 ospvTimeLimit, ospvSizeOfDetailLog,       
                 ospvDetailLog);
         }
+    }
+
+    return errorcode;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+ * The OSPPTransactionIndicateCapability function allows an application to 
+ * indicate its availability.
+ * The parameters to the function are:
+ *  ospvTransaction: handle of the (previously created) transaction object.
+ *  ospvSource: character string identifying the source of the call. The value 
+ *      is expressed as either a DNS name or an IP address enclosed in square 
+ *      brackets, followed by an optional colon and TCP port number. 
+ *      Examples of valid sources include "gateway1.carrier.com" and 
+ *                                                      "[172.16.1.2]:112".
+ *  ospvSourceDevice: character string identifying the source device in a 
+ *      protocol specific manner (e.g. H.323 Identifier); this string is 
+ *      optional and may be empty.
+ * ospvAlmostOutOfResources: a Boolean value to indicate whether or not the  
+ *      is about to run out of resources.  The value can also be used to 
+ *      indicate that a device is about to go off-line or come on-line.
+ *  ospvSizeOfDetailLog: pointer to a variable which, on input, contains the 
+ *      maximum size of the detail log; on output, the variable will be updated
+ *      with the actual size of the detail log. By setting this value to zero, 
+ *      applications indicate that they do not wish a detail log for the 
+ *      authorisation request.
+ *  ospvDetailLog: pointer to a location in which to store a detail log for the
+ *      authorisation request. If this pointer is not NULL, and if the 
+ *      ospvSizeOfDetailLog parameter is non-zero, then the library will store 
+ *      a copy of the authorisation response obtained from the settlement 
+ *      provider, including the settlement provider's digital signature.
+ * As delivered in the SDK library, this function blocks until confirmation 
+ * has been received or an error has been detected. The Open Settlement 
+ * Protocol SDK Porting Guide includes information on modifying that behavior 
+ * to prevent blocking.
+ * The function returns an error code or zero (if the operation was successful)
+ * Specific error codes and their meanings can be found in the osperrno.h file.
+ */
+
+int
+OSPPTransactionIndicateCapabilities(
+    OSPTTRANHANDLE  ospvTransaction,            /* In - Transaction handle */
+    const char      *ospvSource,                /* In - Source of call */
+    const char      *ospvSourceDevice,          /* In - SourceDevice of call */
+    unsigned         ospvAlmostOutOfResources,  /* In - Boolean almost out of resources indicator */
+    unsigned        *ospvSizeOfDetailLog,       /* In/Out - Max size of detail log Actual size of detail log */
+    void            *ospvDetailLog)             /* In/Out - Location of detail log storage */
+{
+    int            errorcode   = OSPC_ERR_NO_ERROR;
+    OSPTTRANS     *trans       = OSPC_OSNULL;
+    OSPTMSGINFO   *msginfo     = OSPC_OSNULL;
+    unsigned char *xmldoc      = OSPC_OSNULL;
+    unsigned       sizeofxmldoc= 0;
+    OSPTALTINFO   *altinfo     = OSPC_OSNULL;
+    OSPTCAPIND    *capind      = OSPC_OSNULL;
+
+    OSPM_ARGUSED(ospvSizeOfDetailLog);
+    OSPM_ARGUSED(ospvDetailLog);
+
+
+    /*
+     * Validate input parameters - Source and SourceDevice must not be NULLs
+     */
+    if (OSPC_OSNULL == ospvSource ||
+        OSPC_OSNULL == ospvSourceDevice)
+    {
+        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+        OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionIndicateCapabilities");
+        OSPM_DBGERRORLOG(errorcode, "ospvSource and ospvSourceDevice must not be NULLs");
+    }
+
+
+    /*
+     * Get transaction context, the call can fail if the transaction
+     * handle passed to the function is not valid.
+     */
+    if (OSPC_ERR_NO_ERROR == errorcode)
+    {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    }
+
+
+    /*
+     * Insure that the transaction does not already have a capability
+     * response, auth response, or token structures assigned to it.
+     */
+    if (OSPC_ERR_NO_ERROR == errorcode)
+    {
+        if (OSPC_OSNULL != trans->CapCnf)
+        {
+            errorcode =OSPC_ERR_TRAN_DUPLICATE_REQUEST;
+            OSPM_DBGERRORLOG(errorcode,"Duplicate Call To OSPPTransactionIndicateCapabilities");
+        }
+        else if (OSPC_OSNULL != trans->AuthRsp || OSPC_OSNULL != trans->AuthInd)
+        {
+            errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+        }
+    }
+
+    /*
+     * 
+     * Input parameters and state validation are over, we are off to the business logic
+     *
+     */
+    if (OSPC_ERR_NO_ERROR == errorcode)
+    {
+        /*
+         * Create and initialize new Capability Indication structure
+         */
+        errorcode = OSPPCapIndNew(&capind,trans,ospvSource,ospvSourceDevice,ospvAlmostOutOfResources);
+    
+    
+
+        /*
+         * XML-encode the structure
+         */
+        if (OSPC_ERR_NO_ERROR == errorcode)
+        {
+            errorcode = OSPPXMLMessageCreate(OSPC_MSG_CAPIND,&xmldoc,&sizeofxmldoc,capind);
+        }
+
+
+        /*
+         * Prepare a structure for sending the message over the network
+         */
+        if (OSPC_ERR_NO_ERROR == errorcode)
+        {
+            errorcode = OSPPMsgInfoNew(&msginfo);
+        }
+        
+
+        /*
+         * Hand off the request to a communication manager and block waiting for a response.
+         * The function will decide which comm manager should handle the call.
+         * The function call will not return untill a valid response is received or all 
+         * service points and retries have been exausted.
+         */
+        if (OSPC_ERR_NO_ERROR == errorcode)
+        {    
+            OSPPTransactionSetState(trans, OSPC_CAP_IND_BLOCK);
+
+            errorcode = OSPPTransactionPrepareAndQueMessage(trans, xmldoc, sizeofxmldoc, &msginfo);
+        }
+
+
+        /*
+         * Parse the XML message, build a response structure and assign it to the
+         * transaction object.  The structure will be released when the transaction
+         * is deleted
+         */
+        if (OSPC_ERR_NO_ERROR == errorcode)
+        {
+            errorcode = OSPPTransactionProcessReturn(trans, msginfo);
+        }
+
+        /*
+         * If the response code is above 299, translate it to an error code
+         */
+        if (OSPC_ERR_NO_ERROR == errorcode)
+        {
+            if (trans->CapCnf->ospmStatus->ospmStatusCode > 299)
+            {
+                errorcode = OSPPUtilGetErrorFromStatus(trans->CapCnf->ospmStatus->ospmStatusCode);
+            }
+        }
+
+        /*
+         * Update the transaction status based on the error code
+         */
+        if (OSPC_ERR_NO_ERROR == errorcode)
+        {
+            OSPPTransactionSetState(trans, OSPC_CAP_IND_SUCCESS);
+        }
+        else
+        {
+            OSPPTransactionSetState(trans, OSPC_CAP_IND_FAIL);
+        }
+    }
+    else
+    {
+        /* Data or state validation must have failed */
+    }
+
+
+    /*
+     *
+     * Clean-up temporary objects
+     *
+     */
+    if (OSPC_OSNULL != xmldoc)
+    {
+        OSPM_FREE(xmldoc);
+        xmldoc = NULL;
+    }
+
+    if (OSPC_OSNULL != capind)
+    {
+        OSPPCapIndDelete(&capind);
+    }
+
+    if (OSPC_OSNULL != msginfo)
+    {
+        OSPPMsgInfoDelete(&msginfo);
     }
 
     return errorcode;
