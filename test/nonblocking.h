@@ -149,6 +149,17 @@ extern "C"
             unsigned        *ospvSizeOfDetailLog,         /* In/Out - Max size of detail log \ Actual size of detail log */
             void            *ospvDetailLog);              /* Out - Pointer to detail log storage */
 
+    int OSPPTransactionIndicateCapabilities_nb(
+            NBMONITOR       *nbMonitor,                   /* In - NBMonitor Pointer   */
+            int             ShouldBlock,                  /* In - 1 WILL block, 0 - will NOT block */
+            int             *OSPErrorCode,                /* Out- Error code returned by the blocking function */
+            OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction Handle  */
+            const char      *ospvSource,                  /* In - Source of call      */
+            const char      *ospvSourceDevice,            /* In - SourceDevice of call*/
+            unsigned         ospvAlmostOutOfResource,     /* In - A Boolean flag indicating device's availability */
+            unsigned        *ospvSizeOfDetailLog,         /* In\Out - Max size of detail log \ Actual size of detail log */
+            void            *ospvDetailLog);              /* In\Out - Location of detail log storage */
+
 #ifdef __cplusplus
 }
 #endif

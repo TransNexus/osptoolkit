@@ -70,12 +70,23 @@ typedef struct _NBUSEIND
 } NBUSEIND;
 
 
+typedef struct _NBCAPIND
+{
+  OSPTTRANHANDLE  ospvTransaction;              /* In - Transaction Handle  */
+  const char      *ospvSource;                  /* In - Source of call      */
+  const char      *ospvSourceDevice;            /* In - SourceDevice of call*/
+  unsigned         ospvAlmostOutOfResources;    /* In - A Boolean flag indicating device's availability */
+  unsigned        *ospvSizeOfDetailLog;         /* In\Out - Max size of detail log \ Actual size of detail log */
+  void            *ospvDetailLog;               /* In\Out - Location of detail log storage */
+} NBCAPIND;
+
 
 
 typedef union _OSPMESSAGE
 {
   NBAUTHREQ       AuthReq;
   NBUSEIND        UseInd;
+  NBCAPIND        CapInd;
 } OSPMESSAGE;
 
 
@@ -86,7 +97,8 @@ typedef union _OSPMESSAGE
 #define MESSAGE_TYPE_INVALID        0
 #define MESSAGE_TYPE_AUTH_REQ       1
 #define MESSAGE_TYPE_USE_IND        2
-#define MESSAGE_TYPE_TIME_TO_EXIT   3
+#define MESSAGE_TYPE_CAP_IND        3
+#define MESSAGE_TYPE_TIME_TO_EXIT   10
 
 typedef struct _NBDATA
 {
@@ -97,6 +109,7 @@ typedef struct _NBDATA
   {
     NBAUTHREQ       AuthReq;
     NBUSEIND        UseInd;
+    NBCAPIND        CapInd;
   } Message;
   int             ShouldBlock;                  /* Ussed to indicate if the caller is blocked */
   OSPTMUTEX       Mutex;                        /* Used to wake up blocked call */
@@ -503,6 +516,15 @@ WorkThread(void *arg)
                                                         transaction->Message.UseInd.ospvSizeOfDetailLog,
                                                         transaction->Message.UseInd.ospvDetailLog);
                 break;
+          case MESSAGE_TYPE_CAP_IND:    //  CapabilitiesIndication
+              *(transaction->ErrorCode) = OSPPTransactionIndicateCapabilities(       
+                                                        transaction->Message.CapInd.ospvTransaction,
+                                                        transaction->Message.CapInd.ospvSource,
+                                                        transaction->Message.CapInd.ospvSourceDevice,
+                                                        transaction->Message.CapInd.ospvAlmostOutOfResources,
+                                                        transaction->Message.CapInd.ospvSizeOfDetailLog,
+                                                        transaction->Message.CapInd.ospvDetailLog);
+                break;
           default:
               break;
         }
@@ -766,6 +788,99 @@ int OSPPTransactionReportUsage_nb(
   else
   {
     errorcode = -1;
+  }
+
+  return errorcode;
+}
+
+int
+OSPPTransactionIndicateCapabilities_nb(
+        NBMONITOR       *nbMonitor,                   /* In - NBMonitor Pointer   */
+        int             ShouldBlock,                  /* In - 1 WILL block, 0 - will NOT block */
+        int             *OSPErrorCode,                /* Out- Error code returned by the blocking function */
+        OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction Handle  */
+        const char      *ospvSource,                  /* In - Source of call      */
+        const char      *ospvSourceDevice,            /* In - SourceDevice of call*/
+        unsigned         ospvAlmostOutOfResource,     /* In - A Boolean flag indicating device's availability */
+        unsigned        *ospvSizeOfDetailLog,         /* In\Out - Max size of detail log \ Actual size of detail log */
+        void            *ospvDetailLog)               /* In\Out - Location of detail log storage */
+{
+  int     errorcode = OSPC_ERR_NO_ERROR;
+  NBDATA* nbData    = OSPC_OSNULL;
+
+  if( nbMonitor->TimeToShutDown == 1  )
+  {
+    /*
+     * Q is shutting down
+     */
+    errorcode = -1;
+  }
+  else if( SyncQueueGetNumberOfTransactions(nbMonitor->SyncQue) > nbMonitor->MaxQueSize )
+  {
+    /*
+     * There are already to many requests in the Q
+     */
+    errorcode = -1;
+  }
+  else
+  {
+    /*
+     * allocate space
+     * the space will be deallocated by one of the working thread
+    */
+    errorcode = newNBDATA(&nbData,MESSAGE_TYPE_CAP_IND);
+
+    if( OSPC_ERR_NO_ERROR == errorcode )
+    {
+      // fill out the data structure
+      nbData->ShouldBlock                                = ShouldBlock;
+      nbData->ErrorCode                                  = OSPErrorCode;
+      nbData->Message.CapInd.ospvTransaction             = ospvTransaction;
+      nbData->Message.CapInd.ospvSource                  = ospvSource;
+      nbData->Message.CapInd.ospvSourceDevice            = ospvSourceDevice;
+      nbData->Message.CapInd.ospvAlmostOutOfResources    = ospvAlmostOutOfResource;
+      nbData->Message.CapInd.ospvSizeOfDetailLog         = ospvSizeOfDetailLog;
+      nbData->Message.CapInd.ospvDetailLog               = ospvDetailLog;
+
+      // time stamp (AuthReq) IN QUEUE event
+      OSPPOSTimeGetTime(&nbData->InQuequeTime,&nbData->InQuequeTimeMS);
+
+      // put a new message to the non-blocking queue
+      *(nbData->ErrorCode)  = OSPC_AUTH_REQUEST_BLOCK;
+      errorcode             = SyncQueueAddTransaction(nbMonitor->SyncQue,nbData);
+
+      if( OSPC_ERR_NO_ERROR == errorcode )
+      {
+        /*
+         *  This is a bit odd.  If the caller wants to wait, 
+         *    it is responsible for deleting nbData.
+         *  Oterwise, the work thread will clean up
+         */
+        if( 1 == nbData->ShouldBlock )
+        {
+          /*
+           * SHOULD wait
+           */
+          OSPM_MUTEX_LOCK(nbData->Mutex, errorcode);
+            while( (*(nbData->ErrorCode) == OSPC_CAP_IND_BLOCK) && (OSPC_ERR_NO_ERROR == errorcode) )
+            {
+              OSPM_CONDVAR_WAIT(nbData->CondVar, nbData->Mutex, errorcode);
+            }
+          OSPM_MUTEX_UNLOCK(nbData->Mutex, errorcode);
+          deleteNBDATA(nbData);
+        }
+        else
+        {
+          /*
+           * should NOT wait
+           */
+        }
+      }
+    }
+    else
+    {
+      errorcode = OSPC_ERR_MSGQ_NO_MEMORY;
+    }
   }
 
   return errorcode;
