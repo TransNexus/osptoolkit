@@ -42,6 +42,136 @@
 #include "osptnprobe.h"
 #include "ospstatistics.h"
 
+
+/*
+ * OSPPTransactionSetNetworkId()
+ *
+ * Reports the network id for a particular transaction
+ * This function can be used to report any network specific 
+ * information to the server.
+ * Reporting the termination group info is a good use of this interface
+ * The parameters to the function are:
+ *   ospvTransaction: handle of the transaction object.
+ *   ospvNetworkId: the network specific information to be reported to the server.
+ * returns OSPC_ERR_NO_ERROR if successful, else error code.
+ */
+int
+OSPPTransactionSetNetworkId(
+    OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */
+    const char *    ospvNetworkId)      /* In - network specific information     */
+{
+    int         errorcode   = OSPC_ERR_NO_ERROR;
+    OSPTTRANS   *trans      = OSPC_OSNULL;
+    OSPTALTINFO  *altinfo = OSPC_OSNULL;
+
+    if ((ospvNetworkId == OSPC_OSNULL) ||
+        (!(strcmp(ospvNetworkId,""))))
+    {
+        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+        OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionSetNetworkId");
+    }
+
+    if(errorcode == OSPC_ERR_NO_ERROR)
+    {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    }
+
+    if ((trans != (OSPTTRANS*) NULL) && (errorcode == OSPC_ERR_NO_ERROR))
+    {
+        if (trans->State == OSPC_REPORT_USAGE_SUCCESS)
+        {
+            errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+            OSPM_DBGERRORLOG(errorcode,"Calling OSPPTransactionSetNetworkId After Usage has been Reported");
+        }
+
+        if (errorcode == OSPC_ERR_NO_ERROR) 
+        {
+            if (trans->NetworkId != OSPC_OSNULL)
+            {
+                errorcode =OSPC_ERR_TRAN_DUPLICATE_REQUEST;
+                OSPM_DBGERRORLOG(errorcode,"Duplicate Calls to OSPPTransactionSetNetworkId");
+            }
+        }
+
+        if (errorcode == OSPC_ERR_NO_ERROR) 
+        {
+            if ((trans->AuthReq == OSPC_OSNULL) && (trans->AuthInd == OSPC_OSNULL))
+            {
+                /* 
+                 * Neither Authorization Request nor Validate Authorization has
+                 * been called. We dont care if it is the source or destn in 
+                 * this case. Just add the info to the transaction handler
+                 */
+                OSPM_MALLOC(trans->NetworkId,const char,strlen(ospvNetworkId)+1);
+                if (trans->NetworkId != OSPC_OSNULL)
+                {
+                    OSPM_MEMCPY(trans->NetworkId,ospvNetworkId,strlen(ospvNetworkId)+1);
+                }
+                else
+                {
+                    errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
+                }
+            }
+            else
+            if ((trans->AuthReq != OSPC_OSNULL) && (trans->AuthInd == OSPC_OSNULL))
+            {
+                /*
+                 * End point is a source, however it is calling the 
+                 * function out of sequence as it has already called 
+                 * AuthReq, return an error
+                 */
+                errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                OSPM_DBGERRORLOG(errorcode,"Calling OSPPTransactionSetNetworkId After Authorization has been requested");
+            }
+            else
+            {
+                /* 
+                 * For the other two cases in which AuthInd!= NULL
+                 * End point is a destination, and Validate Authorization has already been called
+                 * Since out of sequence calls are allowed on the destination, add this to the Authind req
+                 * Check if there exists a list for suource alternates.If not then,
+                 * Make a new list.
+                 */
+                OSPM_MALLOC(trans->NetworkId,const char,strlen(ospvNetworkId)+1);
+                if (trans->NetworkId != OSPC_OSNULL)
+                {
+                    OSPM_MEMCPY(trans->NetworkId,ospvNetworkId,strlen(ospvNetworkId)+1);
+                }
+                else
+                {
+                    errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
+                }
+
+                if (errorcode == OSPC_ERR_NO_ERROR)
+                {
+                    if (trans->AuthInd->ospmAuthIndDestinationAlternate == OSPC_OSNULL) 
+                    {
+                        /*
+                         * Make a new list
+                         */
+                        OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate));
+                    }
+                    /*
+                     * add to the list
+                     */
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvNetworkId),(const char *)ospvNetworkId,ospeNetwork);
+                    if(altinfo != OSPC_OSNULL)
+                    {
+                        OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),(void *)altinfo);
+                        altinfo = OSPC_OSNULL;
+                    }
+                } /* errorcode == OSPC_ERR_NO_ERROR */
+            }
+        } /* errorcode == OSPC_ERR_NO_ERROR */
+    } /* trans != (OSPTTRANS*) NULL */
+
+    return errorcode;
+}
+
+
+
+
+
 /*
  * OSPPTransactionAccumulateOneWayDelay()
  *
@@ -502,6 +632,11 @@ OSPPTransactionDelete(
             {
                 tranindex.Index = OSPM_GET_TRANSACTION_INDEX(ospvTransaction);
                 OSPPTransactionCollectionRemoveItem(trancoll, tranindex);
+            }
+
+            if (trans->NetworkId != OSPC_OSNULL)
+            {
+                OSPM_FREE(trans->NetworkId);
             }
 
             if(trans != (OSPTTRANS *)NULL)
@@ -2575,11 +2710,30 @@ OSPPTransactionValidateAuthorisation(
                 {
 
                     if((ospvDestination != OSPC_OSNULL) ||
-                        (ospvDestinationDevice != OSPC_OSNULL))
+                        (ospvDestinationDevice != OSPC_OSNULL)|| (trans->NetworkId!= OSPC_OSNULL))
                     {
 
                         /* destination alternates - create a linked list */
                         OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate));
+
+
+                        if(trans->NetworkId != OSPC_OSNULL)
+                        {
+
+                            altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->NetworkId), 
+                                (const char *)trans->NetworkId,
+                                ospeNetwork);
+
+                            if(altinfo != OSPC_OSNULL)
+                            {
+
+                                OSPPListAppend(
+                                    (OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),
+                                    (void *)altinfo);
+                            }
+                        }
+
+                        altinfo = OSPC_OSNULL;
 
                         if(ospvDestination != OSPC_OSNULL)
                         {
