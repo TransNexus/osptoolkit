@@ -38,8 +38,11 @@ void        SyncQueueDecrementNumberOfTransactions( SYNCQUEUE *);
 
 
 
-
-
+/*
+ *
+ * Private API
+ *
+ */
 
 static int
 SyncQueueInitSync(
@@ -69,7 +72,30 @@ SyncQueueInitSync(
 }
 
 
+void
+SyncQueueIncrementNumberOfTransactions(
+    SYNCQUEUE *syncQueue)
+{
+    syncQueue->NumberOfTransactions++;
+}
 
+
+
+void
+SyncQueueDecrementNumberOfTransactions(
+    SYNCQUEUE *syncQueue)
+{
+    syncQueue->NumberOfTransactions--;
+}
+
+
+
+
+/*
+ *
+ * Public API
+ *
+ */
 
 
 int
@@ -136,33 +162,23 @@ unsigned
 SyncQueueGetNumberOfTransactions(
     SYNCQUEUE *syncQueue)
 {
-    return syncQueue->NumberOfTransactions;
+    unsigned  RetVal    = 0;
+    int       errorcode = OSPC_ERR_NO_ERROR;
+
+    /* acquire mutex lock */
+    OSPM_MUTEX_LOCK(syncQueue->Mutex, errorcode);
+
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    {
+      RetVal = syncQueue->NumberOfTransactions;
+
+      /* release mutex lock */
+      OSPM_MUTEX_UNLOCK(syncQueue->Mutex, errorcode);
+      assert(errorcode == OSPC_ERR_NO_ERROR);
+    }
+
+    return( RetVal );
 }
-
-
-
-
-
-
-void
-SyncQueueIncrementNumberOfTransactions(
-    SYNCQUEUE *syncQueue)
-{
-    syncQueue->NumberOfTransactions++;
-}
-
-
-
-
-
-
-void
-SyncQueueDecrementNumberOfTransactions(
-    SYNCQUEUE *syncQueue)
-{
-    syncQueue->NumberOfTransactions--;
-}
-
 
 
 
@@ -232,7 +248,7 @@ SyncQueueRemoveTransaction(
       /*
        * wait for conditional variable on the transaction count
        */
-      while( SyncQueueGetNumberOfTransactions(syncQueue) == 0 )
+      while( 0 == syncQueue->NumberOfTransactions )
       {
           OSPM_CONDVAR_WAIT(syncQueue->CondVarNotEmpty, syncQueue->Mutex, errorcode);
       }
@@ -248,7 +264,7 @@ SyncQueueRemoveTransaction(
         /* 
          * Are there any more transactions on the queue ?
         */
-        if( SyncQueueGetNumberOfTransactions(syncQueue) == 0 )
+        if( 0 == syncQueue->NumberOfTransactions )
         {
           OSPM_CONDVAR_SIGNAL(syncQueue->CondVarEmpty, errorcode);
         }
@@ -286,7 +302,7 @@ SyncQueueBlockWhileNotEmpty(
       /*
        * wait for conditional variable on the transaction count
        */
-      while( SyncQueueGetNumberOfTransactions(syncQueue) > 0 )
+      while( syncQueue->NumberOfTransactions > 0 )
       {
           OSPM_CONDVAR_WAIT(syncQueue->CondVarEmpty, syncQueue->Mutex, errorcode);
       }
