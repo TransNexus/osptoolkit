@@ -101,7 +101,9 @@ const OSPTMSGDESC OSPVElemDescs[] =
     { ospeElemTNAuditState,       "transnexus.com:AuditState" },
     { ospeElemTNAuditTimeLimit,   "transnexus.com:AuditTimeLimit" },
     { ospeElemTNAuditMaxMessages, "transnexus.com:AuditMaxMessages" },
-    { ospeElemCSAuditTrigger,     "cisco.com:AuditSignal" }
+    { ospeElemCSAuditTrigger,     "cisco.com:AuditSignal" },
+    { ospeElemDestProtocol,     "DestinationProtocol" },
+    { ospeElemDestOSPVersion,     "OSPVersion" }
 };
 
 
