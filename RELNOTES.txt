@@ -113,5 +113,6 @@ Version 2.6.0
 
 Version 2.6.1
 
-  * Reduced compile time warnings.
   * Upgraded TEP enrollment to use the API changes introduced in 2.6.0
+  * Fixed memory leaks in the ospopenssl module.
+  * Reduced compile time warnings.
