@@ -45,6 +45,331 @@
 
 
 /*
+ * OSPPTransactionModifyDeviceIdentifiers
+ * This API is called to overwrite the ospvSource/ospvSourceDevice/
+ * ospvDestination/ospvDestination device that was passed in the 
+ * Authorization Req/Validate API's.
+ * This API provides the application with a mechanism of reporting Usage
+ * with addresses different than those that were used while calling
+ * RequestAuth/ValidateAuth/BuildUsageFromScratch/InitializeAtDevice etc APIs. 
+ * Parameters 2 through 5 are optional. However, at least one of the four needs to be 
+ * non-NULL.
+ */ 
+int
+OSPPTransactionModifyDeviceIdentifiers(
+    OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */
+    const char      *ospvSource,        /* In - optional */
+    const char      *ospvSourceDevice,  /* In - optional */
+    const char      *ospvDestination,   /* In - optional */
+    const char      *ospvDestinationDevice)  /* In - optional */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans=NULL;
+    OSPTDEST  *dest=NULL;
+    OSPTBOOL modifyallowed=OSPC_FALSE;
+    OSPTALTINFO *altinfo=NULL,*altinfoToKeep=NULL;
+
+    if ((ospvSource == NULL) && (ospvSourceDevice == NULL) && 
+        (ospvDestination == NULL) && (ospvDestinationDevice == NULL))  
+    {
+        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+        OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionModifyDeviceIdentifiers");
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    { 
+        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    {
+        OSPPTransactionGetIsModifyDeviceIdAllowed(trans, &modifyallowed);
+
+        if (modifyallowed == OSPC_TRUE)
+        {
+            if(trans->AuthRsp != (OSPTAUTHRSP *)OSPC_OSNULL)
+            {
+                /*
+                 * We are the source. Change the non-NULL values passed in
+                 * in the API within the CurrentDest obj.
+                 */
+                 dest = trans->CurrentDest;
+
+                 /*
+                  * Check for duplicate calls to the API
+                  */
+                 if (((ospvSource != NULL) && (OSPPListFirst(&(dest->ospmUpdatedSourceAddr)) != OSPC_OSNULL)) ||
+                     ((ospvSourceDevice != NULL) && (OSPPListFirst(&(dest->ospmUpdatedDeviceInfo)) != OSPC_OSNULL)) ||
+                     ((ospvDestination != NULL) && (dest->ospmHasDestAddrBeenModified == OSPC_TRUE)) ||
+                     ((ospvDestinationDevice != NULL) && (dest->ospmHasDestDevAddrBeenModified == OSPC_TRUE))) 
+                 {
+                    errorcode = OSPC_ERR_TRAN_DUP_CALL_TO_API;
+                    OSPM_DBGERRORLOG(errorcode, "Duplicate call to OSPPTransactionModifyDeviceIdentifiers");
+                 }
+
+                 if (errorcode == OSPC_ERR_NO_ERROR)
+                 {
+                     if (ospvSource != NULL)
+                     {
+                         altinfo = OSPPAltInfoNew(strlen(ospvSource),
+                                (const unsigned char *)ospvSource,
+                                ospeTransport);
+
+                         if(altinfo != OSPC_OSNULL)
+                         {
+                             OSPPListAppend(
+                                    (OSPTLIST *)&(dest->ospmUpdatedSourceAddr),
+                                    (void *)altinfo);
+                         }
+                     }
+
+                     altinfo = NULL;
+                     if (ospvSourceDevice != NULL)
+                     {
+                         altinfo = OSPPAltInfoNew(strlen(ospvSourceDevice),
+                                (const unsigned char *)ospvSourceDevice,
+                                ospeTransport);
+
+                         if(altinfo != OSPC_OSNULL)
+                         {
+                             OSPPListAppend(
+                                (OSPTLIST *)&(dest->ospmUpdatedDeviceInfo),
+                                (void *)altinfo);
+                         }
+                     }
+                
+                     if (ospvDestination != NULL)
+                     {
+                         OSPPDestSetAddr(dest,(const unsigned char *)ospvDestination);
+                         dest->ospmHasDestAddrBeenModified = OSPC_TRUE;
+                     }
+ 
+                     if (ospvDestinationDevice != NULL)
+                     {
+                         OSPPDestDevSetAddr(dest,(const unsigned char *)ospvDestinationDevice);
+                         dest->ospmHasDestDevAddrBeenModified = OSPC_TRUE;
+                     }
+                 }
+            }
+            else if(trans->AuthInd != (OSPTAUTHIND *)OSPC_OSNULL)
+            {
+                if (((ospvSource != NULL) && (trans->AuthInd->ospmAuthIndHasSrcAltBeenModified == OSPC_TRUE)) ||
+                ((ospvSourceDevice != NULL) && (trans->AuthInd->ospmAuthIndHasDeviceInfoBeenModified == OSPC_TRUE)) ||
+                ((ospvDestination != NULL) && (trans->AuthInd->ospmAuthIndHasDestBeenModified == OSPC_TRUE)) ||
+                ((ospvDestinationDevice != NULL) && (trans->AuthInd->ospmAuthIndHasDestDevBeenModified == OSPC_TRUE)))
+                {
+                    errorcode = OSPC_ERR_TRAN_DUP_CALL_TO_API;
+                    OSPM_DBGERRORLOG(errorcode, "Duplicate call to OSPPTransactionModifyDeviceIdentifiers to change Source");
+                }
+
+
+                if ((ospvSource != NULL) && (errorcode == OSPC_ERR_NO_ERROR))
+                {
+                    /*
+                     * Overwrite the SourceAlternate in the AuthInd
+                     */
+                    if (OSPPAuthIndHasSourceAlt(trans->AuthInd))
+                    {
+                        /*
+                         * If srcAlt is present, delete the current list
+                         */
+                        while(!OSPPListEmpty(&(trans->AuthInd->ospmAuthIndSourceAlternate)))
+                        {
+                            altinfo = (OSPTALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndSourceAlternate));
+                            if(altinfo != OSPC_OSNULL)
+                            {
+                                OSPM_FREE(altinfo);
+                                altinfo = OSPC_OSNULL;
+                            }
+                        }                 
+                    }
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource),
+                                (const unsigned char *)ospvSource,
+                                ospeTransport);
+
+                    if(altinfo != OSPC_OSNULL)
+                    {
+
+                        OSPPListAppend(
+                             (OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate),
+                             (void *)altinfo);
+                    }
+                    altinfo = NULL;
+                    trans->AuthInd->ospmAuthIndHasSrcAltBeenModified = OSPC_TRUE;
+                }
+
+                if ((ospvSourceDevice != NULL) && (errorcode == OSPC_ERR_NO_ERROR))
+                {
+                    /*
+                     * Overwrite the deviceInfo in the AuthInd
+                     */
+                    if (trans->AuthInd->ospmAuthIndDeviceInfo != NULL)
+                    {
+                        /*
+                         * If devInfo is present, delete the current list
+                         */
+                        while(!OSPPListEmpty(&(trans->AuthInd->ospmAuthIndDeviceInfo)))
+                        {
+                            altinfo = (OSPTALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndDeviceInfo));
+                            if(altinfo != OSPC_OSNULL)
+                            {
+                                OSPM_FREE(altinfo);
+                                altinfo = OSPC_OSNULL;
+                            }
+                        }                 
+                    }
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice),
+                                (const unsigned char *)ospvSourceDevice,
+                                ospeTransport);
+
+                    if(altinfo != OSPC_OSNULL)
+                    {
+
+                        OSPPListAppend(
+                             (OSPTLIST *)&(trans->AuthInd->ospmAuthIndDeviceInfo),
+                             (void *)altinfo);
+                    }
+                    altinfo = NULL;
+                    trans->AuthInd->ospmAuthIndHasDeviceInfoBeenModified = OSPC_TRUE;
+                }
+
+                if ((ospvDestination != NULL) && (errorcode == OSPC_ERR_NO_ERROR))
+                {
+                    /*
+                     * This is a little messed up. 
+                     * Both Destination and DestinationDevice go to the same list.
+                     * Thus, when we are modifying the list, we need to replace only the node for destination.
+                     * If there is a node for destinationDevice, it should still remain there.
+                     */
+                     while(!OSPPListEmpty(&(trans->AuthInd->ospmAuthIndDestinationAlternate)))
+                     {
+                         altinfo = (OSPTALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndDestinationAlternate));
+                         if(altinfo != OSPC_OSNULL)
+                         {
+                             if (altinfo->ospmAltInfoType == ospeH323)
+                             {
+                                 /*
+                                  * This node in the list corresponds to 
+                                  * DestinationDevice. Do not delete it.
+                                  */
+                                 altinfoToKeep = altinfo;
+                                 altinfo = OSPC_OSNULL;
+                             }
+                             else
+                             {
+                                 OSPM_FREE(altinfo);
+                                 altinfo = OSPC_OSNULL;
+                             }
+                         }
+                     }
+
+                     /*
+                      * We have emptied the list now. 
+                      * Add back the altinfo that corresponded to destinationDevice
+                      */
+                      if (altinfoToKeep)
+                      {
+                          OSPPListAppend(
+                              (OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),
+                              (void *)altinfoToKeep);
+                          altinfoToKeep = NULL;    
+                      }
+
+                     /*
+                      * Now add the new destination
+                      */
+
+                      altinfo =
+                           OSPPAltInfoNew(OSPM_STRLEN(ospvDestination),
+                           (const unsigned char *)ospvDestination,
+                           ospeTransport);
+
+                      if(altinfo != OSPC_OSNULL)
+                      {
+                           OSPPListAppend(
+                                    (OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),
+                                    (void *)altinfo);
+                      }
+                      altinfo = NULL;
+                      trans->AuthInd->ospmAuthIndHasDestBeenModified = OSPC_TRUE;
+                }
+
+                if ((ospvDestinationDevice != NULL) && (errorcode == OSPC_ERR_NO_ERROR))
+                {
+                    /*
+                     * This is a little messed up. 
+                     * Both Destination and DestinationDevice go to the same list.
+                     * Thus, when we are modifying the list, we need to replace only the node for destination device.
+                     * If there is a node for destination, it should still remain there.
+                     */
+                     while(!OSPPListEmpty(&(trans->AuthInd->ospmAuthIndDestinationAlternate)))
+                     {
+                         altinfo = (OSPTALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndDestinationAlternate));
+                         if(altinfo != OSPC_OSNULL)
+                         {
+                             if (altinfo->ospmAltInfoType == ospeTransport)
+                             {
+                                 /*
+                                  * This node in the list corresponds to 
+                                  * Destination. Do not delete it.
+                                  */
+                                 altinfoToKeep = altinfo;
+                                 altinfo = OSPC_OSNULL;
+                             }
+                             else
+                             {
+                                 OSPM_FREE(altinfo);
+                                 altinfo = OSPC_OSNULL;
+                             }
+                         }
+                     }
+
+                     /*
+                      * We have emptied the list now. 
+                      * Add back the altinfo that corresponded to destination
+                      */
+
+                      if (altinfoToKeep)
+                      {
+                          OSPPListAppend(
+                              (OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),
+                              (void *)altinfoToKeep);
+                          altinfoToKeep = NULL;    
+                      }
+
+
+                     /*
+                      * Now add the new node for destinationDevice
+                      */
+
+                      altinfo =
+                           OSPPAltInfoNew(OSPM_STRLEN(ospvDestinationDevice),
+                           (const unsigned char *)ospvDestinationDevice,
+                           ospeH323);
+
+                      if(altinfo != OSPC_OSNULL)
+                      {
+                           OSPPListAppend(
+                                    (OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),
+                                    (void *)altinfo);
+                      }
+                      altinfo = NULL;
+                      trans->AuthInd->ospmAuthIndHasDestDevBeenModified = OSPC_TRUE;
+                }
+            }
+            else
+            {
+                errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");
+            }
+        }
+    }
+
+    return errorcode;
+
+}
+ 
+/*
  * OSPPTransactionGetLookAheadInfoIfPresent():
  * This API should be called after calling ValidateAuthorization.
  * The API takes the transaction id as the input and returns the LookAhead 

@@ -118,6 +118,7 @@ char     *New_ServicePoint          = { "http://osptestserver.transnexus.com:108
 static  OSPTCALLID *callids[NUM_CALL_IDS];
 token_algo_t tokenalgo=TOKEN_ALGO_SIGNED;
 char *SourceIP=NULL,*SourceDevIP=NULL,*DstIP=NULL,*DstDevIP=NULL;
+char *ModifiedSourceIP=NULL,*ModifiedSourceDevIP=NULL,*ModifiedDstIP=NULL,*ModifiedDstDevIP=NULL;
 unsigned almostOutOfResources=0;
 unsigned hardwareSupport=0;
 unsigned TCcode=0;
@@ -1246,7 +1247,7 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
 
         errorcode = OSPPTransactionNew(
             OSPVProviderHandle,
-            &tranhandle2);
+            &OSPVTransactionHandle);
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
             printf("\nSuccessful TransactionNew.");
@@ -1258,7 +1259,7 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
 
 
         errorcode = OSPPTransactionBuildUsageFromScratch(
-        tranhandle2,
+        OSPVTransactionHandle,
         (OSPTUINT64)server_txn_id,/* Some hard coded Server Tx Id */
         IsSource, SourceIP,
         DstIP, SourceDevIP,
@@ -1311,7 +1312,7 @@ testOSPPTransactionInitializeAtDevice(int IsSource)
 
         errorcode = OSPPTransactionNew(
             OSPVProviderHandle,
-            &tranhandle2);
+            &OSPVTransactionHandle);
     }
 
     tokensize = TOKEN_SZ;
@@ -1321,7 +1322,7 @@ testOSPPTransactionInitializeAtDevice(int IsSource)
         printf("\nSuccessful TransactionNew.");
 
         errorcode = OSPPTransactionInitializeAtDevice(
-        tranhandle2,
+        OSPVTransactionHandle,
         IsSource, SourceIP,
         DstIP, SourceDevIP,
         NULL, callingnumber,(OSPE_NUMBERING_FORMAT)CallingNumFormat,
@@ -1656,6 +1657,22 @@ testSetCalledNumber()
     return errorcode;
 }
 
+int
+testOSPPTransactionModifyDeviceIdentifiers()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPTransactionModifyDeviceIdentifiers(
+          OSPVTransactionHandle,
+          ModifiedSourceIP,
+          ModifiedSourceDevIP,
+          ModifiedDstIP,
+          ModifiedDstDevIP 
+          );
+
+    printf("errorcode = %d\n", errorcode);
+    return errorcode;
+}
 int
 testOSPPTransactionGetLookAheadInfoIfPresent()
 {
@@ -2186,6 +2203,9 @@ testAPI(int apinumber)
         case 45:
         errorcode = testOSPPTransactionGetLookAheadInfoIfPresent();
         break;
+        case 46:
+        errorcode = testOSPPTransactionModifyDeviceIdentifiers();
+        break;
         case 50:
         errorcode = testSetCallingNumber();
         break;
@@ -2327,7 +2347,7 @@ testMenu()
       printf("39) GetDestinationProtocol            40) IsDestOSPEnabled\n");
       printf("41) %-6d Test Calls                 42) Show Version\n", num_test_calls);
       printf("43) BuildUsageFromScratch(OGW)        44) BuildUsageFromScratch(TGW)\n");
-      printf("45) GetLookAheadInfoIfPresent\n");
+      printf("45) GetLookAheadInfoIfPresent         46) ModifyDeviceIdentifiers\n");
       printf("99) Sleep for 2 seconds\n");
       printf("---------------------------------------------------------------------\n");
       printf("Configuration Parameters \n");
@@ -2541,6 +2561,50 @@ GetConfiguration()
                                                                                             else
                                                                                             {
                                                                                                 CapSPMsgCount[Capspindex++] = atoi(&inbuf[12]);
+                                                                                            }
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            if (strncmp(inbuf,"ModifiedSRC=",12) == 0)
+                                                                                            {
+                                                                                               strcpy(tmp_addr,(&inbuf[12]));
+                                                                                               if (strcmp(tmp_addr,"0") != 0)
+                                                                                               {
+                                                                                                  ModifiedSourceIP = _Strdup(tmp_addr); 
+                                                                                               }
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                if (strncmp(inbuf,"ModifiedSRCDEV=",15) == 0)
+                                                                                                {
+                                                                                                   strcpy(tmp_addr,(&inbuf[15]));
+                                                                                                   if (strcmp(tmp_addr,"0") != 0)
+                                                                                                   {
+                                                                                                      ModifiedSourceDevIP = _Strdup(tmp_addr); 
+                                                                                                   }
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    if (strncmp(inbuf,"ModifiedDST=",12) == 0)
+                                                                                                    {
+                                                                                                       strcpy(tmp_addr,(&inbuf[12]));
+                                                                                                       if (strcmp(tmp_addr,"0") != 0)
+                                                                                                       {
+                                                                                                          ModifiedDstIP = _Strdup(tmp_addr); 
+                                                                                                       }
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        if (strncmp(inbuf,"ModifiedDSTDEV=",15) == 0)
+                                                                                                        {
+                                                                                                           strcpy(tmp_addr,(&inbuf[15]));
+                                                                                                           if (strcmp(tmp_addr,"0") != 0)
+                                                                                                           {
+                                                                                                              ModifiedDstDevIP = _Strdup(tmp_addr); 
+                                                                                                           }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
                                                                                             }
                                                                                         }
                                                                                     }
