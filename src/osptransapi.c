@@ -1420,6 +1420,7 @@ OSPPTransactionReinitializeAtDevice(
  * life of the transaction object. Parameters to the function are:
  *   ospvTransaction: handle of the transaction object.
  *   ospvDuration: the duration of the call, in seconds.
+ *   ospvStartTime: the call start time.
  *   ospvLossPacketsSent: a count of the total number of packets sent by the 
  *      reporting system that were not received by its peer, as reported in 
  *      the peer's RTCP sender and receiver reports.
