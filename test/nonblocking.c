@@ -60,6 +60,7 @@ typedef struct _NBUSEIND
 {
   OSPTTRANHANDLE  ospvTransaction;              /* In - Transaction handle */
   unsigned        ospvDuration;                 /* In - Length of call */
+  OSPTTIME        ospvStartTime;                /* In - StartTime of call */
   unsigned        ospvLossPacketsSent;          /* In - Packets not received by peer */
   signed          ospvLossFractionSent;         /* In - Fraction of packets not received by peer */
   unsigned        ospvLossPacketsReceived;      /* In - Packets not received that were expected */
@@ -494,6 +495,7 @@ WorkThread(void *arg)
               *(transaction->ErrorCode) = OSPPTransactionReportUsage(       
                                                         transaction->Message.UseInd.ospvTransaction,
                                                         transaction->Message.UseInd.ospvDuration,
+                                                        transaction->Message.UseInd.ospvStartTime,
                                                         transaction->Message.UseInd.ospvLossPacketsSent,
                                                         transaction->Message.UseInd.ospvLossFractionSent,
                                                         transaction->Message.UseInd.ospvLossPacketsReceived,
@@ -687,6 +689,7 @@ int OSPPTransactionReportUsage_nb(
         int             *OSPErrorCode,                /* Out- Error code returned by the blocking function */
         OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction handle */
         unsigned        ospvDuration,                 /* In - Length of call */
+        OSPTTIME        ospvStartTime,                /* In - StartTime of call */
         unsigned        ospvLossPacketsSent,          /* In - Packets not received by peer */
         signed          ospvLossFractionSent,         /* In - Fraction of packets not received by peer */
         unsigned        ospvLossPacketsReceived,      /* In - Packets not received that were expected */
@@ -712,6 +715,7 @@ int OSPPTransactionReportUsage_nb(
       nbData->ErrorCode                                   = OSPErrorCode;
       nbData->Message.UseInd.ospvTransaction              = ospvTransaction;
       nbData->Message.UseInd.ospvDuration                 = ospvDuration;
+      nbData->Message.UseInd.ospvStartTime                = ospvStartTime;
       nbData->Message.UseInd.ospvLossPacketsSent          = ospvLossPacketsSent;
       nbData->Message.UseInd.ospvLossFractionSent         = ospvLossFractionSent;
       nbData->Message.UseInd.ospvLossPacketsReceived      = ospvLossPacketsReceived;

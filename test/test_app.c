@@ -1179,6 +1179,7 @@ testOSPPTransactionReportUsage()
         errorcode = OSPPTransactionReportUsage(
             OSPVTransactionHandle,
             30,
+						time(NULL)-10,
             1,
             2,
             100,
@@ -1194,6 +1195,7 @@ testOSPPTransactionReportUsage()
         errorcode = OSPPTransactionReportUsage(
             tranhandle2,
             30,
+						time(NULL)-10,
             1,
             2,
             100,
@@ -2217,6 +2219,7 @@ int testNonBlockingPerformanceTest()
                                                     &OErrorCodes[i],
                                                     OTransactionHandles[i],
                                                     30,
+																										time(NULL)-10,
                                                     1,
                                                     2,
                                                     100,
@@ -2235,6 +2238,7 @@ int testNonBlockingPerformanceTest()
                                                     &TErrorCodes[i],
                                                     TTransactionHandles[i],
                                                     30,
+																										time(NULL)-10,
                                                     1,
                                                     2,
                                                     100,

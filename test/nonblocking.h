@@ -141,6 +141,7 @@ extern "C"
             int             *OSPErrorCode,                /* Out- Error code returned by the blocking function */
             OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction handle */
             unsigned        ospvDuration,                 /* In - Length of call */
+            OSPTTIME        ospvStartTime,                /* In - StartTime of call */
             unsigned        ospvLossPacketsSent,          /* In - Packets not received by peer */
             signed          ospvLossFractionSent,         /* In - Fraction of packets not received by peer */
             unsigned        ospvLossPacketsReceived,      /* In - Packets not received that were expected */
