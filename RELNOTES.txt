@@ -78,4 +78,19 @@ Version 2.5.5
 
 ---------------------------------------------------------------------------
 
+Version 2.5.6
+
+  * Changed OSPPProviderNew to validate service points for correctness 
+    before proceeding with creating a new provider instance.
+  * Fixed handling of HTTP request to close connection - "Connection: close".
+  * Fixed logic for searching available connection when HTTPMaxConnections
+    has been reached.
+  * Fixed a race condition in OSPPCommSignalAllConnections which could
+    potentially cause a call to OSPPProviderDelete to deadlock.
+  * Added initialization of random number generator engine using contents 
+    of ".rnd" file expected to be found in the current directory.
+  * Added Cryptogaphic Hardware Support, requires OpenSSL Engine library.
+  * Replaced failure reasons with TCCodes defined in V.2
+
+---------------------------------------------------------------------------
 
