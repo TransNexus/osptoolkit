@@ -3102,7 +3102,7 @@ OSPPTransactionValidateAuthorisation(
     OSPTDEST            *dest       = OSPC_OSNULL;
     int                 BAllowDupTransId = OSPC_TRUE;
     token_algo_t        tokenAlgo = (token_algo_t)ospvTokenAlgo;
-    OSPTBOOL            signedTokenValidationFailed = OSPC_FALSE;
+    OSPTBOOL            IsTokenSigned;
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
@@ -3121,6 +3121,42 @@ OSPPTransactionValidateAuthorisation(
 
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
         OSPM_DBGERRORLOG(errorcode, "Invalid input for ValidateAuth");
+    }
+
+    /* Check to see what tokenAlgo value is passed, 
+     * and whether it is consistent with the kind of token passed in the API.
+     */
+    if (OSPM_STRNCMP("<?xml",ospvToken,5) == 0)
+    {
+        /*
+         * The token is unsigned.
+         * if tokenAlgo = TOKEN_ALGO_SIGNED, then send an error back
+         */
+        if (tokenAlgo == TOKEN_ALGO_SIGNED)
+        {
+            errorcode = OSPC_ERR_TRAN_UNSIGNED_TOKEN_NOT_ALLOWED;
+            OSPM_DBGERRORLOG(errorcode, "Not configured to do unsigned token in ValidateAuth");
+        }
+        else
+        {
+            IsTokenSigned = OSPC_FALSE;
+        }
+    }
+    else
+    {
+        /*
+         * The token is signed.
+         * if tokenAlgo = TOKEN_ALGO_UNSIGNED, then send an error back
+         */
+        if (tokenAlgo == TOKEN_ALGO_UNSIGNED)
+        {
+            errorcode = OSPC_ERR_TRAN_SIGNED_TOKEN_NOT_ALLOWED;
+            OSPM_DBGERRORLOG(errorcode, "Not configured to do signed token in ValidateAuth");
+        }
+        else
+        {
+            IsTokenSigned = OSPC_TRUE;
+        }
     }
 
     /* Get transaction context */
@@ -3413,8 +3449,7 @@ OSPPTransactionValidateAuthorisation(
             errorcode = OSPPProviderGetSecurity(provider, &security);
         }
 
-        if ((errorcode == OSPC_ERR_NO_ERROR) &&((tokenAlgo == TOKEN_ALGO_SIGNED)|| 
-                                                (tokenAlgo == TOKEN_ALGO_BOTH)))
+        if ((errorcode == OSPC_ERR_NO_ERROR) &&(IsTokenSigned == OSPC_TRUE))
         {
             errorcode = OSPPSecSignatureVerify(security,
                 &tokenmsg, &sizeoftokenmsg,
@@ -3428,14 +3463,9 @@ OSPPTransactionValidateAuthorisation(
             }
 	    #endif
 
-            if (errorcode != OSPC_ERR_NO_ERROR)
-            {
-                signedTokenValidationFailed = OSPC_TRUE;
-            }
         }
 
-        if (((errorcode == OSPC_ERR_NO_ERROR) && (tokenAlgo == TOKEN_ALGO_UNSIGNED)) ||
-            ((signedTokenValidationFailed == OSPC_TRUE) && (tokenAlgo ==TOKEN_ALGO_BOTH)))
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (IsTokenSigned == OSPC_FALSE))
         {
             /* just copy the token content into the token msg. No sig present */
             OSPM_MALLOC(tokenmsg, unsigned char, ospvSizeOfToken);
