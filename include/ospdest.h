@@ -89,90 +89,6 @@ typedef struct
 OSPTDEST;
 
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-#ifndef OSPC_DEBUG
-/*
- * Note: all macros are also implemented as functions in ospmsgdest.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-
-#define OSPPDestHasNumber(ospvDest) \
-    (ospvDest)?((ospvDest)->ospmDestNumber[0] != '\0'):OSPC_FALSE
-#define OSPPDestSetNumber(ospvDest,ospvNum) \
-            OSPM_MEMCPY((ospvDest)->ospmDestNumber, \
-                (ospvNum), \
-                tr_min(OSPC_E164NUMSIZE,OSPM_STRLEN((const char *)ospvNum)+1))
-#define OSPPDestGetNumber(ospvDest) (ospvDest)?((ospvDest)->ospmDestNumber):OSPC_OSNULL
-
-#define OSPPDestHasAddr(ospvDest) \
-    (ospvDest)?((ospvDest)->ospmDestAddr[0] != '\0'):OSPC_FALSE
-#define OSPPDestSetAddr(ospvDest,ospvAddr) \
-            OSPM_MEMCPY((ospvDest)->ospmDestAddr, (ospvAddr), \
-                tr_min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1))
-#define OSPPDestGetAddr(ospvDest) (ospvDest)?((ospvDest)->ospmDestAddr):OSPC_OSNULL
-
-#define OSPPDestDevHasAddr(ospvDest) \
-    (ospvDest)?((ospvDest)->ospmDestDevAddr[0] != '\0'):OSPC_FALSE
-#define OSPPDestDevSetAddr(ospvDest,ospvAddr) \
-            OSPM_MEMCPY((ospvDest)->ospmDestDevAddr, (ospvAddr), \
-                tr_min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1))
-#define OSPPDestDevGetAddr(ospvDest) (ospvDest)?((ospvDest)->ospmDestDevAddr):OSPC_OSNULL
-
-
-#define OSPPDestHasValidAfter(ospvDest) \
-    (ospvDest)?((ospvDest)->ospmDestValidAfter != OSPC_TIMEMIN):OSPC_FALSE
-#define OSPPDestSetValidAfter(ospvDest,ospvTime) \
-    (ospvDest)->ospmDestValidAfter = (ospvTime)
-#define OSPPDestGetValidAfter(ospvDest) (ospvDest)->ospmDestValidAfter
-
-#define OSPPDestHasValidUntil(ospvDest) \
-    (ospvDest)?((ospvDest)->ospmDestValidUntil != OSPC_TIMEMAX):OSPC_FALSE
-#define OSPPDestSetValidUntil(ospvDest,ospvTime) \
-    (ospvDest)->ospmDestValidUntil = (ospvTime)
-#define OSPPDestGetValidUntil(ospvDest) (ospvDest)->ospmDestValidUntil
-
-#define OSPPDestHasAuthority(ospvDest) \
-    (ospvDest)?((ospvDest)->ospmDestAuthority[0] != '\0'):OSPC_FALSE
-#define OSPPDestSetAuthority(ospvDest,ospvAuth) \
-    OSPM_STRNCPY((char *)(ospvDest)->ospmDestAuthority, (ospvAuth), \
-    tr_min(OSPM_STRLEN((const char *)ospvAuth)+1,OSPC_URLSIZE-1))
-
-#define OSPPDestHasCallId(ospvDest) \
-    (ospvDest)?((ospvDest)->ospmDestCallId != OSPC_OSNULL):OSPC_FALSE
-#define OSPPDestGetCallId(ospvDest) ((ospvDest)->ospmDestCallId)
-
-#define OSPPDestHasToken(ospvDest) (ospvDest)?(OSPPListFirst(&(ospvDest)->ospmDestTokens) != OSPC_OSNULL):OSPC_FALSE
-#define OSPPDestAddToken(ospvDest, ospvToken)   \
-    OSPPListAppend(&(ospvDest)->ospmDestTokens, (ospvToken))
-#define OSPPDestFirstToken(ospvDest) \
-    OSPPListFirst(&(ospvDest)->ospmDestTokens)
-#define OSPPDestNextToken(ospvDest, ospvToken) \
-    OSPPListNext(&(ospvDest)->ospmDestTokens, (ospvToken))
-
-#define OSPPDestHasLimit(ospvDest) (ospvDest)?(((OSPTDEST *)ospvDest)->ospmDestHasLimit):OSPC_FALSE
-#define OSPPDestGetLimit(ospvDest) (ospvDest)?(((OSPTDEST *)ospvDest)->ospmDestLimit):0
-#define OSPPDestSetLimit(ospvDest, ospvLimit) \
-    { ((OSPTDEST *)ospvDest)->ospmDestLimit=ospvLimit; \
-    ((OSPTDEST *)ospvDest)->ospmDestHasLimit=OSPC_TRUE; }
-
-
-/* Failure Reason */
-#define OSPPDestHasTNFailReason(ospvDest) \
-    (ospvDest)?((ospvDest)->ospmDestTNFailReasonInd):OSPC_FALSE
-#define OSPPDestSetTNFailReason(ospvDest,ospvTNFailReason) { \
-    (ospvDest)->ospmDestTNFailReason = (ospvTNFailReason); \
-    (ospvDest)->ospmDestTNFailReasonInd = 1; \
-    }
-#define OSPPDestGetTNFailReason(ospvDest) \
-(ospvDest)?(ospvDest)->ospmDestTNFailReason:0
-
-#endif /* OSPC_DEBUG */
-
 #ifdef __cplusplus
 extern "C" 
 {
@@ -186,10 +102,9 @@ extern "C"
     void           OSPPDestDelete(OSPTDEST **);
     unsigned       OSPPDestFromElement(OSPTXMLELEM *, OSPTDEST **);
     void           OSPPDestSetCallId(OSPTDEST *, const unsigned char *, unsigned);
-
-#ifdef OSPC_DEBUG
     void           OSPPDestSetProtocol(OSPTDEST *,const unsigned char *);
     void           OSPPDestSetOSPVersion(OSPTDEST *,const unsigned char *);
+
 
     unsigned       OSPPDestHasNumber(OSPTDEST *ospvDest);
     void           OSPPDestSetNumber(OSPTDEST *, const unsigned char *);
@@ -230,7 +145,6 @@ extern "C"
     void           OSPPDestSetTNFailReason(OSPTDEST *, unsigned);
     unsigned       OSPPDestGetTNFailReason(OSPTDEST *);
 
-#endif /* OSPC_DEBUG */
 
 #ifdef __cplusplus
 }

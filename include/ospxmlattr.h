@@ -53,21 +53,6 @@ OSPTXMLATTR;
 
 /**/
 /*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospxmlattr.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-#define OSPPXMLAttrGetName(ospvXMLAttr)  (ospvXMLAttr)?((ospvXMLAttr)->ospmXMLAttrName):OSPC_OSNULL
-#define OSPPXMLAttrGetValue(ospvXMLAttr) (ospvXMLAttr)?((ospvXMLAttr)->ospmXMLAttrValue):OSPC_OSNULL
-#endif
-/**/
-/*-----------------------------------------------------------------------*
  * function prototypes
  *-----------------------------------------------------------------------*/
 
@@ -79,13 +64,9 @@ extern "C"
 OSPTXMLATTR *OSPPXMLAttrNew(const unsigned char *, const unsigned char *);
 void         OSPPXMLAttrDelete(OSPTXMLATTR **);
 
-#ifndef OSPPXMLAttrGetName
 const char *OSPPXMLAttrGetName(OSPTXMLATTR *);
-#endif
 
-#ifndef OSPPXMLAttrGetValue
 const char *OSPPXMLAttrGetValue(OSPTXMLATTR *);
-#endif
 
 
 #ifdef __cplusplus

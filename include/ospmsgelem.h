@@ -115,32 +115,10 @@ extern const unsigned    OSPVNumElemDesc;
 
 /**/
 /*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospmsgelem.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-
-#define OSPPMsgGetElemName(ospvPart) \
-    OSPPMsgDescGetName((OSPTMSGPART)(ospvPart), OSPVElemDescs, \
-                       OSPVNumElemDesc)
-#define OSPPMsgGetElemPart(ospvName) \
-   ((OSPTMSGELEMPART) OSPPMsgDescGetPart((ospvName), OSPVElemDescs, \
-                          OSPVNumElemDesc))
-#endif /* OSPC_DEBUG */
-/**/
-/*-----------------------------------------------------------------------*
  * function prototypes
  *-----------------------------------------------------------------------*/
-#ifdef OSPC_DEBUG
 const char *OSPPMsgGetElemName(OSPTMSGELEMPART);
 OSPTMSGELEMPART OSPPMsgGetElemPart(const char *);
-#endif /* OSPC_DEBUG */
 
 #endif /* _OSPMSGELEM_H */
 

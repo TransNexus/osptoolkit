@@ -45,8 +45,6 @@
  * in the included main() procedures in the individual components.
  */
 
-#define OSPC_FASTMSG_DESC
-
 /*
  * An OPSMsgDesc structure is used to associate a part (for an attribute
  * or an element) with a name.
@@ -62,32 +60,13 @@ OSPTMSGDESC;
 
 /**/
 /*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-#ifndef OSPC_DEBUG
-/*
- * Note: all macros are also implemented as functions in ospmsgdesc.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-
-#define OSPPMsgDescGetName(ospvPart, ospvDescs, ospvNumDesc) \
-        (((ospvPart) < (ospvNumDesc)) ? \
-        (ospvDescs)[(int)(ospvPart)].ospmMsgDescName : OSPC_OSNULL )
-#endif /* OSPC_DEBUG */
-
-/**/
-/*-----------------------------------------------------------------------*
  * function prototypes
  *-----------------------------------------------------------------------*/
 
 
 OSPTMSGPART  OSPPMsgDescGetPart(const char *, const OSPTMSGDESC *, unsigned);
 
-#ifdef OSPC_DEBUG
 const char  *OSPPMsgDescGetName(OSPTMSGPART,  const OSPTMSGDESC *, unsigned);
-#endif /* OSPC_DEBUG */
 
 #endif /* OSPMSGDESC_H */
 

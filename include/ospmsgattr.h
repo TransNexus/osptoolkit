@@ -54,38 +54,15 @@ OSPTMSGATTRPART;
 extern const OSPTMSGDESC OSPVAttrDescs[];
 extern const unsigned    OSPVNumAttrDesc;
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-#ifndef OSPC_DEBUG
-/*
- * Note: all macros are also implemented as functions in ospmsgattr.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-
-#define OSPPMsgGetAttrName(ospvPart) \
-    OSPPMsgDescGetName((OSPTMSGPART)(ospvPart), OSPVAttrDescs, \
-                       OSPVNumAttrDesc)
-#define OSPPMsgGetAttrPart(ospvName) \
-   ((OSPTMSGATTRPART) OSPPMsgDescGetPart((ospvName), OSPVAttrDescs, \
-                          OSPVNumAttrDesc))
-
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*
  * function prototypes
  *-----------------------------------------------------------------------*/
-#ifdef OSPC_DEBUG
 
 const char *OSPPMsgGetAttrName(OSPTMSGATTRPART);
 OSPTMSGATTRPART OSPPMsgGetAttrPart(const char *);
 
-#endif /* OSPC_DEBUG */
 
 #endif /* _OSPMSGATTR_H */
 

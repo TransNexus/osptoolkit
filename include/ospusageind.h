@@ -61,134 +61,6 @@ OSPTUSAGEIND;
 
 /**/
 /*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-#ifndef OSPC_DEBUG
-/*
- * Note: all macros are also implemented as functions in ospusageind.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-
-/* Timestamp */
-#define OSPPUsageIndHasTimestamp(ospvUsageInd) \
-(ospvUsageInd)?((ospvUsageInd)->ospmUsageIndTimestamp):OSPC_FALSE
-#define OSPPUsageIndSetTimestamp(ospvUsageInd,ospvTime) \
-    (ospvUsageInd)->ospmUsageIndTimestamp = (ospvTime)
-#define OSPPUsageIndGetTimestamp(ospvUsageInd) \
-    (ospvUsageInd)->ospmUsageIndTimestamp
-
-/* ComponentId */
-#define OSPPUsageIndHasComponentId(ospvUsageInd) \
-    ((ospvUsageInd)->ospmUsageIndComponentId != OSPC_OSNULL)
-#define OSPPUsageIndGetComponentId(ospvUsageInd) \
-    (ospvUsageInd)->ospmUsageIndComponentId
-
-/* Role */
-#define OSPPUsageIndHasRole(ospvUsageInd) \
-    (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndRole):OSPC_FALSE
-#define OSPPUsageIndGetRole(ospvUsageInd) \
-    (ospvUsageInd)->ospmUsageIndRole
-#define OSPPUsageIndSetRole(ospvUsageInd,ospvRole) \
-    (ospvUsageInd)->ospmUsageIndRole = (ospvRole); \
-    (ospvUsageInd)->ospmUsageIndHasRole = OSPC_TRUE;
-
-/* TransactionId */
-#define OSPPUsageIndHasTransactionId(ospvUsageInd) \
-    (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndTransactionId != 0):OSPC_FALSE
-#define OSPPUsageIndSetTransactionId(ospvUsageInd,ospvTransactionId) \
-    (ospvUsageInd)->ospmUsageIndTransactionId = ospvTransactionId
-#define OSPPUsageIndGetTransactionId(ospvUsageInd) \
-    ((ospvUsageInd)->ospmUsageIndTransactionId)
-
-/* CallId */
-#define OSPPUsageIndHasCallId(ospvUsageInd) \
-    (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndCallId != OSPC_OSNULL):OSPC_FALSE
-#define OSPPUsageIndGetCallId(ospvUsageInd) \
-    ((ospvUsageInd)->ospmUsageIndCallId)
-
-/* SourceInfo */
-#define OSPPUsageIndSetSourceNumber(ospvUsageInd,ospvSourceNumber) \
-    OSPM_STRNCPY((char *)(ospvUsageInd)->ospmUsageIndSourceNumber, \
-        (const char *)(ospvSourceNumber), \
-        tr_min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvSourceNumber)+1))
-#define OSPPUsageIndGetSourceNumber(ospvUsageInd) \
-        (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndSourceNumber):OSPC_OSNULL
-
-/* Source Alternate */
-#define OSPPUsageIndHasSourceAlt(ospvUsageInd) \
-    (ospvUsageInd)?(OSPPUsageIndFirstSourceAlt(ospvUsageInd) != OSPC_OSNULL):OSPC_FALSE
-
-#define OSPPUsageIndFirstSourceAlt(ospvUsageInd) \
-    (const char *)OSPPListFirst(&((ospvUsageInd)->ospmUsageIndSourceAlternate))
-
-#define OSPPUsageIndNextSourceAlt(ospvUsageInd, ospvAltInfo) \
-    (OSPTALTINFO *)OSPPListNext((OSPTLIST *)&((ospvUsageInd)->ospmUsageIndSourceAlternate), \
-                        (void *)ospvAltInfo)
-
-/* DestinationInfo */
-#define OSPPUsageIndSetDestNumber(ospvUsageInd,ospvDestNumber) \
-    OSPM_STRNCPY((char *)(ospvUsageInd)->ospmUsageIndDestNumber, \
-        (const char *)(ospvDestNumber),  \
-        tr_min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvDestNumber)+1))
-#define OSPPUsageIndGetDestNumber(ospvUsageInd) \
-    (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndDestNumber):OSPC_OSNULL
-
-/* Destination Alternate */
-
-#define OSPPUsageIndHasDestinationAlt(ospvUsageInd) \
-    (ospvUsageInd)?(OSPPUsageIndFirstDestinationAlt(ospvUsageInd) != OSPC_OSNULL):OSPC_FALSE
-
-#define OSPPUsageIndFirstDestinationAlt(ospvUsageInd) \
-    (const char *)OSPPListFirst(&((ospvUsageInd)->ospmUsageIndDestinationAlternate))
-
-#define OSPPUsageIndNextDestinationAlt(ospvUsageInd, ospvAltInfo) \
-    (OSPTALTINFO *)OSPPListNext((OSPTLIST *)&((ospvUsageInd)->ospmUsageIndDestinationAlternate), \
-                        (void *)ospvAltInfo)
-
-#define OSPPUsageIndGetDestinationAltSize(ospvAltInfo) \
-    (ospvAltInfo)?OSPPAltInfoGetSize(ospvAltInfo):0
-
-/* UsageDetail */
-#define OSPPUsageIndHasDuration(ospvUsageInd) \
-    (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndDuration >= 0):OSPC_FALSE
-#define OSPPUsageIndSetDuration(ospvUsageInd,ospvDuration) \
-    (ospvUsageInd)->ospmUsageIndDuration = ospvDuration;
-#define OSPPUsageIndGetDuration(ospvUsageInd) \
-    (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndDuration):0
-
-/* Transnexus Extensions */
-/* Customer ID */
-#define OSPPUsageIndHasTNCustId(ospvUsageInd) \
-    (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndTNCustId != 0L):OSPC_FALSE
-#define OSPPUsageIndSetTNCustId(ospvUsageInd,ospvTNCustId) \
-    (ospvUsageInd)->ospmUsageIndTNCustId = (ospvTNCustId)
-#define OSPPUsageIndGetTNCustId(ospvUsageInd) \
-    (ospvUsageInd)?(ospvUsageInd)->ospmUsageIndTNCustId:0L
-
-/* Device ID */
-#define OSPPUsageIndHasTNDeviceId(ospvUsageInd) \
-    (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndTNDeviceId != 0L):OSPC_FALSE
-#define OSPPUsageIndSetTNDeviceId(ospvUsageInd,ospvTNDeviceId) \
-    (ospvUsageInd)->ospmUsageIndTNDeviceId = (ospvTNDeviceId)
-#define OSPPUsageIndGetTNDeviceId(ospvUsageInd) \
-    (ospvUsageInd)?(ospvUsageInd)->ospmUsageIndTNDeviceId:0L
-
-/* Failure Reason */
-#define OSPPUsageIndHasTNFailReason(ospvUsageInd) \
-    (ospvUsageInd)?((ospvUsageInd)->ospmUsageIndTNFailReasonInd):OSPC_FALSE
-#define OSPPUsageIndSetTNFailReason(ospvUsageInd,ospvTNFailReason) { \
-    (ospvUsageInd)->ospmUsageIndTNFailReason = (ospvTNFailReason); \
-    (ospvUsageInd)->ospmUsageIndTNFailReasonInd = 1; \
-    }
-#define OSPPUsageIndGetTNFailReason(ospvUsageInd) \
-    (ospvUsageInd)?(ospvUsageInd)->ospmUsageIndTNFailReason:0
-
-#endif
-
-/**/
-/*-----------------------------------------------------------------------*
  * function prototypes
  *-----------------------------------------------------------------------*/
 
@@ -210,7 +82,6 @@ extern "C"
     unsigned       OSPPUsageIndHasMessageId(OSPTUSAGEIND *);
     unsigned char  *OSPPUsageIndGetMessageId(OSPTUSAGEIND *);
 
-#ifdef OSPC_DEBUG
 
     unsigned       OSPPUsageIndHasTimestamp(OSPTUSAGEIND *);
     void           OSPPUsageIndSetTimestamp(OSPTUSAGEIND *, OSPTTIME);
@@ -261,8 +132,6 @@ extern "C"
     void           OSPPUsageIndSetTNFailReason(OSPTUSAGEIND *, unsigned);
     unsigned       OSPPUsageIndGetTNFailReason(OSPTUSAGEIND *);
 
-
-#endif /* OSPC_DEBUG */
 
     OSPTBOOL       OSPPUsageIndHasTNStatistics(OSPTUSAGEIND *);
     void           OSPPUsageIndSetTNStatistics(OSPTUSAGEIND *, OSPTSTATISTICS *);

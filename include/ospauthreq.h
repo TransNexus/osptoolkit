@@ -52,112 +52,6 @@ typedef struct
 }
 OSPTAUTHREQ;
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospauthreq.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-
-#define OSPPAuthReqHasTimestamp(ospvAuthReq) \
-    (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqTimestamp != OSPC_TIMEMIN):OSPC_FALSE
-#define OSPPAuthReqSetTimestamp(ospvAuthReq,ospvTime) \
-    (ospvAuthReq)->ospmAuthReqTimestamp = (ospvTime)
-#define OSPPAuthReqGetTimestamp(ospvAuthReq) \
-    (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqTimestamp):0
-
-/* ComponentId */
-#define OSPPAuthReqHasComponentId(ospvAuthReq) \
-    ((ospvAuthReq)->ospmAuthReqComponentId != OSPC_OSNULL)
-
-#define OSPPAuthReqHasCallId(ospvAuthReq) \
-    (ospvAuthReq)?(OSPPAuthReqFirstCallId(ospvAuthReq) != OSPC_OSNULL): \
-    OSPC_OSNULL
-#define OSPPAuthReqFirstCallId(ospvAuthReq) \
-    (ospvAuthReq)? \
-    (OSPTCALLID *)OSPPListFirst(&((ospvAuthReq)->ospmAuthReqCallId)): \
-    OSPC_OSNULL
-#define OSPPAuthReqNextCallId(ospvAuthReq,ospvCallId) \
-    (ospvAuthReq)? \
-    (OSPTCALLID *)OSPPListNext((OSPTLIST *)&((ospvAuthReq)->ospmAuthReqCallId), (void *)ospvCallId): \
-    OSPC_OSNULL
-#define OSPPAuthReqGetCallIdSize(ospvCallId) \
-    (ospvCallId)?OSPPCallIdGetSize(ospvCallId):OSPC_OSNULL
-#define OSPPAuthReqGetCallIdValue(ospvCallId) \
-    (ospvCallId)?OSPPCallIdGetValue(ospvCallId):OSPC_OSNULL
-
-#define OSPPAuthReqHasSourceNumber(ospvAuthReq) \
-    (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqSourceNumber[0] != '\0'):OSPC_FALSE
-#define OSPPAuthReqSetSourceNumber(ospvAuthReq,ospvNum) \
-    OSPM_STRNCPY((ospvAuthReq)->ospmAuthReqSourceNumber, (ospvNum), \
-    tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
-#define OSPPAuthReqGetSourceNumber(ospvAuthReq) \
-    (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqSourceNumber):OSPC_OSNULL
-
-#define OSPPAuthReqHasDestNumber(ospvAuthReq) \
-    (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqDestNumber[0] != '\0'):OSPC_FALSE
-#define OSPPAuthReqSetDestNumber(ospvAuthReq,ospvNum) \
-    OSPM_STRNCPY((ospvAuthReq)->ospmAuthReqDestNumber, (ospvNum), \
-    tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
-#define OSPPAuthReqGetDestNumber(ospvAuthReq) \
-    (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqDestNumber):OSPC_OSNULL
-
-/* Source Alternate */
-
-#define OSPPAuthReqHasSourceAlt(ospvAuthReq) \
-    (ospvAuthReq)?(OSPPAuthReqFirstSourceAlt(ospvAuthReq) != OSPC_OSNULL):OSPC_FALSE
-
-#define OSPPAuthReqFirstSourceAlt(ospvAuthReq) \
-    (ospvAuthReq)?((OSPTALTINFO *)OSPPListFirst((OSPTLIST *)&((ospvAuthReq)->ospmAuthReqSourceAlternate))):OSPC_OSNULL
-
-#define OSPPAuthReqNextSourceAlt(ospvAuthReq, ospvAltInfo) \
-    (ospvAuthReq)?((OSPTALTINFO *)OSPPListNext((OSPTLIST *)&((ospvAuthReq)->ospmAuthReqSourceAlternate), \
-            (void *)ospvAltInfo)):OSPC_OSNULL
-
-/* Destination Alternate */
-
-#define OSPPAuthReqHasDestinationAlt(ospvAuthReq) \
-    (ospvAuthReq)? \
-    (OSPPAuthReqFirstDestinationAlt(ospvAuthReq) != OSPC_OSNULL): \
-    OSPC_FALSE
-
-#define OSPPAuthReqFirstDestinationAlt(ospvAuthReq) \
-    (ospvAuthReq)? \
-    ((OSPTALTINFO *)OSPPListFirst(&((ospvAuthReq)->ospmAuthReqDestinationAlternate))): \
-    OSPC_OSNULL
-
-#define OSPPAuthReqNextDestinationAlt(ospvAuthReq, ospvAltInfo) \
-    (ospvAltInfo)? \
-    ((OSPTALTINFO *)OSPPListNext((OSPTLIST *)&((ospvAuthReq)->ospmAuthReqDestinationAlternate), \
-            (void *)ospvAltInfo)):OSPC_OSNULL
-
-#define OSPPAuthReqSetMaxDest(ospvAuthReq, ospvNum) \
-    (ospvAuthReq)->ospmAuthReqMaxDest = ospvNum
-#define OSPPAuthReqGetMaxDest(ospvAuthReq) \
-    (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqMaxDest):0
-
-#define OSPPAuthReqHasTNCustId(ospvAuthReq) \
-    (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqTNCustId != 0L):OSPC_FALSE
-#define OSPPAuthReqSetTNCustId(ospvAuthReq,ospvTNCustId) \
-    (ospvAuthReq)->ospmAuthReqTNCustId = (ospvTNCustId)
-#define OSPPAuthReqGetTNCustId(ospvAuthReq) \
-    (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqTNCustId):0L
-
-#define OSPPAuthReqHasTNDeviceId(ospvAuthReq) \
-    (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqTNDeviceId != 0L):OSPC_FALSE
-#define OSPPAuthReqSetTNDeviceId(ospvAuthReq,ospvTNDeviceId) \
-    (ospvAuthReq)->ospmAuthReqTNDeviceId = (ospvTNDeviceId)
-#define OSPPAuthReqGetTNDeviceId(ospvAuthReq) \
-    (ospvAuthReq)?((ospvAuthReq)->ospmAuthReqTNDeviceId):0L
-
-#endif /* NOT OSPC_DEBUG */
-
 #ifdef __cplusplus
 extern "C" 
 {
@@ -172,7 +66,6 @@ extern "C"
     int            OSPPAuthReqToElement(OSPTAUTHREQ *, OSPTXMLELEM **);
     unsigned       OSPPAuthReqHasMessageId(OSPTAUTHREQ *);
 
-#ifdef OSPC_DEBUG
     unsigned       OSPPAuthReqHasTimestamp(OSPTAUTHREQ *);
     void           OSPPAuthReqSetTimestamp(OSPTAUTHREQ *, OSPTTIME);
     OSPTTIME       OSPPAuthReqGetTimestamp(OSPTAUTHREQ *);
@@ -182,8 +75,6 @@ extern "C"
     unsigned       OSPPAuthReqHasCallId(OSPTAUTHREQ *);
     OSPTCALLID    *OSPPAuthReqFirstCallId(OSPTAUTHREQ *);
     OSPTCALLID    *OSPPAuthReqNextCallId(OSPTAUTHREQ *, OSPTCALLID *);
-
-    unsigned char *OSPPAuthReqGetCallIdValue(OSPTCALLID *);
 
     unsigned       OSPPAuthReqHasSourceNumber(OSPTAUTHREQ *);
     void           OSPPAuthReqSetSourceNumber(OSPTAUTHREQ *, const unsigned char *);
@@ -211,7 +102,6 @@ extern "C"
     unsigned       OSPPAuthReqHasTNDeviceId(OSPTAUTHREQ *ospvAuthReq);
     void           OSPPAuthReqSetTNDeviceId(OSPTAUTHREQ *, unsigned long);
     unsigned long  OSPPAuthReqGetTNDeviceId(OSPTAUTHREQ *);
-#endif /* OSPC_DEBUG */
 
 #ifdef __cplusplus
 }

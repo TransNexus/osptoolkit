@@ -72,28 +72,6 @@ typedef struct
 }OSP_TYPE_ATTR_STRUCT;
 
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospaltinfo.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-#define OSPPAltInfoDelete(ospvAltInfo)  OSPM_FREE(*ospvAltInfo); *ospvAltInfo = OSPC_OSNULL;
-
-#define OSPPAltInfoGetSize(ospvAltInfo)  ospvAltInfo?((ospvAltInfo)->ospmAltInfoLen):0
-#define OSPPAltInfoGetType(ospvAltInfo)  ospvAltInfo?((ospvAltInfo)->ospmAltInfoType):ospetypeupper
-
-#define OSPPAltInfoGetValue(ospvAltInfo) ospvAltInfo?((ospvAltInfo)->ospmAltInfoVal):OSPC_OSNULL
-
-#endif 
-
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -106,14 +84,10 @@ extern "C"
     OSPTALTINFO *OSPPAltInfoNew(unsigned, const unsigned char *, 
                                               OSPE_TYPE_ATTR_VAL);
 
-#ifdef OSPC_DEBUG
-        
     void                OSPPAltInfoDelete(OSPTALTINFO **);
     unsigned            OSPPAltInfoGetSize(OSPTALTINFO *);
     OSPE_TYPE_ATTR_VAL  OSPPAltInfoGetType(OSPTALTINFO *);
     const unsigned char *OSPPAltInfoGetValue(OSPTALTINFO *);
-
-#endif
 
     unsigned            OSPPAltInfoToElement(OSPTALTINFO *, 
                                         OSPTXMLELEM **, OSPTMSGELEMPART);

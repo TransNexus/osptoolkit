@@ -34,20 +34,6 @@
 
 /**/
 /*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospusage.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-
-
-
-/**/
-/*-----------------------------------------------------------------------*
  * function prototypes
  *-----------------------------------------------------------------------*/
 

@@ -51,33 +51,6 @@ typedef struct
 }
 OSPTXMLELEM;
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospxmlelem.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-#define OSPPXMLElemGetName(ospvElem)    (ospvElem)?((ospvElem)->ospmXMLElemName):OSPC_OSNULL
-#define OSPPXMLElemGetValue(ospvElem)   (ospvElem)?((ospvElem)->ospmXMLElemValue):OSPC_OSNULL
-#define OSPPXMLElemAddChild(ospvElem, ospvChild) \
-    OSPPListAppend((OSPTLIST *) &(ospvElem)->ospmXMLElemChild, (ospvChild))
-#define OSPPXMLElemFirstChild(ospvElem) \
-    OSPPListFirst((OSPTLIST *) &(ospvElem)->ospmXMLElemChild)
-#define OSPPXMLElemNextChild(ospvElem, ospvChild) \
-    OSPPListNext((OSPTLIST *) &(ospvElem)->ospmXMLElemChild, (ospvChild))
-#define OSPPXMLElemAddAttr(ospvElem, ospvAttr)   \
-    OSPPListAppend((OSPTLIST *) &(ospvElem)->ospmXMLElemAttrs, (ospvAttr))
-#define OSPPXMLElemFirstAttr(ospvElem) \
-    OSPPListFirst((OSPTLIST *) &(ospvElem)->ospmXMLElemAttrs)
-#define OSPPXMLElemNextAttr(ospvElem, ospvAttr) \
-    OSPPListNext((OSPTLIST *) &(ospvElem)->ospmXMLElemAttrs, (ospvAttr))
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -93,37 +66,21 @@ extern "C"
 
     void OSPPXMLElemDelete(OSPTXMLELEM **);
 
-#ifndef OSPPXMLElemGetName
     const char *OSPPXMLElemGetName(OSPTXMLELEM *);
-#endif
 
-#ifndef OSPPXMLElemGetValue
     const char *OSPPXMLElemGetValue(OSPTXMLELEM *);
-#endif
 
-#ifndef OSPPXMLElemAddChild
     void OSPPXMLElemAddChild(OSPTXMLELEM *, OSPTXMLELEM *);
-#endif
 
-#ifndef OSPPXMLElemFirstChild
     OSPTXMLELEM *OSPPXMLElemFirstChild(OSPTXMLELEM *);
-#endif
 
-#ifndef OSPPXMLElemNextChild
     OSPTXMLELEM *OSPPXMLElemNextChild(OSPTXMLELEM *, OSPTXMLELEM *);
-#endif
 
-#ifndef OSPPXMLElemAddAttr
     void OSPPXMLElemAddAttr(OSPTXMLELEM *, OSPTXMLATTR *);
-#endif
 
-#ifndef OSPPXMLElemFirstAttr
     OSPTXMLATTR *OSPPXMLElemFirstAttr(OSPTXMLELEM *);
-#endif
 
-#ifndef OSPPXMLElemNextAttr
     OSPTXMLATTR *OSPPXMLElemNextAttr(OSPTXMLELEM *, OSPTXMLATTR *);
-#endif
 
 
 #ifdef __cplusplus

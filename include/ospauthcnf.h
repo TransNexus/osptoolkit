@@ -42,26 +42,6 @@ typedef struct
 }
 OSPTAUTHCNF;
 
-
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospauthcnf.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-
-#define OSPPAuthCnfHasStatus(ospvAuthCnf) \
-                (ospvAuthCnf)? \
-                ((unsigned)((ospvAuthCnf)->ospmAuthCnfStatus != OSPC_OSNULL)) \
-                :OSPC_FALSE
-
-#endif /* OSPC_DEBUG */
 /**/
 /*-----------------------------------------------------------------------*
  * function prototypes
@@ -74,11 +54,7 @@ extern "C"
 
     void         OSPPAuthCnfDelete(OSPTAUTHCNF **);
 
-#ifdef OSPC_DEBUG
-
     unsigned     OSPPAuthCnfHasStatus(OSPTAUTHCNF *ospvAuthCnf);
-
-#endif /* OSPC_DEBUG */
 
 #ifdef __cplusplus
 }

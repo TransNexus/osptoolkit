@@ -48,27 +48,6 @@ OSPTSTATUS;
  *-----------------------------------------------------------------------*/
 #define OSPM_STATUSCODE_SUCCESSFUL(s)      (((s) > 199) &&( (s) < 300))
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-#ifndef OSPC_DEBUG
-/*
- * Note: all macros are also implemented as functions in ospstatus.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-
-/* Code */
-#define OSPPStatusHasCode(ospvStatus) \
-    (ospvStatus)?((ospvStatus)->ospmHasCode):OSPC_FALSE
-#define OSPPStatusGetCode(ospvStatus) \
-    (ospvStatus)?((ospvStatus)->ospmStatusCode):0
-
-#endif /* OSPC_DEBUG */
-
 #ifdef __cplusplus
 extern "C" 
 {
@@ -85,12 +64,10 @@ extern "C"
     void           OSPPStatusSetDesc(OSPTSTATUS *, unsigned char *);
     void           OSPPStatusSetCode(OSPTSTATUS *, unsigned);
 
-#ifdef OSPC_DEBUG
 
     unsigned       OSPPStatusHasCode(OSPTSTATUS *);
     unsigned       OSPPStatusGetCode(OSPTSTATUS *);
 
-#endif /* OSPC_DEBUG */
 
 #ifdef __cplusplus
 }

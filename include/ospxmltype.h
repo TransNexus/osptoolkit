@@ -61,52 +61,20 @@ extern const unsigned char OSPVXMLCType[];
 
 /**/
 /*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospxmlelem.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-
-#define OSPPXMLIsChar(ospvChar)   (OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_CHAR)
-#define OSPPXMLIsSpace(ospvChar)  (OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_SPACE)
-#define OSPPXMLIsLetter(ospvChar) (OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_LETTER)
-#define OSPPXMLIsDigit(ospvChar)  (OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_DIGIT)
-#define OSPPXMLIsName(ospvChar)   (OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_NAME)
-#define OSPPXMLIsName1(ospvChar)  (OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_NAME1)
-
-
-/**/
-/*-----------------------------------------------------------------------*
  * function prototypes
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLIsChar
 unsigned OSPPXMLIsChar(unsigned char);
-#endif
 
-#ifndef OSPPXMLIsSpace
 unsigned OSPPXMLIsSpace(unsigned char);
-#endif
 
-#ifndef OSPPXMLIsLetter
 unsigned OSPPXMLIsLetter(unsigned char);
-#endif
 
-#ifndef OSPPXMLIsDigit
 unsigned OSPPXMLIsDigit(unsigned char);
-#endif
 
-#ifndef OSPPXMLIsName
 unsigned OSPPXMLIsName(unsigned char);
-#endif
 
-#ifndef OSPPXMLIsName1
 unsigned OSPPXMLIsName1(unsigned char);
-#endif
 
 #endif
 

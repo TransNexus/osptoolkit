@@ -48,37 +48,6 @@ typedef struct
 }
 OSPTBFR;
 
-/**/
-/*-----------------------------------------------------------------------*/
-/* macros that emulate functions                                         */
-/*-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospbfr.c. For
- * implementation details, see the comments in that file. To replace a
- * macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-
-#define OSPPBfrLinearPtr(ospvBfr) ((ospvBfr)->ospmBfrRead)
-
-#define OSPPBfrSize(ospvBfr)  \
-    ((ospvBfr)->ospmBfrWrite - (ospvBfr)->ospmBfrRead)
-
-#define OSPPBfrReadByte(ospvBfr) \
-    (OSPPBfrSize(ospvBfr) > 0 ? *((ospvBfr)->ospmBfrRead)++ : (-1) )
-
-#define OSPPBfrPeekByte(ospvBfr) \
-    (OSPPBfrSize(ospvBfr) > 0 ? *((ospvBfr)->ospmBfrRead) : (-1) )
-
-#define OSPPBfrPeekByteN(ospvBfr, ospvCnt) \
-    ((unsigned)OSPPBfrSize(ospvBfr) > (ospvCnt) ? \
-    *(OSPPBfrLinearPtr(ospvBfr)+(ospvCnt)) : (-1) )
-
-#define OSPPBfrDelete(ospvBfr) OSPM_FREE(*ospvBfr); *ospvBfr = OSPC_OSNULL;
-
-#endif
 
 #ifdef __cplusplus
 extern "C" 
@@ -95,7 +64,6 @@ extern "C"
     unsigned  OSPPBfrReadBlock(OSPTBFR **, void *, unsigned );
     void      OSPPBfrClear(OSPTBFR  *);
 
-#ifdef OSPC_DEBUG
     void     *OSPPBfrLinearPtr(OSPTBFR *);
     unsigned  OSPPBfrSize(OSPTBFR *);
     int       OSPPBfrReadByte(OSPTBFR *);
@@ -103,7 +71,6 @@ extern "C"
     int       OSPPBfrPeekByteN(OSPTBFR *, unsigned);
     void      OSPPBfrDelete(OSPTBFR **);
 
-#endif /* OSPC_DEBUG */
 
 #ifdef __cplusplus
 }

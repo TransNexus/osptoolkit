@@ -52,38 +52,6 @@ OSPTREAUTHRSP;
 
 /**/
 /*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospreauthrsp.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-
-#define OSPPReauthRspSetTimestamp(ospvReauthRsp,ospvTime) \
-    (ospvReauthRsp)->ospmReauthRspTimestamp = (ospvTime)
-
-/* ComponentId */
-#define OSPPReauthRspHasComponentId(ospvReauthRsp) \
-    ((ospvReauthRsp)->ospmReauthRspComponentId != OSPC_OSNULL)
-
-#define OSPPReauthRspHasStatus(ospvReauthRsp) \
-    (ospvReauthRsp)?((ospvReauthRsp)->ospmReauthRspStatus != OSPC_OSNULL):OSPC_FALSE
-#define OSPPReauthRspGetStatus(ospvReauthRsp) ((ospvReauthRsp)->ospmReauthRspStatus)
-
-#define OSPPReauthRspSetTrxId(ospvReauthRsp, ospvNum) \
-    (ospvReauthRsp)->ospmReauthRspTrxId = ospvNum
-
-#define OSPPReauthRspHasDest(ospvReauthRsp) \
-    (ospvReauthRsp)?((ospvReauthRsp)->ospmReauthRspDest != OSPC_OSNULL):OSPC_FALSE
-#define OSPPReauthRspSetDest(ospvReauthRsp,ospvDest) \
-    (ospvReauthRsp)->ospmReauthRspDest = (ospvDest)
-#endif
-/**/
-/*-----------------------------------------------------------------------*
  * function prototypes
  *-----------------------------------------------------------------------*/
 
@@ -101,7 +69,6 @@ extern "C"
     void            OSPPReauthRspMessageIdFromElement(OSPTXMLELEM *, unsigned char **);
     void            OSPPReauthRspComponentIdFromElement(OSPTXMLELEM *, unsigned char **);
 
-#ifdef OSPC_DEBUG
 
     void            OSPPReauthRspSetTimestamp(OSPTREAUTHRSP *, OSPTTIME);
     unsigned        OSPPReauthRspHasComponentId(OSPTREAUTHRSP *);
@@ -111,7 +78,6 @@ extern "C"
     void            OSPPReauthRspSetTrxId(OSPTREAUTHRSP *, OSPTTRXID);
     unsigned        OSPPReauthRspHasDest(OSPTREAUTHRSP *ospvReauthRsp);
     void            OSPPReauthRspSetDest(OSPTREAUTHRSP *, OSPTDEST *);
-#endif
 
     OSPTTNAUDIT     *OSPPReauthRspGetTNAudit(OSPTREAUTHRSP *);
 

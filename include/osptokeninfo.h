@@ -47,73 +47,6 @@ typedef struct
 OSPTTOKENINFO;
 
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospauthrsp.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-
-#define OSPPTokenInfoSetSourceNumber(ospvTokenInfo,ospvNum) \
-    OSPM_STRNCPY((ospvTokenInfo)->ospmTokenInfoSourceNumber, (ospvNum), \
-    OSPC_E164NUMSIZE-1)
-#define OSPPTokenInfoGetSourceNumber(ospvTokenInfo) \
-    (ospvTokenInfo)?((ospvTokenInfo)->ospmTokenInfoSourceNumber):OSPC_OSNULL
-
-#define OSPPTokenInfoSetDestNumber(ospvTokenInfo,ospvNum) \
-    OSPM_STRNCPY((ospvTokenInfo)->ospmTokenInfoDestNumber, (ospvNum), \
-    OSPC_E164NUMSIZE-1)
-#define OSPPTokenInfoGetDestNumber(ospvTokenInfo) \
-    (ospvTokenInfo)?((ospvTokenInfo)->ospmTokenInfoDestNumber):OSPC_OSNULL
-
-#define OSPPTokenInfoHasCallId(ospvTokenInfo) \
-    (ospvTokenInfo)?((ospvTokenInfo)->ospmTokenInfoCallId != OSPC_OSNULL):OSPC_FALSE
-
-#define OSPPTokenInfoSetCallId(ospvTokenInfo,ospvCallId)  { \
-    if ((ospvTokenInfo)->ospmTokenInfoCallId != OSPC_OSNULL) \
-    { \
-        OSPPCallIdDelete(&((ospvTokenInfo)->ospmTokenInfoCallId)); \
-    } \
-    (ospvTokenInfo)->ospmTokenInfoCallId = \
-        OSPPCallIdNew((ospvCallId)->ospmCallIdLen, (ospvCallId)->ospmCallIdVal); \
-}
-
-#define OSPPTokenInfoGetCallId(ospvTokenInfo) \
-    ((ospvTokenInfo)->ospmTokenInfoCallId)
-
-#define OSPPTokenInfoGetCallIdValue(ospvTokenInfo) \
-    (ospvTokenInfo)?OSPPCallIdGetValue(((ospvTokenInfo)->ospmTokenInfoCallId)):OSPC_OSNULL
-
-#define OSPPTokenInfoHasValidAfter(ospvTokenInfo) \
-    (ospvTokenInfo)?((ospvTokenInfo)->ospmTokenInfoValidAfter != OSPC_TIMEMIN):OSPC_FALSE
-#define OSPPTokenInfoSetValidAfter(ospvTokenInfo,ospvTime) \
-    (ospvTokenInfo)->ospmTokenInfoValidAfter = (ospvTime)
-#define OSPPTokenInfoGetValidAfter(ospvTokenInfo) \
-    (ospvTokenInfo)->ospmTokenInfoValidAfter
-
-#define OSPPTokenInfoSetValidUntil(ospvTokenInfo,ospvTime) \
-    (ospvTokenInfo)->ospmTokenInfoValidUntil = (ospvTime)
-#define OSPPTokenInfoGetValidUntil(ospvTokenInfo) \
-    (ospvTokenInfo)->ospmTokenInfoValidUntil
-
-#define OSPPTokenInfoSetTrxId(ospvTokenInfo, ospvTrxId) \
-    (ospvTokenInfo)->ospmTokenInfoTrxId = ospvTrxId
-#define OSPPTokenInfoGetTrxId(ospvTokenInfo) \
-    ((ospvTokenInfo)->ospmTokenInfoTrxId)
-
-#define OSPPTokenInfoSetDuration(ospvTokenInfo,ospvDuration) \
-    (ospvTokenInfo)->ospmTokenInfoDuration = ospvDuration; 
-#define OSPPTokenInfoGetDuration(ospvTokenInfo) \
-    (ospvTokenInfo)?((ospvTokenInfo)->ospmTokenInfoDuration):0
-
-#endif /* OSPC_DEBUG */
-
 #ifdef __cplusplus
 extern "C" 
 {
@@ -129,7 +62,6 @@ extern "C"
     void           OSPPTokenInfoDelete(OSPTTOKENINFO **);
     unsigned       OSPPTokenInfoFromElement(OSPTXMLELEM *, OSPTTOKENINFO **);
 
-#ifdef OSPC_DEBUG
 
     void           OSPPTokenInfoSetSourceNumber(OSPTTOKENINFO *, const unsigned char *);
     unsigned char *OSPPTokenInfoGetSourceNumber(OSPTTOKENINFO *);
@@ -155,7 +87,6 @@ extern "C"
     void           OSPPTokenInfoSetDuration(OSPTTOKENINFO *, int);
     int            OSPPTokenInfoGetDuration(OSPTTOKENINFO *);
 
-#endif /* OSPC_DEBUG */
 
 #ifdef __cplusplus
 }

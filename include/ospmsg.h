@@ -62,22 +62,6 @@ typedef enum {
 #define OSPC_URLSIZE          512    /* max characters in URL */
 #define OSPC_ROLESTRSZ         12    /* max characters in role string */
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-#ifndef OSPC_DEBUG
-/*
- * Note: all macros are also implemented as functions in ospmsg.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-
-#define OSPPMsgTimeFromElement(ospvElem, ospvTime) \
-    OSPPOSTimeStringToCal(OSPPXMLElemGetValue(ospvElem), (ospvTime))
-#endif
-
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -116,9 +100,7 @@ int OSPPOSRoleValToString(unsigned, char *ospvRolestr);
 
 int OSPPBase64DecodeWrap(const unsigned char *, unsigned *, unsigned char *);
 
-#ifdef OSPC_DEBUG
 unsigned OSPPMsgTimeFromElement(OSPTXMLELEM *, OSPTTIME *);
-#endif
 
 #ifdef __cplusplus
 }

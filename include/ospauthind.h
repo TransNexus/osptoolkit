@@ -55,96 +55,6 @@ typedef struct
 OSPTAUTHIND;
 
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospauthind.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-
-#define OSPPAuthIndFirstDestinationAlt(ospvAuthInd) \
-    (const char *)OSPPListFirst(&((ospvAuthInd)->ospmAuthIndDestinationAlternate))
-
-#define OSPPAuthIndFirstSourceAlt(ospvAuthInd) \
-    (const char *)OSPPListFirst(&((ospvAuthInd)->ospmAuthIndSourceAlternate))
-
-#define OSPPAuthIndGetCallId(ospvAuthInd) \
-    ((ospvAuthInd)->ospmAuthIndCallId)
-
-#define OSPPAuthIndGetCallIdSize(ospvAuthInd) \
-    OSPPCallIdGetSize(((ospvAuthInd)->ospmAuthIndCallId))
-
-#define OSPPAuthIndGetCallIdValue(ospvAuthInd) \
-    OSPPCallIdGetValue(((ospvAuthInd)->ospmAuthIndCallId))
-
-#define OSPPAuthIndGetDestinationAltValue(ospvAltInfo) \
-    OSPPAltInfoGetValue(ospvAltInfo)
-
-#define OSPPAuthIndGetDestNumber(ospvAuthInd) \
-    ((ospvAuthInd)->ospmAuthIndDestNumber)
-
-#define OSPPAuthIndGetSourceAltValue(ospvAltInfo) \
-    OSPPAltInfoGetValue(ospvAltInfo)
-
-#define OSPPAuthIndGetSourceNumber(ospvAuthInd) \
-    (ospvAuthInd->ospmAuthIndSourceNumber)
-
-#define OSPPAuthIndHasCallId(ospvAuthInd) \
-    ((ospvAuthInd)->ospmAuthIndCallId != OSPC_OSNULL)
-
-#define OSPPAuthIndHasDestinationAlt(ospvAuthInd) \
-    (OSPPAuthIndFirstDestinationAlt(ospvAuthInd) != OSPC_OSNULL)
-
-#define OSPPAuthIndHasDestNumber(ospvAuthInd) \
-    ((ospvAuthInd)->ospmAuthIndDestNumber[0] != '\0')
-
-#define OSPPAuthIndHasDest(ospvAuthInd) \
-    (ospvAuthInd->ospmAuthIndDest != OSPC_OSNULL)
-
-#define OSPPAuthIndHasSourceAlt(ospvAuthInd) \
-    (OSPPAuthIndFirstSourceAlt(ospvAuthInd) != OSPC_OSNULL)
-
-#define OSPPAuthIndHasSourceNumber(ospvAuthInd) \
-    ((ospvAuthInd)->ospmAuthIndSourceNumber[0] != '\0')
-
-#define OSPPAuthIndNextDestinationAlt(ospvAuthInd, ospvAltInfo) \
-    (OSPTALTINFO *)OSPPListNext((OSPTLIST *)&((ospvAuthInd)->ospmAuthIndDestinationAlternate), \
-                        (void *)ospvAltInfo)
-
-#define OSPPAuthIndNextSourceAlt(ospvAuthInd, ospvAltInfo) \
-    (OSPTALTINFO *)OSPPListNext((OSPTLIST *)&((ospvAuthInd)->ospmAuthIndSourceAlternate), \
-                        (void *)ospvAltInfo)
-
-#define OSPPAuthIndSetDest(ospvAuthInd, ospvDest)\
-if ( OSPPAuthIndHasDest( ospvAuthInd ) == OSPC_TRUE )  \
-{ \
-	OSPPDestDelete( &(ospvAuthInd->ospmAuthIndDest ) ); \
-} \
-ospvAuthInd->ospmAuthIndDest = ospvDest;
-
-#define OSPPAuthIndSetDestNumber(ospvAuthInd,ospvNum) \
-    OSPM_STRNCPY((ospvAuthInd)->ospmAuthIndDestNumber, (ospvNum), \
-    tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
-
-#define OSPPAuthIndSetRole(ospvAuthInd,ospvRole) \
-    (ospvAuthInd)->ospmAuthIndRole = (ospvRole); \
-    (ospvAuthInd)->ospmAuthIndHasRole = OSPC_TRUE;
-
-#define OSPPAuthIndSetSourceNumber(ospvAuthInd,ospvNum) \
-    OSPM_STRNCPY((ospvAuthInd)->ospmAuthIndSourceNumber, (ospvNum), \
-    tr_min(OSPM_STRLEN((const char *)ospvNum)+1,OSPC_E164NUMSIZE-1))
-
-#define OSPPAuthIndSetTimestamp(ospvAuthInd,ospvTime) \
-    (ospvAuthInd)->ospmAuthIndTimestamp = (ospvTime)
-
-#endif 
-
 #define OSPPAuthIndTokenGetSize(ospvToken) OSPPTokenGetSize(ospvToken);
 #define OSPPAuthIndTokenGetValue(ospvToken) OSPPTokenGetValue(ospvToken);
 
@@ -163,7 +73,6 @@ extern "C"
     void           OSPPAuthIndSetCallId(OSPTAUTHIND *, OSPTCALLID *);
 
 
-#ifdef OSPC_DEBUG
 
     void           OSPPAuthIndSetTimestamp(OSPTAUTHIND *, OSPTTIME);
 
@@ -195,8 +104,6 @@ extern "C"
     OSPTALTINFO   *OSPPAuthIndFirstDestinationAlt(OSPTAUTHIND *);
     OSPTALTINFO   *OSPPAuthIndNextDestinationAlt(OSPTAUTHIND *, OSPTALTINFO  *);
     unsigned char *OSPPAuthIndGetDestinationAltValue(OSPTALTINFO *);
-
-#endif /* OSPC_DEBUG */
 
     void           OSPPAuthIndSetTimeLimit(OSPTAUTHIND *, unsigned);
 

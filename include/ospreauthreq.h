@@ -60,68 +60,6 @@ OSPTREAUTHREQ;
 
 /**/
 /*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospreauthreq.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-
-#define OSPPReauthReqHasTimestamp(ospvReauthReq) \
-    (ospvReauthReq)?((ospvReauthReq)->ospmReauthReqTimestamp != OSPC_TIMEMIN):OSPC_FALSE
-#define OSPPReauthReqSetTimestamp(ospvReauthReq,ospvTime) \
-    (ospvReauthReq)->ospmReauthReqTimestamp = (ospvTime)
-#define OSPPReauthReqGetTimestamp(ospvReauthReq) (ospvReauthReq)->ospmReauthReqTimestamp
-
-/* ComponentId */
-#define OSPPReauthReqHasComponentId(ospvReauthReq) \
-    ((ospvReauthReq)->ospmReauthReqComponentId != OSPC_OSNULL)
-#define OSPPReauthReqGetComponentId(ospvReauthReq) \
-    (ospvReauthReq)->ospmReauthReqComponentId
-
-#define OSPPReauthReqHasCallId(ospvReauthReq) \
-    (ospvReauthReq)?((ospvReauthReq)->ospmReauthReqCallId != OSPC_OSNULL):OSPC_FALSE
-
-#define OSPPReauthReqGetCallId(ospvReauthReq) ((ospvReauthReq)->ospmReauthReqCallId)
-
-#define OSPPReauthReqSetSourceNumber(ospvReauthReq,ospvNum) \
-    OSPM_STRNCPY((ospvReauthReq)->ospmReauthReqSourceNumber, (ospvNum), \
-    OSPC_E164NUMSIZE-1)
-#define OSPPReauthReqGetSourceNumber(ospvReauthReq) (ospvReauthReq)?((ospvReauthReq)->ospmReauthReqSourceNumber):OSPC_OSNULL
-
-#define OSPPReauthReqSetDestNumber(ospvReauthReq,ospvNum) \
-    OSPM_STRNCPY((ospvReauthReq)->ospmReauthReqDestNumber, (ospvNum), \
-    OSPC_E164NUMSIZE-1)
-#define OSPPReauthReqGetDestNumber(ospvReauthReq) (ospvReauthReq)?((ospvReauthReq)->ospmReauthReqDestNumber):OSPC_OSNULL
-
-#define OSPPReauthReqHasTrxId(ospvReauthReq) (ospvReauthReq)?((ospvReauthReq)->ospmReauthReqTrxId > 0):OSPC_FALSE
-#define OSPPReauthReqSetTrxId(ospvReauthReq, ospvNum) \
-    (ospvReauthReq)->ospmReauthReqTrxId = ospvNum
-#define OSPPReauthReqGetTrxId(ospvReauthReq) ((ospvReauthReq)->ospmReauthReqTrxId)
-
-/* UsageDetail */
-#define OSPPReauthReqHasDuration(ospvReauthReq) \
-    (ospvReauthReq)?((ospvReauthReq)->ospmReauthReqDuration >= 0):OSPC_FALSE
-
-#define OSPPReauthReqSetDuration(ospvReauthReq,ospvDuration) \
-    (ospvReauthReq)->ospmReauthReqDuration = ospvDuration; \
- 
-#define OSPPReauthReqGetDuration(ospvReauthReq) \
-    (ospvReauthReq)?((ospvReauthReq)->ospmReauthReqDuration):0
-
-#define OSPPReauthReqAddToken(ospvReauthReq, ospvToken)   \
-    OSPPListAppend(&(ospvReauthReq)->ospmReauthReqTokens, (ospvToken))
-#define OSPPReauthReqFirstToken(ospvReauthReq) \
-    OSPPListFirst(&(ospvReauthReq)->ospmReauthReqTokens)
-#define OSPPReauthReqNextToken(ospvReauthReq, ospvToken) \
-    OSPPListNext(&(ospvReauthReq)->ospmReauthReqTokens, (ospvToken))
-#endif  /* NOT OSPC_DEBUG */
-/**/
-/*-----------------------------------------------------------------------*
  * function prototypes
  *-----------------------------------------------------------------------*/
 #ifdef __cplusplus
@@ -143,7 +81,6 @@ extern "C"
     unsigned        OSPPReauthReqHasMessageId(OSPTREAUTHREQ *);
     unsigned char  *OSPPReauthReqGetMessageId(OSPTREAUTHREQ *);
 
-#ifdef OSPC_DEBUG
 
     unsigned    OSPPReauthReqHasTimestamp(OSPTREAUTHREQ *);
     void        OSPPReauthReqSetTimestamp(OSPTREAUTHREQ *, OSPTTIME);
@@ -173,7 +110,6 @@ extern "C"
     OSPTTOKEN  *OSPPReauthReqFirstToken(OSPTREAUTHREQ *);
     OSPTTOKEN  *OSPPReauthReqNextToken(OSPTREAUTHREQ *, OSPTTOKEN *);
 
-#endif  /* OSPC_DEBUG */
 
     unsigned       OSPPReauthReqHasDestinationAlt(OSPTREAUTHREQ *);
     OSPTALTINFO   *OSPPReauthReqFirstDestinationAlt(OSPTREAUTHREQ *);

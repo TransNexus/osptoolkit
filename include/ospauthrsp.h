@@ -56,61 +56,6 @@ typedef struct
 OSPTAUTHRSP;
 
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospauthrsp.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-#ifndef OSPC_DEBUG
-
-#define OSPPAuthRspSetTimestamp(ospvAuthRsp,ospvTime) \
-    (ospvAuthRsp)->ospmAuthRspTimestamp = (ospvTime)
-
-/* ComponentId */
-#define OSPPAuthRspHasComponentId(ospvAuthRsp) \
-    ((ospvAuthRsp)->ospmAuthRspComponentId != OSPC_OSNULL)
-
-#define OSPPAuthRspHasStatus(ospvAuthRsp) \
-    ((ospvAuthRsp)->ospmAuthRspStatus != OSPC_OSNULL)
-#define OSPPAuthRspGetStatus(ospvAuthRsp) \
-    (ospvAuthRsp)->ospmAuthRspStatus
-
-#define OSPPAuthRspSetTrxId(ospvAuthRsp, ospvTrxId) \
-    (ospvAuthRsp)->ospmAuthRspTrxId = ospvTrxId
-
-#define OSPPAuthRspFirstDest(ospvAuthRsp) \
-    OSPPListFirst((OSPTLIST *) &(ospvAuthRsp->ospmAuthRspDest))
-#define OSPPAuthRspHasDest(ospvAuthRsp) \
-    ((OSPPAuthRspFirstDest(ospvAuthRsp)) != (void *)OSPC_OSNULL)
-#define OSPPAuthRspNextDest(ospvAuthRsp,ospvDest) \
-    OSPPListNext((OSPTLIST *)&((ospvAuthRsp)->ospmAuthRspDest), (void *)ospvDest)
-
-#define OSPPAuthRspHasTNDelayLimit(ospvAuthRsp) \
-    ((ospvAuthRsp)->ospmAuthRspTNDelayLimit)
-#define OSPPAuthRspSetTNDelayLimit(ospvAuthRsp, ospvTNDelayLimit) \
-    (ospvAuthRsp)->ospmAuthRspTNDelayLimit = ospvTNDelayLimit
-#define OSPPAuthRspGetTNDelayLimit(ospvAuthRsp) \
-    ((ospvAuthRsp)->ospmAuthRspTNDelayLimit)
-
-#define OSPPAuthRspHasTNDelayPref(ospvAuthRsp) \
-    ((ospvAuthRsp)->ospmAuthRspTNDelayPref)
-#define OSPPAuthRspSetTNDelayPref(ospvAuthRsp, ospvTNDelayPref) \
-    (ospvAuthRsp)->ospmAuthRspTNDelayPref = ospvTNDelayPref
-
-#define OSPPAuthRspHasNumDests(ospvAuthRsp) \
-    ((ospvAuthRsp)->ospmNumDests)
-#define OSPPAuthRspIncNumDests(ospvAuthRsp) \
-    ((ospvAuthRsp)->ospmNumDests++)
-#define OSPPAuthRspGetNumDests(ospvAuthRsp) \
-    ((ospvAuthRsp)->ospmNumDests)
-
-#endif /* OSPC_DEBUG */
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)
 #define OSPPAuthRspDestSetNumber(ospvDest,ospvNum) OSPPDestSetNumber(ospvDest,ospvNum)
 #define OSPPAuthRspDestGetNumber(ospvDest) OSPPDestGetNumber(ospvDest)
@@ -162,8 +107,6 @@ extern "C"
     void        OSPPAuthRspMessageIdFromElement(OSPTXMLELEM *, unsigned char **);
     unsigned char *OSPPAuthRspGetMessageId(OSPTAUTHRSP *);
 
-#ifdef OSPC_DEBUG
-
     void        OSPPAuthRspSetTimestamp(OSPTAUTHRSP *, OSPTTIME);
 
     unsigned       OSPPAuthRspHasComponentId(OSPTAUTHRSP *);
@@ -188,7 +131,6 @@ extern "C"
     void        OSPPAuthRspIncNumDests(OSPTAUTHRSP *);
     unsigned    OSPPAuthRspGetNumDests(OSPTAUTHRSP *);
 
-#endif /* OSPC_DEBUG */
 
     OSPTTNAUDIT *OSPPAuthRspGetTNAudit(OSPTAUTHRSP *);
     OSPTCSAUDIT *OSPPAuthRspGetCSAudit(OSPTAUTHRSP *);

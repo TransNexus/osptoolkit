@@ -49,21 +49,6 @@ typedef struct
 OSPTTOKEN;
 
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-#ifndef OSPC_DEBUG
-#define OSPPTokenGetSize(ospvToken)  ((ospvToken)?((ospvToken)->ospmTokenLen):0)
-#define OSPPTokenGetValue(ospvToken) ((ospvToken)?((ospvToken)->ospmTokenVal):OSPC_OSNULL)
-#define OSPPTokenDelete(ospvToken)  OSPM_FREE(*ospvToken); *ospvToken = OSPC_OSNULL;
-#define OSPPTokenToElement(ospvToken, ospvElem) \
-    OSPPMsgBinToElement(OSPPTokenGetSize(ospvToken), \
-        OSPPTokenGetValue(ospvToken), \
-        (const unsigned char *)OSPPMsgGetElemName(ospeElemToken), ospvElem, OSPC_TRUE)
-#endif
-
 #ifdef __cplusplus
 extern "C" 
 {
@@ -77,12 +62,10 @@ extern "C"
     OSPTTOKEN *OSPPTokenNew(unsigned, const unsigned char *);
     unsigned OSPPTokenFromElement(OSPTXMLELEM *, OSPTTOKEN  **);
 
-#ifdef OSPC_DEBUG
     unsigned OSPPTokenGetSize(OSPTTOKEN *);
     const unsigned char *OSPPTokenGetValue(OSPTTOKEN *);
     void OSPPTokenDelete(OSPTTOKEN **);
     unsigned OSPPTokenToElement(OSPTTOKEN *, OSPTXMLELEM **);
-#endif
 
 #ifdef __cplusplus
 }

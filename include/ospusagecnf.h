@@ -49,31 +49,6 @@ typedef struct
 OSPTUSAGECNF;
 
 
-/**/
-/*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospusageind.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-
-#ifndef OSPC_DEBUG
-/* Timestamp */
-#define OSPPUsageCnfSetTimestamp(ospvUsageCnf,ospvTime) \
-    (ospvUsageCnf)->ospmUsageCnfTimestamp = (ospvTime)
-
-/* Status */
-#define OSPPUsageCnfHasStatus(ospvUsageCnf) \
-    (ospvUsageCnf)?((ospvUsageCnf)->ospmUsageCnfStatus != OSPC_OSNULL):OSPC_FALSE
-#define OSPPUsageCnfGetStatus(ospvUsageCnf) (ospvUsageCnf)->ospmUsageCnfStatus
-
-
-#endif /* OSPC_DEBUG */
-
 #ifdef __cplusplus
 extern "C" 
 {
@@ -99,14 +74,12 @@ extern "C"
     unsigned       OSPPUsageCnfHasMessageId(OSPTUSAGECNF *);
     void           OSPPUsageCnfSetMessageId(OSPTUSAGECNF *, unsigned char *);
 
-#ifdef OSPC_DEBUG
     void          OSPPUsageCnfSetTimestamp(OSPTUSAGECNF *, OSPTTIME);
 
     unsigned     OSPPUsageCnfHasStatus(OSPTUSAGECNF *ospvUsageCnf);
 
     OSPTSTATUS  *OSPPUsageCnfGetStatus(OSPTUSAGECNF *);
 
-#endif /* OSPC_DEBUG */
 
     OSPTTNAUDIT *OSPPUsageCnfGetTNAudit(OSPTUSAGECNF *);
     OSPTCSAUDIT *OSPPUsageCnfGetCSAudit(OSPTUSAGECNF *);

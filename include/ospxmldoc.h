@@ -146,19 +146,6 @@ OSPTXMLDOCENTITY;
 
 /**/
 /*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-
-/*
- * Note: all macros are also implemented as functions in ospxmlelem.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-
-
-/**/
-/*-----------------------------------------------------------------------*
  * function prototypes
  *-----------------------------------------------------------------------*/
 
@@ -224,35 +211,7 @@ extern "C"
     unsigned OSPPXMLDocIsCdata(OSPTBFR **, OSPTXMLENC, unsigned *);
     unsigned OSPPXMLDocIsCdataEnd(OSPTBFR **, OSPTXMLENC, unsigned *);
 
-#ifdef OSPC_DEBUG
     void OSPPXMLDocPeekCharN(OSPTBFR **, OSPTXMLENC, unsigned, unsigned char *, int *);
-#else
-#define OSPPXMLDocPeekCharN(ospvBfrAddr,ospvEncoding,ospvCnt,ospvChar,ospvErrCode) { \
-    int      rChar = '\0'; \
-    switch (ospvEncoding) { \
-        case ospeXMLEncUTF8: \
-        rChar = OSPPBfrPeekByteN(*ospvBfrAddr, ospvCnt); \
-        break; \
-        case ospeXMLEncUTF16l: \
-        rChar = OSPPBfrPeekByteN(*ospvBfrAddr, 2*ospvCnt); \
-        break; \
-        case ospeXMLEncUTF16b: \
-        rChar = OSPPBfrPeekByteN(*ospvBfrAddr, (2*ospvCnt+1)); \
-        break; \
-        default: \
-        *ospvErrCode = (unsigned )OSPC_ERR_OS_FAILURE; \
-        break; \
-    } \
-    if (*ospvErrCode == OSPC_ERR_NO_ERROR) { \
-        if(rChar == -1) \
-            *ospvErrCode = OSPC_ERR_BUF_INCOMPLETE; \
-        else \
-            *ospvChar = (unsigned char)rChar; \
-    } \
-}
-
-#endif
-
 #ifdef __cplusplus
 }
 #endif

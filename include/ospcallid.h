@@ -50,23 +50,6 @@ OSPTCALLID;
 
 /**/
 /*-----------------------------------------------------------------------*
- * macros that emulate functions
- *-----------------------------------------------------------------------*/
-#ifndef OSPC_DEBUG
-/*
- * Note: all macros are also implemented as functions in ospcallid.c.
- * For implementation details, see the comments in that file. To replace
- * a macro with a true function, simply comment out the macro definition
- * below.
- */
-
-#define OSPPCallIdGetSize(ospvCallId)  ((ospvCallId)?((ospvCallId)->ospmCallIdLen):0)
-#define OSPPCallIdGetValue(ospvCallId) ((ospvCallId)?((ospvCallId)->ospmCallIdVal):OSPC_OSNULL)
-
-#endif /* OSPC_DEBUG */
-
-/**/
-/*-----------------------------------------------------------------------*
  * function prototypes
  *-----------------------------------------------------------------------*/
 
@@ -80,11 +63,9 @@ extern "C"
     unsigned       OSPPCallIdFromElement(OSPTXMLELEM *, OSPTCALLID  **);
     unsigned       OSPPCallIdToElement(OSPTCALLID *, OSPTXMLELEM **, OSPTBOOL);
 
-#ifdef OSPC_DEBUG
     unsigned       OSPPCallIdGetSize(OSPTCALLID *);
     unsigned char *OSPPCallIdGetValue(OSPTCALLID *);
 
-#endif /* OSPC_DEBUG */
 
 #ifdef __cplusplus
 }
