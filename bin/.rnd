@@ -1,0 +1,9 @@
+The toolkit uses the first 128 bits of this file for seeding pseudo-random 
+number generator engine.  See implementation of ospopenssl.c::rand_init()
+for details.
+
+IT IS YOUR RESPONSIBILITY TO REPLACE THIS MESSAGE WITH RANDOM DATA.
+
+Input may come from user interaction (random key presses, mouse movements)
+and certain hardware events.  For details about sources of randomness and
+cryptographic implications refer to www.openssl.org.
