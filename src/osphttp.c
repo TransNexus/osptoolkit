@@ -363,35 +363,63 @@ osppHttpSetupAndMonitor(
 
             /*
              * see if the connection has timed out due to inactivity
-             * (HttpPersistance). If the connection has timed out, 
-             * free up all the resources associated with this connection
-             * and exit the thread gracefully. Also, if the provider has
-             * been deleted and the Shutdown Flag has been set, shutdown this
-             * connection.
+             * (HttpPersistance), provider has been deleted, or ShutDown flag has been set
              */
             if ((httpconn->NumberOfTransactions == 0 &&
                 errorcode == OSPC_ERR_OS_CONDVAR_TIMEOUT) ||
                 (comm == (OSPTCOMM *)OSPC_OSNULL || 
                 (comm->Flags & OSPC_COMM_HTTPSHUTDOWN_BIT) == OSPC_COMM_HTTPSHUTDOWN_BIT))
             {
-                OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() remove connection requested\n"));
+                if ( (comm == (OSPTCOMM *)OSPC_OSNULL) ||
+                     (comm->Flags & OSPC_COMM_HTTPSHUTDOWN_BIT) == OSPC_COMM_HTTPSHUTDOWN_BIT )
+                {
+                    /*
+                     * We have been signal to shutdown, remove the connection and break
+                     * out from the main loop.
+                     */
+                     OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() remove connection requested\n"));
 #ifndef _WIN32
-                /*
-                 * The connection mutex as locked above is needs to be unlocked
-                 * if the connection is shutting down or a time out event has occured.
-                 * - Solaris does not seem to give a probem if this mutex is left locked
-                 *   or is unlocked before it is destroyed.Eitherways, it is fine. 
-                 * - Linux needs this mutex to be unlocked before it can be destroyed. 
-                 * - Windows seems to have a problem if it is unlocked before it is destroyed
-                 *   Because of this problem, there is an error message that pops up on
-                 *   Windows if this function call is made before destroying the mutex. 
-                 *   And to prevent that log message, the below written function call is made 
-                 *   for all the other OS but Windows.
-                 */
-                OSPM_MUTEX_UNLOCK(httpconn->Mutex, errorcode);
+                     /*
+                      * The connection mutex as locked above is needs to be unlocked
+                      * if the connection is shutting down or a time out event has occured.
+                      * - Solaris does not seem to give a probem if this mutex is left locked
+                      *   or is unlocked before it is destroyed.Eitherways, it is fine. 
+                      * - Linux needs this mutex to be unlocked before it can be destroyed. 
+                      * - Windows seems to have a problem if it is unlocked before it is destroyed
+                      *   Because of this problem, there is an error message that pops up on
+                      *   Windows if this function call is made before destroying the mutex. 
+                      *   And to prevent that log message, the below written function call is made 
+                      *   for all the other OS but Windows.
+                      */
+                     OSPM_MUTEX_UNLOCK(httpconn->Mutex, errorcode);
 #endif
-                osppHttpRemoveConnection(httpconn);
-                break;
+                     osppHttpRemoveConnection(httpconn);
+                     break;
+                }
+                else
+                {
+                    /*
+                     * The connection has timed out due to inactivity (HttpPersistance).
+                     * We should close the socket, indicate that we are no longer the
+                     * connected state, unlock the mutex, and go back waiting for an event.
+                     *
+                     * There is no harm in calling SockClose on an already closed connection.
+                     * In that case, the call will have no effect.
+                     */
+                    OSPPSockClose(OSPC_FALSE, &(httpconn->SockFd), &(httpconn->SSLSession));
+                    connected = OSPC_FALSE;
+
+                    /*
+                     * The mutex is locked, and will be locked again at the top of the loop 
+                     */
+                    OSPM_MUTEX_UNLOCK(httpconn->Mutex, errorcode);
+                    assert(errorcode == OSPC_ERR_NO_ERROR);
+
+                    /*
+                     * Go back to the top of the loop
+                     */
+                    continue;
+                 }
             }
 
             /*
@@ -552,30 +580,16 @@ osppHttpSetupAndMonitor(
 
         if ( OSPC_SOCK_INVALID == httpconn->SockFd )
         {
-          /*
-           * Connection is no longer valid
-           * time to quit this thread
-           */
-          OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() remove connection requested\n"));
-#ifndef _WIN32
-         /*
-          * The connection mutex as locked above is needs to be unlocked
-          * if the connection is shutting down or a time out event has occured.
-          * - Solaris does not seem to give a probem if this mutex is left locked
-          * or is unlocked before it is destroyed. 
-          * - Linux needs this mutex to be unlocked before it can be destroyed. 
-          * - Windows seems to have a problem if it is unlocked before it is destroyed
-          *   Because of this problem, there is an error message that pops up on
-          *   Windows if this function call is made before destroying the mutex. 
-          *   And to prevent that log message, the below written function call is made 
-          *   for all the other OS but Windows.
-          */
-          OSPM_MUTEX_UNLOCK(httpconn->Mutex, errorcode);
-#endif
-          osppHttpRemoveConnection(httpconn);
-          break;
+            /*
+             * Connection is no longer valid
+             * There are a couple of reasons for this state - TCP connection to the last
+             * service point failed or HTTP response included "Connection: close" directive.
+             * Insure that the connected status is set to false, but do
+             * not break away from the loop and exit the thread.
+             */
+            connected = OSPC_FALSE;
         }
-    }
+    } /* Loop until signaled to exit */
 
     /*
      * finally clean up the memory for the connection
@@ -614,7 +628,7 @@ OSPPHttpVerifyResponse(
      * be concerned with response type.
      */
 
-		/*
+  	/*
 		 * Try to determine the response type. Anything other than
 		 * 1xx or 2xx will be considered and error.
 		 */
