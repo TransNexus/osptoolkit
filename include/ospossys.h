@@ -376,6 +376,28 @@
     } \
 }
 
+#ifdef _XOPEN_SOURCE
+#define OSPM_GETHOSTBYNAME(h,ip,e) { \
+    struct hostent *pHost, sHostResult; \
+    struct sockaddr_in sSockAddr; \
+    char cBuf[512]; \
+    int Error; \
+    gethostbyname_r((const char *)h, \
+                    &sHostResult, cBuf, 512, &pHost, &Error);\
+    if (pHost == (struct hostent *)NULL) \
+    { \
+        e = Error; \
+        OSPM_DBG(e,("%s failed. %s\n", "gethostbyname_r", strerror(errno))); \
+        ip = 0; \
+    } \
+    else { \
+        OSPM_MEMSET(&sSockAddr, 0, sizeof(sSockAddr)); \
+            OSPM_MEMCPY((char *)&sSockAddr.sin_addr, \
+            pHost->h_addr, pHost->h_length); \
+        ip = sSockAddr.sin_addr.s_addr; \
+    } \
+}
+#else /*_XOPEN_SOURCE*/
 #define OSPM_GETHOSTBYNAME(h,ip,e) { \
     struct hostent *pHost, sHostResult; \
     struct sockaddr_in sSockAddr; \
@@ -395,6 +417,7 @@
         ip = sSockAddr.sin_addr.s_addr; \
     } \
 }
+#endif /*_XOPEN_SOURCE*/
 
 #define OSPM_GETSOCKERR(h,e) { \
     int err = 0, err_sz = sizeof(int); \
