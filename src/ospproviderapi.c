@@ -653,20 +653,25 @@ OSPPProviderNew(
     OSPTPROVHANDLE       *ospvProvider)             /* Out - Handle to new provider  */
 {
     OSPTPROVIDER    *provider   = OSPC_OSNULL;
-    int             i,errorcode   = OSPC_ERR_NO_ERROR;
+    int             errorcode   = OSPC_ERR_NO_ERROR;
     unsigned long   custid      = 0L, 
                     deviceid    = 0L;
+    unsigned i;
 
-    for (i=0;i<ospvNumberOfServicePoints;i++)
+    if (ospvMessageCount != NULL) 
     {
-        if (ospvMessageCount[i]<0)
+        for (i=0;i<ospvNumberOfServicePoints;i++)
         {
-            errorcode = OSPC_ERR_PROV_INVALID_VALUE;
-            OSPM_DBGERRORLOG(errorcode, "Invalid input value for Message count");
-            break;
+	    printf("%d out of %d\n",i, ospvNumberOfServicePoints);
+
+            if (ospvMessageCount[i]<0)
+            {
+                errorcode = OSPC_ERR_PROV_INVALID_VALUE;
+                OSPM_DBGERRORLOG(errorcode, "Invalid input value for Message count");
+                break;
+            }
         }
     }
-
 
     /* 
      * check incoming values and reset to defaults if necessary
