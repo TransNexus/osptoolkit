@@ -336,6 +336,7 @@ int OSPPEnrollCleanup (
     OSPTCOMM* ospvCommMgr
 );
 
+#define OSPPCommMgrSetSPMessageCount(ospvComm,ospvMessageCount) OSPPProviderSetSPMessageCount(ospvComm,ospvMessageCount)
 #ifdef __cplusplus
 }
 #endif
