@@ -314,3 +314,8 @@ Version 3.0
 * The test application configuration file - test.cfg has been modified with the following configuration parameters: 
   TC Code to be reported in the usage indication, Format of the Calling Number (e.164/SIP/URL), and
   Format of the Called Number (e.164/SIP/URL).
+* The following API's have changed as a result of the above mentioned changes:
+  - OSPPTransactionBuildUsageFromScratch
+  - OSPPTransactionInitializeAtDevice
+  - OSPPTransactionRequestAuthorisation
+  - OSPPTransactionValidateAuthorisation
