@@ -63,6 +63,7 @@ typedef struct _OSPTSEC
     unsigned            SSLLifetime;
     OSPTBOOL            SSLSessionHasMutex;
     OSPTMUTEX           SSLSessionMutex;
+    OSPTMUTEX           SSLCertMutex;
     void                *ContextRef;
 } OSPTSEC;
 
