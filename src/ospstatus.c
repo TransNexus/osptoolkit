@@ -110,7 +110,6 @@ OSPPStatusSetDesc(
     return; 
 }
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPStatusHasCode() - is the status code populated
@@ -147,7 +146,6 @@ OSPPStatusGetCode(
     return statuscode; 
 }
 
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*

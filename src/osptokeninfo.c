@@ -37,7 +37,6 @@
 #include "ospusage.h"
 #include "osputils.h"
 
-#ifdef OSPC_DEBUG
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -358,7 +357,6 @@ OSPPTokenInfoGetDuration(
     return ospvDuration;
 }
 
-#endif /* OSPC_DEBUG */
 
 /**/
 /*-----------------------------------------------------------------------*

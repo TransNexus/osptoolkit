@@ -166,7 +166,6 @@ OSPPTokenFromElement(
     return(ospvErrCode);
 }
 
-#ifdef OSPC_DEBUG
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPTokenDelete() - destroy a token object
@@ -246,5 +245,4 @@ OSPPTokenToElement(
     }
     return(ospvErrCode);
 }
-#endif
 
