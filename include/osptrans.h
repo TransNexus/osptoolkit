@@ -166,6 +166,7 @@ void           OSPPTransactionGetAccumAllowed(OSPTTRANS *, OSPTBOOL *);
 OSPTTRANS     *OSPPTransactionGetContext(OSPTTRANHANDLE, int *);
 int            OSPPTransactionGetCounter(OSPTTRANS *);
 void           OSPPTransactionGetDeleteAllowed(OSPTTRANS *, OSPTBOOL *);
+void           OSPPTransactionGetIsModifyDeviceIdAllowed(OSPTTRANS *, OSPTBOOL *);
 int            OSPPTransactionGetDestAllowed(OSPTTRANS *);
 int            OSPPTransactionGetDestination(OSPTTRANS *, enum OSPEFAILREASON,
                    unsigned, char *, char *, unsigned *, unsigned *, void *,
