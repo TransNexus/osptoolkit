@@ -64,6 +64,7 @@ typedef enum
     ospeElemSrcAlt,
     ospeElemSrcInfo,
     ospeElemSrcSigAddr,
+    ospeElemStartTime,
     ospeElemStatus,
     ospeElemTimestamp,
     ospeElemToken,

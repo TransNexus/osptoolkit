@@ -68,6 +68,7 @@ const OSPTMSGDESC OSPVElemDescs[] =
     { ospeElemSrcAlt,           "SourceAlternate" },
     { ospeElemSrcInfo,          "SourceInfo" },
     { ospeElemSrcSigAddr,       "SourceSignalAddress" },
+    { ospeElemStartTime,        "StartTime" },
     { ospeElemStatus,           "Status" },
     { ospeElemTimestamp,        "Timestamp" },
     { ospeElemToken,            "Token" },
