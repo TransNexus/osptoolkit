@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release_Secure"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\crypto" /I "..\include" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "OSPC_USE_SIGNED_TOKEN" /D "OSP_SDK" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\crypto" /I "..\include" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "OSPC_USE_SIGNED_TOKEN" /D "OSPC_HW_ACCEL" /D "OSP_SDK" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
