@@ -41,7 +41,7 @@
  * exposed OSP API prototypes and constants
  */
 
-#include "ospproviderapi.h"
-#include "osptransapi.h"
+#include "osp/ospproviderapi.h"
+#include "osp/osptransapi.h"
 
 #endif
