@@ -126,7 +126,9 @@ extern "C"
             const char      *ospvSource,                  /* In - Source of call      */
             const char      *ospvSourceDevice,            /* In - SourceDevice of call*/
             const char      *ospvCallingNumber,           /* In - Calling number      */
+            int             ospvCallingNumberFormat,           /* In - Calling number Format */
             const char      *ospvCalledNumber,            /* In - Called number       */
+            int             ospvCalledNumberFormat,            /* In - Called number       */
             const char      *ospvUser,                    /* In - End user (optional) */
             unsigned        ospvNumberOfCallIds,          /* In - Number of call identifiers */
             OSPTCALLID      *ospvCallIds[],               /* In - List of call identifiers */
@@ -171,7 +173,9 @@ block */
             const char          *ospvSourceDevice,      /* In - SourceDevice of call */
             const char          *ospvDestinationDevice, /* In - DestinationDevice for call */
             const char          *ospvCallingNumber,     /* In - Calling number string*/
+            int                 ospvCallingNumberFormat,           /* In - Calling number Format */
             const char          *ospvCalledNumber,      /* In - Called number string */
+            int                 ospvCalledNumberFormat, /* In - Called number Format */
             unsigned            ospvSizeOfCallId,       /* In - Size of call id value */
             const void          *ospvCallId,            /* In - Call Id for this call */
             unsigned            ospvSizeOfToken,        /* In - Size of authorization token */

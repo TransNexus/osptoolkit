@@ -65,8 +65,8 @@ extern "C"
             char *, unsigned, char *, unsigned, char *, unsigned *, void *);
 
     int OSPPTransactionInitializeAtDevice(OSPTTRANHANDLE, unsigned, const char *,
-            const char *, const char *, const char *,const char *,const char *,
-            unsigned, const void *, unsigned, const void *,unsigned *,unsigned *,
+            const char *, const char *, const char *,const char *,OSPE_NUMBERING_FORMAT, const char *,
+            OSPE_NUMBERING_FORMAT, unsigned, const void *, unsigned, const void *,unsigned *,unsigned *,
             unsigned *, void *,unsigned);
 
     int OSPPTransactionNew(OSPTPROVHANDLE, OSPTTRANHANDLE *);
@@ -75,14 +75,14 @@ extern "C"
 
     int OSPPTransactionReinitializeAtDevice(OSPTTRANHANDLE, enum OSPEFAILREASON,
             unsigned, const char *, const char *, const char *, const char *,
-            const char *, const char *, unsigned, const void *, unsigned,
+            const char *,const char *,unsigned, const void *, unsigned,
             const void *, unsigned *, unsigned *, unsigned *, void *,unsigned);
 
     int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, unsigned, signed,
             unsigned, signed, unsigned *, void *);
 
     int OSPPTransactionRequestAuthorisation(OSPTTRANHANDLE, const char *, 
-            const char *, const char *, const char *, const char *, 
+            const char *, const char *, OSPE_NUMBERING_FORMAT, const char *, OSPE_NUMBERING_FORMAT, const char *, 
             unsigned, OSPTCALLID *[], const char *[], unsigned *, unsigned *, 
             void *);
 
@@ -93,8 +93,8 @@ extern "C"
             void *, unsigned *,unsigned *,unsigned *, void *);
 
     int OSPPTransactionValidateAuthorisation(OSPTTRANHANDLE, const char *,
-            const char *, const char *, const char *, const char *, 
-            const char *, unsigned, const void *, unsigned, const void *, 
+            const char *, const char *, const char *, const char *, OSPE_NUMBERING_FORMAT, 
+            const char *, OSPE_NUMBERING_FORMAT, unsigned, const void *, unsigned, const void *, 
             unsigned *, unsigned *, unsigned *, void *,unsigned);
 
     int OSPPTransactionValidateReAuthorisation(OSPTTRANHANDLE, unsigned, const void *,                 
@@ -109,7 +109,9 @@ extern "C"
     const char     *ospvSourceDevice,       /*In - SourceDevice */
     const char     *ospvDestinationDevice,  /*In - DestinationDevice */
     const char     *ospvCallingNumber,      /*In - Calling number */
+    OSPE_NUMBERING_FORMAT ospvCallingNumberFormat, /* In - Calling number formaat : sip/e.164/url */
     const char     *ospvCalledNumber,       /*In - Called number */
+    OSPE_NUMBERING_FORMAT ospvCalledNumberFormat, /* In - Called number formaat : sip/e.164/url */
     unsigned        ospvSizeOfCallId,       /*In - Size of Callid */
     const void     *ospvCallId,             /*In - Call identifier */
     enum OSPEFAILREASON  ospvFailureReason,

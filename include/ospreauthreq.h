@@ -70,7 +70,7 @@ extern "C"
 
     OSPTREAUTHREQ   *OSPPReauthReqNew(void);
     void            OSPPReauthReqDelete(OSPTREAUTHREQ **);
-    int             OSPPReauthReqToElement(OSPTREAUTHREQ *, OSPTXMLELEM **);
+    int             OSPPReauthReqToElement(OSPTREAUTHREQ *, OSPTXMLELEM **,void *);
 
     void            OSPPReauthReqSetRole(OSPTREAUTHREQ *, OSPE_MSG_ROLETYPES);
     unsigned        OSPPReauthReqHasRole(OSPTREAUTHREQ *);

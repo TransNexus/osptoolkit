@@ -1257,11 +1257,15 @@ OSPPTransactionGetNextDestination(
  *      standard (with no punctuation).
  *      When the API is called for the 2nd time or thereafter this value can 
  *      be left NULL.
+ *  ospvCallingNumberFormat: Value that identifies the type of calling number.
+ *      It can be either {0-E.164, 1-SIP or 2-URL}
  *  ospvCalledNumber: character string containing the called number, expressed 
  *      as a full international number conforming to the ITU E.164 standard 
  *      (with no punctuation).
  *      When the API is called for the 2nd time or thereafter this value can 
  *      be left NULL.
+ *  ospvCalledNumberFormat: Value that identifies the type of called number.
+ *      It can be either {0-E.164, 1-SIP or 2-URL}
  *  ospvSizeOfCallId: size of the memory buffer containing the call identifier.
  *      This should always be populated.
  *  ospvCallId: memory location containing the H.323 call identifier for the 
@@ -1281,7 +1285,9 @@ OSPPTransactionBuildUsageFromScratch(
     const char     *ospvSourceDevice,       /*In - SourceDevice */
     const char     *ospvDestinationDevice,  /*In - DestinationDevice */
     const char     *ospvCallingNumber,      /*In - Calling number */
+    OSPE_NUMBERING_FORMAT ospvCallingNumberFormat,  /* In - Calling number format : sip/e.164/url */
     const char     *ospvCalledNumber,       /*In - Called number */
+    OSPE_NUMBERING_FORMAT ospvCalledNumberFormat,  /* In - Called number format : sip/e.164/url */
     unsigned        ospvSizeOfCallId,       /*In - Size of Callid */
     const void     *ospvCallId,             /*In - Call identifier */
     enum OSPEFAILREASON  ospvFailureReason, /* Reason that the previous destination failed */
@@ -1301,6 +1307,9 @@ OSPPTransactionBuildUsageFromScratch(
     if(((ospvDestination == (const char *)OSPC_OSNULL)&&
         (ospvDestinationDevice == (const char *)OSPC_OSNULL)) ||
         (ospvSizeOfCallId == 0)                          ||
+        ((ospvCallingNumberFormat != OSPC_E164) && (ospvCallingNumberFormat != OSPC_SIP) && (ospvCallingNumberFormat != OSPC_URL)) ||
+        ((ospvCalledNumberFormat != OSPC_E164) && (ospvCalledNumberFormat != OSPC_SIP) && (ospvCalledNumberFormat != OSPC_URL)) ||
+
         (ospvCallId == (const void *)OSPC_OSNULL))
     {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -1383,6 +1392,12 @@ OSPPTransactionBuildUsageFromScratch(
                         ospvSizeOfDetailLog, 
                         ospvDetailLog);
 
+                    if (errorcode == OSPC_ERR_NO_ERROR)
+                    {
+                        trans->CallingNumberFormat = ospvCallingNumberFormat;
+                        trans->CalledNumberFormat = ospvCalledNumberFormat;
+                    }
+
                     /* delete callid - TransactionRequestNew created new one */
                     OSPPCallIdDelete(&callid);
                 }
@@ -1445,8 +1460,12 @@ OSPPTransactionBuildUsageFromScratch(
                         OSPPAuthIndSetCallId(authind, callid);
                         OSPPAuthIndSetSourceNumber(authind,
                             (const unsigned char *)ospvCallingNumber);
+                        trans->CallingNumberFormat = ospvCallingNumberFormat;
+
                         OSPPAuthIndSetDestNumber(authind,
                             (const unsigned char *)ospvCalledNumber);
+                        trans->CalledNumberFormat = ospvCalledNumberFormat;
+
                         OSPPListNew(&(authind->ospmAuthIndTokens));
                         OSPPCallIdDelete(&callid);
                     }
@@ -1694,9 +1713,13 @@ OSPPTransactionBuildUsageFromScratch(
  *  ospvCallingNumber: character string containing the calling party's number 
  *      expressed as a full international number conforming to the ITU E.164 
  *      standard (with no punctuation).
+ *  ospvCallingNumberFormat: Value that identifies the type of calling number.
+ *      It can be either {0-E.164, 1-SIP or 2-URL}
  *  ospvCalledNumber: character string containing the called number, expressed 
  *      as a full international number conforming to the ITU E.164 standard 
  *      (with no punctuation).
+ *  ospvCalledNumberFormat: Value that identifies the type of called number.
+ *      It can be either {0-E.164, 1-SIP or 2-URL}
  *  ospvSizeOfCallId: size of the memory buffer containing the call identifier.
  *  ospvCallId: memory location containing the H.323 call identifier for the 
  *      call.
@@ -1749,7 +1772,9 @@ OSPPTransactionInitializeAtDevice(
     const char     *ospvSourceDevice,       /*In - SourceDevice */
     const char     *ospvDestinationDevice,  /*In - DestinationDevice */
     const char     *ospvCallingNumber,      /*In - Calling number */
+    OSPE_NUMBERING_FORMAT  ospvCallingNumberFormat,  /* In - Calling number Format : sip/e.164/url*/
     const char     *ospvCalledNumber,       /*In - Called number */
+    OSPE_NUMBERING_FORMAT  ospvCalledNumberFormat,  /* In - Called number Format : sip/e.164/url*/
     unsigned        ospvSizeOfCallId,       /*In - Size of Callid */
     const void     *ospvCallId,             /*In - Call identifier */
     unsigned        ospvSizeOfToken,        /*In - Size of Token */
@@ -1774,6 +1799,8 @@ OSPPTransactionInitializeAtDevice(
         (ospvSizeOfCallId == 0)                          ||
         (ospvCallId == (const void *)OSPC_OSNULL)   ||
         (ospvSizeOfToken == 0)                      ||
+        ((ospvCallingNumberFormat != OSPC_E164) && (ospvCallingNumberFormat != OSPC_SIP) && (ospvCallingNumberFormat != OSPC_URL)) ||
+        ((ospvCalledNumberFormat != OSPC_E164) && (ospvCalledNumberFormat != OSPC_SIP) && (ospvCalledNumberFormat != OSPC_URL)) ||
         (ospvToken == (const void *)OSPC_OSNULL))
     {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -1795,7 +1822,7 @@ OSPPTransactionInitializeAtDevice(
             ospvDestination, 
             ospvSourceDevice,
             ospvDestinationDevice,
-            ospvCallingNumber, ospvCalledNumber,
+            ospvCallingNumber, ospvCallingNumberFormat, ospvCalledNumber, ospvCalledNumberFormat, 
             ospvSizeOfCallId, ospvCallId, 
             ospvSizeOfToken, ospvToken, 
             ospvAuthorised,
@@ -2163,12 +2190,19 @@ OSPPTransactionReinitializeAtDevice(
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
 
+            /*
+             * The toolkit expects the calling and called numbers to be in
+             * the same format as the format that was used while callinf 
+             * InitializeAtDevice API
+             * The application should make sure of this !
+             */
             errorcode = OSPPTransactionValidateAuthorisation(ospvTransaction, 
                 ospvSource,
                 ospvDestination, 
                 ospvSourceDevice,
                 ospvDestinationDevice,
-                ospvCallingNumber, ospvCalledNumber,
+                ospvCallingNumber, trans->CallingNumberFormat, ospvCalledNumber,
+                trans->CalledNumberFormat,
                 ospvSizeOfCallId, ospvCallId, 
                 ospvSizeOfToken, ospvToken, 
                 ospvAuthorised,
@@ -2483,7 +2517,7 @@ OSPPTransactionReportUsage(
     if (errorcode == OSPC_ERR_NO_ERROR) 
     {
         errorcode = OSPPXMLMessageCreate(OSPC_MSG_UIND, 
-            &xmldoc, &sizeofxmldoc, &(trans->UsageInd));
+            &xmldoc, &sizeofxmldoc, &(trans->UsageInd), trans);
     }
 
     /* Check for audit. If it is turned on add xmldoc to audit
@@ -2582,9 +2616,13 @@ OSPPTransactionReportUsage(
  *      unavailable (e.g. because the end user has blocked caller ID services),
  *      then the application should supply a local phone number for the device 
  *      originating the call.
+ *  ospvCallingNumberFormat: Value that identifies the type of calling number.
+ *      It can be either {0-E.164, 1-SIP or 2-URL}
  *  ospvCalledNumber: character string containing the called number, expressed 
  *      as a full international number conforming to the ITU E.164 standard 
  *      (with no punctuation).
+ *  ospvCalledNumberFormat: Value that identifies the type of called number.
+ *      It can be either {0-E.164, 1-SIP or 2-URL}
  *  ospvUser: character string identifying the end user (e.g. calling card and 
  *      PIN number assigned to roaming users); this string may be empty.
  *  ospvNumberOfCallIds: the number of call identifiers in the ospvCallIds list
@@ -2638,7 +2676,9 @@ OSPPTransactionRequestAuthorisation(
     const char      *ospvSource,                /* In - Source of call */
     const char      *ospvSourceDevice,                /* In - SourceDevice of call */
     const char      *ospvCallingNumber,         /* In - Calling number */
+    OSPE_NUMBERING_FORMAT ospvCallingNumberFormat,  /* In - Calling number format : sip/e.164/url */
     const char      *ospvCalledNumber,          /* In - Called number */
+    OSPE_NUMBERING_FORMAT ospvCalledNumberFormat,  /* In - Called number format : sip/e.164/url */
     const char      *ospvUser,                  /* In - End user (optional) */
     unsigned        ospvNumberOfCallIds,        /* In - Number of call identifiers */
     OSPTCALLID      *ospvCallIds[],             /* In - List of call identifiers */
@@ -2664,6 +2704,8 @@ OSPPTransactionRequestAuthorisation(
         (ospvCalledNumber == (const char *)OSPC_OSNULL)     ||
         (ospvNumberOfCallIds == 0)                          ||
         (ospvCallIds[0] == (OSPTCALLID *)OSPC_OSNULL)       ||
+        ((ospvCallingNumberFormat != OSPC_E164) && (ospvCallingNumberFormat != OSPC_SIP) && (ospvCallingNumberFormat != OSPC_URL)) ||
+        ((ospvCalledNumberFormat != OSPC_E164) && (ospvCalledNumberFormat != OSPC_SIP) && (ospvCalledNumberFormat != OSPC_URL)) ||
         (ospvNumberOfDestinations == 0))
     {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -2704,12 +2746,18 @@ OSPPTransactionRequestAuthorisation(
                         ospvCallIds, ospvPreferredDestinations, 
                         ospvNumberOfDestinations, 
                         ospvSizeOfDetailLog, ospvDetailLog);
+                   
+                    if (errorcode == OSPC_ERR_NO_ERROR)
+                    {
+                        trans->CallingNumberFormat = ospvCallingNumberFormat;
+                        trans->CalledNumberFormat = ospvCalledNumberFormat;
+                    }
 
                     if (errorcode == OSPC_ERR_NO_ERROR) 
                     {
 
                         errorcode = OSPPXMLMessageCreate(OSPC_MSG_AREQ, 
-                            &xmldoc, &sizeofxmldoc, trans->AuthReq);
+                            &xmldoc, &sizeofxmldoc, trans->AuthReq, trans);
 
                         if (errorcode == OSPC_ERR_NO_ERROR)
                         {
@@ -2995,7 +3043,7 @@ OSPPTransactionRequestReauthorisation(
     if (errorcode == OSPC_ERR_NO_ERROR) 
     {
         errorcode = OSPPXMLMessageCreate(OSPC_MSG_REAREQ, 
-            &xmldoc, &sizeofxmldoc, trans->ReauthReq);
+            &xmldoc, &sizeofxmldoc, trans->ReauthReq, trans);
     }
 
     /* Create msginfo, put in queue and process return */
@@ -3171,9 +3219,13 @@ OSPPTransactionRequestReauthorisation(
  *  ospvCallingNumber: character string containing the calling party's number 
  *      expressed as a full international number conforming to the ITU E.164 
  *      standard (with no punctuation).
+ *  ospvCallingNumberFormat: Value that identifies the type of calling number.
+ *      It can be either {0-E.164, 1-SIP or 2-URL}
  *  ospvCalledNumber: character string containing the called number, expressed 
  *      as a full international number conforming to the ITU E.164 standard 
  *      (with no punctuation).
+ *  ospvCalledNumberFormat: Value that identifies the type of called number.
+ *      It can be either {0-E.164, 1-SIP or 2-URL}
  *  ospvSizeOfCallId: size of the memory buffer containing the call identifier.
  *  ospvCallId: memory location containing the H.323 call identifier for the 
  *      call.
@@ -3224,7 +3276,9 @@ OSPPTransactionValidateAuthorisation(
     const char          *ospvSourceDevice,      /* In - SourceDevice of call */
     const char          *ospvDestinationDevice, /* In - DestinationDevice for call */
     const char          *ospvCallingNumber,     /* In - Calling number string*/
+    OSPE_NUMBERING_FORMAT  ospvCallingNumberFormat,  /* In - Calling number Format : sip/e.164/url*/
     const char          *ospvCalledNumber,      /* In - Called number string */
+    OSPE_NUMBERING_FORMAT  ospvCalledNumberFormat,  /* In - Called number Format : sip/e.164/url*/
     unsigned            ospvSizeOfCallId,       /* In - Size of call id value */
     const void          *ospvCallId,            /* In - Call Id for this call */
     unsigned            ospvSizeOfToken,        /* In - Size of authorization token */
@@ -3254,6 +3308,7 @@ OSPPTransactionValidateAuthorisation(
     OSPTBOOL            IsTokenSigned=OSPC_FALSE;
     OSPE_DEST_OSP_ENABLED dstOSPStatus;
     OSPE_DEST_PROT dstProt;
+    unsigned char *CallIdValue = OSPC_OSNULL;
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
@@ -3267,6 +3322,8 @@ OSPPTransactionValidateAuthorisation(
         (ospvCallId == (const void *)OSPC_OSNULL)        ||
         (ospvSizeOfToken == 0)                           ||
         (ospvToken == (const void *)OSPC_OSNULL)         ||
+        ((ospvCallingNumberFormat != OSPC_E164) && (ospvCallingNumberFormat != OSPC_SIP) && (ospvCallingNumberFormat != OSPC_URL)) ||
+        ((ospvCalledNumberFormat != OSPC_E164) && (ospvCalledNumberFormat != OSPC_SIP) && (ospvCalledNumberFormat != OSPC_URL)) ||
         ((tokenAlgo < TOKEN_ALGO_SIGNED) || (tokenAlgo >TOKEN_ALGO_BOTH)))
     {
 
@@ -3341,8 +3398,12 @@ OSPPTransactionValidateAuthorisation(
                     OSPPAuthIndSetCallId(authind, callid);
                     OSPPAuthIndSetSourceNumber(authind, 
                         (const unsigned char *)ospvCallingNumber);
+                    trans->CallingNumberFormat = ospvCallingNumberFormat;
+
                     OSPPAuthIndSetDestNumber(authind, 
                         (const unsigned char *)ospvCalledNumber);
+                    trans->CalledNumberFormat = ospvCalledNumberFormat;
+
                     OSPPListNew(&(authind->ospmAuthIndTokens));
                     OSPPCallIdDelete(&callid);
                 }
@@ -3646,8 +3707,12 @@ OSPPTransactionValidateAuthorisation(
          * If Forward Route information is present, 
          * Store it in the transaction object
          */
-        trans->TokenInfoIsLookAheadInfoPresent = tokeninfo->ospmTokenInfoIsLookAheadInfoPresent; 
-        if (tokeninfo->ospmTokenInfoIsLookAheadInfoPresent == OSPC_TRUE)
+        if (tokeninfo != NULL)
+        {
+            trans->TokenInfoIsLookAheadInfoPresent = tokeninfo->ospmTokenInfoIsLookAheadInfoPresent; 
+        }
+
+        if (trans->TokenInfoIsLookAheadInfoPresent)
         {
             /*
              * Set the destination
@@ -3701,8 +3766,12 @@ OSPPTransactionValidateAuthorisation(
                     /*
                      * Verify CallId
                      */
-                    retcode = OSPM_MEMCMP(OSPPAuthIndGetCallIdValue(trans->AuthInd),
-                        OSPPTokenInfoGetCallIdValue(tokeninfo), ospvSizeOfCallId); 
+                    CallIdValue = OSPPTokenInfoGetCallIdValue(tokeninfo);
+                    if (CallIdValue != OSPC_OSNULL)
+                    {
+                        retcode = OSPM_MEMCMP(OSPPAuthIndGetCallIdValue(trans->AuthInd),
+                                  CallIdValue, ospvSizeOfCallId); 
+                    }
 
                     if (retcode != 0)
                     {
@@ -3865,7 +3934,9 @@ OSPPTransactionValidateReAuthorisation(
                 sourcealtval,                
                 destaltval, 
                 (const char *)OSPPAuthIndGetSourceNumber(trans->AuthInd),         
+                trans->CallingNumberFormat,
                 (const char *)OSPPAuthIndGetDestNumber(trans->AuthInd), 
+                trans->CalledNumberFormat,
                 OSPPAuthIndGetCallIdSize(trans->AuthInd),           
                 (const void *)OSPPAuthIndGetCallIdValue(trans->AuthInd), 
                 ospvSizeOfToken,            
@@ -4007,7 +4078,7 @@ OSPPTransactionIndicateCapabilities(
          */
         if (OSPC_ERR_NO_ERROR == errorcode)
         {
-            errorcode = OSPPXMLMessageCreate(OSPC_MSG_CAPIND,&xmldoc,&sizeofxmldoc,capind);
+            errorcode = OSPPXMLMessageCreate(OSPC_MSG_CAPIND,&xmldoc,&sizeofxmldoc,capind,trans);
         }
 
 

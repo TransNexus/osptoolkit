@@ -30,6 +30,7 @@
 
 #include "osp.h"
 #include "ospmsg.h"
+#include "osptrans.h"
 
 #ifdef __cplusplus
 extern "C" 
@@ -39,7 +40,7 @@ extern "C"
     int OSPPXMLElementProcess(OSPTXMLELEM *, unsigned char **, unsigned *);
     int OSPPXMLGetDataType(OSPTXMLELEM *, OSPE_MSG_DATATYPES *);
 
-    int OSPPXMLMessageCreate(OSPE_MSG_DATATYPES, unsigned char **, unsigned *, void *);
+    int OSPPXMLMessageCreate(OSPE_MSG_DATATYPES, unsigned char **, unsigned *, void *, OSPTTRANS *);
     int OSPPXMLMessageParse(unsigned char *, unsigned, void **, OSPE_MSG_DATATYPES *);
     int OSPPXMLMessageProcess(OSPTXMLELEM *, void **, OSPE_MSG_DATATYPES);
 

@@ -147,7 +147,8 @@ OSPPXMLMessageCreate(
     OSPE_MSG_DATATYPES  ospvDataType,       /* In - what data type (AREQ, ARESP...) */
     unsigned char       **ospvMessage,      /* Out - actual xml message */
     unsigned            *ospvSizeOfMessage, /* Out - size of xml message */
-    void                *ospvInfo)          /* In - structure holding data */
+    void                *ospvInfo,          /* In - structure holding data */
+    OSPTTRANS           *trans)             /* In - transaction handle */
 {
     int         errorcode = OSPC_ERR_NO_ERROR;
     OSPTXMLELEM *xmlelem = NULL;
@@ -168,16 +169,16 @@ OSPPXMLMessageCreate(
         {
             case OSPC_MSG_AREQ:
 
-            errorcode = OSPPAuthReqToElement((OSPTAUTHREQ *)ospvInfo, &xmlelem);
+            errorcode = OSPPAuthReqToElement((OSPTAUTHREQ *)ospvInfo, &xmlelem, trans);
             break;
 
             case OSPC_MSG_UIND:
 
-            errorcode = OSPPUsageIndToElement((OSPTLIST *)ospvInfo, &xmlelem);
+            errorcode = OSPPUsageIndToElement((OSPTLIST *)ospvInfo, &xmlelem, trans);
             break;
 
             case OSPC_MSG_REAREQ:
-            errorcode = OSPPReauthReqToElement((OSPTREAUTHREQ *)ospvInfo, &xmlelem);
+            errorcode = OSPPReauthReqToElement((OSPTREAUTHREQ *)ospvInfo, &xmlelem,trans);
             break;
             
             case OSPC_MSG_CAPIND:

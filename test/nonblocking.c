@@ -45,7 +45,9 @@ typedef struct _NBAUTHREQ
   const char      *ospvSource;                  /* In - Source of call      */
   const char      *ospvSourceDevice;            /* In - SourceDevice of call*/
   const char      *ospvCallingNumber;           /* In - Calling number      */
+  int             ospvCallingNumberFormat;           /* In - Calling number      Format */
   const char      *ospvCalledNumber;            /* In - Called number       */
+  int             ospvCalledNumberFormat;            /* In - Called number  Format */
   const char      *ospvUser;                    /* In - End user (optional) */
   unsigned        ospvNumberOfCallIds;          /* In - Number of call identifiers */
   OSPTCALLID      **ospvCallIds;                /* In - List of call identifiers */
@@ -89,7 +91,9 @@ typedef struct _NBVALIDATEAUTH
   const char      *ospvSourceDevice;            /* In - SourceDevice of call*/
   const char      *ospvDestinationDevice;       /* In - DestDevice of call      */
   const char      *ospvCallingNumber;           /* In - Calling number      */
+  int             ospvCallingNumberFormat;           /* In - Calling number      Format */
   const char      *ospvCalledNumber;            /* In - Called number       */
+  int             ospvCalledNumberFormat;            /* In - Called number  Format */
   unsigned        ospvSizeOfCallId;             /* In - Size of call id value */
   const void      *ospvCallId;                  /* In - Call Id for this call */
   unsigned        ospvSizeOfToken;              /* In - Size of authorization token */
@@ -508,7 +512,9 @@ WorkThread(void *arg)
                                                           transaction->Message.AuthReq.ospvSource,
                                                           transaction->Message.AuthReq.ospvSourceDevice,
                                                           transaction->Message.AuthReq.ospvCallingNumber,
+                                                          (OSPE_NUMBERING_FORMAT)transaction->Message.AuthReq.ospvCallingNumberFormat,
                                                           transaction->Message.AuthReq.ospvCalledNumber,
+                                                          (OSPE_NUMBERING_FORMAT)transaction->Message.AuthReq.ospvCalledNumberFormat,
                                                           transaction->Message.AuthReq.ospvUser,
                                                           transaction->Message.AuthReq.ospvNumberOfCallIds,
                                                           transaction->Message.AuthReq.ospvCallIds,
@@ -560,7 +566,9 @@ WorkThread(void *arg)
                                                           transaction->Message.ValidateAuth.ospvSourceDevice,
                                                           transaction->Message.ValidateAuth.ospvDestinationDevice,
                                                           transaction->Message.ValidateAuth.ospvCallingNumber,
+                                                          (OSPE_NUMBERING_FORMAT)transaction->Message.ValidateAuth.ospvCallingNumberFormat,
                                                           transaction->Message.ValidateAuth.ospvCalledNumber,
+                                                          (OSPE_NUMBERING_FORMAT)transaction->Message.ValidateAuth.ospvCalledNumberFormat,
                                                           transaction->Message.ValidateAuth.ospvSizeOfCallId,
                                                           transaction->Message.ValidateAuth.ospvCallId,
                                                           transaction->Message.ValidateAuth.ospvSizeOfToken,
@@ -655,7 +663,9 @@ OSPPTransactionValidateAuthorisation_nb(
     const char          *ospvSourceDevice,      /* In - SourceDevice of call */
     const char          *ospvDestinationDevice, /* In - DestinationDevice for call */
     const char          *ospvCallingNumber,     /* In - Calling number string*/
+    int                 ospvCallingNumberFormat,/* In - Calling number Format*/
     const char          *ospvCalledNumber,      /* In - Called number string */
+    int                 ospvCalledNumberFormat,/* In - Calling number Format*/
     unsigned            ospvSizeOfCallId,       /* In - Size of call id value */
     const void          *ospvCallId,            /* In - Call Id for this call */
     unsigned            ospvSizeOfToken,        /* In - Size of authorization token */
@@ -702,7 +712,9 @@ OSPPTransactionValidateAuthorisation_nb(
       nbData->Message.ValidateAuth.ospvSourceDevice       = ospvSourceDevice;
       nbData->Message.ValidateAuth.ospvDestinationDevice  = ospvDestinationDevice;
       nbData->Message.ValidateAuth.ospvCallingNumber      = ospvCallingNumber;
+      nbData->Message.ValidateAuth.ospvCallingNumberFormat= ospvCallingNumberFormat;
       nbData->Message.ValidateAuth.ospvCalledNumber       = ospvCalledNumber;
+      nbData->Message.ValidateAuth.ospvCalledNumberFormat = ospvCalledNumberFormat;
       nbData->Message.ValidateAuth.ospvSizeOfCallId       = ospvSizeOfCallId;
       nbData->Message.ValidateAuth.ospvCallId             = ospvCallId;
       nbData->Message.ValidateAuth.ospvSizeOfToken        = ospvSizeOfToken;
@@ -769,7 +781,9 @@ OSPPTransactionRequestAuthorisation_nb(
         const char      *ospvSource,                  /* In - Source of call      */
         const char      *ospvSourceDevice,            /* In - SourceDevice of call*/
         const char      *ospvCallingNumber,           /* In - Calling number      */
+        int             ospvCallingNumberFormat,      /* In - Calling number Format */
         const char      *ospvCalledNumber,            /* In - Called number       */
+        int             ospvCalledNumberFormat,       /* In - Called number Format */
         const char      *ospvUser,                    /* In - End user (optional) */
         unsigned        ospvNumberOfCallIds,          /* In - Number of call identifiers */
         OSPTCALLID      *ospvCallIds[],               /* In - List of call identifiers */
@@ -812,7 +826,9 @@ OSPPTransactionRequestAuthorisation_nb(
       nbData->Message.AuthReq.ospvSource                  = ospvSource;
       nbData->Message.AuthReq.ospvSourceDevice            = ospvSourceDevice;
       nbData->Message.AuthReq.ospvCallingNumber           = ospvCallingNumber;
+      nbData->Message.AuthReq.ospvCallingNumberFormat     = ospvCallingNumberFormat;
       nbData->Message.AuthReq.ospvCalledNumber            = ospvCalledNumber;
+      nbData->Message.AuthReq.ospvCalledNumberFormat      = ospvCalledNumberFormat;
       nbData->Message.AuthReq.ospvUser                    = ospvUser;
       nbData->Message.AuthReq.ospvNumberOfCallIds         = ospvNumberOfCallIds;
       nbData->Message.AuthReq.ospvCallIds                 = ospvCallIds;

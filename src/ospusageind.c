@@ -39,6 +39,7 @@
 #include "ospusageind.h"
 #include "ospstatistics.h"
 #include "osputils.h"
+#include "osptrans.h"
 
 
 /**/
@@ -1116,7 +1117,8 @@ OSPPUsageIndSetTNStatistics(
 int                                 /* returns error code */
 OSPPUsageIndToElement(
     OSPTLIST         *ospvUsageInd, /* usage ind list */
-    OSPTXMLELEM      **ospvElem     /* where to put XML element pointer */
+    OSPTXMLELEM      **ospvElem,     /* where to put XML element pointer */
+    void        *ospvtrans
 )
 {
     int             ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -1129,6 +1131,7 @@ OSPPUsageIndToElement(
     OSPTUSAGEIND    *usage      = OSPC_OSNULL;
     char            random[OSPC_MAX_RANDOM];
     OSPTBOOL        isbase64    = OSPC_TRUE;
+    OSPTTRANS       *trans = (OSPTTRANS *)ospvtrans;
 
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
 
@@ -1283,8 +1286,22 @@ OSPPUsageIndToElement(
             }
             if (ospvErrCode == OSPC_ERR_NO_ERROR)
             {
-                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
-                    (const unsigned char *)"e164");
+                if (trans->CallingNumberFormat == OSPC_E164)
+                {
+                    attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+                        (const unsigned char *)"e164");
+                }
+                else if (trans->CallingNumberFormat == OSPC_SIP)
+                {
+                    attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+                        (const unsigned char *)"sip");
+                }
+                else if (trans->CallingNumberFormat == OSPC_URL)
+                {
+                    attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+                        (const unsigned char *)"url");
+                }
+
                 if (attr == OSPC_OSNULL)
                 {
                     ospvErrCode = OSPC_ERR_XML_NO_ATTR;
@@ -1347,8 +1364,22 @@ OSPPUsageIndToElement(
             }
             if (ospvErrCode == OSPC_ERR_NO_ERROR)
             {
-                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
-                    (const unsigned char *)"e164");
+                if (trans->CalledNumberFormat == OSPC_E164)
+                {
+                    attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+                        (const unsigned char *)"e164");
+                }
+                else if (trans->CalledNumberFormat == OSPC_SIP)
+                {
+                    attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+                        (const unsigned char *)"sip");
+                }
+                else if (trans->CalledNumberFormat == OSPC_URL)
+                {
+                    attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+                        (const unsigned char *)"url");
+                }
+
                 if (attr == OSPC_OSNULL)
                 {
                     ospvErrCode = OSPC_ERR_XML_NO_ATTR;

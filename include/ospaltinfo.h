@@ -51,7 +51,8 @@ typedef enum
     ospeSubscriber,
     ospeAbbreviated,
     ospeE164prefix,
-    ospetypelower
+    ospetypelower,
+    ospeSip
 }OSPE_TYPE_ATTR_VAL;
 
 /* the basic altinfo structure */

@@ -101,6 +101,8 @@ typedef struct _OSPTTRANS
     OSPTBOOL                    WasLookAheadInfoGivenToApp;
     OSPTBOOL                    TokenInfoIsLookAheadInfoPresent;
     OSPTTOKENLOOKAHEADINFO      TokenLookAheadInfo;
+    OSPE_NUMBERING_FORMAT       CallingNumberFormat;
+    OSPE_NUMBERING_FORMAT       CalledNumberFormat;
 
 } OSPTTRANS;
 
