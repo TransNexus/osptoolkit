@@ -2222,9 +2222,6 @@ testAPI(int apinumber)
         errorcode = testSetCallId();
         break;
         case 100:
-#if 0
-        errorcode = testNonBlockingPerformanceTest();
-#endif
         printf("Enter the number of Providers to be created .. ");
         scanf("%d",&num_providers);
         if (num_providers > OSPC_MAX_PROVIDERS)
