@@ -67,7 +67,7 @@ OSPPSecGetLocalCertInfo(
     OSPTASN1OBJECT **ospvLocalCertInfo);
 
 
-void OpenSSLErrorLog(long errorcode);
+void OpenSSLErrorLog(int errorcode);
 
 /**************************************/
 /* IMPLEMENTATION OF MEMBER FUNCTIONS */
@@ -1446,7 +1446,7 @@ OSPPSecGetSignerCertSubjectName(
     return errorcode;
 }
 
-void OpenSSLErrorLog(long errorcode)
+void OpenSSLErrorLog(int errorcode)
 {
 	BIO		*mem_bio	= OSPC_OSNULL;
 	char	*p				= OSPC_OSNULL;
