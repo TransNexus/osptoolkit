@@ -386,7 +386,7 @@ OSPPCapIndToElement(
      * Create/Add OSPVersion
      * 
      */
-     elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemOSPVersion),"2.1.1");
+     elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemDestOSPVersion),"2.1.1");
      OSPPXMLElemAddChild(capindelem, elem);
     
     

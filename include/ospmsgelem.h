@@ -58,7 +58,6 @@ typedef enum
     ospeElemIncrement,
     ospeElemMaxDest,
     ospeElemMessage,
-    ospeElemOSPVersion,
     ospeElemPricingCnf,
     ospeElemPricingInd,
     ospeElemReauthReq,

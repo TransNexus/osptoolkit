@@ -131,7 +131,7 @@ OSPPCapCnfFromElement(
             switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem)))
             {
                 case ospeElemTimestamp:
-                case ospeElemOSPVersion:
+                case ospeElemDestOSPVersion:
                     /* For now, we aren't interested in the value */
                     break;
 

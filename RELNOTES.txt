@@ -246,3 +246,8 @@ Version 2.10.0
   used for sending Authorization Request and Usage Indication messages.
 * Eliminated a race condition in the communication module.
 * Improved resource management - quickly close TCP connection after HTTP persistence times out.
+---------------------------------------------------------------------------
+
+Version 2.10.1
+
+* Removed a conflicting definition of OSPVersion element.  The bug was introduced in version 2.10.0

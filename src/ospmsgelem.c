@@ -62,7 +62,6 @@ const OSPTMSGDESC OSPVElemDescs[] =
     { ospeElemIncrement,        "Increment" },
     { ospeElemMaxDest,          "MaximumDestinations" },
     { ospeElemMessage,          "Message" },
-    { ospeElemOSPVersion,       "OSPVersion" },
     { ospeElemPricingCnf,       "PricingConfirmation" },
     { ospeElemPricingInd,       "PricingIndication" },
     { ospeElemReauthReq,        "ReauthorizationRequest" },
