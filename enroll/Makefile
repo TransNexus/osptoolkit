@@ -18,6 +18,7 @@ CFLAGS        = -g $(WARNING_FLAGS)
 MACRO_FLAGS   = -D_POSIX_THREADS -DSOLARIS -DOSPD_DEBUG -DOSP_SDK -DOSPC_DEBUG=1
 
 LIBS          = -lnsl -lsocket -ldl -lm -losp $(SSL_LIBS) -lpthread 
+LIBS_LINUX    = -losp $(SSL_LIBS) -lpthread 
 OSP_LIBDIR    = -L../lib
 LIBDIRS       = $(OSP_LIBDIR) $(SSL_LIBDIRS)
 
@@ -34,6 +35,9 @@ OBJS          = $(CREATED_OBJS) $(OSP_OBJS) $(SSL_OBJS)
 # Rule for creating the output executable:
 enroll: $(OBJS)
 	$(PURIFY) $(CC) -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS) $(INCLDIRS)
+
+linux: $(OBJS)
+	$(PURIFY) $(CC) -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS_LINUX) $(INCLDIRS)
 
 clean:
 	rm -f $(CREATED_OBJS) $(EXEC)

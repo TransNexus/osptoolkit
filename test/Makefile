@@ -10,6 +10,7 @@ CFLAGS     = -g $(PROFILE) -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D
 #CC         = /usr/vws/bin/cc
 #CFLAGS     =  -g -v -xCC -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D_REENTRANT -DOSP_SDK
 LFLAGS	   = $(PROFILELIB) -lsocket -lnsl -lpthread -lmalloc  -ldl -lm
+LFLAGS_LINUX	   = $(PROFILELIB) -lpthread -lm
 SOFLAGS    = -shared 
 SOOBJ      = libosp.so
 AR         = /usr/ccs/bin/ar
@@ -35,6 +36,10 @@ OBJS	= nonblocking.o syncque.o test_app.o
 all: 	$(OBJS)
 	$(PURE) $(CC) $(PROFILE) $(OBJS) -o ../bin/test_app \
 	$(ARLIBDIR)/libosp.a $(LFLAGS) -L$(ARLIBDIR) $(ARLIB) $(SSL)
+
+linux: 	$(OBJS)
+	$(PURE) $(CC) $(PROFILE) $(OBJS) -o ../bin/test_app \
+	$(ARLIBDIR)/libosp.a $(LFLAGS_LINUX) -L$(ARLIBDIR) $(ARLIB) $(SSL)
 
 clean :
 	rm -f *.o ../bin/test_app
