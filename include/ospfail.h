@@ -44,7 +44,7 @@ enum OSPEFAILREASON
     OSPC_FAIL_CALL_AWARDED                                      =     7,
     OSPC_FAIL_PREEMTION                                         =     8,
     OSPC_FAIL_CERCUIT_RESERVED_FOR_REUSE                        =     9,
-    OSPC_FAIL_NORMAL_CALL_CLEARING                              =     16,
+    OSPC_FAIL_NORMAL_CALL_CLEARING                              =   1016,
     OSPC_FAIL_USER_BUSY                                         =     17,
     OSPC_FAIL_NO_USER_RESPONDING                                =     18,
     OSPC_FAIL_NO_ANSWER_FROM_USER                               =     19,
