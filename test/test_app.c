@@ -125,7 +125,7 @@ NBMONITOR *nbMonitor    = NULL;
 #define WORK_THREAD_NUM 40    /* make sure that this number does not exceed DEF_HTTP_MAXCONN */
 #define TOKEN_SIZE      2000
 #define TEST_ERROR 1
-#define MAX_QUEUE_SIZE 1000
+#define MAX_QUEUE_SIZE 10000
 int TEST_NUM=0;
 char      **Tokens;
 
@@ -1400,8 +1400,12 @@ int
 testSetCallingNumber()
 {
     int errorcode = 0;
+    int i=0;
     printf("Enter the new value for Calling number : ");
-    scanf("%s",callingnumber);
+    fflush(stdin);
+    while ((callingnumber[i]=getchar()) != '\n')
+      i++;
+    callingnumber[i] = '\0';
     if (!strcmp(callingnumber,""))
     {
         printf("WARNING : You have set an Empty Calling Number !!\n");
@@ -1414,8 +1418,12 @@ int
 testSetCalledNumber()
 {
     int errorcode = 0;
+    int i=0;
     printf("Enter the new value for Called number : ");
-    scanf("%s",callednumber);
+    fflush(stdin);
+    while ((callednumber[i]=getchar()) != '\n')
+      i++;
+    callednumber[i] = '\0';
     if (!strcmp(callednumber,""))
     {
         printf("WARNING : You have set an Empty Called Number !!\n");
