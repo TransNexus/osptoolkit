@@ -213,10 +213,7 @@ int main ( int argc, char* argv[] )
                     "Error encountered with enrollment.\n" );
             }
 
-            else
-            {
                 OSPPPrintCertAndStatus( localCert, localCertLen, enrollStatus );
-            }
         }
 
         else
@@ -849,12 +846,12 @@ void OSPPPrintCertAndStatus(
         {
             if ( ospvCert == OSPC_OSNULL )
             {
-                OSPM_PRINTF( "Error: The certificate returned was null.\n" );
+                OSPM_PRINTTOERR((stderr,"Error: The certificate returned was null.\n"));
             }
 
             else if ( ospvCertLen == 0 )
             {
-                OSPM_PRINTF( "Error: An empty certificate was retrieved.\n" );
+                OSPM_PRINTTOERR((stderr,"Error: An empty certificate was retrieved.\n"));
             }    
         }
     }
@@ -873,9 +870,14 @@ void OSPPPrintCertAndStatus(
      */
     else
     {
-        OSPM_PRINTF( 
+        OSPM_PRINTTOERR((stderr, 
             "The certificate request failed with the following code: %d\n", 
-            ospvEnrollStatus );
+            ospvEnrollStatus ));
+        if (ospvEnrollStatus == 2)
+        {
+            OSPM_PRINTTOERR((stderr, 
+                "Device not defined on the Server. Define device and try again\n")); 
+        }
     }
 
     OSPM_DBGEXIT(( "EXIT: OSPPPrintCertAndStatus\n" ));

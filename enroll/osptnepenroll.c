@@ -214,6 +214,7 @@ int OSPPEnroll(
                 OSPM_DBGMISC(( 
                     "Request rejected: <%d>\n", 
                     *ospvEnrollStatusOut ));
+                retVal = *ospvEnrollStatusOut;
             }
         }
 
