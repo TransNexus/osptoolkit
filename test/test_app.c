@@ -1186,12 +1186,15 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
         errorcode = OSPPTransactionNew(
             OSPVProviderHandle,
             &tranhandle2);
+        if (errorcode == OSPC_ERR_NO_ERROR)
+        {
+            printf("\nSuccessful TransactionNew.");
+        }
     }
 
 
     if (errorcode == OSPC_ERR_NO_ERROR){
 
-        printf("\nSuccessful TransactionNew.");
 
         errorcode = OSPPTransactionBuildUsageFromScratch(
         tranhandle2,
@@ -1270,7 +1273,7 @@ testOSPPTransactionInitializeAtDevice(int IsSource)
         &timelimit,
         &detaillogsize,
         NULL,
-        TOKEN_ALGO_SIGNED);
+        tokenalgo);
     }
 
 
@@ -1359,7 +1362,7 @@ testOSPPTransactionReinitializeAtDevice()
                                                 &timelimit,
                                                 &detaillogsize,
                                                 NULL,
-                                                TOKEN_ALGO_BOTH);
+                                                tokenalgo);
     }
 
     if(errorcode == OSPC_ERR_NO_ERROR){
@@ -2027,7 +2030,9 @@ testAPI(int apinumber)
         errorcode = testBuildUsageFromScratch(OSPC_SOURCE,build_new_trans);
         break;
         case 44:
-        errorcode = testBuildUsageFromScratch(OSPC_DESTINATION,1);
+        printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
+        scanf("%d",&build_new_trans);
+        errorcode = testBuildUsageFromScratch(OSPC_DESTINATION,build_new_trans);
         break;
         case 50:
         errorcode = testSetCallingNumber();
