@@ -97,7 +97,9 @@ typedef enum
     ospeElemTNAuditState,
     ospeElemTNAuditTimeLimit,
     ospeElemTNAuditMaxMessages,
-    ospeElemCSAuditTrigger
+    ospeElemCSAuditTrigger,
+    ospeElemDestProtocol,
+    ospeElemDestOSPVersion
 }
 OSPTMSGELEMPART;
 
