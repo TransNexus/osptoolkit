@@ -42,10 +42,8 @@
 #include "openssl/ssl.h"
 #include "openssl/err.h"
 #include "openssl/rand.h"
-
-#ifdef OSPC_HW_ACCEL
-  #include "openssl/engine.h"
-#endif
+#include "openssl/crypto.h"
+#include "openssl/engine.h"
 
 
 #define OSPC_MAX_CERT_BUFFER         4096
@@ -58,7 +56,11 @@ int OSPPSSLVerifyCallback(int ok, X509_STORE_CTX *ctx);
 long bio_dump_cb(BIO *bio, int cmd, const char *argp, int argi, long argl, long ret);
 int OSPPSSLLoadCerts(OSPTSEC *ospvRef);
 int rand_init();
-int cha_engine_init();
+int cha_engine_init(OSPTBOOL hw_enabled);
+void thread_setup(void);
+unsigned long pthreads_thread_id(void);
+void pthreads_locking_callback(int mode, int type, char *file,int line);
+void thread_cleanup(void);
 
 /*
 ** BIO_stdout = File handle for output of SSL debugging
@@ -88,22 +90,10 @@ OSPPSSLWrapInit(void *ospvRef)
     
     if (security != OSPC_OSNULL)
     {
-        SSLeay_add_ssl_algorithms();
-        SSL_load_error_strings();
-				OpenSSL_add_all_digests();
-        
-        bio_stdout=BIO_new_fp(stdout,BIO_NOCLOSE);
-
         /*
-        **  Seed random generator
-        */
-        rand_init();
-
-        /*
-        **  Set Cryptographic Hardware Acceleration Engine
-        */
-        cha_engine_init();
-
+         * Openssl initialization has now been moved from here to the OSPPInit
+         * function. It will be done only once now, rather than with every ProviderNew
+         */
         ctx = (SSL_CTX **)&(security->ContextRef);
         version = SSLv3_client_method();
         *ctx = SSL_CTX_new(version);
@@ -114,6 +104,12 @@ OSPPSSLWrapInit(void *ospvRef)
             SSL_CTX_set_timeout(*ctx, OSPPSecGetSSLLifetime(security));
             SSL_CTX_set_verify(*ctx,SSL_VERIFY_PEER|SSL_VERIFY_CLIENT_ONCE ,OSPPSSLVerifyCallback);
         }
+
+        /*
+         * Initialize the CertMutex. This mutex is used to streamline access
+         * to the LoadCerts function
+         */
+        OSPM_MUTEX_INIT(security->SSLCertMutex,OSPC_OSNULL, errorcode);
     }
     
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapInit() (%d)\n",errorcode));
@@ -121,10 +117,122 @@ OSPPSSLWrapInit(void *ospvRef)
 }
 
 void
+OSPPOpenSSLInit(OSPTBOOL hw_enabled)
+{
+    SSLeay_add_ssl_algorithms();
+    SSL_load_error_strings();
+    OpenSSL_add_all_digests();
+
+    bio_stdout=BIO_new_fp(stdout,BIO_NOCLOSE);
+
+    /*
+     **  Seed random generator
+     */
+    rand_init();
+
+    /*
+     * Initialize openssl for multithreading
+     */
+    OSPPInitSSLMultiThread();
+
+    /*
+     **  Set Cryptographic Hardware Acceleration Engine
+     */
+    cha_engine_init(hw_enabled);
+
+}
+
+/*************************************
+** Global params for openssl multi
+** thread initialization
+*************************************/
+static OSPTMUTEX *lock_cs;
+static long *lock_count;
+
+void 
+OSPPInitSSLMultiThread(void)
+{
+    thread_setup();
+}
+
+void thread_setup(void)
+{
+   int i;
+   int errorcode=OSPC_ERR_NO_ERROR;
+  
+   lock_cs=OPENSSL_malloc(CRYPTO_num_locks() * sizeof(OSPTMUTEX));
+   lock_count=OPENSSL_malloc(CRYPTO_num_locks() * sizeof(long));
+
+   for (i=0;i<CRYPTO_num_locks();i++)
+   {
+      lock_count[i]=0;
+      OSPM_MUTEX_INIT(lock_cs[i],NULL,errorcode);
+   }
+
+   CRYPTO_set_id_callback((unsigned long (*)())pthreads_thread_id);
+   CRYPTO_set_locking_callback((void (*)())pthreads_locking_callback);
+
+}
+
+unsigned long pthreads_thread_id(void)
+{
+    unsigned long ret;
+
+    ret=(unsigned long)OSPM_THR_SELF();
+    return(ret);
+}
+
+void pthreads_locking_callback(int mode, int type, char *file,
+             int line)
+{
+   int errorcode=OSPC_ERR_NO_ERROR;
+
+   if (mode & CRYPTO_LOCK)
+   {
+      OSPM_MUTEX_LOCK(lock_cs[type],errorcode);
+      lock_count[type]++;
+   }
+   else
+   {
+      OSPM_MUTEX_UNLOCK(lock_cs[type],errorcode);
+   }
+}
+
+void thread_cleanup(void)
+{
+    int i;
+    int errorcode=OSPC_ERR_NO_ERROR;
+
+    CRYPTO_set_locking_callback(NULL);
+    for (i=0; i<CRYPTO_num_locks(); i++)
+    {
+        OSPM_MUTEX_DESTROY(lock_cs[i],errorcode);
+    }
+    if (lock_cs != NULL)
+       OPENSSL_free(lock_cs);
+    if (lock_count != NULL)
+       OPENSSL_free(lock_count);
+
+}
+
+
+void OSPPOpenSSLCleanUp(void)
+{
+    OSPPOpenSSLMultiThreadCleanUp();
+}
+
+
+void OSPPOpenSSLMultiThreadCleanUp(void)
+{
+    thread_cleanup();
+}
+
+void
 OSPPSSLWrapCleanup(void *ospvRef)
 {
     SSL_CTX    **ctx       = OSPC_OSNULL;
     OSPTSEC     *security  = OSPC_OSNULL;
+    int errorcode=OSPC_ERR_NO_ERROR;
     
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapCleanup()\n"));
     security = (OSPTSEC *)ospvRef;
@@ -134,10 +242,14 @@ OSPPSSLWrapCleanup(void *ospvRef)
         SSL_CTX_free(*ctx);
     }
     if (bio_stdout != OSPC_OSNULL)
-		{
+    {
         BIO_free(bio_stdout);
         bio_stdout = OSPC_OSNULL;
-		}
+    }
+    /*
+     * Destroy the CertMutex
+     */
+    OSPM_MUTEX_DESTROY(security->SSLCertMutex, errorcode);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapCleanup()\n"));
     return;
 }
@@ -455,16 +567,27 @@ int OSPPSSLLoadCerts(OSPTSEC *security)
     X509            *x509       = OSPC_OSNULL;
     SSL_CTX         **ctx       = OSPC_OSNULL;
     int             errorcode   = OSPC_ERR_SEC_MODULE;
+    int lock=OSPC_FALSE;
     
     OSPM_DBGENTER(("ENTER: OSPPSSLLoadCerts()\n"));
+    /*
+     * We need to streamline the access to this function.
+     * If we don't, then while running multiple calls, two 
+     * http threads may try to overwrite the same providers context.
+     * This was a bug in the toolkit which is fixed by the addition 
+     * of this mutex
+     */
+    OSPM_MUTEX_LOCK(security->SSLCertMutex, errorcode);
     
     /*
     ** Make sure the Security Object is present, this object contains
     ** the certificates (CA,LOCAL,PRIVATE)
     */
     
-    if (security != OSPC_OSNULL)
+    if ((security != OSPC_OSNULL) && (errorcode == OSPC_ERR_NO_ERROR))
     {
+        lock =OSPC_TRUE;
+        errorcode   = OSPC_ERR_SEC_MODULE;
         if((ctx = (SSL_CTX **)&(security->ContextRef))!=OSPC_OSNULL)
             if((errorcode=OSPPSecGetNumberOfAuthorityCertificates(security,&count))==OSPC_ERR_NO_ERROR) 
         {
@@ -554,6 +677,10 @@ int OSPPSSLLoadCerts(OSPTSEC *security)
         OSPM_DBGERRORLOG(errorcode, "Security Context is not valid");
     }
     
+    if (lock == OSPC_TRUE)
+    {
+        OSPM_MUTEX_UNLOCK(security->SSLCertMutex, errorcode);
+    }
     OSPM_DBGEXIT(("EXIT : OSPPSSLLoadCerts() (%d)\n", 0));
     return 0;
 }
@@ -589,40 +716,33 @@ int rand_init()
 **  iterate through all supported engines and set
 **  the first available one for all crypto operations
 */
-int cha_engine_init()
+int cha_engine_init(OSPTBOOL hw_enabled)
 {
   int  errorcode = OSPC_ERR_NO_ERROR;
+  ENGINE *e = OSPC_OSNULL;
 
-#ifdef OSPC_HW_ACCEL
-  ENGINE *eng    = OSPC_OSNULL;
-
-  OSPM_DBGENTER(("ENTER: cha_engine_init()\n"));
-
-  for(eng  = ENGINE_get_first();
-      eng != OSPC_OSNULL;
-      eng  = ENGINE_get_next(eng))
+  if (hw_enabled)
   {
-    /* skip 'openssl' because it is a software engine */
-    if( strcmp("openssl",ENGINE_get_id(eng)) != 0 )
-    {
-      if( ENGINE_set_default(eng,ENGINE_METHOD_ALL) != 0)
-      {
-        /* Success */
-        break;
-      }
-    } 
-  }
+      OSPM_DBGENTER(("ENTER: cha_engine_init()\n"));
 
-  if( OSPC_OSNULL == eng )
-  {
-    /* Iterated though all supported engines and failed to set any of them */
-    errorcode=OSPC_ERR_SEC_MODULE;
-    OSPM_DBGERRORLOG(errorcode, "Failed to set hardware engine support");
+      ENGINE_load_builtin_engines();
+      /*
+       * Engine registration as implemented in the server.
+       * Recreate ENGINE_register_all_complete_except for the DSA operation.
+       * For some reason, DSA verification using the hardware does not work
+       */
+       for (e=ENGINE_get_first();e;e=ENGINE_get_next(e))
+       {
+           ENGINE_register_ciphers(e);
+           ENGINE_register_digests(e);
+           ENGINE_register_RSA(e);
+           ENGINE_register_DH(e);
+           ENGINE_register_RAND(e);
+       }
+
   }
 
   OSPM_DBGEXIT(("EXIT : cha_engine_init() (%d)\n", errorcode));
-#endif
-
   return( errorcode );
 }
 
