@@ -44,6 +44,100 @@
 
 
 /*
+ * OSPPTransactionGetDestProtocol() :
+ * Reports the Protocol Information at the Current destination. 
+ * This API should be called right after Calling GetFirstDestination 
+ * or should be called right after Calling GetNextDestination.
+ * The parameters to the function are:
+ *   ospvTransaction: handle of the transaction object.
+ *   ospvDestinationProtocol: the memory location in which 
+ *                            the Toolkit puts the Destination Protocol.
+ *                            The returned value is one of the types 
+ *                            defined in OSPE_DEST_PROT.
+ * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
+ */
+int
+OSPPTransactionGetDestProtocol(
+    OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */
+    OSPE_DEST_PROT *ospvDestinationProtocol)      /* Out - Destination Protocol Info     */
+{
+    int         errorcode   = OSPC_ERR_NO_ERROR;
+    OSPTTRANS   *trans      = OSPC_OSNULL;
+    OSPTDEST *dest = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+
+    if (trans != (OSPTTRANS*) NULL) 
+    {
+        dest = (OSPTDEST *)trans->CurrentDest;
+        if (trans->State == OSPC_GET_DEST_SUCCESS)
+        {
+            if (dest == NULL)
+            {
+               errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+               OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+            }
+            else
+               *ospvDestinationProtocol = dest->ospmDestProtocol;
+        }
+        else
+        {
+            errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+        }
+    }
+    return errorcode;
+}
+
+
+/*
+ * OSPPTransactionIsDestOSPEnabled() :
+ * Reports whether the destination is OSP Enabled or Not. 
+ * This API should be called right after Calling GetFirstDestination 
+ * or should be called right after Calling GetNextDestination.
+ * The parameters to the function are:
+ *   ospvTransaction: handle of the transaction object.
+ *   ospvDestinationOSPStatus: the memory location in which 
+ *                            the Toolkit puts the destination OSP Status.
+ *                            The returned value is one of the types 
+ *                            defined in OSPE_DEST_OSP_ENABLED.
+ * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
+ */
+int
+OSPPTransactionIsDestOSPEnabled(
+    OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */
+    OSPE_DEST_OSP_ENABLED *ospvDestinationOSPStatus)      /* Out - Destination OSP Status     */
+{
+    int         errorcode   = OSPC_ERR_NO_ERROR;
+    OSPTTRANS   *trans      = OSPC_OSNULL;
+    OSPTDEST *dest = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+
+    if (trans != (OSPTTRANS*) NULL) 
+    {
+        dest = (OSPTDEST *)trans->CurrentDest;
+        if (trans->State == OSPC_GET_DEST_SUCCESS)
+        {
+            if (dest == NULL)
+            {
+               errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+               OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+            }
+            else
+               *ospvDestinationOSPStatus = dest->ospmDestOSPVersion;
+        }
+        else
+        {
+            errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+        }
+    }
+    return errorcode;
+}
+
+
+/*
  * OSPPTransactionSetNetworkId()
  *
  * Reports the network id for a particular transaction
@@ -287,7 +381,7 @@ OSPPTransactionAccumulateOneWayDelay(
             /* minimum measured value */
             if(tmpstats.HasValue)
             {
-                tmpstats.Minimum = min(tmpstats.Minimum, ospvMinimum);
+                tmpstats.Minimum = tr_min(tmpstats.Minimum, ospvMinimum);
             }
             else
             {
@@ -490,7 +584,7 @@ OSPPTransactionAccumulateRoundTripDelay(
             /* minimum measured value */
             if(tmpstats.HasValue)
             {
-                tmpstats.Minimum = min(tmpstats.Minimum, ospvMinimum);
+                tmpstats.Minimum = tr_min(tmpstats.Minimum, ospvMinimum);
             }
             else
             {
@@ -2539,6 +2633,7 @@ OSPPTransactionValidateAuthorisation(
     unsigned char       *tokenmsg  = OSPC_OSNULL;
     unsigned            sizeoftokenmsg = 0;
     OSPTDEST            *dest       = OSPC_OSNULL;
+    int                 BAllowDupTransId = OSPC_TRUE;
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
@@ -2890,8 +2985,11 @@ OSPPTransactionValidateAuthorisation(
             /*
              * Verify Source Number
              */
-            retcode = OSPM_MEMCMP(OSPPAuthIndGetSourceNumber(trans->AuthInd),
-                OSPPTokenInfoGetSourceNumber(tokeninfo), OSPM_STRLEN(ospvCallingNumber)); 
+            retcode = OSPM_STRCMP(OSPPAuthIndGetSourceNumber(trans->AuthInd),
+                                    OSPPTokenInfoGetSourceNumber(tokeninfo));
+
+            /*retcode = OSPM_MEMCMP(OSPPAuthIndGetSourceNumber(trans->AuthInd),
+                OSPPTokenInfoGetSourceNumber(tokeninfo), OSPM_STRLEN(ospvCallingNumber)); */
 
             if (retcode != 0)
             {
@@ -2953,9 +3051,14 @@ OSPPTransactionValidateAuthorisation(
                 /*
                  * Add transaction id to transactionid tree and check for reuse.
                  */
-                if(OSPPTransIdCheckAndAdd(OSPPTokenInfoGetTrxId(tokeninfo), 
+#ifdef OSP_ALLOW_DUP_TXN
+                BAllowDupTransId = OSPC_TRUE;
+#else
+                BAllowDupTransId = OSPC_FALSE;
+#endif
+                if ((OSPPTransIdCheckAndAdd(OSPPTokenInfoGetTrxId(tokeninfo), 
                                          (unsigned long)OSPPTokenInfoGetValidUntil(tokeninfo), 
-                                          trans->Provider))
+                                          trans->Provider)) || BAllowDupTransId)
                 {
 
                     /*
