@@ -633,7 +633,7 @@ int
 OSPPProviderNew(
     unsigned             ospvNumberOfServicePoints, /* In  - Svc ptr count           */
     const char           *ospvServicePoints[],       /* In  - Svc pts strings         */
-    unsigned long         *ospvMessageCount,         /* Array of Integers that tell the 
+    unsigned long         ospvMessageCount[],         /* Array of Integers that tell the 
                                                        toolkit about the maximum messages
                                                        that can be sent to each SP on a connection */
     const char           *ospvAuditURL,             /* In  - Audit URL string         */
@@ -1255,7 +1255,7 @@ OSPPProviderSetLocalValidation(
  */
 int OSPPProviderSetSPMessageCount(
     void        *ospvcomm,              /* In - Comm Manager handle    */
-    unsigned long       *ospvMessageCount         /* In - Message count for each SP*/
+    unsigned long       ospvMessageCount[]         /* In - Message count for each SP*/
 )
 {
     OSPTSVCPT       *svcptlist  = OSPC_OSNULL,
@@ -1349,7 +1349,7 @@ int
 OSPPProviderSetServicePoints(
     OSPTPROVHANDLE  ospvProvider,              /* In - Provider handle    */
     unsigned        ospvNumberOfServicePoints, /* In - New svc pt cnt     */
-    unsigned long   *ospvMessageCount,          /* In - Message cnt     */
+    unsigned long   ospvMessageCount[],          /* In - Message cnt     */
     const char      *ospvServicePoints[])      /* In - New svc pt strings */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
@@ -1392,7 +1392,7 @@ int
 OSPPProviderSetCapabilitiesURLs(
     OSPTPROVHANDLE  ospvProvider,              /* In - Provider handle     */
     unsigned        ospvNumberOfURLs,          /* In - New svc url cnt     */
-    unsigned long   *ospvMessageCount,          /* In - Msg count for URL */
+    unsigned long   ospvMessageCount[],          /* In - Msg count for URL */
     const char      *ospvCapabilitiesURLs[])   /* In - New svc url strings */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
