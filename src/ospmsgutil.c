@@ -232,6 +232,14 @@ OSPPMsgBinToElement(
         if (ospvUseBase64 == OSPC_FALSE)
         {
             /* allocate the buffer we use for the CDATA */
+
+            /* Possible Optimization - 
+             * Instead of allocating buffer for the below mentioned size,
+             * allocate for 1 byte more.
+             * This is because when we then have to finally put a '\0' char 
+             * and we call WriteByte function, the WriteByte function wont have 
+             * to allocate more memory. It will already have that space.
+             */ 
             bfr = OSPPBfrNew(ospvDataLen + OSPC_XMLDOC_CDATABEGLEN +
                 OSPC_XMLDOC_CDATAENDLEN);
             if (bfr == OSPC_OSNULL)
@@ -306,6 +314,13 @@ OSPPMsgBinToElement(
 
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
+                    /* Possible Optimization - 
+                     * Instead of allocating buffer for the below mentioned size,
+                     * allocate for 1 byte more.
+                     * This is because when we then have to finally put a '\0' char 
+                     * and we call WriteByte function, the WriteByte function wont have 
+                     * to allocate more memory. It will already have that space.
+                     */ 
                     bfr = OSPPBfrNew(base64bufsz);
                     if (bfr != OSPC_OSNULL)
                     {
