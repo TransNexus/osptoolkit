@@ -25,23 +25,23 @@
 /*
  * osptrans.cpp - Global functions for transaction object.
  */
-#include "osp.h"
-#include "osptrans.h"
-#include "ospprovider.h"
-#include "ospsecurity.h"
-#include "ospmime.h"
-#include "osputils.h"
-#include "ospmsgque.h"
-#include "ospmsginfo.h"
-#include "ospxml.h"
-#include "ospmsg.h"
-#include "ospcomm.h"
-#include "ospauthreq.h"
-#include "ospreauthreq.h"
-#include "ospauthcnf.h"
-#include "ospusagecnf.h"
-#include "ospfail.h"
-#include "ospaltinfo.h"
+#include "osp/osp.h"
+#include "osp/osptrans.h"
+#include "osp/ospprovider.h"
+#include "osp/ospsecurity.h"
+#include "osp/ospmime.h"
+#include "osp/osputils.h"
+#include "osp/ospmsgque.h"
+#include "osp/ospmsginfo.h"
+#include "osp/ospxml.h"
+#include "osp/ospmsg.h"
+#include "osp/ospcomm.h"
+#include "osp/ospauthreq.h"
+#include "osp/ospreauthreq.h"
+#include "osp/ospauthcnf.h"
+#include "osp/ospusagecnf.h"
+#include "osp/ospfail.h"
+#include "osp/ospaltinfo.h"
 
 
 /* Build a Reauthorisation Request and put in transaction */
@@ -446,11 +446,6 @@ OSPPTransactionBuildUsage(
             {
                 OSPPUsageIndSetCallId(*ospvUsage, 
                     OSPPAuthIndGetCallId(ospvTrans->AuthInd));
-            }
-            else
-            {
-                errorcode = OSPC_ERR_TRAN_CALLID_NOT_FOUND;
-                OSPM_DBGERRORLOG(errorcode, "Callid not found");
             }
 
             /* Source Number (Calling)*/
@@ -1151,7 +1146,9 @@ OSPPTransactionGetDestination(
 /* Out - Token string */
 {
     int           errorcode   = OSPC_ERR_NO_ERROR,
-                  timeflag    = OSPC_TRUE;
+                  timeflag    = OSPC_TRUE,
+                  callidflag  = OSPC_TRUE,
+                  callednumflag    = OSPC_TRUE;
     OSPTCALLID    *callid     = OSPC_OSNULL;
     OSPTDEST      *dest       = OSPC_OSNULL;
     OSPTSTATUS    *status     = OSPC_OSNULL;
@@ -1159,6 +1156,16 @@ OSPPTransactionGetDestination(
     unsigned char *destnum    = OSPC_OSNULL,
                   *sigaddr    = OSPC_OSNULL;
     OSPTTOKEN     *token      = OSPC_OSNULL;
+
+    if ((ospvSizeOfCalledNumber == 0) || (ospvCalledNumber == NULL))
+    {
+        callednumflag = OSPC_FALSE;
+    }
+
+    if ((ospvSizeOfCallId == 0) || (ospvCallId == NULL))
+    {
+        callidflag = OSPC_FALSE;
+    }
 
     /* Make sure there is enough space for the timestamp
      * copies.
@@ -1296,7 +1303,7 @@ OSPPTransactionGetDestination(
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             /* Is time limit required ? */
-            if(OSPPDestHasLimit(dest))
+            if ((OSPPDestHasLimit(dest)) && (ospvTimeLimit!=NULL))
             {
                 *ospvTimeLimit = OSPPDestGetLimit(dest);
             }
@@ -1306,7 +1313,7 @@ OSPPTransactionGetDestination(
                 errorcode = OSPC_ERR_TRAN_CALL_ID_INVALID;
                 OSPM_DBGERRORLOG(errorcode, "null pointer for callid");
             }
-            else
+            else if (callidflag == OSPC_TRUE)
             {
                 callid = OSPPDestGetCallId(dest);
                 if (OSPPCallIdGetSize(callid) > *ospvSizeOfCallId)
@@ -1346,7 +1353,7 @@ OSPPTransactionGetDestination(
                 errorcode = OSPC_ERR_TRAN_DEST_INVALID;
                 OSPM_DBGERRORLOG(errorcode, "null pointer for dest number.");
             }
-            else
+            else if (callednumflag == OSPC_TRUE)
             {
                 if (ospvSizeOfCalledNumber < strlen((const char *)destnum)+1)
                 {
@@ -2027,7 +2034,10 @@ OSPPTransactionRequestNew(
 
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
     OSPM_MEMSET(counter, 0, OSPC_MAX_RANDOM);
-    ospvTrans->SizeOfDetailLog = *ospvSizeOfDetailLog;
+    if (ospvSizeOfDetailLog != OSPC_OSNULL)
+    {
+        ospvTrans->SizeOfDetailLog = *ospvSizeOfDetailLog;
+    }
     ospvTrans->DetailLog       = ospvDetailLog;
 
     /* so far no error */
