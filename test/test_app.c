@@ -348,14 +348,11 @@ testOSPPProviderNew()
 {
 int errorcode = 0;
 const char **servpts;
-int i;
-char msg[100];
 
 char customer_id[64];
 char device_id[64];
 
     int length = 0;
-    unsigned char *temp;
 
     errorcode = testOSPPloadPemPrivateKey((unsigned char *)"pkey.pem", (unsigned char *)Reqbuf,&length);
     if (errorcode == OSPC_ERR_NO_ERROR)
@@ -389,7 +386,7 @@ char device_id[64];
         TheAuthCert.CertData = AuthBuf;
         TheAuthCert.CertDataLength = length;
         authCerts[0] = &TheAuthCert;
-        printf ("Loaded 1 Auhorization Certificate \n");
+        printf ("Loaded 1 Authorization Certificate \n");
     }
     else
     {
@@ -512,7 +509,6 @@ testOSPPProviderSetAuthorityCertificates()
 {
     int errorcode = 0;
     int length = 0;
-    unsigned char *temp;
 
     errorcode = testOSPPloadPemCert((unsigned char *)"cacert.pem", (unsigned char *)AuthBuf,&length);
     if (errorcode == OSPC_ERR_NO_ERROR)
