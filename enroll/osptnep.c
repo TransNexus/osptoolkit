@@ -26,6 +26,7 @@
 #include "osptnep.h"
 #include "ospb64.h"
 
+#define HW_ENABLE 1
 
 /*
  * Enroll this device. This will consist of:
@@ -81,6 +82,9 @@ int main ( int argc, char* argv[] )
      */
     unsigned         enrollStatus  = OSPC_ENROLL_STATUS_FAILURE_DEFAULT; 
 
+    /* Initialize the Toolkit library
+     */
+    OSPPInit(HW_ENABLE);
 
     /* Set the communications parameters to some sample values; these
      * can be set on standard input ( along with all of the other 
@@ -232,6 +236,10 @@ int main ( int argc, char* argv[] )
         OSPM_FREE( localCert );
     }
 
+    /* 
+     * Clean up the toolkit library 
+     */
+    OSPPCleanup();
     return retVal;
 
 }
