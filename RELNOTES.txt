@@ -109,3 +109,9 @@ Version 2.6.0
       * Changed the type of ospvLocalCertificate from (const void *) to (const OSPTCERT *)
       * Changed the type of ospvAuthorityCertificates from (const void *[]) to (const OSPTCERT *[])
 
+---------------------------------------------------------------------------
+
+Version 2.6.1
+
+  * Reduced compile time warnings.
+  * Upgraded TEP enrollment to use the API changes introduced in 2.6.0
