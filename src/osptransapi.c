@@ -1313,11 +1313,21 @@ OSPPTransactionBuildUsageFromScratch(
             }
             else
             {
+                if ((ospvCallingNumber == (const char *)OSPC_OSNULL) ||
+                   (ospvCalledNumber == (const char *)OSPC_OSNULL)) 
+                {
+                    errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                    OSPM_DBGERRORLOG(errorcode, "invalid input for Initialize");
+                }
+
                 /* Need to build the auth Ind element now */
-                authind = OSPPAuthIndNew();
+                if (errorcode == OSPC_ERR_NO_ERROR)
+                {
+                    authind = OSPPAuthIndNew();
+                }
 
                 /* populate the new one */
-                if (authind != (OSPTAUTHIND *)OSPC_OSNULL)
+                if ((authind != (OSPTAUTHIND *)OSPC_OSNULL) && (errorcode == OSPC_ERR_NO_ERROR))
                 {
 
                     OSPPAuthIndSetTimestamp(authind, time(OSPC_OSNULL));
