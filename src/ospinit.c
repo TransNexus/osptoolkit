@@ -35,6 +35,7 @@ OSPTMUTEX       OSPVProviderMutex;
 char *OSPVDeleteAllowed;
 #endif
 
+
 /*
  * The OSPPInit function performs internal housekeeping necessary to 
  * prepare the SDK software for operation.
@@ -42,7 +43,7 @@ char *OSPVDeleteAllowed;
  * returns OSPC_ERR_NO_ERROR if successful, OSPC_ERR_XXX otherwise.
  */
 int
-OSPPInit(void)
+OSPPInit(OSPTBOOL hw_enabled)
 {
     int         providerindex = 0;
     int         errorcode     = OSPC_ERR_NO_ERROR,
@@ -85,6 +86,11 @@ OSPPInit(void)
     }
 #endif
 
+    /*
+     * Initialize openssl global parameters
+     */
+    OSPPOpenSSLInit(hw_enabled);
+
     return errorcode;
 }
 
@@ -98,5 +104,10 @@ OSPPCleanup(void)
      */
     OSPM_MUTEX_DESTROY(OSPVProviderMutex, errorcode);
     OSPM_CLEANUPWINSOCK();
+
+    /*
+     * Clean up openssl global parameters
+     */
+    OSPPOpenSSLCleanUp();
     return;
 }
