@@ -46,6 +46,7 @@
 #   include "ospusageind.h"
 #   include "ospreauthreq.h"
 #   include "ospreauthrsp.h"
+#   include "ospcapind.h"
 #endif /* NOT OSP_SDK */
 
 
@@ -178,6 +179,10 @@ OSPPXMLMessageCreate(
             case OSPC_MSG_REAREQ:
             errorcode = OSPPReauthReqToElement((OSPTREAUTHREQ *)ospvInfo, &xmlelem);
             break;
+            
+            case OSPC_MSG_CAPIND:
+            errorcode = OSPPCapIndToElement((OSPTCAPIND *)ospvInfo, &xmlelem);
+            break;
 
 #ifndef OSP_SDK
             case OSPC_MSG_REARESP:
@@ -305,6 +310,10 @@ OSPPXMLGetDataType(
         else if(OSPM_STRSTR(name, "ReauthorizationResponse") != NULL)
         {
             *ospvDataType = OSPC_MSG_REARESP;
+        }
+        else if(OSPM_STRSTR(name, "CapabilitiesConfirmation") != NULL)
+        {
+            *ospvDataType = OSPC_MSG_CAPCNF;
         }
         else
         {
@@ -450,6 +459,10 @@ OSPPXMLMessageProcess(
 
         case OSPC_MSG_REARESP:
         errorcode = OSPPReauthRspFromElement(ospvElem, (OSPTREAUTHRSP **)ospvStruct);
+        break;
+ 
+        case OSPC_MSG_CAPCNF:
+        errorcode = OSPPCapCnfFromElement(ospvElem, (OSPTCAPCNF **)ospvStruct);
         break;
 
 #ifndef OSP_SDK
