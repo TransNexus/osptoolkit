@@ -21,7 +21,7 @@
 
 
 
-#include <mtmalloc.h>
+#include <malloc.h>
 #include <stdio.h>
 
 #include "osp.h"
