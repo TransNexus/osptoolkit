@@ -37,7 +37,7 @@ void      NonBlockingQueueMonitorIncrementActiveWorkThreadCounter(NBMONITOR *);
 void      NonBlockingQueueMonitorDecrementActiveWorkThreadCounter(NBMONITOR *);
 unsigned  NonBlockingQueueMonitorGetActiveWorkThreadCounter(NBMONITOR *);
 
-unsigned long long GetDeltaMS(OSPTTIME FromTimeSec,unsigned int FromTimeMS,OSPTTIME ToTimeSec,unsigned int ToTimeMS);
+OSPTUINT64 GetDeltaMS(OSPTTIME FromTimeSec,unsigned int FromTimeMS,OSPTTIME ToTimeSec,unsigned int ToTimeMS);
 
 typedef struct _NBAUTHREQ
 {
@@ -435,8 +435,8 @@ WorkThread(void *arg)
   NBDATA    *transaction    = NULL;
   int       TimeToExit      = 0;
   int       errorcode       = 0;
-  unsigned long long QTime  = 0;
-  unsigned long long TKTime = 0;
+  OSPTUINT64 QTime  				= 0;
+  OSPTUINT64 TKTime 				= 0;
 
   while( TimeToExit == 0 )
   {
@@ -517,12 +517,12 @@ WorkThread(void *arg)
           TKTime = GetDeltaMS(transaction->OutQuequeTime,transaction->OutQuequeTimeMS,transaction->OutToolKitTime,transaction->OutToolKitTimeMS);
 
           OSPM_DBGPRINTF("InQ[%llu:%3llu] OutQ[%llu:%3llu] OutTK[%llu:%3llu] QTime[%7llu] TKTime[%7llu] QSize[%5u] MsgType[%d]\n",
-                (long long unsigned)transaction->InQuequeTime,
-                (long long unsigned)transaction->InQuequeTimeMS,
-                (long long unsigned)transaction->OutQuequeTime,
-                (long long unsigned)transaction->OutQuequeTimeMS,
-                (long long unsigned)transaction->OutToolKitTime,
-                (long long unsigned)transaction->OutToolKitTimeMS,
+                (OSPTUINT64)transaction->InQuequeTime,
+                (OSPTUINT64)transaction->InQuequeTimeMS,
+                (OSPTUINT64)transaction->OutQuequeTime,
+                (OSPTUINT64)transaction->OutQuequeTimeMS,
+                (OSPTUINT64)transaction->OutToolKitTime,
+                (OSPTUINT64)transaction->OutToolKitTimeMS,
                 QTime,
                 TKTime,
                 SyncQueueGetNumberOfTransactions(nbMonitor->SyncQue),
@@ -768,7 +768,7 @@ int OSPPTransactionReportUsage_nb(
 }
 
 
-unsigned long long GetDeltaMS(OSPTTIME FromTimeSec,unsigned int FromTimeMS,OSPTTIME ToTimeSec,unsigned int ToTimeMS)
+OSPTUINT64 GetDeltaMS(OSPTTIME FromTimeSec,unsigned int FromTimeMS,OSPTTIME ToTimeSec,unsigned int ToTimeMS)
 {
   return( 1000*(ToTimeSec-FromTimeSec) + (ToTimeMS-FromTimeMS) );
 }
