@@ -113,6 +113,8 @@ unsigned tokensize                  = TOKEN_SZ;
 char     c_token[TOKEN_SZ]          = { "" };
 void     *token                     = NULL;
 
+char     *New_ServicePoint          = { "http://osptestserver.transnexus.com:80/osp" };
+
 static  OSPTCALLID *callids[NUM_CALL_IDS];
 
 
@@ -324,6 +326,18 @@ int testOSPPloadPemPrivateKey(unsigned char *FileName, unsigned char *buffer, in
        RSA_free(pKey);
     }
     return retVal;    
+}
+
+int 
+testOSPPSetServicePoints()
+{
+    int errorcode = 0;
+    const char **servpts;
+
+    servpts = (const char **)&New_ServicePoint;
+
+    errorcode = OSPPProviderSetServicePoints(OSPVProviderHandle,1,servpts);
+    return errorcode;
 }
 
 
@@ -1665,7 +1679,7 @@ testAPI(int apinumber)
         errorcode = testOSPPProviderGetServicePoints();
         break;
         case 18:
-        errorcode = testNotImplemented();
+        errorcode = testOSPPSetServicePoints();
         break;
         case 19:
         errorcode = testOSPPProviderGetSSLLifetime();
@@ -1804,7 +1818,7 @@ testMenu()
       printf("11) GetHTTPTimeout                    12) SetHTTPTimeout\n");
       printf("13) For future Enhancements           14) SetLocalKeys\n");
       printf("15) GetLocalValidation                16) SetLocalValidation\n");
-      printf("17) GetServicePoints                  18) For future Enhancements\n");
+      printf("17) GetServicePoints                  18) SetServicePoints\n");
       printf("19) GetSSLLifetime                    20) SetSSLLifetime\n");
       printf("21) GetNumberOfAuthorityCertificates  22) GetNumberOfServicePoints\n");
       printf("---------------------------------------------------------------------\n");
