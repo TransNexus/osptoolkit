@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release_Secure"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\crypto" /I "..\include" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "OSPC_USE_SIGNED_TOKEN" /D "OSPC_HW_ACCEL" /D "OSP_SDK" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\crypto" /I "..\include" /I "..\pthread\include" /D "_POSIX_THREADS" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "OSPC_USE_SIGNED_TOKEN" /D "OSPC_HW_ACCEL" /D "OSP_SDK" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -65,7 +65,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug_Secure"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "OSP_SDK" /D "BSAFE" /D "OSPC_DEBUG" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W3 /Gm /GX /Zi /Od /I "..\include" /I "..\crypto" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "OSP_SDK" /D "OSPC_DEBUG" /D "OSPC_USE_SIGNED_TOKEN" /YX /FD /GZ /c
+# ADD CPP /nologo /MD /W3 /Gm /GX /Zi /Od /I "..\include" /I "..\crypto" /I "..\pthread\include" /D "_POSIX_THREADS" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "OSP_SDK" /D "OSPC_DEBUG" /D "OSPC_USE_SIGNED_TOKEN" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -88,7 +88,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug_Non_Secure"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /I "..\crypto" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "OSP_SDK" /D "BSAFE" /D "OSPC_DEBUG" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W3 /Gm /GX /Zi /Od /I "../include" /I "../crypto" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "OSP_SDK" /D "OSPC_DEBUG" /YX /FD /GZ /c
+# ADD CPP /nologo /MD /W3 /Gm /GX /Zi /Od /I "../include" /I "../crypto" /I "..\pthread\include" /D "_POSIX_THREADS" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "OSP_SDK" /D "OSPC_DEBUG" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe

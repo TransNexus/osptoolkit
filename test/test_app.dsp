@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W3 /Gm /GX /Zi /Od /I "..\include" /I "..\crypto" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "OSP_SDK" /D "OSPC_DEBUG" /YX /FD /GZ /c
+# ADD CPP /nologo /MD /W3 /Gm /GX /Zi /Od /I "..\include" /I "..\crypto" /I "..\pthread\include" /D "_POSIX_THREADS" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "OSP_SDK" /D "OSPC_DEBUG" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -50,7 +50,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 osp.lib wsock32.lib ssleay32.lib libeay32.lib /nologo /subsystem:console /incremental:no /debug /machine:I386 /out:"../bin/test_app.exe" /pdbtype:sept /libpath:"..\lib"
+# ADD LINK32 osp.lib wsock32.lib ssleay32.lib libeay32.lib pthreadVC.lib /nologo /subsystem:console /incremental:no /debug /machine:I386 /out:"../bin/test_app.exe" /pdbtype:sept /libpath:"..\lib,..\pthread\lib"
 # SUBTRACT LINK32 /nodefaultlib
 
 !ELSEIF  "$(CFG)" == "test_app - Win32 Release"
@@ -67,7 +67,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W3 /GX /Zi /Od /Gy /I "..\include" /I "..\crypto" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "OSP_SDK" /YX /FD /GZ /c
+# ADD CPP /nologo /MD /W3 /GX /Zi /Od /Gy /I "..\include" /I "..\crypto" /I "..\pthread\include" /D "_POSIX_THREADS" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "OSP_SDK" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -75,7 +75,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 osp.lib wsock32.lib ssleay32.lib libeay32.lib /nologo /subsystem:console /incremental:no /debug /machine:I386 /out:"../bin/test_app.exe" /pdbtype:sept /libpath:"..\lib"
+# ADD LINK32 osp.lib wsock32.lib ssleay32.lib libeay32.lib pthreadVC.lib /nologo /subsystem:console /incremental:no /debug /machine:I386 /out:"../bin/test_app.exe" /pdbtype:sept /libpath:"..\lib,..\pthread\lib"
 # SUBTRACT LINK32 /nodefaultlib
 
 !ENDIF 
