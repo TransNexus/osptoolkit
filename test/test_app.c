@@ -79,6 +79,8 @@
 #define DEF_DEVICE_ID         1000L
 
 #define CALL_ID_SZ       256
+#define CALLING_NUM_SZ   256
+#define CALLED_NUM_SZ   256
 #define DESTINATION_SZ   64
 #define TOKEN_SZ         2096*8
 
@@ -105,10 +107,8 @@ unsigned callidsize                 = CALL_ID_SZ;
 void     *callid                    = NULL;
 unsigned char ret_cid[CALL_ID_SZ];
 unsigned char c_id[CALL_ID_SZ+1]    = { "1234567890123456"};
-char     callednumber[CALL_ID_SZ];
-char     callingnumber[CALL_ID_SZ];
-/*char     *callednumber              = { "14048724799" };
-char     *callingnumber             = { "14045551212" };*/
+char     callednumber[CALLED_NUM_SZ];
+char     callingnumber[CALLING_NUM_SZ];
 char     dest[DESTINATION_SZ]       = { "" };
 char     destdev[DESTINATION_SZ]    = { "" };
 unsigned tokensize                  = TOKEN_SZ;
@@ -974,19 +974,19 @@ testOSPPTransactionGetDestProtocol()
     {
        switch (dest_prot)
        {
-           case 0 :
+           case OSPE_DEST_PROT_UNDEFINED :
                       printf("Destination Protocol is Not Configured at Server \n");
                       break;
-           case 2 :
+           case OSPE_DEST_PROT_SIP :
                       printf("Destination Protocol is SIP \n");
                       break;
-           case 4 :
+           case OSPE_DEST_PROT_H323_LRQ :
                       printf("Destination Protocol is h323-LRQ \n");
                       break;
-           case 8 :
+           case OSPE_DEST_PROT_H323_SETUP :
                       printf("Destination Protocol is h323-Q931\n");
                       break;
-           case 16:
+           case OSPE_DEST_PROT_UNKNOWN:
                       printf("Destination Protocol is Unknown \n");
                       break;
        }
@@ -1006,16 +1006,16 @@ testOSPPTransactionIsDestOSPEnabled()
     {
        switch (dest_osp_ver)
        {
-           case 0 :
+           case OSPE_OSP_UNDEFINED :
                       printf("Destination OSP Version Not Configured at Server \n");
                       break;
-           case 128 :
+           case OSPE_OSP_TRUE :
                       printf("Destination is OSP Enabled\n");
                       break;
-           case 256 :
+           case OSPE_OSP_FALSE :
                       printf("Destination is Not OSP Enabled\n");
                       break;
-           case 512 :
+           case OSPE_OSP_UNKNOWN :
                       printf("Destination OSP Status is Unknown \n");
                       break;
        }
@@ -1984,7 +1984,7 @@ GetConfiguration()
 {
     FILE *fp = NULL;
     int errorcode = 0;
-    char inbuf[512],*tmp;
+    char inbuf[512];
 
     if ((fp = fopen(CONFIG_FILENAME, "r")) == (FILE *)NULL)
     {
@@ -2033,19 +2033,13 @@ GetConfiguration()
                         {
                             if (strncmp(inbuf, "CALLED=", 7) == 0)
                             {
-                                  tmp = _Strdup(&inbuf[7]);
-                                  strcpy(callednumber,tmp);
-                                  free(tmp);
-                                  tmp = NULL;
+                                  strcpy(callednumber,(&inbuf[7]));
                             }
                             else
                             {
                                 if (strncmp(inbuf, "CALLING=", 8) == 0)
                                 {
-                                      tmp = _Strdup(&inbuf[8]);
-                                      strcpy(callingnumber,tmp);
-                                      free(tmp);
-                                      tmp = NULL;
+                                      strcpy(callingnumber,(&inbuf[8]));
                                 }
                                 else
                                 {
