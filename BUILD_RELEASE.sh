@@ -17,7 +17,7 @@ ZIP_OPTIONS=-f
 ##	Destribution File Name
 ##
 VERSION=$1
-DISTRIBUTION_NAME="./TK-3_3_0-20041210/BUILDs/OSPToolkit-""$VERSION"".tar"
+DISTRIBUTION_NAME="../tags/TK-3_3_0-20041210/BUILDs/OSPToolkit-""$VERSION"".tar"
 
 ##
 ##	Remove old files
@@ -34,7 +34,7 @@ LIST_OF_EXCLUDED_FILES="exclude_while_taring"
 
 # CVS dirs
 cd ..
-find ./TK-3_3_0-20041210 -name ".svn" -type d | cut -b 1-   > $LIST_OF_EXCLUDED_FILES
+find ../tags/TK-3_3_0-20041210 -name ".svn" -type d | cut -b 1-   > $LIST_OF_EXCLUDED_FILES
 
 # This script
 echo "TK*/"$0                   		>> $LIST_OF_EXCLUDED_FILES
@@ -51,7 +51,7 @@ echo "./TK-3_3_0-20041210/doc"										>> $LIST_OF_EXCLUDED_FILES
 ##
 ##	Tar it
 ##
-$TAR $TAR_OPTIONS $DISTRIBUTION_NAME $LIST_OF_EXCLUDED_FILES ./TK-3_3_0-20041210/*
+$TAR $TAR_OPTIONS $DISTRIBUTION_NAME $LIST_OF_EXCLUDED_FILES ../tags/TK-3_3_0-20041210/*
 
 ##
 ##	Zip it
