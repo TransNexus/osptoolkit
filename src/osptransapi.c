@@ -156,7 +156,7 @@ OSPPTransactionIsDestOSPEnabled(
 int
 OSPPTransactionSetNetworkId(
     OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */
-    const char *    ospvNetworkId)      /* In - network specific information     */
+    char*    ospvNetworkId)      /* In - network specific information     */
 {
     int         errorcode   = OSPC_ERR_NO_ERROR;
     OSPTTRANS   *trans      = OSPC_OSNULL;
@@ -200,7 +200,7 @@ OSPPTransactionSetNetworkId(
                  * been called. We dont care if it is the source or destn in 
                  * this case. Just add the info to the transaction handler
                  */
-                OSPM_MALLOC(trans->NetworkId,const char,strlen(ospvNetworkId)+1);
+                OSPM_MALLOC(trans->NetworkId,char,strlen(ospvNetworkId)+1);
                 if (trans->NetworkId != OSPC_OSNULL)
                 {
                     OSPM_MEMCPY(trans->NetworkId,ospvNetworkId,strlen(ospvNetworkId)+1);
@@ -230,7 +230,7 @@ OSPPTransactionSetNetworkId(
                  * Check if there exists a list for suource alternates.If not then,
                  * Make a new list.
                  */
-                OSPM_MALLOC(trans->NetworkId,const char,strlen(ospvNetworkId)+1);
+                OSPM_MALLOC(trans->NetworkId,char,strlen(ospvNetworkId)+1);
                 if (trans->NetworkId != OSPC_OSNULL)
                 {
                     OSPM_MEMCPY(trans->NetworkId,ospvNetworkId,strlen(ospvNetworkId)+1);
@@ -252,7 +252,7 @@ OSPPTransactionSetNetworkId(
                     /*
                      * add to the list
                      */
-                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvNetworkId),(const char *)ospvNetworkId,ospeNetwork);
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvNetworkId),(char *)ospvNetworkId,ospeNetwork);
                     if(altinfo != OSPC_OSNULL)
                     {
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),(void *)altinfo);
@@ -732,7 +732,7 @@ OSPPTransactionDelete(
                 OSPPTransactionCollectionRemoveItem(trancoll, tranindex);
             }
 
-            if (trans->NetworkId != OSPC_OSNULL)
+            if (trans->NetworkId != (char *)OSPC_OSNULL)
             {
                 OSPM_FREE(trans->NetworkId);
             }
@@ -906,6 +906,7 @@ OSPPTransactionGetFirstDestination(
             if (errorcode == OSPC_ERR_NO_ERROR)
             {
                 OSPPTransactionSetState(trans, OSPC_GET_DEST_SUCCESS);
+                trans->HasGetDestSucceeded = OSPC_TRUE;
             }
             else
             {
@@ -1084,6 +1085,7 @@ OSPPTransactionGetNextDestination(
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
             OSPPTransactionSetState(trans, OSPC_GET_DEST_SUCCESS);
+            trans->HasGetDestSucceeded = OSPC_TRUE;
         }
         else
         {
@@ -1373,6 +1375,7 @@ OSPPTransactionNew(
     if (errorcode == OSPC_ERR_NO_ERROR)
     {
         OSPPTransactionSetState(trans, OSPC_TRANSNEW);
+        trans->HasGetDestSucceeded = OSPC_FALSE;
     }
 
     return errorcode;
@@ -2820,7 +2823,7 @@ OSPPTransactionValidateAuthorisation(
                         {
 
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->NetworkId), 
-                                (const char *)trans->NetworkId,
+                                (char *)trans->NetworkId,
                                 ospeNetwork);
 
                             if(altinfo != OSPC_OSNULL)
