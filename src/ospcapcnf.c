@@ -92,10 +92,6 @@ OSPPCapCnfFromElement(
     OSPTXMLELEM  *elem          = OSPC_OSNULL;
     OSPTXMLELEM  *capCnfElem    = OSPC_OSNULL;
     OSPTCAPCNF   *capcnf        = OSPC_OSNULL;
-    OSPTTIME      t             = 0L;
-    int           len           = 0;
-    unsigned char *compid       = OSPC_OSNULL;
-    unsigned char *messageId    = OSPC_OSNULL;
 
     /*
      * Check input data

@@ -3266,7 +3266,6 @@ OSPPTransactionIndicateCapabilities(
     OSPTMSGINFO   *msginfo     = OSPC_OSNULL;
     unsigned char *xmldoc      = OSPC_OSNULL;
     unsigned       sizeofxmldoc= 0;
-    OSPTALTINFO   *altinfo     = OSPC_OSNULL;
     OSPTCAPIND    *capind      = OSPC_OSNULL;
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
