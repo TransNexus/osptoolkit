@@ -49,6 +49,7 @@ typedef struct
     unsigned          ospmAuthReqMaxDest;
     unsigned long     ospmAuthReqTNCustId;
     unsigned long     ospmAuthReqTNDeviceId;
+    OSPTLIST          ospmAuthReqDeviceInfo;
 }
 OSPTAUTHREQ;
 

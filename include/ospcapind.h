@@ -43,6 +43,7 @@ typedef struct
     unsigned char    *ospmComponentId;
     OSPTLIST          ospmDeviceInfo;
     unsigned          ospmAlmostOutOfResources;
+    OSPTLIST          ospmSrcAlternate;
 }
 OSPTCAPIND;
 

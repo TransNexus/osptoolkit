@@ -46,6 +46,7 @@ typedef struct
     unsigned char     ospmAuthIndSourceNumber[OSPC_E164NUMSIZE];
     unsigned char     ospmAuthIndDestNumber[OSPC_E164NUMSIZE];
     OSPTLIST          ospmAuthIndSourceAlternate;
+    OSPTLIST          ospmAuthIndDeviceInfo;
     OSPTLIST          ospmAuthIndDestinationAlternate;
     OSPTLIST          ospmAuthIndTokens;
     OSPTBOOL          ospmAuthIndHasTimeLimit;
