@@ -269,10 +269,9 @@ Version 2.11
     for multiple destinations the application should call this API again. 
 * With this release, the unsigned mode of compilation has been removed from the toolkit. The toolkit can now
   validate both - signed and unsigned tokens in the same build. However, the application should tell the toolkit
-  about the signed/unsigned nature of the token. This is done using a new parameter - ospvTokenAlgo, in the 
-  OSPPTransactionValidateAuthorization API. The permissible values are - 0 for Signed token, 1 for unsigned,
-  and 2 for both. The application can use '2' if it is not sure of whether the token is signed or unsigned. 
-  In that case, the toolkit will try both the algorithms and try to validate the token in whichever way possible.
+  about the kind of algorithm (signed/unsigned/both) that the toolkit should restrict to while validating the token.
+  This is done using a new parameter - ospvTokenAlgo, in the OSPPTransactionValidateAuthorization API. 
+  The permissible values are - 0 for Signed token, 1 for unsigned, and 2 for both.
   Along with the ValidateAuthorization API, the following API's have also changed - OSPPTransactionInitializeAtDevice,
   OSPPTransactionReinitializeAtDevice, OSPPTransactionValidateReAuthorisation.
 * Fixed a bug because of which a duration of 0 was reported in the CDR after calling OSPPTransactionRecordFailure
@@ -286,4 +285,4 @@ Version 2.11
   UsageIndication, CapabilityIndication, and Request Reauthorization messages. 
 * This release includes an enrollment script that works on Linux and Solaris, and automates the device 
   enrollment procedure with the Server.
-* Fixed a bug because of which the toolkit would crash when SSL was used for communication with the Server.Added a mutex used to streamline access to the LoadCert function in ospopenssl.c file.
+* Fixed a bug because of which the toolkit would crash when SSL was used for communication with the Server.Added a mutex used to protect access to the LoadCert function in ospopenssl.c file.
