@@ -141,9 +141,11 @@ static  size_t  NUM_CA_CERTS=0;
 static  size_t  NUM_LOCAL_CERTS=0;
 static  size_t  NUM_PKEYS=0;
 static  unsigned char  **certs=NULL;
+static  OSPTCERT				*authCerts[10];
 static  int           *certssizes=NULL;
 static  unsigned char  **localcerts=NULL;
 static  int             *localcertssizes=NULL;
+static OSPTCERT         localcert = { NULL, 0 };
 static  unsigned char **pkeys=NULL;
 static  int            *pkeyssizes=NULL;
 static OSPTPRIVATEKEY privatekey = { NULL, 0 };
@@ -235,11 +237,18 @@ char device_id[64];
 
     privatekey.PrivateKeyData=pkeys[0];
     privatekey.PrivateKeyLength = pkeyssizes[0];
+
+    localcert.CertData=localcerts[0];
+    localcert.CertDataLength = localcertssizes[0];
     
     if (!quietmode)
     {
        for (i = 0 ; i < (int)NUM_CA_CERTS ; i++)
        {
+					OSPM_MALLOC(authCerts[i], OSPTCERT, sizeof(OSPTCERT));
+					authCerts[i]->CertData=certs[i];
+					authCerts[i]->CertDataLength = certssizes[i];
+    
          sprintf(msg, "Loaded Authority Certificate %02d", i);
          OSPTNLOGDUMP(certs[i], certssizes[i], msg);
        }
@@ -258,10 +267,10 @@ char device_id[64];
         auditurl,
         (const OSPTPRIVATEKEY *)&privatekey,
         /* Local certificate */
-        localcerts[0],
+        &localcert,
         /* CA certificates */
         NUM_CA_CERTS,
-        (const void **)certs,
+        (const OSPTCERT **)authCerts,
         /**/
         LOCAL_VALIDATION,
         DEF_SSL_LIFETIME,
@@ -365,10 +374,11 @@ testOSPPProviderSetAuthorityCertificates()
     (void)FileArrayRead(&certs,&NUM_CA_CERTS, &certssizes, "cert","dat",99);
     printf("Loaded %u CA certificates\n",NUM_CA_CERTS);
 
+
     errorcode = OSPPProviderSetAuthorityCertificates(
         OSPVProviderHandle,
         NUM_CA_CERTS,
-        (const void **)certs);
+        (const OSPTCERT **)authCerts);
 
     return errorcode;
 }
