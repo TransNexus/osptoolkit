@@ -28,11 +28,11 @@
 #ifndef _OSPTOKENINFO_H
 #define _OSPTOKENINFO_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsg.h"
-#include "ospcallid.h"
-#include "osptoken.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospcallid.h"
+#include "osp/osptoken.h"
 
 typedef struct 
 {
@@ -83,6 +83,8 @@ extern "C"
     void           OSPPTokenInfoSetCallId(OSPTTOKENINFO *, OSPTCALLID *);
     OSPTCALLID    *OSPPTokenInfoGetCallId(OSPTTOKENINFO *);
     unsigned char *OSPPTokenInfoGetCallIdValue(OSPTTOKENINFO *);
+    unsigned       OSPPTokenInfoGetCallIdSize(OSPTTOKENINFO *);
+
 
     unsigned       OSPPTokenInfoHasValidAfter(OSPTTOKENINFO *);
     void           OSPPTokenInfoSetValidAfter(OSPTTOKENINFO *, OSPTTIME);
