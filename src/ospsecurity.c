@@ -659,8 +659,8 @@ OSPPSecSetAuthorityCertificates(
     /* Add certificates to certificate list */
     if (errorcode == OSPC_ERR_NO_ERROR)
     {
-				/* Create X509_STORE */
-    		ospvSecurity->AuthorityCertStore = X509_STORE_new();
+	/* Create X509_STORE */
+    	ospvSecurity->AuthorityCertStore = X509_STORE_new();
 
 
         /* Create new certificate list */
@@ -678,42 +678,42 @@ OSPPSecSetAuthorityCertificates(
                 errorcode = OSPPX509CertCreate( ospvAuthorityCertificates[i]->CertData,
                     &newCertInfo);
 
-								/* Convert DER encoded cert to X509 object */
+		/* Convert DER encoded cert to X509 object */
 
-								/* p is a temporary pointer, it will be updated by the functions */
-								p = ospvAuthorityCertificates[i]->CertData;
-								newX509Cert = d2i_X509(	OSPC_OSNULL,
-																				&p,
-																				ospvAuthorityCertificates[i]->CertDataLength);
+		/* p is a temporary pointer, it will be updated by the functions */
+		p = ospvAuthorityCertificates[i]->CertData;
+		newX509Cert = d2i_X509(	OSPC_OSNULL,
+					&p,
+					ospvAuthorityCertificates[i]->CertDataLength);
 
-								if( newX509Cert != OSPC_OSNULL )
-								{
-									if( 1 == X509_STORE_add_cert(ospvSecurity->AuthorityCertStore,newX509Cert) )
-									{
-										/* Success */
-										errorcode=OSPC_ERR_NO_ERROR;
-									}
-									else
-									{
-										errorcode=OSPC_ERR_X509_STORE_ERROR;
-										OSPM_DBGERRORLOG(errorcode, "Failed to decode X509 cert");
-										OpenSSLErrorLog(errorcode);
-									}
+		if( newX509Cert != OSPC_OSNULL )
+		{
+			if( 1 == X509_STORE_add_cert(ospvSecurity->AuthorityCertStore,newX509Cert) )
+			{
+				/* Success */
+				errorcode=OSPC_ERR_NO_ERROR;
+			}
+			else
+			{
+				errorcode=OSPC_ERR_X509_STORE_ERROR;
+				OSPM_DBGERRORLOG(errorcode, "Failed to decode X509 cert");
+				OpenSSLErrorLog(errorcode);
+			}
 
-									/*
-									**	At this time, there are two references to the X509 object - 
-									**	this pointer and the X509_STORE.
-									**	This call will decrement the reference counter, but
-									**	will NOT release the object.
-									*/
-									X509_free(newX509Cert);
-								}
-								else
-								{
-									errorcode=OSPC_ERR_X509_DECODING_ERROR;
-									OSPM_DBGERRORLOG(errorcode, "d2i_X509 failed");
-									OpenSSLErrorLog(errorcode);
-								}
+			/*
+			**	At this time, there are two references to the X509 object - 
+			**	this pointer and the X509_STORE.
+			**	This call will decrement the reference counter, but
+			**	will NOT release the object.
+			*/
+			X509_free(newX509Cert);
+		}
+		else
+		{
+			errorcode=OSPC_ERR_X509_DECODING_ERROR;
+			OSPM_DBGERRORLOG(errorcode, "d2i_X509 failed");
+			OpenSSLErrorLog(errorcode);
+		}
 
 
             }
@@ -761,11 +761,11 @@ OSPPSecSignatureVerify(
 
 			/* verify message and extract xml token */
 			if( 1==PKCS7_verify(signedData,
-													OSPC_OSNULL,
-													ospvSecurity->AuthorityCertStore,
-													OSPC_OSNULL,
-													mem_bio_out,
-													PKCS7_NOCHAIN) )
+					OSPC_OSNULL,
+					ospvSecurity->AuthorityCertStore,
+					OSPC_OSNULL,
+					mem_bio_out,
+					PKCS7_NOCHAIN) )
 			{
 				/* Success, copy extracted message to output parameters */
 				*ospvContentLength = BIO_get_mem_data(mem_bio_out,&tokenBuf);
