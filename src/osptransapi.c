@@ -4098,7 +4098,10 @@ OSPPTransactionValidateAuthorisation(
     /*
      * Validate the signature and get the call id from the token
      */
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    {
         errorcode = OSPPTransactionGetProvider(trans, &provider);
+    }
 
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
