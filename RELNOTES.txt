@@ -151,5 +151,5 @@ Version 2.8.1
 Version 2.8.2
 
  * Bug fix for Linux. Problem because of trying to delete the mutex when it was locked
- * Alcatel bug fix and support of SetServicePoints API in test_app
+ * Implemeted support of SetServicePoints API in test_app, fixed a bug for this support in the Toolkit.
  * Log message changes for Linux and windows
