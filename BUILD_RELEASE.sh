@@ -17,7 +17,7 @@ ZIP_OPTIONS=-f
 ##	Destribution File Name
 ##
 VERSION=$1
-DESTRIBUTION_NAME="BUILDs/OSPToolkit-""$VERSION"".tar"
+DESTRIBUTION_NAME="osptoolkit/BUILDs/OSPToolkit-""$VERSION"".tar"
 
 ##
 ##	Remove old files
@@ -29,25 +29,29 @@ rm -f *.tar *.gz
 ##
 LIST_OF_EXCLUDED_FILES="exclude_while_taring"
 
+# Copy openssl.cnf file
+cp $CVSENVROOT/vendor_libs/openssl/apps/openssl.cnf bin/
+
 # CVS dirs
-find . -name CVS -type dir | cut -b 3-   > $LIST_OF_EXCLUDED_FILES
+cd ..
+find osptoolkit -name CVS -type dir | cut -b 1-   > $LIST_OF_EXCLUDED_FILES
 
 # This script
-echo $0                   		>> $LIST_OF_EXCLUDED_FILES
+echo "osptoolkit/"$0                   		>> $LIST_OF_EXCLUDED_FILES
 
 # The list itself
 echo $LIST_OF_EXCLUDED_FILES	>> $LIST_OF_EXCLUDED_FILES
-echo "BUILDs"									>> $LIST_OF_EXCLUDED_FILES
+echo "osptoolkit/BUILDs"									>> $LIST_OF_EXCLUDED_FILES
 
 # Do NOT include documentation folder
-echo "doc"										>> $LIST_OF_EXCLUDED_FILES
+echo "osptoolkit/doc"										>> $LIST_OF_EXCLUDED_FILES
 
 
 
 ##
 ##	Tar it
 ##
-$TAR $TAR_OPTIONS $DESTRIBUTION_NAME $LIST_OF_EXCLUDED_FILES *
+$TAR $TAR_OPTIONS $DESTRIBUTION_NAME $LIST_OF_EXCLUDED_FILES osptoolkit/*
 
 ##
 ##	Zip it
