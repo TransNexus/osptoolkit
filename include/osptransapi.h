@@ -28,6 +28,7 @@
 #define _OSPTRANSAPI_H
 
 #include "ospfail.h"
+#include "ospdest.h"
 
 /* Authorisation Indicators */
 #define OSPC_TRAN_AUTHORISED        0x0001
@@ -40,6 +41,10 @@ extern "C"
 #endif
 
     /* Function Prototypes */
+
+    int OSPPTransactionGetDestProtocol(OSPTTRANHANDLE,OSPE_DEST_PROT *);
+
+    int OSPPTransactionIsDestOSPEnabled(OSPTTRANHANDLE,OSPE_DEST_OSP_ENABLED *);
 
     int OSPPTransactionSetNetworkId(OSPTTRANHANDLE,const char *);
 
