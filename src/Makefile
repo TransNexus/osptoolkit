@@ -5,7 +5,7 @@ INCLDIR = ../include
 CC=cc
 INSTALL_PATH=/usr/local
 
-LFLAGS   = -lsocket -lnsl -lpthread
+LFLAGS   = -lsocket -lnsl -lm -lpthread
 ARLIB    = ../lib/libosp.a
 MKDEP    = /usr/openwin/bin/makedepend
 
@@ -14,7 +14,7 @@ MKDEP    = /usr/openwin/bin/makedepend
 # and instead using gcc, please comment the line below for proper 
 # compilation.
 #
-#GCCFLAGS = -Wall -D_GNU_SOURCE -fPIC
+GCCFLAGS = -Wall -D_GNU_SOURCE -fPIC
 
 #
 # CFLAGS definition
@@ -30,7 +30,6 @@ CFLAGS	= -O -DOSP_ALLOW_DUP_TXN -DOSP_NO_DELETE_CHECK -DOSP_SDK -D_POSIX_THREADS
 # SSL library selection
 # for OpenSSL
 SSLOBJ    = ospopenssl.o
-SSLLIB    = ../lib/libssl.a
 SSLINC    = ../crypto
 INCL = -I$(SSLINC) -I$(INCLDIR)
 
