@@ -70,9 +70,6 @@ OSPPMsgDescGetName(
     unsigned           ospvNumDesc                      /* size of array */
 )
 {
-#ifndef OSPC_FASTMSG_DESC
-    unsigned cnt;
-#endif
     const char *ospvName = OSPC_OSNULL;
 
     if (ospvPart != OSPC_MSGPARTUNKNOWN) 
@@ -89,30 +86,12 @@ OSPPMsgDescGetName(
          * in the included main() procedures in the individual components.
          */
 
-#ifndef OSPC_FASTMSG_DESC
-
-        /* safest approach - slower but harder to mess up */
-
-        /* now just search through the array looking for the part */
-        for (cnt=0; cnt<ospvNumDesc; cnt++)
-        {
-            if (ospvDesc->ospmMsgDescPart == ospvPart)
-            {
-                ospvName = ospvDesc->ospmMsgDescName;
-                break;
-            }
-            ospvDesc++;
-        }
-
-#else
-
         /* alternate approach - faster, but array must be built appropriately */
         if ((unsigned)ospvPart < ospvNumDesc) 
         {
             ospvName = ospvDesc[(int)ospvPart].ospmMsgDescName;
         }
 
-#endif
     }
     return(ospvName);
 }
