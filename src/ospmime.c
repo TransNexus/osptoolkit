@@ -812,6 +812,11 @@ OSPPMimeMessageParse(
         if((errorcode == OSPC_ERR_NO_ERROR) &&
             (result == 0))
         {
+            /* Possible Optimization -
+             * When it is not a multibody message, there is no need to allocate memory
+             * for mimebody.BodyParts[0], we can just set - mimebody.NumBodyParts = 1
+             * and that will do. Allocating memory for the 0th element is not required.
+             */
             OSPM_MALLOC(mimebody.BodyParts[0],
                 OSPTMIMEPART,
                 sizeof(OSPTMIMEPART));
