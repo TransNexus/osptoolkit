@@ -662,8 +662,6 @@ OSPPProviderNew(
     {
         for (i=0;i<ospvNumberOfServicePoints;i++)
         {
-	    printf("%d out of %d\n",i, ospvNumberOfServicePoints);
-
             if (ospvMessageCount[i]<0)
             {
                 errorcode = OSPC_ERR_PROV_INVALID_VALUE;
