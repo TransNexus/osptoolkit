@@ -226,7 +226,7 @@ char msg[100];
 char customer_id[64];
 char device_id[64];
 
-    int length;
+    int length = 0;
     unsigned char *temp;
     BIO *bioIn = NULL;
     RSA *pKey;
@@ -331,10 +331,10 @@ testOSPPProviderDelete()
         OSPVProviderHandle,
         DEF_TIME_LIMIT);
 
-    FileArrayDelete(&certs, &certssizes, NUM_CA_CERTS);
-    FileArrayDelete(&localcerts, &localcertssizes, NUM_LOCAL_CERTS);
+/*    FileArrayDelete(&localcerts, &localcertssizes, NUM_LOCAL_CERTS);
     FileArrayDelete(&pkeys, &pkeyssizes, NUM_PKEYS);
-
+    FileArrayDelete(&certs, &certssizes, NUM_CA_CERTS);
+*/
     NUM_CA_CERTS=0;
     NUM_LOCAL_CERTS=0;
     NUM_PKEYS=0;
@@ -404,11 +404,34 @@ int
 testOSPPProviderSetAuthorityCertificates()
 {
     int errorcode = 0;
+    int length = 0;
+    unsigned char *temp;
+    BIO *bioIn = NULL;
+    RSA *pKey;
+    X509 *lcert,*cacert;
 
 
-    FileArrayDelete(&certs, &certssizes, NUM_CA_CERTS);
-    (void)FileArrayRead(&certs,&NUM_CA_CERTS, &certssizes, "cert","dat",99);
-    printf("Loaded %u CA certificates\n",NUM_CA_CERTS);
+    temp = NULL;
+    temp = AuthBuf;
+    length = 0;
+
+    bioIn = BIO_new_file("cacert.pem","r");
+    cacert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
+    length = i2d_X509(cacert,&temp);
+
+    if (cacert == NULL || length == 0)
+    {
+        printf("Failed to parse the Authority Certificate from the File - cacert.pem \n");
+        return 0;
+    }
+    else
+    {
+        TheAuthCert.CertData = AuthBuf;
+        TheAuthCert.CertDataLength = length;
+        authCerts[0] = &TheAuthCert;
+        printf ("Read 1 Auhorization Certificate \n");
+    }
+    NUM_CA_CERTS = 1;
 
 
     errorcode = OSPPProviderSetAuthorityCertificates(
@@ -593,16 +616,51 @@ int
 testOSPPProviderSetLocalKeys()
 {
     int errorcode = 0;
+    int length;
+    unsigned char *temp;
+    BIO *bioIn = NULL;
+    RSA *pKey;
+    X509 *lcert,*cacert;
 
-    FileArrayDelete(&localcerts,&localcertssizes, NUM_LOCAL_CERTS);
-    (void)FileArrayRead(&localcerts,&NUM_LOCAL_CERTS, &localcertssizes, "localcert","dat",1);
-    printf("Loaded %u local certificates\n",NUM_LOCAL_CERTS);
+    bioIn = BIO_new_file("pkey.pem","r");
 
-    FileArrayDelete(&pkeys,&pkeyssizes, NUM_PKEYS);
-    (void)FileArrayRead(&pkeys,&NUM_PKEYS,&pkeyssizes, "pkey","dat",1);
-    printf("Loaded %u private keys\n",NUM_PKEYS);
-    privatekey.PrivateKeyData=pkeys[0];
-    privatekey.PrivateKeyLength=pkeyssizes[0];
+    temp = Reqbuf;
+    length = 0;
+
+    pKey = PEM_read_bio_RSAPrivateKey(bioIn,NULL,NULL,NULL);
+    length = i2d_RSAPrivateKey(pKey,&temp);
+    if (pKey == NULL || length == 0)
+    {
+        printf("Failed to parse the Private Key from the File - pkey.pem \n");
+        return 0;
+    }
+    else
+    {
+        privatekey.PrivateKeyData = Reqbuf;
+        privatekey.PrivateKeyLength = length;
+        printf ("Read 1 Private Key \n");
+    }
+
+    temp = NULL;
+    temp = LocalBuf;
+    length = 0;
+
+    bioIn = BIO_new_file("localcert.pem","r");
+    lcert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
+    length = i2d_X509(lcert,&temp);
+
+    if (lcert == NULL || length == 0)
+    {
+        printf("Failed to parse the Local Certificate from the File - localcert.pem \n");
+        return 0;
+    }
+    else
+    {
+        localcert.CertData = LocalBuf;
+        localcert.CertDataLength = length;
+        printf ("Read 1 Local Certificate \n");
+        localcerts = &(localcert.CertData);
+    }
 
     errorcode = OSPPProviderSetLocalKeys(
         OSPVProviderHandle,
@@ -1870,7 +1928,7 @@ main(int argc, char *argv[])
     OSPPCleanup();
     CleanupServicePoints();
     printf("Program Over.\n");
-    return 0;
+    exit(0);
 }
 
 
