@@ -13,7 +13,7 @@ include ospcflags.inc
 #TARGET_OS should be set in release builder's environment.!!!!
 
 #
-LFLAGS   = -lsocket -lnsl -lpthread -lmtmalloc
+LFLAGS   = -lsocket -lnsl -lpthread
 SOFLAGS  = -shared 
 SOOBJ    = libosp.so
 #AR       = /usr/ccs/bin/ar
