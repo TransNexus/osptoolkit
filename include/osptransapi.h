@@ -67,7 +67,7 @@ extern "C"
     int OSPPTransactionInitializeAtDevice(OSPTTRANHANDLE, unsigned, const char *,
             const char *, const char *, const char *,const char *,const char *,
             unsigned, const void *, unsigned, const void *,unsigned *,unsigned *,
-            unsigned *, void *);
+            unsigned *, void *,unsigned);
 
     int OSPPTransactionNew(OSPTPROVHANDLE, OSPTTRANHANDLE *);
 
@@ -76,7 +76,7 @@ extern "C"
     int OSPPTransactionReinitializeAtDevice(OSPTTRANHANDLE, enum OSPEFAILREASON,
             unsigned, const char *, const char *, const char *, const char *,
             const char *, const char *, unsigned, const void *, unsigned,
-            const void *, unsigned *, unsigned *, unsigned *, void *);
+            const void *, unsigned *, unsigned *, unsigned *, void *,unsigned);
 
     int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, unsigned, signed,
             unsigned, signed, unsigned *, void *);
@@ -95,10 +95,27 @@ extern "C"
     int OSPPTransactionValidateAuthorisation(OSPTTRANHANDLE, const char *,
             const char *, const char *, const char *, const char *, 
             const char *, unsigned, const void *, unsigned, const void *, 
-            unsigned *, unsigned *, unsigned *, void *);
+            unsigned *, unsigned *, unsigned *, void *,unsigned);
 
     int OSPPTransactionValidateReAuthorisation(OSPTTRANHANDLE, unsigned, const void *,                 
-            unsigned *, unsigned *, unsigned *, void *);            
+            unsigned *, unsigned *, unsigned *, void *,unsigned);            
+
+    int OSPPTransactionBuildUsageFromScratch(
+    OSPTTRANHANDLE  ospvTransaction,        /*In - Transaction handle */
+    unsigned long long  ospvServerTransactionId, /*In - OSP Server Transaction Id */
+    unsigned        ospvIsSource,           /*In - Is this the ogw or tgw */
+    const char     *ospvSource,             /*In - Source of call */
+    const char     *ospvDestination,        /*In - Destination for call */
+    const char     *ospvSourceDevice,       /*In - SourceDevice */
+    const char     *ospvDestinationDevice,  /*In - DestinationDevice */
+    const char     *ospvCallingNumber,      /*In - Calling number */
+    const char     *ospvCalledNumber,       /*In - Called number */
+    unsigned        ospvSizeOfCallId,       /*In - Size of Callid */
+    const void     *ospvCallId,             /*In - Call identifier */
+    enum OSPEFAILREASON  ospvFailureReason,
+    unsigned   *ospvSizeOfDetailLog,   /* In/Out - Max size of detail log\ Actual size of detail log */
+    void           *ospvDetailLog);         /* In - Pointer to storage for detail log */
+
 #ifdef __cplusplus
 }
 #endif
