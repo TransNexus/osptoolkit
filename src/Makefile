@@ -55,7 +55,7 @@ OBJS    =   osppkcs1.o osppkcs8.o osppkcs7.o ospcryptowrap.o ospasn1ids.o \
             ospusageind.o ospstatus.o ospauthreq.o ospauthrsp.o ospauthind.o \
             ospauthcnf.o ospreauthreq.o ospreauthrsp.o ospusagecnf.o ospb64.o \
             ospbfr.o osptokeninfo.o  ospfail.o ospaltinfo.o ospssl.o  ospstatistics.o osptnprobe.o \
-            ospaudit.o osptnaudit.o osptransids.o ospciscoext.o $(SSLOBJ) $(CRYPTOADDOBJ) ospversion.o
+            ospaudit.o osptnaudit.o osptransids.o ospciscoext.o ospcapind.o ospcapcnf.o $(SSLOBJ) $(CRYPTOADDOBJ) ospversion.o
 
 .SUFFIXES: .o .c 
 
