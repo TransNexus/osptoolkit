@@ -13,13 +13,13 @@
 #   consent of TransNexus, LLC.                                      
 #                                     
 #
-# $Date: 2003/05/27 21:09:30 $
+# $Date: 2003/06/25 19:25:28 $
 #
-# $Id: osp_sdk_compile.ksh,v 1.5 2003/05/27 21:09:30 vmathur Exp $
+# $Id: osp_sdk_compile.ksh,v 1.6 2003/06/25 19:25:28 vmathur Exp $
 #
 # $RCSfile: osp_sdk_compile.ksh,v $
 #
-# $Revision: 1.5 $
+# $Revision: 1.6 $
 #
 # $Source: /tmp/OSPclient/osptoolkit/src/Attic/osp_sdk_compile.ksh,v $
 #
@@ -101,7 +101,7 @@ RELEASE_TAG=DEV
 # compiler flags
 # 
 # GNU gcc/g++
-GNU_COMMON_FLAGS="-Wall -D_GNU_SOURCE -DOSP_ALLOW_DUP_TXN"
+GNU_COMMON_FLAGS="-Wall -D_GNU_SOURCE -DOSP_ALLOW_DUP_TXN -DOSPC_FASTMSG_DESC"
 GNU_OPTIMIZED="-O3 $GNU_COMMON_FLAGS"
 GNU_DEBUG="-g $GNU_COMMON_FLAGS"
 GNU_GPROF="-pg $GNU_DEBUG"
