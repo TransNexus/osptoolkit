@@ -226,3 +226,21 @@ Version 2.9.3
 * Added a new function (RequestSuggestedAuthorization, CLI function #30) to the test_app. Implemented reporting of suggested route's in the test_app. 
 * Eased the restriction on reporting TC Codes in the GetNextDestination API. The toolkit now supports 0 as a valid TC Code.
 * This version of the toolkit is also tested with unsigned tokens.
+---------------------------------------------------------------------------
+
+Version 2.10.0
+
+* Implemented new API for reporting CapabilitiesIndication message.  OSPPProviderSetCapabilitiesURLs - configures
+  a list of URLs.  The URLs will be used for sending the new message only.  Other OSP messages will be send to
+  the service points configured using OSPPProviderNew or OSPProviderSetServicePoints.  OSPPTransactionIndicateCapabilities -
+  sends the new message to one of the URLs in the list.
+* Added new test cases to the test app:
+  #4   tests OSPProviderSetServicePoints
+  #14  tests OSPPProviderSetCapabilitiesURLs
+  #37  tests a single call to OSPPTransactionIndicateCapabilities
+  #101 tests multiples calls to OSPPTransactionIndicateCapabilities in parallel
+* Fixed a bug in XML-encoding logic for empty elements with attributes.  The toolkit will correctly encode 
+  empty calling number.
+* Fixed a bug in OSPProviderSetServicePoints.  The function can be used for updating the list of service points
+  used for sending Authorization Request and Usage Indication messages.
+
