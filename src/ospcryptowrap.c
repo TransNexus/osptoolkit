@@ -69,7 +69,7 @@ OSPPCryptoWrapDigest(
 
 
 		/* Set digest algorithm */
-		type = EVP_md5();
+		type = (EVP_MD *)EVP_md5();
 
 		if (type)
 		{
@@ -174,7 +174,7 @@ OSPPCryptoWrapDecrypt(
 		{
 			pData				=	pX509PubKey->public_key->data;
 			len					=	pX509PubKey->public_key->length;
-			pRSAPubKey	= d2i_RSAPublicKey(NULL, &pData, len);
+			pRSAPubKey	= d2i_RSAPublicKey(NULL,(const unsigned char **) &pData, len);
 
 			if (pRSAPubKey)
 			{
@@ -274,7 +274,7 @@ OSPPCryptoWrapVerify(
 		{
 			pData	=	pX509PubKey->public_key->data;
 			len		=	pX509PubKey->public_key->length;
-			pRSAPubKey = d2i_RSAPublicKey(NULL, &pData, len);
+			pRSAPubKey = d2i_RSAPublicKey(NULL, (const unsigned char **)&pData, len);
 
 			if (pRSAPubKey)
 			{
