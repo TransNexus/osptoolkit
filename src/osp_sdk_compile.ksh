@@ -13,13 +13,13 @@
 #   consent of TransNexus, LLC.                                      
 #                                     
 #
-# $Date: 2002/02/22 14:16:14 $
+# $Date: 2002/04/02 12:08:27 $
 #
-# $Id: osp_sdk_compile.ksh,v 1.1 2002/02/22 14:16:14 dmitry Exp $
+# $Id: osp_sdk_compile.ksh,v 1.2 2002/04/02 12:08:27 dmitry Exp $
 #
 # $RCSfile: osp_sdk_compile.ksh,v $
 #
-# $Revision: 1.1 $
+# $Revision: 1.2 $
 #
 # $Source: /tmp/OSPclient/osptoolkit/src/Attic/osp_sdk_compile.ksh,v $
 #
@@ -136,7 +136,7 @@ BLD_VARS="${BLD_VARS} BLD_DEBUG BLD_CDATA_ONLY BLD_GCC BLD_GPLUSPLUS"
 BLD_VARS="${BLD_VARS} BLD_SSL_CL_ATH BLD_SPRO BLD_SMIME"
 
 set -A BLD_SEC_TOK    1 stok  1 OSP_TOKEN=-DOSPC_USE_SIGNED_TOKEN
-set -A BLD_HW_ACCEL   1 hwe   1 OSPC_HWE_CRYPTOSWIFT=-DOSPC_HWE_CRYPTOSWIFT
+set -A BLD_HW_ACCEL   1 hwe   1 OSPC_HW_ACCEL=-DOSPC_HW_ACCEL
 set -A BLD_DEBUG      0 dbg   1 OSPC_DEBUG=-DOSPC_DEBUG
 set -A BLD_CDATA_ONLY 0 cdat  1 OSPC_USE_CDATA_ONLY=-DOSPC_USE_CDATA_ONLY
 set -A BLD_SSL_CL_ATH 0 sslc  1 OSPC_ENABLE_SSL_CLIENT_AUTHENTICATION=-DOSPC_ENABLE_SSL_CLIENT_AUTHENTICATION

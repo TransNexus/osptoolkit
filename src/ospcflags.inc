@@ -1,4 +1,4 @@
-CC       = $(PURIFY) $(COMPILER)
+CC       = $(COMPILER)
 
 CFLAGS   = $(COMPFLAGS) \
            $(OSPC_DEBUG) \
@@ -13,7 +13,7 @@ CFLAGS   = $(COMPFLAGS) \
            $(OSP_TOKEN) \
            $(OSPC_USE_CDATA_ONLY) \
            $(OSPC_ENABLE_SSL_CLIENT_AUTHENTICATION) \
-           $(OSPC_HWE_CRYPTOSWIFT)  \
+           $(OSPC_HW_ACCEL)  \
            $(OSP_OTHER)  \
            -D_POSIX_THREADS \
            -D_REENTRANT \
