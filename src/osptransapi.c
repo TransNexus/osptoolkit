@@ -1195,8 +1195,6 @@ OSPPTransactionBuildUsageFromScratch(
     /* verify input */
     if(((ospvDestination == (const char *)OSPC_OSNULL)&&
         (ospvDestinationDevice == (const char *)OSPC_OSNULL)) ||
-        (ospvCallingNumber == (const char *)OSPC_OSNULL) ||
-        (ospvCalledNumber == (const char *)OSPC_OSNULL)  ||
         (ospvSizeOfCallId == 0)                          ||
         (ospvCallId == (const void *)OSPC_OSNULL))
     {
@@ -1248,12 +1246,22 @@ OSPPTransactionBuildUsageFromScratch(
             }
             else
             {
-                /* create callid structure */
-                callid = OSPPCallIdNew(ospvSizeOfCallId, (const unsigned char *)ospvCallId);
+                 if ((ospvCallingNumber == (const char *)OSPC_OSNULL) ||
+                    (ospvCalledNumber == (const char *)OSPC_OSNULL)) 
+                 {
+                     errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                     OSPM_DBGERRORLOG(errorcode, "invalid input for Initialize");
+                 }
 
-                if(callid == (OSPTCALLID *)OSPC_OSNULL)
+                /* create callid structure */
+                if (errorcode == OSPC_ERR_NO_ERROR)
                 {
-                    errorcode = OSPC_ERR_DATA_NOCALLID;
+                    callid = OSPPCallIdNew(ospvSizeOfCallId, (const unsigned char *)ospvCallId);
+
+                    if(callid == (OSPTCALLID *)OSPC_OSNULL)
+                    {
+                        errorcode = OSPC_ERR_DATA_NOCALLID;
+                    }
                 }
 
                 if(errorcode == OSPC_ERR_NO_ERROR)
@@ -1269,10 +1277,11 @@ OSPPTransactionBuildUsageFromScratch(
                         &numcallids, 
                         ospvSizeOfDetailLog, 
                         ospvDetailLog);
+
+                    /* delete callid - TransactionRequestNew created new one */
+                    OSPPCallIdDelete(&callid);
                 }
 
-                /* delete callid - TransactionRequestNew created new one */
-                OSPPCallIdDelete(&callid);
 
                 if(errorcode == OSPC_ERR_NO_ERROR)
                 {
