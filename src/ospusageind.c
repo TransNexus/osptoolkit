@@ -866,6 +866,86 @@ OSPPUsageIndCopyDeviceInfo(
     return;
 }
 
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndMergeSourceAlt() - Merges the source alt list
+ * The list (ospmAuthReqSourceAlternate) could contain - NetworkId, SrcAddr,
+ * or the Subscriber Info. We need to copy everything from list1, except
+ * the SrcAddr. The 2nd list contains the Updated SrcAddr that we just 
+ * append to the list.
+ *-----------------------------------------------------------------------*/
+void                                /* nothing returned */
+OSPPUsageIndMergeSourceAlt(
+    OSPTUSAGEIND *ospvUsageInd,     
+    OSPTLIST     *ospvList1,          
+    OSPTLIST     *ospvList2          
+    )
+{
+    OSPTALTINFO *altinfo1    = OSPC_OSNULL,
+        *altinfo2    = OSPC_OSNULL;
+
+    if ((ospvUsageInd != OSPC_OSNULL) && ((ospvList1 != OSPC_OSNULL) || (ospvList2 != OSPC_OSNULL)))
+    {
+        OSPPListNew(&(ospvUsageInd->ospmUsageIndSourceAlternate));
+    }
+
+    /*
+     * Copy the node from List 2.
+     */
+    if((ospvUsageInd != OSPC_OSNULL) &&
+        (ospvList2 != OSPC_OSNULL))
+    {
+        for(altinfo1 = (OSPTALTINFO *)OSPPListFirst(ospvList2);
+            altinfo1 != OSPC_OSNULL;
+            altinfo1 = (OSPTALTINFO *)OSPPListNext(ospvList2, altinfo1))
+        {
+            altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1),
+                    OSPPAltInfoGetValue(altinfo1),
+                    OSPPAltInfoGetType(altinfo1));
+            if(altinfo2 != OSPC_OSNULL)
+            {
+               OSPPListAppend(&(ospvUsageInd)->ospmUsageIndSourceAlternate, altinfo2);
+            }
+            altinfo2 = OSPC_OSNULL;
+        }
+    }
+
+    if(altinfo2 != OSPC_OSNULL)
+    {
+        OSPPAltInfoDelete(&altinfo2);
+    }
+
+    /*
+     * Now copy the nodes for Network/Subscriber Info
+     */
+    if((ospvUsageInd != OSPC_OSNULL) &&
+        (ospvList1 != OSPC_OSNULL))
+    {
+        for(altinfo1 = (OSPTALTINFO *)OSPPListFirst(ospvList1);
+            altinfo1 != OSPC_OSNULL;
+            altinfo1 = (OSPTALTINFO *)OSPPListNext(ospvList1, altinfo1))
+        {
+            if (OSPPAltInfoGetType(altinfo1) != ospeTransport)
+            {
+                altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1),
+                    OSPPAltInfoGetValue(altinfo1),
+                    OSPPAltInfoGetType(altinfo1));
+                if(altinfo2 != OSPC_OSNULL)
+                {
+                    OSPPListAppend(&(ospvUsageInd)->ospmUsageIndSourceAlternate, altinfo2);
+                }
+                altinfo2 = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if(altinfo2 != OSPC_OSNULL)
+    {
+        OSPPAltInfoDelete(&altinfo2);
+    }
+
+    return;
+}
 
 /**/
 /*-----------------------------------------------------------------------*
