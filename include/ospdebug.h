@@ -54,6 +54,7 @@
  */
 
 #define OSPM_DBGPRINTF OSPM_PRINTF
+#define OSPM_PRINTTOERR(ospvParams); {fprintf ospvParams; fflush(stdout); }
 
 /*
  * The OSPM_DBG macro is slightly tricky since printf takes

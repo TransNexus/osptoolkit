@@ -630,7 +630,7 @@ OSPPX509CertTestContext(
     if (ospvCertInfo == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_X509_INVALID_CONTEXT;
-        OSPM_DBGERRORLOG(errorcode, "X509 CertInfo context is null pointer");
+        OSPM_PRINTTOERR((stderr,"X509 CertInfo context is null pointer\n"));
     }
 
     return errorcode;
