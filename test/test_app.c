@@ -684,6 +684,33 @@ testOSPPProviderGetNumberOfServicePoints()
     return errorcode;
 }
 
+int 
+testOSPPTransactionSetNetworkId()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPTransactionSetNetworkId(
+        OSPVTransactionHandle,
+        "termid01");
+
+    return errorcode;
+
+}
+
+
+int 
+testOSPPTransactionSetNewNetworkId()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPTransactionSetNetworkId(
+        OSPVTransactionHandle,
+        "termidNew");
+
+    return errorcode;
+
+}
+
 int
 testOSPPTransactionNew()
 {
@@ -1533,13 +1560,13 @@ testAPI(int apinumber)
         errorcode = testOSPPTransactionInitializeAtDevice(OSPC_DESTINATION);
         break;
         case 35:
-        errorcode = testNotImplemented();
+        errorcode = testOSPPTransactionSetNetworkId();
         break;
         case 36:
         errorcode = testOSPPTransactionRecordFailure();
         break;
         case 37:
-        errorcode = testNotImplemented();
+        errorcode = testOSPPTransactionSetNewNetworkId();
         break;
         case 38:
         errorcode = testNotImplemented();
@@ -1616,9 +1643,9 @@ testMenu()
       printf(" 7) GetHTTPPersistence                 8) SetHTTPPersistence\n");
       printf(" 9) GetHTTPRetryDelay                 10) SetHTTPRetryDelay\n");
       printf("11) GetHTTPTimeout                    12) SetHTTPTimeout\n");
-      printf("13) not implemented                   14) SetLocalKeys\n");
+      printf("13) For future Enhancements           14) SetLocalKeys\n");
       printf("15) GetLocalValidation                16) SetLocalValidation\n");
-      printf("17) GetServicePoints                  18) not implemented\n");
+      printf("17) GetServicePoints                  18) For future Enhancements\n");
       printf("19) GetSSLLifetime                    20) SetSSLLifetime\n");
       printf("21) GetNumberOfAuthorityCertificates  22) GetNumberOfServicePoints\n");
       printf("---------------------------------------------------------------------\n");
@@ -1627,15 +1654,15 @@ testMenu()
       printf("23) New                               24) Delete\n");
       printf("25) AccumulateOneWayDelay             26) AccumulateRoundTripDelay\n");
       printf("27) GetFirstDestination               28) GetNextDestination\n");
-      printf("29) RequestAuthorisation              30) not implemented\n");
+      printf("29) RequestAuthorisation              30) For future Enhancements\n");
       printf("31) ValidateAuthorisation             32) ReportUsage\n");
       printf("33) TransactionInitializeAtDevice(OGW)34) TransactionInitialize(TGW)\n");
-      printf("35) not implemented                   36) TransactionRecordFailure\n");
+      printf("35) SetNetworkId                      36) TransactionRecordFailure\n");
       printf("---------------------------------------------------------------------\n");
       printf("Miscellaneous Tests\n");
       printf("---------------------------------------------------------------------\n");
-      printf("37) not implemented                   38) not implemented\n");
-      printf("39) not implemented                   40) not implemented\n");
+      printf("37) Reset NetworkId                   38) For future Enhancements\n");
+      printf("39) For future Enhancements           40) For future Enhancements\n");
       printf("41) %-6d Test Calls                 42) Show Version\n", num_test_calls);
       printf("99) Sleep for 2 seconds\n");
       printf("---------------------------------------------------------------------\n");
