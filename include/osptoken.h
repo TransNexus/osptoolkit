@@ -48,6 +48,12 @@ typedef struct
 }
 OSPTTOKEN;
 
+typedef enum
+{
+    TOKEN_ALGO_SIGNED,
+    TOKEN_ALGO_UNSIGNED,
+    TOKEN_ALGO_BOTH
+}token_algo_t;
 
 #ifdef __cplusplus
 extern "C" 
