@@ -75,7 +75,7 @@
 #ifndef _NON_BLOCKING_H
 #define _NON_BLOCKING_H
 
-#include "osp.h"
+#include "osp/osp.h"
 #include "syncque.h"
 
 
