@@ -35,6 +35,29 @@
 #include "osptoken.h"
 
 
+/*-----------------------------------------------------------------------*
+ * Destination Protocol Data Type
+ *-----------------------------------------------------------------------*/
+typedef enum
+{
+    OSPE_DEST_PROT_UNDEFINED=0, /* Not Configured at Server */
+    OSPE_DEST_PROT_SIP=2, /* Destination Protocol - SIP */
+    OSPE_DEST_PROT_H323_LRQ=4, /*Destination Protocol - H323, Send LRQ to GK to Complete Call */
+    OSPE_DEST_PROT_H323_SETUP=8, /*Destination Protocol - H323, Send Setup to Complete Call */
+    OSPE_DEST_PROT_UNKNOWN=16 /*Could not be understood by the Client as Sent by the Server */
+}OSPE_DEST_PROT;
+
+/*-----------------------------------------------------------------------*
+ * Destination OSP Enabled Data Type
+ *-----------------------------------------------------------------------*/
+typedef enum
+{
+    OSPE_OSP_UNDEFINED=0, /* Not Configured at Server */
+    OSPE_OSP_TRUE = 128, /* Destination is OSP Enabled */
+    OSPE_OSP_FALSE = 256, /* Destination os Not OSP Enabled */
+    OSPE_OSP_UNKNOWN = 512 /*Could not be understood by the Client as Sent by the Server */
+}OSPE_DEST_OSP_ENABLED;
+
 typedef struct
 {
     OSPTLISTLINK      ospmDestLink;
@@ -50,7 +73,8 @@ typedef struct
     OSPTCALLID       *ospmDestCallId;
     unsigned          ospmDestTNFailReason;
     unsigned          ospmDestTNFailReasonInd;
-
+    OSPE_DEST_PROT    ospmDestProtocol;
+    OSPE_DEST_OSP_ENABLED ospmDestOSPVersion;
 }
 OSPTDEST;
 
@@ -72,21 +96,21 @@ OSPTDEST;
 #define OSPPDestSetNumber(ospvDest,ospvNum) \
             OSPM_MEMCPY((ospvDest)->ospmDestNumber, \
                 (ospvNum), \
-                min(OSPC_E164NUMSIZE,OSPM_STRLEN((const char *)ospvNum)+1))
+                tr_min(OSPC_E164NUMSIZE,OSPM_STRLEN((const char *)ospvNum)+1))
 #define OSPPDestGetNumber(ospvDest) (ospvDest)?((ospvDest)->ospmDestNumber):OSPC_OSNULL
 
 #define OSPPDestHasAddr(ospvDest) \
     (ospvDest)?((ospvDest)->ospmDestAddr[0] != '\0'):OSPC_FALSE
 #define OSPPDestSetAddr(ospvDest,ospvAddr) \
             OSPM_MEMCPY((ospvDest)->ospmDestAddr, (ospvAddr), \
-                min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1))
+                tr_min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1))
 #define OSPPDestGetAddr(ospvDest) (ospvDest)?((ospvDest)->ospmDestAddr):OSPC_OSNULL
 
 #define OSPPDestDevHasAddr(ospvDest) \
     (ospvDest)?((ospvDest)->ospmDestDevAddr[0] != '\0'):OSPC_FALSE
 #define OSPPDestDevSetAddr(ospvDest,ospvAddr) \
             OSPM_MEMCPY((ospvDest)->ospmDestDevAddr, (ospvAddr), \
-                min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1))
+                tr_min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1))
 #define OSPPDestDevGetAddr(ospvDest) (ospvDest)?((ospvDest)->ospmDestDevAddr):OSPC_OSNULL
 
 
@@ -106,7 +130,7 @@ OSPTDEST;
     (ospvDest)?((ospvDest)->ospmDestAuthority[0] != '\0'):OSPC_FALSE
 #define OSPPDestSetAuthority(ospvDest,ospvAuth) \
     OSPM_STRNCPY((char *)(ospvDest)->ospmDestAuthority, (ospvAuth), \
-    min(OSPM_STRLEN((const char *)ospvAuth)+1,OSPC_URLSIZE-1))
+    tr_min(OSPM_STRLEN((const char *)ospvAuth)+1,OSPC_URLSIZE-1))
 
 #define OSPPDestHasCallId(ospvDest) \
     (ospvDest)?((ospvDest)->ospmDestCallId != OSPC_OSNULL):OSPC_FALSE
@@ -154,6 +178,9 @@ extern "C"
     void           OSPPDestSetCallId(OSPTDEST *, const unsigned char *, unsigned);
 
 #ifdef OSPC_DEBUG
+    void           OSPPDestSetProtocol(OSPTDEST *,const unsigned char *);
+    void           OSPPDestSetOSPVersion(OSPTDEST *,const unsigned char *);
+
     unsigned       OSPPDestHasNumber(OSPTDEST *ospvDest);
     void           OSPPDestSetNumber(OSPTDEST *, const unsigned char *);
     unsigned char *OSPPDestGetNumber(OSPTDEST *);
