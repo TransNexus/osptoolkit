@@ -32,22 +32,13 @@
 #include "osp/ospbfr.h"
 #include "osp/ospxmldoc.h"
 #include "osp/osptokeninfo.h"
-#ifndef OSP_SDK
-#   include "trxreauthrsp.h"
-#   include "trxauthrsp.h"
-#   include "trxusagecnf.h"
-#   include "trxusageind.h"
-#   include "trxreauthreq.h"
-#   include "trxauthreq.h"
-#else
-#   include "osp/ospauthreq.h"
-#   include "osp/ospauthrsp.h"
-#   include "osp/ospusagecnf.h"
-#   include "osp/ospusageind.h"
-#   include "osp/ospreauthreq.h"
-#   include "osp/ospreauthrsp.h"
-#   include "osp/ospcapind.h"
-#endif /* NOT OSP_SDK */
+#include "osp/ospauthreq.h"
+#include "osp/ospauthrsp.h"
+#include "osp/ospusagecnf.h"
+#include "osp/ospusageind.h"
+#include "osp/ospreauthreq.h"
+#include "osp/ospreauthrsp.h"
+#include "osp/ospcapind.h"
 
 
 int 
