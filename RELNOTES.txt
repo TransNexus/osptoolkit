@@ -210,3 +210,11 @@ Version 2.9.1
  * Fixed a bug which was introduced in the 2.8.2 release of the toolkit. The new bug caused the OSPPProviderDelete call made after attempting multiple calls to hang and never return to the application. The bug is fixed in this release. 
  * Added all pthread specific configuration (that was required on Windows) to the test.dsp, enroll.dsp and osp.dsp files. Now there is no need for manual configuration of pthreads on Windows.
  * Changed toolkit to report Translated Number (As returned in the Authorization Response) in the Usage Indication rather than the originally requested number.If the server returns no Called number in the Authorization Response or returns an empty called number in the Authorization Response, the toolkit sends the original called number (As sent in the Authorization Request) in the Usage Indication.
+---------------------------------------------------------------------------
+
+Version 2.9.2
+
+ * Modified the test_app to run any number of test calls. Prior to this release the Option#100 in the test_app CLI ran 1000 calls. The interface now asks the user to input the number of calls that need to be run. This number can be anything as long as the maximum simltaneous transactions are not exceeded and the toolkit queue size limit is not exceeded.
+ * Changed the code to eliminate all the warnings that popped up while compiling the toolkit with the SUN 'cc' compiler.
+ * Changed test_app to use 'scanf' instead of 'gets'.
+ * Added a section in the 'Toolkit Porting Guide' document which details the current memory allocation scheme implemented in the toolkit, and outlines how some other schemes can be used to improve the toolkit efficiency.
