@@ -42,6 +42,7 @@ typedef struct _OSPTMSGINFO
     OSPTCONDVAR         CondVar;
     int                 ErrorCode;
     unsigned char       Flags;
+    int                 IsNonBlocking;
 } OSPTMSGINFO;
 
 #define OSPC_MSGINFO_AUDIT_TYPE 0x01    /* bit 1 - Message type flag */
