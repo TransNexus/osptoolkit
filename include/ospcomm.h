@@ -86,7 +86,7 @@ typedef struct _OSPTCOMM
     unsigned            HttpRetryDelay;
     unsigned            HttpRetryLimit;
     unsigned            HttpTimeout;
-    OSPTUINT64          ConnSelectionHttpTimeout;
+    OSPTUINT64          ConnSelectionTimeout;
     OSPTSVCPT           *ServicePointList;
     OSPTSVCPT           *AuditURL;
     unsigned            HttpConnCount;
