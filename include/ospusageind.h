@@ -249,9 +249,6 @@ extern "C"
     void           OSPPUsageIndSetDuration(OSPTUSAGEIND *, int ospvDuration);
     int            OSPPUsageIndGetDuration(OSPTUSAGEIND *);
 
-    void           OSPPUsageIndSetStartTime(OSPTUSAGEIND *, OSPTTIME ospvStartTime);
-    OSPTTIME       OSPPUsageIndGetStartTime(OSPTUSAGEIND *);
-
     unsigned       OSPPUsageIndHasTNCustId(OSPTUSAGEIND *ospvUsageInd);
     void           OSPPUsageIndSetTNCustId(OSPTUSAGEIND *, unsigned long);
     unsigned long  OSPPUsageIndGetTNCustId(OSPTUSAGEIND *);
@@ -270,6 +267,9 @@ extern "C"
     OSPTBOOL       OSPPUsageIndHasTNStatistics(OSPTUSAGEIND *);
     void           OSPPUsageIndSetTNStatistics(OSPTUSAGEIND *, OSPTSTATISTICS *);
     void           OSPPUsageIndAddDestinationAlt(OSPTUSAGEIND *ospvUsageInd, OSPTALTINFO *ospvAltInfo);
+
+    void           OSPPUsageIndSetStartTime(OSPTUSAGEIND *, OSPTTIME ospvStartTime);
+    OSPTTIME       OSPPUsageIndGetStartTime(OSPTUSAGEIND *);
 
 #ifdef __cplusplus
 }
