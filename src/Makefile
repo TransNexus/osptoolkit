@@ -2,7 +2,7 @@
 # OSP Library Makefile
 #
 INCLDIR = ../include
-CC=gcc
+CC=cc
 INSTALL_PATH=/usr/local
 
 LFLAGS   = -lsocket -lnsl -lpthread
