@@ -70,6 +70,9 @@ OSPPMsgDescGetName(
     unsigned           ospvNumDesc                      /* size of array */
 )
 {
+#ifndef OSPC_FASTMSG_DESC
+    unsigned cnt;
+#endif
     const char *ospvName = OSPC_OSNULL;
 
     if (ospvPart != OSPC_MSGPARTUNKNOWN) 
