@@ -1075,7 +1075,7 @@ testOSPPTransactionGetNextDestination()
 
     errorcode = OSPPTransactionGetNextDestination(
         OSPVTransactionHandle,
-        FAILURE_REASON,
+        OSPC_FAIL_NONE,
         TIMESTAMP_SZ,
         validafter,
         validuntil,
@@ -1238,7 +1238,7 @@ testOSPPTransactionRecordFailure()
 
     errorcode = OSPPTransactionRecordFailure(
                         OSPVTransactionHandle,
-                        FAILURE_REASON);
+                        OSPC_FAIL_NORMAL_CALL_CLEARING);
 
 
     if(errorcode == OSPC_ERR_NO_ERROR){
@@ -1319,6 +1319,42 @@ testOSPPTransactionReinitializeAtDevice()
 }
 
 int
+testOSPPTransactionRequestSuggestedAuthorisation()
+{
+    int      errorcode       = 0;
+    unsigned detaillogsize   = 0;
+    char *preferredDest[] = {"1.1.1.1"};
+
+    errorcode = testInitializeCallIds(); 
+
+    numdestinations = NUM_CALL_IDS;
+
+    if (errorcode == OSPC_ERR_NO_ERROR) 
+        errorcode = OSPPTransactionRequestAuthorisation(
+        OSPVTransactionHandle,
+        "[1.1.1.1]",
+        "[111.111.111.111]", /* Some random IP address that would probably not be in the Server */
+        callingnumber,
+        callednumber,
+        "919404556#4444",
+        NUM_CALL_IDS,
+        callids,
+        (const char **)preferredDest,
+        &numdestinations,
+        &detaillogsize,
+        (void *)NULL);
+
+    if (errorcode == 0 && !quietmode)
+    {
+        printf("num dest = %u\n", numdestinations);
+    }
+    testFreeCallIds();
+
+    return errorcode;
+}
+
+
+int
 testOSPPTransactionRequestAuthorisation()
 {
     int      errorcode       = 0;
@@ -1335,7 +1371,7 @@ testOSPPTransactionRequestAuthorisation()
         "[2.2.2.2]",
         callingnumber,
         callednumber,
-        "bgates",
+        "919404556#4444",
         NUM_CALL_IDS,
         callids,
         (const char **)NULL,
@@ -1833,7 +1869,7 @@ testAPI(int apinumber)
         errorcode = testOSPPTransactionRequestAuthorisation();
         break;
         case 30:
-        errorcode = testNotImplemented();
+        errorcode = testOSPPTransactionRequestSuggestedAuthorisation();
         break;
         case 31:
         errorcode = testOSPPTransactionValidateAuthorisation();
@@ -1957,7 +1993,7 @@ testMenu()
       printf("23) New                               24) Delete\n");
       printf("25) AccumulateOneWayDelay             26) AccumulateRoundTripDelay\n");
       printf("27) GetFirstDestination               28) GetNextDestination\n");
-      printf("29) RequestAuthorisation              30) For future Enhancements\n");
+      printf("29) RequestAuthorisation              30) RequestSuggestedAuthorization\n");
       printf("31) ValidateAuthorisation             32) ReportUsage\n");
       printf("33) TransactionInitializeAtDevice(OGW)34) TransactionInitialize(TGW)\n");
       printf("35) SetNetworkId                      36) TransactionRecordFailure\n");
@@ -2483,7 +2519,7 @@ int testNonBlockingPerformanceTest()
                                                             "[2.2.2.2]",
                                                             callingnumber,
                                                             callednumber,
-                                                            "bgates",
+                                                            "919404556#4444",
                                                             CallIdsNum[i],
                                                             &CallIds[i],
                                                             (const char **)NULL,
