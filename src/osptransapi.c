@@ -110,7 +110,7 @@ OSPPTransactionGetLookAheadInfoIfPresent(
             */
            OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate));
            altinfo =
-                OSPPAltInfoNew(OSPM_STRLEN(destinfo),
+                OSPPAltInfoNew(OSPM_STRLEN((const char *)destinfo),
                 (const unsigned char *)destinfo,
                 ospeTransport);
 

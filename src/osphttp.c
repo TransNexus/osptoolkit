@@ -265,11 +265,15 @@ osppHttpRemoveConnection(
          */
         (void)OSPPListRemoveSpecificItem((OSPTLIST *)&(comm->HttpConnList),
             ospvHttp);
-
         /*
-         * decrement the number of http connections
+         * We have moved the OSPPCommDecrementHttpConnCount function from here 
+         * to osppHttpSetupAndMonitor function. This is so because there was a race condition.
+         * Since, the communication manager waits on: (*comm)->HttpConnCount to become 0,
+         * we cannot decrement the count here, because, the Http connection object has 
+         * not been deleted yet. This can lead to potential memory access problems. 
+         * By moving the function to osppHttpSetupAndMonitor, we make sure that we decrement the count
+         * only when the connection has been deleted
          */
-        (void)OSPPCommDecrementHttpConnCount(comm);
 
         OSPM_MUTEX_UNLOCK(comm->Mutex, errorcode);
         assert(errorcode == OSPC_ERR_NO_ERROR);
@@ -666,6 +670,12 @@ osppHttpSetupAndMonitor(
     OSPPHttpDelete(&httpconn);
 
     /*
+     * Now, decrement the connection count in the Comm object
+     * This functionality has been moved here from the RemoveConnection function.
+     */
+     OSPPHttpDecrementConnectionCount(comm);
+    
+    /*
      * The BitReset function removed from here was erroneously introduced in 2.8.2 and was not present
      * in the previous versions. Because of this, the ProviderDelete function call hung if multiple calls 
      * were run. In this function, we reset the HTTP_SHUTDOWN bit, because of which other threads do not get to
@@ -676,6 +686,25 @@ osppHttpSetupAndMonitor(
 
     OSPTTHREADRETURN_NULL();
 }
+
+void
+OSPPHttpDecrementConnectionCount(
+    OSPTCOMM *comm)
+{
+    int errorcode=0;
+
+    if (comm != (OSPTCOMM *)OSPC_OSNULL)
+    {
+        OSPM_MUTEX_LOCK(comm->Mutex, errorcode);
+        assert(errorcode == OSPC_ERR_NO_ERROR);
+
+        (void)OSPPCommDecrementHttpConnCount(comm);
+   
+        OSPM_MUTEX_UNLOCK(comm->Mutex, errorcode);
+        assert(errorcode == OSPC_ERR_NO_ERROR);
+    }
+}
+
 
 int
 OSPPHttpVerifyResponse(
@@ -808,7 +837,7 @@ osppHttpSelectConnection(
     unsigned httpcount  = 0,
              maxcount   = 0;
     int      errorcode  = OSPC_ERR_NO_ERROR;
-    int current_conn_count=0;
+    unsigned current_conn_count=0;
 
     OSPM_DBGENTER(("ENTER : osppHttpSelectConnection\n"));
 
@@ -828,21 +857,17 @@ osppHttpSelectConnection(
      * number of connections == max connections
      */
 
-    /*
-     * first see if any connections exist
-     */
-    *ospvHttp = (OSPTHTTP *)OSPPListFirst(
-        (OSPTLIST *)&(ospvComm->HttpConnList));
 
     /*
      * see if we can add a new one
      */
+    *ospvHttp = (OSPTHTTP *)OSPC_OSNULL;
+
     (void)OSPPCommGetHttpConnCount(ospvComm, &httpcount);
     (void)OSPPCommGetMaxConnections(ospvComm, &maxcount);
-    if ((*ospvHttp == (OSPTHTTP *)OSPC_OSNULL) || (httpcount < maxcount))
+    if (httpcount < maxcount)
     {
         createnew = OSPC_TRUE;
-        *ospvHttp = (OSPTHTTP *)OSPC_OSNULL;
     }
     else
     {
@@ -963,10 +988,8 @@ osppHttpGetIdleHttpConn(
            *ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList,
                    (void *)*ospvHttp);
        }
-       if (*ospvHttp == NULL)
-       {
-           *ospvHttp = (OSPTHTTP *)OSPPListFirst((OSPTLIST *)ospvHttpList);
-       }
+
+       assert (*ospvHttp != NULL);
    }
 
    /*
@@ -997,7 +1020,7 @@ osppHttpGetIdleHttpConn(
      }
    }
 
-   if ((errorcode == OSPC_ERR_NO_ERROR) && (found == OSPC_FALSE))
+   while ((errorcode == OSPC_ERR_NO_ERROR) && (found == OSPC_FALSE))
    {
        /*
         * We went through one iteration and all the queues were full
@@ -1017,10 +1040,21 @@ osppHttpGetIdleHttpConn(
               errorcode = OSPC_ERR_HTTP_CONN_SRCH_TIMEOUT;
               OSPM_DBGERRORLOG(errorcode, "search for connection timedout");
           }
-          else if (errorcode == OSPC_ERR_NO_ERROR)
+          else
           {
               /*
-               * The condition variable must have been signalled
+               * The only errorcode that we need to entertain is OSPC_ERR_OS_CONDVAR_TIMEOUT
+               * If the wakeup was a spurious wakeup, errorcode might have been set to some 
+               * value. To enable the control to get back into the while loop, 
+               * we need to reset the errorcode to NO_ERROR.
+               * Otherwise, if the errorcode was set during the spurious wakeup,
+               * and we did not find a single idle connection below, 
+               * we would not be able to get back into the while loop above.
+               */
+               errorcode = OSPC_ERR_NO_ERROR;
+
+              /*
+               * The condition variable might have been signalled
                * Search again.
                */
               for (i=0;i<maxconn;i++)
@@ -1043,18 +1077,6 @@ osppHttpGetIdleHttpConn(
                       }
                   }
               }
-              /*
-               * Ideally we should never encounter this section of the code.
-               * After the condition variable has been signalled, 
-               * found should be set to TRUE for one of the nodes. 
-               * However, if this does not happen, then it is an error condition
-               */
-              if (found == OSPC_FALSE)
-              {
-                  errorcode = OSPC_ERR_HTTP_INVALID_COND_IN_HTTP_SEARCH;
-                  OSPM_DBGERRORLOG(errorcode, "search for connection failed.");
-                  *ospvHttp = NULL;
-              }
           }
       }
    }
@@ -1072,7 +1094,8 @@ osppHttpCopySPList(
                     *svcptitem  = OSPC_OSNULL,
                     *newroot    = OSPC_OSNULL,
                     *newsvcptnode    = OSPC_OSNULL;
-    int  numsvcpts,i=0;
+    unsigned  numsvcpts;
+    int i=0;
 
     /*
      * get a pointer to the service point list

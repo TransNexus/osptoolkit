@@ -138,6 +138,7 @@ extern "C"
     int      OSPPCommValidateSvcPts(unsigned ospvNumberOfServicePoints, const char **ospvServicePoint);
 	int      OSPPCommUpdateURLs(OSPTCOMM *, unsigned, const char **);
     int      OSPPCommGetNumberOfTransactions(OSPTCOMM *, unsigned *);
+    void     OSPPHttpDecrementConnectionCount(OSPTCOMM *);
 
 #ifdef __cplusplus
 }
