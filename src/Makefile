@@ -2,16 +2,14 @@
 # OSP Library Makefile
 #
 INCLDIR = ../include
-CC=cc
 INSTALL_PATH=/usr/local
 
 LFLAGS   = -lsocket -lnsl -lm -lpthread
 ARLIB    = ../lib/libosp.a
-MKDEP    = /usr/openwin/bin/makedepend
 
 # WARNING !!
-# If not using the Sun Compiler for compiling the toolkit
-# and instead using gcc, please comment the line below for proper 
+# If not using gcc for compiling the toolkit
+# and instead using the Sun Compiler, please comment the line below for proper 
 # compilation.
 #
 GCCFLAGS = -Wall -D_GNU_SOURCE -fPIC
@@ -19,7 +17,7 @@ GCCFLAGS = -Wall -D_GNU_SOURCE -fPIC
 #
 # CFLAGS definition
 # This is for DEBUG mode of compilation
-#CFLAGS	= -g -DOSP_ALLOW_DUP_TXN -DOSPC_DEBUG -DOSP_NO_DELETE_CHECK -DOSP_SDK -D_POSIX_THREADS -D_REENTRANT $(GCCFLAGS)
+#CFLAGS	= -g -DOSP_ALLOW_DUP_TXN -DOSP_NO_DELETE_CHECK -DOSP_SDK -D_POSIX_THREADS -D_REENTRANT $(GCCFLAGS) -DOSPC_DEBUG
 
 # This is for PRODUCTION mode of compilation
 CFLAGS	= -O -DOSP_ALLOW_DUP_TXN -DOSP_NO_DELETE_CHECK -DOSP_SDK -D_POSIX_THREADS -D_REENTRANT $(GCCFLAGS)
@@ -51,11 +49,16 @@ OBJS    =   osppkcs1.o osppkcs8.o osppkcs7.o ospcryptowrap.o ospasn1ids.o \
 .SUFFIXES: .o .c 
 
 .c.o:
-	$(CC) $(CFLAGS) $(CRYPTOCFLAGS) $(INCL) $(<) -c
+	cc $(CFLAGS) $(CRYPTOCFLAGS) $(INCL) $(<) -c
 
 default:
-	@ echo 'Use - make build, to build the osp library.'
-	@ echo 'Use - make install, to install the osp library.'
+	@ echo 'Use - make build, to build the osp library'
+	@ echo ""
+	@ echo 'Use - make install, to install the osp library'
+	@ echo '      make install will install the files in: $(INSTALL_PATH)'
+	@ echo '      Modify the INSTALL_PATH variable to install the files at a different location'
+	@ echo '      make install might require root previliges'
+
 
 build  : $(OBJS)
 	ar -r $(ARLIB) $(OBJS)
