@@ -1,4 +1,5 @@
 CC       = $(COMPILER)
+OSP_NO_DELETE_CHECK = -DOSP_NO_DELETE_CHECK
 
 CFLAGS   = $(COMPFLAGS) \
            $(OSPC_DEBUG) \
