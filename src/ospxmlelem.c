@@ -131,13 +131,6 @@ OSPPXMLElemDelete(
 
     if (*ospvElem != OSPC_OSNULL)
     {
-        /* check to make sure the element's not on a list somewhere */
-        if (!OSPPListLinkIsolated(&((*ospvElem)->ospmXMLElemLink)))
-        {
-            /* clear the link */
-            OSPPListLinkDelete(&((*ospvElem)->ospmXMLElemLink));
-        }
-
         /* destroy any attributes */
         while ((attr = (OSPTXMLATTR *)OSPPListRemove(&((*ospvElem)->ospmXMLElemAttrs))) != OSPC_OSNULL)
         {
@@ -161,7 +154,6 @@ OSPPXMLElemDelete(
  * OSPPXMLElemGetName() - returns the name from an XML attribute
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLElemGetName
 const char *                      /* returns pointer to name */
 OSPPXMLElemGetName(
     OSPTXMLELEM *ospvElem         /* element being querried */
@@ -175,14 +167,12 @@ OSPPXMLElemGetName(
     }
     return(ospvName);
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLElemGetValue() - returns the value of an XML element
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLElemGetValue
 const char *                   /* returns pointer to character value */
 OSPPXMLElemGetValue(
     OSPTXMLELEM *ospvElem      /* element in question */
@@ -197,7 +187,6 @@ OSPPXMLElemGetValue(
 
     return(ospvValue);
 }
-#endif
 
 
 /**/
@@ -205,7 +194,6 @@ OSPPXMLElemGetValue(
  * OSPPXMLElemAddChild() - add a child element to the current element
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLElemAddChild
 void                                                  /* no return value */
 OSPPXMLElemAddChild(
     OSPTXMLELEM *ospvElem,            /* element to which child is added */
@@ -220,14 +208,12 @@ OSPPXMLElemAddChild(
         }
     }
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLElemFirstChild() - returns the first child of an element
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLElemFirstChild
 OSPTXMLELEM *                   /* returns pointer to child or NULL */
     OSPPXMLElemFirstChild(
     OSPTXMLELEM *ospvElem       /* parent element in question */
@@ -241,14 +227,12 @@ OSPTXMLELEM *                   /* returns pointer to child or NULL */
     }
     return(ospvChild);
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLElemNextChild() - returns the next child of an element
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLElemNextChild
 OSPTXMLELEM *                   /* returns pointer to child or NULL */
     OSPPXMLElemNextChild(
     OSPTXMLELEM *ospvElem,      /* parent element in question */
@@ -266,14 +250,12 @@ OSPTXMLELEM *                   /* returns pointer to child or NULL */
     }
     return(ospvNext);
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLElemAddAttr() - add an attribute to the current element
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLElemAddAttr
 void                                                  /* no return value */
 OSPPXMLElemAddAttr(
     OSPTXMLELEM *ospvElem,        /* element to which attribute is added */
@@ -288,14 +270,12 @@ OSPPXMLElemAddAttr(
         }
     }
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLElemFirstAttr() - returns the first attribute of an element
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLElemFirstAttr
 OSPTXMLATTR *                   /* returns pointer to attribute or NULL */
     OSPPXMLElemFirstAttr(
     OSPTXMLELEM *ospvElem       /* parent element in question */
@@ -309,14 +289,12 @@ OSPTXMLATTR *                   /* returns pointer to attribute or NULL */
     }
     return(ospvAttr);
 }
-#endif
 
 /**/
 /*-----------------------------------------------------------------------*
  * OSPPXMLElemNextAttr() - returns the next attribute of an element
  *-----------------------------------------------------------------------*/
 
-#ifndef OSPPXMLElemNextAttr
 OSPTXMLATTR *                   /* returns pointer to attribute or NULL */
     OSPPXMLElemNextAttr(
     OSPTXMLELEM *ospvElem,      /* parent element in question */
@@ -334,6 +312,5 @@ OSPTXMLATTR *                   /* returns pointer to attribute or NULL */
     }
     return(ospvNext);
 }
-#endif
 
 
