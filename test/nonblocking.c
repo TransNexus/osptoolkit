@@ -30,7 +30,7 @@
  */
 
 #include "nonblocking.h"
-#include "osptrans.h"
+#include "osp/osptrans.h"
 
 OSPTTHREADRETURN WorkThread(void *);
 void      NonBlockingQueueMonitorIncrementActiveWorkThreadCounter(NBMONITOR *);
@@ -346,6 +346,11 @@ NonBlockingQueueMonitorDelete(
   {
     NonBlockingQueueMonitorBlockWhileQueueNotEmpty( *nbMonitor );
     SyncQueueDelete( &((*nbMonitor)->SyncQue) );
+    for(i = 0; i < (*nbMonitor)->NumberOfWorkThreads; i++)
+    {
+      OSPM_THR_JOIN((*nbMonitor)->WorkThreadIDs[i],NULL);
+    }
+
   }
 
   // release memory
