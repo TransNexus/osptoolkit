@@ -868,7 +868,6 @@ OSPPTransactionGetDeleteAllowed(
         case    OSPC_TRANSNEW:
         case    OSPC_AUTH_REQUEST_FAIL:
         case    OSPC_AUTH_REQUEST_SUCCESS:
-        case    OSPC_GET_DEST_FAIL:
         case    OSPC_REPORT_USAGE_BLOCK:
         case    OSPC_REPORT_USAGE_SUCCESS:
         case    OSPC_VALIDATE_AUTH_FAIL:
@@ -887,6 +886,13 @@ OSPPTransactionGetDeleteAllowed(
         case    OSPC_ACCUMULATE_FAIL:
         *ospvDeleteAllowed = OSPC_FALSE;
         break;
+
+        case    OSPC_GET_DEST_FAIL:
+                   if (ospvTrans->HasGetDestSucceeded == OSPC_TRUE)
+                      *ospvDeleteAllowed = OSPC_FALSE;
+                   else
+                      *ospvDeleteAllowed = OSPC_TRUE;
+                   break;
 
         default:
         /* unknown state */
@@ -1917,7 +1923,7 @@ OSPPTransactionRequestNew(
                 {
 
                     altinfo = OSPPAltInfoNew(strlen(ospvTrans->NetworkId), 
-                        (const char *)ospvTrans->NetworkId,
+                        (char *)ospvTrans->NetworkId,
                         ospeNetwork);
 
                     if(altinfo != OSPC_OSNULL)
