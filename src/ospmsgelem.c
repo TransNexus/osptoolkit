@@ -107,7 +107,10 @@ const OSPTMSGDESC OSPVElemDescs[] =
     { ospeElemTNAuditMaxMessages, "transnexus.com:AuditMaxMessages" },
     { ospeElemCSAuditTrigger,     "cisco.com:AuditSignal" },
     { ospeElemDestProtocol,     "DestinationProtocol" },
-    { ospeElemDestOSPVersion,     "OSPVersion" }
+    { ospeElemDestOSPVersion,     "OSPVersion" },
+    { ospeElemEndTime,        "EndTime" },
+    { ospeElemAlertTime,        "AlertTime" },
+    { ospeElemPostDialDelay,        "PostDialDelay" }
 };
 
 

@@ -73,10 +73,9 @@ typedef struct
 {
     OSPTLISTLINK      ospmDestLink;
     unsigned char     ospmDestNumber[OSPC_E164NUMSIZE];
+    unsigned char     ospmSrcNumber[OSPC_E164NUMSIZE];
     unsigned char     ospmDestAddr[OSPC_SIGNALADDRSIZE];
-    OSPTBOOL          ospmHasDestAddrBeenModified;
     unsigned char     ospmDestDevAddr[OSPC_SIGNALADDRSIZE];
-    OSPTBOOL          ospmHasDestDevAddrBeenModified;
     OSPTLIST          ospmUpdatedSourceAddr;
     OSPTLIST          ospmUpdatedDeviceInfo;
     OSPTTIME          ospmDestValidAfter;
@@ -114,6 +113,10 @@ extern "C"
     unsigned       OSPPDestHasNumber(OSPTDEST *ospvDest);
     void           OSPPDestSetNumber(OSPTDEST *, const unsigned char *);
     unsigned char *OSPPDestGetNumber(OSPTDEST *);
+
+    unsigned       OSPPDestHasSrcNumber(OSPTDEST *ospvDest);
+    void           OSPPDestSetSrcNumber(OSPTDEST *, const unsigned char *);
+    unsigned char *OSPPDestGetSrcNumber(OSPTDEST *);
 
     unsigned       OSPPDestHasAddr(OSPTDEST *);
     void           OSPPDestSetAddr(OSPTDEST *, const unsigned char *);

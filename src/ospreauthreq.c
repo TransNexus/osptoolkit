@@ -1032,7 +1032,7 @@ OSPPReauthReqToElement(
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasDuration(ospvReauthReq))
     {
         ospvErrCode = OSPPUsageToElement(
-            (unsigned)OSPPReauthReqGetDuration(ospvReauthReq), 0, &elem);
+            (unsigned)OSPPReauthReqGetDuration(ospvReauthReq), 0, 0, 0, 0, 0, &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(reauthelem, elem);

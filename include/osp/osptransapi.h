@@ -46,7 +46,7 @@ extern "C"
 
     int OSPPTransactionIsDestOSPEnabled(OSPTTRANHANDLE,OSPE_DEST_OSP_ENABLED *);
 
-    int OSPPTransactionSetNetworkId(OSPTTRANHANDLE,const char *);
+    int OSPPTransactionSetNetworkIds(OSPTTRANHANDLE,const char *,const char *);
 
     int OSPPTransactionAccumulateOneWayDelay(OSPTTRANHANDLE, unsigned, 
             unsigned, unsigned, float);
@@ -58,11 +58,11 @@ extern "C"
 
     int OSPPTransactionGetFirstDestination(OSPTTRANHANDLE, unsigned, char *,
             char *, unsigned *, unsigned *, void *, unsigned, char *,
-            unsigned, char *, unsigned, char *,unsigned *, void *);
+            unsigned, char*, unsigned, char *, unsigned, char *,unsigned *, void *);
 
     int OSPPTransactionGetNextDestination(OSPTTRANHANDLE, enum OSPEFAILREASON,
             unsigned, char *, char *, unsigned *, unsigned *, void *, unsigned,
-            char *, unsigned, char *, unsigned, char *, unsigned *, void *);
+            char *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned *, void *);
 
     int OSPPTransactionInitializeAtDevice(OSPTTRANHANDLE, unsigned, const char *,
             const char *, const char *, const char *,const char *,OSPE_NUMBERING_FORMAT, const char *,
@@ -78,7 +78,7 @@ extern "C"
             const char *,const char *,unsigned, const void *, unsigned,
             const void *, unsigned *, unsigned *, unsigned *, void *,unsigned);
 
-    int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, unsigned, signed,
+    int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned, signed,
             unsigned, signed, unsigned *, void *);
 
     int OSPPTransactionRequestAuthorisation(OSPTTRANHANDLE, const char *, 

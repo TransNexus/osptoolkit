@@ -134,6 +134,10 @@ unsigned                           /* returns error code */
 OSPPUsageToElement(
     unsigned      ospvUsage,       /* usage value */
 		OSPTTIME		  ospvStartTime,	 /* optional, if not 0, call start time */
+		OSPTTIME		  ospvEndTime,	 /* optional, if not 0, call end time */
+		OSPTTIME		  ospvAlertTime,	 /* optional, if not 0, call alert time */
+    unsigned      ospvIsPDDInfoPresnt,       /* Is PDD info present variable */
+    unsigned      ospvPostDialDelay,       /* PDD value */
     OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
 )
 {
@@ -210,6 +214,39 @@ OSPPUsageToElement(
     {
         ospvErrCode = OSPPMsgTimeToElement(ospvStartTime,
                                           (const unsigned char *)OSPPMsgGetElemName(ospeElemStartTime), &elem);
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* optional (if not null) call end time */
+    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvEndTime != 0))
+    {
+        ospvErrCode = OSPPMsgTimeToElement(ospvEndTime,
+                                          (const unsigned char *)OSPPMsgGetElemName(ospeElemEndTime), &elem);
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* optional (if not null) call end time */
+    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvAlertTime != 0))
+    {
+        ospvErrCode = OSPPMsgTimeToElement(ospvAlertTime,
+                                          (const unsigned char *)OSPPMsgGetElemName(ospeElemAlertTime), &elem);
+        if (ospvErrCode == OSPC_ERR_NO_ERROR)
+        {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+        }
+    }
+
+    /* now add the PDD */
+    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvIsPDDInfoPresnt))
+    {
+        ospvErrCode = OSPPMsgNumToElement(ospvPostDialDelay,
+            (const unsigned char *)OSPPMsgGetElemName(ospeElemPostDialDelay), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(*ospvElem, elem);

@@ -16,19 +16,19 @@
 ;#
 ;# $Date: 2004/01/26 13:36:40 $
 ;#
-;# $Header: /tmp/OSPclient/osptoolkit/src/osp.def,v 1.2 2004/01/26 13:36:40 dmitry Exp $
+;# $Header: /home/scm/dev/cvsroot/src/osptoolkit/src/osp.def,v 1.2 2004/01/26 13:36:40 dmitry Exp $
 ;#
 ;# $Id: osp.def,v 1.2 2004/01/26 13:36:40 dmitry Exp $
 ;#
 ;# $Locker:  $
 ;#
-;# $Name:  $
+;# $Name: TK-3_2_0-20041104 $
 ;#
 ;# $RCSfile: osp.def,v $
 ;#
 ;# $Revision: 1.2 $
 ;#
-;# $Source: /tmp/OSPclient/osptoolkit/src/osp.def,v $
+;# $Source: /home/scm/dev/cvsroot/src/osptoolkit/src/osp.def,v $
 ;#
 ;# $State: Exp $
 ;#

@@ -63,6 +63,10 @@ typedef struct _NBUSEIND
   OSPTTRANHANDLE  ospvTransaction;              /* In - Transaction handle */
   unsigned        ospvDuration;                 /* In - Length of call */
   OSPTTIME        ospvStartTime;                /* In - StartTime of call */
+  OSPTTIME        ospvEndTime;                  /* In - EndTime of call */
+  OSPTTIME        ospvAlertTime;                /* In - AlertTime of call */
+  unsigned        ospvIsPDDInfoPresent;         /* In - Is PDD info present*/
+  unsigned        ospvPostDialDelay;            /* In - PDD */
   unsigned        ospvLossPacketsSent;          /* In - Packets not received by peer */
   signed          ospvLossFractionSent;         /* In - Fraction of packets not received by peer */
   unsigned        ospvLossPacketsReceived;      /* In - Packets not received that were expected */
@@ -542,6 +546,10 @@ WorkThread(void *arg)
                                                         transaction->Message.UseInd.ospvTransaction,
                                                         transaction->Message.UseInd.ospvDuration,
                                                         transaction->Message.UseInd.ospvStartTime,
+                                                        transaction->Message.UseInd.ospvEndTime,
+                                                        transaction->Message.UseInd.ospvAlertTime,
+                                                        transaction->Message.UseInd.ospvIsPDDInfoPresent,
+                                                        transaction->Message.UseInd.ospvPostDialDelay,
                                                         transaction->Message.UseInd.ospvLossPacketsSent,
                                                         transaction->Message.UseInd.ospvLossFractionSent,
                                                         transaction->Message.UseInd.ospvLossPacketsReceived,
@@ -900,6 +908,10 @@ int OSPPTransactionReportUsage_nb(
         OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction handle */
         unsigned        ospvDuration,                 /* In - Length of call */
         OSPTTIME        ospvStartTime,                /* In - StartTime of call */
+        OSPTTIME        ospvEndTime,                  /* In - EndTime of call */
+        OSPTTIME        ospvAlertTime,                /* In - AlertTime of call */
+        unsigned        ospvIsPDDInfoPresent,         /* In - Is PDD info available*/
+        unsigned        ospvPostDialDelay,            /* In - PDD */
         unsigned        ospvLossPacketsSent,          /* In - Packets not received by peer */
         signed          ospvLossFractionSent,         /* In - Fraction of packets not received by peer */
         unsigned        ospvLossPacketsReceived,      /* In - Packets not received that were expected */
@@ -926,6 +938,10 @@ int OSPPTransactionReportUsage_nb(
       nbData->Message.UseInd.ospvTransaction              = ospvTransaction;
       nbData->Message.UseInd.ospvDuration                 = ospvDuration;
       nbData->Message.UseInd.ospvStartTime                = ospvStartTime;
+      nbData->Message.UseInd.ospvEndTime                  = ospvEndTime;
+      nbData->Message.UseInd.ospvAlertTime                = ospvAlertTime;
+      nbData->Message.UseInd.ospvIsPDDInfoPresent         = ospvIsPDDInfoPresent;
+      nbData->Message.UseInd.ospvPostDialDelay            = ospvPostDialDelay;
       nbData->Message.UseInd.ospvLossPacketsSent          = ospvLossPacketsSent;
       nbData->Message.UseInd.ospvLossFractionSent         = ospvLossFractionSent;
       nbData->Message.UseInd.ospvLossPacketsReceived      = ospvLossPacketsReceived;

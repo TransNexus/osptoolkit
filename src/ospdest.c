@@ -120,6 +120,65 @@ OSPPDestHasNumber(
     return(ospvHasNumber);
 }
 
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPDestHasSrcNumber() - does the destination include a calling number?
+ *-----------------------------------------------------------------------*/
+unsigned                            /* returns non-zero if number exists */
+OSPPDestHasSrcNumber(
+    OSPTDEST *ospvDest              /* destination effected */
+)
+{
+    unsigned ospvHasSrcNumber = OSPC_FALSE;
+
+    if (ospvDest != OSPC_OSNULL) 
+    {
+        ospvHasSrcNumber = ((ospvDest)->ospmSrcNumber[0] != '\0');
+    }
+    return(ospvHasSrcNumber);
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPDestSetSrcNumber() - set the calling number for a destination
+ *-----------------------------------------------------------------------*/
+void                                       /* nothing returned */
+OSPPDestSetSrcNumber(
+    OSPTDEST            *ospvDest,         /* destination to set */
+    const unsigned char *ospvNum           /* calling number (as string) */
+)
+{
+    size_t  len = 0;
+
+    len=0;
+    if (ospvDest != OSPC_OSNULL) 
+    {
+        if (ospvNum  != OSPC_OSNULL) 
+        {
+            OSPM_MEMCPY((ospvDest)->ospmSrcNumber, 
+                (ospvNum), 
+                tr_min(OSPC_E164NUMSIZE,OSPM_STRLEN((const char *)ospvNum)+1));
+        }
+    }
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPDestGetSrcNumber() - returns the calling number for a destination
+ *-----------------------------------------------------------------------*/
+unsigned char *                     /* returns number as string */
+OSPPDestGetSrcNumber(
+    OSPTDEST *ospvDest                     /* destination */
+)
+{
+    unsigned char *ospvNum = OSPC_OSNULL;
+
+    if (ospvDest != OSPC_OSNULL) 
+    {
+        ospvNum = ospvDest->ospmSrcNumber;
+    }
+    return(ospvNum);
+}
 
 /**/
 /*-----------------------------------------------------------------------*
@@ -673,8 +732,6 @@ OSPPDestNew()
         OSPPListNew(&(ospvDest->ospmUpdatedSourceAddr));
         OSPPListNew(&(ospvDest->ospmUpdatedDeviceInfo));
         ospvDest->ospmDestHasLimit = OSPC_FALSE;
-        ospvDest->ospmHasDestAddrBeenModified = OSPC_FALSE;
-        ospvDest->ospmHasDestDevAddrBeenModified = OSPC_FALSE;
 
     }
 
@@ -797,6 +854,10 @@ OSPPDestFromElement(
                 case ospeElemDestOSPVersion:
                 	OSPPDestSetOSPVersion(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
                 	break;
+
+                case ospeElemSrcInfo:
+                OSPPDestSetSrcNumber(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
+                break;
 
                 case ospeElemDestInfo:
                 OSPPDestSetNumber(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));

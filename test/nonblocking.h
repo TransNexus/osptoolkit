@@ -144,6 +144,10 @@ extern "C"
             OSPTTRANHANDLE  ospvTransaction,              /* In - Transaction handle */
             unsigned        ospvDuration,                 /* In - Length of call */
             OSPTTIME        ospvStartTime,                /* In - StartTime of call */
+            OSPTTIME        ospvEndTime,                  /* In - EndTime of call */
+            OSPTTIME        ospvAlertTime,                /* In - AlertTime of call */
+            unsigned        ospvIsPDDInfoPresent,         /* In - Is PDD present*/
+            unsigned        ospvPostDialDelay,            /* In - PDD */
             unsigned        ospvLossPacketsSent,          /* In - Packets not received by peer */
             signed          ospvLossFractionSent,         /* In - Fraction of packets not received by peer */
             unsigned        ospvLossPacketsReceived,      /* In - Packets not received that were expected */

@@ -103,7 +103,10 @@ typedef enum
     ospeElemTNAuditMaxMessages,
     ospeElemCSAuditTrigger,
     ospeElemDestProtocol,
-    ospeElemDestOSPVersion
+    ospeElemDestOSPVersion,
+    ospeElemEndTime,
+    ospeElemAlertTime,
+    ospeElemPostDialDelay
 }
 OSPTMSGELEMPART;
 

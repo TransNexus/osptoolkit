@@ -415,6 +415,79 @@ OSPPUsageIndGetDuration(
 
 /**/
 /*-----------------------------------------------------------------------*
+ * OSPPUsageIndSetIsPDDInfoPresent() - set the IsPDDInfoPResent variable
+ *-----------------------------------------------------------------------*/
+void                                /* nothing returned */
+OSPPUsageIndSetIsPDDInfoPresent(
+    OSPTUSAGEIND *ospvUsageInd,     /* usage indication to set */
+    unsigned IsPDDInfoPresent /* duration to set to */
+)
+{
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        ospvUsageInd->ospvUsageIndIsPDDInfoPresent = IsPDDInfoPresent;
+    }
+    return;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndGetIsPDDInfoPresent() - gets the IsPDDInfoPResent variable.
+ *-----------------------------------------------------------------------*/
+int
+OSPPUsageIndGetIsPDDInfoPresent(
+    OSPTUSAGEIND *ospvUsageInd                     /* usage ind */
+)
+{
+    unsigned ospvIsPDDInfoPresent = 0;
+
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        ospvIsPDDInfoPresent = ospvUsageInd->ospvUsageIndIsPDDInfoPresent;
+    }
+    return ospvIsPDDInfoPresent;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndSetPostDialDelay() - set the PDD
+ *-----------------------------------------------------------------------*/
+void                                /* nothing returned */
+OSPPUsageIndSetPostDialDelay(
+    OSPTUSAGEIND *ospvUsageInd,     /* usage indication to set */
+    int ospvPostDialDelay /* PDD to set to */
+)
+{
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        if (ospvPostDialDelay  >= 0)
+        {
+            ospvUsageInd->ospmUsageIndPostDialDelay = ospvPostDialDelay;
+        }
+    }
+    return;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndGetPostDialDelay() - returns the PDD for a usage ind
+ *-----------------------------------------------------------------------*/
+int
+OSPPUsageIndGetPostDialDelay(
+    OSPTUSAGEIND *ospvUsageInd                     /* usage ind */
+)
+{
+    int ospvPostDialDelay = 0;
+
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        ospvPostDialDelay = ospvUsageInd->ospmUsageIndPostDialDelay;
+    }
+    return ospvPostDialDelay;
+}
+
+/**/
+/*-----------------------------------------------------------------------*
  * OSPPUsageIndHasTNCustId() - Does usage have a TransNexus Customer Id?
  *-----------------------------------------------------------------------*/
 unsigned                                   /* returns non-zero if time */
@@ -746,6 +819,76 @@ OSPPUsageIndGetStartTime(
     }
 
 		return(ospvStartTime);
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndSetEndTime() - Set Call End Time
+ *-----------------------------------------------------------------------*/
+void                                       /* nothing returned */
+OSPPUsageIndSetEndTime(
+    OSPTUSAGEIND *ospvUsageInd,
+    OSPTTIME      ospvEndTime
+)
+{
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        (ospvUsageInd)->ospmUsageIndEndTime = ospvEndTime;
+    }
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageGetGetEndTime() - Get Call End Time
+ *-----------------------------------------------------------------------*/
+OSPTTIME                                    /* call end time */
+OSPPUsageIndGetEndTime(
+    OSPTUSAGEIND *ospvUsageInd
+)
+{
+		OSPTTIME ospvEndTime = 0;
+
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        ospvEndTime = (ospvUsageInd)->ospmUsageIndEndTime;
+    }
+
+		return(ospvEndTime);
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageIndSetAlertTime() - Set Call Alert Time
+ *-----------------------------------------------------------------------*/
+void                                       /* nothing returned */
+OSPPUsageIndSetAlertTime(
+    OSPTUSAGEIND *ospvUsageInd,
+    OSPTTIME      ospvAlertTime
+)
+{
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        (ospvUsageInd)->ospmUsageIndAlertTime = ospvAlertTime;
+    }
+}
+
+/**/
+/*-----------------------------------------------------------------------*
+ * OSPPUsageGetGetAlertTime() - Get Call Alert Time
+ *-----------------------------------------------------------------------*/
+OSPTTIME                                    /* call alert time */
+OSPPUsageIndGetAlertTime(
+    OSPTUSAGEIND *ospvUsageInd
+)
+{
+		OSPTTIME ospvAlertTime = 0;
+
+    if (ospvUsageInd != OSPC_OSNULL)
+    {
+        ospvAlertTime = (ospvUsageInd)->ospmUsageIndAlertTime;
+    }
+
+		return(ospvAlertTime);
 }
 
 /**/
@@ -1499,7 +1642,9 @@ OSPPUsageIndToElement(
             {
                 ospvErrCode = OSPPUsageToElement(
                     (unsigned)OSPPUsageIndGetDuration(usage),
-                    OSPPUsageIndGetStartTime(usage),&subelem);
+                    OSPPUsageIndGetStartTime(usage),OSPPUsageIndGetEndTime(usage),
+                    OSPPUsageIndGetAlertTime(usage),OSPPUsageIndGetIsPDDInfoPresent(usage),
+                    OSPPUsageIndGetPostDialDelay(usage),&subelem);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
                     OSPPXMLElemAddChild(usgindelem, subelem);

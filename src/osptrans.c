@@ -313,11 +313,9 @@ OSPPTransactionBuildUsage(
             {
 
                 /* Get Source Number (Calling) */
-                if(OSPPAuthReqHasSourceNumber(ospvTrans->AuthReq))
+                if (OSPPDestHasSrcNumber(ospvDest)) 
                 {
-
-                    OSPPUsageIndSetSourceNumber(*ospvUsage, 
-                        OSPPAuthReqGetSourceNumber(ospvTrans->AuthReq));
+                    OSPPUsageIndSetSourceNumber(*ospvUsage,(unsigned char *)OSPPDestGetSrcNumber(ospvDest));
                 }
                 else
                 {
@@ -1126,6 +1124,12 @@ OSPPTransactionGetDestination(
     char                 *ospvCalledNumber,      
                         /* Out - Called number string */
 
+    unsigned             ospvSizeOfCallingNumber, 
+                        /* In - Max size of calling number */
+
+    char                 *ospvCallingNumber,      
+                        /* Out - Calling number string */
+
     unsigned             ospvSizeOfDestination,  
                         /* In - Max size of destination string */
 
@@ -1148,13 +1152,15 @@ OSPPTransactionGetDestination(
     int           errorcode   = OSPC_ERR_NO_ERROR,
                   timeflag    = OSPC_TRUE,
                   callidflag  = OSPC_TRUE,
-                  callednumflag    = OSPC_TRUE;
+                  callednumflag    = OSPC_TRUE,
+                  callingnumflag    = OSPC_TRUE;
     OSPTCALLID    *callid     = OSPC_OSNULL;
     OSPTDEST      *dest       = OSPC_OSNULL;
     OSPTSTATUS    *status     = OSPC_OSNULL;
     OSPTTIME      validtime   = 0;
     unsigned char *destnum    = OSPC_OSNULL,
-                  *sigaddr    = OSPC_OSNULL;
+                  *sigaddr    = OSPC_OSNULL,
+                  *callingnum = OSPC_OSNULL;
     OSPTTOKEN     *token      = OSPC_OSNULL;
 
     if ((ospvSizeOfCalledNumber == 0) || (ospvCalledNumber == NULL))
@@ -1162,6 +1168,10 @@ OSPPTransactionGetDestination(
         callednumflag = OSPC_FALSE;
     }
 
+    if ((ospvSizeOfCallingNumber == 0) || (ospvCallingNumber == NULL))
+    {
+        callingnumflag = OSPC_FALSE;
+    }
     if ((ospvSizeOfCallId == 0) || (ospvCallId == NULL))
     {
         callidflag = OSPC_FALSE;
@@ -1369,6 +1379,43 @@ OSPPTransactionGetDestination(
                     OSPM_MEMCPY(ospvCalledNumber, 
                         destnum,
                         strlen((const char *)destnum)+1);
+                }
+            }
+        }
+
+        /*
+         * Get the calling number now
+         */
+        if (errorcode == OSPC_ERR_NO_ERROR)
+        {
+            if (callingnumflag == OSPC_TRUE)
+            {
+                if (!OSPPDestHasSrcNumber(dest))
+                {
+                    /*
+                     * The source number is not present in the destination.
+                     * Not much we can do. Just return an empty calling number
+                     */
+                     ospvCallingNumber[0] = '\0';
+                }
+                else
+                {
+                    callingnum = (unsigned char *)OSPPDestGetSrcNumber(dest);
+                    if (ospvSizeOfCallingNumber < strlen((const char *)callingnum)+1)
+                    {
+                        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errorcode, 
+                            "not enough space for calling number");
+                    }
+                    else
+                    {
+                        /*
+                         * Get the calling number 
+                         */
+                        OSPM_MEMCPY(ospvCallingNumber, 
+                            callingnum,
+                            strlen((const char *)callingnum)+1);
+                    }
                 }
             }
         }
@@ -2119,18 +2166,18 @@ OSPPTransactionRequestNew(
              */
 
             if((ospvSource != OSPC_OSNULL) ||
-                (ospvTrans->NetworkId !=OSPC_OSNULL) ||
+                (ospvTrans->SrcNetworkId !=OSPC_OSNULL) ||
                 (ospvUser != OSPC_OSNULL))
             {
 
                 /* source alternates - create a linked list */
                 OSPPListNew((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqSourceAlternate));
 
-                if(ospvTrans->NetworkId != OSPC_OSNULL)
+                if(ospvTrans->SrcNetworkId != OSPC_OSNULL)
                 {
 
-                    altinfo = OSPPAltInfoNew(strlen(ospvTrans->NetworkId), 
-                        (const unsigned char *)ospvTrans->NetworkId,
+                    altinfo = OSPPAltInfoNew(strlen(ospvTrans->SrcNetworkId), 
+                        (const unsigned char *)ospvTrans->SrcNetworkId,
                         ospeNetwork);
 
                     if(altinfo != OSPC_OSNULL)
@@ -2342,6 +2389,7 @@ OSPPTransactionRequestNew(
 int
 OSPPTransactionResponseBuild(OSPTTRANS    *ospvTrans, 
                            const char   *ospvDestination, 
+                           const char   *ospvCallingNumber,
                            unsigned     ospvSizeOfCallId,
                            const void   *ospvCallId, 
                            unsigned     ospvSizeOfToken, 
@@ -2406,6 +2454,7 @@ OSPPTransactionResponseBuild(OSPTTRANS    *ospvTrans,
                           ospvSizeOfCallId);
 
         OSPPDestSetAddr(dest, (const unsigned char *)ospvDestination);
+        OSPPDestSetSrcNumber(dest, (const unsigned char *)ospvCallingNumber);
 
         OSPPAuthRspAddDest(ospvTrans->AuthRsp,dest);
 

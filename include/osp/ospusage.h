@@ -38,7 +38,7 @@
  *-----------------------------------------------------------------------*/
 
 unsigned OSPPUsageFromElement(OSPTXMLELEM *, unsigned *);
-unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTXMLELEM **);
+unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, OSPTXMLELEM **);
 
 #endif
 

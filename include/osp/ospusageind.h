@@ -40,6 +40,10 @@ typedef struct
     OSPTLISTLINK      ospmUsageIndLink;
     OSPTTIME          ospmUsageIndTimestamp;
     OSPTTIME          ospmUsageIndStartTime;
+    OSPTTIME          ospmUsageIndEndTime;
+    OSPTTIME          ospmUsageIndAlertTime;
+    OSPTTIME          ospmUsageIndPostDialDelay;
+    OSPTBOOL          ospvUsageIndIsPDDInfoPresent;
     unsigned char     *ospmUsageIndMessageId;
     unsigned char     *ospmUsageIndComponentId;
     unsigned          ospmUsageIndRole;
@@ -143,7 +147,15 @@ extern "C"
 
     void           OSPPUsageIndSetStartTime(OSPTUSAGEIND *, OSPTTIME ospvStartTime);
     OSPTTIME       OSPPUsageIndGetStartTime(OSPTUSAGEIND *);
+    void           OSPPUsageIndSetEndTime(OSPTUSAGEIND *, OSPTTIME ospvEndTime);
+    OSPTTIME       OSPPUsageIndGetEndTime(OSPTUSAGEIND *);
 
+    void           OSPPUsageIndSetAlertTime(OSPTUSAGEIND *, OSPTTIME ospvEndTime);
+    OSPTTIME       OSPPUsageIndGetAlertTime(OSPTUSAGEIND *);
+    void           OSPPUsageIndSetPostDialDelay(OSPTUSAGEIND *, int ospvPostDialDelay);
+    int            OSPPUsageIndGetPostDialDelay(OSPTUSAGEIND *);
+    void           OSPPUsageIndSetIsPDDInfoPresent(OSPTUSAGEIND *, unsigned ospvIsPDDInfoPresent);
+    int            OSPPUsageIndGetIsPDDInfoPresent(OSPTUSAGEIND *);
 #ifdef __cplusplus
 }
 #endif

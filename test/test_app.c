@@ -137,6 +137,7 @@ int CallingNumFormat=0,CalledNumFormat=0;
 unsigned long SPMsgCount[50];
 unsigned long *MsgCount = SPMsgCount;
 int DEF_HTTP_MAXCONN=30;
+unsigned IS_PDD_INFO_AVAILABLE=0;
 unsigned long CapSPMsgCount[50];
 unsigned long *CapMsgCount = CapSPMsgCount;
 
@@ -927,16 +928,25 @@ int
 testOSPPTransactionSetNetworkId()
 {
     int errorcode = 0,i=0;
-    char NetId[128];
+    char SrcNetId[128];
+    char DstNetId[128];
 
-    printf("Enter the Network Identifier : ");
+    printf("Enter the Source Network Identifier : ");
     fflush(stdin);
-    while ((NetId[i]=getchar()) != '\n')
+    while ((SrcNetId[i]=getchar()) != '\n')
       i++;
-    NetId[i] = '\0';
-    errorcode = OSPPTransactionSetNetworkId(
+    SrcNetId[i] = '\0';
+
+    i=0;
+    printf("Enter the Destination Network Identifier : ");
+    fflush(stdin);
+    while ((DstNetId[i]=getchar()) != '\n')
+      i++;
+    DstNetId[i] = '\0';
+
+    errorcode = OSPPTransactionSetNetworkIds(
         OSPVTransactionHandle,
-        NetId);
+        SrcNetId,DstNetId);
 
     return errorcode;
 
@@ -1110,8 +1120,10 @@ testOSPPTransactionGetFirstDestination()
         &timelimit,
         &callidsize,
         callid,
-        strlen(callednumber) + 1,
+        CALLED_NUM_SZ,
         callednumber,
+        CALLING_NUM_SZ,
+        callingnumber,
         DESTINATION_SZ,
         dest,
         DESTINATION_SZ,
@@ -1153,8 +1165,10 @@ testOSPPTransactionGetNextDestination()
         &timelimit,
         &callidsize,
         callid,
-        strlen(callednumber) + 1,
+        CALLED_NUM_SZ,
         callednumber,
+        CALLING_NUM_SZ,
+        callingnumber,
         DESTINATION_SZ,
         dest,
         DESTINATION_SZ,
@@ -1658,6 +1672,23 @@ testSetCalledNumber()
 }
 
 int
+testOSPPTransactionModifyDeviceIdentifiersAgain()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPTransactionModifyDeviceIdentifiers(
+          OSPVTransactionHandle,
+          "99.99.99.99",
+          "100.100.100.100",
+          "101.101.101.101",
+          "102.102.102.102" 
+          );
+
+    printf("errorcode = %d\n", errorcode);
+    return errorcode;
+}
+
+int
 testOSPPTransactionModifyDeviceIdentifiers()
 {
     int errorcode = 0;
@@ -1813,6 +1844,10 @@ testOSPPTransactionReportUsage()
             OSPVTransactionHandle,
             30,
 						time(NULL)-10,
+						time(NULL)+20,
+						time(NULL)-10,
+            IS_PDD_INFO_AVAILABLE,
+	    1, /* PDD */
             1,
             2,
             100,
@@ -1829,6 +1864,10 @@ testOSPPTransactionReportUsage()
             tranhandle2,
             30,
 						time(NULL)-10,
+						time(NULL)+20,
+						time(NULL)-10,
+            IS_PDD_INFO_AVAILABLE,
+	    1, /* PDD */
             1,
             2,
             100,
@@ -2205,6 +2244,9 @@ testAPI(int apinumber)
         case 46:
         errorcode = testOSPPTransactionModifyDeviceIdentifiers();
         break;
+        case 47:
+        errorcode = testOSPPTransactionModifyDeviceIdentifiersAgain();
+        break;
         case 50:
         errorcode = testSetCallingNumber();
         break;
@@ -2344,6 +2386,7 @@ testMenu()
       printf("41) %-6d Test Calls                 42) Not Implemented\n", num_test_calls);
       printf("43) BuildUsageFromScratch(OGW)        44) BuildUsageFromScratch(TGW)\n");
       printf("45) GetLookAheadInfoIfPresent         46) ModifyDeviceIdentifiers\n");
+      printf("47) ModifyDeviceIdentifiersAgain\n");
       printf("99) Sleep for 2 seconds\n");
       printf("---------------------------------------------------------------------\n");
       printf("Configuration Parameters \n");
@@ -2599,6 +2642,13 @@ GetConfiguration()
                                                                                                               ModifiedDstDevIP = _Strdup(tmp_addr); 
                                                                                                            }
                                                                                                         }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            if (strncmp(inbuf,"IS_PDD_INFO_AVAILABLE=",22) == 0)
+                                                                                                            {
+                                                                                                                IS_PDD_INFO_AVAILABLE = atoi(&inbuf[22]);
+                                                                                                            }
+                                                                                                        } 
                                                                                                     }
                                                                                                 }
                                                                                             }
@@ -2929,6 +2979,7 @@ testNonBlockingPerformanceTest(void *arg)
     NBMONITOR *nbMonitor    = NULL;
 
    char     Localcallednumber[CALLED_NUM_SZ];
+   char     Localcallingnumber[CALLING_NUM_SZ];
    char     Localdest[DESTINATION_SZ]       = { "" };
    char     Localdestdev[DESTINATION_SZ]    = { "" };
    char     Localvalidafter[TIMESTAMP_SZ],Localvaliduntil[TIMESTAMP_SZ];
@@ -3126,8 +3177,10 @@ testNonBlockingPerformanceTest(void *arg)
                                                         &Localtimelimit,
                                                         &CallIdsLen[i],
                                                         CallIds[i],
-                                                        strlen(Localcallednumber) + 1,
+                                                        CALLED_NUM_SZ,
                                                         Localcallednumber,
+                                                        CALLING_NUM_SZ,
+                                                        Localcallingnumber,
                                                         DESTINATION_SZ,
                                                         Localdest,
                                                         DESTINATION_SZ,
@@ -3164,7 +3217,7 @@ testNonBlockingPerformanceTest(void *arg)
                                                             Localdest,
                                                             NULL,
                                                             NULL,
-                                                            callingnumber,
+                                                            Localcallingnumber,
                                                             CallingNumFormat,
                                                             Localcallednumber,
                                                             CalledNumFormat,
@@ -3219,7 +3272,11 @@ testNonBlockingPerformanceTest(void *arg)
                                                     &OErrorCodes[i],
                                                     OTransactionHandles[i],
                                                     30,
-																										time(NULL)-10,
+						time(NULL)-10,
+						time(NULL)+20,
+						time(NULL)-10,
+            					    IS_PDD_INFO_AVAILABLE,
+                                                    1, /* PDD*/
                                                     1,
                                                     2,
                                                     100,
@@ -3238,7 +3295,11 @@ testNonBlockingPerformanceTest(void *arg)
                                                     &TErrorCodes[i],
                                                     TTransactionHandles[i],
                                                     30,
-																										time(NULL)-10,
+						time(NULL)-10,
+						time(NULL)+20,
+						time(NULL)-10,
+            					    IS_PDD_INFO_AVAILABLE,
+                                                    1, /* PDD*/
                                                     1,
                                                     2,
                                                     100,

@@ -92,7 +92,8 @@ typedef struct _OSPTTRANS
     OSPTBOOL                    HasGetDestSucceeded;
     unsigned                    Counter;
     unsigned                    Duration;
-    char                        *NetworkId;
+    char                        *SrcNetworkId;
+    char                        *DstNetworkId;
     unsigned                    SizeOfDetailLog;
     void                        *DetailLog;
     OSPTSTATISTICS              *TNStatistics;
@@ -170,7 +171,7 @@ void           OSPPTransactionGetIsModifyDeviceIdAllowed(OSPTTRANS *, OSPTBOOL *
 int            OSPPTransactionGetDestAllowed(OSPTTRANS *);
 int            OSPPTransactionGetDestination(OSPTTRANS *, enum OSPEFAILREASON,
                    unsigned, char *, char *, unsigned *, unsigned *, void *,
-                   unsigned, char *, unsigned, char *, unsigned, char *,
+                   unsigned, char *, unsigned, char *, unsigned, char *, unsigned, char *,
                    unsigned *, void *);
 int         OSPPTransactionGetNewContext(OSPTPROVHANDLE, OSPTTRANHANDLE *);
 int         OSPPTransactionGetProvider(OSPTTRANS *, struct _OSPTPROVIDER **);
@@ -186,7 +187,7 @@ int         OSPPTransactionRequestNew(OSPTTRANS *, const char *, const char *,
                    const char *, const char *, const char *, unsigned, 
                    OSPTCALLID *[], const char *[], unsigned *, unsigned *, 
                    void *);
-int         OSPPTransactionResponseBuild(OSPTTRANS *, const char *, unsigned,
+int         OSPPTransactionResponseBuild(OSPTTRANS *, const char *, const char *, unsigned,
                    const void *, unsigned, const void *);
 int         OSPPTransactionSetProvider(OSPTTRANS *, struct _OSPTPROVIDER *);
 void        OSPPTransactionSetState(OSPTTRANS *, OSPE_TRANS_STATE);
