@@ -71,6 +71,12 @@ OSPPXMLElementProcess(
      */
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
+       /* Possible Optimization - 
+        * Instead of allocating buffer for the below mentioned size,
+        * allocate for OSPC_XMLDOC_DECLLEN byte's.
+        * This will cut down on some subsequent malloc calls.
+        */ 
+
         if((outbuffer = OSPPBfrNew(0))!=NULL) 
         {
             errorcode = OSPPXMLDocCreate(ospvElem, &outbuffer);
