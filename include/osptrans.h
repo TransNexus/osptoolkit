@@ -84,6 +84,7 @@ typedef struct _OSPTTRANS
     OSPTBOOL                    HasTransactionID;
     unsigned                    Counter;
     unsigned                    Duration;
+    const char                  *NetworkId;
     unsigned                    SizeOfDetailLog;
     void                        *DetailLog;
     OSPTSTATISTICS              *TNStatistics;
