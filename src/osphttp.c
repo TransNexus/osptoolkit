@@ -878,22 +878,21 @@ osppHttpSelectConnection(
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
             ospvComm->RoundRobinIndex = ((ospvComm->RoundRobinIndex)+1) % maxcount;
+            /* 
+             * check connection type. make sure it syncs up with the type of
+             * msginfo we are about to send.
+             */
+            if ((ospvMsgInfoType & OSPC_MSGINFO_AUDIT_TYPE) == 0)
+            {
+                if (((*ospvHttp)->Flags & OSPC_HTTP_AUDIT_TYPE) == OSPC_HTTP_AUDIT_TYPE)
+                createnew = OSPC_TRUE;
+            }
+            else
+            {
+                if (((*ospvHttp)->Flags & OSPC_HTTP_AUDIT_TYPE) != OSPC_HTTP_AUDIT_TYPE)
+                createnew = OSPC_TRUE;
+            } 
         }
-
-        /* 
-         * check connection type. make sure it syncs up with the type of
-         * msginfo we are about to send.
-         */
-        if ((ospvMsgInfoType & OSPC_MSGINFO_AUDIT_TYPE) == 0)
-        {
-            if (((*ospvHttp)->Flags & OSPC_HTTP_AUDIT_TYPE) == OSPC_HTTP_AUDIT_TYPE)
-            createnew = OSPC_TRUE;
-        }
-        else
-        {
-            if (((*ospvHttp)->Flags & OSPC_HTTP_AUDIT_TYPE) != OSPC_HTTP_AUDIT_TYPE)
-            createnew = OSPC_TRUE;
-        } 
     }
 
     if (createnew)
@@ -926,10 +925,10 @@ osppHttpSelectConnection(
              * by 1 everytime a new connection is created.
              */
             errorcode = OSPPCommGetHttpConnCount(ospvComm,&current_conn_count); 
-            osppHttpCopySPList(ospvComm,ospvHttp,current_conn_count);
 
             if (errorcode == OSPC_ERR_NO_ERROR)
             {
+                osppHttpCopySPList(ospvComm,ospvHttp,current_conn_count);
                 (void)OSPPCommIncrementHttpConnCount(ospvComm);
                 errorcode = OSPPCommGetHttpConnCount(ospvComm,&current_conn_count);
                 if ((errorcode == OSPC_ERR_NO_ERROR) && (current_conn_count == maxcount))
@@ -1203,7 +1202,7 @@ OSPPHttpRequestHandoff(
     OSPTCOMM     *ospvComm, 
     OSPTMSGQUEUE *ospvMsgQueue)
 {
-    int         errorcode  = OSPC_ERR_NO_ERROR;
+    int         err=OSPC_ERR_NO_ERROR,errorcode  = OSPC_ERR_NO_ERROR;
     OSPTMSGINFO *msginfo   = OSPC_OSNULL;
     OSPTHTTP    *httpconn  = OSPC_OSNULL;
     int         attempts   = 0;
@@ -1218,17 +1217,30 @@ OSPPHttpRequestHandoff(
      */
 
     /*
-     * get the first msginfo item from the msg queue list
+     * acquire message queue mutex
      */
-    msginfo = (OSPTMSGINFO *)OSPPListFirst(
+     OSPM_MUTEX_LOCK(ospvMsgQueue->Mutex, errorcode);
+
+     if(errorcode == OSPC_ERR_NO_ERROR)
+     {
+       /*
+        * get the first msginfo item from the msg queue list
+        */
+       msginfo = (OSPTMSGINFO *)OSPPListFirst(
         (OSPTLIST *)&(ospvMsgQueue->MsgInfoList));
-    if (msginfo == (OSPTMSGINFO *)OSPC_OSNULL)
-    {
+       if (msginfo == (OSPTMSGINFO *)OSPC_OSNULL)
+       {
+        /*
+         * release the mutex lock
+         */
+        OSPM_MUTEX_UNLOCK(ospvMsgQueue->Mutex,err);
+        assert (err==OSPC_ERR_NO_ERROR);
+
         errorcode = OSPC_ERR_HTTP_BAD_QUEUE;
         OSPM_DBGERRORLOG(errorcode, "msg queue prematurely empty");
-    }
-    else
-    {
+       }
+       else
+       {
         /*
          * Now remove the message info item from the comm
          * message queue
@@ -1245,6 +1257,11 @@ OSPPHttpRequestHandoff(
          * decrement the message queue transaction count
          */
         OSPPMsgQueueDecrementNumberOfTransactions(ospvMsgQueue);
+        /*
+         * release the mutex lock
+         */
+        OSPM_MUTEX_UNLOCK(ospvMsgQueue->Mutex,err);
+        assert (err==OSPC_ERR_NO_ERROR);
 
         /*
          * try at most 3 times to get an HTTP connection object. in
@@ -1322,9 +1339,10 @@ OSPPHttpRequestHandoff(
                 assert(errorcode == OSPC_ERR_NO_ERROR);
             }
         }
-    }
-    OSPM_DBGEXIT(("EXIT : OSPPHttpRequestHandoff\n"));
-    return errorcode;
+       }
+     }
+     OSPM_DBGEXIT(("EXIT : OSPPHttpRequestHandoff\n"));
+     return errorcode;
 }
 
 void

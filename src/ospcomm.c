@@ -85,6 +85,12 @@ osppCommMonitor(
             if (msgqueue->NumberOfTransactions > 0 && errorcode == OSPC_ERR_NO_ERROR)
             {
                 /*
+                 * release the mutex lock
+                 */
+                OSPM_MUTEX_UNLOCK(msgqueue->Mutex, tmperror);
+                assert(tmperror == OSPC_ERR_NO_ERROR);
+
+                /*
                  * send the new msg request to the HTTP connection
                  * module
                  */
@@ -103,12 +109,12 @@ osppCommMonitor(
                  */
                 OSPPCommShutdownConnections((*comm), (*comm)->ShutdownTimeLimit);
                 shutdown = OSPC_TRUE;
+                /*
+                 * release the mutex lock
+                 */
+                OSPM_MUTEX_UNLOCK(msgqueue->Mutex, tmperror);
+                assert(tmperror == OSPC_ERR_NO_ERROR);
             }
-            /*
-             * release the mutex lock
-             */
-            OSPM_MUTEX_UNLOCK(msgqueue->Mutex, tmperror);
-            /* assert(tmperror == OSPC_ERR_NO_ERROR); */
 
             if (shutdown)
                 break;
