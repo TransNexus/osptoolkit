@@ -43,6 +43,7 @@ typedef struct _OSPTPROVIDER
 {
     unsigned char              ProviderInUse;
     OSPTCOMM                   *Comm;
+    OSPTCOMM                   *CommForCapabilities;
     struct _OSPTTRANCOLLECTION *TransCollection;
     OSPTAUDIT                  *Audit;
     OSPTTXID                   *Id;
