@@ -72,6 +72,8 @@
 /* POSIX thread typedefs, applies to UNIX and WIN32 */
 
 #define OSPM_THR_SELF() pthread_self()
+
+#define OSPM_THR_JOIN(t,p) pthread_join(t,p)
     
 #define OSPM_CREATE_THREAD(t,a,f,p,e) { \
     e = pthread_create(&t, a, f, p); \
