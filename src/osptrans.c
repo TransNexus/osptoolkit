@@ -2189,7 +2189,7 @@ OSPPTransactionResponseBuild(OSPTTRANS    *ospvTrans,
                           (const unsigned char *)ospvCallId,
                           ospvSizeOfCallId);
 
-        OSPPDestSetNumber(dest, (const unsigned char *)ospvDestination);
+        OSPPDestSetAddr(dest, (const unsigned char *)ospvDestination);
 
         OSPPAuthRspAddDest(ospvTrans->AuthRsp,dest);
 
