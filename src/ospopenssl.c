@@ -123,9 +123,11 @@ OSPPSSLWrapInit(void *ospvRef)
 void
 OSPPOpenSSLInit(OSPTBOOL hw_enabled)
 {
-    SSLeay_add_ssl_algorithms();
-    SSL_load_error_strings();
+    SSL_library_init();
+    OpenSSL_add_all_algorithms();
     OpenSSL_add_all_digests();
+    ERR_load_ERR_strings();
+    ERR_load_crypto_strings();
 
     bio_stdout=BIO_new_fp(stdout,BIO_NOCLOSE);
 
