@@ -687,28 +687,27 @@ osppHttpMinTransCheck(
     OSPTHTTP **ospvHttp,
     unsigned timeout)
 {
-    OSPTTIME theTime   = 0L;
-
-    unsigned int elapsedTime = 0;
-    unsigned int currentTime = 0;
-    unsigned int referenceTime = 0;
+    OSPTTIME     startTime        = 0L;
+    OSPTTIME     currentTime      = 0L;
+    unsigned int startMilliTime   = 0;
+    unsigned int currentMilliTime = 0;
+    unsigned int elapsedTime      = 0;
 
     int      errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER : osppHttpMinTransCheck\n"));
 
     /* Get a reference time */
-    errorcode = OSPPOSTimeGetTime(&theTime, &referenceTime);
+    errorcode = OSPPOSTimeGetTime(&startTime, &startMilliTime);
 
-    do
+    while( (errorcode == OSPC_ERR_NO_ERROR) && (*ospvHttp == (OSPTHTTP *)OSPC_OSNULL) )
     {
-        if (ospvHttp == OSPC_OSNULL)
-        {
             /* Get the first item in the queue */
             *ospvHttp = (OSPTHTTP *)OSPPListFirst((OSPTLIST *)ospvHttpList);
             if(*ospvHttp == OSPC_OSNULL)
             {
                 errorcode = OSPC_ERR_HTTP_BAD_QUEUE;
+                OSPM_DBGERRORLOG(errorcode, "http msg queue corrupted");
                 break;
             }
 
@@ -717,7 +716,7 @@ osppHttpMinTransCheck(
             {
 
                 /* If this item in the list has an empty queue... */
-                if (&(*ospvHttp)->NumberOfTransactions == 0)
+                if ((*ospvHttp)->NumberOfTransactions == 0)
                 {
                     /* ...break out of the while loop with ospvHttp pointing */
                     /* to the item */
@@ -730,21 +729,22 @@ osppHttpMinTransCheck(
             }
 
             /* Get the current time */
-            errorcode = OSPPOSTimeGetTime(&theTime, &currentTime);
+            errorcode = OSPPOSTimeGetTime(&currentTime, &currentMilliTime);
 
             /* Check to make sure there are no problems... */
             if(errorcode == OSPC_ERR_NO_ERROR)
             {
-                /* ...if no problems, calculate the elapsed time */
-                elapsedTime = currentTime - referenceTime;
-            }
-        }
-        else
-        {
-            break;
-        }
+                /* ...if no problems, calculate the elapsed time in millisieconds */
+                elapsedTime = ((currentTime - startTime) * 1000) + ((int)currentMilliTime - (int)startMilliTime);
 
-    } while((*ospvHttp == OSPC_OSNULL)&&(elapsedTime < timeout)&&(errorcode == OSPC_ERR_NO_ERROR));
+                /* Check for time out */
+                if(elapsedTime >= timeout)
+                {
+                  errorcode = OSPC_ERR_HTTP_CONN_SRCH_TIMEOUT;
+                  OSPM_DBGERRORLOG(errorcode, "search for connection timedout");
+                }
+            }
+    }
 
     OSPM_DBGEXIT(("EXIT : osppHttpMinTransCheck\n"));
     return errorcode;
@@ -817,22 +817,11 @@ osppHttpSelectConnection(
                 /*
                  * connection limit has been reached. Find a queue with no
                  * transactions and use it; otherwise, wait for a queue to
-                 * become empty.
+                 * become empty.  The call may time out.
                  */
 
                 errorcode = osppHttpMinTransCheck(&(ospvComm->HttpConnList),
                     &(*ospvHttp), ospvComm->HttpTimeout);
-                if ((*ospvHttp == (OSPTHTTP *)OSPC_OSNULL)||(errorcode != OSPC_ERR_NO_ERROR))
-                {
-                    if(errorcode == OSPC_ERR_HTTP_BAD_QUEUE)
-                    {
-                        OSPM_DBGERRORLOG(errorcode, "http msg queue corrupted");
-                    }
-                    else
-                    {
-                        OSPM_DBGERRORLOG(errorcode, "search for connection timedout");
-                    }
-                }
             }
         }
         else
@@ -1000,12 +989,7 @@ OSPPHttpRequestHandoff(
              * request off to.
              */
             errorcode = osppHttpSelectConnection(ospvComm, &httpconn, msginfo->Flags);
-            if (errorcode != OSPC_ERR_NO_ERROR)
-            {
-                msginfo->ErrorCode = OSPC_ERR_HTTP_MALLOC_FAILED;
-                OSPM_DBGERRORLOG(msginfo->ErrorCode, "httpconn is NULL");
-            }
-            else
+            if (errorcode == OSPC_ERR_NO_ERROR)
             {
                 /*
                  * add the msginfo item to the selected HTTP connection
@@ -1019,6 +1003,14 @@ OSPPHttpRequestHandoff(
                 msginfo->ErrorCode = osppHttpAddRequest(httpconn, msginfo);
                 if (msginfo->ErrorCode == OSPC_ERR_NO_ERROR)
                     break;
+            }
+            else
+            {
+                /*
+                 * SelectConnection failed.  Save the error code and break
+                 */
+                msginfo->ErrorCode = errorcode;
+                break;
             }
         }
 
@@ -1035,6 +1027,21 @@ OSPPHttpRequestHandoff(
                 assert(errorcode == OSPC_ERR_NO_ERROR);
 
                 OSPM_MUTEX_UNLOCK(httpconn->Mutex, errorcode);
+                assert(errorcode == OSPC_ERR_NO_ERROR);
+            }
+        }
+        else
+        {
+          /*
+           * Signal caller that the request failed
+           */
+            OSPM_MUTEX_LOCK(msginfo->Mutex, errorcode);
+            if (errorcode == OSPC_ERR_NO_ERROR)
+            {
+                OSPM_CONDVAR_SIGNAL(msginfo->CondVar, errorcode);
+                assert(errorcode == OSPC_ERR_NO_ERROR);
+
+                OSPM_MUTEX_UNLOCK(msginfo->Mutex, errorcode);
                 assert(errorcode == OSPC_ERR_NO_ERROR);
             }
         }
