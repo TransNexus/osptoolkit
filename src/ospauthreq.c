@@ -26,17 +26,17 @@
  *  ospauthreq.c - OSP authorisation request functions
  */
 
-#include "osp.h"
-#include "osperrno.h"
-#include "ospbfr.h"
-#include "ospxmlattr.h"
-#include "ospxmlelem.h"
-#include "ospmsgattr.h"
-#include "ospmsgelem.h"
-#include "ospcallid.h"
-#include "ospauthreq.h"
-#include "osputils.h"
-#include "osptrans.h"
+#include "osp/osp.h"
+#include "osp/osperrno.h"
+#include "osp/ospbfr.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospmsgelem.h"
+#include "osp/ospcallid.h"
+#include "osp/ospauthreq.h"
+#include "osp/osputils.h"
+#include "osp/osptrans.h"
 
 /**/
 /*-----------------------------------------------------------------------*

@@ -26,18 +26,18 @@
  * ospreauthrsp.c - OSP reauthorisation response functions
  */
 
-#include "osp.h"
-#include "osperrno.h"
-#include "ospbfr.h"
-#include "osplist.h"
-#include "ospxmlattr.h"
-#include "ospxmlelem.h"
-#include "ospmsgattr.h"
-#include "ospmsgelem.h"
-#include "ospdest.h"
-#include "ospreauthrsp.h"
-#include "ospstatus.h"
-#include "osputils.h"
+#include "osp/osp.h"
+#include "osp/osperrno.h"
+#include "osp/ospbfr.h"
+#include "osp/osplist.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospmsgelem.h"
+#include "osp/ospdest.h"
+#include "osp/ospreauthrsp.h"
+#include "osp/ospstatus.h"
+#include "osp/osputils.h"
 
 /**/
 /*-----------------------------------------------------------------------*

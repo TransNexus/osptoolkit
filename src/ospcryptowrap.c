@@ -24,10 +24,10 @@
 #include <malloc.h>
 #include <stdio.h>
 
-#include "osp.h"
-#include "ospcryptowrap.h"
-#include "osptnlog.h"
-#include "osperrno.h"
+#include "osp/osp.h"
+#include "osp/ospcryptowrap.h"
+#include "osp/osptnlog.h"
+#include "osp/osperrno.h"
 
 
 

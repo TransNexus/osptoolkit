@@ -26,10 +26,10 @@
  * ospxmlutil.c - Utility functions for parsing and encoding XML documents.
  */
 
-#include "osp.h"
-#include "ospbfr.h"
-#include "ospxmltype.h"
-#include "ospxmldoc.h"
+#include "osp/osp.h"
+#include "osp/ospbfr.h"
+#include "osp/ospxmltype.h"
+#include "osp/ospxmldoc.h"
 
 
 /* pre-defined entity names */

@@ -25,13 +25,13 @@
 /*
  * ospxml.cpp - XML functions
  */
-#include "osp.h"
-#include "osperrno.h"
-#include "ospxml.h"
-#include "ospmsg.h"
-#include "ospbfr.h"
-#include "ospxmldoc.h"
-#include "osptokeninfo.h"
+#include "osp/osp.h"
+#include "osp/osperrno.h"
+#include "osp/ospxml.h"
+#include "osp/ospmsg.h"
+#include "osp/ospbfr.h"
+#include "osp/ospxmldoc.h"
+#include "osp/osptokeninfo.h"
 #ifndef OSP_SDK
 #   include "trxreauthrsp.h"
 #   include "trxauthrsp.h"
@@ -40,13 +40,13 @@
 #   include "trxreauthreq.h"
 #   include "trxauthreq.h"
 #else
-#   include "ospauthreq.h"
-#   include "ospauthrsp.h"
-#   include "ospusagecnf.h"
-#   include "ospusageind.h"
-#   include "ospreauthreq.h"
-#   include "ospreauthrsp.h"
-#   include "ospcapind.h"
+#   include "osp/ospauthreq.h"
+#   include "osp/ospauthrsp.h"
+#   include "osp/ospusagecnf.h"
+#   include "osp/ospusageind.h"
+#   include "osp/ospreauthreq.h"
+#   include "osp/ospreauthrsp.h"
+#   include "osp/ospcapind.h"
 #endif /* NOT OSP_SDK */
 
 

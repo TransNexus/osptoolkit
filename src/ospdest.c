@@ -25,19 +25,19 @@
  * ospdest.c - OSP destination functions
  */
 
-#include "osp.h"
-#include "osperrno.h"
-#include "ospbfr.h"
-#include "osplist.h"
-#include "ospxmlattr.h"
-#include "ospxmlelem.h"
-#include "ospmsgattr.h"
-#include "ospmsgelem.h"
-#include "ospcallid.h"
-#include "osptoken.h"
-#include "ospdest.h"
-#include "ospusage.h"
-#include "ospaltinfo.h"
+#include "osp/osp.h"
+#include "osp/osperrno.h"
+#include "osp/ospbfr.h"
+#include "osp/osplist.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospmsgelem.h"
+#include "osp/ospcallid.h"
+#include "osp/osptoken.h"
+#include "osp/ospdest.h"
+#include "osp/ospusage.h"
+#include "osp/ospaltinfo.h"
 
 /**/
 /*-----------------------------------------------------------------------*

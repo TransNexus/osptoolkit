@@ -25,8 +25,8 @@
 /*
  * ospinit.cpp - Provider space initialization.
  */
-#include "osp.h"
-#include "ospprovider.h"
+#include "osp/osp.h"
+#include "osp/ospprovider.h"
 
 OSPTPROVIDER    OSPVProviderCollection[OSPC_MAX_PROVIDERS];
 OSPTMUTEX       OSPVProviderMutex;

@@ -25,10 +25,10 @@
  * ospmsgque.cpp - MsgQueue object funcions.
  */
 
-#include "osp.h"
-#include "ospmsgque.h"
-#include "ospmsginfo.h"
-#include "osplist.h"
+#include "osp/osp.h"
+#include "osp/ospmsgque.h"
+#include "osp/ospmsginfo.h"
+#include "osp/osplist.h"
 
 static
 int

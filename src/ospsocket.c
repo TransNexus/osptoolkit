@@ -24,13 +24,13 @@
 /*
  * ospsocket.cpp - Socket functions.
  */
-#include "osp.h"
-#include "ospconfig.h"
-#include "ospsocket.h"
-#include "osputils.h"
-#include "ospcomm.h"
-#include "osphttp.h"
-#include "ospssl.h"
+#include "osp/osp.h"
+#include "osp/ospconfig.h"
+#include "osp/ospsocket.h"
+#include "osp/osputils.h"
+#include "osp/ospcomm.h"
+#include "osp/osphttp.h"
+#include "osp/ospssl.h"
 
 int
 OSPPSockClose(

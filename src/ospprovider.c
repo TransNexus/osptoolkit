@@ -25,10 +25,10 @@
 /*
  * ospprovider.cpp - Global provider functions.
  */
-#include "osp.h"
-#include "ospinit.h"    
-#include "ospprovider.h"
-#include "osptrans.h"
+#include "osp/osp.h"
+#include "osp/ospinit.h"    
+#include "osp/ospprovider.h"
+#include "osp/osptrans.h"
 
 extern OSPTPROVIDER OSPVProviderCollection[];
 extern OSPTMUTEX    OSPVProviderMutex;

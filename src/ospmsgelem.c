@@ -25,9 +25,9 @@
  * ospxmlmsgelem.c - XML element processing specific to OSP.
  */
 
-#include "osp.h"
-#include "ospmsgdesc.h"
-#include "ospmsgelem.h"
+#include "osp/osp.h"
+#include "osp/ospmsgdesc.h"
+#include "osp/ospmsgelem.h"
 
 
 /**/

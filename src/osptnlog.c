@@ -33,7 +33,7 @@
  * for its instructional value, and is not guaranteed
  * for any particular purpose.
  */
-#include "osptnlog.h"
+#include "osp/osptnlog.h"
 #ifndef _WIN32
 #include <stdio.h>
 #include <sys/types.h>

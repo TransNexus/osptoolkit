@@ -38,8 +38,8 @@
  */
 
 #include "assert.h"
-#include "osp.h"
-#include "ospxmltype.h"
+#include "osp/osp.h"
+#include "osp/ospxmltype.h"
 
 /*
  * the XML ctype-like array; this is not a static array so we can

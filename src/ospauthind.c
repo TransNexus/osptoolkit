@@ -26,18 +26,18 @@
  * ospauthind.c - OSP authorisation indication functions
  */
 
-#include "osp.h"
-#include "osperrno.h"
-#include "ospbfr.h"
-#include "osplist.h"
-#include "ospxmlattr.h"
-#include "ospxmlelem.h"
-#include "ospmsgattr.h"
-#include "ospmsgelem.h"
-#include "ospcallid.h"
-#include "osptoken.h"
-#include "ospauthind.h"
-#include "osputils.h"
+#include "osp/osp.h"
+#include "osp/osperrno.h"
+#include "osp/ospbfr.h"
+#include "osp/osplist.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospmsgelem.h"
+#include "osp/ospcallid.h"
+#include "osp/osptoken.h"
+#include "osp/ospauthind.h"
+#include "osp/osputils.h"
 
 /**/
 /*-----------------------------------------------------------------------*

@@ -25,8 +25,8 @@
 /*
  * ospmsginfo.c
  */
-#include "osp.h"
-#include "ospmsginfo.h"
+#include "osp/osp.h"
+#include "osp/ospmsginfo.h"
 
 static
 int

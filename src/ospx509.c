@@ -25,14 +25,14 @@
  * ospx509.c - Member functions for X509 Certificate object.
  */
 
-#include "osp.h"
-#include "ospasn1.h"
-#include "osppkcs1.h"
-#include "ospx509.h"
-#include "ospx500.h"
-#include "osptnlog.h"
-#include "ospostime.h"
-#include "ospcrypto.h"
+#include "osp/osp.h"
+#include "osp/ospasn1.h"
+#include "osp/osppkcs1.h"
+#include "osp/ospx509.h"
+#include "osp/ospx500.h"
+#include "osp/osptnlog.h"
+#include "osp/ospostime.h"
+#include "osp/ospcrypto.h"
 
 
 

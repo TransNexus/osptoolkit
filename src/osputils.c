@@ -25,9 +25,9 @@
 /*
  * osputils.h - Utility functions.
  */
-#include "osp.h"
-#include "osputils.h"
-#include "osplist.h"
+#include "osp/osp.h"
+#include "osp/osputils.h"
+#include "osp/osplist.h"
 
 
 /* Build a string given a uint64 and an int.

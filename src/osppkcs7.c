@@ -25,15 +25,15 @@
  * osppkcs7.c - PKCS #7 Cryptographic message object processing functions.
  */
 
-#include "osp.h"
-#include "ospasn1.h"
-#include "osppkcs1.h"
-#include "ospx509.h"
-#include "ospx500.h"
-#include "osppkcs1.h"
-#include "osppkcs7.h"
-#include "ospcrypto.h"
-#include "osptnlog.h"
+#include "osp/osp.h"
+#include "osp/ospasn1.h"
+#include "osp/osppkcs1.h"
+#include "osp/ospx509.h"
+#include "osp/ospx500.h"
+#include "osp/osppkcs1.h"
+#include "osp/osppkcs7.h"
+#include "osp/ospcrypto.h"
+#include "osp/osptnlog.h"
 #define DUMPOBJECTDATA(a, b)    { unsigned char *_data; unsigned int _dataLength; OSPTASN1ELEMENTINFO *_eInfo; OSPPASN1ObjectGetElementInfo(a, &_eInfo); OSPPASN1ElementGetElementData(_eInfo, &_data, &_dataLength); OSPTNLOGDUMP(_data, _dataLength, b); }
 
 

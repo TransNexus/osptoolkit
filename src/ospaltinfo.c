@@ -25,13 +25,13 @@
  * ospaltinfo.c - OSP alt info functions
  */
 
-#include "osp.h"
-#include "osperrno.h"
-#include "ospmsgdesc.h"
-#include "ospmsgelem.h"
-#include "ospmsg.h"
-#include "ospmsgattr.h"
-#include "ospaltinfo.h"
+#include "osp/osp.h"
+#include "osp/osperrno.h"
+#include "osp/ospmsgdesc.h"
+#include "osp/ospmsgelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospaltinfo.h"
 
 OSP_TYPE_ATTR_STRUCT OSPVTypeStringTable[] = {
     {ospetypeupper,     "top"},

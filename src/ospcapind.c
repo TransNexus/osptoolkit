@@ -25,22 +25,22 @@
 /*
  * osptcapind.c
  */
-#include "osp.h"
-#include "osptrans.h"
-#include "ospprovider.h"
-#include "ospsecurity.h"
-#include "ospmime.h"
-#include "osputils.h"
-#include "ospmsgque.h"
-#include "ospmsginfo.h"
-#include "ospmsgattr.h"
-#include "ospxml.h"
-#include "ospxmlattr.h"
-#include "ospmsg.h"
-#include "ospcomm.h"
-#include "ospcapind.h"
-#include "ospfail.h"
-#include "ospaltinfo.h"
+#include "osp/osp.h"
+#include "osp/osptrans.h"
+#include "osp/ospprovider.h"
+#include "osp/ospsecurity.h"
+#include "osp/ospmime.h"
+#include "osp/osputils.h"
+#include "osp/ospmsgque.h"
+#include "osp/ospmsginfo.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospxml.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospmsg.h"
+#include "osp/ospcomm.h"
+#include "osp/ospcapind.h"
+#include "osp/ospfail.h"
+#include "osp/ospaltinfo.h"
 
 
 /*

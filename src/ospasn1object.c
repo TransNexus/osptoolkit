@@ -25,8 +25,8 @@
  * ospasn1object.c  Functions to implement PKCS7 ASN1 Objects 
  */
 
-#include "osp.h"
-#include "ospasn1.h"
+#include "osp/osp.h"
+#include "osp/ospasn1.h"
 
 #define OSPC_ERR_PKCS7                              (25500)
 #define OSPC_ERR_PKCS7_MALLOC_FAILED    (OSPC_ERR_PKCS7 + 1000)

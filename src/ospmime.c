@@ -24,7 +24,7 @@
 /*
  * ospmime.cpp - mime stuff
  */
-#include "ospmime.h"
+#include "osp/ospmime.h"
 
 void
 OSPPMimeBodyFree(

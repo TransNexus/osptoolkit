@@ -29,11 +29,11 @@
                     ospcrypto.h
 */
 
-#include "osp.h"
-#include "osptnlog.h"
-#include "osppkcs8.h"
-#include "ospcrypto.h"
-#include "ospcryptowrap.h"
+#include "osp/osp.h"
+#include "osp/osptnlog.h"
+#include "osp/osppkcs8.h"
+#include "osp/ospcrypto.h"
+#include "osp/ospcryptowrap.h"
 
 /* ---------------------------------------------------------*/
 /* Member functions                                         */

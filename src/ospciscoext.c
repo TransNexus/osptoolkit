@@ -26,10 +26,10 @@
  * ospciscoext.c - Functions for Cisco audit element.
  */
 
-#include "ospciscoext.h"
-#include "ospmsgelem.h"
-#include "ospmsg.h"
-#include "ospmsgattr.h"
+#include "osp/ospciscoext.h"
+#include "osp/ospmsgelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospmsgattr.h"
 
 void           
 OSPPCSAuditDelete(

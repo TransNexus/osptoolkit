@@ -26,15 +26,15 @@
  * ospxmlparse.c - Generic XML document parsing functions.
  */
 
-#include "osp.h"
-#include "ospbfr.h"
-#include "osplist.h"
-#include "ospxmlattr.h"
-#include "ospxmlelem.h"
-#include "osperrno.h"
-#include "ospxmltype.h"
-#include "ospxmldoc.h"
-#include "ospmsgelem.h"
+#include "osp/osp.h"
+#include "osp/ospbfr.h"
+#include "osp/osplist.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospxmlelem.h"
+#include "osp/osperrno.h"
+#include "osp/ospxmltype.h"
+#include "osp/ospxmldoc.h"
+#include "osp/ospmsgelem.h"
 
 
 /**/

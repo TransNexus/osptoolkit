@@ -25,11 +25,11 @@
  * ospstatistics.c - OSP Statistics elements functions
  */
 
-#include "osp.h"
-#include "ospstatistics.h"
-#include "ospmsgelem.h"
-#include "ospmsgattr.h"
-#include "ospmsg.h"
+#include "osp/osp.h"
+#include "osp/ospstatistics.h"
+#include "osp/ospmsgelem.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospmsg.h"
 
 /* Delete Statistics structure */
 void

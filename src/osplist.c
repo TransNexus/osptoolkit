@@ -26,8 +26,8 @@
  * osplist.c - Utility functions for linked lists.
  */
 
-#include "osp.h"
-#include "osplist.h"
+#include "osp/osp.h"
+#include "osp/osplist.h"
 
 /*
  * The following functions implement a fairly straightforward

@@ -81,12 +81,12 @@
 #include <sys\timeb.h>
 #endif
 
-#include "osptnprobe.h"
-#include "ospdest.h"
-#include "osputils.h"
-#include "ospcomm.h"
-#include "ospconfig.h"
-#include "ospsocket.h"
+#include "osp/osptnprobe.h"
+#include "osp/ospdest.h"
+#include "osp/osputils.h"
+#include "osp/ospcomm.h"
+#include "osp/ospconfig.h"
+#include "osp/ospsocket.h"
 
 #ifdef TESTMODE
 #include <stdio.h>

@@ -22,9 +22,9 @@
 
 
 
-#include "osp.h"
-#include "osperrno.h"
-#include "ospb64.h"
+#include "osp/osp.h"
+#include "osp/osperrno.h"
+#include "osp/ospb64.h"
 
 
 

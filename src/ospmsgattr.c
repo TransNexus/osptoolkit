@@ -26,9 +26,9 @@
  * ospmsgattr.c - OSP attribute processing.
  */
 
-#include "osp.h"
-#include "ospmsgdesc.h"
-#include "ospmsgattr.h"
+#include "osp/osp.h"
+#include "osp/ospmsgdesc.h"
+#include "osp/ospmsgattr.h"
 
 /**/
 /*-----------------------------------------------------------------------*

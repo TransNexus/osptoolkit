@@ -25,16 +25,16 @@
 /*
  * ospproviderapi.cpp - API functions for provider.
  */
-#include "osp.h"
-#include "ospossys.h"
-#include "ospproviderapi.h"
-#include "ospprovider.h"
-#include "ospcomm.h"
-#include "ospsecurity.h"
-#include "osptrans.h"
-#include "ospmsgque.h"
-#include "ospssl.h"
-#include "ospconfig.h"
+#include "osp/osp.h"
+#include "osp/ospossys.h"
+#include "osp/ospproviderapi.h"
+#include "osp/ospprovider.h"
+#include "osp/ospcomm.h"
+#include "osp/ospsecurity.h"
+#include "osp/osptrans.h"
+#include "osp/ospmsgque.h"
+#include "osp/ospssl.h"
+#include "osp/ospconfig.h"
 
 /* 
  * OSPPProviderDelete()

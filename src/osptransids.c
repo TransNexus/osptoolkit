@@ -156,8 +156,8 @@
  *           appropriate semaphore mechanisms.
  */
 
-#include "osptransids.h"
-#include "ospprovider.h"
+#include "osp/osptransids.h"
+#include "osp/ospprovider.h"
 
 /*-----------------------------------------------------------------------*/
 /* OSPPTransIdAdd - add a transaction ID to the ordered tree */

@@ -26,9 +26,9 @@
  * ospasn1.c - Member functions for ASN1 decode/encode library
  */
 
-#include "osp.h"
-#include "ospasn1.h"
-#include "osptnlog.h"
+#include "osp/osp.h"
+#include "osp/ospasn1.h"
+#include "osp/osptnlog.h"
 
 /* ---------------------------------------------------------*/
 /* Member functions                                         */

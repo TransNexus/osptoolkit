@@ -25,13 +25,13 @@
  * ospssl.c - SSL common functions
  */
 
-#include "osp.h"
-#include "ospssl.h"
-#include "osphttp.h"
-#include "ospcomm.h"
-#include "ospsocket.h"
-#include "osputils.h"
-#include "ospsecurity.h"
+#include "osp/osp.h"
+#include "osp/ospssl.h"
+#include "osp/osphttp.h"
+#include "osp/ospcomm.h"
+#include "osp/ospsocket.h"
+#include "osp/osputils.h"
+#include "osp/ospsecurity.h"
 
 void
 OSPPSSLSessionDelete(

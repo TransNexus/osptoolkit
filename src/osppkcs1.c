@@ -26,11 +26,11 @@
  */
 
 
-#include "osp.h"
-#include "ospdatatypes.h"
-#include "ospasn1.h"
-#include "osppkcs1.h"
-#include "ospcrypto.h"
+#include "osp/osp.h"
+#include "osp/ospdatatypes.h"
+#include "osp/ospasn1.h"
+#include "osp/osppkcs1.h"
+#include "osp/ospcrypto.h"
 
 /* FUNCTION PROTOTYPES */
 

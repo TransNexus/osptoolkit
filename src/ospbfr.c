@@ -39,8 +39,8 @@
 
 #include "stdlib.h"
 
-#include "osp.h"
-#include "ospbfr.h"
+#include "osp/osp.h"
+#include "osp/ospbfr.h"
 
 /**/
 /*-----------------------------------------------------------------------*

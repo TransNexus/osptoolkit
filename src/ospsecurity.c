@@ -24,15 +24,15 @@
 /*
  * ospsecurity.cpp - Functions for security object.
  */
-#include "osp.h"
-#include "ospdatatypes.h"
-#include "ospasn1.h"
-#include "osppkcs1.h"
-#include "osppkcs7.h"
-#include "osppkcs8.h"
-#include "ospx509.h"
-#include "ospsecurity.h"
-#include "osptnlog.h"
+#include "osp/osp.h"
+#include "osp/ospdatatypes.h"
+#include "osp/ospasn1.h"
+#include "osp/osppkcs1.h"
+#include "osp/osppkcs7.h"
+#include "osp/osppkcs8.h"
+#include "osp/ospx509.h"
+#include "osp/ospsecurity.h"
+#include "osp/osptnlog.h"
 
 #include <openssl/pkcs7.h>
 #include <openssl/bio.h>

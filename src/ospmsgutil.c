@@ -25,17 +25,17 @@
  * ospmsgutil.c - utility functions for OSP messages
  */
 
-#include "osp.h"
-#include "ospostime.h"
-#include "osperrno.h"
-#include "ospbfr.h"
-#include "ospxmlelem.h"
-#include "ospxmlattr.h"
-#include "ospmsgattr.h"
-#include "ospxmldoc.h"
-#include "ospmsg.h"
-#include "ospb64.h"
-#include "osptnlog.h"
+#include "osp/osp.h"
+#include "osp/ospostime.h"
+#include "osp/osperrno.h"
+#include "osp/ospbfr.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospxmldoc.h"
+#include "osp/ospmsg.h"
+#include "osp/ospb64.h"
+#include "osp/osptnlog.h"
 
 
 /**/

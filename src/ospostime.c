@@ -41,8 +41,8 @@
 #include "unistd.h"
 #endif
 
-#include "osp.h"
-#include "ospostime.h"
+#include "osp/osp.h"
+#include "osp/ospostime.h"
 
 OSPTTIME OSPPOSTimeConvertToGMT(int, int, int, int, int, int);
 

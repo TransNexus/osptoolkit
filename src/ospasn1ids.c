@@ -27,9 +27,9 @@
 
 #define OSPC_OSPASN1ID_INCLUDE_STATIC 1 /* Forces inclusion of static */
 /* data defined in ospasn1id.h */
-#include "osp.h"
-#include "ospasn1.h"
-#include "ospasn1ids.h"         
+#include "osp/osp.h"
+#include "osp/ospasn1.h"
+#include "osp/ospasn1ids.h"         
 
 
 /* FUNCTION PROTOTYPES */

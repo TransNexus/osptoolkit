@@ -25,9 +25,9 @@
  * ospasn1primitives.c - ASN1 Primitive encode/decode functions 
  */
 
-#include "osp.h"
-#include "ospasn1.h"
-#include "osptnlog.h"
+#include "osp/osp.h"
+#include "osp/ospasn1.h"
+#include "osp/osptnlog.h"
 
 /* ---------------------------------------------------------*/
 /* Member functions                                         */

@@ -25,13 +25,13 @@
 /*
  * ospcomm.cpp - Communication object functions.
  */
-#include "osp.h"
-#include "ospcomm.h"
-#include "ospsocket.h"
-#include "osphttp.h"
-#include "osplist.h"
-#include "ospmsgque.h"
-#include "ospsecurity.h"
+#include "osp/osp.h"
+#include "osp/ospcomm.h"
+#include "osp/ospsocket.h"
+#include "osp/osphttp.h"
+#include "osp/osplist.h"
+#include "osp/ospmsgque.h"
+#include "osp/ospsecurity.h"
 
 /*
  * monitors the message queue for new communication requests.

@@ -25,9 +25,9 @@
 /*
  * ospsecssl.cpp - Functions for security object.
  */
-#include "osp.h"
-#include "ospsecurity.h"
-#include "ospssl.h"
+#include "osp/osp.h"
+#include "osp/ospsecurity.h"
+#include "osp/ospssl.h"
 
 OSPTBOOL
     OSPPSecSSLLifetimeHasExpired(

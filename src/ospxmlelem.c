@@ -26,10 +26,10 @@
  * ospxmlelem.c - Functions for generic XML attributes.
  */
 
-#include "osp.h"
-#include "osplist.h"
-#include "ospxmlattr.h"
-#include "ospxmlelem.h"
+#include "osp/osp.h"
+#include "osp/osplist.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospxmlelem.h"
 
 
 /**/

@@ -25,13 +25,13 @@
  * ospaudit.c - OSP audit functions
  */
 
-#include "osp.h"
-#include "ospaudit.h"
-#include "ospconfig.h"
-#include "ospmime.h"
-#include "ospxml.h"
-#include "ospxmldoc.h"
-#include "osputils.h"
+#include "osp/osp.h"
+#include "osp/ospaudit.h"
+#include "osp/ospconfig.h"
+#include "osp/ospmime.h"
+#include "osp/ospxml.h"
+#include "osp/ospxmldoc.h"
+#include "osp/osputils.h"
 
 /* copy message data into audit buffer */
 int

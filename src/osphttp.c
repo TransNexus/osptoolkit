@@ -24,15 +24,15 @@
 /*
  * osphttp.c 
  */
-#include "osp.h"
-#include "osphttp.h"
-#include "ospsocket.h"
-#include "osplist.h"
-#include "ospcomm.h"
-#include "ospmsgque.h"
-#include "ospmsginfo.h"
-#include "ospconfig.h"
-#include "osputils.h"
+#include "osp/osp.h"
+#include "osp/osphttp.h"
+#include "osp/ospsocket.h"
+#include "osp/osplist.h"
+#include "osp/ospcomm.h"
+#include "osp/ospmsgque.h"
+#include "osp/ospmsginfo.h"
+#include "osp/ospconfig.h"
+#include "osp/osputils.h"
 
 int
 OSPPHttpNew(

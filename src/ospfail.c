@@ -24,8 +24,8 @@
 /*
  * ospfail.cpp - Failure reasons.
  */
-#include "osp.h"
-#include "ospfail.h"
+#include "osp/osp.h"
+#include "osp/ospfail.h"
 
 /*
  * Will return success as long as ospvFailureReason is between

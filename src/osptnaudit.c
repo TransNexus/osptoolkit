@@ -25,10 +25,10 @@
 /*
  * osptnaudit.c - Functions for tnaudit element.
  */
-#include "osptnaudit.h"
-#include "ospmsgelem.h"
-#include "ospmsg.h"
-#include "ospmsgattr.h"
+#include "osp/osptnaudit.h"
+#include "osp/ospmsgelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospmsgattr.h"
 
 void           
 OSPPTNAuditDelete(

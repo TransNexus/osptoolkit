@@ -25,12 +25,12 @@
 * ospopenssl.c - SSL API bridge to openSSL library implementation (v0.9.4)
 */
 
-#include "osp.h"
-#include "ospsocket.h"
-#include "ospssl.h"
-#include "osputils.h"
-#include "ospcomm.h"
-#include "ospsecurity.h"
+#include "osp/osp.h"
+#include "osp/ospsocket.h"
+#include "osp/ospssl.h"
+#include "osp/osputils.h"
+#include "osp/ospcomm.h"
+#include "osp/ospsecurity.h"
 
 /* 
 ** OpenSSL headers 

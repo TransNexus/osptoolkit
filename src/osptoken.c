@@ -25,16 +25,16 @@
  * osptoken.c - OSP token functions
  */
 
-#include "osp.h"
-#include "osperrno.h"
-#include "osplist.h"
-#include "ospxmldoc.h"
-#include "ospxmlattr.h"
-#include "ospxmlelem.h"
-#include "ospmsgattr.h"
-#include "ospmsgelem.h"
-#include "osptoken.h"
-#include "ospmsg.h"
+#include "osp/osp.h"
+#include "osp/osperrno.h"
+#include "osp/osplist.h"
+#include "osp/ospxmldoc.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospmsgelem.h"
+#include "osp/osptoken.h"
+#include "osp/ospmsg.h"
 
 
 /**/

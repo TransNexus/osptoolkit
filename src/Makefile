@@ -2,46 +2,38 @@
 # OSP Library Makefile
 #
 INCLDIR = ../include
+CC=gcc
+INSTALL_PATH=/usr/local
 
-#
-# ***** Platform specific flags ******
-#
-# Solaris (POSIX threads)
-
-include ospcflags.inc
-
-#TARGET_OS should be set in release builder's environment.!!!!
-
-#
 LFLAGS   = -lsocket -lnsl -lpthread
-SOFLAGS  = -shared 
-SOOBJ    = libosp.so
-#AR       = /usr/ccs/bin/ar
-ARLIB    = $(TARGETDIR)/libosp.a
-#LINT     = /opt/SUNWspro/bin/lint
+ARLIB    = ../lib/libosp.a
 MKDEP    = /usr/openwin/bin/makedepend
+
+# WARNING !!
+# If not using the Sun Compiler for compiling the toolkit
+# and instead using gcc, please comment the line below for proper 
+# compilation.
+#
+GCCFLAGS = -Wall -D_GNU_SOURCE -fPIC
+
+#
+# CFLAGS definition
+# This is for DEBUG mode of compilation
+#CFLAGS	= -g -DOSP_ALLOW_DUP_TXN -DOSPC_DEBUG -DOSP_NO_DELETE_CHECK -DOSP_SDK -D_POSIX_THREADS -D_REENTRANT $(GCCFLAGS)
+
+# This is for PRODUCTION mode of compilation
+CFLAGS	= -O -DOSP_ALLOW_DUP_TXN -DOSP_NO_DELETE_CHECK -DOSP_SDK -D_POSIX_THREADS -D_REENTRANT $(GCCFLAGS)
+
 
 #
 #
 # SSL library selection
-#
-
 # for OpenSSL
 SSLOBJ    = ospopenssl.o
 SSLLIB    = ../lib/libssl.a
 SSLINC    = ../crypto
-SSLCFLAGS = -I$(SSLINC)
+INCL = -I$(SSLINC) -I$(INCLDIR)
 
-#
-# for No SSL
-#
-#SSLOBJ = ospnossl.o
-
-#
-# How to lint
-#
-LINT=OSPLINT -s -Xc -I./ $(SSLCFLAGS) $(CRYPTOCFLAGS) -D_POSIX_THREADS -D_REENTRANT -DOSP_SDK 
-#
 ####################################################################
 OBJS    =   osppkcs1.o osppkcs8.o osppkcs7.o ospcryptowrap.o ospasn1ids.o \
             ospasn1object.o ospx509.o ospasn1.o ospasn1primitives.o \
@@ -60,13 +52,18 @@ OBJS    =   osppkcs1.o osppkcs8.o osppkcs7.o ospcryptowrap.o ospasn1ids.o \
 .SUFFIXES: .o .c 
 
 .c.o:
-	$(CC) $(CFLAGS) $(CRYPTOCFLAGS) $(SSLCFLAGS) $(<) -c
+	$(CC) $(CFLAGS) $(CRYPTOCFLAGS) $(INCL) $(<) -c
 
-#.c.o:
-# $(LINT) $(<) ; $(CC) $(CFLAGS) $(CRYPTOCFLAGS) $(SSLCFLAGS) $(<) -c
+default:
+	@ echo 'Use - make build, to build the osp library.'
+	@ echo 'Use - make install, to install the osp library.'
 
-libosp  : $(OBJS)
+build  : $(OBJS)
 	ar -r $(ARLIB) $(OBJS)
+
+install: build
+	cp -r ../include/osp/ $(INSTALL_PATH)/include/
+	cp ../lib/libosp.a $(INSTALL_PATH)/lib
 
 clean   :
 	rm -f $(OBJS) $(ARLIB)

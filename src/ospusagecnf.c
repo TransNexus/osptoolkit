@@ -26,19 +26,19 @@
  * ospusagecnf.c - OSP usage confirmation functions
  */
 
-#include "osp.h"
-#include "osperrno.h"
-#include "ospbfr.h"
-#include "osplist.h"
-#include "ospxmlattr.h"
-#include "ospxmlelem.h"
-#include "ospmsgattr.h"
-#include "ospmsgelem.h"
-#include "ospusage.h"
-#include "ospusagecnf.h"
-#include "ospstatus.h"
-#include "osputils.h"
-#include "ospciscoext.h"
+#include "osp/osp.h"
+#include "osp/osperrno.h"
+#include "osp/ospbfr.h"
+#include "osp/osplist.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospmsgelem.h"
+#include "osp/ospusage.h"
+#include "osp/ospusagecnf.h"
+#include "osp/ospstatus.h"
+#include "osp/osputils.h"
+#include "osp/ospciscoext.h"
 
 /*-----------------------------------------------------------------------*
  * OSPPUsageCnfDelete() - destroy specified UsageCnf object

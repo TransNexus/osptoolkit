@@ -26,13 +26,13 @@
  * ospxmlenc.c - Generic XML document encoding functions.
  */
 
-#include "osp.h"
-#include "ospbfr.h"
-#include "osperrno.h"
-#include "ospxmlattr.h"
-#include "ospxmlelem.h"
-#include "ospxmltype.h"
-#include "ospxmldoc.h"
+#include "osp/osp.h"
+#include "osp/ospbfr.h"
+#include "osp/osperrno.h"
+#include "osp/ospxmlattr.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospxmltype.h"
+#include "osp/ospxmldoc.h"
 
 /**/
 /*-----------------------------------------------------------------------*
