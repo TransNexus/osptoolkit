@@ -28,15 +28,15 @@
 #ifndef _OSPAUTHRSP_H
 #define _OSPAUTHRSP_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsg.h"
-#include "ospcallid.h"
-#include "osptoken.h"
-#include "ospdest.h"
-#include "ospstatus.h"
-#include "osptnaudit.h"
-#include "ospciscoext.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospcallid.h"
+#include "osp/osptoken.h"
+#include "osp/ospdest.h"
+#include "osp/ospstatus.h"
+#include "osp/osptnaudit.h"
+#include "osp/ospciscoext.h"
 
 typedef struct
 {

@@ -27,8 +27,8 @@
 #ifndef _OSPTRANSAPI_H
 #define _OSPTRANSAPI_H
 
-#include "ospfail.h"
-#include "ospdest.h"
+#include "osp/ospfail.h"
+#include "osp/ospdest.h"
 
 /* Authorisation Indicators */
 #define OSPC_TRAN_AUTHORISED        0x0001

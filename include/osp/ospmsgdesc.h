@@ -30,8 +30,8 @@
 #define OSPMSGDESC_H
 
 
-#include "osp.h"
-#include "ospmsgpart.h"
+#include "osp/osp.h"
+#include "osp/ospmsgpart.h"
 
 
 /*

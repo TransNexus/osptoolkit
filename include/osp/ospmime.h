@@ -27,7 +27,7 @@
 #ifndef _OSPMIME_H
 #define _OSPMIME_H
 
-#include "osp.h"
+#include "osp/osp.h"
 
 #define _WIN32_WINNT 0x0400
 

@@ -28,11 +28,11 @@
 #ifndef _OSP_PKCS7_H
 #define _OSP_PKCS7_H
 
-#include "osp.h"
-#include "ospasn1.h"
-#include "ospx500.h"
-#include "ospx509.h"
-#include "osppkcs1.h"
+#include "osp/osp.h"
+#include "osp/ospasn1.h"
+#include "osp/ospx500.h"
+#include "osp/ospx509.h"
+#include "osp/osppkcs1.h"
 
 /*-------------------------------------------*/
 /* SIGNED DATA typedef                                           */

@@ -27,10 +27,10 @@
 #ifndef _OSP_COMM_H
 #define _OSP_COMM_H
 
-#include "osp.h"
-#include "ospmsgque.h"
-#include "ospmsginfo.h"
-#include "ospsecurity.h"
+#include "osp/osp.h"
+#include "osp/ospmsgque.h"
+#include "osp/ospmsginfo.h"
+#include "osp/ospsecurity.h"
 
 #define OSPC_COMM_MULTI_MSG     "multipart/signed; protocol=\"application/pkcs7-signature\"; micalg=sha1; boundary=bar"
 #define OSPC_COMM_TEXT_MSG      "text/plain"

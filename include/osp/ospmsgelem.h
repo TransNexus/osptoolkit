@@ -28,8 +28,8 @@
 #ifndef _OSPMSGELEM_H
 #define _OSPMSGELEM_H
 
-#include "ospmsgpart.h"
-#include "ospmsgdesc.h"
+#include "osp/ospmsgpart.h"
+#include "osp/ospmsgdesc.h"
 
 /* the elements defined by the Open Settlement Protocol */
 

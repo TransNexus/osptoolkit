@@ -28,7 +28,7 @@
 #ifndef osplist_h
 #define osplist_h
 
-#include "osp.h"
+#include "osp/osp.h"
 
 /*
  * This module provides simple, linked list utility functions

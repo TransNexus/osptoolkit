@@ -28,8 +28,8 @@
 #ifndef _OSPMSGATTR_H
 #define _OSPMSGATTR_H
 
-#include "ospmsgdesc.h"
-#include "ospmsgpart.h"
+#include "osp/ospmsgdesc.h"
+#include "osp/ospmsgpart.h"
 
 /* attributes defined by the Open Settlement Protocol */
 

@@ -28,10 +28,10 @@
 #ifndef _OSP_X509_H
 #define _OSP_X509_H
 
-#include "osp.h"
-#include "ospasn1.h"
-#include "ospx500.h"
-#include "osppkcs1.h"
+#include "osp/osp.h"
+#include "osp/ospasn1.h"
+#include "osp/ospx500.h"
+#include "osp/osppkcs1.h"
 
 #define OSPC_CERT_STATE_START               0
 #define OSPC_CERT_STATE_TLV                 1

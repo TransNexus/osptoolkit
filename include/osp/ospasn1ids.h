@@ -27,7 +27,7 @@
 #ifndef _OSP_ASN1ID_H
 #define _OSP_ASN1ID_H
 
-#include "ospasn1.h"
+#include "osp/ospasn1.h"
 
 
 

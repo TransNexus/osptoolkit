@@ -27,8 +27,8 @@
 #ifndef _OSP_ASN1_H
 #define _OSP_ASN1_H
 
-#include "osp.h"
-#include "ospasn1ids.h"
+#include "osp/osp.h"
+#include "osp/ospasn1ids.h"
 
 #define OSPC_ASN1_SIGNERINFO_VERSION 1
 

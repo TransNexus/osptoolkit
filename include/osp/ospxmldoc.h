@@ -30,9 +30,9 @@
 #ifndef _OSPXMLDOC_H
 #define _OSPXMLDOC_H
 
-#include "osp.h"
-#include "ospbfr.h"
-#include "ospxmlelem.h"
+#include "osp/osp.h"
+#include "osp/ospbfr.h"
+#include "osp/ospxmlelem.h"
 
 /* various XML character constants */
 

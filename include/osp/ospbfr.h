@@ -34,7 +34,7 @@
 #ifndef _OSPBFR_H
 #define _OSPBFR_H
 
-#include "ospossys.h"
+#include "osp/ospossys.h"
 
 
 typedef struct

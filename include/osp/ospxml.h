@@ -28,9 +28,9 @@
 #ifndef _OSPXML_H
 #define _OSPXML_H
 
-#include "osp.h"
-#include "ospmsg.h"
-#include "osptrans.h"
+#include "osp/osp.h"
+#include "osp/ospmsg.h"
+#include "osp/osptrans.h"
 
 #ifdef __cplusplus
 extern "C" 

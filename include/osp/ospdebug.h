@@ -28,7 +28,7 @@
 #ifndef _OSPDEBUG_H
 #define _OSPDEBUG_H
 
-#include "ospossys.h"
+#include "osp/ospossys.h"
 
 /*
  * The OSPC_DEBUG constant is the master constant for all debugging

@@ -28,11 +28,11 @@
 #ifndef _OSPACAPCNF_H
 #define _OSPACAPCNF_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsg.h"
-#include "ospaltinfo.h"
-#include "osptrans.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospaltinfo.h"
+#include "osp/osptrans.h"
 
 
 

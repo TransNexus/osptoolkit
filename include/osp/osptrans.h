@@ -27,21 +27,21 @@
 #ifndef _OSPTRANS_H
 #define _OSPTRANS_H
 
-#include "osp.h"
-#include "ospauthreq.h"
-#include "ospauthrsp.h"
-#include "ospmsginfo.h"
-#include "ospauthind.h"
-#include "ospauthcnf.h"
-#include "ospusageind.h"
-#include "ospusagecnf.h"
-#include "ospreauthreq.h"
-#include "ospreauthrsp.h"
-#include "ospstatistics.h"
-#include "ospcapcnf.h"
-#include "ospmsg.h"
-#include "ospfail.h"
-#include "osptokeninfo.h"
+#include "osp/osp.h"
+#include "osp/ospauthreq.h"
+#include "osp/ospauthrsp.h"
+#include "osp/ospmsginfo.h"
+#include "osp/ospauthind.h"
+#include "osp/ospauthcnf.h"
+#include "osp/ospusageind.h"
+#include "osp/ospusagecnf.h"
+#include "osp/ospreauthreq.h"
+#include "osp/ospreauthrsp.h"
+#include "osp/ospstatistics.h"
+#include "osp/ospcapcnf.h"
+#include "osp/ospmsg.h"
+#include "osp/ospfail.h"
+#include "osp/osptokeninfo.h"
 
 
 /*

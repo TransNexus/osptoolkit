@@ -28,12 +28,12 @@
 #ifndef _OSPUSAGECNF_H
 #define _OSPUSAGECNF_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsg.h"
-#include "ospstatus.h"
-#include "osptnaudit.h"
-#include "ospciscoext.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospstatus.h"
+#include "osp/osptnaudit.h"
+#include "osp/ospciscoext.h"
 
 
 typedef struct

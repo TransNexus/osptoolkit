@@ -28,9 +28,9 @@
 #ifndef _OSPMSG_H
 #define _OSPMSG_H
 
-#include "osp.h"
-#include "ospostime.h"
-#include "osplist.h"
+#include "osp/osp.h"
+#include "osp/ospostime.h"
+#include "osp/osplist.h"
 
 typedef enum {
     OSPC_MSG_LOWER_BOUND=10,

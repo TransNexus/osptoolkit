@@ -28,12 +28,12 @@
 #ifndef _OSPAUTHREQ_H
 #define _OSPAUTHREQ_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsg.h"
-#include "ospcallid.h"
-#include "osptoken.h"
-#include "ospaltinfo.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospcallid.h"
+#include "osp/osptoken.h"
+#include "osp/ospaltinfo.h"
 
 
 typedef struct

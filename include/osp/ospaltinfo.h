@@ -28,10 +28,10 @@
 #ifndef _OSPALTINFO_H
 #define _OSPALTINFO_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsgelem.h"
-#include "ospmsg.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsgelem.h"
+#include "osp/ospmsg.h"
 
 
 /* max size of an altinfo (bytes) */

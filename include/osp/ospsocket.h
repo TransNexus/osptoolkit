@@ -27,9 +27,9 @@
 #ifndef _OSP_SOCKET_H
 #define _OSP_SOCKET_H
 
-#include "ospdatatypes.h"
-#include "ospcomm.h"
-#include "osphttp.h"
+#include "osp/ospdatatypes.h"
+#include "osp/ospcomm.h"
+#include "osp/osphttp.h"
 
 #ifdef _WIN32
 #  define OSPC_SOCK_INVALID              SOCKET_ERROR

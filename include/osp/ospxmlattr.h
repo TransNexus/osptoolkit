@@ -28,8 +28,8 @@
 #ifndef _OSPXMLATTR_H
 #define _OSPXMLATTR_H
 
-#include "osp.h"
-#include "osplist.h"
+#include "osp/osp.h"
+#include "osp/osplist.h"
 
 /*
  * An XMLAttr structure represents an XML attribute in its

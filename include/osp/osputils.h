@@ -27,7 +27,7 @@
 #ifndef _OSP_UTILS_H
 #define _OSP_UTILS_H
 
-#include "ospdatatypes.h"
+#include "osp/ospdatatypes.h"
 
 #define OSPC_MIN_TIMESTAMP_LEN  21
 #define OSPC_MAX_RANDOM         256

@@ -29,7 +29,7 @@
 #ifndef tnids_h
 #define tnids_h
 
-#include "osp.h"
+#include "osp/osp.h"
 
 
 /*MACROS

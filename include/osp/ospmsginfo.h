@@ -24,7 +24,7 @@
 #ifndef _OSPMSGINFO_H
 #define _OSPMSGINFO_H
 
-#include "osp.h"
+#include "osp/osp.h"
 
 /*-------------------------------------------*/
 /* message info typedef                      */

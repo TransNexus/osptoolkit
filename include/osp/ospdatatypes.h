@@ -28,9 +28,9 @@
 #ifndef _OSP_DATATYPES_H
 #define _OSP_DATATYPES_H
 
-#include "osposincl.h"
-#include "osplist.h"
-#include "osptoken.h"
+#include "osp/osposincl.h"
+#include "osp/osplist.h"
+#include "osp/osptoken.h"
 
 /* NOTE: ospcallid.h is included at the end of this file. */
 

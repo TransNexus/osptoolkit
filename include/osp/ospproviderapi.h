@@ -27,8 +27,8 @@
 #ifndef _OSP_PROVIDERAPI_H
 #define _OSP_PROVIDERAPI_H
 
-#include "osp.h"
-#include "osppkcs1.h"
+#include "osp/osp.h"
+#include "osp/osppkcs1.h"
 
 #ifdef __cplusplus
 extern "C" 

@@ -30,7 +30,7 @@
 
 #include "time.h"
 
-#include "osp.h"
+#include "osp/osp.h"
 
 
 /* time limits */

@@ -28,13 +28,13 @@
 #ifndef _OSPREAUTHREQ_H
 #define _OSPREAUTHREQ_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsg.h"
-#include "ospcallid.h"
-#include "osptoken.h"
-#include "ospusage.h"
-#include "ospaltinfo.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospcallid.h"
+#include "osp/osptoken.h"
+#include "osp/ospusage.h"
+#include "osp/ospaltinfo.h"
 
 
 typedef struct

@@ -28,9 +28,9 @@
 #ifndef _OSPSTATUS_H
 #define _OSPSTATUS_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsg.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsg.h"
 
 
 typedef struct

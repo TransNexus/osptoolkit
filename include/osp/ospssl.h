@@ -29,10 +29,10 @@
 #ifndef _OSPSSL_H
 #define _OSPSSL_H
 
-#include "osp.h"
-#include "osphttp.h"
-#include "ospsecurity.h"
-#include "ospsslsess.h"
+#include "osp/osp.h"
+#include "osp/osphttp.h"
+#include "osp/ospsecurity.h"
+#include "osp/ospsslsess.h"
 
 #define OSPPSSLSessionHasContext(sslsess) \
     ((sslsess)->Context != OSPC_OSNULL)

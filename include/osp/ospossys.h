@@ -27,7 +27,7 @@
 #ifndef _OSPOSSYS_H
 #define _OSPOSSYS_H
 
-#include "ospdebug.h"
+#include "osp/ospdebug.h"
 
 /*
  * =============================================

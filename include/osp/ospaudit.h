@@ -28,10 +28,10 @@
 #ifndef _OSPAUDIT_H
 #define _OSPAUDIT_H
 
-#include "osp.h"
-#include "ospbfr.h"
-#include "ospcomm.h"
-#include "ospsecurity.h"
+#include "osp/osp.h"
+#include "osp/ospbfr.h"
+#include "osp/ospcomm.h"
+#include "osp/ospsecurity.h"
 
 typedef  struct _OSPTAUDIT
 {

@@ -27,7 +27,7 @@
 #ifndef _OSPTNAUDIT_H
 #define _OSPTNAUDIT_H
 
-#include "osp.h"
+#include "osp/osp.h"
 
 typedef struct
 {

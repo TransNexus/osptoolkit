@@ -28,8 +28,8 @@
 #ifndef _OSPUSAGE_H
 #define _OSPUSAGE_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
 
 
 /**/

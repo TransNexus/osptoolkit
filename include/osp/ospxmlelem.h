@@ -28,9 +28,9 @@
 #ifndef _OSPXMLELEM_H
 #define _OSPXMLELEM_H
 
-#include "osp.h"
-#include "osplist.h"
-#include "ospxmlattr.h"
+#include "osp/osp.h"
+#include "osp/osplist.h"
+#include "osp/ospxmlattr.h"
 
 
 /*

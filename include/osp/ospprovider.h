@@ -28,12 +28,12 @@
 #ifndef _OSP_PROVIDER_H
 #define _OSP_PROVIDER_H
 
-#include "osp.h"
-#include "osptrans.h"
-#include "ospcomm.h"
-#include "ospsecurity.h"
-#include "ospaudit.h"
-#include "osptransids.h"
+#include "osp/osp.h"
+#include "osp/osptrans.h"
+#include "osp/ospcomm.h"
+#include "osp/ospsecurity.h"
+#include "osp/ospaudit.h"
+#include "osp/osptransids.h"
 
 #define     OSPC_PROV_SHIFT  24
 /*-------------------------------------------*/

@@ -28,7 +28,7 @@
 #ifndef _OSPCSAUDIT_H
 #define _OSPCSAUDIT_H
 
-#include "osp.h"
+#include "osp/osp.h"
 
 
 typedef struct

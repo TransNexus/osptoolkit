@@ -28,8 +28,8 @@
 #ifndef _OSP_X500_H
 #define _OSP_X500_H
 
-#include "osp.h"
-#include "ospasn1.h"
+#include "osp/osp.h"
+#include "osp/ospasn1.h"
 
 #define OSPC_DN_ELEMENT_TERMINATOR (-1)  /* Not a legal OID value */
 

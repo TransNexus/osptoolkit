@@ -28,13 +28,13 @@
 #ifndef _OSPAUTHIND_H
 #define _OSPAUTHIND_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsg.h"
-#include "ospcallid.h"
-#include "osptoken.h"
-#include "ospaltinfo.h"
-#include "ospdest.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospcallid.h"
+#include "osp/osptoken.h"
+#include "osp/ospaltinfo.h"
+#include "osp/ospdest.h"
 
 
 typedef struct

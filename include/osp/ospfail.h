@@ -27,7 +27,7 @@
 #ifndef _OSP_FAIL_H
 #define _OSP_FAIL_H
 
-#include "osp.h"
+#include "osp/osp.h"
 
 enum OSPEFAILREASON
 {

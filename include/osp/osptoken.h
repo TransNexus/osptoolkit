@@ -28,9 +28,9 @@
 #ifndef _OSPTOKEN_H
 #define _OSPTOKEN_H
 
-#include "osp.h"
-#include "osplist.h"
-#include "ospxmlelem.h"
+#include "osp/osp.h"
+#include "osp/osplist.h"
+#include "osp/ospxmlelem.h"
 
 
 /* max size of a token (bytes) */

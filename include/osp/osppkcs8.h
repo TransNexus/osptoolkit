@@ -28,9 +28,9 @@
 #ifndef _OSP_PKCS8_H
 #define _OSP_PKCS8_H
 
-#include "osp.h"
-#include "ospasn1.h"
-#include "ospdatatypes.h"
+#include "osp/osp.h"
+#include "osp/ospasn1.h"
+#include "osp/ospdatatypes.h"
 
 
 #define OSPC_PKCS8_PRIVATEKEYINFO_VERSION 0

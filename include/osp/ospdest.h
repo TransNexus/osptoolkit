@@ -28,11 +28,11 @@
 #ifndef _OSPDEST_H
 #define _OSPDEST_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsg.h"
-#include "ospcallid.h"
-#include "osptoken.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospcallid.h"
+#include "osp/osptoken.h"
 
 
 /*-----------------------------------------------------------------------*

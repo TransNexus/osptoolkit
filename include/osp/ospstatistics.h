@@ -27,7 +27,7 @@
 #ifndef _OSPSTATISTICS_H
 #define _OSPSTATISTICS_H
 
-#include "osp.h"
+#include "osp/osp.h"
 
 /* Basic structure for TN statistics */
 typedef struct

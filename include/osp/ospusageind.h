@@ -28,12 +28,12 @@
 #ifndef _OSPUSAGEIND_H
 #define _OSPUSAGEIND_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsg.h"
-#include "ospcallid.h"
-#include "ospaltinfo.h"
-#include "ospstatistics.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospcallid.h"
+#include "osp/ospaltinfo.h"
+#include "osp/ospstatistics.h"
 
 typedef struct
 {

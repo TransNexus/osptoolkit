@@ -32,10 +32,10 @@
  * internal SDK includes
  */
 
-#include "ospdatatypes.h"
-#include "ospinit.h"
-#include "osperrno.h"
-#include "ospossys.h"
+#include "osp/ospdatatypes.h"
+#include "osp/ospinit.h"
+#include "osp/osperrno.h"
+#include "osp/ospossys.h"
 
 /*
  * exposed OSP API prototypes and constants

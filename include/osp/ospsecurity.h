@@ -27,12 +27,12 @@
 #ifndef _OSPSECURITY_H
 #define _OSPSECURITY_H
 
-#include "osp.h"
-#include "osptrans.h"
-#include "ospasn1.h"
-#include "osppkcs1.h"
-#include "ospx509.h"
-#include "ospsslsess.h"
+#include "osp/osp.h"
+#include "osp/osptrans.h"
+#include "osp/ospasn1.h"
+#include "osp/osppkcs1.h"
+#include "osp/ospx509.h"
+#include "osp/ospsslsess.h"
 
 #include <openssl/x509.h>
 

@@ -28,10 +28,10 @@
 #ifndef _OSPAUTHCNF_H
 #define _OSPAUTHCNF_H
 
-#include "osp.h"
-#include "ospxmlelem.h"
-#include "ospmsg.h"
-#include "ospstatus.h"
+#include "osp/osp.h"
+#include "osp/ospxmlelem.h"
+#include "osp/ospmsg.h"
+#include "osp/ospstatus.h"
 
 typedef struct
 {

@@ -24,9 +24,9 @@
 #ifndef _OSPHTTP_H
 #define _OSPHTTP_H
 
-#include "osp.h"
-#include "ospcomm.h"
-#include "ospsslsess.h"
+#include "osp/osp.h"
+#include "osp/ospcomm.h"
+#include "osp/ospsslsess.h"
 
 #define OSPC_HTTP_CONTENT_LENGTH    1
 #define OSPC_HTTP_CONTENT_TYPE      2

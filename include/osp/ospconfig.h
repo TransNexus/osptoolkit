@@ -28,7 +28,7 @@
 #ifndef _OSPCONFIG_H
 #define _OSPCONFIG_H
 
-#include "osp.h"
+#include "osp/osp.h"
 
 #define OSPC_AUDIT_MAX_SPACE            1024 * 10   /* 10 K */   
 #define OSPC_AUDIT_MAX_TIME             60 * 60     /* 1 hour in seconds */      

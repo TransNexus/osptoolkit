@@ -27,8 +27,8 @@
 #ifndef _OSPMSGQUE_H
 #define _OSPMSGQUE_H
 
-#include "osp.h"
-#include "ospmsginfo.h"
+#include "osp/osp.h"
+#include "osp/ospmsginfo.h"
 
 #define OSPPMsgQueueGetCondVar(ospvMsgQueue)   (ospvMsgQueue)->CondVar
 
