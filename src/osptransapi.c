@@ -4077,59 +4077,12 @@ OSPPTransactionValidateAuthorisation(
      */
     if (errorcode == OSPC_ERR_NO_ERROR) 
     {
-#if 0
-        /*
-         * Verify Token Signature and pull off Tokeninfo message
+        /* 
+         * The token validation part has been moved from here to the
+         * the top. This is so that we may extract the call Id from
+         * the token early enough.
          */
-        errorcode = OSPPTransactionGetProvider(trans, &provider);
 
-        if (errorcode == OSPC_ERR_NO_ERROR)
-        {
-            errorcode = OSPPProviderGetSecurity(provider, &security);
-        }
-
-        if ((errorcode == OSPC_ERR_NO_ERROR) &&(IsTokenSigned == OSPC_TRUE))
-        {
-            errorcode = OSPPSecSignatureVerify(security,
-                &tokenmsg, &sizeoftokenmsg,
-                (unsigned char *)ospvToken, ospvSizeOfToken,
-                OSPC_SEC_SIGNATURE_AND_CONTENT);
-
-	    #ifdef OSPC_VALIDATE_TOKEN_CERT_SUBJECT_NAME
-            if(errorcode == OSPC_ERR_NO_ERROR)
-            {
-                errorcode = OSPPTransactionValidateTokenCert(trans, (unsigned char *)ospvToken, ospvSizeOfToken);
-            }
-	    #endif
-
-        }
-
-        if ((errorcode == OSPC_ERR_NO_ERROR) && (IsTokenSigned == OSPC_FALSE))
-        {
-            /* just copy the token content into the token msg. No sig present */
-            OSPM_MALLOC(tokenmsg, unsigned char, ospvSizeOfToken);
-            if (tokenmsg != OSPC_OSNULL)
-            {
-                OSPM_MEMCPY(tokenmsg, ospvToken, ospvSizeOfToken);
-                sizeoftokenmsg = ospvSizeOfToken;
-                errorcode = OSPC_ERR_NO_ERROR;
-            }
-            else
-            {
-                errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
-            }
-        }
-
-        /*
-         * Parse the Token into a TokenInfo structure
-         */
-        if (errorcode == OSPC_ERR_NO_ERROR)
-        {
-            errorcode = OSPPXMLMessageParse( (unsigned char *)tokenmsg,
-                sizeoftokenmsg, 
-                (void **)&tokeninfo, &dtype);
-        }
-#endif
         /*
          * If Forward Route information is present, 
          * Store it in the transaction object
