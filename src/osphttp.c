@@ -375,6 +375,7 @@ osppHttpSetupAndMonitor(
                 (comm->Flags & OSPC_COMM_HTTPSHUTDOWN_BIT) == OSPC_COMM_HTTPSHUTDOWN_BIT))
             {
                 OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() remove connection requested\n"));
+                OSPM_MUTEX_UNLOCK(httpconn->Mutex, errorcode);
                 osppHttpRemoveConnection(httpconn);
                 break;
             }
@@ -542,6 +543,7 @@ osppHttpSetupAndMonitor(
            * time to quit this thread
            */
           OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() remove connection requested\n"));
+          OSPM_MUTEX_UNLOCK(httpconn->Mutex, errorcode);
           osppHttpRemoveConnection(httpconn);
           break;
         }
@@ -551,6 +553,8 @@ osppHttpSetupAndMonitor(
      * finally clean up the memory for the connection
      */
     OSPPHttpDelete(&httpconn);
+
+    comm->Flags &= ~OSPC_COMM_HTTPSHUTDOWN_BIT;
 
     OSPM_DBGEXIT(("EXIT : osppHttpSetupAndMonitor()\n"));
 
