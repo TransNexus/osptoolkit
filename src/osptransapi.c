@@ -67,7 +67,7 @@ OSPPTransactionModifyDeviceIdentifiers(
     OSPTTRANS *trans=NULL;
     OSPTDEST  *dest=NULL;
     OSPTBOOL modifyallowed=OSPC_FALSE;
-    OSPTALTINFO *altinfo=NULL,*altinfoToKeep=NULL;
+    OSPTALTINFO *altinfo=NULL,*altinfoToKeep=NULL,*altinfoToKeep2=NULL;
 
     if ((ospvSource == NULL) && (ospvSourceDevice == NULL) && 
         (ospvDestination == NULL) && (ospvDestinationDevice == NULL))  
@@ -237,7 +237,7 @@ OSPPTransactionModifyDeviceIdentifiers(
                 {
                     /*
                      * This is a little messed up. 
-                     * Both Destination and DestinationDevice go to the same list.
+                     * NetworkId, Destination and DestinationDevice go to the same list.
                      * Thus, when we are modifying the list, we need to replace only the node for destination.
                      * If there is a node for destinationDevice, it should still remain there.
                      */
@@ -253,19 +253,26 @@ OSPPTransactionModifyDeviceIdentifiers(
                                   * DestinationDevice. Do not delete it.
                                   */
                                  altinfoToKeep = altinfo;
-                                 altinfo = OSPC_OSNULL;
+                             }
+                             else if (altinfo->ospmAltInfoType == ospeNetwork)
+                             {
+                                 /*
+                                  * This node in the list corresponds to 
+                                  * Network Id. Do not delete it.
+                                  */
+                                 altinfoToKeep2 = altinfo;
                              }
                              else
                              {
                                  OSPM_FREE(altinfo);
-                                 altinfo = OSPC_OSNULL;
                              }
+                             altinfo = OSPC_OSNULL;
                          }
                      }
 
                      /*
                       * We have emptied the list now. 
-                      * Add back the altinfo that corresponded to destinationDevice
+                      * Add back the altinfo that corresponded to destinationDevice and Network Id
                       */
                       if (altinfoToKeep)
                       {
@@ -275,6 +282,13 @@ OSPPTransactionModifyDeviceIdentifiers(
                           altinfoToKeep = NULL;    
                       }
 
+                      if (altinfoToKeep2)
+                      {
+                          OSPPListAppend(
+                              (OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),
+                              (void *)altinfoToKeep2);
+                          altinfoToKeep2 = NULL;    
+                      }
                      /*
                       * Now add the new destination
                       */
@@ -298,7 +312,7 @@ OSPPTransactionModifyDeviceIdentifiers(
                 {
                     /*
                      * This is a little messed up. 
-                     * Both Destination and DestinationDevice go to the same list.
+                     * NetworkId, Destination and DestinationDevice go to the same list.
                      * Thus, when we are modifying the list, we need to replace only the node for destination device.
                      * If there is a node for destination, it should still remain there.
                      */
@@ -314,13 +328,20 @@ OSPPTransactionModifyDeviceIdentifiers(
                                   * Destination. Do not delete it.
                                   */
                                  altinfoToKeep = altinfo;
-                                 altinfo = OSPC_OSNULL;
+                             }
+                             else if (altinfo->ospmAltInfoType == ospeNetwork)
+                             {
+                                 /*
+                                  * This node in the list corresponds to 
+                                  * NetworkId. Do not delete it.
+                                  */
+                                 altinfoToKeep2 = altinfo;
                              }
                              else
                              {
                                  OSPM_FREE(altinfo);
-                                 altinfo = OSPC_OSNULL;
                              }
+                             altinfo = OSPC_OSNULL;
                          }
                      }
 
@@ -337,6 +358,13 @@ OSPPTransactionModifyDeviceIdentifiers(
                           altinfoToKeep = NULL;    
                       }
 
+                      if (altinfoToKeep2)
+                      {
+                          OSPPListAppend(
+                              (OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),
+                              (void *)altinfoToKeep2);
+                          altinfoToKeep2 = NULL;    
+                      }
 
                      /*
                       * Now add the new node for destinationDevice
