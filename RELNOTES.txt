@@ -384,3 +384,4 @@ Version 3.1.2
   ospvTimeLimit parameters of the API.
 * The RequestAuthorization API has been fixed to accept NULL value for the ospvDetailLog
   parameter of the API.
+* openssl.cnf file is now packaged with the toolkit tarball.
