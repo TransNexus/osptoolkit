@@ -115,7 +115,7 @@ unsigned tokensize                  = TOKEN_SZ;
 char     c_token[TOKEN_SZ]          = { "" };
 void     *token                     = NULL;
 
-char     *New_ServicePoint          = { "http://osptestserver.transnexus.com:80/osp" };
+char     *New_ServicePoint          = { "http://osptestserver.transnexus.com:1080/osp" };
 
 static  OSPTCALLID *callids[NUM_CALL_IDS];
 
@@ -123,10 +123,11 @@ static  OSPTCALLID *callids[NUM_CALL_IDS];
 
 NBMONITOR *nbMonitor    = NULL;
 #define WORK_THREAD_NUM 40    /* make sure that this number does not exceed DEF_HTTP_MAXCONN */
-#define TEST_NUM        1000
 #define TOKEN_SIZE      2000
 #define TEST_ERROR 1
-char      Tokens[TEST_NUM][TOKEN_SIZE];
+#define MAX_QUEUE_SIZE 1000
+int TEST_NUM=0;
+char      **Tokens;
 
 
 /*----------------------------------------------*
@@ -435,10 +436,6 @@ testOSPPProviderDelete()
         OSPVProviderHandle,
         DEF_TIME_LIMIT);
 
-/*    FileArrayDelete(&localcerts, &localcertssizes, NUM_LOCAL_CERTS);
-    FileArrayDelete(&pkeys, &pkeyssizes, NUM_PKEYS);
-    FileArrayDelete(&certs, &certssizes, NUM_CA_CERTS);
-*/
     NUM_CA_CERTS=0;
     NUM_LOCAL_CERTS=0;
     NUM_PKEYS=0;
@@ -862,7 +859,7 @@ testOSPPTransactionSetNetworkId()
     char NetId[128];
 
     printf("Enter the Network Identifier : ");
-    gets(NetId);
+    scanf("%s",NetId);
     errorcode = OSPPTransactionSetNetworkId(
         OSPVTransactionHandle,
         NetId);
@@ -1404,7 +1401,7 @@ testSetCallingNumber()
 {
     int errorcode = 0;
     printf("Enter the new value for Calling number : ");
-    gets(callingnumber);
+    scanf("%s",callingnumber);
     if (!strcmp(callingnumber,""))
     {
         printf("WARNING : You have set an Empty Calling Number !!\n");
@@ -1418,7 +1415,7 @@ testSetCalledNumber()
 {
     int errorcode = 0;
     printf("Enter the new value for Called number : ");
-    gets(callednumber);
+    scanf("%s",callednumber);
     if (!strcmp(callednumber,""))
     {
         printf("WARNING : You have set an Empty Called Number !!\n");
@@ -1741,10 +1738,12 @@ testAPI(int apinumber)
         errorcode = testOSPPProviderDelete();
         break;
         case 3:
-        errorcode = testOSPPProviderGetAuthorityCertificates();
+        errorcode = testNotImplemented();
+        /*errorcode = testOSPPProviderGetAuthorityCertificates();*/
         break;
         case 4:
-        errorcode = testOSPPProviderSetAuthorityCertificates();
+        errorcode = testNotImplemented();
+        /*errorcode = testOSPPProviderSetAuthorityCertificates();*/
         break;
         case 5:
         errorcode = testOSPPProviderGetHTTPMaxConnections();
@@ -1774,7 +1773,8 @@ testAPI(int apinumber)
         errorcode = testNotImplemented();
         break;
         case 14:
-        errorcode = testOSPPProviderSetLocalKeys();
+        errorcode = testNotImplemented();
+        /*errorcode = testOSPPProviderSetLocalKeys();*/
         break;
         case 15:
         errorcode = testOSPPProviderGetLocalValidation();
@@ -1930,12 +1930,12 @@ testMenu()
       printf("\nProvider API functions\n");
       printf("---------------------------------------------------------------------\n");
       printf(" 1) New                                2) Delete\n");
-      printf(" 3) GetAuthorityCertificates           4) SetAuthorityCertificates\n");
+      printf(" 3) For future Enhancements            4) For future Enhancements\n");
       printf(" 5) GetHTTPMaxConnections              6) SetHTTPMaxConnections\n");
       printf(" 7) GetHTTPPersistence                 8) SetHTTPPersistence\n");
       printf(" 9) GetHTTPRetryDelay                 10) SetHTTPRetryDelay\n");
       printf("11) GetHTTPTimeout                    12) SetHTTPTimeout\n");
-      printf("13) For future Enhancements           14) SetLocalKeys\n");
+      printf("13) For future Enhancements           14) For future Enhancements\n");
       printf("15) GetLocalValidation                16) SetLocalValidation\n");
       printf("17) GetServicePoints                  18) SetServicePoints\n");
       printf("19) GetSSLLifetime                    20) SetSSLLifetime\n");
@@ -1965,7 +1965,7 @@ testMenu()
       printf("---------------------------------------------------------------------\n");
       printf("Performance tests\n");
       printf("---------------------------------------------------------------------\n");
-      printf("100) 1000 Full calls\n");
+      printf("100) Run Multiple calls\n");
       printf("---------------------------------------------------------------------\n");
       printf("Enter function number or 'q' to quit => ");
     }
@@ -2107,7 +2107,7 @@ main(int argc, char *argv[])
         exit(1);
     }
 
-    NonBlockingQueueMonitorNew(&nbMonitor,WORK_THREAD_NUM,1000,(500*1000) );
+    NonBlockingQueueMonitorNew(&nbMonitor,WORK_THREAD_NUM,MAX_QUEUE_SIZE,(500*1000) );
 
     do 
     {
@@ -2333,21 +2333,70 @@ int testNonBlockingPerformanceTest()
     unsigned detaillogsize   = 0;
 
 
-    int             OErrorCodes[TEST_NUM];
-    int             TErrorCodes[TEST_NUM];
-    OSPTTRANHANDLE  OTransactionHandles[TEST_NUM];
-    OSPTTRANHANDLE  TTransactionHandles[TEST_NUM];
-    unsigned        NumOfDestinations[TEST_NUM];
-    unsigned        TokenSizes[TEST_NUM];
-    OSPTCALLID*     CallIds[TEST_NUM];
-    unsigned        CallIdsNum[TEST_NUM];
-    unsigned        CallIdsLen[TEST_NUM];
+    int             *OErrorCodes = NULL;
+    int             *TErrorCodes = NULL;
+    OSPTTRANHANDLE  *OTransactionHandles = NULL;
+    OSPTTRANHANDLE  *TTransactionHandles = NULL;
+    unsigned        *NumOfDestinations = NULL;
+    unsigned        *TokenSizes = NULL;
+    OSPTCALLID     **CallIds = NULL;
+    unsigned        *CallIdsNum = NULL;
+    unsigned        *CallIdsLen = NULL;
     int             i = 0;
 
     /*
      * Used for calculating performance
     */
     time_t start_time, end_time;
+
+    fflush(stdin);
+    printf("Enter the number of Simultaneous Calls : ");
+    scanf("%d",&TEST_NUM);
+    
+    if ( (2 * TEST_NUM) > OSPC_MAX_TRANS)
+        printf("Warning !! The toolkit may not be able to process - %d Calls because the maximum transactions that can be created is - %d \n",TEST_NUM,OSPC_MAX_TRANS);
+
+    if (TEST_NUM > MAX_QUEUE_SIZE)
+        printf("Warning !! The toolkit may not be able to process - %d Calls because the maximum queue size is - %d \n",TEST_NUM,MAX_QUEUE_SIZE);
+
+
+    Tokens = (char **) malloc (sizeof(char *) * TEST_NUM);
+    if (Tokens == NULL)
+    {
+        printf("Malloc Failed !! Exiting ! \n");
+        exit (0);
+    }
+
+    for (i=0;i<TEST_NUM;i++)
+    {
+        Tokens[i] = (char *) malloc (sizeof(char) * TOKEN_SIZE);
+        if (Tokens[i] == NULL)
+        {
+            printf("Malloc Failed !! Exiting ! \n");
+            exit (0);
+        }
+    }
+
+    /*
+     * Allocate Memory
+     */
+     OErrorCodes = (int *)malloc((sizeof(int)*TEST_NUM));
+     TErrorCodes = (int *)malloc((sizeof(int)*TEST_NUM));
+     OTransactionHandles = (OSPTTRANHANDLE *)malloc((sizeof(OSPTTRANHANDLE)*TEST_NUM));
+     TTransactionHandles = (OSPTTRANHANDLE *)malloc((sizeof(OSPTTRANHANDLE)*TEST_NUM));
+     NumOfDestinations = (unsigned *)malloc((sizeof(unsigned)*TEST_NUM));
+     TokenSizes = (unsigned *)malloc((sizeof(unsigned)*TEST_NUM));
+     CallIds = (OSPTCALLID **)malloc((sizeof(OSPTCALLID *) * TEST_NUM));
+     CallIdsNum = (unsigned *)malloc((sizeof(unsigned)*TEST_NUM));
+     CallIdsLen = (unsigned *)malloc((sizeof(unsigned)*TEST_NUM));
+
+     if ((OErrorCodes == NULL) || (TErrorCodes == NULL) || (OTransactionHandles == NULL)
+        || (TTransactionHandles == NULL) || (NumOfDestinations == NULL) || (TokenSizes == NULL)
+        || (CallIds == NULL) || (CallIdsNum == NULL) || (CallIdsLen == NULL))
+    {
+        printf("Malloc Failed !! Exiting ! \n");
+        exit (0);
+    }
 
 
     /*
@@ -2612,7 +2661,6 @@ int testNonBlockingPerformanceTest()
       }
     }
 
-
     /* 
      * Phase V Deleting transactions
     */
@@ -2632,6 +2680,43 @@ int testNonBlockingPerformanceTest()
     time(&end_time);
     printf("Time elapsed <%d>\n",end_time - start_time);
 
+    if (OErrorCodes != NULL)
+       free(OErrorCodes);
+
+    if (TErrorCodes != NULL)
+       free(TErrorCodes);
+
+    if (OTransactionHandles != NULL)
+       free(OTransactionHandles);
+
+    if (TTransactionHandles != NULL)
+       free(TTransactionHandles);
+
+    if (NumOfDestinations != NULL)
+       free(NumOfDestinations);
+
+    if (TokenSizes != NULL)
+       free(TokenSizes);
+
+    if (CallIds != NULL)
+       free(CallIds);
+
+    if (CallIdsNum != NULL)
+       free(CallIdsNum);
+
+    if (CallIdsLen != NULL)
+       free(CallIdsLen);
+
+    for (i=0;i<TEST_NUM;i++)
+    {
+       if (Tokens[i] != NULL)
+       {
+          free(Tokens[i]);
+       }
+    }
+
+    if (Tokens != NULL)
+       free(Tokens);
 
     return errorcode;
 }
