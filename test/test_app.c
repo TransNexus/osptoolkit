@@ -928,22 +928,23 @@ int
 testOSPPTransactionSetServiceAndPricingInfo()
 {
     int errorcode = 0;
-    OSPT_PRICING_INFO PricingInfo;
+    OSPT_PRICING_INFO PricingInfo1;
     OSPT_PRICING_INFO PricingInfo2;
     OSPT_PRICING_INFO    *ospvPricingInfo[MAX_PRICING_INFO_ALLOWED];
 
-    PricingInfo.amount = 10;
-    PricingInfo.increment = 2;
-    OSPM_STRCPY((char *)PricingInfo.unit,(const char *)"sec");
-    OSPM_STRCPY((char *)PricingInfo.currency,(const char *)"USD");
+    PricingInfo1.amount = 10;
+    PricingInfo1.increment = 0.02;
+    OSPM_STRCPY((char *)PricingInfo1.unit,(const char *)"sec");
+    OSPM_STRCPY((char *)PricingInfo1.currency,(const char *)"USD");
 
     PricingInfo2.amount = 15;
-    PricingInfo2.increment = 3;
+    PricingInfo2.increment = 0.03;
     OSPM_STRCPY((char *)PricingInfo2.unit,(const char *)"sec");
     OSPM_STRCPY((char *)PricingInfo2.currency,(const char *)"EUR");
 
-    ospvPricingInfo[0] = &PricingInfo;
-    ospvPricingInfo[1] = NULL;
+    ospvPricingInfo[0] = &PricingInfo1;
+    ospvPricingInfo[1] = &PricingInfo2;
+    ospvPricingInfo[2] = NULL;
 
     errorcode = OSPPTransactionSetServiceAndPricingInfo(
         OSPVTransactionHandle,
@@ -1081,6 +1082,9 @@ testOSPPTransactionGetDestProtocol()
                       break;
            case OSPE_DEST_PROT_SIP :
                       printf("Destination Protocol is SIP \n");
+                      break;
+           case OSPE_DEST_PROT_IAX :
+                      printf("Destination Protocol is IAX \n");
                       break;
            case OSPE_DEST_PROT_H323_LRQ :
                       printf("Destination Protocol is h323-LRQ \n");
@@ -1534,7 +1538,7 @@ testOSPPTransactionRequestSuggestedAuthorisation()
 {
     int      errorcode       = 0;
     unsigned detaillogsize   = 0;
-    char *preferredDest[] = {{"172.16.4.10"},{"172.16.4.10"}};
+    char *preferredDest[] = {"172.16.4.10","172.16.4.10",NULL};
 
     errorcode = testInitializeCallIds(); 
 
@@ -1800,6 +1804,9 @@ testOSPPTransactionGetLookAheadInfoIfPresent()
                       break;
                case OSPE_DEST_PROT_SIP :
                       printf("Destination Protocol is SIP \n");
+                      break;
+               case OSPE_DEST_PROT_IAX :
+                      printf("Destination Protocol is IAX \n");
                       break;
                case OSPE_DEST_PROT_H323_LRQ :
                       printf("Destination Protocol is h323-LRQ \n");
