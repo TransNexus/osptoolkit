@@ -46,9 +46,6 @@
 #include "osp/ospx509.h"
 #include "osp/osptrans.h"
 #include "nonblocking.h"
-#include "openssl/bio.h"
-#include "openssl/pem.h"
-#include "openssl/evp.h"
 
 
 #ifdef  WIN32
@@ -129,7 +126,6 @@ NBMONITOR *nbMonitor    = NULL;
 int WORK_THREAD_NUM=30;    /* make sure that this number does not exceed DEF_HTTP_MAXCONN */
 #define TOKEN_SIZE      2000
 #define TEST_ERROR 1
-#define FILE_OPEN_ERROR 2
 #define MAX_QUEUE_SIZE 10000
 int TEST_NUM=0;
 char      **Tokens;
@@ -165,6 +161,7 @@ static  size_t  NUM_LOCAL_CERTS=0;
 static  size_t  NUM_PKEYS=0;
 static  unsigned char  **certs=NULL;
 static  OSPTCERT				*authCerts[OSPC_SEC_MAX_AUTH_CERTS];
+static  OSPTCERT                                TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
 static  int           *certssizes=NULL;
 static  unsigned char  **localcerts=NULL;
 static  int             *localcertssizes=NULL;
@@ -177,8 +174,7 @@ int quietmode = 0;
 unsigned numdestinations = NUM_CALL_IDS;
 int num_test_calls = 500;
 
-OSPTCERT TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
-unsigned char Reqbuf[4096],LocalBuf[4096],AuthBuf[OSPC_SEC_MAX_AUTH_CERTS][4096];
+unsigned char KeyBuf[4096],LocalBuf[4096],AuthBuf[OSPC_SEC_MAX_AUTH_CERTS][4096];
 
 /************ Local prototypes */
 static off_t  FileSizeGet(int fd);
@@ -235,116 +231,6 @@ testNotImplemented()
   return(0);
 }
 
-/*----------------------------------------------*
- *               Loads the Certificate          *
- *----------------------------------------------*/
-int testOSPPloadPemCert(unsigned char *FileName, unsigned char *buffer, int *len)
-{
-    int length = 0;
-    unsigned char *temp;
-    BIO *bioIn = NULL;
-    X509 *cert=NULL;
-    int retVal = OSPC_ERR_NO_ERROR;
-
-    temp = buffer;
-    bioIn = BIO_new_file((const char*)FileName,"r");
-    if (bioIn == NULL)
-    {
-        retVal = FILE_OPEN_ERROR;
-    }
-    else
-    {
-        cert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
-        if (cert == NULL)
-        {
-            printf("Failed to parse the Certificate from the File - %s \n",FileName);
-            retVal = TEST_ERROR;
-        }
-        else
-        {
-            length = i2d_X509(cert,&temp);
-            if (cert == 0)
-            {
-                printf("Failed to parse the Certificate from the File - %s ,Length = 0\n",FileName);
-                retVal = TEST_ERROR;
-            }
-            else
-            {
-               *len = length;
-            }
-        }
-    }
-
-    if (bioIn != NULL)
-    {
-        BIO_free(bioIn);
-    }
-
-    if (cert != NULL)
-    {
-        X509_free(cert);
-    }
-    return retVal;    
-}
-
-
-
-
-
-/*----------------------------------------------*
- *               Loads the Private Key          *
- *----------------------------------------------*/
-int testOSPPloadPemPrivateKey(unsigned char *FileName, unsigned char *buffer, int *len)
-{
-    int length = 0;
-    unsigned char *temp;
-    BIO *bioIn = NULL;
-    RSA *pKey = NULL;
-    int retVal = OSPC_ERR_NO_ERROR;
-
-    temp = buffer;
-
-    bioIn = BIO_new_file((const char*)FileName,"r");
-    if (bioIn == NULL)
-    {
-        printf("Failed to find the File - %s \n",FileName);
-        retVal = FILE_OPEN_ERROR;
-    }
-    else
-    {
-        pKey = PEM_read_bio_RSAPrivateKey(bioIn,NULL,NULL,NULL);
-        if (pKey == NULL)
-        {
-            printf("Failed to parse the Private Key from the File - pkey.pem \n");
-            retVal = TEST_ERROR;
-        }
-        else
-        {
-            length = i2d_RSAPrivateKey(pKey,&temp);
-            if (length == 0)
-            {
-                printf("Failed to parse the Private Key from the File - pkey.pem, length = 0\n");
-                retVal = TEST_ERROR;
-            }
-            else
-            {
-                *len = length;
-                printf ("Loaded 1 Private Key \n");
-            }   
-        }
-    }
-    if (bioIn != NULL)
-    {
-        BIO_free(bioIn);
-    }
-
-    if (pKey != NULL)
-    {
-       RSA_free(pKey);
-    }
-    return retVal;    
-}
-
 int 
 testOSPPSetServicePoints()
 {
@@ -368,49 +254,30 @@ char customer_id[64];
 char device_id[64];
 char searchstr[20];
 
-    int length = 0;
-
-    errorcode = testOSPPloadPemPrivateKey((unsigned char *)"pkey.pem", (unsigned char *)Reqbuf,&length);
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
-        privatekey.PrivateKeyData = Reqbuf;
-        privatekey.PrivateKeyLength = length;
-    }
-    else
+    errorcode = OSPPUtilLoadPEMPrivateKey((unsigned char *)"pkey.pem", &privatekey, KeyBuf);
+    if (errorcode != OSPC_ERR_NO_ERROR)
     {
          return errorcode;
     }
-
-   length = 0;
-    errorcode = testOSPPloadPemCert((unsigned char *)"localcert.pem", (unsigned char *)LocalBuf,&length);
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
-        localcert.CertData = LocalBuf;
-        localcert.CertDataLength = length;
-        printf ("Loaded 1 Local Certificate \n");
-    }
-    else
+    errorcode = OSPPUtilLoadPEMCert((unsigned char *)"localcert.pem", &localcert, LocalBuf);
+    if (errorcode != OSPC_ERR_NO_ERROR)
     {
          return errorcode;
     }
-
     i=0;
     while (i<OSPC_SEC_MAX_AUTH_CERTS)
     {
         sprintf(searchstr,"cacert_%d.pem",i); 
-        length = 0;
-        errorcode = testOSPPloadPemCert((unsigned char *)searchstr, (unsigned char *)AuthBuf[i],&length);
+        errorcode = OSPPUtilLoadPEMCert((unsigned char *)searchstr, &(TheAuthCert[i]), AuthBuf[i]);
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
-            TheAuthCert[i].CertData = AuthBuf[i];
-            TheAuthCert[i].CertDataLength = length;
             authCerts[i] = &(TheAuthCert[i]);
             i++;
             printf ("Loaded %d Authorization Certificate \n",i);
         }
         else
         {
-             if (errorcode == FILE_OPEN_ERROR)
+             if (errorcode == OSPC_ERR_CRYPTO_FILE_OPEN_ERROR)
              {
                  /*
                   * If i!=0 then we have read at least one cacert.
@@ -427,6 +294,7 @@ char searchstr[20];
                      /*
                       * Break out of thew loop
                       */
+                     printf("There are no more cert files\n");
                      break;
                  }
              }
@@ -438,6 +306,7 @@ char searchstr[20];
     }
     NUM_CA_CERTS = i;
 
+    printf("Number of cert files %d\n",NUM_CA_CERTS);
 
     sprintf(customer_id, "%ld", custid);
     sprintf(device_id, "%ld", devid);
@@ -556,18 +425,16 @@ testOSPPProviderSetAuthorityCertificates()
     {
         sprintf(searchstr,"cacert_%d.pem",i); 
         length = 0;
-        errorcode = testOSPPloadPemCert((unsigned char *)searchstr, (unsigned char *)AuthBuf[i],&length);
+        errorcode = OSPPUtilLoadPEMCert((unsigned char *)searchstr, &(TheAuthCert[i]),AuthBuf[i]);
+        authCerts[i] = &(TheAuthCert[i]);
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
-            TheAuthCert[i].CertData = AuthBuf[i];
-            TheAuthCert[i].CertDataLength = length;
-            authCerts[i] = &(TheAuthCert[i]);
             i++;
             printf ("Read %d Authorization Certificate \n",i);
         }
         else
         {
-             if (errorcode == FILE_OPEN_ERROR)
+             if (errorcode == OSPC_ERR_CRYPTO_FILE_OPEN_ERROR)
              {
                  /*
                   * If i!=0 then we have read at least one cacert.
@@ -779,30 +646,24 @@ testOSPPProviderSetLocalKeys()
     int errorcode = 0;
     int length;
 
-    errorcode = testOSPPloadPemPrivateKey((unsigned char *)"pkey.pem", (unsigned char *) Reqbuf,&length);
+    errorcode = OSPPUtilLoadPEMPrivateKey((unsigned char *)"pkey.pem", &privatekey,KeyBuf);
 
     if (errorcode == OSPC_ERR_NO_ERROR)
     {
-        privatekey.PrivateKeyData = Reqbuf;
-        privatekey.PrivateKeyLength = length;
-        length = 0;
-
-        errorcode = testOSPPloadPemCert((unsigned char *)"localcert.pem", (unsigned char *)LocalBuf,&length);
+        errorcode = OSPPUtilLoadPEMCert((unsigned char *)"localcert.pem", &localcert, LocalBuf);
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
-            localcert.CertData = LocalBuf;
-            localcert.CertDataLength = length;
             printf ("Read 1 Local Certificate \n");
             localcerts = &(localcert.CertData);
         }
         else
         {
-            printf("testOSPPloadPemCertreturned Error ! \n");
+            printf("OSPPUtilLoadPEMCertreturned Error ! \n");
         } 
     }
     else
     {
-        printf("testOSPPloadPemPrivateKey returned Error ! \n");
+        printf("OSPPUtilLoadPEMPrivateKey returned Error ! \n");
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR)

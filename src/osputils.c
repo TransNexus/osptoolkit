@@ -28,6 +28,10 @@
 #include "osp/osp.h"
 #include "osp/osputils.h"
 #include "osp/osplist.h"
+#include "openssl/bio.h"
+#include "openssl/pem.h"
+#include "openssl/evp.h"
+
 
 
 /* Build a string given a uint64 and an int.
@@ -133,7 +137,7 @@ OSPPUtilGetErrorFromStatus(
             break;
         case 404:
             errorcode = OSPC_ERR_TRAN_ROUTE_NOT_FOUND;
-						OSPM_DBGERRORLOG(errorcode, "OSP Response Status: 404 Route Not Found");
+            OSPM_DBGERRORLOG(errorcode, "OSP Response Status: 404 Route Not Found");
             break;
         case 410:
             errorcode = OSPC_ERR_TRAN_CHAR_ENC_NOT_SUPD;
@@ -267,4 +271,107 @@ OSPPUtilStringToLowercase(
             *(*ospvString + ospvIndex) = (char)OSPM_TOLOWER((unsigned int)*(*ospvString + ospvIndex));
         }
     }
+}
+/*
+ * Loads the Private Key
+ */
+int OSPPUtilLoadPEMPrivateKey(unsigned char *FileName, OSPTPRIVATEKEY *key, unsigned char *keyBuffer)
+{
+    BIO *bioIn = NULL;
+    RSA *rsaKey = NULL;
+    int errorcode = OSPC_ERR_NO_ERROR;
+
+    key->PrivateKeyData = keyBuffer;
+
+    bioIn = BIO_new_file((const char*)FileName,"r");
+
+    if (bioIn == NULL)
+    {
+        errorcode = OSPC_ERR_CRYPTO_FILE_OPEN_ERROR;
+        OSPM_DBGERRORLOG(errorcode, "Failed to open PEM key file");
+    }
+    else
+    {
+        rsaKey = PEM_read_bio_RSAPrivateKey(bioIn,NULL,NULL,NULL);
+        if (rsaKey == NULL)
+        {
+            errorcode = OSPC_ERR_CRYPTO_FILE_LOAD_ERROR;
+            OSPM_DBGERRORLOG(errorcode, "Failed to load PEM key from file");
+        }
+        else
+        {
+	    key->PrivateKeyLength = i2d_RSAPrivateKey(rsaKey,&keyBuffer);
+
+            if (key->PrivateKeyLength == 0)
+            {
+                errorcode = OSPC_ERR_CRYPTO_FILE_PARSE;
+                OSPM_DBGERRORLOG(errorcode, "Failed to parse PEM key from file");
+            }
+        }
+    }
+    if (bioIn != NULL)
+    {
+        BIO_free(bioIn);
+    }
+
+    if (rsaKey != NULL)
+    {
+       RSA_free(rsaKey);
+    }
+
+    return errorcode;    
+}
+
+
+
+
+
+/*
+ * Loads the Certificate
+ */
+int OSPPUtilLoadPEMCert(unsigned char *FileName, OSPTCERT *cert, unsigned char *certBuffer)
+{
+    BIO *bioIn = NULL;
+    X509 *x509cert=NULL;
+    int errorcode = OSPC_ERR_NO_ERROR;
+
+    cert->CertData = certBuffer;
+
+    bioIn = BIO_new_file((const char*)FileName,"r");
+
+    if (bioIn == NULL)
+    {
+        errorcode = OSPC_ERR_CRYPTO_FILE_OPEN_ERROR;
+    }
+    else
+    {
+        x509cert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
+        if (x509cert == NULL)
+        {
+            errorcode = OSPC_ERR_CRYPTO_FILE_LOAD_ERROR;
+            OSPM_DBGERRORLOG(errorcode, "Failed to load PEM Cert from file");
+        }
+        else
+        {
+            cert->CertDataLength = i2d_X509(x509cert,&certBuffer);
+
+            if (cert->CertDataLength == 0)
+            {
+                errorcode = OSPC_ERR_CRYPTO_FILE_PARSE;
+       	        OSPM_DBGERRORLOG(errorcode, "Failed to parse PEM Certificate from file");
+            }
+        }
+    }
+
+    if (bioIn != NULL)
+    {
+        BIO_free(bioIn);
+    }
+
+    if (x509cert != NULL)
+    {
+        X509_free(x509cert);
+    }
+
+    return errorcode;    
 }
