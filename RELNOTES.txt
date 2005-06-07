@@ -429,13 +429,11 @@ Version 3.3.1
 * Bug-fix in test case #30 - NULL terminated suggested routes
 * Bug-fix in test case #31 - check error code when token algorithm does 
   not match actual token format.
+---------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
+Version 3.3.2
+* Moved  OSPPUtilLoadPEMPrivateKey and OSPPUtilLoadPEMCert from test_app to
+  osputils.
+* When validating a token, don't call OSPPTransIdCheckAndAdd when compile-time
+  flag OSP_ALLOW_DUP_TXN is defined.
 
