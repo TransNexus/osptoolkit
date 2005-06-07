@@ -4626,9 +4626,10 @@ OSPPTransactionValidateAuthorisation(
 #else
                 BAllowDupTransId = OSPC_FALSE;
 #endif
-                if ((OSPPTransIdCheckAndAdd(OSPPTokenInfoGetTrxId(tokeninfo), 
+                if (BAllowDupTransId ||
+                    (OSPPTransIdCheckAndAdd(OSPPTokenInfoGetTrxId(tokeninfo), 
                                          (unsigned long)OSPPTokenInfoGetValidUntil(tokeninfo), 
-                                          trans->Provider)) || BAllowDupTransId)
+                                          trans->Provider)))
                 {
 
                     /*
