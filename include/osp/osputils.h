@@ -45,8 +45,8 @@ extern "C"
     int           OSPPUtilGetRandom(char *, int);
     int           OSPPUtilBuildString(OSPTUINT64, int, char **);
     void          OSPPUtilStringToLowercase(char **);
-    int           OSPPUtilLoadPEMPrivateKey(unsigned char *fileName, OSPTPRIVATEKEY *key, unsigned char *keyBuffer);
-    int           OSPPUtilLoadPEMCert(      unsigned char *fileName, OSPTCERT *cert,      unsigned char *certBuffer);
+    int           OSPPUtilLoadPEMPrivateKey(unsigned char *fileName, OSPTPRIVATEKEY *key);
+    int           OSPPUtilLoadPEMCert(      unsigned char *fileName, OSPTCERT *cert);
 #ifdef __cplusplus
 }
 #endif

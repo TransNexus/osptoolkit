@@ -275,13 +275,14 @@ OSPPUtilStringToLowercase(
 /*
  * Loads the Private Key
  */
-int OSPPUtilLoadPEMPrivateKey(unsigned char *FileName, OSPTPRIVATEKEY *key, unsigned char *keyBuffer)
+int OSPPUtilLoadPEMPrivateKey(unsigned char *FileName, OSPTPRIVATEKEY *key)
 {
     BIO *bioIn = NULL;
     RSA *rsaKey = NULL;
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    key->PrivateKeyData = keyBuffer;
+    /* The i2d function will allocate memory */
+    key->PrivateKeyData = NULL;
 
     bioIn = BIO_new_file((const char*)FileName,"r");
 
@@ -300,7 +301,7 @@ int OSPPUtilLoadPEMPrivateKey(unsigned char *FileName, OSPTPRIVATEKEY *key, unsi
         }
         else
         {
-	    key->PrivateKeyLength = i2d_RSAPrivateKey(rsaKey,&keyBuffer);
+	    key->PrivateKeyLength = i2d_RSAPrivateKey(rsaKey,&(key->PrivateKeyData));
 
             if (key->PrivateKeyLength == 0)
             {
@@ -329,13 +330,14 @@ int OSPPUtilLoadPEMPrivateKey(unsigned char *FileName, OSPTPRIVATEKEY *key, unsi
 /*
  * Loads the Certificate
  */
-int OSPPUtilLoadPEMCert(unsigned char *FileName, OSPTCERT *cert, unsigned char *certBuffer)
+int OSPPUtilLoadPEMCert(unsigned char *FileName, OSPTCERT *cert)
 {
     BIO *bioIn = NULL;
     X509 *x509cert=NULL;
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    cert->CertData = certBuffer;
+    /* The i2d function will allocate memory */
+    cert->CertData = NULL;
 
     bioIn = BIO_new_file((const char*)FileName,"r");
 
@@ -353,7 +355,7 @@ int OSPPUtilLoadPEMCert(unsigned char *FileName, OSPTCERT *cert, unsigned char *
         }
         else
         {
-            cert->CertDataLength = i2d_X509(x509cert,&certBuffer);
+            cert->CertDataLength = i2d_X509(x509cert,&(cert->CertData));
 
             if (cert->CertDataLength == 0)
             {
