@@ -157,32 +157,12 @@ long devid  = DEF_DEVICE_ID;
  *            certificate globals               *
  *----------------------------------------------*/
 static  size_t  NUM_CA_CERTS=0;
-static  size_t  NUM_LOCAL_CERTS=0;
-static  size_t  NUM_PKEYS=0;
-static  unsigned char  **certs=NULL;
-static  OSPTCERT				*authCerts[OSPC_SEC_MAX_AUTH_CERTS];
-static  OSPTCERT                                TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
-static  int           *certssizes=NULL;
-static  unsigned char  **localcerts=NULL;
-static  int             *localcertssizes=NULL;
-static OSPTCERT         localcert = { NULL, 0 };
-static  unsigned char **pkeys=NULL;
-static  int            *pkeyssizes=NULL;
-static OSPTPRIVATEKEY privatekey = { NULL, 0 };
 
 int quietmode = 0;
 unsigned numdestinations = NUM_CALL_IDS;
 int num_test_calls = 500;
 
-unsigned char KeyBuf[4096],LocalBuf[4096],AuthBuf[OSPC_SEC_MAX_AUTH_CERTS][4096];
-
 /************ Local prototypes */
-static off_t  FileSizeGet(int fd);
-static int    FileArrayRead(unsigned char ***array,size_t *arrayNum, 
-                            int **filesizes,const char *baseName,
-                            const char *ext,size_t max);
-static void    FileArrayDelete(unsigned char ***array,int **filesizes, 
-                              size_t num);
 int testTestCalls(void);
 OSPTTHREADRETURN testNonBlockingPerformanceTest(void *);
 int testNonBlockingPerformanceTestForCapabilities();
@@ -247,19 +227,23 @@ testOSPPSetServicePoints()
 int
 testOSPPProviderNew(OSPTPROVHANDLE *ProvHandle)
 {
-int i,errorcode = 0;
-const char **servpts;
+    int i,errorcode = 0;
+    const char **servpts;
 
-char customer_id[64];
-char device_id[64];
-char searchstr[20];
+    char customer_id[64];
+    char device_id[64];
+    char searchstr[20];
+    OSPTCERT       localcert;
+    OSPTPRIVATEKEY privatekey;
+    OSPTCERT      *authCerts[OSPC_SEC_MAX_AUTH_CERTS];
+    OSPTCERT      TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
 
-    errorcode = OSPPUtilLoadPEMPrivateKey((unsigned char *)"pkey.pem", &privatekey, KeyBuf);
+    errorcode = OSPPUtilLoadPEMPrivateKey((unsigned char *)"pkey.pem", &privatekey);
     if (errorcode != OSPC_ERR_NO_ERROR)
     {
          return errorcode;
     }
-    errorcode = OSPPUtilLoadPEMCert((unsigned char *)"localcert.pem", &localcert, LocalBuf);
+    errorcode = OSPPUtilLoadPEMCert((unsigned char *)"localcert.pem", &localcert);
     if (errorcode != OSPC_ERR_NO_ERROR)
     {
          return errorcode;
@@ -268,7 +252,7 @@ char searchstr[20];
     while (i<OSPC_SEC_MAX_AUTH_CERTS)
     {
         sprintf(searchstr,"cacert_%d.pem",i); 
-        errorcode = OSPPUtilLoadPEMCert((unsigned char *)searchstr, &(TheAuthCert[i]), AuthBuf[i]);
+        errorcode = OSPPUtilLoadPEMCert((unsigned char *)searchstr, &(TheAuthCert[i]));
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
             authCerts[i] = &(TheAuthCert[i]);
@@ -335,6 +319,25 @@ char searchstr[20];
         device_id,
         ProvHandle);
 
+    /* Free memory allocated while loading crypto information from PEM-encoded files */
+    if (privatekey.PrivateKeyData != NULL)
+    {
+       free(privatekey.PrivateKeyData);
+    }
+
+    if (localcert.CertData != NULL)
+    {
+       free(localcert.CertData);
+    }
+
+    for (i=0; i<NUM_CA_CERTS; i++)
+    {
+      if (TheAuthCert[i].CertData != NULL)
+      {
+         free(TheAuthCert[i].CertData);
+      }
+    }
+
     return errorcode;
 }
 
@@ -348,8 +351,6 @@ testOSPPProviderDelete()
         DEF_TIME_LIMIT);
 
     NUM_CA_CERTS=0;
-    NUM_LOCAL_CERTS=0;
-    NUM_PKEYS=0;
     
     return errorcode;
 }
@@ -419,13 +420,15 @@ testOSPPProviderSetAuthorityCertificates()
     int length = 0;
     int i;
     char searchstr[20];
+    OSPTCERT      *authCerts[OSPC_SEC_MAX_AUTH_CERTS];
+    OSPTCERT      TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
 
     i=0;
     while (i<OSPC_SEC_MAX_AUTH_CERTS)
     {
         sprintf(searchstr,"cacert_%d.pem",i); 
         length = 0;
-        errorcode = OSPPUtilLoadPEMCert((unsigned char *)searchstr, &(TheAuthCert[i]),AuthBuf[i]);
+        errorcode = OSPPUtilLoadPEMCert((unsigned char *)searchstr, &(TheAuthCert[i]));
         authCerts[i] = &(TheAuthCert[i]);
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -467,6 +470,14 @@ testOSPPProviderSetAuthorityCertificates()
         NUM_CA_CERTS,
         (const OSPTCERT **)authCerts);
 
+    /* Free memory allocated while loading crypto information from PEM-encoded files */
+    for (i=0; i<NUM_CA_CERTS; i++)
+    {
+      if (TheAuthCert[i].CertData != NULL)
+      {
+         free(TheAuthCert[i].CertData);
+      }
+    }
     return errorcode;
 }
 
@@ -645,16 +656,17 @@ testOSPPProviderSetLocalKeys()
 {
     int errorcode = 0;
     int length;
+    OSPTCERT       localcert;
+    OSPTPRIVATEKEY privatekey;
 
-    errorcode = OSPPUtilLoadPEMPrivateKey((unsigned char *)"pkey.pem", &privatekey,KeyBuf);
+    errorcode = OSPPUtilLoadPEMPrivateKey((unsigned char *)"pkey.pem", &privatekey);
 
     if (errorcode == OSPC_ERR_NO_ERROR)
     {
-        errorcode = OSPPUtilLoadPEMCert((unsigned char *)"localcert.pem", &localcert, LocalBuf);
+        errorcode = OSPPUtilLoadPEMCert((unsigned char *)"localcert.pem", &localcert);
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
             printf ("Read 1 Local Certificate \n");
-            localcerts = &(localcert.CertData);
         }
         else
         {
@@ -671,7 +683,18 @@ testOSPPProviderSetLocalKeys()
         errorcode = OSPPProviderSetLocalKeys(
         OSPVProviderHandle,
         &privatekey,
-        localcerts[0]);
+        localcert.CertData);
+    }
+
+    /* Free memory allocated while loading crypto information from PEM-encoded files */
+    if (privatekey.PrivateKeyData != NULL)
+    {
+       free(privatekey.PrivateKeyData);
+    }
+
+    if (localcert.CertData != NULL)
+    {
+       free(localcert.CertData);
     }
 
     return errorcode;
@@ -1961,70 +1984,6 @@ testOSPPSecCertShowChain()
 }
 
 int
-testOSPPSecCertObjectCreateDelete()
-{
-    int      errorcode     = 0;
-        OSPTASN1OBJECT *certificate = OSPC_OSNULL;
-        unsigned long customerId = 0;
-        unsigned long deviceId = 0;
-
-        /* Read the local certificate into the array */
-    FileArrayDelete(&localcerts, &localcertssizes, NUM_LOCAL_CERTS);
-    (void)FileArrayRead(&localcerts,&NUM_LOCAL_CERTS,&localcertssizes, 
-                        "localcert","dat",1);
-    if (!quietmode)
-        printf("Loaded %u local certificates\n",NUM_LOCAL_CERTS);
-
-        errorcode = OSPPX509CertCreate(localcerts[0], &certificate);
-
-        if (errorcode == OSPC_ERR_NO_ERROR)
-        {
-                errorcode = OSPPX509CertGetCustDeviceId( certificate,
-                                                                                                        &customerId, &deviceId);
-                if (errorcode == OSPC_ERR_NO_ERROR)
-                {
-                        printf("Certificate Customer ID: %ld\n", customerId);
-                        printf("Certificate Device ID: %ld\n", deviceId);
-                }
-        }
-
-        if (errorcode == OSPC_ERR_NO_ERROR)
-        {
-                errorcode = OSPPX509CertDelete(&certificate);
-        }
-
-        return(errorcode);
-}
-
-int
-testOSPPSecKeyObjectCreateDelete()
-{
-    int      errorcode     = 0;
-        OSPTASN1OBJECT *key = OSPC_OSNULL;
-        OSPTPRIVATEKEY privateKey;
-
-        /* Read the local key into the array */
-    FileArrayDelete(&pkeys, &pkeyssizes, NUM_PKEYS);
-    (void)FileArrayRead(&pkeys,&NUM_PKEYS,&pkeyssizes, "pkey","dat",1);
-    if (!quietmode)
-        printf("Loaded %u private keys\n",NUM_PKEYS);
-
-    privateKey.PrivateKeyData=pkeys[0];
-    privateKey.PrivateKeyLength = pkeyssizes[0];
-    
-
-        errorcode = OSPPPKCS8KeyInfoCreate(&key, &privateKey);
-
-        if (errorcode == OSPC_ERR_NO_ERROR)
-        {
-                OSPPPKCS8KeyInfoDelete(&key);
-        }
-
-        return(errorcode);
-}
-
-
-int
 testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
@@ -2701,149 +2660,6 @@ main(int argc, char *argv[])
     printf("Program Over.\n");
     return(0);
 }
-
-
-
-static int FileArrayRead(unsigned char ***array,size_t *arrayNum,int *filesizes[],const char *baseName,const char *ext,size_t maxFiles)
-{
-int    Fretval;
-char  file[1024+1];
-int    doIt;
-int    fd;
-int   *fs;
-unsigned char  **cp;
-
-  Fretval=(-1);
-  doIt=1;
-  if((array!=NULL)&&(arrayNum!=NULL))
-  {
-    *array=NULL;
-    *arrayNum=0;
-    *filesizes=(int *)NULL;
-    if(((cp=(unsigned char **)calloc(1,maxFiles*sizeof(cp)))!=NULL)
-        && ((fs=(int *)malloc(maxFiles*sizeof(int)))!=NULL)) 
-    {
-      size_t  x;
-
-      Fretval=0;
-      for(x=0;(x<maxFiles)&&(Fretval==0);x++)
-      {
-        sprintf(file,"%s_%05d.%s",baseName,x+1,ext);
-        if((fd=_Open(file,O_RDONLY | O_BINARY))>=0)
-        {
-          int    s;
-          unsigned char  *data;
-
-          if((s=FileSizeGet(fd))>0)
-          {
-            if((data=(unsigned char *)malloc(s+1))!=NULL)
-            {
-              cp[x]=data;
-              fs[x]=s;
-              data[s]=0;  /* So it looks like a string */
-              if(_Read(fd,data,s) != s)
-              {
-                printf("Unable to read file %s size %u\n",file,s);
-                Fretval=(-1);
-              }
-            }
-            else
-            {
-              printf("Unable to allocate %u bytes for file %s\n",s,file);
-              Fretval=(-1);
-            }
-          }
-          else
-          {
-            printf("Unable to get file size of <%s>\n",file);
-            Fretval=(-1);
-          }
-          (void)_Close(fd);
-        }
-        else
-        {
-          break;
-        }
-      } /* For every file */
-      if(Fretval==0)
-      {
-        *arrayNum=x;
-        *array=cp;
-        *filesizes=fs;
-      }
-      else
-      {
-        FileArrayDelete(&cp,&fs,maxFiles);
-      }
-    }
-    else
-    {
-      printf("Unable to allocate file pointers\n");
-    }
-  }
-  else
-  {
-    printf("Bad function parameters\n");
-  }
-  return(Fretval);
-} /* FileArrayRead */
-
-
-static void FileArrayDelete(unsigned char ***array, int **filesizes,size_t num)
-{
-unsigned char    **p;
-size_t  x;
-
-  if((array!=NULL)&&(num>=1)&&(filesizes!=NULL))
-  {
-    p=*array;
-    for(x=0;x<num;x++)
-    {
-      if(p[x]!=NULL)
-      {
-        free(p[x]);
-      }
-    }
-    free(p);
-    *array=NULL;
-    free(*filesizes);
-    *filesizes=NULL;
-  }
-  return;
-}
-
-
-/********************************************************
-*
-* Function name : FileSizeGet
-* Description   :
-* Returns       : -1: error else file size
-*
-********************************************************/
-static off_t FileSizeGet(int fd)
-{
-off_t x;
-off_t Fretval;
-
-  Fretval=(-1);
-  if(fd!=(-1))
-  {
-    if((x=_Lseek(fd,0,SEEK_CUR))!=(-1))
-    {
-      if(_Lseek(fd,0,SEEK_SET)!=(-1))
-      {
-        Fretval=_Lseek(fd,0,SEEK_END);
-      }
-      if(_Lseek(fd,x,SEEK_SET)==(-1))
-      {
-        Fretval=(-1);
-      }
-    }
-  }
-  return(Fretval);
-} /* FileSizeGet */
-
-
 
 
 
