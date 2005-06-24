@@ -45,6 +45,7 @@
 #include "osp/osppkcs8.h"
 #include "osp/ospx509.h"
 #include "osp/osptrans.h"
+#include "osp/osputils.h"
 #include "nonblocking.h"
 
 
