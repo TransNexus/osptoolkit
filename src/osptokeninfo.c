@@ -674,7 +674,7 @@ OSPPTokenInfoFromElement(
                  */
                 if (OSPPXMLAttrGetValue((OSPTXMLATTR *)elem->ospmXMLElemAttrs))
                 {
-                    if (!(OSPM_STRCMP("network",OSPPXMLAttrGetValue((OSPTXMLATTR *)elem->ospmXMLElemAttrs))))
+                    if (!(OSPM_STRCMP("network",OSPPXMLAttrGetValue((OSPTXMLATTR *)OSPPListFirst(&elem->ospmXMLElemAttrs)))))
                     {
                         /* 
                          * This is network information
