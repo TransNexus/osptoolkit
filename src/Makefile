@@ -5,7 +5,7 @@ INCLDIR = ../include
 INSTALL_PATH=/usr/local
 
 LFLAGS   = -lsocket -lnsl -lm -lpthread
-ARLIB    = ../lib/libosp.a
+ARLIB    = ../lib/libosptk.a
 
 # WARNING !!
 # If not using gcc for compiling the toolkit
@@ -65,7 +65,7 @@ build  : $(OBJS)
 
 install: build
 	cp -r ../include/osp/ $(INSTALL_PATH)/include/
-	cp ../lib/libosp.a $(INSTALL_PATH)/lib
+	cp ../lib/libosptk.a $(INSTALL_PATH)/lib
 
 clean   :
 	rm -f $(OBJS) $(ARLIB)

@@ -17,8 +17,8 @@ CFLAGS        = -g $(WARNING_FLAGS)
 
 MACRO_FLAGS   = -D_POSIX_THREADS -DSOLARIS -DOSPD_DEBUG -DOSP_SDK -DOPENSSL_NO_KRB5 -DOSPC_DEBUG=1
 
-LIBS          = -lnsl -lsocket -ldl -lm -losp $(SSL_LIBS) -lpthread 
-LIBS_LINUX    = -losp $(SSL_LIBS) -lpthread -ldl -lm
+LIBS          = -lnsl -lsocket -ldl -lm -losptk $(SSL_LIBS) -lpthread 
+LIBS_LINUX    = -losptk $(SSL_LIBS) -lpthread -ldl -lm
 OSP_LIBDIR    = -L../lib
 LIBDIRS       = $(OSP_LIBDIR) $(SSL_LIBDIRS)
 

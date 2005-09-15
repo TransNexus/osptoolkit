@@ -12,10 +12,10 @@ CFLAGS     = -g $(PROFILE) -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D
 LFLAGS	   = $(PROFILELIB) -lsocket -lnsl -lpthread -lmtmalloc  -ldl -lm
 LFLAGS_LINUX	   = $(PROFILELIB) -lpthread -lm -ldl
 SOFLAGS    = -shared 
-SOOBJ      = libosp.so
+SOOBJ      = libosptk.so
 AR         = /usr/ccs/bin/ar
 ARLIBDIR   = ../lib
-ARLIB      = -losp
+ARLIB      = -losptk
 
 #LINT	   = /usr/ccs/bin/ucblint
 MKDEP      = /usr/openwin/bin/makedepend
@@ -35,11 +35,11 @@ OBJS	= nonblocking.o syncque.o test_app.o
 
 all: 	$(OBJS)
 	$(PURE) cc $(PROFILE) $(OBJS) -o ../bin/test_app \
-	$(ARLIBDIR)/libosp.a $(LFLAGS) -L$(ARLIBDIR) $(ARLIB) $(SSL)
+	$(ARLIBDIR)/libosptk.a $(LFLAGS) -L$(ARLIBDIR) $(ARLIB) $(SSL)
 
 linux: 	$(OBJS)
 	$(PURE) cc $(PROFILE) $(OBJS) -o ../bin/test_app \
-	$(ARLIBDIR)/libosp.a $(LFLAGS_LINUX) -L$(ARLIBDIR) $(ARLIB) $(SSL)
+	$(ARLIBDIR)/libosptk.a $(LFLAGS_LINUX) -L$(ARLIBDIR) $(ARLIB) $(SSL)
 
 clean :
 	rm -f *.o ../bin/test_app

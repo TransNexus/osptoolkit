@@ -17,7 +17,7 @@ SSL_LIBS      = -lssl -lcrypto
 SSL_OBJS      = ../ospopenssl.o
 SSL_LIBDIRS   = -L/usr/local/ssl/lib
 #
-LIBS          = -lnsl -lsocket -ldl -lm $(SSL_LIBS) -losp -lpthread 
+LIBS          = -lnsl -lsocket -ldl -lm $(SSL_LIBS) -losptk -lpthread 
 OSP_LIBDIR    = $(CVSENVROOT)/lib/client/$(TARGET_OS)
 LIBDIRS       = -L$(CVSENVROOT)/lib -L$(OSP_LIBDIR) $(SSL_LIBDIRS) 
 
