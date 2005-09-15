@@ -21,28 +21,16 @@
 
 
 
-
 /*
- * osp.h - Universal OSP includes.
- */
-#ifndef _OSP_H
-#define _OSP_H
-
-/*
- * internal SDK includes
+ * osplibversion.h - OSP Toolkit version
  */
 
-#include "osp/ospdatatypes.h"
-#include "osp/ospinit.h"
-#include "osp/osperrno.h"
-#include "osp/ospossys.h"
+#ifndef _OSPLIBVERSION_H
+#define _OSPLIBVERSION_H
 
-/*
- * exposed OSP API prototypes and constants
- */
-
-#include "osp/ospproviderapi.h"
-#include "osp/osptransapi.h"
-#include "osp/osplibversion.h"
+#define OSP_CLIENT_TOOLKIT_VERSION_MAJOR	3
+#define OSP_CLIENT_TOOLKIT_VERSION_MINOR	3
+#define OSP_CLIENT_TOOLKIT_VERSION_BUGFIX	3
 
 #endif
+
