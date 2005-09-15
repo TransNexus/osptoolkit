@@ -892,7 +892,11 @@ OSPPParseTokenInfoFromASCIIToken(
                case 'I':
                            if (OSPM_STRLEN((const char *)val) > 2)
                            {
+#ifndef _WIN32
                               trxid = atoll((const char *)(val+2));
+#else
+                              trxid = _atoi64((const char *)(val+2));
+#endif
                               OSPPTokenInfoSetTrxId(tokeninfo, trxid);
                            }
                            break;
