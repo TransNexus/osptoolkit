@@ -50,7 +50,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 wsock32.lib osp.lib ssleay32.lib libeay32.lib pthreadVC.lib /nologo /subsystem:console /machine:I386 /out:"../bin/enroll.exe" /libpath:"..\lib,..\pthread\lib"
+# ADD LINK32 osp.lib wsock32.lib ssleay32.lib libeay32.lib pthreadVC2.lib /nologo /subsystem:console /machine:I386 /out:"../bin/enroll.exe" /libpath:"..\lib" /libpath:"..\pthread\lib"
 # SUBTRACT LINK32 /pdb:none /nodefaultlib
 
 !ELSEIF  "$(CFG)" == "enroll - Win32 Debug"
@@ -75,7 +75,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 wsock32.lib osp.lib ssleay32.lib libeay32.lib pthreadVC.lib /nologo /subsystem:console /debug /machine:I386 /out:"../bin/enroll.exe" /pdbtype:sept /libpath:"..\lib,..\pthread\lib"
+# ADD LINK32 osp.lib wsock32.lib ssleay32.lib libeay32.lib pthreadVC2.lib /nologo /subsystem:console /debug /machine:I386 /out:"../bin/enroll.exe" /pdbtype:sept /libpath:"..\lib" /libpath:"..\pthread\lib"
 # SUBTRACT LINK32 /pdb:none /nodefaultlib
 
 !ENDIF 
