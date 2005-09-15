@@ -4,6 +4,9 @@
 INCLDIR = ../include
 INSTALL_PATH=/usr/local
 
+CC = gcc
+AR = ar
+
 LFLAGS   = -lsocket -lnsl -lm -lpthread
 ARLIB    = ../lib/libosptk.a
 
@@ -49,7 +52,7 @@ OBJS    =   osppkcs1.o osppkcs8.o osppkcs7.o ospcryptowrap.o ospasn1ids.o \
 .SUFFIXES: .o .c 
 
 .c.o:
-	cc $(CFLAGS) $(CRYPTOCFLAGS) $(INCL) $(<) -c
+	$(CC) $(CFLAGS) $(CRYPTOCFLAGS) $(INCL) $(<) -c
 
 default:
 	@ echo 'Use - make build, to build the osp library'
@@ -61,10 +64,13 @@ default:
 
 
 build  : $(OBJS)
-	ar -r $(ARLIB) $(OBJS)
+	$(AR) -r $(ARLIB) $(OBJS)
 
 install: build
 	cp -r ../include/osp/ $(INSTALL_PATH)/include/
+ifeq ($(wildcard $(INSTALL_PATH)/lib),)
+	mkdir $(INSTALL_PATH)/lib
+endif
 	cp ../lib/libosptk.a $(INSTALL_PATH)/lib
 
 clean   :

@@ -31,14 +31,14 @@ OBJS	= nonblocking.o syncque.o test_app.o
 .SUFFIXES: .o .c
 
 .c.o:
-	cc $(CFLAGS) $(SSLINC) $(<) -c
+	$(CC) $(CFLAGS) $(SSLINC) $(<) -c
 
 all: 	$(OBJS)
-	$(PURE) cc $(PROFILE) $(OBJS) -o ../bin/test_app \
+	$(PURE) $(CC) $(PROFILE) $(OBJS) -o ../bin/test_app \
 	$(ARLIBDIR)/libosptk.a $(LFLAGS) -L$(ARLIBDIR) $(ARLIB) $(SSL)
 
 linux: 	$(OBJS)
-	$(PURE) cc $(PROFILE) $(OBJS) -o ../bin/test_app \
+	$(PURE) $(CC) $(PROFILE) $(OBJS) -o ../bin/test_app \
 	$(ARLIBDIR)/libosptk.a $(LFLAGS_LINUX) -L$(ARLIBDIR) $(ARLIB) $(SSL)
 
 clean :

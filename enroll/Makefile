@@ -1,15 +1,11 @@
 #Compiler
 CC            = gcc
 
-
-
 # For OpenSSL:
 SSLINC        = ../crypto
 SSL_LIBDIRS   = -L../lib
 SSL_LIBS      = -lssl -lcrypto
 SSL_OBJS      = ../src/ospopenssl.o
-
-
 
 INCLDIRS      = -I./ -I../include -I$(SSLINC)
 #WARNING_FLAGS = -Wall
@@ -27,17 +23,16 @@ EXEC          =../bin/enroll
 CREATED_OBJS  = osptnepinit.o osptnepenroll.o osptnep.o osptneputil.o
 OBJS          = $(CREATED_OBJS) $(OSP_OBJS) $(SSL_OBJS)
 
-
 # Rule for converting all of the source files into objects:
 .c.o:
-	$(PURIFY) cc -c $(CFLAGS) -c $(MACRO_FLAGS) $(INCLDIRS) $(<) 
+	$(PURIFY) $(CC) -c $(CFLAGS) -c $(MACRO_FLAGS) $(INCLDIRS) $(<) 
 
 # Rule for creating the output executable:
 enroll: $(OBJS)
-	$(PURIFY) cc -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS) $(INCLDIRS)
+	$(PURIFY) $(CC) -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS) $(INCLDIRS)
 
 linux: $(OBJS)
-	$(PURIFY) cc -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS_LINUX) $(INCLDIRS)
+	$(PURIFY) $(CC) -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS_LINUX) $(INCLDIRS)
 
 clean:
 	rm -f $(CREATED_OBJS) $(EXEC)
