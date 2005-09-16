@@ -43,6 +43,10 @@
 #include "osp/ospstatistics.h"
 #include "osp/ospcapind.h"
 
+#define OSPC_UNDEFINED_CALLID_NUM	((unsigned)1)
+#define OSPC_UNDEFINED_CALLID_STR	((unsigned char*)"UNDEFINED")
+#define OSPC_UNDEFINED_CALLID_SIZE	((unsigned)9)			/* size of OSPC_UNDEFINED_CALLID_STR */
+
 /*
  * OSPPTransactionSetServiceAndPricingInfo
  * The API sets the Service Type and Pricing Information
@@ -3416,11 +3420,14 @@ OSPPTransactionRequestAuthorisation(
     OSPTDEST      *dest        = OSPC_OSNULL;
     register unsigned probecnt = 0;
     OSPTSVCPT     *svcpt       = OSPC_OSNULL;
+    unsigned      tmpNumberOfCallIds = 0;
+    OSPTCALLID    **tmpCallIds = OSPC_OSNULL;
+    static OSPTCALLID undefinedCallId = { { OSPC_OSNULL }, OSPC_UNDEFINED_CALLID_SIZE, OSPC_UNDEFINED_CALLID_STR };
+    static OSPTCALLID *undefinedCallIds[OSPC_UNDEFINED_CALLID_NUM] = { &undefinedCallId };
 
     if( (ospvCallingNumber == (const char *)OSPC_OSNULL)    ||
         (ospvCalledNumber == (const char *)OSPC_OSNULL)     ||
-        (ospvNumberOfCallIds == 0)                          ||
-        (ospvCallIds[0] == (OSPTCALLID *)OSPC_OSNULL)       ||
+        ((ospvNumberOfCallIds != 0) && ((ospvCallIds == (OSPTCALLID **)OSPC_OSNULL) || (ospvCallIds[0] == (OSPTCALLID *)OSPC_OSNULL))) ||
         ((ospvCallingNumberFormat != OSPC_E164) && (ospvCallingNumberFormat != OSPC_SIP) && (ospvCallingNumberFormat != OSPC_URL)) ||
         ((ospvCalledNumberFormat != OSPC_E164) && (ospvCalledNumberFormat != OSPC_SIP) && (ospvCalledNumberFormat != OSPC_URL)) ||
         (ospvNumberOfDestinations == 0))
@@ -3431,15 +3438,24 @@ OSPPTransactionRequestAuthorisation(
 
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
-        if ((ospvNumberOfCallIds > 1) && 
-            (ospvNumberOfCallIds != *ospvNumberOfDestinations)) 
+        if (ospvNumberOfCallIds == 0)
         {
-            errorcode = OSPC_ERR_TRAN_CALLID_DEST_MISMATCH;
-            OSPM_DBGERRORLOG(errorcode, 
-                "number of callids != number of dests sent in.");
+            tmpNumberOfCallIds = OSPC_UNDEFINED_CALLID_NUM;
+            tmpCallIds = undefinedCallIds;
+        }
+        else {
+            tmpNumberOfCallIds = ospvNumberOfCallIds;
+            tmpCallIds = ospvCallIds;
+
+            if ((ospvNumberOfCallIds > 1) &&
+                (ospvNumberOfCallIds != *ospvNumberOfDestinations))
+            {
+                errorcode = OSPC_ERR_TRAN_CALLID_DEST_MISMATCH;
+                OSPM_DBGERRORLOG(errorcode, 
+                    "number of callids != number of dests sent in.");
+            }
         }
     }
-
 
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
@@ -3459,8 +3475,8 @@ OSPPTransactionRequestAuthorisation(
 
                     errorcode =  OSPPTransactionRequestNew (trans, 
                         ospvSource, ospvSourceDevice, ospvCallingNumber,           
-                        ospvCalledNumber, ospvUser, ospvNumberOfCallIds,
-                        ospvCallIds, ospvPreferredDestinations, 
+                        ospvCalledNumber, ospvUser, tmpNumberOfCallIds,
+                        tmpCallIds, ospvPreferredDestinations, 
                         ospvNumberOfDestinations, 
                         ospvSizeOfDetailLog, ospvDetailLog);
                    
@@ -4026,6 +4042,8 @@ OSPPTransactionValidateAuthorisation(
     OSPE_DEST_OSP_ENABLED dstOSPStatus;
     OSPE_DEST_PROT dstProt;
     unsigned char *CallIdValue = OSPC_OSNULL;
+    unsigned CallIdSize = 0;
+    OSPTBOOL callidundefined = OSPC_FALSE;
     unsigned char *AuthIndCallId = OSPC_OSNULL;
     unsigned char AsciiTokenMsg[1000]; /* The assumption is that the ASCII
                                         * token will be less than 1000 bytes 
@@ -4170,6 +4188,23 @@ OSPPTransactionValidateAuthorisation(
         }
 
 
+    /*
+     * Get the call id from the token, if it is "UNDEFINED", set callidundefined
+     */
+    if (errorcode == OSPC_ERR_NO_ERROR)
+    {
+        CallIdSize = OSPPTokenInfoGetCallIdSize(tokeninfo); 
+        CallIdValue = OSPPTokenInfoGetCallIdValue(tokeninfo);
+        if ((CallIdSize == OSPC_UNDEFINED_CALLID_SIZE) && 
+            (OSPM_MEMCMP(CallIdValue, OSPC_UNDEFINED_CALLID_STR, OSPC_UNDEFINED_CALLID_SIZE) == 0))
+        {
+            callidundefined = OSPC_TRUE;
+        }
+        else {
+            callidundefined = OSPC_FALSE;
+        }
+    }
+
     /* Is there an AuthInd here already?
      * If so, we are only adding the token
      */
@@ -4196,8 +4231,8 @@ OSPPTransactionValidateAuthorisation(
                     /*
                      * Copy the callId from the token.
                      */
-                    callid = OSPPCallIdNew(OSPPTokenInfoGetCallIdSize(tokeninfo), 
-                       (const unsigned char *)OSPPTokenInfoGetCallIdValue(tokeninfo));
+                    callid = OSPPCallIdNew(CallIdSize,
+                        (const unsigned char *)CallIdValue);
                 }
 
                 if (callid != (OSPTCALLID *)OSPC_OSNULL)
@@ -4580,8 +4615,10 @@ OSPPTransactionValidateAuthorisation(
                     /*
                      * Verify CallId
                      */
-                    CallIdValue = OSPPTokenInfoGetCallIdValue(tokeninfo);
-                    if ((CallIdValue != OSPC_OSNULL) && ((AuthIndCallId=OSPPAuthIndGetCallIdValue(trans->AuthInd)) != OSPC_OSNULL) && (ospvSizeOfCallId > 0))
+                    if ((CallIdValue != OSPC_OSNULL) && 
+                        ((AuthIndCallId=OSPPAuthIndGetCallIdValue(trans->AuthInd)) != OSPC_OSNULL) && 
+                        (ospvSizeOfCallId > 0) &&
+                        (callidundefined == OSPC_FALSE))
                     {
                         retcode = OSPM_MEMCMP(AuthIndCallId,
                                   CallIdValue, ospvSizeOfCallId); 
