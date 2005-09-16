@@ -1028,6 +1028,7 @@ testOSPPTransactionGetFirstDestination()
 
     OSPM_MEMSET(ret_cid, 0, CALL_ID_SZ);
     callid = (void *)ret_cid;
+    callidsize = CALL_ID_SZ;
 
     errorcode = OSPPTransactionGetFirstDestination(
         OSPVTransactionHandle,
@@ -1051,9 +1052,7 @@ testOSPPTransactionGetFirstDestination()
 
     if (errorcode == 0 && !quietmode)
     {
-        printf("callid size = %d value = ", callidsize);
-        for (i = 0; i < callidsize; i++)
-                printf("<%x>",(*((unsigned char *)callid+i)));
+        printf("callid size = %d value = %.*s", callidsize, callidsize, callid);
         printf("\n");
         OSPM_SPRINTF(msg, "DEST = %s", dest);
         printf("%s\n", dest);
@@ -1071,8 +1070,9 @@ testOSPPTransactionGetNextDestination()
 
     token  = (void *)c_token;
     tokensize = TOKEN_SZ;
-    OSPM_MEMSET(ret_cid, 0, 20);
+    OSPM_MEMSET(ret_cid, 0, CALL_ID_SZ);
     callid = (void *)ret_cid;
+    callidsize = CALL_ID_SZ;
 
     errorcode = OSPPTransactionGetNextDestination(
         OSPVTransactionHandle,
@@ -1097,8 +1097,7 @@ testOSPPTransactionGetNextDestination()
     if (errorcode == 0 && !quietmode)
     {
         printf("callid size = %d value = ", callidsize);
-        for (i = 0; i < callidsize; i++)
-                printf("<%x>",(*((unsigned char *)callid+i)));
+        printf("callid size = %d value = %.*s", callidsize, callidsize, callid);
         printf("\n");
         OSPM_SPRINTF(msg, "DEST = %s", dest);
         printf("%s\n", dest);
