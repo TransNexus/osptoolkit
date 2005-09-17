@@ -547,6 +547,7 @@ OSPPTransactionGetLookAheadInfoIfPresent(
     OSPTAUTHIND **ospvAuthInd;
     unsigned char *destinfo;
     OSPTALTINFO   *altinfo = OSPC_OSNULL;
+    OSPTALTINFO   *altinfoToKeep = OSPC_OSNULL;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
   
@@ -579,8 +580,19 @@ OSPPTransactionGetLookAheadInfoIfPresent(
                 altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate));
                 if(altinfo != OSPC_OSNULL)
                 {
-                    OSPM_FREE(altinfo);
-                    altinfo = OSPC_OSNULL;
+                    if(altinfo->ospmAltInfoType == ospeNetwork)
+                    {
+                        /*
+                        * This node in the list corresponds to
+                        * Network Id. Do not delete it.
+                        */
+                        altinfoToKeep = altinfo;
+                    }
+                    else
+                    {
+                        OSPM_FREE(altinfo);
+                        altinfo = OSPC_OSNULL;
+                    }
                 }
             }
 
@@ -590,6 +602,18 @@ OSPPTransactionGetLookAheadInfoIfPresent(
             * Create a new list of destiantion Alt
             */
            OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate));
+
+           /*
+           * Add back the AltInfo for networkId
+           */
+           if (altinfoToKeep)
+           {
+               OSPPListAppend(
+                   (OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),
+                   (void *)altinfoToKeep);
+                   altinfoToKeep = NULL;
+           }
+
            altinfo =
                 OSPPAltInfoNew(OSPM_STRLEN((const char *)destinfo),
                 (const unsigned char *)destinfo,
@@ -688,6 +712,7 @@ OSPPTransactionGetDestNetworkId(OSPTTRANHANDLE  ospvTransaction,/* In - Transact
                        errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
                    }
+                   break;
                }
                else
                {
