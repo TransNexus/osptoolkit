@@ -1096,7 +1096,6 @@ testOSPPTransactionGetNextDestination()
 
     if (errorcode == 0 && !quietmode)
     {
-        printf("callid size = %d value = ", callidsize);
         printf("callid size = %d value = %.*s", callidsize, callidsize, callid);
         printf("\n");
         OSPM_SPRINTF(msg, "DEST = %s", dest);
