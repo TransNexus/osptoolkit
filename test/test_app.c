@@ -1983,6 +1983,17 @@ testOSPPSecCertShowChain()
 }
 
 int
+testOSPToolkitVersion()
+{
+    printf("OSP Client Toolkit Version: %d.%d.%d\n",
+        OSP_CLIENT_TOOLKIT_VERSION_MAJOR,
+        OSP_CLIENT_TOOLKIT_VERSION_MINOR,
+        OSP_CLIENT_TOOLKIT_VERSION_BUGFIX);
+
+    return 0;
+}
+
+int
 testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
@@ -2120,11 +2131,9 @@ testAPI(int apinumber)
         case 41:
         errorcode = testTestCalls();
         break;
-#ifndef _WIN32
         case 42:
-        errorcode = testNotImplemented();
+        errorcode = testOSPToolkitVersion();
         break;
-#endif
         case 43:
         printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
         scanf("%d",&build_new_trans);
