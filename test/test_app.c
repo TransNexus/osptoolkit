@@ -930,7 +930,7 @@ testOSPPTransactionAccumulateOneWayDelay()
                      accumtable10[i].Number, accumtable10[i].Min, 
                      accumtable10[i].Mean, accumtable10[i].Variance);
     
-        printf("\nOSPPTransactionAccumulateOneWayDelay errorcode = %d", errorcode);
+        printf("OSPPTransactionAccumulateOneWayDelay errorcode = %d\n", errorcode);
     }
     return errorcode;
 }
@@ -946,7 +946,7 @@ testOSPPTransactionAccumulateRoundTripDelay()
                      accumtable2[i].Number, accumtable2[i].Min, 
                      accumtable2[i].Mean, accumtable2[i].Variance);
     
-        printf("\nOSPPTransactionAccumulateRoundTripDelay errorcode = %d", errorcode);
+        printf("OSPPTransactionAccumulateRoundTripDelay errorcode = %d\n", errorcode);
     }
     return errorcode;
 }
@@ -1052,8 +1052,7 @@ testOSPPTransactionGetFirstDestination()
 
     if (errorcode == 0 && !quietmode)
     {
-        printf("callid size = %d value = %.*s", callidsize, callidsize, callid);
-        printf("\n");
+        printf("callid size = %d value = %.*s\n", callidsize, callidsize, callid);
         OSPM_SPRINTF(msg, "DEST = %s", dest);
         printf("%s\n", dest);
         OSPTNLOGDUMP(token, tokensize, msg);
@@ -1096,8 +1095,7 @@ testOSPPTransactionGetNextDestination()
 
     if (errorcode == 0 && !quietmode)
     {
-        printf("callid size = %d value = %.*s", callidsize, callidsize, callid);
-        printf("\n");
+        printf("callid size = %d value = %.*s\n", callidsize, callidsize, callid);
         OSPM_SPRINTF(msg, "DEST = %s", dest);
         printf("%s\n", dest);
         OSPTNLOGDUMP(token, tokensize, msg);
@@ -1190,7 +1188,7 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
             &OSPVTransactionHandle);
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
-            printf("\nSuccessful TransactionNew.");
+            printf("Successful TransactionNew.\n");
         }
     }
 
@@ -1221,11 +1219,11 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
 
     if(errorcode == OSPC_ERR_NO_ERROR && BuildNew)
     {
-            printf("\nTransaction Built \n");
+            printf("Transaction Built \n");
     }
     else if ((errorcode == OSPC_ERR_NO_ERROR) && (!BuildNew))
     {
-            printf("\nDestination Added to transaction \n");
+            printf("Destination Added to transaction \n");
     }
     else
     {
@@ -1284,7 +1282,7 @@ testOSPPTransactionInitializeAtDevice(int IsSource)
 
     if (errorcode == OSPC_ERR_NO_ERROR){
 
-        printf("\nSuccessful TransactionNew.");
+        printf("Successful TransactionNew.\n");
 
         errorcode = OSPPTransactionInitializeAtDevice(
         OSPVTransactionHandle,
@@ -1307,22 +1305,22 @@ testOSPPTransactionInitializeAtDevice(int IsSource)
     if(errorcode == OSPC_ERR_NO_ERROR){
         switch(authorised){
         case OSPC_TRAN_AUTHORISED:
-            printf("\nInitialization authorised\n");
+            printf("Initialization authorised\n");
             break;
         case OSPC_TRAN_REAUTHORISED:
-            printf("\nInitialization reauthorised\n");
+            printf("Initialization reauthorised\n");
             break;
         case OSPC_TRAN_NOT_AUTHORISED:
-            printf("\nInitialization not authorised\n");
+            printf("Initialization not authorised\n");
             break;
         default:
-            printf("\nUnknown authorisation code\n");
+            printf("Unknown authorisation code\n");
             break;
         }
     }
     else
     {
-        printf("\nErrorcode TransactionInitialize = %d\n", errorcode);
+        printf("Errorcode TransactionInitialize = %d\n", errorcode);
     }
 
     return errorcode;
@@ -1339,11 +1337,11 @@ testOSPPTransactionRecordFailure()
 
 
     if(errorcode == OSPC_ERR_NO_ERROR){
-        printf("\nOSPPTransactionRecordFailure Successful\n");
+        printf("OSPPTransactionRecordFailure Successful\n");
     }
     else
     {
-        printf("\nErrorcode TransactionRecordFailure = %d\n", errorcode);
+        printf("Errorcode TransactionRecordFailure = %d\n", errorcode);
     }
 
     return errorcode;
@@ -1395,22 +1393,22 @@ testOSPPTransactionReinitializeAtDevice()
     if(errorcode == OSPC_ERR_NO_ERROR){
         switch(authorised){
         case OSPC_TRAN_AUTHORISED:
-            printf("\nInitialization authorised\n");
+            printf("Initialization authorised\n");
             break;
         case OSPC_TRAN_REAUTHORISED:
-            printf("\nInitialization reauthorised\n");
+            printf("Initialization reauthorised\n");
             break;
         case OSPC_TRAN_NOT_AUTHORISED:
-            printf("\nInitialization not authorised\n");
+            printf("Initialization not authorised\n");
             break;
         default:
-            printf("\nUnknown authorisation code\n");
+            printf("Unknown authorisation code\n");
             break;
         }
     }
     else
     {
-        printf("\nErrorcode TransactionReInitialize = %d\n", errorcode);
+        printf("Errorcode TransactionReInitialize = %d\n", errorcode);
     }
 
     return errorcode;
@@ -1555,7 +1553,7 @@ testOSPPTransactionRequestReauthorisation()
             (void *)NULL);
     }
 
-    printf("\nErrorcode = %d. \nAuthorised = %u. \nTimelimit = %u. \nToken = %s.",
+    printf("Errorcode = %d. \nAuthorised = %u. \nTimelimit = %u. \nToken = %s.",
             errorcode, authorised, timelimit, token);
 
     return errorcode;
@@ -1793,7 +1791,7 @@ testOSPPTransactionReportUsage()
       if(OSPVTransactionHandle != OSPC_TRAN_HANDLE_INVALID){
        
         if (!quietmode)
-            printf("\nReporting Usage for OSPVTransactionHandle %d\n",(int)OSPVTransactionHandle);
+            printf("Reporting Usage for OSPVTransactionHandle %d\n",(int)OSPVTransactionHandle);
 
         errorcode = OSPPTransactionReportUsage(
             OSPVTransactionHandle,
@@ -1816,7 +1814,7 @@ testOSPPTransactionReportUsage()
   
     if(tranhandle2 != OSPC_TRAN_HANDLE_INVALID){
 
-        printf("\nReporting Usage for tranhandle2\n");
+        printf("Reporting Usage for tranhandle2\n");
 
         errorcode = OSPPTransactionReportUsage(
             tranhandle2,
@@ -2292,7 +2290,7 @@ testMenu()
       printf("Miscellaneous Tests\n");
       printf("---------------------------------------------------------------------\n");
       printf("39) GetDestinationProtocol            40) IsDestOSPEnabled\n");
-      printf("41) %-6d Test Calls                 42) Not Implemented\n", num_test_calls);
+      printf("41) %-6d Test Calls                 42) Get OSP Client Toolkit Version\n", num_test_calls);
       printf("43) BuildUsageFromScratch(OGW)        44) BuildUsageFromScratch(TGW)\n");
       printf("45) GetLookAheadInfoIfPresent         46) ModifyDeviceIdentifiers\n");
       printf("47) ModifyDeviceIdentifiersAgain\n");
