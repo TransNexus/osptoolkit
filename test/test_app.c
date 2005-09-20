@@ -2172,6 +2172,7 @@ testAPI(int apinumber)
         case 100:
         printf("Enter the number of Providers to be created .. ");
         scanf("%d",&num_providers);
+        getchar();
         if (num_providers > OSPC_MAX_PROVIDERS)
         {
             printf("Cannot run the test. The entered value is greater than the maximum providers allowed\n");
@@ -2181,6 +2182,7 @@ testAPI(int apinumber)
         {
             printf("Enter the number of Transactions to be run .. ");
             scanf("%d",&trans_to_run);
+            getchar();
             if ( 2 * trans_to_run > OSPC_MAX_TRANS)
             {
                errorcode =  OSPC_ERR_TRAN_NO_TRANS_SPACE;
@@ -2195,19 +2197,21 @@ testAPI(int apinumber)
             /*
              * Launch the threads
              */
-            for (i=0;(i<num_providers) && (errorcode == 0);i++)
-            {
-                OSPM_CREATE_THREAD(MultProviderThrId[i],
+            if (errorcode == 0) {
+                for (i=0; i<num_providers; i++)
+                {
+                    OSPM_CREATE_THREAD(MultProviderThrId[i],
                                    NULL,
                                    testNonBlockingPerformanceTest,
                                    (void *)&trans_to_run,
                                    errorcode);
 
-                printf("Created Thread [%d] with thread id: [%d]\n",i,MultProviderThrId[i]);
-            }
-            for (i=0;i<num_providers;i++)
-            {
-                OSPM_THR_JOIN(MultProviderThrId[i],NULL);
+                    printf("Created Thread [%d] with thread id: [%d]\n",i,MultProviderThrId[i]);
+                }
+                for (i=0;i<num_providers;i++)
+                {
+                    OSPM_THR_JOIN(MultProviderThrId[i],NULL);
+                }
             }
         }
         break;
