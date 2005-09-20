@@ -897,7 +897,7 @@ testOSPPTransactionDelete()
                       OSPVTransactionHandle);
         if(errorcode == OSPC_ERR_NO_ERROR){
             if (!quietmode)
-               printf("\nOSPVTransactionHandle deleted.\n");
+               printf("OSPVTransactionHandle deleted.\n");
 
             OSPVTransactionHandle = OSPC_TRAN_HANDLE_INVALID;
         }
@@ -908,7 +908,7 @@ testOSPPTransactionDelete()
                       tranhandle2);
 
         if(errorcode == OSPC_ERR_NO_ERROR){
-            printf("\ntranhandle2 deleted.\n");
+            printf("tranhandle2 deleted.\n");
 
             tranhandle2 = OSPC_TRAN_HANDLE_INVALID;
         }
@@ -1227,7 +1227,7 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
     }
     else
     {
-        printf("\nErrorcode = %d\n", errorcode);
+        printf("Errorcode = %d\n", errorcode);
     }
 
     return errorcode;
@@ -2135,11 +2135,13 @@ testAPI(int apinumber)
         case 43:
         printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
         scanf("%d",&build_new_trans);
+        getchar();
         errorcode = testBuildUsageFromScratch(OSPC_SOURCE,build_new_trans);
         break;
         case 44:
         printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
         scanf("%d",&build_new_trans);
+        getchar();
         errorcode = testBuildUsageFromScratch(OSPC_DESTINATION,build_new_trans);
         break;
         case 45:
