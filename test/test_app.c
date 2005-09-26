@@ -1192,7 +1192,7 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
         }
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR){
+    if (errorcode == OSPC_ERR_NO_ERROR && BuildNew){
     errorcode = OSPPTransactionSetServiceAndPricingInfo(
         OSPVTransactionHandle,
         OSPC_VOICE, /* voice */
