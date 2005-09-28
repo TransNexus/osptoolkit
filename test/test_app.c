@@ -1227,6 +1227,10 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
     }
     else
     {
+        if (OSPVTransactionHandle != OSPC_TRAN_HANDLE_INVALID) {
+            OSPPTransactionDelete(OSPVTransactionHandle);
+            OSPVTransactionHandle = OSPC_TRAN_HANDLE_INVALID;
+        }
         printf("Errorcode = %d\n", errorcode);
     }
 
