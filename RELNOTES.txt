@@ -436,4 +436,18 @@ Version 3.3.2
   osputils.
 * When validating a token, don't call OSPPTransIdCheckAndAdd when compile-time
   flag OSP_ALLOW_DUP_TXN is defined.
+---------------------------------------------------------------------------
+
+Version 3.3.3
+* Changed OSP Client Toolkit library name from libosp.a to libosptk.a.
+* Replaced atoll with _atoi64 in Windows.
+* Changed pthread library name used by link options in Windows.
+* Added OSP Client Toolkit version number.
+* Support "UNDEFINED" call ID. In RequestAuthorisation function, if
+  NumberOfCallIds is 0, "UNDEFINED" call ID will be sent to the OSP server.
+  And ValidateAuthorisation will not validate the "UNDEFINED" call ID in the
+  token.
+* Changed GetLookAheadInfoIfPresent not to erase network ID info.
+* Bug-fix in test case #43 - allow multiple calls and check transaction
+  handle.
 
