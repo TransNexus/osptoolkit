@@ -373,34 +373,20 @@ OSPPTransactionBuildUsage(
                 }
             }
 
-
             /* Get Destination Number (Called) */
             if(errorcode == OSPC_ERR_NO_ERROR)
             {
-                if (OSPPDestHasNumber(ospvDest)) 
+                if(OSPPAuthReqHasDestNumber(ospvTrans->AuthReq))
                 {
-                    OSPPUsageIndSetDestNumber(*ospvUsage,OSPPDestGetNumber(ospvDest));
+                    OSPPUsageIndSetDestNumber(*ospvUsage, 
+                        OSPPAuthReqGetDestNumber(ospvTrans->AuthReq));
                 }
                 else
                 {
-                    /*
-                     * There was no destination number in the AuthRsp, or it was empty
-                     * Use the number in the AuthReq.
-                     */
-                    if(OSPPAuthReqHasDestNumber(ospvTrans->AuthReq))
-                    {
-
-                        OSPPUsageIndSetDestNumber(*ospvUsage, 
-                        OSPPAuthReqGetDestNumber(ospvTrans->AuthReq));
-                    }
-                    else
-                    {
-                        errorcode = OSPC_ERR_TRAN_DEST_NUMBER_NOT_FOUND;
-                        OSPM_DBGERRORLOG(errorcode, "Dest number not found");
-                    }
+                    errorcode = OSPC_ERR_TRAN_DEST_NUMBER_NOT_FOUND;
+                    OSPM_DBGERRORLOG(errorcode, "Dest number not found");
                 }
             }
-
 
             /* add DestinationSignalAddress to DestinationAlternates for Usage */
             if ((errorcode == OSPC_ERR_NO_ERROR) &&

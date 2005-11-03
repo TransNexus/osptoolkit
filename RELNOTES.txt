@@ -450,4 +450,8 @@ Version 3.3.3
 * Changed GetLookAheadInfoIfPresent not to erase network ID info.
 * Bug-fix in test case #43 - allow multiple calls and check transaction
   handle.
+---------------------------------------------------------------------------
+
+Version 3.3.4
+* Changed toolkit to report orinally requested number in the Usage Indication rather than the translated called number.
 
