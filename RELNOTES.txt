@@ -454,4 +454,8 @@ Version 3.3.3
 
 Version 3.3.4
 * Changed toolkit to report orinally requested number in the Usage Indication rather than the translated called number.
+---------------------------------------------------------------------------
+
+Version 3.3.5
+* Fixed a rare race condition in the MsgInfo module. For OSPC-24 on SIPfoundry.
 

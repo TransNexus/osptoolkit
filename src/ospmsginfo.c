@@ -138,6 +138,7 @@ OSPPMsgInfoProcessResponse(
         OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errorcode);
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
+            ospvMsgInfo->HasBeenProcessed = OSPC_TRUE;
             OSPM_CONDVAR_SIGNAL(ospvMsgInfo->CondVar, errorcode);
             OSPM_MUTEX_UNLOCK(ospvMsgInfo->Mutex, tmperrcode);
         }
@@ -163,8 +164,7 @@ OSPPMsgInfoWaitForMsg(
     OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errorcode);
     if (errorcode == OSPC_ERR_NO_ERROR)
     {
-       while (ospvMsgInfo->ResponseMsg == OSPC_OSNULL &&
-                ospvMsgInfo->ErrorCode == OSPC_ERR_NO_ERROR)
+       while (ospvMsgInfo->HasBeenProcessed == OSPC_FALSE)
        {
            OSPM_CONDVAR_WAIT(ospvMsgInfo->CondVar, ospvMsgInfo->Mutex,
                     errorcode);
