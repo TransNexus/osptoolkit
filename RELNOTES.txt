@@ -458,4 +458,9 @@ Version 3.3.4
 
 Version 3.3.5
 * Fixed a rare race condition in the MsgInfo module. For OSPC-24 on SIPfoundry.
+---------------------------------------------------------------------------
 
+Version 3.3.6
+* Remove number of call ids check in RequestAuth function. For Emergent's two
+  call ids solution
+* Fixed an error in handling HTTP responses. For OSPC-25 on SIPfoundry.
