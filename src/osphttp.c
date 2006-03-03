@@ -1356,6 +1356,9 @@ OSPPHttpParseHeader(
          *endptr = OSPC_OSNULL;
 
     OSPM_DBGENTER(("ENTER : OSPPHttpParseHeader\n"));
+
+    *ospvError = OSPC_ERR_NO_ERROR;
+
     switch(ospvHeaderType)
     {
 

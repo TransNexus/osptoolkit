@@ -491,20 +491,26 @@ OSPPSockProcessRequest(
     unsigned      *ospvContentBufferSz,
     int           *ospvError)
 {
-
     #define OSPC_RECVBUF_SZ    256
-    unsigned char *tmprecvbuf                   = OSPC_OSNULL;
+
     char           recvheadbuf[OSPC_RECVBUF_SZ] = { "" };
-    unsigned       recvbufsz                    = OSPC_RECVBUF_SZ;
+    unsigned       recvheadbufsz                = OSPC_RECVBUF_SZ;
     int            responsetype                 = 0;
-    unsigned       ospvConnectionBufferSz       = 0;
     int            connectionCloseFlag          = OSPC_FALSE;
-    unsigned char  *ospvConnectionBuffer        = OSPC_OSNULL;
+    unsigned char  *tmpConnectionBuffer         = OSPC_OSNULL;
+    unsigned       tmpConnectionBufferSz        = 0;
+    unsigned char  *tmpReceiveBuffer            = OSPC_OSNULL;
+    unsigned       tmpReceiveBufferSz           = 0;
     unsigned char  *tmpContentBuffer            = OSPC_OSNULL;
     unsigned       tmpContentBufferSz           = 0;
 
     OSPM_DBGENTER(("ENTER: OSPPSockProcessRequest()\n"));
 
+    /*
+     * set the default value.
+     */
+    *ospvResponseBuffer = OSPC_OSNULL; 
+    *ospvResponseBufferSz = 0; 
     *ospvError = OSPC_ERR_NO_ERROR;
 
     if (ospvHttp == (OSPTHTTP *)OSPC_OSNULL)
@@ -544,7 +550,7 @@ OSPPSockProcessRequest(
          */
         *ospvError = OSPPSSLSessionRead(ospvHttp, 
             (unsigned char *)recvheadbuf, 
-            &recvbufsz, 
+            &recvheadbufsz, 
             "\r\n\r\n");
 
         /*
@@ -574,10 +580,10 @@ OSPPSockProcessRequest(
                 /*
                  * Read again for the 200 header.
                  */
-                recvbufsz = 256;
+                recvheadbufsz = 256;
                 *ospvError = OSPPSSLSessionRead(ospvHttp, 
                     (unsigned char *)recvheadbuf, 
-                    &recvbufsz, 
+                    &recvheadbufsz, 
                     "\r\n\r\n");
 
                 responsetype = 0;
@@ -615,31 +621,31 @@ OSPPSockProcessRequest(
                 {
 
                     /* parse the header response and place the MIME
-                     * connection-type into the ospvConnectionBuffer variable.
-                     * ospvConnectionBufferSz is set to the size of the
-                     * ospvConnectionBuffer.
+                     * connection-type into the tmpConnectionBuffer variable.
+                     * tmpConnectionBufferSz is set to the size of the
+                     * tmpConnectionBuffer.
                      */
 
                     OSPPHttpParseHeader((unsigned char *) recvheadbuf, 
-                        &ospvConnectionBuffer, &ospvConnectionBufferSz,
+                        &tmpConnectionBuffer, &tmpConnectionBufferSz,
                         OSPC_HTTP_CONNECTION_TYPE, ospvError);
 
                     /* check to see if the connection type contains "close".
                      * If so, then set a flag to eventually close the socket connection.
                      */
 
-                    if((ospvConnectionBuffer != OSPC_OSNULL)&&
-                        (ospvConnectionBufferSz > 0))
+                    if((tmpConnectionBuffer != OSPC_OSNULL)&&
+                        (tmpConnectionBufferSz > 0))
                     {
-                        if(OSPM_STRSTR((char *)ospvConnectionBuffer, (const char *)"close") != OSPC_OSNULL)
+                        if(OSPM_STRSTR((char *)tmpConnectionBuffer, (const char *)"close") != OSPC_OSNULL)
                         {
                             connectionCloseFlag = OSPC_TRUE;
                         }
                     }
 
-                    if(ospvConnectionBuffer != OSPC_OSNULL)
+                    if(tmpConnectionBuffer != OSPC_OSNULL)
                     {
-                        OSPM_FREE(ospvConnectionBuffer);
+                        OSPM_FREE(tmpConnectionBuffer);
                     }
 
                     OSPM_DBGNET(("http header = [%s]", 
@@ -660,14 +666,14 @@ OSPPSockProcessRequest(
                     {
                         /*
                          * parse the header response and place the 
-                         * content-length in the ospvResponseBufferSz 
+                         * content-length in the tmpReceiveBufferSz
                          * variable. This is used to determine
                          * the size of the inbound response message 
-                         * buffer. Alloc space for the tmprecvbuf in order
+                         * buffer. Alloc space for the tmpReceiveBuffer in order
                          * receive the content data.
                          */
                         OSPPHttpParseHeader((unsigned char *)recvheadbuf, 
-                            &tmprecvbuf, ospvResponseBufferSz,
+                            &tmpReceiveBuffer, &tmpReceiveBufferSz,
                             OSPC_HTTP_CONTENT_LENGTH, ospvError);
 
                         if (*ospvError == OSPC_ERR_NO_ERROR)
@@ -676,25 +682,10 @@ OSPPSockProcessRequest(
                              * now receive the body of the HTTP response
                              */
                             *ospvError = OSPPSSLSessionRead(
-                                ospvHttp, tmprecvbuf,
-                                ospvResponseBufferSz, OSPC_OSNULL);
+                                ospvHttp, tmpReceiveBuffer,
+                                &tmpReceiveBufferSz, OSPC_OSNULL);
 
-
-                            if (*ospvError != OSPC_ERR_NO_ERROR)
-                            {
-                                if (tmprecvbuf != OSPC_OSNULL)
-                                {
-                                    OSPM_FREE(tmprecvbuf);
-                                    tmprecvbuf = OSPC_OSNULL;
-                                }
-                                if (*ospvContentBuffer != OSPC_OSNULL)
-                                {
-                                    OSPM_FREE(*ospvContentBuffer);
-                                }
-                                *ospvResponseBuffer = 
-                                    *ospvContentBuffer = OSPC_OSNULL; 
-                            }
-                            else
+                            if (*ospvError == OSPC_ERR_NO_ERROR)
                             {
                                 /*
                                  * assign the response buffer pointer after all of the 
@@ -707,34 +698,51 @@ OSPPSockProcessRequest(
                                  * a partial message will attempt to be processed which will reek
                                  * havoc on the request and possibly the application as well.
                                  */
-                                *ospvResponseBuffer = tmprecvbuf;
+                                *ospvResponseBuffer = tmpReceiveBuffer;
+                                *ospvResponseBufferSz = tmpReceiveBufferSz;
 
-                                OSPM_DBGNET(("http body = [%s]", 
-                                    tmprecvbuf));
+                                OSPM_DBGNET(("http body = [%s]", tmpReceiveBuffer));
+
+                                if(*ospvContentBuffer != OSPC_OSNULL)
+                                {
+                                    OSPM_FREE(*ospvContentBuffer);
+                                    *ospvContentBufferSz = 0;
+                                }
+
+                                /* Save the content buffer and content buffer size
+                                 * for the next time through this function 
+                                 */
+                                *ospvContentBuffer = tmpContentBuffer;
+                                *ospvContentBufferSz = tmpContentBufferSz;
+                            }
+                            else
+                            {
+                                if (tmpReceiveBuffer != OSPC_OSNULL)
+                                {
+                                    OSPM_FREE(tmpReceiveBuffer);
+                                }
+                                if (tmpContentBuffer != OSPC_OSNULL)
+                                {
+                                    OSPM_FREE(tmpContentBuffer);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (tmpContentBuffer != OSPC_OSNULL)
+                            {
+                                OSPM_FREE(tmpContentBuffer);
                             }
                         }
                     }
-
-                    if(*ospvContentBuffer != OSPC_OSNULL)
-                    {
-                        OSPM_FREE(*ospvContentBuffer);
-                        *ospvContentBufferSz = 0;
-                    }
-
-                    /* Save the content buffer and content buffer size
-                     * for the next time through this function 
-                     */
-                    *ospvContentBuffer = tmpContentBuffer;
-                    *ospvContentBufferSz = tmpContentBufferSz;
-
                 }
             }
         }
     }
-		else
-		{
-                    OSPM_DBGERROR(("Connection to application has been reset. IP address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr)));
-		}
+    else
+    {
+        OSPM_DBGERROR(("Connection to application has been reset. IP address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr)));
+    }
 
     /* If the Connection-Type indicated "close" in the MIME header, 
      * then close the connection.

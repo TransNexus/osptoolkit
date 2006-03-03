@@ -3472,6 +3472,8 @@ OSPPTransactionRequestAuthorisation(
             tmpNumberOfCallIds = ospvNumberOfCallIds;
             tmpCallIds = ospvCallIds;
 
+/* Relax the number of call ids check for Emergent's two call ids solution */
+/*
             if ((ospvNumberOfCallIds > 1) &&
                 (ospvNumberOfCallIds != *ospvNumberOfDestinations))
             {
@@ -3479,6 +3481,7 @@ OSPPTransactionRequestAuthorisation(
                 OSPM_DBGERRORLOG(errorcode, 
                     "number of callids != number of dests sent in.");
             }
+*/
         }
     }
 
