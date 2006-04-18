@@ -37,7 +37,7 @@
  *                char variables.
  */
 
-#include "assert.h"
+#include <assert.h>
 #include "osp/osp.h"
 #include "osp/ospxmltype.h"
 

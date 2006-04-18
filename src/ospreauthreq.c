@@ -25,7 +25,7 @@
  * ospreauthreq.c - OSP authorisation request functions
  */
 
-#include "assert.h"
+#include <assert.h>
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"

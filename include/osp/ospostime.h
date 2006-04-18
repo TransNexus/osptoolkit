@@ -28,7 +28,7 @@
 #ifndef _OSPOSTIME_H
 #define _OSPOSTIME_H
 
-#include "time.h"
+#include <time.h>
 
 #include "osp/osp.h"
 

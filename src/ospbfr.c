@@ -37,7 +37,7 @@
  *            that the called routines are thread-safe.
  */
 
-#include "stdlib.h"
+#include <stdlib.h>
 
 #include "osp/osp.h"
 #include "osp/ospbfr.h"

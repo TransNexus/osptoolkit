@@ -26,9 +26,9 @@
  * ospostime.c - OS-specific time functions
  */
 
-#include "assert.h"
+#include <assert.h>
 
-#include "time.h"
+#include <time.h>
 
 #ifndef _WIN32
 #include <sys/timeb.h>
@@ -37,8 +37,8 @@
 #endif
 
 #ifndef _WIN32
-#include "sys/time.h"
-#include "unistd.h"
+#include <sys/time.h>
+#include <unistd.h>
 #endif
 
 #include "osp/osp.h"
