@@ -1239,6 +1239,26 @@ testBuildUsageFromScratch(int IsSource,int BuildNew)
 
 
 int
+testSetDestinationCount()
+{
+    int      errorcode        = 0;
+    unsigned destinationCount = 0;
+
+    printf("Enter destination count (0 if N/A)");
+
+    scanf("%d",&destinationCount);
+    getchar();
+
+    printf("Setting destination count to %d\n",destinationCount);
+
+    errorcode = OSPPTransactionSetDestinationCount(
+        OSPVTransactionHandle,
+        destinationCount);
+
+    return errorcode;
+}
+
+int
 testOSPPTransactionInitializeAtDevice(int IsSource)
 {
     int             errorcode       = 0;
@@ -2157,6 +2177,9 @@ testAPI(int apinumber)
         case 47:
         errorcode = testOSPPTransactionModifyDeviceIdentifiersAgain();
         break;
+        case 48:
+        errorcode = testSetDestinationCount();
+        break;
         case 50:
         errorcode = testSetCallingNumber();
         break;
@@ -2303,7 +2326,7 @@ testMenu()
       printf("41) %-6d Test Calls                 42) Get OSP Client Toolkit Version\n", num_test_calls);
       printf("43) BuildUsageFromScratch(OGW)        44) BuildUsageFromScratch(TGW)\n");
       printf("45) GetLookAheadInfoIfPresent         46) ModifyDeviceIdentifiers\n");
-      printf("47) ModifyDeviceIdentifiersAgain\n");
+      printf("47) ModifyDeviceIdentifiersAgain      48) SetDestinationCount\n");
       printf("99) Sleep for 2 seconds\n");
       printf("---------------------------------------------------------------------\n");
       printf("Configuration Parameters \n");

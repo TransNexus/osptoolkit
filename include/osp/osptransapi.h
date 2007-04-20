@@ -118,6 +118,10 @@ extern "C"
     unsigned   *ospvSizeOfDetailLog,   /* In/Out - Max size of detail log\ Actual size of detail log */
     void           *ospvDetailLog);         /* In - Pointer to storage for detail log */
 
+    int OSPPTransactionSetDestinationCount(
+        OSPTTRANHANDLE  ospvTransaction,        /*In - Transaction handle */
+        unsigned        ospvDestinationCount);    /*In - Optional Destination Count, 0 if n/a */
+
     int
     OSPPTransactionGetLookAheadInfoIfPresent(
         OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */

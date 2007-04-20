@@ -1334,6 +1334,7 @@ OSPTUSAGEIND *                                 /* returns pointer or NULL */
         ospvUsageInd->ospmUsageIndMessageId = OSPC_OSNULL;
         ospvUsageInd->ospmUsageIndIsPricingInfoPresent = OSPC_FALSE;
         ospvUsageInd->osmpUsageIndIsServiceInfoPresent = OSPC_FALSE;
+        ospvUsageInd->ospmUsageIndDestinationCount = (OSPTALTINFO *)OSPC_OSNULL;
     }
 
     return ospvUsageInd;
@@ -1400,8 +1401,14 @@ OSPPUsageIndDelete(OSPTUSAGEIND **ospvUsageInd)
             OSPM_FREE((*ospvUsageInd)->ospmUsageIndMessageId);
         }
 
+        if(OSPPUsageIndGetDestinationCount(*ospvUsageInd) != (OSPTALTINFO *)OSPC_OSNULL)
+        {
+            OSPM_FREE((*ospvUsageInd)->ospmUsageIndDestinationCount);
+        }
+
         OSPPListDelete(&((*ospvUsageInd)->ospmUsageIndDestinationAlternate));
         OSPM_FREE(*ospvUsageInd);
+
         *ospvUsageInd = OSPC_OSNULL;
     }
     return;
@@ -1782,6 +1789,20 @@ OSPPUsageIndToElement(
                 }
             }
 
+            /* add destination count */
+            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndGetDestinationCount(usage) != (OSPTALTINFO *)OSPC_OSNULL))
+            {
+                altinfo = OSPPUsageIndGetDestinationCount(usage);
+
+                ospvErrCode = OSPPAltInfoToElement(altinfo, &subelem, ospeElemDestAlt);
+
+                if (ospvErrCode == OSPC_ERR_NO_ERROR)
+                {
+                    OSPPXMLElemAddChild(usgindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
             /*
              * Add Pricing Info 
              */
@@ -1848,50 +1869,50 @@ OSPPUsageIndToElement(
                         OSPPUsageIndGetTNCustId(usage),
                         (const unsigned char *)OSPPMsgGetElemName(ospeElemTNCustId),
                         &subelem);
-             /*add attribute critical = "False" since not all servers understand */
+                    /*add attribute critical = "False" since not all servers understand */
                     if (ospvErrCode == OSPC_ERR_NO_ERROR)
                     {
-			attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
-                    (const unsigned char *)"False");
-			if (attr != OSPC_OSNULL)
-			{
-			    OSPPXMLElemAddAttr(subelem, attr);
-			    attr = OSPC_OSNULL;
-			}
-			else
-			{
-			    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-			}
+			                 attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                                      (const unsigned char *)"False");
+			                 if (attr != OSPC_OSNULL)
+			                 {
+			                     OSPPXMLElemAddAttr(subelem, attr);
+			                     attr = OSPC_OSNULL;
+			                 }
+			                 else
+			                 {
+			                     ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+			                 }
 		    
 		
-			OSPPXMLElemAddChild(usgindelem, subelem);
-                        subelem = OSPC_OSNULL;
+			                 OSPPXMLElemAddChild(usgindelem, subelem);
+                       subelem = OSPC_OSNULL;
                      }		
-                   if (OSPPUsageIndHasTNDeviceId(usage))
-                   {
-                       ospvErrCode = OSPPMsgNumToElement( 
-                            OSPPUsageIndGetTNDeviceId(usage),
-                            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNDeviceId),
-                            &subelem);
+                     if (OSPPUsageIndHasTNDeviceId(usage))
+                     {
+                         ospvErrCode = OSPPMsgNumToElement( 
+                              OSPPUsageIndGetTNDeviceId(usage),
+                              (const unsigned char *)OSPPMsgGetElemName(ospeElemTNDeviceId),
+                              &subelem);
                
-                            /*add attribute critical = "False" since not all servers understand */
-			    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-                            {
-                                 attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
-                    			(const unsigned char *)"False");
-                        	if (attr != OSPC_OSNULL)
-                        	{
+                          /*add attribute critical = "False" since not all servers understand */
+			                    if (ospvErrCode == OSPC_ERR_NO_ERROR)
+                          {
+                              attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                    			                             (const unsigned char *)"False");
+                        	    if (attr != OSPC_OSNULL)
+                        	    {
                             		OSPPXMLElemAddAttr(subelem, attr);
                             		attr = OSPC_OSNULL;
-                        	}
-                        	else
-                        	{
+                        	    }
+                        	    else
+                        	    {
                             		ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-                       	 	}
-				OSPPXMLElemAddChild(usgindelem, subelem);
+                       	 	    }
+				                        OSPPXMLElemAddChild(usgindelem, subelem);
                                 subelem = OSPC_OSNULL;
-                            }
-                    }
+                           }
+                      }
                     
                 }
             }
@@ -2018,4 +2039,30 @@ OSPPUsageIndGetMessageId(
     }
 
     return messagestring;
+}
+
+
+void
+OSPPUsageIndSetDestinationCount(
+    OSPTUSAGEIND *ospvUsageInd,
+    unsigned      ospvDestinationCount
+)
+{
+    char buf[64];
+
+    if (ospvDestinationCount > 0)
+    {
+        sprintf(buf,"%d",ospvDestinationCount);
+
+        ospvUsageInd->ospmUsageIndDestinationCount = OSPPAltInfoNew(strlen(buf),(unsigned char *)buf,ospeDeviceId);
+    }
+}
+
+
+OSPTALTINFO *
+OSPPUsageIndGetDestinationCount(
+    OSPTUSAGEIND *ospvUsageInd
+)
+{
+    return ospvUsageInd->ospmUsageIndDestinationCount;
 }

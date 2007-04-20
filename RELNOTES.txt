@@ -464,3 +464,9 @@ Version 3.3.6
 * Remove number of call ids check in RequestAuth function. For Emergent's two
   call ids solution
 * Fixed an error in handling HTTP responses. For OSPC-25 on SIPfoundry.
+---------------------------------------------------------------------------
+
+Version 3.4.0
+* Added a new API - OSPPTransactionSetDestinationCount
+---------------------------------------------------------------------------
+

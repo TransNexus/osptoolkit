@@ -52,7 +52,8 @@ typedef enum
     ospeAbbreviated,
     ospeE164prefix,
     ospetypelower,
-    ospeSip
+    ospeSip,
+    ospeDeviceId
 }OSPE_TYPE_ATTR_VAL;
 
 /* the basic altinfo structure */

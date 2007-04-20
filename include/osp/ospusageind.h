@@ -68,6 +68,7 @@ typedef struct
     OSPT_PRICING_INFO osmpUsageIndPricingInfo;
     OSPTBOOL          osmpUsageIndIsServiceInfoPresent;
     OSPE_SERVICE_TYPE osmpUsageIndServiceType;
+    OSPTALTINFO       *ospmUsageIndDestinationCount;
 }
 OSPTUSAGEIND;
 
@@ -172,6 +173,9 @@ extern "C"
     unsigned       OSPPUsageIndGetReleaseSource(OSPTUSAGEIND *);
     void           OSPPUsageIndSetConferenceId(OSPTUSAGEIND *,unsigned char *);
     unsigned char * OSPPUsageIndGetConferenceId(OSPTUSAGEIND *);
+
+    void           OSPPUsageIndSetDestinationCount(OSPTUSAGEIND *, unsigned ospvDestinationCount);
+    OSPTALTINFO   *OSPPUsageIndGetDestinationCount(OSPTUSAGEIND *);
 #ifdef __cplusplus
 }
 #endif

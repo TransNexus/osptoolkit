@@ -2376,6 +2376,57 @@ OSPPTransactionBuildUsageFromScratch(
 
 
 /*
+ * OSPPTransactionSetDestinationCount()
+ *
+ * The OSPPTransactionSetDestinationCount function sets destination count.
+ * When a stateless proxy sends a stop source CDR, it may indicate which 
+ * destination number the usage indication is for.  For example, if the first
+ * two set-up attempts failed and the call was completed by the 3rd destination,
+ * the proxy should set the destination count to 3.  The proxy would call this
+ * API after building a usage indication (using OSPPTransactionBuildUsageFromScratch)
+ * and before reporting the message to a settlement server (using OSPPTransactionReportUsage())
+ *
+ * Parameters to the function are:
+ *  ospvTransaction: handle of the (previously created) transaction object.
+ *  ospvDestinationCount: The destination count
+ *
+ * Specific error codes and their meanings can be found in the osperrno.h file.
+ *
+*/
+int
+OSPPTransactionSetDestinationCount(
+    OSPTTRANHANDLE  ospvTransaction,        /*In - Transaction handle */
+    unsigned        ospvDestinationCount    /*In - Optional Destination Count, 0 if n/a */
+)
+{
+    int        errorcode   = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans       = (OSPTTRANS *)OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction,&errorcode);
+
+    if(errorcode == OSPC_ERR_NO_ERROR)
+    {
+        if((trans->AuthReq != (OSPTAUTHREQ *)OSPC_OSNULL) && (trans->CurrentDest != (OSPTDEST *)OSPC_OSNULL))
+        {
+            OSPPDestSetDestinationCount(trans->CurrentDest,ospvDestinationCount);
+        }
+        else
+        {
+            errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+            OSPM_DBGERRORLOG(errorcode,"OSPPTransactionSetDestinationCount should be called after OSPPTransactionBuildUsageFromScratch for the source CDR");
+        }
+    }
+    else
+    {
+        errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+        OSPM_DBGERRORLOG(errorcode,"OSPPTransactionSetDestinationCount should be called after OSPPTransactionBuildUsageFromScratch for the source CDR");
+    }
+
+    return errorcode;
+}
+
+
+/*
  * OSPPTransactionInitializeAtDevice()
  *
  * The OSPPTransactionInitializeAtDevice function initializes a (newly created)
@@ -3143,6 +3194,8 @@ OSPPTransactionReportUsage(
 
                     if(errorcode == OSPC_ERR_NO_ERROR)
                     {
+                        OSPPUsageIndSetDestinationCount(usage, OSPPDestGetDestinationCount(dest));
+
                         /* set FailureReason */
                         OSPPUsageIndSetTNFailReason(usage, OSPPDestGetTNFailReason(dest));
                         OSPPListAppend(&(trans->UsageInd), usage);
@@ -3169,6 +3222,9 @@ OSPPTransactionReportUsage(
                                 /* Set failure reason */
                                 OSPPUsageIndSetTNFailReason(usage, OSPPDestGetTNFailReason(dest));
                             }
+
+                            OSPPUsageIndSetDestinationCount(usage, OSPPDestGetDestinationCount(dest));
+
                             /* Set Duration */
                             OSPPUsageIndSetDuration(usage, (int)ospvDuration);
                             OSPPUsageIndSetStartTime(usage, ospvStartTime);
@@ -3234,7 +3290,7 @@ OSPPTransactionReportUsage(
             {
                 OSPPListNew(&(trans->UsageInd));
                 OSPPUsageIndSetDuration(usage, (int)ospvDuration);
-		OSPPUsageIndSetStartTime(usage, ospvStartTime);
+		            OSPPUsageIndSetStartTime(usage, ospvStartTime);
                 OSPPUsageIndSetEndTime(usage, ospvEndTime);
                 OSPPUsageIndSetAlertTime(usage, ospvAlertTime);
                 OSPPUsageIndSetConnectTime(usage, ospvConnectTime);

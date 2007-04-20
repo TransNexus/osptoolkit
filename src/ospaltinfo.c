@@ -47,7 +47,8 @@ OSP_TYPE_ATTR_STRUCT OSPVTypeStringTable[] = {
     {ospeAbbreviated,   "abbreviated"},
     {ospeE164prefix,    "e164prefix"},
     {ospetypelower,     "bottom"},
-    {ospeSip,           "sip"}
+    {ospeSip,           "sip"},
+    {ospeDeviceId,      "deviceId"}
 };
 
 const unsigned OSPVNumElemAltInfoTypes = sizeof(OSPVTypeStringTable)/sizeof(OSP_TYPE_ATTR_STRUCT);

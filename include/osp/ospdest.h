@@ -92,6 +92,7 @@ typedef struct
     OSPE_DEST_PROT    ospmDestProtocol;
     OSPE_DEST_OSP_ENABLED ospmDestOSPVersion;
     unsigned char     ospmDestNetworkId[OSPC_NETWORKIDSIZE];
+    unsigned          ospmDestDestinationCount;
 }
 OSPTDEST;
 
@@ -159,6 +160,9 @@ extern "C"
     unsigned       OSPPDestHasTNFailReason(OSPTDEST *);
     void           OSPPDestSetTNFailReason(OSPTDEST *, unsigned);
     unsigned       OSPPDestGetTNFailReason(OSPTDEST *);
+
+    void           OSPPDestSetDestinationCount(OSPTDEST *, unsigned);
+    unsigned       OSPPDestGetDestinationCount(OSPTDEST *);
 
 
 #ifdef __cplusplus

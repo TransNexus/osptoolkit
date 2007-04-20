@@ -788,6 +788,7 @@ OSPPDestNew()
         OSPPListNew(&(ospvDest->ospmUpdatedSourceAddr));
         OSPPListNew(&(ospvDest->ospmUpdatedDeviceInfo));
         ospvDest->ospmDestHasLimit = OSPC_FALSE;
+        ospvDest->ospmDestDestinationCount = 0;
 
     }
 
@@ -1031,4 +1032,44 @@ OSPPDestSetCallId(
         }
     }
 }
+
+
+void
+OSPPDestSetDestinationCount(
+     OSPTDEST *ospvDest,
+     unsigned  ospvDestinationCount
+)
+{
+    if (ospvDest != OSPC_OSNULL)
+    {
+        ospvDest->ospmDestDestinationCount = ospvDestinationCount;
+    }
+}
+
+unsigned
+OSPPDestGetDestinationCount(
+     OSPTDEST *ospvDest
+)
+{
+    unsigned ospvTheValue = 0;
+
+    if (ospvDest != OSPC_OSNULL)
+    {
+        ospvTheValue = ospvDest->ospmDestDestinationCount;
+    }
+
+    return(ospvTheValue);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
