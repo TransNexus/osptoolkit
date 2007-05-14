@@ -1271,6 +1271,17 @@ testSetDuration()
 }
 
 int
+testSetTCCode()
+{
+    printf("Enter TC Code: ");
+
+    scanf("%d",&TCcode);
+    getchar();
+
+    return 0;
+}
+
+int
 testOSPPTransactionInitializeAtDevice(int IsSource)
 {
     int             errorcode       = 0;
@@ -2212,6 +2223,9 @@ testAPI(int apinumber)
         case 56:
         errorcode = testSetDuration();
         break;
+        case 57:
+        errorcode = testSetTCCode();
+        break;
         case 100:
         printf("Enter the number of Providers to be created .. ");
         scanf("%d",&num_providers);
@@ -2349,7 +2363,7 @@ testMenu()
       printf("52) Get Calling Number                53) Get Called Number\n");
       printf("54) Set CallId to Empty for Token Validation\n");
       printf("55) Set Pricing and Service Info\n");
-      printf("56) Set Duration\n");
+      printf("56) Set Duration                      57) Set TC Code\n");
       printf("---------------------------------------------------------------------\n");
       printf("Performance tests\n");
       printf("---------------------------------------------------------------------\n");
