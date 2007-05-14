@@ -120,6 +120,7 @@ char *ModifiedSourceIP=NULL,*ModifiedSourceDevIP=NULL,*ModifiedDstIP=NULL,*Modif
 unsigned almostOutOfResources=0;
 unsigned hardwareSupport=0;
 unsigned TCcode=0;
+unsigned duration=30;
 
 
 
@@ -1259,6 +1260,17 @@ testSetDestinationCount()
 }
 
 int
+testSetDuration()
+{
+    printf("Enter duration (in seconds) : ");
+
+    scanf("%d",&duration);
+    getchar();
+
+    return 0;
+}
+
+int
 testOSPPTransactionInitializeAtDevice(int IsSource)
 {
     int             errorcode       = 0;
@@ -1819,7 +1831,7 @@ testOSPPTransactionReportUsage()
 
         errorcode = OSPPTransactionReportUsage(
             OSPVTransactionHandle,
-            30,
+            duration,
 						time(NULL)-10,
 						time(NULL)+20,
 						time(NULL)-10,
@@ -1842,7 +1854,7 @@ testOSPPTransactionReportUsage()
 
         errorcode = OSPPTransactionReportUsage(
             tranhandle2,
-            30,
+            duration,
 						time(NULL)-10,
 						time(NULL)+20,
 						time(NULL)-10,
@@ -2194,9 +2206,11 @@ testAPI(int apinumber)
         break;
         case 54:
         errorcode = testSetCallId();
-        break;
         case 55:
         errorcode = testOSPPTransactionSetServiceAndPricingInfo();
+        break;
+        case 56:
+        errorcode = testSetDuration();
         break;
         case 100:
         printf("Enter the number of Providers to be created .. ");
@@ -2335,6 +2349,7 @@ testMenu()
       printf("52) Get Calling Number                53) Get Called Number\n");
       printf("54) Set CallId to Empty for Token Validation\n");
       printf("55) Set Pricing and Service Info\n");
+      printf("56) Set Duration\n");
       printf("---------------------------------------------------------------------\n");
       printf("Performance tests\n");
       printf("---------------------------------------------------------------------\n");
@@ -2999,7 +3014,7 @@ testNonBlockingPerformanceTest(void *arg)
                                                     0, /* DON'T BLOCK */
                                                     &OErrorCodes[i],
                                                     OTransactionHandles[i],
-                                                    30,
+                                                    duration,
 						time(NULL)-10,
 						time(NULL)+20,
 						time(NULL)-10,
@@ -3025,7 +3040,7 @@ testNonBlockingPerformanceTest(void *arg)
                                                     0, /* DON'T BLOCK */
                                                     &TErrorCodes[i],
                                                     TTransactionHandles[i],
-                                                    30,
+                                                    duration,
 						time(NULL)-10,
 						time(NULL)+20,
 						time(NULL)-10,
