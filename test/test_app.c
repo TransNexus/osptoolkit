@@ -2369,260 +2369,190 @@ GetConfiguration()
     }
     else
     {
-        while (fgets(inbuf, 512, fp))
-        {
-            if (inbuf[0] == '#' || inbuf[0] == '\n')
-                continue;
+       while (fgets(inbuf, 512, fp))
+       {
+          if (inbuf[0] == '#' || inbuf[0] == '\n')
+              continue;
+          
+          inbuf[strlen(inbuf)-1] = '\0';
+          
+          if (strncmp(inbuf, "AUDIT=", 6) == 0)
+          {
+              auditurl = _Strdup(&inbuf[6]);
+          }
+          else if (strncmp(inbuf, "SP=", 3) == 0)
+          {
+              servicepoints[num_serv_points++] = _Strdup(&inbuf[3]);
+          
+              if (num_serv_points == MAX_SERVICE_POINTS)
+              {
+                  fprintf(stderr, "Too many service points configured. Max = %d\n",
+                  MAX_SERVICE_POINTS);
+                  errorcode = 1;
+                  break;
+              }
+          }
+          else if (strncmp(inbuf, "CapURL=", strlen("CapURL=")) == 0)
+          {
+              capURLs[num_capURLs++] = _Strdup(&inbuf[strlen("CapURL=")]);
+          
+              if (num_capURLs == MAX_SERVICE_POINTS)
+              {
+                  fprintf(stderr, "Too many capabilities URLs configured. Max = %d\n",
+                  MAX_SERVICE_POINTS);
+                  errorcode = 1;
+                  break;
+              }
+          }
+          else if (strncmp(inbuf, "CUSTID=", 7) == 0)
+          {
+              custid = atol((const char *)&inbuf[7]);
+          } 
+          else if (strncmp(inbuf, "DEVID=", 6) == 0)
+          {
+              devid = atol((const char *)&inbuf[6]);
+          } 
+          else if (strncmp(inbuf, "CALLED=", 7) == 0)
+          {
+              strcpy(callednumber,(&inbuf[7]));
+          }
+          else if (strncmp(inbuf, "CALLING=", 8) == 0)
+          {
+              strcpy(callingnumber,(&inbuf[8]));
+          }
+          else if (strncmp(inbuf, "TEST_CALLS=", 11) == 0)
+          {
+              num_test_calls = atoi(&inbuf[11]);
+          }
+          else if (strncmp(inbuf,"TOKENALGO=",10) == 0)
+          {
+              tokenalgo = (token_algo_t)atoi(&inbuf[10]);
+          }
+          else if (strncmp(inbuf,"SRC=",4) == 0)
+          {
+              strcpy(tmp_addr,(&inbuf[4]));
+              if (strcmp(tmp_addr,"0") != 0)
+              {
+                  SourceIP = _Strdup(tmp_addr); 
+              }
+          }
+          else if (strncmp(inbuf,"SRCDEV=",7) == 0)
+          {
+              strcpy(tmp_addr,(&inbuf[7]));
+              if (strcmp(tmp_addr,"0") != 0)
+              {
+                  SourceDevIP = _Strdup(tmp_addr); 
+              }
+          }
+          else if (strncmp(inbuf,"DST=",4) == 0)
+          {
+              strcpy(tmp_addr,(&inbuf[4]));
+              if (strcmp(tmp_addr,"0") != 0)
+              {
+                  DstIP = _Strdup(tmp_addr); 
+              }
+          }
+          else if (strncmp(inbuf,"DSTDEV=",7) == 0)
+          {
+              strcpy(tmp_addr,(&inbuf[7]));
+              if (strcmp(tmp_addr,"0") != 0)
+              {
+                  DstDevIP = _Strdup(tmp_addr); 
+              }
+          }
+          else if (strncmp(inbuf,"OUTOFRESOURCES=",15) == 0)
+          {
+              almostOutOfResources = atoi(&inbuf[15]);
+          }
+          else if (strncmp(inbuf,"HWSUPPORT=",10) == 0)
+          {
+              hardwareSupport = atoi(&inbuf[10]);
+          }
+          else if (strncmp(inbuf,"TCCODE=",7) == 0)
+          {
+              TCcode = atoi(&inbuf[7]);
+          }
+          else if (strncmp(inbuf,"CALLING_NUM_FORMAT=",19) == 0)
+          {
+              CallingNumFormat = atoi(&inbuf[19]);
+          }
+          else if (strncmp(inbuf,"CALLED_NUM_FORMAT=",18) == 0)
+          {
+              CalledNumFormat = atoi(&inbuf[18]);
+          }
+          else if (strncmp(inbuf,"MSGCOUNT=",9) == 0)
+          {
+              if (strcmp(&inbuf[9],"NULL") == 0)
+              {
+                  MsgCount=NULL;
+              }
+              else
+              {
+                  SPMsgCount[spindex++] = atoi(&inbuf[9]);
+              }
+          }
+          else if (strncmp(inbuf,"DEF_HTTP_MAXCONN=",17) == 0)
+          {
+              DEF_HTTP_MAXCONN = atoi(&inbuf[17]);
+              WORK_THREAD_NUM = DEF_HTTP_MAXCONN;
+          }
+          else if (strncmp(inbuf,"CapMSGCOUNT=",12) == 0)
+          {
+              if (strcmp(&inbuf[12],"NULL") == 0)
+              {
+                  CapMsgCount=NULL;
+              }
+              else
+              {
+                  CapSPMsgCount[Capspindex++] = atoi(&inbuf[12]);
+              }
+          }
+          else if (strncmp(inbuf,"ModifiedSRC=",12) == 0)
+          {
+              strcpy(tmp_addr,(&inbuf[12]));
+              if (strcmp(tmp_addr,"0") != 0)
+              {
+                  ModifiedSourceIP = _Strdup(tmp_addr); 
+              }
+          }
+          else if (strncmp(inbuf,"ModifiedSRCDEV=",15) == 0)
+          {
+              strcpy(tmp_addr,(&inbuf[15]));
+              if (strcmp(tmp_addr,"0") != 0)
+              {
+                  ModifiedSourceDevIP = _Strdup(tmp_addr); 
+              }
+          }
+          else if (strncmp(inbuf,"ModifiedDST=",12) == 0)
+          {
+              strcpy(tmp_addr,(&inbuf[12]));
+              if (strcmp(tmp_addr,"0") != 0)
+              {
+                  ModifiedDstIP = _Strdup(tmp_addr); 
+              }
+          }
+          else if (strncmp(inbuf,"ModifiedDSTDEV=",15) == 0)
+          {
+              strcpy(tmp_addr,(&inbuf[15]));
+              if (strcmp(tmp_addr,"0") != 0)
+              {
+                  ModifiedDstDevIP = _Strdup(tmp_addr); 
+              }
+          }
+          else if (strncmp(inbuf,"IS_PDD_INFO_AVAILABLE=",22) == 0)
+          {
+              IS_PDD_INFO_AVAILABLE = atoi(&inbuf[22]);
+          }
+       } 
+       fclose(fp);
+    }
 
-            inbuf[strlen(inbuf)-1] = '\0';
-
-            if (strncmp(inbuf, "AUDIT=", 6) == 0)
-                auditurl = _Strdup(&inbuf[6]);
-            else
-            {
-                if (strncmp(inbuf, "SP=", 3) == 0)
-                {
-                    servicepoints[num_serv_points++] = _Strdup(&inbuf[3]);
-
-                    if (num_serv_points == MAX_SERVICE_POINTS)
-                    {
-                        fprintf(stderr, "Too many service points configured. Max = %d\n",
-                            MAX_SERVICE_POINTS);
-                        errorcode = 1;
-                        break;
-                    }
-                }
-                else if (strncmp(inbuf, "CapURL=", strlen("CapURL=")) == 0)
-                {
-                    capURLs[num_capURLs++] = _Strdup(&inbuf[strlen("CapURL=")]);
-
-                    if (num_capURLs == MAX_SERVICE_POINTS)
-                    {
-                        fprintf(stderr, "Too many capabilities URLs configured. Max = %d\n",
-                            MAX_SERVICE_POINTS);
-                        errorcode = 1;
-                        break;
-                    }
-                }
-                else
-                {
-                    if (strncmp(inbuf, "CUSTID=", 7) == 0)
-                    {
-                        custid = atol((const char *)&inbuf[7]);
-                    } 
-                    else
-                    {
-                        if (strncmp(inbuf, "DEVID=", 6) == 0)
-                        {
-                            devid = atol((const char *)&inbuf[6]);
-                        } 
-                        else
-                        {
-                            if (strncmp(inbuf, "CALLED=", 7) == 0)
-                            {
-                                  strcpy(callednumber,(&inbuf[7]));
-                            }
-                            else
-                            {
-                                if (strncmp(inbuf, "CALLING=", 8) == 0)
-                                {
-                                      strcpy(callingnumber,(&inbuf[8]));
-                                }
-                                else
-                                {
-                                    if (strncmp(inbuf, "TEST_CALLS=", 11) == 0)
-                                    {
-                                        num_test_calls = atoi(&inbuf[11]);
-                                    }
-                                    else
-                                    {
-                                        if (strncmp(inbuf,"TOKENALGO=",10) == 0)
-                                        {
-                                            tokenalgo = (token_algo_t)atoi(&inbuf[10]);
-                                        }
-                                        else 
-                                        {
-                                            if (strncmp(inbuf,"SRC=",4) == 0)
-                                            {
-                                               strcpy(tmp_addr,(&inbuf[4]));
-                                               if (strcmp(tmp_addr,"0") != 0)
-                                               {
-                                                  SourceIP = _Strdup(tmp_addr); 
-                                               }
-                                            }
-                                            else
-                                            {
-                                                if (strncmp(inbuf,"SRCDEV=",7) == 0)
-                                                {
-                                                   strcpy(tmp_addr,(&inbuf[7]));
-                                                   if (strcmp(tmp_addr,"0") != 0)
-                                                   {
-                                                      SourceDevIP = _Strdup(tmp_addr); 
-                                                   }
-                                                }
-                                                else
-                                                {
-                                                    if (strncmp(inbuf,"DST=",4) == 0)
-                                                    {
-                                                       strcpy(tmp_addr,(&inbuf[4]));
-                                                       if (strcmp(tmp_addr,"0") != 0)
-                                                       {
-                                                          DstIP = _Strdup(tmp_addr); 
-                                                       }
-                                                    }
-                                                    else
-                                                    {
-                                                        if (strncmp(inbuf,"DSTDEV=",7) == 0)
-                                                        {
-                                                           strcpy(tmp_addr,(&inbuf[7]));
-                                                           if (strcmp(tmp_addr,"0") != 0)
-                                                           {
-                                                              DstDevIP = _Strdup(tmp_addr); 
-                                                           }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (strncmp(inbuf,"OUTOFRESOURCES=",15) == 0)
-                                                            {
-                                                               almostOutOfResources = atoi(&inbuf[15]);
-                                                            }
-                                                            else
-                                                            {
-                                                                if (strncmp(inbuf,"HWSUPPORT=",10) == 0)
-                                                                {
-                                                                    hardwareSupport = atoi(&inbuf[10]);
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (strncmp(inbuf,"TCCODE=",7) == 0)
-                                                                    {
-                                                                        TCcode = atoi(&inbuf[7]);
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (strncmp(inbuf,"CALLING_NUM_FORMAT=",19) == 0)
-                                                                        {
-                                                                            CallingNumFormat = atoi(&inbuf[19]);
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (strncmp(inbuf,"CALLED_NUM_FORMAT=",18) == 0)
-                                                                            {
-                                                                                CalledNumFormat = atoi(&inbuf[18]);
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (strncmp(inbuf,"MSGCOUNT=",9) == 0)
-                                                                                {
-                                                                                    if (strcmp(&inbuf[9],"NULL") == 0)
-                                                                                    {
-                                                                                        MsgCount=NULL;
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        SPMsgCount[spindex++] = atoi(&inbuf[9]);
-                                                                                    }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (strncmp(inbuf,"DEF_HTTP_MAXCONN=",17) == 0)
-                                                                                    {
-                                                                                        DEF_HTTP_MAXCONN = atoi(&inbuf[17]);
-                                                                                        WORK_THREAD_NUM = DEF_HTTP_MAXCONN;
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        if (strncmp(inbuf,"CapMSGCOUNT=",12) == 0)
-                                                                                        {
-                                                                                            if (strcmp(&inbuf[12],"NULL") == 0)
-                                                                                            {
-                                                                                                CapMsgCount=NULL;
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                CapSPMsgCount[Capspindex++] = atoi(&inbuf[12]);
-                                                                                            }
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            if (strncmp(inbuf,"ModifiedSRC=",12) == 0)
-                                                                                            {
-                                                                                               strcpy(tmp_addr,(&inbuf[12]));
-                                                                                               if (strcmp(tmp_addr,"0") != 0)
-                                                                                               {
-                                                                                                  ModifiedSourceIP = _Strdup(tmp_addr); 
-                                                                                               }
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                if (strncmp(inbuf,"ModifiedSRCDEV=",15) == 0)
-                                                                                                {
-                                                                                                   strcpy(tmp_addr,(&inbuf[15]));
-                                                                                                   if (strcmp(tmp_addr,"0") != 0)
-                                                                                                   {
-                                                                                                      ModifiedSourceDevIP = _Strdup(tmp_addr); 
-                                                                                                   }
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    if (strncmp(inbuf,"ModifiedDST=",12) == 0)
-                                                                                                    {
-                                                                                                       strcpy(tmp_addr,(&inbuf[12]));
-                                                                                                       if (strcmp(tmp_addr,"0") != 0)
-                                                                                                       {
-                                                                                                          ModifiedDstIP = _Strdup(tmp_addr); 
-                                                                                                       }
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        if (strncmp(inbuf,"ModifiedDSTDEV=",15) == 0)
-                                                                                                        {
-                                                                                                           strcpy(tmp_addr,(&inbuf[15]));
-                                                                                                           if (strcmp(tmp_addr,"0") != 0)
-                                                                                                           {
-                                                                                                              ModifiedDstDevIP = _Strdup(tmp_addr); 
-                                                                                                           }
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            if (strncmp(inbuf,"IS_PDD_INFO_AVAILABLE=",22) == 0)
-                                                                                                            {
-                                                                                                                IS_PDD_INFO_AVAILABLE = atoi(&inbuf[22]);
-                                                                                                            }
-                                                                                                        } 
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        } 
-                    }
-                }
-            }
-        }
-        fclose(fp);
-     }
-
-     if (num_serv_points == 0 || auditurl == NULL)
-     {
+    if (num_serv_points == 0 || auditurl == NULL)
+    {
           fprintf(stderr, "Both service points and an audit URL must be configured\n");
           errorcode = 1;
-     }
-     return errorcode;
+    }
+    return errorcode;
 }
 
 void
