@@ -121,6 +121,10 @@ unsigned almostOutOfResources=0;
 unsigned hardwareSupport=0;
 unsigned TCcode=0;
 unsigned duration=30;
+time_t   call_start_time   = 0;
+time_t   call_end_time     = 0;
+time_t   call_alert_time   = 0;
+time_t   call_connect_time = 0;
 
 
 
@@ -1282,6 +1286,51 @@ testSetTCCode()
 }
 
 int
+testSetStartTime()
+{
+    printf("Enter Call Start Time (in seconds since 1970 GMT) : ");
+
+    scanf("%d",&call_start_time);
+    getchar();
+
+    return 0;
+}
+
+int
+testSetEndTime()
+{
+    printf("Enter Call End Time (in seconds since 1970 GMT) : ");
+
+    scanf("%d",&call_end_time);
+    getchar();
+
+    return 0;
+}
+
+
+int
+testSetAlertTime()
+{
+    printf("Enter Call Alert Time (in seconds since 1970 GMT) : ");
+
+    scanf("%d",&call_alert_time);
+    getchar();
+
+    return 0;
+}
+
+int
+testSetConnectTime()
+{
+    printf("Enter Call Connect Time (in seconds since 1970 GMT) : ");
+
+    scanf("%d",&call_connect_time);
+    getchar();
+
+    return 0;
+}
+
+int
 testOSPPTransactionInitializeAtDevice(int IsSource)
 {
     int             errorcode       = 0;
@@ -1843,12 +1892,12 @@ testOSPPTransactionReportUsage()
         errorcode = OSPPTransactionReportUsage(
             OSPVTransactionHandle,
             duration,
-						time(NULL)-10,
-						time(NULL)+20,
-						time(NULL)-10,
-						time(NULL)-8,
+            call_start_time,
+            call_end_time,
+            call_alert_time,
+            call_connect_time,
             IS_PDD_INFO_AVAILABLE,
-	    1, /* PDD */
+            1, /* PDD */
             0, /* Release Source */
             (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id*/
             1,
@@ -1866,12 +1915,12 @@ testOSPPTransactionReportUsage()
         errorcode = OSPPTransactionReportUsage(
             tranhandle2,
             duration,
-						time(NULL)-10,
-						time(NULL)+20,
-						time(NULL)-10,
-						time(NULL)-8,
+            call_start_time,
+            call_end_time,
+            call_alert_time,
+            call_connect_time,
             IS_PDD_INFO_AVAILABLE,
-	    1, /* PDD */
+            1, /* PDD */
             0, /* Release Source */
             (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id*/
             1,
@@ -2226,6 +2275,18 @@ testAPI(int apinumber)
         case 57:
         errorcode = testSetTCCode();
         break;
+        case 58:
+        errorcode = testSetStartTime();
+        break;
+        case 59:
+        errorcode = testSetEndTime();
+        break;
+        case 60:
+        errorcode = testSetStartTime();
+        break;
+        case 61:
+        errorcode = testSetStartTime();
+        break;
         case 100:
         printf("Enter the number of Providers to be created .. ");
         scanf("%d",&num_providers);
@@ -2364,6 +2425,8 @@ testMenu()
       printf("54) Set CallId to Empty for Token Validation\n");
       printf("55) Set Pricing and Service Info\n");
       printf("56) Set Duration                      57) Set TC Code\n");
+      printf("58) Set Start Time                    59) Set End Time\n");
+      printf("60) Set Alert Time                    61) Set Connect Time\n");
       printf("---------------------------------------------------------------------\n");
       printf("Performance tests\n");
       printf("---------------------------------------------------------------------\n");
@@ -2593,7 +2656,7 @@ CleanupServicePoints()
     {
         free(servicepoints[i]);
     }
-	
+
     for (i = 0; i < num_capURLs; i++)
     {
         free(capURLs[i]);
@@ -3029,11 +3092,11 @@ testNonBlockingPerformanceTest(void *arg)
                                                     &OErrorCodes[i],
                                                     OTransactionHandles[i],
                                                     duration,
-						time(NULL)-10,
-						time(NULL)+20,
-						time(NULL)-10,
-						time(NULL)-8,
-            					    IS_PDD_INFO_AVAILABLE,
+                                                    time(NULL)-10,
+                                                    time(NULL)+20,
+                                                    time(NULL)-10,
+                                                    time(NULL)-8,
+                                                    IS_PDD_INFO_AVAILABLE,
                                                     1, /* PDD*/
                                                     3, /* Release Source */
                                                     (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id*/
@@ -3055,11 +3118,11 @@ testNonBlockingPerformanceTest(void *arg)
                                                     &TErrorCodes[i],
                                                     TTransactionHandles[i],
                                                     duration,
-						time(NULL)-10,
-						time(NULL)+20,
-						time(NULL)-10,
-						time(NULL)-8,
-            					    IS_PDD_INFO_AVAILABLE,
+                                                    time(NULL)-10,
+                                                    time(NULL)+20,
+                                                    time(NULL)-10,
+                                                    time(NULL)-8,
+                                                    IS_PDD_INFO_AVAILABLE,
                                                     1, /* PDD*/
                                                     3, /* Release Source */
                                                     (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id*/
