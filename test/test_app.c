@@ -2282,10 +2282,10 @@ testAPI(int apinumber)
         errorcode = testSetEndTime();
         break;
         case 60:
-        errorcode = testSetStartTime();
+        errorcode = testSetAlertTime();
         break;
         case 61:
-        errorcode = testSetStartTime();
+        errorcode = testSetConnectTime();
         break;
         case 100:
         printf("Enter the number of Providers to be created .. ");
