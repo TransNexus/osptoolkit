@@ -54,11 +54,14 @@ OSPPSockClose(
     return OSPC_ERR_NO_ERROR;
 }
 
-char *OSPM_INET_NTOA(OSPTIPADDR ip) 
+const char* OSPM_INET_NTOA(
+    OSPTIPADDR ip, 
+    char* buffer, 
+    socklen_t length) 
 {
     struct in_addr sin;
-    sin.s_addr     = (ip);
-    return(inet_ntoa(sin));
+    sin.s_addr = (ip);
+    return(inet_ntop(AF_INET, &sin, buffer, length));
 }
 
 int
@@ -72,6 +75,7 @@ OSPPSockConnect(
 {
     int  errorcode = OSPC_ERR_NO_ERROR;
     char ErrStr[200];
+    char buffer[INET_ADDRSTRLEN];
 
     /*
      * set the connection socket. 
@@ -91,12 +95,12 @@ OSPPSockConnect(
         {
             errorcode = OSPC_ERR_SOCK_CONNECT_FAILED;
 #ifdef _WIN32
-            OSPM_DBGERROR(("Could not connect to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",OSPM_INET_NTOA(ospvIpAddr), ntohs(ospvPort),errorcode));
-            sprintf(ErrStr,"Cannot communicate with application. Connection timed out to IP address: %s",OSPM_INET_NTOA(ospvIpAddr));
+            OSPM_DBGERROR(("Could not connect to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",OSPM_INET_NTOA(ospvIpAddr, buffer, INET_ADDRSTRLEN), ntohs(ospvPort),errorcode));
+            sprintf(ErrStr,"Cannot communicate with application. Connection timed out to IP address: %s",OSPM_INET_NTOA(ospvIpAddr, buffer, INET_ADDRSTRLEN));
             OSPM_DBGERRORLOG(errorcode,ErrStr);
 #else
-            OSPM_DBGERROR(("%s to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",strerror(errno), OSPM_INET_NTOA(ospvIpAddr), ntohs(ospvPort),errorcode));
-            sprintf(ErrStr,"Cannot communicate with application. Connection timed out to IP address: %s",OSPM_INET_NTOA(ospvIpAddr));
+            OSPM_DBGERROR(("%s to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",strerror(errno), OSPM_INET_NTOA(ospvIpAddr, buffer, INET_ADDRSTRLEN), ntohs(ospvPort),errorcode));
+            sprintf(ErrStr,"Cannot communicate with application. Connection timed out to IP address: %s",OSPM_INET_NTOA(ospvIpAddr, buffer, INET_ADDRSTRLEN));
             OSPM_DBGERRORLOG(errorcode,ErrStr);
 #endif
             OSPPSockClose(OSPC_FALSE, ospvSockFd, ospvSSLSession);
@@ -112,12 +116,12 @@ OSPPSockConnect(
             {
                 errorcode = OSPC_ERR_SOCK_CONNECT_FAILED;
 #ifdef _WIN32
-                OSPM_DBGERROR(("Could not connect to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",OSPM_INET_NTOA(ospvIpAddr), ntohs(ospvPort),errorcode));
-                sprintf(ErrStr,"Cannot communicate with application. Connection timed out to IP address: %s",OSPM_INET_NTOA(ospvIpAddr));
+                OSPM_DBGERROR(("Could not connect to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",OSPM_INET_NTOA(ospvIpAddr, buffer, INET_ADDRSTRLEN), ntohs(ospvPort),errorcode));
+                sprintf(ErrStr,"Cannot communicate with application. Connection timed out to IP address: %s",OSPM_INET_NTOA(ospvIpAddr, buffer, INET_ADDRSTRLEN));
                 OSPM_DBGERRORLOG(errorcode,ErrStr);
 #else
-                OSPM_DBGERROR(("%s to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",strerror(errno), OSPM_INET_NTOA(ospvIpAddr), ntohs(ospvPort),errorcode));
-                sprintf(ErrStr,"Cannot communicate with application. Connection timed out to IP address: %s",OSPM_INET_NTOA(ospvIpAddr));
+                OSPM_DBGERROR(("%s to %s:%d .Check IP Address and Port Numbers again. Error = %d\n",strerror(errno), OSPM_INET_NTOA(ospvIpAddr, buffer, INET_ADDRSTRLEN), ntohs(ospvPort),errorcode));
+                sprintf(ErrStr,"Cannot communicate with application. Connection timed out to IP address: %s",OSPM_INET_NTOA(ospvIpAddr, buffer, INET_ADDRSTRLEN));
                 OSPM_DBGERRORLOG(errorcode,ErrStr);
 #endif
                 OSPPSockClose(OSPC_FALSE, ospvSockFd, ospvSSLSession);
@@ -504,6 +508,8 @@ OSPPSockProcessRequest(
     unsigned char  *tmpContentBuffer            = OSPC_OSNULL;
     unsigned       tmpContentBufferSz           = 0;
 
+    char buffer[INET_ADDRSTRLEN];
+
     OSPM_DBGENTER(("ENTER: OSPPSockProcessRequest()\n"));
 
     /*
@@ -741,7 +747,7 @@ OSPPSockProcessRequest(
     }
     else
     {
-        OSPM_DBGERROR(("Connection to application has been reset. IP address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr)));
+        OSPM_DBGERROR(("Connection to application has been reset. IP address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN)));
     }
 
     /* If the Connection-Type indicated "close" in the MIME header, 
@@ -769,6 +775,7 @@ OSPPSockRead(
     struct timeval  timeout;
     unsigned        socktimeout = 0;
     char   ErrStr[200];
+    char buffer[INET_ADDRSTRLEN];
 
     OSPM_DBGENTER(("ENTER: OSPPSockRead()\n"));
 
@@ -793,8 +800,8 @@ OSPPSockRead(
         }
         else
         {
-            OSPM_DBGERROR(("Response timed out. Server unavailable on %s:%d Error = %d\n",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr),ntohs(ospvHttp->ServicePoint->Port),errorcode));
-            sprintf(ErrStr,"Application slow in responding, response timed out to IP address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr));
+            OSPM_DBGERROR(("Response timed out. Server unavailable on %s:%d Error = %d\n",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN),ntohs(ospvHttp->ServicePoint->Port),errorcode));
+            sprintf(ErrStr,"Application slow in responding, response timed out to IP address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
             OSPM_DBGERRORLOG(errorcode,ErrStr);
         }
 
@@ -809,8 +816,8 @@ OSPPSockRead(
             length, *ospvBufferSz, errorcode));
 
         errorcode = OSPC_ERR_SOCK_RECV_FAILED;
-        OSPM_DBGERROR(("Connection reset by peer on %s:%d Error = %d\n",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr),ntohs(ospvHttp->ServicePoint->Port),errorcode));
-        sprintf(ErrStr,"Connection to application has been reset. IP address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr));
+        OSPM_DBGERROR(("Connection reset by peer on %s:%d Error = %d\n",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN),ntohs(ospvHttp->ServicePoint->Port),errorcode));
+        sprintf(ErrStr,"Connection to application has been reset. IP address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
         OSPM_DBGERRORLOG(errorcode,ErrStr);
     }
     *ospvBufferSz = length;

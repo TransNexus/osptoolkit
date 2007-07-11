@@ -485,7 +485,7 @@
 /* ----------------------------------*/
 /* Common Winsock/Sockets Functions  */
 /* ----------------------------------*/
-char *OSPM_INET_NTOA(OSPTIPADDR ip);
+const char* OSPM_INET_NTOA(OSPTIPADDR ip, char* buf, socklen_t len);
 
 /* -------------------------------*/
 /* Common Winsock/Sockets Macros  */
