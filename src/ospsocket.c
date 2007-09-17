@@ -32,6 +32,10 @@
 #include "osp/osphttp.h"
 #include "osp/ospssl.h"
 
+#ifndef _WIN32
+#include <poll.h>
+#endif
+
 int
 OSPPSockClose(
     OSPTBOOL ospvGracefulSSLShutdown,
@@ -507,8 +511,9 @@ OSPPSockProcessRequest(
     unsigned       tmpReceiveBufferSz           = 0;
     unsigned char  *tmpContentBuffer            = OSPC_OSNULL;
     unsigned       tmpContentBufferSz           = 0;
-
+#ifdef OSPC_DEBUG
     char buffer[INET_ADDRSTRLEN];
+#endif
 
     OSPM_DBGENTER(("ENTER: OSPPSockProcessRequest()\n"));
 
@@ -866,10 +871,11 @@ OSPPSockWaitTillReady(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
+    OSPM_DBGENTER(("ENTER: OSPPSockWaitTillReady()\n"));
+
+#ifdef _WIN32
     fd_set            fdlist;
     unsigned          fdready     = 0;
-
-    OSPM_DBGENTER(("ENTER: OSPPSockWaitTillReady()\n"));
 
     if (errorcode == OSPC_ERR_NO_ERROR)
     {
@@ -898,6 +904,29 @@ OSPPSockWaitTillReady(
         if (fdready != 1)
             errorcode = OSPC_ERR_SOCK_SELECT_FAILED;
     }
+#else
+    short events;
+    struct pollfd fd;
+    int timeout = ospvTimeout->tv_sec * 1000 + ospvTimeout->tv_usec;
+    int fdready;
+
+    if (ospvWaitForRead) {
+        /* make sure there is data available to read */
+        events = POLLIN;
+    } else {
+        /* make sure there is data available to write */
+        events = POLLOUT;
+    }
+
+    fd.fd = ospvSockFd;
+    fd.events = events;
+    fd.revents = 0;
+    fdready = poll(&fd, 1, timeout);
+    if ((fdready != 1) || !(fd.revents & events)) {
+        errorcode = OSPC_ERR_SOCK_SELECT_FAILED;
+    }
+#endif
+
     OSPM_DBGEXIT(("EXIT : OSPPSockWaitTillReady() select on %s to.sec(%ld) to.usec(%ld) fdready(%d) err(%d)\n", 
         (ospvWaitForRead ? "read" : "write"), ospvTimeout->tv_sec, ospvTimeout->tv_usec, 
          fdready, errorcode));
