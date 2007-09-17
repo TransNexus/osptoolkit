@@ -470,3 +470,8 @@ Version 3.4.0
 * Added a new API - OSPPTransactionSetDestinationCount
 ---------------------------------------------------------------------------
 
+Version 3.4.1
+* Fixed a thread safe issue. Replaced inet_ntoa by inet_ntop. For 1751656 of OSP Toolkit on SourceForge.
+* Fixed a crash issue. Replaced select by poll. For 1796025 of OSP Toolkit on SourceForge.
+---------------------------------------------------------------------------
+
