@@ -8,7 +8,7 @@ SSL_LIBS      = -lssl -lcrypto
 SSL_OBJS      = ../src/ospopenssl.o
 
 INCLDIRS      = -I./ -I../include -I$(SSLINC)
-#WARNING_FLAGS = -Wall
+WARNING_FLAGS = -Wall
 CFLAGS        = -g $(WARNING_FLAGS)
 
 MACRO_FLAGS   = -D_POSIX_THREADS -DSOLARIS -DOSPD_DEBUG -DOSP_SDK -DOPENSSL_NO_KRB5 -DOSPC_DEBUG=1

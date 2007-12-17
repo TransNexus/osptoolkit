@@ -6,7 +6,8 @@ INCLDIR = ../include
 # ***** Platform specific flags ******
 #
 CC         = g++
-CFLAGS     = -g $(PROFILE) -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D_REENTRANT -DOPENSSL_NO_KRB5 -DOSP_SDK
+WARNING_FLAGS = -Wall
+CFLAGS     = -g $(WARNING_FLAGS) $(PROFILE) -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D_REENTRANT -DOPENSSL_NO_KRB5 -DOSP_SDK
 #CC         = /usr/vws/bin/cc
 #CFLAGS     =  -g -v -xCC -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D_REENTRANT -DOPENSSL_NO_KRB5 -DOSP_SDK
 LFLAGS	   = $(PROFILELIB) -lsocket -lnsl -lpthread -lmtmalloc  -ldl -lm

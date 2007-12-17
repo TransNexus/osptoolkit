@@ -683,7 +683,7 @@ OSPPSecSetAuthorityCertificates(
 		/* p is a temporary pointer, it will be updated by the functions */
 		p = ospvAuthorityCertificates[i]->CertData;
 		newX509Cert = d2i_X509(	OSPC_OSNULL,
-					&p,
+					(const unsigned char**)(&p),
 					ospvAuthorityCertificates[i]->CertDataLength);
 
 		if( newX509Cert != OSPC_OSNULL )
@@ -753,7 +753,7 @@ OSPPSecSignatureVerify(
 		char	*tokenBuf		= OSPC_OSNULL;
 
 		/* decode signed data */
-		signedData = d2i_PKCS7(OSPC_OSNULL,&p, ospvSignatureLength);
+		signedData = d2i_PKCS7(OSPC_OSNULL,(const unsigned char**)(&p), ospvSignatureLength);
 
 		if(signedData != OSPC_OSNULL)
 		{

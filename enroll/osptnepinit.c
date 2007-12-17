@@ -1072,7 +1072,7 @@ int OSPPExtractCACertFromResponse(
             OSPPExtractFieldFromResponse( 
                 ospvResponseIn, 
                 ospvResponseLenIn,
-                OSPC_ENROLL_CA_CERT_RSP_PARAM, 
+                (unsigned char*)OSPC_ENROLL_CA_CERT_RSP_PARAM, 
                 &caCertB64 ); 
 
         /* Complain if we couldn't find the CA certificate: */
@@ -1099,7 +1099,7 @@ int OSPPExtractCACertFromResponse(
      */
     if ( retVal == OSPC_ERR_NO_ERROR ) 
     {
-        caCertB64Len = OSPM_STRLEN( caCertB64 );
+        caCertB64Len = OSPM_STRLEN( (char*)caCertB64 );
         if ( caCertB64Len <= 0 )
         {
             OSPM_DBGERRORLOG( 
@@ -1145,7 +1145,7 @@ int OSPPExtractCACertFromResponse(
 
         retVal = 
             OSPPBase64Decode( 
-                caCertB64, 
+                (char*)caCertB64, 
                 caCertB64Len, 
                 *ospvCACertOut, 
                 ospvCACertLenOut );
@@ -1281,7 +1281,7 @@ int OSPPValidateCACertificate(
      * simply for the sake of having a single entry/exit point.
      */
     if ( ( ospvEnrollParams->CAFprint != OSPC_OSNULL ) &&
-         ( OSPM_STRLEN( ospvEnrollParams->CAFprint ) > 0 ) ) 
+         ( OSPM_STRLEN( (char*)(ospvEnrollParams->CAFprint) ) > 0 ) ) 
     {
         OSPM_DBGMISC(( "fingerprint on input: \n" ));
         OSPPDumpHex( ospvEnrollParams->CAFprint, 40 );
@@ -1331,9 +1331,9 @@ int OSPPValidateCACertificate(
             retVal = 
                 OSPPHexToBinary( 
                     ospvEnrollParams->CAFprint, 
-                    OSPM_STRLEN( ospvEnrollParams->CAFprint ),
+                    OSPM_STRLEN( (char*)(ospvEnrollParams->CAFprint) ),
                     inputFprintBin,
-                    &inputFprintBinLen ); 
+                    (unsigned*)(&inputFprintBinLen) ); 
 
             if ( retVal != OSPC_ERR_NO_ERROR )
             {
@@ -1367,7 +1367,7 @@ int OSPPValidateCACertificate(
             retVal = 
                 OSPPCryptoWrapDigest( 
                     caFprint,
-                    &caFprintLen,
+                    (unsigned*)(&caFprintLen),
                     OSPC_OSNULL,
                     0,
                     ospvEnrollParams->CACert,
@@ -1505,7 +1505,7 @@ int OSPPHexToBinary (
      */
     if ( retVal == OSPC_ERR_NO_ERROR )
     {
-        if ( OSPM_STRLEN( ospvHexStr ) < ospvHexStrLen )
+        if ( OSPM_STRLEN( (char*)ospvHexStr ) < (size_t)ospvHexStrLen )
         {
             retVal = OSPC_ERR_ENROLL_INVALID_ARG;
             OSPM_DBGERRORLOG( 
@@ -1585,8 +1585,8 @@ int OSPPHexToBinary (
 
         for ( hexStrIndex = 0; ( hexStrIndex < ospvHexStrLen ); hexStrIndex+=2 )
         {
-            OSPM_SPRINTF( nextByte, "%.2s", ospvHexStr + hexStrIndex ); 
-            nextWord = OSPM_STRTOL( nextByte, NULL, 16 );
+            OSPM_SPRINTF( (char*)nextByte, "%.2s", ospvHexStr + hexStrIndex ); 
+            nextWord = OSPM_STRTOL( (char*)nextByte, NULL, 16 );
 
             OSPM_DBGMISC(( 
                 "nextWord: %ld, %d\n", 
@@ -1657,7 +1657,7 @@ int OSPPExtractFieldFromResponse (
          ( ospvResponseLen <= 0 ) ||
          ( ospvSearchField == OSPC_OSNULL ) ||
          ( ospvValueOut == OSPC_OSNULL ) ||
-         ( OSPM_STRLEN( ospvSearchField ) <= 0 )
+         ( OSPM_STRLEN( (char*)ospvSearchField ) <= 0 )
         )
     {
         retVal = OSPC_ERR_ENROLL_INVALID_ARG;
@@ -1721,7 +1721,7 @@ int OSPPExtractFieldFromResponse (
 
         do
         {
-            nextNamePtr = OSPM_STRSTR( nextNamePtr, ospvSearchField );
+            nextNamePtr = (unsigned char*)OSPM_STRSTR( (char*)nextNamePtr, (char*)ospvSearchField );
 
             if ( nextNamePtr == OSPC_OSNULL )
             {
@@ -1855,7 +1855,7 @@ int OSPPCopyString (
      */
     if ( retVal == OSPC_ERR_NO_ERROR )
     {
-        srcStrLen = OSPM_STRLEN( ospvSrcStr );
+        srcStrLen = OSPM_STRLEN( (char*)ospvSrcStr );
         if ( srcStrLen <= 0 )
         {
             retVal = OSPC_ERR_ENROLL_SOURCE_STRING_EMPTY;
@@ -1891,7 +1891,7 @@ int OSPPCopyString (
     if ( retVal == OSPC_ERR_NO_ERROR )
     {
         OSPM_MEMSET( tmpDestStr, 0, srcStrLen + 1 ); 
-        OSPM_STRCPY( tmpDestStr, ospvSrcStr );
+        OSPM_STRCPY( (char*)tmpDestStr, (char*)ospvSrcStr );
         *ospvDestStr = tmpDestStr;
     }
 

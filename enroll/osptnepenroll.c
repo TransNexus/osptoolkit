@@ -523,7 +523,7 @@ int OSPPEnrollDevice (
             OSPPExtractFieldFromResponse( 
                 enrollResponse,
                 ospvEnrollMsgIn->ResponseSz,
-                OSPC_ENROLL_STATUS_RSP_PARAM, 
+                (unsigned char*)OSPC_ENROLL_STATUS_RSP_PARAM, 
                 &statusStr ); 
 
         if ( retVal != OSPC_ERR_NO_ERROR )
@@ -575,7 +575,7 @@ int OSPPEnrollDevice (
                 OSPPExtractFieldFromResponse( 
                     enrollResponse,
                     ospvEnrollMsgIn->ResponseSz, 
-                    OSPC_ENROLL_CERT_RSP_PARAM, 
+                    (unsigned char*)OSPC_ENROLL_CERT_RSP_PARAM, 
                     &certb64Buf );
 
             if ( retVal == OSPC_ERR_NO_ERROR )
@@ -1919,7 +1919,7 @@ int OSPPCreateEnrollmentRequestBody(
 
         retVal = OSPPAddNameValuePair(
                      *ospvRequestBfrOut,
-                     OSPC_ENROLL_OPERATION_REQ_PARAM,
+                     (unsigned char*)OSPC_ENROLL_OPERATION_REQ_PARAM,
                      OSPM_STRLEN( OSPC_ENROLL_OPERATION_REQ_PARAM ),
                      ospvEnrollParamsIn->Function,
                      OSPM_STRLEN( (const char *)ospvEnrollParamsIn->Function ),
@@ -1939,7 +1939,7 @@ int OSPPCreateEnrollmentRequestBody(
     {
         retVal = OSPPAddNameValuePair( 
                      *ospvRequestBfrOut,
-                     OSPC_ENROLL_NONCE_REQ_PARAM, 
+                     (unsigned char*)OSPC_ENROLL_NONCE_REQ_PARAM, 
                      OSPM_STRLEN( OSPC_ENROLL_NONCE_REQ_PARAM ),
                      ospvEnrollParamsIn->Nonce,
                      ospvEnrollParamsIn->NonceLen, 
@@ -1960,7 +1960,7 @@ int OSPPCreateEnrollmentRequestBody(
     {
         retVal = OSPPAddNameValuePair( 
                      *ospvRequestBfrOut,
-                     OSPC_ENROLL_USERNAME_REQ_PARAM,
+                     (unsigned char*)OSPC_ENROLL_USERNAME_REQ_PARAM,
                      OSPM_STRLEN( OSPC_ENROLL_USERNAME_REQ_PARAM ),
                      ospvEnrollParamsIn->Username,
                      OSPM_STRLEN( (const char *)ospvEnrollParamsIn->Username ),
@@ -1979,7 +1979,7 @@ int OSPPCreateEnrollmentRequestBody(
     {
         retVal = OSPPAddNameValuePair(
                      *ospvRequestBfrOut,
-                     OSPC_ENROLL_PASSWORD_REQ_PARAM,
+                     (unsigned char*)OSPC_ENROLL_PASSWORD_REQ_PARAM,
                      OSPM_STRLEN( OSPC_ENROLL_PASSWORD_REQ_PARAM ),
                      ospvEnrollParamsIn->Password,
                      OSPM_STRLEN( (const char *)ospvEnrollParamsIn->Password ),
@@ -1998,7 +1998,7 @@ int OSPPCreateEnrollmentRequestBody(
     {
         retVal = OSPPAddNameValuePair(
                      *ospvRequestBfrOut,
-                     OSPC_ENROLL_DEVICEID_REQ_PARAM,
+                     (unsigned char*)OSPC_ENROLL_DEVICEID_REQ_PARAM,
                      OSPM_STRLEN( OSPC_ENROLL_DEVICEID_REQ_PARAM ),
                      ospvEnrollParamsIn->DeviceId,
                      OSPM_STRLEN( (const char *)ospvEnrollParamsIn->DeviceId ),
@@ -2017,7 +2017,7 @@ int OSPPCreateEnrollmentRequestBody(
     {
         retVal = OSPPAddNameValuePair(
                      *ospvRequestBfrOut,
-                     OSPC_ENROLL_CUSTOMERID_REQ_PARAM,
+                     (unsigned char*)OSPC_ENROLL_CUSTOMERID_REQ_PARAM,
                      OSPM_STRLEN( OSPC_ENROLL_CUSTOMERID_REQ_PARAM ),
                      ospvEnrollParamsIn->CustomerId,
                      OSPM_STRLEN( (const char *)ospvEnrollParamsIn->CustomerId ),
@@ -2036,7 +2036,7 @@ int OSPPCreateEnrollmentRequestBody(
     {
         retVal = OSPPAddNameValuePair(
                      *ospvRequestBfrOut,
-                     OSPC_ENROLL_CERT_REQ_PARAM,
+                     (unsigned char*)OSPC_ENROLL_CERT_REQ_PARAM,
                      OSPM_STRLEN( OSPC_ENROLL_CERT_REQ_PARAM ),
                      ospvEnrollParamsIn->CertReq,
                      OSPM_STRLEN( (const char *)ospvEnrollParamsIn->CertReq ), 

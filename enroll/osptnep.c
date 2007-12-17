@@ -540,7 +540,7 @@ int OSPPEnrollParseParameters (
                                 }
                                 else
                                 {
-                                    enrollParams->CACertB64Len = strlen(buf2);
+                                    enrollParams->CACertB64Len = OSPM_STRLEN((char*)buf2);
                                     X509_free(cert);
                                     temp = NULL;
                                     BIO_free(bioIn);
@@ -799,7 +799,7 @@ int OSPPPrintB64Text(
 				outputText, 
 				ospvTextBlock + printIndex, 
 				columnsPerLine );
-            OSPM_PRINTF( "%s\r\n", outputText );
+            OSPM_PRINTF( "%s\r\n", (char*)outputText );
         }
         OSPM_PRINTF( "-----END CERTIFICATE-----");
     }

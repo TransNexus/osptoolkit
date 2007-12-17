@@ -320,10 +320,7 @@ OSPPXMLIsChar(
 {
     unsigned ospvIs = OSPC_FALSE;
 
-    if (ospvChar <= OSPC_XML_CTYPESIZE)
-    {
-        ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_CHAR;
-    }
+    ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_CHAR;
     return(ospvIs);
 }
 
@@ -339,10 +336,7 @@ OSPPXMLIsSpace(
 {
     unsigned ospvIs = OSPC_FALSE;
 
-    if (ospvChar <= OSPC_XML_CTYPESIZE);
-    {
-        ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_SPACE;
-    }
+    ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_SPACE;
     return(ospvIs);
 }
 
@@ -358,10 +352,7 @@ OSPPXMLIsLetter(
 {
     unsigned ospvIs = OSPC_FALSE;
 
-    if (ospvChar <= OSPC_XML_CTYPESIZE)
-    {
-        ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_LETTER;
-    }
+    ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_LETTER;
     return(ospvIs);
 }
 
@@ -377,10 +368,7 @@ OSPPXMLIsDigit(
 {
     unsigned ospvIs = OSPC_FALSE;
 
-    if (ospvChar <= OSPC_XML_CTYPESIZE)
-    {
-        ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_DIGIT;
-    }
+    ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_DIGIT;
     return(ospvIs);
 }
 
@@ -396,10 +384,7 @@ OSPPXMLIsName(
 {
     unsigned ospvIs = OSPC_FALSE;
 
-    if (ospvChar <= OSPC_XML_CTYPESIZE)
-    {
-        ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_NAME;
-    }
+    ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_NAME;
     return(ospvIs);
 }
 
@@ -415,10 +400,7 @@ OSPPXMLIsName1(
 {
     unsigned ospvIs = OSPC_FALSE;
 
-    if (ospvChar <= OSPC_XML_CTYPESIZE)
-    {
-        ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_NAME1;
-    }
+    ospvIs = OSPVXMLCType[ospvChar] & OSPC_XMLTYPE_NAME1;
     return(ospvIs);
 }
 

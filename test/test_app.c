@@ -233,7 +233,8 @@ testOSPPSetServicePoints()
 int
 testOSPPProviderNew(OSPTPROVHANDLE *ProvHandle)
 {
-    int i,errorcode = 0;
+    unsigned int i;
+    int errorcode = 0;
     const char **servpts;
 
     char customer_id[64];
@@ -424,7 +425,7 @@ testOSPPProviderSetAuthorityCertificates()
 {
     int errorcode = 0;
     int length = 0;
-    int i;
+    unsigned int i;
     char searchstr[20];
     OSPTCERT      *authCerts[OSPC_SEC_MAX_AUTH_CERTS];
     OSPTCERT      TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
@@ -661,7 +662,6 @@ int
 testOSPPProviderSetLocalKeys()
 {
     int errorcode = 0;
-    int length;
     OSPTCERT       localcert;
     OSPTPRIVATEKEY privatekey;
 
@@ -1025,8 +1025,7 @@ int
 testOSPPTransactionGetFirstDestination()
 {
 
-    unsigned             i,
-                        errorcode = 0;
+    int          errorcode = 0;
     char         msg[100]; 
     token  = (void *)c_token;
     tokensize = TOKEN_SZ;
@@ -1057,7 +1056,7 @@ testOSPPTransactionGetFirstDestination()
 
     if (errorcode == 0 && !quietmode)
     {
-        printf("callid size = %d value = %.*s\n", callidsize, callidsize, callid);
+        printf("callid size = %d value = %.*s\n", callidsize, callidsize, (char*)callid);
         OSPM_SPRINTF(msg, "DEST = %s", dest);
         printf("%s\n", dest);
         OSPTNLOGDUMP(token, tokensize, msg);
@@ -1068,7 +1067,6 @@ testOSPPTransactionGetFirstDestination()
 int
 testOSPPTransactionGetNextDestination()
 {
-    unsigned    i           = 0;
     int         errorcode   = 0;
         char msg[100];
 
@@ -1100,7 +1098,7 @@ testOSPPTransactionGetNextDestination()
 
     if (errorcode == 0 && !quietmode)
     {
-        printf("callid size = %d value = %.*s\n", callidsize, callidsize, callid);
+        printf("callid size = %d value = %.*s\n", callidsize, callidsize, (char*)callid);
         OSPM_SPRINTF(msg, "DEST = %s", dest);
         printf("%s\n", dest);
         OSPTNLOGDUMP(token, tokensize, msg);
@@ -1290,7 +1288,7 @@ testSetStartTime()
 {
     printf("Enter Call Start Time (in seconds since 1970 GMT) : ");
 
-    scanf("%d",&call_start_time);
+    scanf("%ld",&call_start_time);
     getchar();
 
     return 0;
@@ -1301,7 +1299,7 @@ testSetEndTime()
 {
     printf("Enter Call End Time (in seconds since 1970 GMT) : ");
 
-    scanf("%d",&call_end_time);
+    scanf("%ld",&call_end_time);
     getchar();
 
     return 0;
@@ -1313,7 +1311,7 @@ testSetAlertTime()
 {
     printf("Enter Call Alert Time (in seconds since 1970 GMT) : ");
 
-    scanf("%d",&call_alert_time);
+    scanf("%ld",&call_alert_time);
     getchar();
 
     return 0;
@@ -1324,7 +1322,7 @@ testSetConnectTime()
 {
     printf("Enter Call Connect Time (in seconds since 1970 GMT) : ");
 
-    scanf("%d",&call_connect_time);
+    scanf("%ld",&call_connect_time);
     getchar();
 
     return 0;
@@ -1650,7 +1648,7 @@ testOSPPTransactionRequestReauthorisation()
     }
 
     printf("Errorcode = %d. \nAuthorised = %u. \nTimelimit = %u. \nToken = %s.",
-            errorcode, authorised, timelimit, token);
+            errorcode, authorised, timelimit, (char*)token);
 
     return errorcode;
 }
@@ -2324,7 +2322,7 @@ testAPI(int apinumber)
                                    (void *)&trans_to_run,
                                    errorcode);
 
-                    printf("Created Thread [%d] with thread id: [%d]\n",i,MultProviderThrId[i]);
+                    printf("Created Thread [%d] with thread id: [%lu]\n",i,MultProviderThrId[i]);
                 }
                 for (i=0;i<num_providers;i++)
                 {
@@ -2371,7 +2369,7 @@ testTestCalls()
        i++; 
    }
    time(&end_time);
-   printf("Elapsed Time: %d seconds\n", end_time - start_time);
+   printf("Elapsed Time: %ld seconds\n", end_time - start_time);
    quietmode = 0;
    return errorcode;
 }
@@ -2813,7 +2811,7 @@ testNonBlockingPerformanceTest(void *arg)
 
    time(&thr_start_time);
    thr_id = OSPM_THR_SELF();
-   printf("Thread Id: %d Started\n",thr_id);
+   printf("Thread Id: %lu Started\n",thr_id);
 
    NonBlockingQueueMonitorNew(&nbMonitor,WORK_THREAD_NUM,MAX_QUEUE_SIZE,(500*1000));
 
@@ -2900,14 +2898,14 @@ testNonBlockingPerformanceTest(void *arg)
     }
 
    errorcode = testOSPPProviderNew(&provHandle);
-   printf("Thread Id: %d, ProviderNew returned: %d, ProviderId: %d\n",thr_id,errorcode,provHandle);
+   printf("Thread Id: %lu, ProviderNew returned: %d, ProviderId: %d\n",thr_id,errorcode,provHandle);
 
 
     /* 
      * Phase I Creating new transactions / 2 (O + T) transactions for every call
     */
     printf("\n\n");
-    printf("Thread Id: %d, Phase I (Source and Destination): OSPPTransactionNew.\n",thr_id);
+    printf("Thread Id: %lu, Phase I (Source and Destination): OSPPTransactionNew.\n",thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -2919,7 +2917,7 @@ testNonBlockingPerformanceTest(void *arg)
         }
     }
     time(&end_time);
-    printf("Time elapsed <%d>\n",end_time - start_time);
+    printf("Time elapsed <%ld>\n",end_time - start_time);
 
 
 
@@ -2927,7 +2925,7 @@ testNonBlockingPerformanceTest(void *arg)
      * Phase II Sending AuthorizationRequests
     */
     printf("\n\n");
-    printf("Thread Id: %d,Phase II (Source): OSPPTransactionRequestAuthorisation.\n",thr_id);
+    printf("Thread Id: %lu,Phase II (Source): OSPPTransactionRequestAuthorisation.\n",thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -2964,7 +2962,7 @@ testNonBlockingPerformanceTest(void *arg)
 
 
     time(&end_time);
-    printf("Time elapsed <%d>\n",end_time - start_time);
+    printf("Time elapsed <%ld>\n",end_time - start_time);
 
     printf("Checking ReturnCodes.\n");
     for(i = 0; i < num_test_calls; i++)
@@ -2983,7 +2981,7 @@ testNonBlockingPerformanceTest(void *arg)
      * Phase III (Source) Getting 1st destination
     */
     printf("\n\n");
-    printf("Thread Id: %d,Phase III (Source): OSPPTransactionGetFirstDestination.\n",thr_id);
+    printf("Thread Id: %lu,Phase III (Source): OSPPTransactionGetFirstDestination.\n",thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -3016,7 +3014,7 @@ testNonBlockingPerformanceTest(void *arg)
     }
 
     time(&end_time);
-    printf("Time elapsed <%d>\n",end_time - start_time);
+    printf("Time elapsed <%ld>\n",end_time - start_time);
 
 
 
@@ -3025,7 +3023,7 @@ testNonBlockingPerformanceTest(void *arg)
      * Phase III (Destination) Validate destination
     */
     printf("\n\n");
-    printf("Thread Id: %d,Phase III (Destination): OSPPTransactionValidateAuthorisation.\n",thr_id);
+    printf("Thread Id: %lu,Phase III (Destination): OSPPTransactionValidateAuthorisation.\n",thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -3066,7 +3064,7 @@ testNonBlockingPerformanceTest(void *arg)
 
 
     time(&end_time);
-    printf("Time elapsed <%d>\n",end_time - start_time);
+    printf("Time elapsed <%ld>\n",end_time - start_time);
 
     printf("Checking ReturnCodes.\n");
     for(i = 0; i < num_test_calls; i++)
@@ -3083,7 +3081,7 @@ testNonBlockingPerformanceTest(void *arg)
      * Phase IV Sending 2 (Source and Destination) UsageIndications for each call
     */
     printf("\n\n");
-    printf("Thread Id: %d,Phase IV (Source and Destination): OSPPTransactionReportUsage.\n",thr_id);
+    printf("Thread Id: %lu,Phase IV (Source and Destination): OSPPTransactionReportUsage.\n",thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -3146,7 +3144,7 @@ testNonBlockingPerformanceTest(void *arg)
     NonBlockingQueueMonitorBlockWhileQueueNotEmpty(nbMonitor);
 
     time(&end_time);
-    printf("Time elapsed <%d>\n",end_time - start_time);
+    printf("Time elapsed <%ld>\n",end_time - start_time);
 
 
     printf("Checking ReturnCodes.\n");
@@ -3169,7 +3167,7 @@ testNonBlockingPerformanceTest(void *arg)
      * Phase V Deleting transactions
     */
     printf("\n\n");
-    printf("Thread Id: %d,Phase V: OSPPTransactionDelete.\n",thr_id);
+    printf("Thread Id: %lu,Phase V: OSPPTransactionDelete.\n",thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -3182,7 +3180,7 @@ testNonBlockingPerformanceTest(void *arg)
         OSPPCallIdDelete(&CallIds[i]);
     }
     time(&end_time);
-    printf("Time elapsed <%d>\n",end_time - start_time);
+    printf("Time elapsed <%ld>\n",end_time - start_time);
 
     if (OErrorCodes != NULL)
        free(OErrorCodes);
@@ -3235,7 +3233,7 @@ testNonBlockingPerformanceTest(void *arg)
       exit(0);
    }
    time(&thr_end_time);
-   printf("Thread Id: %d,Elapsed Time: %d seconds\n",thr_id, thr_end_time - thr_start_time);
+   printf("Thread Id: %lu,Elapsed Time: %ld seconds\n",thr_id, thr_end_time - thr_start_time);
 
    NonBlockingQueueMonitorDelete(&nbMonitor);
 
@@ -3319,7 +3317,7 @@ int testNonBlockingPerformanceTestForCapabilities()
         }
     }
     time(&end_time);
-    printf("Time elapsed <%d>\n",end_time - start_time);
+    printf("Time elapsed <%ld>\n",end_time - start_time);
 
 
 
@@ -3357,7 +3355,7 @@ int testNonBlockingPerformanceTestForCapabilities()
 
 
     time(&end_time);
-    printf("Time elapsed <%d>\n",end_time - start_time);
+    printf("Time elapsed <%ld>\n",end_time - start_time);
 
     printf("Checking ReturnCodes.\n");
     for(i = 0; i < TEST_NUM; i++)
@@ -3388,7 +3386,7 @@ int testNonBlockingPerformanceTestForCapabilities()
         }
     }
     time(&end_time);
-    printf("Time elapsed <%d>\n",end_time - start_time);
+    printf("Time elapsed <%ld>\n",end_time - start_time);
 
     if (OErrorCodes != NULL)
        free(OErrorCodes);

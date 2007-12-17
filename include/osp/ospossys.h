@@ -292,7 +292,8 @@
 }
 
 #define OSPM_GETSOCKERR(h,e) { \
-    int err = 0, err_sz = sizeof(int); \
+    int err = 0; \
+    socklen_t err_sz = sizeof(int); \
     e = getsockopt(h->SockFd, SOL_SOCKET, SO_ERROR, (char *)&err, &err_sz); \
     if (err != 0) e = OSPC_ERR_SOCK_RESET; \
 }
@@ -419,7 +420,8 @@
 #endif /*_XOPEN_SOURCE*/
 
 #define OSPM_GETSOCKERR(h,e) { \
-    int err = 0, err_sz = sizeof(int); \
+    int err = 0; \
+    socklen_t err_sz = sizeof(int); \
     e = getsockopt(h->SockFd, SOL_SOCKET, SO_ERROR, (void *)&err, &err_sz); \
     if (err != 0) e = OSPC_ERR_SOCK_RESET; \
 }

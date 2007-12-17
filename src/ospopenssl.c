@@ -593,14 +593,14 @@ long bio_dump_cb(BIO *bio, int cmd, const char *argp, int argi, long argl, long 
     
     if (cmd == (BIO_CB_READ|BIO_CB_RETURN))
     {
-        BIO_printf(out,"read from %08X [%08lX] (%d bytes => %ld (0x%X))\n",
+        BIO_printf(out,"read from %p [%p] (%d bytes => %ld (0x%lX))\n",
             bio,argp,argi,ret,ret);
         BIO_dump(out,argp,(int)ret);
         return(ret);
     }
     else if (cmd == (BIO_CB_WRITE|BIO_CB_RETURN))
     {
-        BIO_printf(out,"write to %08X [%08lX] (%d bytes => %ld (0x%X))\n",
+        BIO_printf(out,"write to %p [%p] (%d bytes => %ld (0x%lX))\n",
             bio,argp,argi,ret,ret);
         BIO_dump(out,argp,(int)ret);
     }
@@ -656,7 +656,7 @@ int OSPPSSLLoadCerts(OSPTSEC *security)
                             if((errorcode=OSPPX509CertGetCertificate(security->AuthorityCertInfo[i], 
                                 &ca, &certlen))==OSPC_ERR_NO_ERROR)
                 {
-                                if((x509=d2i_X509(NULL,&ca,certlen))!=OSPC_OSNULL) 
+                                if((x509=d2i_X509(NULL,(const unsigned char**)(&ca),certlen))!=OSPC_OSNULL) 
                                 {
                                     SSL_CTX_add_client_CA(*ctx,x509);
                                     /* decrement reference count */
@@ -686,7 +686,7 @@ int OSPPSSLLoadCerts(OSPTSEC *security)
                     else
                     {
                         ca=&certbuf[0];
-                        if((x509=d2i_X509(NULL,&ca,certlen))!=OSPC_OSNULL) 
+                        if((x509=d2i_X509(NULL,(const unsigned char**)(&ca),certlen))!=OSPC_OSNULL) 
                         {
                             if(SSL_CTX_use_certificate(*ctx,x509)>0) 
                             {

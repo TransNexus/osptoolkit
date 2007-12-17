@@ -67,11 +67,10 @@ build  : $(OBJS)
 	$(AR) -r $(ARLIB) $(OBJS)
 
 install: build
-	cp -r ../include/osp/ $(INSTALL_PATH)/include/
-ifeq ($(wildcard $(INSTALL_PATH)/lib),)
-	mkdir $(INSTALL_PATH)/lib
-endif
-	cp ../lib/libosptk.a $(INSTALL_PATH)/lib
+	install -d $(INSTALL_PATH)/include/osp
+	cp -t $(INSTALL_PATH)/include/osp/ ../include/osp/* 
+	install -d $(INSTALL_PATH)/lib
+	cp -t $(INSTALL_PATH)/lib/ ../lib/libosptk.a
 
 clean   :
 	rm -f $(OBJS) $(ARLIB)

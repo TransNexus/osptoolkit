@@ -168,7 +168,7 @@ OSPPCryptoWrapDecrypt(
     OSPTNLOGDUMP(ospvEncryptedData, ospvEncryptedDataLength, "DECRYPT: ospvEncryptedData");
     OSPTNLOGDUMP(ospvBERReaderKey, ospvBERReaderKeyLength, "DECRYPT: ospvBERReaderKey");
 
-		pX509PubKey = d2i_X509_PUBKEY(NULL, &ospvBERReaderKey, ospvBERReaderKeyLength); 
+		pX509PubKey = d2i_X509_PUBKEY(NULL, (const unsigned char**)(&ospvBERReaderKey), ospvBERReaderKeyLength); 
 
 		if (pX509PubKey)
 		{
@@ -268,7 +268,7 @@ OSPPCryptoWrapVerify(
     OSPTNLOGDUMP(ospvBERReaderKey, ospvBERReaderKeyLength, "VERIFY: ospvBERReaderKey");
 
 
-		pX509PubKey = d2i_X509_PUBKEY(NULL, &ospvBERReaderKey, ospvBERReaderKeyLength);
+		pX509PubKey = d2i_X509_PUBKEY(NULL, (const unsigned char**)(&ospvBERReaderKey), ospvBERReaderKeyLength);
 
 		if (pX509PubKey)
 		{
