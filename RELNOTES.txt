@@ -475,3 +475,8 @@ Version 3.4.1
 * Fixed a crash issue. Replaced select by poll. For 1796025 of OSP Toolkit on SourceForge.
 ---------------------------------------------------------------------------
 
+Version 3.4.2
+* Modified to remove compile warning messages.
+* Added new AuthRsp codes support.
+---------------------------------------------------------------------------
+

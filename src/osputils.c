@@ -118,6 +118,11 @@ OSPC_ERR_TRAN_TIME_PROB                     (11499)
 OSPC_ERR_TRAN_VALID_TIME_TOO_SOON           (11500)
 OSPC_ERR_TRAN_TIME_INTERVAL_TOO_SMALL       (11501)
 OSPC_ERR_TRAN_GENERIC_FAILURE               (11502)
+OSPC_ERR_TRAN_ROUTE_NOT_FOUND               (11503)
+OSPC_ERR_TRAN_ROUTE_BLOCKED                 (11510)
+OSPC_ERR_TRAN_MAY_NOT_ORIGINATE             (11511)
+OSPC_ERR_TRAN_CALL_RATE_EXCEEDED            (11512)
+OSPC_ERR_TRAN_DESTINATION_INFO_INVALID      (11513)
 */
 int
 OSPPUtilGetErrorFromStatus(
@@ -135,9 +140,15 @@ OSPPUtilGetErrorFromStatus(
         case 401:
             errorcode = OSPC_ERR_TRAN_UNAUTHORIZED;
             break;
+        case 403:
+            errorcode = OSPC_ERR_TRAN_ROUTE_BLOCKED;
+            break;
         case 404:
             errorcode = OSPC_ERR_TRAN_ROUTE_NOT_FOUND;
             OSPM_DBGERRORLOG(errorcode, "OSP Response Status: 404 Route Not Found");
+            break;
+        case 405:
+            errorcode = OSPC_ERR_TRAN_MAY_NOT_ORIGINATE;
             break;
         case 410:
             errorcode = OSPC_ERR_TRAN_CHAR_ENC_NOT_SUPD;
@@ -165,6 +176,12 @@ OSPPUtilGetErrorFromStatus(
             break;
         case 425:
             errorcode = OSPC_ERR_TRAN_ENCRYPTION_REQD;
+            break;
+        case 441:
+            errorcode = OSPC_ERR_TRAN_CALL_RATE_EXCEEDED;
+            break;
+        case 489:
+            errorcode = OSPC_ERR_TRAN_DESTINATION_INFO_INVALID;
             break;
         case 500:
             errorcode = OSPC_ERR_TRAN_INTERNAL_SRVR_ERR;
