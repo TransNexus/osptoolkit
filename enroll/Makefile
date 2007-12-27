@@ -1,38 +1,63 @@
-#Compiler
-CC            = gcc
+#
+# OSP Enroll Makefile
+#
+
+# OSP direcory
+INCDIR = ../include
+LIBDIR = ../lib
+BINDIR = ../bin
+
+# OSP library
+OSPLIB = -L$(LIBDIR) -losptk
 
 # For OpenSSL:
-SSLINC        = ../crypto
-SSL_LIBDIRS   = -L../lib
-SSL_LIBS      = -lssl -lcrypto
-SSL_OBJS      = ../src/ospopenssl.o
+SSLINCDIR = ../crypto
+SSLLIBDIR = ../lib
+SSLLIBS = -L$(SSLLIBDIR) -lssl -lcrypto
 
-INCLDIRS      = -I./ -I../include -I$(SSLINC)
-WARNING_FLAGS = -Wall
-CFLAGS        = -g $(WARNING_FLAGS)
+# Compiler tools
+CC = gcc
 
-MACRO_FLAGS   = -D_POSIX_THREADS -DSOLARIS -DOSPD_DEBUG -DOSP_SDK -DOPENSSL_NO_KRB5 -DOSPC_DEBUG=1
+# WARNING !!
+# If not using gcc for compiling the toolkit and instead using the Sun Compiler,
+# please comment the line below for proper compilation.
+GCCFLAGS = -Wall
 
-LIBS          = -lnsl -lsocket -ldl -lm -losptk $(SSL_LIBS) -lpthread 
-LIBS_LINUX    = -losptk $(SSL_LIBS) -lpthread -ldl -lm
-OSP_LIBDIR    = -L../lib
-LIBDIRS       = $(OSP_LIBDIR) $(SSL_LIBDIRS)
+# Macro definition
+MFLAGS = -DOPENSSL_NO_KRB5 -D_POSIX_THREADS -D_REENTRANT -DOSP_SDK -DSOLARIS
 
-EXEC          =../bin/enroll
+# Debug flags
+# This is for DEBUG mode of compilation
+#DFLAGS = -g -DOSPC_DEBUG=1
+# This is for PRODUCTION mode of compilation
+DFLAGS = -O
 
-CREATED_OBJS  = osptnepinit.o osptnepenroll.o osptnep.o osptneputil.o
-OBJS          = $(CREATED_OBJS) $(OSP_OBJS) $(SSL_OBJS)
+# Compile flags
+CFLAGS = $(MFLAGS) $(DFLAGS) $(GCCFLAGS)
 
-# Rule for converting all of the source files into objects:
+# Include flags
+IFLAGS = -I./ -I$(INCDIR) -I$(SSLINCDIR)
+
+# Library flags
+LIBS = $(OSPLIB) $(SSLLIBS) -lpthread -ldl -lm -lnsl -lsocket
+LIBS_LINUX = $(OSPLIB) $(SSLLIBS) -lpthread -ldl -lm
+
+################################################################################
+
+ENOBJS = osptnepinit.o osptnepenroll.o osptnep.o osptneputil.o
+
+ENROLL = $(BINDIR)/enroll
+
+.SUFFIXES: .o .c
+
 .c.o:
-	$(PURIFY) $(CC) -c $(CFLAGS) -c $(MACRO_FLAGS) $(INCLDIRS) $(<) 
+	$(PURIFY) $(CC) $(CFLAGS) $(IFLAGS) -c $(<)
 
-# Rule for creating the output executable:
-enroll: $(OBJS)
-	$(PURIFY) $(CC) -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS) $(INCLDIRS)
+default: $(ENOBJS)
+	$(PURIFY) $(CC) -o $(ENROLL) $(ENOBJS) $(LIBS)
 
-linux: $(OBJS)
-	$(PURIFY) $(CC) -o $(EXEC) $(OBJS) $(LIBDIRS) $(LIBS_LINUX) $(INCLDIRS)
+linux: $(ENOBJS)
+	$(PURIFY) $(CC) -o $(ENROLL) $(ENOBJS) $(LIBS_LINUX)
 
 clean:
-	rm -f $(CREATED_OBJS) $(EXEC)
+	rm -f $(ENROLL) $(ENOBJS)

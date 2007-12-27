@@ -1,46 +1,63 @@
 #
-# TEST_APP Makefile
+# OSP Test Applicatopn Makefile
 #
-INCLDIR = ../include
-#
-# ***** Platform specific flags ******
-#
-CC         = g++
-WARNING_FLAGS = -Wall
-CFLAGS     = -g $(WARNING_FLAGS) $(PROFILE) -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D_REENTRANT -DOPENSSL_NO_KRB5 -DOSP_SDK
-#CC         = /usr/vws/bin/cc
-#CFLAGS     =  -g -v -xCC -I. -I$(INCLDIR) $(OSPTNLOGDEBUG) -D_POSIX_THREADS -D_REENTRANT -DOPENSSL_NO_KRB5 -DOSP_SDK
-LFLAGS	   = $(PROFILELIB) -lsocket -lnsl -lpthread -lmtmalloc  -ldl -lm
-LFLAGS_LINUX	   = $(PROFILELIB) -lpthread -lm -ldl
-SOFLAGS    = -shared 
-SOOBJ      = libosptk.so
-AR         = /usr/ccs/bin/ar
-ARLIBDIR   = ../lib
-ARLIB      = -losptk
 
-#LINT	   = /usr/ccs/bin/ucblint
-MKDEP      = /usr/openwin/bin/makedepend
-SSLINC     = -I../crypto
-SSLLIBDIR  = $../lib
-SSLLIB     = -lssl -lcrypto
-SSL        = -L$(SSLLIBDIR) $(SSLLIB)
+# OSP direcory
+INCDIR = ../include
+LIBDIR = ../lib
+BINDIR = ../bin
 
-#
-####################################################################
-OBJS	= nonblocking.o syncque.o test_app.o
+# OSP library
+OSPLIB = -L$(LIBDIR) -losptk
+
+# For OpenSSL:
+SSLINCDIR = ../crypto
+SSLLIBDIR = ../lib
+SSLLIBS = -L$(SSLLIBDIR) -lssl -lcrypto
+
+# Compiler tools
+CC = g++
+
+# WARNING !!
+# If not using gcc for compiling the toolkit and instead using the Sun Compiler,
+# please comment the line below for proper compilation.
+GCCFLAGS = -Wall
+
+# Macro definition
+MFLAGS = -DOPENSSL_NO_KRB5 -D_POSIX_THREADS -D_REENTRANT -DOSP_SDK
+
+# Debug flags
+# This is for DEBUG mode of compilation
+#DFLAGS = $(OSPTNLOGDEBUG) -g -DOSPC_DEBUG=1
+# This is for PRODUCTION mode of compilation
+DFLAGS = $(OSPTNLOGDEBUG) -O
+
+# Compile flags
+CFLAGS = $(MFLAGS) $(DFLAGS) $(GCCFLAGS) $(PROFILE)
+
+# Include flags
+IFLAGS = -I./ -I$(INCDIR) -I$(SSLINCDIR)
+
+# Library flags
+LIBS = $(OSPLIB) $(SSLLIBS) -lpthread -ldl -lm -lnsl -lsocket -lmtmalloc $(PROFILELIB)
+LIBS_LINUX = $(OSPLIB) $(SSLLIBS) -lpthread -ldl -lm $(PROFILELIB)
+
+################################################################################
+
+TESTOBJS = nonblocking.o syncque.o test_app.o
+
+TESTAPP = $(BINDIR)/test_app
 
 .SUFFIXES: .o .c
 
 .c.o:
-	$(CC) $(CFLAGS) $(SSLINC) $(<) -c
+	$(PURIFY) $(CC) $(CFLAGS) $(IFLAGS) -c $(<)
 
-all: 	$(OBJS)
-	$(PURE) $(CC) $(PROFILE) $(OBJS) -o ../bin/test_app \
-	$(ARLIBDIR)/libosptk.a $(LFLAGS) -L$(ARLIBDIR) $(ARLIB) $(SSL)
+default: $(TESTOBJS)
+	$(PURIFY) $(CC) -o $(TESTAPP) $(TESTOBJS) $(LFLAGS) $(LIBS) $(PROFILE)
 
-linux: 	$(OBJS)
-	$(PURE) $(CC) $(PROFILE) $(OBJS) -o ../bin/test_app \
-	$(ARLIBDIR)/libosptk.a $(LFLAGS_LINUX) -L$(ARLIBDIR) $(ARLIB) $(SSL)
+linux: $(TESTOBJS)
+	$(PURIFY) $(CC) -o $(TESTAPP) $(TESTOBJS) $(LFLAGS) $(LIBS_LINUX) $(PROFILE)
 
 clean :
-	rm -f *.o ../bin/test_app
+	rm -f $(TESTAPP) $(TESTOBJS)
