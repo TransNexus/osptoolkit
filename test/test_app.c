@@ -111,7 +111,7 @@ unsigned tokensize                  = TOKEN_SZ;
 char     c_token[TOKEN_SZ]          = { "" };
 void     *token                     = NULL;
 
-char     *New_ServicePoint          = { "http://osptestserver.transnexus.com:1080/osp" };
+const char *New_ServicePoint        = { "http://osptestserver.transnexus.com:1080/osp" };
 
 static  OSPTCALLID *callids[NUM_CALL_IDS];
 token_algo_t tokenalgo=TOKEN_ALGO_SIGNED;
@@ -223,7 +223,7 @@ testOSPPSetServicePoints()
     int errorcode = 0;
     const char **servpts;
 
-    servpts = (const char **)&New_ServicePoint;
+    servpts = &New_ServicePoint;
 
     errorcode = OSPPProviderSetServicePoints(OSPVProviderHandle,1,MsgCount,servpts);
     return errorcode;
@@ -711,8 +711,8 @@ testOSPPProviderGetLocalValidation()
 {
     int errorcode = 0;
     unsigned    localvalidation;
-    char        *local = "LOCAL";
-    char        *remote = "REMOTE";
+    const char  *local = "LOCAL";
+    const char  *remote = "REMOTE";
 
     errorcode = OSPPProviderGetLocalValidation(
         OSPVProviderHandle,
@@ -1513,7 +1513,7 @@ testOSPPTransactionRequestSuggestedAuthorisation()
 {
     int      errorcode       = 0;
     unsigned detaillogsize   = 0;
-    char *preferredDest[] = {"172.16.4.10","172.16.4.10",NULL};
+    const char *preferredDest[] = {"172.16.4.10","172.16.4.10",NULL};
 
     errorcode = testInitializeCallIds(); 
 
