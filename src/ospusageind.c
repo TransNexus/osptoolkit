@@ -217,7 +217,7 @@ OSPPUsageIndSetTransactionId(
 {
     if (ospvUsageInd != OSPC_OSNULL) 
     {
-        if (ospvTransactionId  != (OSPTTRXID)OSPC_OSNULL) 
+        if (ospvTransactionId != 0) 
         {
             ospvUsageInd->ospmUsageIndTransactionId = ospvTransactionId;
         }
@@ -1318,7 +1318,7 @@ OSPTUSAGEIND *                                 /* returns pointer or NULL */
         ospvUsageInd->ospmUsageIndPostDialDelay = 0;
         ospvUsageInd->ospmUsageIndReleaseSource = 0;
         ospvUsageInd->ospmUsageIndConferenceId[0] = '\0';
-        ospvUsageInd->ospmUsageIndTransactionId = (OSPTTRXID)OSPC_OSNULL;
+        ospvUsageInd->ospmUsageIndTransactionId = 0;
         ospvUsageInd->ospmUsageIndCallId = (OSPTCALLID *)OSPC_OSNULL;
         ospvUsageInd->ospmUsageIndSourceNumber[0] = '\0';
         ospvUsageInd->ospmUsageIndDestNumber[0] = '\0';

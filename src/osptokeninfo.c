@@ -497,7 +497,7 @@ OSPPTokenInfoSetTrxId(
 {
     if (ospvTokenInfo != OSPC_OSNULL) 
     {
-        if (ospvTrxId  != (OSPTTRXID)OSPC_OSNULL) 
+        if (ospvTrxId != 0) 
         {
             ospvTokenInfo->ospmTokenInfoTrxId = ospvTrxId;
         }
@@ -578,7 +578,7 @@ OSPTTOKENINFO *                                 /* returns pointer or NULL */
         ospvTokenInfo->ospmTokenInfoCallId = (OSPTCALLID *)OSPC_OSNULL;
         ospvTokenInfo->ospmTokenInfoValidAfter = OSPC_TIMEMIN;
         ospvTokenInfo->ospmTokenInfoValidUntil = OSPC_TIMEMAX;
-        ospvTokenInfo->ospmTokenInfoTrxId = (OSPTTRXID)OSPC_OSNULL;
+        ospvTokenInfo->ospmTokenInfoTrxId = 0;
         ospvTokenInfo->ospmTokenInfoDuration = -1;
         ospvTokenInfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_FALSE;
         ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDestProt = OSPE_DEST_PROT_UNDEFINED;

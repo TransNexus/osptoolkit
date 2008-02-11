@@ -1460,7 +1460,7 @@ void OpenSSLErrorLog(int errorcode)
 
 	len = BIO_get_mem_data(mem_bio,&p);
 
-	p[len] = (char)OSPC_OSNULL;
+	p[len] = '\0';
 
 	OSPM_DBGERRORLOG(errorcode,p);
 
