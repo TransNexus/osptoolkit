@@ -318,7 +318,7 @@ OSPPASN1ElementDecode(
                 errorcode = OSPC_ERR_ASN1_INVALID_ELEMENT_TAG;
                 sprintf(msg, "Invalid ASN1 element tag: %02x at %06d", 
                     eInfo->Tag, 
-                    ((int ) eptr - (int) (ospvASN1Element))) ;
+                    (int)(eptr - ospvASN1Element));
                 OSPM_DBGERRORLOG(errorcode, msg);
                 sprintf(msg, "ERROR:ElementDecode - Tag=%0x", eInfo->Tag);  
 

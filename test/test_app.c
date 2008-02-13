@@ -162,7 +162,7 @@ long devid  = DEF_DEVICE_ID;
 /*----------------------------------------------*
  *            certificate globals               *
  *----------------------------------------------*/
-static  size_t  NUM_CA_CERTS=0;
+static unsigned NUM_CA_CERTS=0;
 
 int quietmode = 0;
 unsigned numdestinations = NUM_CALL_IDS;

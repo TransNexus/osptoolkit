@@ -38,8 +38,8 @@ static unsigned const char B64CharTab[64+1]=
 "0123456789+/";
 
 
-int OSPPBase64Encode(unsigned const char *in,size_t inSize,
-                  unsigned char *out,size_t *outSize)
+int OSPPBase64Encode(unsigned const char *in,unsigned inSize,
+                  unsigned char *out,unsigned *outSize)
 {
     int     Fretval;
     size_t  x;
@@ -84,7 +84,7 @@ int OSPPBase64Encode(unsigned const char *in,size_t inSize,
 
 
 /* Ignores embedded whitespace, terminates on first '=' regardless of its position */
-int OSPPBase64Decode(const char *in,size_t inSize,unsigned char *out,size_t *outSize)
+int OSPPBase64Decode(const char *in,unsigned inSize,unsigned char *out,unsigned *outSize)
 {
     int Fretval;
     int state;
