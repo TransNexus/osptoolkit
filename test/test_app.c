@@ -2322,7 +2322,7 @@ testAPI(int apinumber)
                                    (void *)&trans_to_run,
                                    errorcode);
 
-                    printf("Created Thread [%d] with thread id: [%lu]\n",i,MultProviderThrId[i]);
+                    printf("Created Thread [%d] with thread id: [%lu]\n",i,(unsigned long int)MultProviderThrId[i]);
                 }
                 for (i=0;i<num_providers;i++)
                 {
@@ -2811,7 +2811,7 @@ testNonBlockingPerformanceTest(void *arg)
 
    time(&thr_start_time);
    thr_id = OSPM_THR_SELF();
-   printf("Thread Id: %lu Started\n",thr_id);
+   printf("Thread Id: %lu Started\n",(unsigned long int)thr_id);
 
    NonBlockingQueueMonitorNew(&nbMonitor,WORK_THREAD_NUM,MAX_QUEUE_SIZE,(500*1000));
 
@@ -2898,14 +2898,14 @@ testNonBlockingPerformanceTest(void *arg)
     }
 
    errorcode = testOSPPProviderNew(&provHandle);
-   printf("Thread Id: %lu, ProviderNew returned: %d, ProviderId: %d\n",thr_id,errorcode,provHandle);
+   printf("Thread Id: %lu, ProviderNew returned: %d, ProviderId: %d\n",(unsigned long int)thr_id,errorcode,provHandle);
 
 
     /* 
      * Phase I Creating new transactions / 2 (O + T) transactions for every call
     */
     printf("\n\n");
-    printf("Thread Id: %lu, Phase I (Source and Destination): OSPPTransactionNew.\n",thr_id);
+    printf("Thread Id: %lu, Phase I (Source and Destination): OSPPTransactionNew.\n",(unsigned long int)thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -2925,7 +2925,7 @@ testNonBlockingPerformanceTest(void *arg)
      * Phase II Sending AuthorizationRequests
     */
     printf("\n\n");
-    printf("Thread Id: %lu,Phase II (Source): OSPPTransactionRequestAuthorisation.\n",thr_id);
+    printf("Thread Id: %lu,Phase II (Source): OSPPTransactionRequestAuthorisation.\n",(unsigned long int)thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -2981,7 +2981,7 @@ testNonBlockingPerformanceTest(void *arg)
      * Phase III (Source) Getting 1st destination
     */
     printf("\n\n");
-    printf("Thread Id: %lu,Phase III (Source): OSPPTransactionGetFirstDestination.\n",thr_id);
+    printf("Thread Id: %lu,Phase III (Source): OSPPTransactionGetFirstDestination.\n",(unsigned long int)thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -3023,7 +3023,7 @@ testNonBlockingPerformanceTest(void *arg)
      * Phase III (Destination) Validate destination
     */
     printf("\n\n");
-    printf("Thread Id: %lu,Phase III (Destination): OSPPTransactionValidateAuthorisation.\n",thr_id);
+    printf("Thread Id: %lu,Phase III (Destination): OSPPTransactionValidateAuthorisation.\n",(unsigned long int)thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -3081,7 +3081,7 @@ testNonBlockingPerformanceTest(void *arg)
      * Phase IV Sending 2 (Source and Destination) UsageIndications for each call
     */
     printf("\n\n");
-    printf("Thread Id: %lu,Phase IV (Source and Destination): OSPPTransactionReportUsage.\n",thr_id);
+    printf("Thread Id: %lu,Phase IV (Source and Destination): OSPPTransactionReportUsage.\n",(unsigned long int)thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -3167,7 +3167,7 @@ testNonBlockingPerformanceTest(void *arg)
      * Phase V Deleting transactions
     */
     printf("\n\n");
-    printf("Thread Id: %lu,Phase V: OSPPTransactionDelete.\n",thr_id);
+    printf("Thread Id: %lu,Phase V: OSPPTransactionDelete.\n",(unsigned long int)thr_id);
     time(&start_time);
     for(i = 0; i < num_test_calls; i++)
     {
@@ -3233,7 +3233,7 @@ testNonBlockingPerformanceTest(void *arg)
       exit(0);
    }
    time(&thr_end_time);
-   printf("Thread Id: %lu,Elapsed Time: %ld seconds\n",thr_id, thr_end_time - thr_start_time);
+   printf("Thread Id: %lu,Elapsed Time: %ld seconds\n",(unsigned long int)thr_id, thr_end_time - thr_start_time);
 
    NonBlockingQueueMonitorDelete(&nbMonitor);
 
