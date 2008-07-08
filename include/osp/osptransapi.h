@@ -101,22 +101,22 @@ extern "C"
             unsigned *, unsigned *, unsigned *, void *,unsigned);            
 
     int OSPPTransactionBuildUsageFromScratch(
-    OSPTTRANHANDLE  ospvTransaction,        /*In - Transaction handle */
-    OSPTUINT64  ospvServerTransactionId, /*In - OSP Server Transaction Id */
-    unsigned        ospvIsSource,           /*In - Is this the ogw or tgw */
-    const char     *ospvSource,             /*In - Source of call */
-    const char     *ospvDestination,        /*In - Destination for call */
-    const char     *ospvSourceDevice,       /*In - SourceDevice */
-    const char     *ospvDestinationDevice,  /*In - DestinationDevice */
-    const char     *ospvCallingNumber,      /*In - Calling number */
-    OSPE_NUMBERING_FORMAT ospvCallingNumberFormat, /* In - Calling number formaat : sip/e.164/url */
-    const char     *ospvCalledNumber,       /*In - Called number */
-    OSPE_NUMBERING_FORMAT ospvCalledNumberFormat, /* In - Called number formaat : sip/e.164/url */
-    unsigned        ospvSizeOfCallId,       /*In - Size of Callid */
-    const void     *ospvCallId,             /*In - Call identifier */
-    enum OSPEFAILREASON  ospvFailureReason,
-    unsigned   *ospvSizeOfDetailLog,   /* In/Out - Max size of detail log\ Actual size of detail log */
-    void           *ospvDetailLog);         /* In - Pointer to storage for detail log */
+            OSPTTRANHANDLE ospvTransaction,                 /* In - Transaction handle */
+            OSPTUINT64 ospvServerTransactionId,             /* In - OSP Server Transaction Id */
+            unsigned ospvRole,                              /* In - ogw, tgw or RADIUS */
+            const char* ospvSource,                         /* In - Source of call */
+            const char* ospvDestination,                    /* In - Destination for call */
+            const char* ospvSourceDevice,                   /* In - SourceDevice */
+            const char* ospvDestinationDevice,              /* In - DestinationDevice */
+            const char* ospvCallingNumber,                  /* In - Calling number */
+            OSPE_NUMBERING_FORMAT ospvCallingNumberFormat,  /* In - Calling number formaat : sip/e.164/url */
+            const char* ospvCalledNumber,                   /* In - Called number */
+            OSPE_NUMBERING_FORMAT ospvCalledNumberFormat,   /* In - Called number formaat : sip/e.164/url */
+            unsigned ospvSizeOfCallId,                      /* In - Size of Callid */
+            const void* ospvCallId,                         /* In - Call identifier */
+            enum OSPEFAILREASON ospvFailureReason,
+            unsigned* ospvSizeOfDetailLog,                  /* In/Out - Max size of detail log\ Actual size of detail log */
+            void* ospvDetailLog);                           /* In - Pointer to storage for detail log */
 
     int OSPPTransactionSetDestinationCount(
         OSPTTRANHANDLE  ospvTransaction,        /*In - Transaction handle */

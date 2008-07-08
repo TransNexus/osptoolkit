@@ -53,7 +53,8 @@ typedef enum {
     OSPC_UNDEFINED_ROLE=0,      /* Not a known role */
     OSPC_DESTINATION,
     OSPC_SOURCE,   
-    OSPC_OTHER
+    OSPC_OTHER,
+    OSPC_RADIUS
 } OSPE_MSG_ROLETYPES;
 
 

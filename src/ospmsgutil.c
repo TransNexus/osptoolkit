@@ -922,24 +922,27 @@ OSPPMsgElemIsCritical(
  *-----------------------------------------------------------------------*/
 int
 OSPPOSRoleValToString(unsigned ospvRole, 
-                      char *ospvRolestr)
+    char *ospvRolestr)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
     switch(ospvRole)
     {
         case OSPC_SOURCE:
-        memcpy(ospvRolestr, "source", strlen("source"));
-        break;
+            memcpy(ospvRolestr, "source", strlen("source"));
+            break;
         case OSPC_DESTINATION:
-        memcpy(ospvRolestr, "destination", strlen("destination"));
-        break;
+            memcpy(ospvRolestr, "destination", strlen("destination"));
+            break;
         case OSPC_OTHER:
-        memcpy(ospvRolestr, "other", strlen("other"));
-        break;
+            memcpy(ospvRolestr, "other", strlen("other"));
+            break;
+        case OSPC_RADIUS:
+            memcpy(ospvRolestr, "radius", strlen("radius"));
+            break;
         default:
-        errorcode = OSPC_ERR_DATA_INVALID;
-        break;
+            errorcode = OSPC_ERR_DATA_INVALID;
+            break;
     }
 
     return errorcode;
