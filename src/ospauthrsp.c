@@ -676,7 +676,7 @@ void OSPPAuthRspComponentIdFromElement(
  * OSPPAuthRspHasRole() - Does AuthResponse have role set?
  *-----------------------------------------------------------------------*
  */
-int OSPPReauthReqHasRole(
+int OSPPAuthRspHasRole(
     OSPTAUTHRSP* ospvAuthRsp)
 {
     int ospvHasRole = OSPC_FALSE;
@@ -685,6 +685,22 @@ int OSPPReauthReqHasRole(
         ospvHasRole = (ospvAuthRsp->ospmAuthRspHasRole != OSPC_FALSE);
     }
     return ospvHasRole;
+}
+
+/*^L*/
+/*
+ *-----------------------------------------------------------------------*
+ * OSPPAuthRspSetRole() - sets value for role in AuthResponse
+ *-----------------------------------------------------------------------*
+ */
+void OSPPAuthRspSetRole(
+    OSPTAUTHRSP* ospvAuthRsp,
+    OSPE_MSG_ROLETYPES ospvRole)
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        ospvAuthRsp->ospmAuthRspRole = ospvRole;
+        ospvAuthRsp->ospmAuthRspHasRole = OSPC_TRUE;
+    }
 }
 
 /*^L*/
@@ -702,21 +718,5 @@ OSPE_MSG_ROLETYPES OSPPAuthRspGetRole(
         ospvRole = (OSPE_MSG_ROLETYPES)ospvAuthRsp->ospmAuthRspRole;
     }
     return ospvRole;
-}
-
-/*^L*/
-/*
- *-----------------------------------------------------------------------*
- * OSPPAuthRspSetRole() - sets value for role in AuthResponse
- *-----------------------------------------------------------------------*
- */
-void OSPPReauthReqSetRole(
-    OSPTAUTHRSP* ospvAuthRsp,
-    OSPE_MSG_ROLETYPES ospvRole)
-{
-    if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvAuthRsp->ospmAuthRspHasRole = OSPC_TRUE;
-        ospvAuthRsp->ospmAuthRspRole = ospvRole;
-    }
 }
 

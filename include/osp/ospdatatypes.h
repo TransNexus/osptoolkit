@@ -97,8 +97,8 @@ typedef SOCKET              OSPTSOCKET;
 
 #endif /* _WIN32 */
 
-typedef long            OSPTIPADDR;
-typedef unsigned char   OSPTBOOL;
+typedef long        OSPTIPADDR;
+typedef unsigned    OSPTBOOL;
 
 #define OSPC_OSNULL     NULL
 #define OSPTTIME        time_t

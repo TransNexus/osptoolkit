@@ -937,8 +937,11 @@ OSPPOSRoleValToString(unsigned ospvRole,
         case OSPC_OTHER:
             memcpy(ospvRolestr, "other", strlen("other"));
             break;
-        case OSPC_RADIUS:
-            memcpy(ospvRolestr, "radius", strlen("radius"));
+        case OSPC_RADSRC:
+            memcpy(ospvRolestr, "radsrc", strlen("radsrc"));
+            break;
+        case OSPC_RADDST:
+            memcpy(ospvRolestr, "raddst", strlen("raddst"));
             break;
         default:
             errorcode = OSPC_ERR_DATA_INVALID;

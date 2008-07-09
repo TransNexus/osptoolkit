@@ -1763,7 +1763,7 @@ int OSPPTransactionBuildUsageFromScratch(
      * point to it.
      */
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        if ((ospvRole == OSPC_SOURCE) || (ospvRole == OSPC_RADIUS)) {
+        if ((ospvRole == OSPC_SOURCE) || (ospvRole == OSPC_RADSRC)) {
             if (trans->AuthReq != (OSPTAUTHREQ*)OSPC_OSNULL) {
                 /*
                  * This is the 2nd time that the API is being called.
@@ -1838,7 +1838,7 @@ int OSPPTransactionBuildUsageFromScratch(
                    OSPPAuthRspSetRole(trans->AuthRsp,ospvRole);
                 }
             }
-        } else if (ospvRole == OSPC_DESTINATION) {
+        } else if ((ospvRole == OSPC_DESTINATION) || (ospvRole == OSPC_RADDST)) {
             if (trans->AuthInd != OSPC_OSNULL) {
                 errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
                 OSPM_DBGERRORLOG(errorcode, "Transaction already initialized");

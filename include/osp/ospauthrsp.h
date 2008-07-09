@@ -44,8 +44,8 @@ typedef struct {
     unsigned ospmAuthRspTNDelayPref;
     unsigned ospmNumDests;
     OSPTCSAUDIT* ospmAuthRspCSAudit;
-    unsigned ospmAuthRspRole;
-    unsigned ospmAuthRspHasRole;
+    OSPE_MSG_ROLETYPES ospmAuthRspRole;
+    OSPTBOOL ospmAuthRspHasRole;
 } OSPTAUTHRSP;
 
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)
@@ -77,17 +77,17 @@ typedef struct {
 #define OSPPAuthRspDestGetLimit(ospvDest) OSPPDestGetLimit(ospvDest) 
 #define OSPPAuthRspDestSetLimit(ospvDest, ospvLimit) OSPPDestSetLimit(ospvDest, ospvLimit)
 
+/**/
+/*
+ *-----------------------------------------------------------------------*
+ * function prototypes
+ *-----------------------------------------------------------------------*
+ */
+
 #ifdef __cplusplus
 extern "C" 
 {
 #endif
-
-    /**/
-    /*
-     *-----------------------------------------------------------------------*
-     * function prototypes
-     *-----------------------------------------------------------------------*
-     */
 
     OSPTAUTHRSP* OSPPAuthRspNew(void);
     void OSPPAuthRspDelete(OSPTAUTHRSP**);

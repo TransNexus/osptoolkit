@@ -54,7 +54,8 @@ typedef enum {
     OSPC_DESTINATION,
     OSPC_SOURCE,   
     OSPC_OTHER,
-    OSPC_RADIUS
+    OSPC_RADSRC,
+    OSPC_RADDST
 } OSPE_MSG_ROLETYPES;
 
 
