@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospauthrsp.h - OSP authorisation response objects
  */
@@ -38,23 +32,21 @@
 #include "osp/osptnaudit.h"
 #include "osp/ospciscoext.h"
 
-typedef struct
-{
-    OSPTTIME          ospmAuthRspTimestamp;
-    unsigned char    *ospmAuthRspMessageId;
-    unsigned char    *ospmAuthRspComponentId;
-    OSPTSTATUS       *ospmAuthRspStatus;
-    OSPTTNAUDIT      *ospmAuthRspTNAudit;
-    OSPTTRXID         ospmAuthRspTrxId;
-    OSPTLIST          ospmAuthRspDest;
-    unsigned          ospmAuthRspTNDelayLimit;
-    unsigned          ospmAuthRspTNDelayPref;
-    unsigned          ospmNumDests;
-    OSPTCSAUDIT      *ospmAuthRspCSAudit;
-
-}
-OSPTAUTHRSP;
-
+typedef struct {
+    OSPTTIME ospmAuthRspTimestamp;
+    unsigned char* ospmAuthRspMessageId;
+    unsigned char* ospmAuthRspComponentId;
+    OSPTSTATUS* ospmAuthRspStatus;
+    OSPTTNAUDIT* ospmAuthRspTNAudit;
+    OSPTTRXID ospmAuthRspTrxId;
+    OSPTLIST ospmAuthRspDest;
+    unsigned ospmAuthRspTNDelayLimit;
+    unsigned ospmAuthRspTNDelayPref;
+    unsigned ospmNumDests;
+    OSPTCSAUDIT* ospmAuthRspCSAudit;
+    unsigned ospmAuthRspRole;
+    unsigned ospmAuthRspHasRole;
+} OSPTAUTHRSP;
 
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)
 #define OSPPAuthRspDestSetNumber(ospvDest,ospvNum) OSPPDestSetNumber(ospvDest,ospvNum)
@@ -90,51 +82,58 @@ extern "C"
 {
 #endif
 
-
     /**/
-    /*-----------------------------------------------------------------------*
+    /*
+     *-----------------------------------------------------------------------*
      * function prototypes
-     *-----------------------------------------------------------------------*/
+     *-----------------------------------------------------------------------*
+     */
 
-    OSPTAUTHRSP *OSPPAuthRspNew(void);
-    void        OSPPAuthRspDelete(OSPTAUTHRSP **);
-    unsigned    OSPPAuthRspFromElement(OSPTXMLELEM *, OSPTAUTHRSP **);
-    OSPTDEST    *OSPPAuthRspAddDest(OSPTAUTHRSP *, OSPTDEST *);
-    void        OSPPAuthRspSetComponentId(OSPTAUTHRSP *, unsigned char *);
-    void        OSPPAuthRspComponentIdFromElement(OSPTXMLELEM *, unsigned char **);
-    unsigned    OSPPAuthRspHasMessageId(OSPTAUTHRSP *);
-    void        OSPPAuthRspSetMessageId(OSPTAUTHRSP *, unsigned char *);
-    void        OSPPAuthRspMessageIdFromElement(OSPTXMLELEM *, unsigned char **);
-    unsigned char *OSPPAuthRspGetMessageId(OSPTAUTHRSP *);
+    OSPTAUTHRSP* OSPPAuthRspNew(void);
+    void OSPPAuthRspDelete(OSPTAUTHRSP**);
 
-    void        OSPPAuthRspSetTimestamp(OSPTAUTHRSP *, OSPTTIME);
+    unsigned OSPPAuthRspFromElement(OSPTXMLELEM*, OSPTAUTHRSP**);
 
-    unsigned       OSPPAuthRspHasComponentId(OSPTAUTHRSP *);
+    int OSPPAuthRspHasDest(OSPTAUTHRSP *ospvAuthRsp);
+    OSPTDEST* OSPPAuthRspAddDest(OSPTAUTHRSP*, OSPTDEST*);
+    OSPTDEST* OSPPAuthRspFirstDest(OSPTAUTHRSP*);
+    OSPTDEST* OSPPAuthRspNextDest(OSPTAUTHRSP*, OSPTDEST*);
 
-    unsigned     OSPPAuthRspHasStatus(OSPTAUTHRSP *);
-    OSPTSTATUS  *OSPPAuthRspGetStatus(OSPTAUTHRSP *);
+    int OSPPAuthRspHasComponentId(OSPTAUTHRSP*);
+    void OSPPAuthRspSetComponentId(OSPTAUTHRSP*, unsigned char*);
+    void OSPPAuthRspComponentIdFromElement(OSPTXMLELEM*, unsigned char**);
 
-    void        OSPPAuthRspSetTrxId(OSPTAUTHRSP *, OSPTTRXID);
+    int OSPPAuthRspHasMessageId(OSPTAUTHRSP*);
+    void OSPPAuthRspSetMessageId(OSPTAUTHRSP*, unsigned char*);
+    void OSPPAuthRspMessageIdFromElement(OSPTXMLELEM*, unsigned char**);
+    unsigned char* OSPPAuthRspGetMessageId(OSPTAUTHRSP*);
 
-    unsigned    OSPPAuthRspHasDest(OSPTAUTHRSP *ospvAuthRsp);
-    OSPTDEST   *OSPPAuthRspFirstDest(OSPTAUTHRSP *);
-    OSPTDEST   *OSPPAuthRspNextDest(OSPTAUTHRSP *, OSPTDEST *);
+    void OSPPAuthRspSetTimestamp(OSPTAUTHRSP*, OSPTTIME);
 
-    unsigned     OSPPAuthRspHasTNDelayLimit(OSPTAUTHRSP *);
-    void         OSPPAuthRspSetTNDelayLimit(OSPTAUTHRSP *, unsigned);
-    unsigned     OSPPAuthRspGetTNDelayLimit(OSPTAUTHRSP *);
+    int OSPPAuthRspHasStatus(OSPTAUTHRSP*);
+    OSPTSTATUS* OSPPAuthRspGetStatus(OSPTAUTHRSP*);
 
-    unsigned     OSPPAuthRspHasTNDelayPref(OSPTAUTHRSP *);
-    void         OSPPAuthRspSetTNDelayPref(OSPTAUTHRSP *, unsigned);
+    void OSPPAuthRspSetTrxId(OSPTAUTHRSP*, OSPTTRXID);
 
-    unsigned    OSPPAuthRspHasNumDests(OSPTAUTHRSP *);
-    void        OSPPAuthRspIncNumDests(OSPTAUTHRSP *);
-    unsigned    OSPPAuthRspGetNumDests(OSPTAUTHRSP *);
+    int OSPPAuthRspHasTNDelayLimit(OSPTAUTHRSP*);
+    void OSPPAuthRspSetTNDelayLimit(OSPTAUTHRSP*, unsigned);
+    unsigned OSPPAuthRspGetTNDelayLimit(OSPTAUTHRSP*);
 
+    int OSPPAuthRspHasTNDelayPref(OSPTAUTHRSP*);
+    void OSPPAuthRspSetTNDelayPref(OSPTAUTHRSP*, unsigned);
 
-    OSPTTNAUDIT *OSPPAuthRspGetTNAudit(OSPTAUTHRSP *);
-    OSPTCSAUDIT *OSPPAuthRspGetCSAudit(OSPTAUTHRSP *);
-    int         OSPPAuthRspHasCSAudit(OSPTAUTHRSP *);
+    unsigned OSPPAuthRspHasNumDests(OSPTAUTHRSP*);
+    void OSPPAuthRspIncNumDests(OSPTAUTHRSP*);
+    unsigned OSPPAuthRspGetNumDests(OSPTAUTHRSP*);
+
+    OSPTTNAUDIT* OSPPAuthRspGetTNAudit(OSPTAUTHRSP*);
+
+    int OSPPAuthRspHasCSAudit(OSPTAUTHRSP*);
+    OSPTCSAUDIT* OSPPAuthRspGetCSAudit(OSPTAUTHRSP*);
+
+    int OSPPAuthRspHasRole(OSPTAUTHRSP*);
+    void OSPPAuthRspSetRole(OSPTAUTHRSP*, OSPE_MSG_ROLETYPES);
+    OSPE_MSG_ROLETYPES OSPPAuthRspGetRole(OSPTAUTHRSP*);
 
 #ifdef __cplusplus
 }

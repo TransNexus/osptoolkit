@@ -1160,7 +1160,6 @@ OSPE_MSG_ROLETYPES                         /* returns the role (OGW/TGW) */
 /*-----------------------------------------------------------------------*
  * OSPPReauthReqSetRole() - sets value for role in reauthorisation request
  *-----------------------------------------------------------------------*/
-
 void                              
 OSPPReauthReqSetRole(
     OSPTREAUTHREQ       *ospvReauthReq,

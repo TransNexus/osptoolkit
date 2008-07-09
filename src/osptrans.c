@@ -295,7 +295,13 @@ OSPPTransactionBuildUsage(
         if(ospvType == OSPC_MSG_ARESP)
         {
             /* Originating */
-            OSPPUsageIndSetRole(*ospvUsage, OSPC_SOURCE);
+            if ((ospvTrans->AuthRsp != (OSPTAUTHRSP*)OSPC_OSNULL) &&
+                (OSPPAuthRspHasRole(ospvTrans->AuthRsp)))
+            {
+                OSPPUsageIndSetRole(*ospvUsage, OSPPAuthRspGetRole(ospvTrans->AuthRsp));
+            } else {
+                OSPPUsageIndSetRole(*ospvUsage, OSPC_SOURCE);
+            }
 
             /* Get CallId */
             if(OSPPDestHasCallId(ospvDest))
