@@ -432,7 +432,7 @@ OSPPTransactionBuildUsage(
             /* Terminating */
             if ((ospvTrans->AuthInd != (OSPTAUTHIND*)OSPC_OSNULL) &&
                 (OSPPAuthIndHasRole(ospvTrans->AuthInd)) &&
-                ((role = OSPPAuthIndGetRole(ospvTrans->AuthInd) != OSPC_DESTINATION)))
+                ((role = OSPPAuthIndGetRole(ospvTrans->AuthInd)) != OSPC_DESTINATION))
             {
                 OSPPUsageIndSetRole(*ospvUsage, role);
             } else if (ospvTrans->WasLookAheadInfoGivenToApp == OSPC_TRUE) {
