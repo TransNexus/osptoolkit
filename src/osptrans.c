@@ -74,9 +74,7 @@ OSPPTransactionBuildReauthRequest(
     }
 
     /* Set Role  = OSPC_SOURCE */
-    if(errorcode == OSPC_ERR_NO_ERROR)
-    {
-
+    if(errorcode == OSPC_ERR_NO_ERROR) {
         /* Set Timestamp */
         timestamp = time(NULL);
         OSPPReauthReqSetTimestamp(ospvTrans->ReauthReq, timestamp);
@@ -274,7 +272,8 @@ OSPPTransactionBuildReauthRequest(
 
 }
 
-/* Build a Usage Indication list
+/* 
+ * Build a Usage Indication list
  */
 int
 OSPPTransactionBuildUsage(
@@ -294,7 +293,7 @@ OSPPTransactionBuildUsage(
         if(ospvType == OSPC_MSG_ARESP) {
             /* Originating */
             if ((ospvTrans->AuthRsp != (OSPTAUTHRSP*)OSPC_OSNULL) &&
-                (OSPPAuthRspHasRole(ospvTrans->AuthRsp)))
+                OSPPAuthRspHasRole(ospvTrans->AuthRsp))
             {
                 OSPPUsageIndSetRole(*ospvUsage, OSPPAuthRspGetRole(ospvTrans->AuthRsp));
             } else {
@@ -303,8 +302,7 @@ OSPPTransactionBuildUsage(
 
             /* Get CallId */
             if(OSPPDestHasCallId(ospvDest)) {
-                OSPPUsageIndSetCallId(*ospvUsage, 
-                    OSPPDestGetCallId(ospvDest));
+                OSPPUsageIndSetCallId(*ospvUsage, OSPPDestGetCallId(ospvDest)); 
             } else {
                 errorcode = OSPC_ERR_TRAN_CALLID_NOT_FOUND;
                 OSPM_DBGERRORLOG(errorcode, "Callid not found");
@@ -317,12 +315,11 @@ OSPPTransactionBuildUsage(
                 } else {
                     /*
                      * It is now acceptable to report source usage indications w/o calling number
-                    errorcode = OSPC_ERR_TRAN_SOURCE_NUMBER_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Source number not found");
+                     * errorcode = OSPC_ERR_TRAN_SOURCE_NUMBER_NOT_FOUND;
+                     * OSPM_DBGERRORLOG(errorcode, "Source number not found");
                      */
                     if(OSPPAuthReqHasSourceNumber(ospvTrans->AuthReq)) {
-                        OSPPUsageIndSetSourceNumber(*ospvUsage, 
-                        OSPPAuthReqGetSourceNumber(ospvTrans->AuthReq));
+                        OSPPUsageIndSetSourceNumber(*ospvUsage, OSPPAuthReqGetSourceNumber(ospvTrans->AuthReq)); 
                     }
                 }
             }
@@ -338,8 +335,7 @@ OSPPTransactionBuildUsage(
                         &((*ospvTrans->AuthReq).ospmAuthReqSourceAlternate),
                         &(ospvDest->ospmUpdatedSourceAddr));
                 }  else if (OSPPAuthReqHasSourceAlt(ospvTrans->AuthReq)) {
-                    OSPPUsageIndCopySourceAlt(*ospvUsage, 
-                        &((*ospvTrans->AuthReq).ospmAuthReqSourceAlternate));
+                    OSPPUsageIndCopySourceAlt(*ospvUsage, &((*ospvTrans->AuthReq).ospmAuthReqSourceAlternate)); 
                 }
             }
 
@@ -350,19 +346,16 @@ OSPPTransactionBuildUsage(
              */
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 if (OSPPListFirst(&(ospvDest->ospmUpdatedDeviceInfo)) != NULL) {
-                    OSPPUsageIndCopyDeviceInfo(*ospvUsage, 
-                        &(ospvDest->ospmUpdatedDeviceInfo));
+                    OSPPUsageIndCopyDeviceInfo(*ospvUsage, &(ospvDest->ospmUpdatedDeviceInfo)); 
                 } else if (ospvTrans->AuthReq->ospmAuthReqDeviceInfo != NULL) {
-                    OSPPUsageIndCopyDeviceInfo(*ospvUsage, 
-                        &((*ospvTrans->AuthReq).ospmAuthReqDeviceInfo));
+                    OSPPUsageIndCopyDeviceInfo(*ospvUsage, &((*ospvTrans->AuthReq).ospmAuthReqDeviceInfo)); 
                 }
             }
 
             /* Get Destination Number (Called) */
             if(errorcode == OSPC_ERR_NO_ERROR) {
                 if(OSPPAuthReqHasDestNumber(ospvTrans->AuthReq)) {
-                    OSPPUsageIndSetDestNumber(*ospvUsage, 
-                        OSPPAuthReqGetDestNumber(ospvTrans->AuthReq));
+                    OSPPUsageIndSetDestNumber(*ospvUsage, OSPPAuthReqGetDestNumber(ospvTrans->AuthReq)); 
                 } else {
                     errorcode = OSPC_ERR_TRAN_DEST_NUMBER_NOT_FOUND;
                     OSPM_DBGERRORLOG(errorcode, "Dest number not found");
@@ -370,9 +363,7 @@ OSPPTransactionBuildUsage(
             }
 
             /* add DestinationSignalAddress to DestinationAlternates for Usage */
-            if ((errorcode == OSPC_ERR_NO_ERROR) &&
-                OSPPDestHasAddr(ospvDest))
-            {
+            if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPDestHasAddr(ospvDest)) {
                 dest = OSPPDestGetAddr(ospvDest);
                 altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,ospeTransport);
 
@@ -380,18 +371,14 @@ OSPPTransactionBuildUsage(
                 altinfo = OSPC_OSNULL;
                 dest = NULL;
             }
-            if ((errorcode == OSPC_ERR_NO_ERROR) &&
-                OSPPDestDevHasAddr(ospvDest))
-            {
+            if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPDestDevHasAddr(ospvDest)) {
                 dest = OSPPDestDevGetAddr(ospvDest);
                 altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,ospeH323);
 
                 OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
                 altinfo = OSPC_OSNULL;
             }
-            if ((errorcode == OSPC_ERR_NO_ERROR) &&
-                OSPPDestHasNetworkAddr(ospvDest))
-            {
+            if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPDestHasNetworkAddr(ospvDest)) {
                 dest = OSPPDestGetNetworkAddr(ospvDest);
                 altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,ospeNetwork);
 
@@ -400,12 +387,9 @@ OSPPTransactionBuildUsage(
             }
 
             /* Get Destination Alternates */
-            if ((errorcode == OSPC_ERR_NO_ERROR) && 
-                OSPPAuthReqHasDestinationAlt(ospvTrans->AuthReq))
-            {
-                OSPPUsageIndMoveDestinationAlt(*ospvUsage, 
-                    &(ospvTrans->AuthReq->ospmAuthReqDestinationAlternate));
-            /* Function above may be patterned after OSPPUsageIndMoveDestinationAlt */
+            if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasDestinationAlt(ospvTrans->AuthReq)) { 
+                OSPPUsageIndMoveDestinationAlt(*ospvUsage, &(ospvTrans->AuthReq->ospmAuthReqDestinationAlternate)); 
+                /* Function above may be patterned after OSPPUsageIndMoveDestinationAlt */
             }
 
             /* Move pricing information to Usage Ind structure */
@@ -443,45 +427,36 @@ OSPPTransactionBuildUsage(
 
             /* Get CallId */
             if(OSPPAuthIndHasCallId(ospvTrans->AuthInd)) {
-                OSPPUsageIndSetCallId(*ospvUsage, 
-                    OSPPAuthIndGetCallId(ospvTrans->AuthInd));
+                OSPPUsageIndSetCallId(*ospvUsage, OSPPAuthIndGetCallId(ospvTrans->AuthInd)); 
             }
 
             /* Source Number (Calling)*/
             if(errorcode == OSPC_ERR_NO_ERROR) {
                 if(OSPPAuthIndHasSourceNumber(ospvTrans->AuthInd)) {
-                    OSPPUsageIndSetSourceNumber(*ospvUsage, 
-                        OSPPAuthIndGetSourceNumber(ospvTrans->AuthInd));
+                    OSPPUsageIndSetSourceNumber(*ospvUsage, OSPPAuthIndGetSourceNumber(ospvTrans->AuthInd)); 
                 } else {
                     /*
                      * It is now acceptable to report dest usage indications w/o calling number
-                    errorcode = OSPC_ERR_TRAN_SOURCE_NUMBER_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Source number not found");
+                     * errorcode = OSPC_ERR_TRAN_SOURCE_NUMBER_NOT_FOUND;
+                     * OSPM_DBGERRORLOG(errorcode, "Source number not found");
                      */
                 }
             }
 
             /* Get Source Alternates */
-            if ((errorcode == OSPC_ERR_NO_ERROR) && 
-                OSPPAuthIndHasSourceAlt(ospvTrans->AuthInd))
-            {
-                OSPPUsageIndMoveSourceAlt(*ospvUsage, 
-                    &(ospvTrans->AuthInd->ospmAuthIndSourceAlternate));
+            if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPAuthIndHasSourceAlt(ospvTrans->AuthInd)) {
+                OSPPUsageIndMoveSourceAlt(*ospvUsage, &(ospvTrans->AuthInd->ospmAuthIndSourceAlternate)); 
             }
 
             /* Get Device Info (copying a pointer) */
-            if ((errorcode == OSPC_ERR_NO_ERROR) &&
-                (ospvTrans->AuthInd->ospmAuthIndDeviceInfo != NULL))
-            {
-                OSPPUsageIndMoveDeviceInfo(*ospvUsage,
-                    &(ospvTrans->AuthInd->ospmAuthIndDeviceInfo));
+            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->AuthInd->ospmAuthIndDeviceInfo != NULL)) {
+                OSPPUsageIndMoveDeviceInfo(*ospvUsage, &(ospvTrans->AuthInd->ospmAuthIndDeviceInfo));
             }
 
             /* Destination Number (CALLED) */
             if(errorcode == OSPC_ERR_NO_ERROR) {
                 if(OSPPAuthIndHasDestNumber(ospvTrans->AuthInd)) {
-                    OSPPUsageIndSetDestNumber(*ospvUsage, 
-                        OSPPAuthIndGetDestNumber(ospvTrans->AuthInd));
+                    OSPPUsageIndSetDestNumber(*ospvUsage, OSPPAuthIndGetDestNumber(ospvTrans->AuthInd)); 
                 } else {
                     errorcode = OSPC_ERR_TRAN_DEST_NUMBER_NOT_FOUND;
                     OSPM_DBGERRORLOG(errorcode, "Dest number not found");
@@ -489,11 +464,8 @@ OSPPTransactionBuildUsage(
             }
 
             /* Get Destination Alternates */
-            if ((errorcode == OSPC_ERR_NO_ERROR) && 
-                OSPPAuthIndHasDestinationAlt(ospvTrans->AuthInd))
-            {
-                OSPPUsageIndMoveDestinationAlt(*ospvUsage, 
-                    &(ospvTrans->AuthInd->ospmAuthIndDestinationAlternate));
+            if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPAuthIndHasDestinationAlt(ospvTrans->AuthInd)) { 
+                OSPPUsageIndMoveDestinationAlt(*ospvUsage, &(ospvTrans->AuthInd->ospmAuthIndDestinationAlternate)); 
             }
 
             /* Move pricing information to Usage Ind structure */
