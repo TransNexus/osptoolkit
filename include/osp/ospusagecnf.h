@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospusagecnf.h - OSP Usage Confirm Objects
  */
@@ -35,52 +29,35 @@
 #include "osp/osptnaudit.h"
 #include "osp/ospciscoext.h"
 
+typedef struct {
+    OSPTLISTLINK ospmUsageCnfLink;
+    OSPTTIME ospmUsageCnfTimestamp;
+    unsigned char *ospmUsageCnfMessageId;
+    unsigned char *ospmUsageCnfComponentId;
+    OSPTSTATUS *ospmUsageCnfStatus;
+    OSPTTNAUDIT *ospmUsageCnfTNAudit;
+    OSPTCSAUDIT *ospmUsageCnfCSAudit;
+} OSPTUSAGECNF;
 
-typedef struct
-{
-    OSPTLISTLINK    ospmUsageCnfLink;
-    OSPTTIME        ospmUsageCnfTimestamp;
-    unsigned char   *ospmUsageCnfMessageId;
-    unsigned char   *ospmUsageCnfComponentId;
-    OSPTSTATUS      *ospmUsageCnfStatus;
-    OSPTTNAUDIT     *ospmUsageCnfTNAudit;
-    OSPTCSAUDIT     *ospmUsageCnfCSAudit;
-}
-OSPTUSAGECNF;
-
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    /**/
-    /*-----------------------------------------------------------------------*
-     * function prototypes
-     *-----------------------------------------------------------------------*/
-
-    OSPTUSAGECNF   *OSPPUsageCnfNew(void);
-    unsigned        OSPPUsageCnfFromElement(OSPTXMLELEM *, OSPTLIST *);
-    void            OSPPUsageCnfDelete(OSPTUSAGECNF **);
-
-    unsigned char  *OSPPUsageCnfGetComponentId(OSPTUSAGECNF *);
-    unsigned        OSPPUsageCnfHasComponentId(OSPTUSAGECNF *);
-    void            OSPPUsageCnfSetComponentId(OSPTUSAGECNF  *, unsigned char *);
-
-    void            OSPPUsageCnfComponentIdFromElement(OSPTXMLELEM *, const unsigned char **);
-
-    void           OSPPUsageCnfMessageIdFromElement(OSPTXMLELEM *, unsigned char **);
-
-    unsigned       OSPPUsageCnfHasMessageId(OSPTUSAGECNF *);
-    void           OSPPUsageCnfSetMessageId(OSPTUSAGECNF *, unsigned char *);
-
-    void          OSPPUsageCnfSetTimestamp(OSPTUSAGECNF *, OSPTTIME);
-
-    unsigned     OSPPUsageCnfHasStatus(OSPTUSAGECNF *ospvUsageCnf);
-
-    OSPTSTATUS  *OSPPUsageCnfGetStatus(OSPTUSAGECNF *);
-
-
+    OSPTUSAGECNF *OSPPUsageCnfNew(void);
+    unsigned OSPPUsageCnfFromElement(OSPTXMLELEM *, OSPTLIST *);
+    void OSPPUsageCnfDelete(OSPTUSAGECNF **);
+    unsigned char *OSPPUsageCnfGetComponentId(OSPTUSAGECNF *);
+    unsigned OSPPUsageCnfHasComponentId(OSPTUSAGECNF *);
+    void OSPPUsageCnfSetComponentId(OSPTUSAGECNF *, unsigned char *);
+    void OSPPUsageCnfComponentIdFromElement(OSPTXMLELEM *, const unsigned char **);
+    void OSPPUsageCnfMessageIdFromElement(OSPTXMLELEM *, unsigned char **);
+    unsigned OSPPUsageCnfHasMessageId(OSPTUSAGECNF *);
+    void OSPPUsageCnfSetMessageId(OSPTUSAGECNF *, unsigned char *);
+    void OSPPUsageCnfSetTimestamp(OSPTUSAGECNF *, OSPTTIME);
+    unsigned OSPPUsageCnfHasStatus(OSPTUSAGECNF *ospvUsageCnf);
+    OSPTSTATUS *OSPPUsageCnfGetStatus(OSPTUSAGECNF *);
     OSPTTNAUDIT *OSPPUsageCnfGetTNAudit(OSPTUSAGECNF *);
     OSPTCSAUDIT *OSPPUsageCnfGetCSAudit(OSPTUSAGECNF *);
 

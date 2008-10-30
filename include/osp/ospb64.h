@@ -15,25 +15,20 @@
 ***                                                                     ***
 **************************************************************************/
 
+#ifndef _OSPB64_H
+#define _OSPB64_H
 
+/* Function Prototypes */
 
-
-
-
-
-/*** Prototypes ***/
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    int OSPPBase64Encode(unsigned const char *in,unsigned inSize,
-                      unsigned char *out,unsigned *outSize);
-    int OSPPBase64Decode(const char *in,unsigned inSize,unsigned char *out,unsigned *outSize);
+    int OSPPBase64Encode(unsigned const char *in, unsigned inSize, unsigned char *out, unsigned *outSize);
+    int OSPPBase64Decode(const char *in, unsigned inSize, unsigned char *out, unsigned *outSize);
 
 #ifdef __cplusplus
 }
 #endif
 
-
-/* EOF */
+#endif /* _OSPB64_H */

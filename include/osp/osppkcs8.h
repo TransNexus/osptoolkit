@@ -15,64 +15,34 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * osppkcs8.h - PKCS8 definitions used for key objects.
  */
 
-#ifndef _OSP_PKCS8_H
-#define _OSP_PKCS8_H
+#ifndef _OSPPKCS8_H
+#define _OSPPKCS8_H
 
 #include "osp/osp.h"
 #include "osp/ospasn1.h"
 #include "osp/ospdatatypes.h"
 
-
 #define OSPC_PKCS8_PRIVATEKEYINFO_VERSION 0
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
-    int
-    OSPPPKCS8KeyInfoCreate(
-        OSPTASN1OBJECT **ospvPrivateKeyInfo,
-        OSPTPRIVATEKEY *ospvPrivateKey);
 
-    int
-    OSPPPKCS8KeyInfoTestContext(
-        OSPTASN1OBJECT  *ospvPrivateKeyInfo);
-
-    void 
-    OSPPPKCS8KeyInfoDelete(
-        OSPTASN1OBJECT  **ospvPrivateKeyInfo);
-
-    int
-    OSPPPKCS8KeyInfoGetPrivateKey(
-        OSPTASN1OBJECT *ospvPrivateKeyInfo,
-        unsigned char **ospvPrivateKey,
-        unsigned      *ospvPrivateKeyLength);
-
-    int
-    OSPPPKCS8KeyInfoGetPrivateKeyElement(
-        OSPTASN1OBJECT *ospvPrivateKeyInfo, 
-        OSPEASN1DATAREFID ospvDataRefId,
-        OSPTASN1ELEMENTINFO **ospvElementInfo);
-
-    int
-    OSPPKCS8KeyInfoGetEncodedKeyInfo(
-        OSPTASN1OBJECT *ospvPrivateKeyInfo,
-        unsigned char **ospvBERPrivateKeyInfo,
-        unsigned      *ospvBERPrivateKeyInfoLength);
+    int OSPPPKCS8KeyInfoCreate(OSPTASN1OBJECT **ospvPrivateKeyInfo, OSPTPRIVATEKEY *ospvPrivateKey);
+    int OSPPPKCS8KeyInfoTestContext(OSPTASN1OBJECT *ospvPrivateKeyInfo);
+    void OSPPPKCS8KeyInfoDelete(OSPTASN1OBJECT **ospvPrivateKeyInfo);
+    int OSPPPKCS8KeyInfoGetPrivateKey(OSPTASN1OBJECT *ospvPrivateKeyInfo, unsigned char **ospvPrivateKey, unsigned *ospvPrivateKeyLength);
+    int OSPPPKCS8KeyInfoGetPrivateKeyElement(OSPTASN1OBJECT *ospvPrivateKeyInfo, OSPEASN1DATAREFID ospvDataRefId, OSPTASN1ELEMENTINFO **ospvElementInfo);
+    int OSPPKCS8KeyInfoGetEncodedKeyInfo(OSPTASN1OBJECT *ospvPrivateKeyInfo, unsigned char **ospvBERPrivateKeyInfo, unsigned *ospvBERPrivateKeyInfoLength);
 
 #ifdef __cplusplus
 }
 #endif
 
-
-#endif
+#endif /* _OSPPKCS8_H */

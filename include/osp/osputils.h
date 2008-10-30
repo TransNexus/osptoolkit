@@ -15,17 +15,12 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * osputils.h - Constants and prototypes for utility functions.
  */
-#ifndef _OSP_UTILS_H
-#define _OSP_UTILS_H
+
+#ifndef _OSPUTILS_H
+#define _OSPUTILS_H
 
 #include "osp/ospdatatypes.h"
 
@@ -35,21 +30,22 @@
 #define OSPC_TEST_DEST_STRING   "www.transnexus.com"
 #define OSPC_FAKE_TOKEN         ")&(^%&$^%#"
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    OSPTBOOL      OSPPUtilIsDottedNumericIP(const char *);
-    int           OSPPUtilGetErrorFromStatus(unsigned);
-    int           OSPPUtilGetRandom(char *, int);
-    int           OSPPUtilBuildString(OSPTUINT64, int, char **);
-    void          OSPPUtilStringToLowercase(char **);
-    int           OSPPUtilLoadPEMPrivateKey(unsigned char *fileName, OSPTPRIVATEKEY *key);
-    int           OSPPUtilLoadPEMCert(      unsigned char *fileName, OSPTCERT *cert);
+    OSPTBOOL OSPPUtilIsDottedNumericIP(const char *);
+    int OSPPUtilGetErrorFromStatus(unsigned);
+    int OSPPUtilGetRandom(char *, int);
+    int OSPPUtilBuildString(OSPTUINT64, int, char **);
+    void OSPPUtilStringToLowercase(char **);
+    int OSPPUtilLoadPEMPrivateKey(unsigned char *fileName, OSPTPRIVATEKEY *key);
+    int OSPPUtilLoadPEMCert(unsigned char *fileName, OSPTCERT *cert);
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif
-
+#endif /* _OSPUTILS_H */

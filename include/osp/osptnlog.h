@@ -15,44 +15,39 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 #ifndef _OSPTNLOG_H
 #define _OSPTNLOG_H
 
-#define LOGPERM (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP)
-#define MAXLOGSZ 100000
-#define BUFSZ 8192
-#define DUMPLEN  16
+#define LOGPERM     (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP)
+#define MAXLOGSZ    100000
+#define BUFSZ       8192
+#define DUMPLEN     16
 
 #ifndef _WIN32
 #ifdef OSPTNLOGDEBUG
-#define OSPTNINITLOG(a) tninitlog(a)
-#define OSPTNLOG(a) tnlog(a)
-#define OSPTNLOG1(a,b) tnlog(a,b)
-#define OSPTNLOG2(a,b,c) tnlog(a,b,c)
-#define OSPTNLOG3(a,b,c,d) tnlog(a,b,c,d)
-#define OSPTNLOG4(a,b,c,d,e) tnlog(a,b,c,d,e)
-#define OSPTNLOGDUMP(a,b,c) tnlogdump(a,b,c)
-#define OSPTNLOGMEMUSE(a) tnlogmemuse(a)
+#define OSPTNINITLOG(a)         tninitlog(a)
+#define OSPTNLOG(a)             tnlog(a)
+#define OSPTNLOG1(a,b)          tnlog(a,b)
+#define OSPTNLOG2(a,b,c)        tnlog(a,b,c)
+#define OSPTNLOG3(a,b,c,d)      tnlog(a,b,c,d)
+#define OSPTNLOG4(a,b,c,d,e)    tnlog(a,b,c,d,e)
+#define OSPTNLOGDUMP(a,b,c)     tnlogdump(a,b,c)
+#define OSPTNLOGMEMUSE(a)       tnlogmemuse(a)
 #else
 #define OSPTNINITLOG(a)
-#define OSPTNLOG(a) 
-#define OSPTNLOG1(a,b) 
-#define OSPTNLOG2(a,b,c) 
-#define OSPTNLOG3(a,b,c,d) 
-#define OSPTNLOG4(a,b,c,d,e) 
-#define OSPTNLOGDUMP(a,b,c) 
-#define OSPTNLOGMEMUSE(a) 
+#define OSPTNLOG(a)
+#define OSPTNLOG1(a,b)
+#define OSPTNLOG2(a,b,c)
+#define OSPTNLOG3(a,b,c,d)
+#define OSPTNLOG4(a,b,c,d,e)
+#define OSPTNLOGDUMP(a,b,c)
+#define OSPTNLOGMEMUSE(a)
 #endif
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
     void get_log_time(char *timebuf);
@@ -66,13 +61,13 @@ extern "C"
 #endif
 #else /* WIN32 defined */
 #define OSPTNINITLOG(a)
-#define OSPTNLOG(a) 
-#define OSPTNLOG1(a,b) 
-#define OSPTNLOG2(a,b,c) 
-#define OSPTNLOG3(a,b,c,d) 
-#define OSPTNLOG4(a,b,c,d,e) 
-#define OSPTNLOGDUMP(a,b,c) 
-#define OSPTNLOGMEMUSE(a) 
-#endif  /* WIN32 */
-#endif
+#define OSPTNLOG(a)
+#define OSPTNLOG1(a,b)
+#define OSPTNLOG2(a,b,c)
+#define OSPTNLOG3(a,b,c,d)
+#define OSPTNLOG4(a,b,c,d,e)
+#define OSPTNLOGDUMP(a,b,c)
+#define OSPTNLOGMEMUSE(a)
+#endif /* WIN32 */
 
+#endif /* _OSPTNLOG_H */

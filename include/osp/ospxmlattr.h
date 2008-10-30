@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospxmlattr.h - Structures and prototypes for generic XML attributes.
  */
@@ -40,38 +34,28 @@
  * be linked together.
  */
 
-typedef struct OSPSXMLAttr
-{
+typedef struct OSPSXMLAttr {
     OSPTLISTLINK ospmXMLAttrLink;
-    const char  *ospmXMLAttrName;
-    const char  *ospmXMLAttrValue;
-}
-OSPTXMLATTR;
+    const char *ospmXMLAttrName;
+    const char *ospmXMLAttrValue;
+} OSPTXMLATTR;
 
 
-#define OSPC_MAX_ID_LEN 25
+#define OSPC_MAX_ID_LEN     25
 
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-OSPTXMLATTR *OSPPXMLAttrNew(const unsigned char *, const unsigned char *);
-void         OSPPXMLAttrDelete(OSPTXMLATTR **);
-
-const char *OSPPXMLAttrGetName(OSPTXMLATTR *);
-
-const char *OSPPXMLAttrGetValue(OSPTXMLATTR *);
-
+    OSPTXMLATTR *OSPPXMLAttrNew(const unsigned char *, const unsigned char *);
+    void OSPPXMLAttrDelete(OSPTXMLATTR **);
+    const char *OSPPXMLAttrGetName(OSPTXMLATTR *);
+    const char *OSPPXMLAttrGetValue(OSPTXMLATTR *);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
-
+#endif /* _OSPXMLATTR_H */

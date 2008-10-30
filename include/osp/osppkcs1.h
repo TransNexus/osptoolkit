@@ -15,59 +15,34 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * osppkcs1.h - PKCS1 definitions used for key objects.
  */
 
-#ifndef _OSP_PKCS1_H
-#define _OSP_PKCS1_H
+#ifndef _OSPPKCS1_H
+#define _OSPPKCS1_H
 
 #include "osp/osp.h"
 #include "osp/ospasn1.h"
 #include "osp/ospdatatypes.h"
 
+#define OSPC_ASN1_PRIVATEKEYINFO_VERSION    0
 
-#define OSPC_ASN1_PRIVATEKEYINFO_VERSION 0
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    int
-    OSPPPKCS1PrivateKeyDelete(
-        OSPTPRIVATEKEY **ospvPrivateKey);
-
-    int
-    OSPPPKCS1PrivateKeyCreate(
-        OSPTPRIVATEKEY *ospvSourcePrivateKey,
-        OSPTPRIVATEKEY **ospvNewPrivateKey);
-
-    int
-    OSPPPKCS1PrivateKeyCopy(
-        OSPTPRIVATEKEY *ospvDestinationPrivateKey,
-        OSPTPRIVATEKEY *ospvSourcePrivateKey);
-
-    int
-    OSPPPKCS1PrivateKeyTestContext(
-        OSPTPRIVATEKEY *ospvPrivateKey);
-
-    int
-    OSPPPKCS1Encrypt(
-        OSPTASN1OBJECT **ospvEncryptedDigest,
-        OSPTASN1OBJECT *ospvAlgorithmId,
-        OSPTASN1OBJECT *ospvDigestInfo,
-        OSPTPRIVATEKEY *ospvPrivateKey);
+    int OSPPPKCS1PrivateKeyDelete(OSPTPRIVATEKEY **ospvPrivateKey);
+    int OSPPPKCS1PrivateKeyCreate(OSPTPRIVATEKEY *ospvSourcePrivateKey, OSPTPRIVATEKEY **ospvNewPrivateKey);
+    int OSPPPKCS1PrivateKeyCopy(OSPTPRIVATEKEY *ospvDestinationPrivateKey, OSPTPRIVATEKEY *ospvSourcePrivateKey);
+    int OSPPPKCS1PrivateKeyTestContext(OSPTPRIVATEKEY *ospvPrivateKey);
+    int OSPPPKCS1Encrypt(OSPTASN1OBJECT **ospvEncryptedDigest, OSPTASN1OBJECT *ospvAlgorithmId, OSPTASN1OBJECT *ospvDigestInfo, 
+            OSPTPRIVATEKEY *ospvPrivateKey);
 
 #ifdef __cplusplus
 }
 #endif
 
-
-#endif
+#endif /* _OSPPKCS1_H */

@@ -15,53 +15,45 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospsocket.h - Prototypes for socket functions.
  */
-#ifndef _OSP_SOCKET_H
-#define _OSP_SOCKET_H
+
+#ifndef _OSPSOCKET_H
+#define _OSPSOCKET_H
 
 #include "osp/ospdatatypes.h"
 #include "osp/ospcomm.h"
 #include "osp/osphttp.h"
 
 #ifdef _WIN32
-#  define OSPC_SOCK_INVALID              SOCKET_ERROR
+#  define OSPC_SOCK_INVALID         SOCKET_ERROR
 #else
-#  define OSPC_SOCK_INVALID              -1
+#  define OSPC_SOCK_INVALID         -1
 #endif
+
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    int  OSPPSockClose(OSPTBOOL, OSPTSOCKET *, OSPTSSLSESSION  **);
-    int  OSPPSockConnect(OSPTSOCKET *, OSPTBOOL, OSPTIPADDR, unsigned short,
-            struct timeval *, OSPTSSLSESSION **);
-    int  OSPPSockConnectAuditURL(OSPTHTTP  *,  OSPTBOOL *);
-    int  OSPPSockConnectServicePoint(OSPTHTTP  *, OSPTBOOL *, OSPTBOOL *);
-    int  OSPPSockDisableNagle(OSPTHTTP *);
-    int  OSPPSockGetHostIP(char *, OSPTIPADDR *);
-    int  OSPPSockNew(OSPTHTTP *);
-
-    void OSPPSockProcessRequest(OSPTHTTP *, unsigned char *, unsigned,
-             unsigned char **, unsigned *, unsigned char **, unsigned *, int *);
-    int  OSPPSockRead(OSPTHTTP *, unsigned char *, unsigned int *);
-    int  OSPPSockSetBlockingIO(OSPTSOCKET, OSPTBOOL);
-    int  OSPPSockSetKeepAlive(OSPTHTTP *);
-    int  OSPPSockWaitTillReady(OSPTSOCKET, OSPTBOOL, struct timeval *);
-    int  OSPPSockWrite(OSPTHTTP *, unsigned char *, unsigned int *);
+    int OSPPSockClose(OSPTBOOL, OSPTSOCKET *, OSPTSSLSESSION **);
+    int OSPPSockConnect(OSPTSOCKET *, OSPTBOOL, OSPTIPADDR, unsigned short, struct timeval *, OSPTSSLSESSION **);
+    int OSPPSockConnectAuditURL(OSPTHTTP *, OSPTBOOL *);
+    int OSPPSockConnectServicePoint(OSPTHTTP *, OSPTBOOL *, OSPTBOOL *);
+    int OSPPSockDisableNagle(OSPTHTTP *);
+    int OSPPSockGetHostIP(char *, OSPTIPADDR *);
+    int OSPPSockNew(OSPTHTTP *);
+    void OSPPSockProcessRequest(OSPTHTTP *, unsigned char *, unsigned, unsigned char **, unsigned *, unsigned char **, unsigned *, int *);
+    int OSPPSockRead(OSPTHTTP *, unsigned char *, unsigned int *);
+    int OSPPSockSetBlockingIO(OSPTSOCKET, OSPTBOOL);
+    int OSPPSockSetKeepAlive(OSPTHTTP *);
+    int OSPPSockWaitTillReady(OSPTSOCKET, OSPTBOOL, struct timeval *);
+    int OSPPSockWrite(OSPTHTTP *, unsigned char *, unsigned int *);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
-
+#endif /* _OSPSOCKET_H */

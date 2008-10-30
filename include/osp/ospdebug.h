@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospdebug.h - Structures and prototypes for debugging and logging.
  */
@@ -74,14 +68,12 @@
 
 #ifdef OSPC_DEBUG
 #  ifdef _WIN32
-#    define OSPM_DBG(ospvCond,ospvParams) \
-        ( ospvCond ? OSPM_DBGPRINTF ospvParams : 0 )
+#    define OSPM_DBG(ospvCond,ospvParams)   ( ospvCond ? OSPM_DBGPRINTF ospvParams : 0 )
 #  else
-#    define OSPM_DBG(ospvCond,ospvParams) \
-        if ( ospvCond ) {  OSPM_DBGPRINTF ospvParams; fflush(stdout); }
+#    define OSPM_DBG(ospvCond,ospvParams)   if ( ospvCond ) {  OSPM_DBGPRINTF ospvParams; fflush(stdout); }
 #  endif
 #else
-#   define OSPM_DBG(ospvCond,ospvParams)
+#    define OSPM_DBG(ospvCond,ospvParams)
 #endif
 
 /*
@@ -98,7 +90,6 @@
 #define OSPC_DBGNET    0x00000020   /* network input/output */
 #define OSPC_DBGSEC    0x00000040   /* security */
 #define OSPC_DBGMISC   0x00000080   /* miscellaneous debugging */
-
 #define OSPC_DBGALL    0xFFFFFFFF   /* debug everything */
 
 /*
@@ -111,7 +102,7 @@
  * no debug code is included.
  */
 
-#define OSPVDbgFlag  OSPC_DBGERROR 
+#define OSPVDbgFlag  OSPC_DBGERROR
 
 /*
  * At last, here are the real debug macros. They are intended
@@ -126,30 +117,15 @@
  *    OSPM_DBGMEM(("allocating %u bytes of memory\n", size));
  */
 
-#define OSPM_DBGERROR(ospvParams) \
-    OSPM_DBG((OSPVDbgFlag&OSPC_DBGERROR),ospvParams)
-
-#define OSPM_DBGENTER(ospvParams) \
-    OSPM_DBG((OSPVDbgFlag&OSPC_DBGENTER),ospvParams)
-
-#define OSPM_DBGEXIT(ospvParams) \
-    OSPM_DBG((OSPVDbgFlag&OSPC_DBGEXIT),ospvParams)
-
-#define OSPM_DBGMEM(ospvParams) \
-    OSPM_DBG((OSPVDbgFlag&OSPC_DBGMEM),ospvParams)
-
-#define OSPM_DBGBFR(ospvParams) \
-    OSPM_DBG((OSPVDbgFlag&OSPC_DBGBFR),ospvParams)
-
-#define OSPM_DBGNET(ospvParams) \
-    OSPM_DBG((OSPVDbgFlag&OSPC_DBGNET),ospvParams)
-
-#define OSPM_DBGSEC(ospvParams) \
-    OSPM_DBG((OSPVDbgFlag&OSPC_DBGSEC),ospvParams)
-
-#define OSPM_DBGMISC(ospvParams) \
-    OSPM_DBG((OSPVDbgFlag&OSPC_DBGMISC),ospvParams)
-
+#define OSPM_DBGERROR(ospvParams)   OSPM_DBG((OSPVDbgFlag&OSPC_DBGERROR),ospvParams)
+#define OSPM_DBGENTER(ospvParams)   OSPM_DBG((OSPVDbgFlag&OSPC_DBGENTER),ospvParams)
+#define OSPM_DBGEXIT(ospvParams)    OSPM_DBG((OSPVDbgFlag&OSPC_DBGEXIT),ospvParams)
+#define OSPM_DBGMEM(ospvParams)     OSPM_DBG((OSPVDbgFlag&OSPC_DBGMEM),ospvParams)
+#define OSPM_DBGBFR(ospvParams)     OSPM_DBG((OSPVDbgFlag&OSPC_DBGBFR),ospvParams)
+#define OSPM_DBGNET(ospvParams)     OSPM_DBG((OSPVDbgFlag&OSPC_DBGNET),ospvParams)
+#define OSPM_DBGSEC(ospvParams)     OSPM_DBG((OSPVDbgFlag&OSPC_DBGSEC),ospvParams)
+#define OSPM_DBGMISC(ospvParams)    OSPM_DBG((OSPVDbgFlag&OSPC_DBGMISC),ospvParams)
+   
 /*
  * Finally, a special debugging macro just for error logging.
  * The macro takes two parameters: an error code and descriptive
@@ -169,12 +145,12 @@
  */
 
 #define OSPM_DBGERRORLOG(ospvErrCode,ospvErrText) \
-     OSPM_DBGERROR(("ERROR %0d: %s\n      File: %s  line: %u\n", \
-                  (ospvErrCode), (ospvErrText), __FILE__, __LINE__))
+     OSPM_DBGERROR(("ERROR %0d: %s\n      File: %s  line: %u\n", (ospvErrCode), (ospvErrText), __FILE__, __LINE__)) 
 
-#else       /* Use customized debug code */
-#   include    "osp/ospcustomdebug.h"
-#endif  /* OSP_SDK */
+#else /* Use customized debug code */
 
+#include "osp/ospcustomdebug.h"
 
-#endif
+#endif /* OSP_SDK */
+
+#endif /* _OSPDEBUG_H */

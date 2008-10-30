@@ -15,18 +15,12 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  *  ospcapcnf.h - OSP capabiliti indication objects
  */
 
-#ifndef _OSPACAPCNF_H
-#define _OSPACAPCNF_H
+#ifndef _OSPCAPCNF_H
+#define _OSPCAPCNF_H
 
 #include "osp/osp.h"
 #include "osp/ospxmlelem.h"
@@ -34,29 +28,22 @@
 #include "osp/ospaltinfo.h"
 #include "osp/osptrans.h"
 
+typedef struct {
+    OSPTSTATUS *ospmStatus;
+} OSPTCAPCNF;
 
-
-typedef struct
-{
-    OSPTSTATUS       *ospmStatus;
-}
-OSPTCAPCNF;
-
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    /*-----------------------------------------------------------------------*
-     *  function prototypes
-     *-----------------------------------------------------------------------*/
-    unsigned       OSPPCapCnfNew(OSPTCAPCNF**);
-    void           OSPPCapCnfDelete(OSPTCAPCNF **);
-    unsigned       OSPPCapCnfFromElement(OSPTXMLELEM *,OSPTCAPCNF **);
+    unsigned OSPPCapCnfNew(OSPTCAPCNF **);
+    void OSPPCapCnfDelete(OSPTCAPCNF **);
+    unsigned OSPPCapCnfFromElement(OSPTXMLELEM *, OSPTCAPCNF **);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _OSPACAPIND_H */
+#endif /* _OSPCAPCNF_H */

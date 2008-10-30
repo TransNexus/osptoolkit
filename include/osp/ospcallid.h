@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospcallid.h - OSP call identifier objects
  */
@@ -32,45 +26,34 @@
 #include "osp/osplist.h"
 #include "osp/ospxmlelem.h"
 
-
 /* max size of a call ID (bytes) */
 
-#define OSPC_CALLID_MAXSIZE        256
+#define OSPC_CALLID_MAXSIZE         256
 
 /* the basic call identifier structure */
 
-typedef struct
-{
-    OSPTLISTLINK   ospmCallIdLink;
-    unsigned       ospmCallIdLen;
+typedef struct {
+    OSPTLISTLINK ospmCallIdLink;
+    unsigned ospmCallIdLen;
     unsigned char *ospmCallIdVal;
-}
-OSPTCALLID;
+} OSPTCALLID;
 
-
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    OSPTCALLID    *OSPPCallIdNew(unsigned, const unsigned char *);
-    void           OSPPCallIdDelete(OSPTCALLID **);
-    unsigned       OSPPCallIdFromElement(OSPTXMLELEM *, OSPTCALLID  **);
-    unsigned       OSPPCallIdToElement(OSPTCALLID *, OSPTXMLELEM **, OSPTBOOL);
-
-    unsigned       OSPPCallIdGetSize(OSPTCALLID *);
+    OSPTCALLID *OSPPCallIdNew(unsigned, const unsigned char *);
+    void OSPPCallIdDelete(OSPTCALLID **);
+    unsigned OSPPCallIdFromElement(OSPTXMLELEM *, OSPTCALLID **);
+    unsigned OSPPCallIdToElement(OSPTCALLID *, OSPTXMLELEM **, OSPTBOOL);
+    unsigned OSPPCallIdGetSize(OSPTCALLID *);
     unsigned char *OSPPCallIdGetValue(OSPTCALLID *);
-    unsigned       OSPPCallIdFromASCIIElement(unsigned char *,OSPTCALLID  **);
-
+    unsigned OSPPCallIdFromASCIIElement(unsigned char *, OSPTCALLID **);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* _OSPCALLID_H */
-

@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospxmldoc.h - Structures and prototypes for generic XML documents.
  *               The corresponding functions are in ospxmlutil.c,
@@ -55,9 +49,9 @@
 
 /* UTF-16 byte order marks */
 
-#define OSPC_XMLDOC_UTF16MSB  0xFE
-#define OSPC_XMLDOC_UTF16LSB  0xFF
-#define OSPC_XMLDOC_UTF16NULL 0x00
+#define OSPC_XMLDOC_UTF16MSB        0xFE
+#define OSPC_XMLDOC_UTF16LSB        0xFF
+#define OSPC_XMLDOC_UTF16NULL       0x00
 
 /* various XML string constants */
 
@@ -104,8 +98,6 @@
 #define OSPC_XMLDOC_CDATABEGLEN        (sizeof(OSPC_XMLDOC_CDATABEG)-1)
 #define OSPC_XMLDOC_CDATAENDLEN        (sizeof(OSPC_XMLDOC_CDATAEND)-1)
 
-
-
 /*
  * Best guess sizes for element/attribute names and values - These
  * don't have to be strict since we use elastic buffers. They're just
@@ -117,58 +109,40 @@
 #define OSPC_XMLDOC_NAMESIZE   100
 #define OSPC_XMLDOC_VALUESIZE  1000
 
-
 /* maximum size of entity name  */
 
 #define OSPC_XMLDOC_ENTITYSIZE 10
 
-
 /* character encodings supported */
-typedef enum
-{
-    ospeXMLEncUnknown,       /* unrecognized encoding */
-    ospeXMLEncUTF8,          /* UTF-8 (8-bit Unicode) */
-    ospeXMLEncUTF16l,        /* UTF-16 little endian  */
-    ospeXMLEncUTF16b         /* UTF-16 big endian */
-}
-OSPTXMLENC;
+typedef enum {
+    ospeXMLEncUnknown,      /* unrecognized encoding */
+    ospeXMLEncUTF8,         /* UTF-8 (8-bit Unicode) */
+    ospeXMLEncUTF16l,       /* UTF-16 little endian  */
+    ospeXMLEncUTF16b        /* UTF-16 big endian */
+} OSPTXMLENC;
 
 
 /* structure used to store entity references */
-typedef struct
-{
-    unsigned char  ospmEntValue;
+typedef struct {
+    unsigned char ospmEntValue;
     unsigned char *ospmEntName;
-}
-OSPTXMLDOCENTITY;
+} OSPTXMLDOCENTITY;
 
-
-
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    /* functions in ospxmlutil.c */
-
-    unsigned OSPPXMLDocIsMatch(OSPTBFR **, OSPTXMLENC, const unsigned char *,
-        unsigned, unsigned char *, unsigned *);
-    unsigned OSPPXMLDocSkipPast(OSPTBFR **, OSPTXMLENC, const unsigned char *,
-        unsigned char *);
+    unsigned OSPPXMLDocIsMatch(OSPTBFR **, OSPTXMLENC, const unsigned char *, unsigned, unsigned char *, unsigned *);
+    unsigned OSPPXMLDocSkipPast(OSPTBFR **, OSPTXMLENC, const unsigned char *, unsigned char *);
     unsigned OSPPXMLDocSkipPastChar(OSPTBFR **, OSPTXMLENC, unsigned char);
-    unsigned OSPPXMLDocGetEncoding(OSPTBFR **, OSPTXMLENC  * );
+    unsigned OSPPXMLDocGetEncoding(OSPTBFR **, OSPTXMLENC *);
     unsigned OSPPXMLDocTranslateEntity(unsigned char *, unsigned char *);
     unsigned OSPPXMLDocReadChar(OSPTBFR **, OSPTXMLENC, unsigned char *);
     unsigned OSPPXMLDocSkipWhite(OSPTBFR **, OSPTXMLENC);
     unsigned OSPPXMLAddReference(const unsigned char *, unsigned, OSPTBFR **);
-    unsigned OSPPXMLDereference(const unsigned char *, unsigned *,
-        unsigned char *);
-
+    unsigned OSPPXMLDereference(const unsigned char *, unsigned *, unsigned char *);
 
     /* functions in ospxmlenc.c */
 
@@ -178,7 +152,6 @@ extern "C"
     int OSPPXMLDocAddAttr(OSPTXMLATTR *, OSPTBFR **);
     int OSPPXMLDocAddAttrName(OSPTXMLATTR *, OSPTBFR **);
     int OSPPXMLDocAddChar(OSPTBFR **, char);
-
 
     /* functions in ospxmlparse.c */
 
@@ -212,9 +185,9 @@ extern "C"
     unsigned OSPPXMLDocIsCdataEnd(OSPTBFR **, OSPTXMLENC, unsigned *);
 
     void OSPPXMLDocPeekCharN(OSPTBFR **, OSPTXMLENC, unsigned, unsigned char *, int *);
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif
-
+#endif /* _OSPXMLDOC_H */

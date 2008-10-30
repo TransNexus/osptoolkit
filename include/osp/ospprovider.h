@@ -15,18 +15,13 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospprovider.h - Prototypes, macros and constants for global provider
  * functions.
  */
-#ifndef _OSP_PROVIDER_H
-#define _OSP_PROVIDER_H
+
+#ifndef _OSPPROVIDER_H
+#define _OSPPROVIDER_H
 
 #include "osp/osp.h"
 #include "osp/osptrans.h"
@@ -35,27 +30,29 @@
 #include "osp/ospaudit.h"
 #include "osp/osptransids.h"
 
-#define     OSPC_PROV_SHIFT  24
-/*-------------------------------------------*/
-/* provider typedef                          */
-/*-------------------------------------------*/ 
-typedef struct _OSPTPROVIDER
-{
-    unsigned char              ProviderInUse;
-    OSPTCOMM                   *Comm;
-    OSPTCOMM                   *CommForCapabilities;
+#define OSPC_PROV_SHIFT  24
+/*
+ * provider typedef
+ */
+typedef struct _OSPTPROVIDER {
+    unsigned char ProviderInUse;
+    OSPTCOMM *Comm;
+    OSPTCOMM *CommForCapabilities;
     struct _OSPTTRANCOLLECTION *TransCollection;
-    OSPTAUDIT                  *Audit;
-    OSPTTXID                   *Id;
-    OSPTMUTEX                  ProviderMutex;
-    OSPTSEC                    *Security;
-    unsigned char              Flags;      /* bit 1 -  Trans Allowed     - 0x01; 
-                                                       Trans not allowed - 0x00 */
-    unsigned long               TNCustId;
-    unsigned long               TNDeviceId;
-    OSPTTRANSID                 *TreeRoot;
-    OSPTTRANSID                 Sentinel;
-    OSPTMUTEX                   TransIdMutex;
+    OSPTAUDIT *Audit;
+    OSPTTXID *Id;
+    OSPTMUTEX ProviderMutex;
+    OSPTSEC *Security;
+    /* 
+     * bit 1 -  Trans Allowed     - 0x01; 
+     *          Trans not allowed - 0x00 
+     */
+    unsigned char Flags;
+    unsigned long TNCustId;
+    unsigned long TNDeviceId;
+    OSPTTRANSID *TreeRoot;
+    OSPTTRANSID Sentinel;
+    OSPTMUTEX TransIdMutex;
 } OSPTPROVIDER;
 
 /* MACROS */
@@ -64,35 +61,32 @@ typedef struct _OSPTPROVIDER
 #define OSPM_GET_PROV_INDEX_FM_PROV_HANDLE(e)  (e);
 #define OSPM_GET_PROV_INDEX_FM_TRANS_HANDLE(e) (e >> OSPC_PROV_SHIFT);
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    /* Function Definitions */
-
     OSPTPROVIDER *OSPPProviderGetContext(OSPTPROVHANDLE, int *);
-    int           OSPPProviderGetNewCollectionItem(OSPTPROVHANDLE *);
-    void          OSPPProviderGetNewTransactionAllowed(OSPTPROVIDER *, unsigned char *);
-    int           OSPPProviderGetTransactionCollection(OSPTPROVIDER *, 
-                      struct _OSPTTRANCOLLECTION **);
-    OSPTTRANSID   **OSPPProviderGetTransIdRoot(OSPTPROVIDER *);
-    OSPTTRANSID   *OSPPProviderGetTransIdSentinel(OSPTPROVIDER *);
-    int           OSPPProviderLockTransIdMutex(OSPTPROVIDER *);
-    int           OSPPProviderUnLockTransIdMutex(OSPTPROVIDER *);
-    void          OSPPProviderSetNewTransactionAllowed(OSPTPROVIDER *, unsigned char);
-    void          OSPPProviderTransactionCollectionDelete(struct _OSPTTRANCOLLECTION **);
-    int           OSPPProviderTransactionCollectionNew(struct _OSPTTRANCOLLECTION **);
-    int           OSPPProviderInitializeStorage(OSPTPROVIDER *);
-
+    int OSPPProviderGetNewCollectionItem(OSPTPROVHANDLE *);
+    void OSPPProviderGetNewTransactionAllowed(OSPTPROVIDER *, unsigned char *);
+    int OSPPProviderGetTransactionCollection(OSPTPROVIDER *, struct _OSPTTRANCOLLECTION **);
+    OSPTTRANSID **OSPPProviderGetTransIdRoot(OSPTPROVIDER *);
+    OSPTTRANSID *OSPPProviderGetTransIdSentinel(OSPTPROVIDER *);
+    int OSPPProviderLockTransIdMutex(OSPTPROVIDER *);
+    int OSPPProviderUnLockTransIdMutex(OSPTPROVIDER *);
+    void OSPPProviderSetNewTransactionAllowed(OSPTPROVIDER *, unsigned char);
+    void OSPPProviderTransactionCollectionDelete(struct _OSPTTRANCOLLECTION **);
+    int OSPPProviderTransactionCollectionNew(struct _OSPTTRANCOLLECTION **);
+    int OSPPProviderInitializeStorage(OSPTPROVIDER *);
     unsigned long OSPPProviderGetTNCustId(OSPTPROVIDER *);
-    void          OSPPProviderSetTNCustId(OSPTPROVIDER *, unsigned long);
+    void OSPPProviderSetTNCustId(OSPTPROVIDER *, unsigned long);
     unsigned long OSPPProviderGetTNDeviceId(OSPTPROVIDER *);
-    void          OSPPProviderSetTNDeviceId(OSPTPROVIDER *, unsigned long);
-    int           OSPPProviderGetSecurity(OSPTPROVIDER *, OSPTSEC **);
+    void OSPPProviderSetTNDeviceId(OSPTPROVIDER *, unsigned long);
+    int OSPPProviderGetSecurity(OSPTPROVIDER *, OSPTSEC **);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPPROVIDER_H */

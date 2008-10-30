@@ -15,15 +15,10 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospossys.h - OS dependent system macros.
  */
+
 #ifndef _OSPOSSYS_H
 #define _OSPOSSYS_H
 
@@ -52,7 +47,7 @@
 
 #define OSPM_MEMSET(p,c,z) (void)memset((void *)p,c,z)
 
-#define OSPM_MEMCMP(p1,p2,z) memcmp(p1,p2,z) 
+#define OSPM_MEMCMP(p1,p2,z) memcmp(p1,p2,z)
 
 #define OSPM_MEMMOVE(p,s,z) memmove(p,s,z)
 
@@ -74,7 +69,7 @@
 #define OSPM_THR_SELF() pthread_self()
 
 #define OSPM_THR_JOIN(t,p) pthread_join(t,p)
-    
+
 #define OSPM_CREATE_THREAD(t,a,f,p,e) { \
     e = pthread_create(&t, a, f, p); \
     OSPM_DBG(e,("%s failed. %s\n", "pthread_create", strerror(errno))); \
@@ -146,8 +141,7 @@
 }
 #endif /* POSIX THREADS */
 
-
-#ifdef  _WIN32 
+#ifdef  _WIN32
 #ifndef _POSIX_THREADS
 /* MS Threads */
 #define OSPM_THR_SELF() GetCurrentThreadID()
@@ -160,7 +154,7 @@
 }
 
 /* currently unused in Win32 Threads */
-#define OSPM_THRATTR_INIT(a,e) a = 0, e = OSPC_ERR_NO_ERROR; 
+#define OSPM_THRATTR_INIT(a,e) a = 0, e = OSPC_ERR_NO_ERROR;
 #define OSPM_THRATTR_DESTROY(a) a = 0;
 #define OSPM_SETDETACHED_STATE(a,e) a = a, e = OSPC_ERR_NO_ERROR;
 
@@ -245,9 +239,9 @@
  * =============================================
  */
 
-/* -----------------------------*/
-/* WIN32 Winsock Macros         */
-/* -----------------------------*/
+/*
+ * WIN32 Winsock Macros
+ */
 #ifdef _WIN32
 
 #define OSPM_INITWINSOCK(e) { \
@@ -358,9 +352,9 @@
 }
 #else
 
-/* -----------------------------*/
-/* UNIX Sockets Macros          */
-/* -----------------------------*/
+/*
+ * UNIX Sockets Macros
+ */
 #define OSPM_INITWINSOCK(e)      { }
 
 #define OSPM_CLEANUPWINSOCK()    { }
@@ -484,14 +478,14 @@
 }
 #endif
 
-/* ----------------------------------*/
-/* Common Winsock/Sockets Functions  */
-/* ----------------------------------*/
-const char* OSPM_INET_NTOA(OSPTIPADDR ip, char* buf, socklen_t len);
+/*
+ * Common Winsock/Sockets Functions
+ */
+const char *OSPM_INET_NTOA(OSPTIPADDR ip, char *buf, socklen_t len);
 
-/* -------------------------------*/
-/* Common Winsock/Sockets Macros  */
-/* -------------------------------*/
+/*
+ * Common Winsock/Sockets Macros
+ */
 
 #define OSPM_DISABLE_NAGLE(s,e) { \
     int flag = 1; \
@@ -583,7 +577,7 @@ const char* OSPM_INET_NTOA(OSPTIPADDR ip, char* buf, socklen_t len);
     flag = _isnan(num); \
     }
 
-#define OSPM_ACCESS 	_access
+#define OSPM_ACCESS _access
 
 #else
 
@@ -603,7 +597,7 @@ const char* OSPM_INET_NTOA(OSPTIPADDR ip, char* buf, socklen_t len);
     flag = isnan(num); \
     }
 
-#define OSPM_ACCESS 	access
+#define OSPM_ACCESS access
 
 #endif
 
@@ -626,6 +620,4 @@ const char* OSPM_INET_NTOA(OSPTIPADDR ip, char* buf, socklen_t len);
 /* 'uses' the argument */
 #define OSPM_ARGUSED(x) (x=x)
 
-
-#endif
-
+#endif /* _OSPOSSYS_H */

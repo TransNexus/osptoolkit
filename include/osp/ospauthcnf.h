@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospauthcnf.h - OSP authorisation confirmation objects
  */
@@ -33,28 +27,21 @@
 #include "osp/ospmsg.h"
 #include "osp/ospstatus.h"
 
-typedef struct
-{
-    OSPTTIME          ospmAuthCnfTimestamp;
-    OSPTSTATUS       *ospmAuthCnfStatus;
-    OSPTTIME          ospmAuthCnfValidAfter;
-    OSPTTIME          ospmAuthCnfValidUntil;
-}
-OSPTAUTHCNF;
+typedef struct {
+    OSPTTIME ospmAuthCnfTimestamp;
+    OSPTSTATUS *ospmAuthCnfStatus;
+    OSPTTIME ospmAuthCnfValidAfter;
+    OSPTTIME ospmAuthCnfValidUntil;
+} OSPTAUTHCNF;
 
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    void         OSPPAuthCnfDelete(OSPTAUTHCNF **);
-
-    unsigned     OSPPAuthCnfHasStatus(OSPTAUTHCNF *ospvAuthCnf);
+    void OSPPAuthCnfDelete(OSPTAUTHCNF **);
+    unsigned OSPPAuthCnfHasStatus(OSPTAUTHCNF *ospvAuthCnf);
 
 #ifdef __cplusplus
 }

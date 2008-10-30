@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospmsgpart.h - Structures and prototypes for generic OSP message parts
  */
@@ -40,8 +34,6 @@
 
 typedef int OSPTMSGPART;
 
-#define OSPC_MSGPARTUNKNOWN ((OSPTMSGPART)0)   /* rsv'd for unknown part */
+#define OSPC_MSGPARTUNKNOWN ((OSPTMSGPART)0)    /* rsv'd for unknown part */
 
-
-#endif
-
+#endif /* _OSPMSGPART_H */

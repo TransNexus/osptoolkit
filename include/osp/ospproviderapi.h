@@ -15,24 +15,20 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospproviderapi.h - Prototypes for API provider functions.
  */
-#ifndef _OSP_PROVIDERAPI_H
-#define _OSP_PROVIDERAPI_H
+
+#ifndef _OSPPROVIDERAPI_H
+#define _OSPPROVIDERAPI_H
 
 #include "osp/osp.h"
 #include "osp/osppkcs1.h"
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
     int OSPPProviderDelete(OSPTPROVHANDLE, int);
@@ -48,10 +44,8 @@ extern "C"
     int OSPPProviderGetNumberOfServicePoints(OSPTPROVHANDLE, unsigned *);
     int OSPPProviderGetServicePoints(OSPTPROVHANDLE, unsigned, unsigned, char *[]);
     int OSPPProviderGetSSLLifetime(OSPTPROVHANDLE, unsigned *);
-    int OSPPProviderNew(unsigned, const char *[], unsigned long [],const char *, const OSPTPRIVATEKEY *,
-            const OSPTCERT *, unsigned, const OSPTCERT *[], unsigned, unsigned, unsigned, 
-            unsigned, unsigned, unsigned, unsigned, const char *, const char *, 
-            OSPTPROVHANDLE *);
+    int OSPPProviderNew(unsigned, const char *[], unsigned long[], const char *, const OSPTPRIVATEKEY *, const OSPTCERT *, unsigned,
+            const OSPTCERT *[], unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, const char *, const char *, OSPTPROVHANDLE *);
     int OSPPProviderSetAuthorityCertificates(OSPTPROVHANDLE, unsigned, const OSPTCERT *[]);
     int OSPPProviderSetHTTPMaxConnections(OSPTPROVHANDLE, unsigned);
     int OSPPProviderSetHTTPPersistence(OSPTPROVHANDLE, unsigned);
@@ -60,12 +54,13 @@ extern "C"
     int OSPPProviderSetHTTPTimeout(OSPTPROVHANDLE, unsigned);
     int OSPPProviderSetLocalKeys(OSPTPROVHANDLE, const OSPTPRIVATEKEY *, const void *);
     int OSPPProviderSetLocalValidation(OSPTPROVHANDLE, unsigned);
-    int OSPPProviderSetServicePoints(OSPTPROVHANDLE, unsigned,unsigned long [], const char *[]);
-	int OSPPProviderSetCapabilitiesURLs(OSPTPROVHANDLE, unsigned,unsigned long [], const char *[]);
+    int OSPPProviderSetServicePoints(OSPTPROVHANDLE, unsigned, unsigned long[], const char *[]);
+    int OSPPProviderSetCapabilitiesURLs(OSPTPROVHANDLE, unsigned, unsigned long[], const char *[]);
     int OSPPProviderSetSSLLifetime(OSPTPROVHANDLE, unsigned);
-    int OSPPProviderSetSPMessageCount(void *,unsigned long[]);
+    int OSPPProviderSetSPMessageCount(void *, unsigned long[]);
 
 #ifdef __cplusplus
 }
 #endif
-#endif
+
+#endif /* _OSPPROVIDERAPI_H */

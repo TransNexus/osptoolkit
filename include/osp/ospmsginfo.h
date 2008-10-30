@@ -15,33 +15,26 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 #ifndef _OSPMSGINFO_H
 #define _OSPMSGINFO_H
 
 #include "osp/osp.h"
 
-/*-------------------------------------------*/
-/* message info typedef                      */
-/*-------------------------------------------*/ 
-typedef struct _OSPTMSGINFO 
-{
-    OSPTLISTLINK        Link;
-    unsigned char       *RequestMsg;
-    unsigned char       *ResponseMsg;
-    unsigned char       *ContentType;
-    unsigned            RequestSz;
-    unsigned            ResponseSz;
-    unsigned            ContentSz;
-    OSPTMUTEX           Mutex;
-    OSPTCONDVAR         CondVar;
-    int                 ErrorCode;
-    unsigned char       Flags;
+/*
+ * message info typedef
+ */
+typedef struct _OSPTMSGINFO {
+    OSPTLISTLINK Link;
+    unsigned char *RequestMsg;
+    unsigned char *ResponseMsg;
+    unsigned char *ContentType;
+    unsigned RequestSz;
+    unsigned ResponseSz;
+    unsigned ContentSz;
+    OSPTMUTEX Mutex;
+    OSPTCONDVAR CondVar;
+    int ErrorCode;
+    unsigned char Flags;
     /*
      * By default the flag is set to False (memset to 0s in OSPPMsgInfoNew)
      * and does not alter current behavior.  However, when the flag is set to True
@@ -52,26 +45,27 @@ typedef struct _OSPTMSGINFO
      * by calling the OSPPMsgInfoWaitForMsg function.
      * If IsNonBlocking is set to TRUE, then we should never wait for a response because
      * in that case, OSPPMsgInfoProcessResponse function would delete the structure. 
-     */ 
-    int                 IsNonBlocking;
-    int                 HasBeenProcessed;
+     */
+    int IsNonBlocking;
+    int HasBeenProcessed;
 } OSPTMSGINFO;
 
 #define OSPC_MSGINFO_AUDIT_TYPE 0x01    /* bit 1 - Message type flag */
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    int  OSPPMsgInfoNew(OSPTMSGINFO **);
+    int OSPPMsgInfoNew(OSPTMSGINFO **);
     void OSPPMsgInfoDelete(OSPTMSGINFO **);
-    int  OSPPMsgInfoWaitForMsg(OSPTMSGINFO *);
-    int  OSPPMsgInfoProcessResponse(OSPTMSGINFO *);
+    int OSPPMsgInfoWaitForMsg(OSPTMSGINFO *);
+    int OSPPMsgInfoProcessResponse(OSPTMSGINFO *);
     void OSPPMsgInfoAssignRequestMsg(OSPTMSGINFO *, unsigned char *, unsigned);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPMSGINFO_H */

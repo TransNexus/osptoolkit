@@ -15,24 +15,16 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospmsgdesc.h - Structures and prototypes for generic XML message
  *                descriptors.
  */
 
-#ifndef OSPMSGDESC_H
-#define OSPMSGDESC_H
-
+#ifndef _OSPMSGDESC_H
+#define _OSPMSGDESC_H
 
 #include "osp/osp.h"
 #include "osp/ospmsgpart.h"
-
 
 /*
  * The OSPPMsgDescGetName includes two different implementations: the
@@ -50,23 +42,14 @@
  * or an element) with a name.
  */
 
-typedef struct
-{
-    OSPTMSGPART  ospmMsgDescPart;
-    const char  *ospmMsgDescName;
-}
-OSPTMSGDESC;
+typedef struct {
+    OSPTMSGPART ospmMsgDescPart;
+    const char *ospmMsgDescName;
+} OSPTMSGDESC;
 
+/* Function Prototypes */
 
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+OSPTMSGPART OSPPMsgDescGetPart(const char *, const OSPTMSGDESC *, unsigned);
+const char *OSPPMsgDescGetName(OSPTMSGPART, const OSPTMSGDESC *, unsigned);
 
-
-OSPTMSGPART  OSPPMsgDescGetPart(const char *, const OSPTMSGDESC *, unsigned);
-
-const char  *OSPPMsgDescGetName(OSPTMSGPART,  const OSPTMSGDESC *, unsigned);
-
-#endif /* OSPMSGDESC_H */
-
+#endif /* _OSPMSGDESC_H */

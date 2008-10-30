@@ -46,7 +46,7 @@ typedef enum {
 typedef enum {
     OSPC_UNDEFINED_ROLE = 0,    /* Not a known role */
     OSPC_DESTINATION,
-    OSPC_SOURCE,   
+    OSPC_SOURCE,
     OSPC_OTHER,
     OSPC_RADSRCSTART,
     OSPC_RADDSTSTART,
@@ -61,49 +61,32 @@ typedef enum {
 #define OSPC_URLSIZE        512 /* max characters in URL */
 #define OSPC_ROLESTRSZ      12  /* max characters in role string */
 
-/**/
-/*
- *-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*
- */
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    unsigned OSPPMsgBinFromElement(OSPTXMLELEM*, unsigned*, unsigned char**);
-    unsigned OSPPMsgBinToElement(unsigned, unsigned char*, const unsigned char*, OSPTXMLELEM**, OSPTBOOL);
-
-    unsigned OSPPMsgNumFromElement(OSPTXMLELEM*, unsigned long*);
-    unsigned OSPPMsgNumToElement(unsigned long, const unsigned char*, OSPTXMLELEM**);
-
-    int OSPPMsgFloatFromElement(OSPTXMLELEM*, float*);
-    int OSPPMsgFloatToElement(float, const unsigned char*, OSPTXMLELEM**);
-
-    unsigned OSPPMsgCodeFromElement(OSPTXMLELEM*, unsigned long*);
-    unsigned OSPPMsgCodeToElement(unsigned long, const unsigned char*, OSPTXMLELEM**);
-
-    unsigned OSPPMsgTXToElement(OSPTTRXID, const unsigned char*, OSPTXMLELEM**);
-    unsigned OSPPMsgTXFromElement(OSPTXMLELEM*, OSPTTRXID*);
-
-    unsigned OSPPMsgTimeToElement(OSPTTIME, const unsigned char*, OSPTXMLELEM**);
-    unsigned OSPPMsgElemIsCritical(OSPTXMLELEM*);
-
-    unsigned OSPPMsgRoleToElement(unsigned, const unsigned char*, OSPTXMLELEM**);
-
-    int OSPPOSRoleValToString(unsigned, char* ospvRolestr);
-
-    int OSPPBase64DecodeWrap(const unsigned char*, unsigned*, unsigned char*);
-
-    unsigned OSPPMsgTimeFromElement(OSPTXMLELEM*, OSPTTIME*);
-
-    unsigned OSPPMsgBinFromASCIIElement(unsigned char*,unsigned*, unsigned char**);
+    unsigned OSPPMsgBinFromElement(OSPTXMLELEM *, unsigned *, unsigned char **);
+    unsigned OSPPMsgBinToElement(unsigned, unsigned char *, const unsigned char *, OSPTXMLELEM **, OSPTBOOL);
+    unsigned OSPPMsgNumFromElement(OSPTXMLELEM *, unsigned long *);
+    unsigned OSPPMsgNumToElement(unsigned long, const unsigned char *, OSPTXMLELEM **);
+    int OSPPMsgFloatFromElement(OSPTXMLELEM *, float *);
+    int OSPPMsgFloatToElement(float, const unsigned char *, OSPTXMLELEM **);
+    unsigned OSPPMsgCodeFromElement(OSPTXMLELEM *, unsigned long *);
+    unsigned OSPPMsgCodeToElement(unsigned long, const unsigned char *, OSPTXMLELEM **);
+    unsigned OSPPMsgTXToElement(OSPTTRXID, const unsigned char *, OSPTXMLELEM **);
+    unsigned OSPPMsgTXFromElement(OSPTXMLELEM *, OSPTTRXID *);
+    unsigned OSPPMsgTimeToElement(OSPTTIME, const unsigned char *, OSPTXMLELEM **);
+    unsigned OSPPMsgElemIsCritical(OSPTXMLELEM *);
+    unsigned OSPPMsgRoleToElement(unsigned, const unsigned char *, OSPTXMLELEM **);
+    int OSPPOSRoleValToString(unsigned, char *ospvRolestr);
+    int OSPPBase64DecodeWrap(const unsigned char *, unsigned *, unsigned char *);
+    unsigned OSPPMsgTimeFromElement(OSPTXMLELEM *, OSPTTIME *);
+    unsigned OSPPMsgBinFromASCIIElement(unsigned char *, unsigned *, unsigned char **);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
-
+#endif /* _OSPMSG_H */

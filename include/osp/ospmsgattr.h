@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospmsgattr.h - Definitions for OSP message attributes.
  */
@@ -33,8 +27,7 @@
 
 /* attributes defined by the Open Settlement Protocol */
 
-typedef enum
-{
+typedef enum {
     ospeAttrUnknown = OSPC_MSGPARTUNKNOWN,
     ospeAttrComponentId,
     ospeAttrCritical,
@@ -43,26 +36,18 @@ typedef enum
     ospeAttrType,
     ospeAttrVersion,
     ospeAttrRandom
-}
-OSPTMSGATTRPART;
+} OSPTMSGATTRPART;
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * externally declared global variables
- *-----------------------------------------------------------------------*/
+ */
 
 extern const OSPTMSGDESC OSPVAttrDescs[];
-extern const unsigned    OSPVNumAttrDesc;
+extern const unsigned OSPVNumAttrDesc;
 
-
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+/* Function Prototypes */
 
 const char *OSPPMsgGetAttrName(OSPTMSGATTRPART);
 OSPTMSGATTRPART OSPPMsgGetAttrPart(const char *);
 
-
 #endif /* _OSPMSGATTR_H */
-

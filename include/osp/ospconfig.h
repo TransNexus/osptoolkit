@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospconfig.h - OSP configuration items
  */
@@ -30,18 +24,18 @@
 
 #include "osp/osp.h"
 
-#define OSPC_AUDIT_MAX_SPACE            1024 * 10   /* 10 K */   
-#define OSPC_AUDIT_MAX_TIME             60 * 60     /* 1 hour in seconds */      
+#define OSPC_AUDIT_MAX_SPACE            1024 * 10       /* 10 K */
+#define OSPC_AUDIT_MAX_TIME             60 * 60         /* 1 hour in seconds */
 #define OSPC_AUDIT_MAX_MESSAGES         100
 #define OSPC_AUDIT_RETRY_DELAY          3
 #define OSPC_AUDIT_RETRY_LIMIT          1
 
-#define OSPC_DEFAULT_SSLLIFETIME        4 * 60 * 60 /* 4 hours in seconds */
-#define OSPC_DEFAULT_HTTPMAXCONNECTIONS 1           /* at least one */
-#define OSPC_DEFAULT_HTTPPERSISTENCE    60          /* seconds */
-#define OSPC_DEFAULT_HTTPRETRYDELAY     2           /* seconds */
-#define OSPC_DEFAULT_HTTPTIMEOUT        3 * 1000    /* 3 seconds in milliseconds */
-#define OSPC_DEFAULT_PROBE_CONNECT      1 * 1000    /* 1 second in milliseconds */
+#define OSPC_DEFAULT_SSLLIFETIME        4 * 60 * 60     /* 4 hours in seconds */
+#define OSPC_DEFAULT_HTTPMAXCONNECTIONS 1               /* at least one */
+#define OSPC_DEFAULT_HTTPPERSISTENCE    60              /* seconds */
+#define OSPC_DEFAULT_HTTPRETRYDELAY     2               /* seconds */
+#define OSPC_DEFAULT_HTTPTIMEOUT        3 * 1000        /* 3 seconds in milliseconds */
+#define OSPC_DEFAULT_PROBE_CONNECT      1 * 1000        /* 1 second in milliseconds */
 #define OSPC_DEFAULT_BLOCKING_FLAG      OSPC_FALSE
-#endif
 
+#endif /* _OSPCONFIG_H */

@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  *  ospauthreq.h - OSP authorisation request objects
  */
@@ -35,74 +29,58 @@
 #include "osp/osptoken.h"
 #include "osp/ospaltinfo.h"
 
+typedef struct {
+    OSPTTIME ospmAuthReqTimestamp;
+    unsigned char *ospmAuthReqMessageId;
+    unsigned char *ospmAuthReqComponentId;
+    OSPTLIST ospmAuthReqCallId;
+    unsigned char ospmAuthReqSourceNumber[OSPC_E164NUMSIZE];
+    unsigned char ospmAuthReqDestNumber[OSPC_E164NUMSIZE];
+    OSPTLIST ospmAuthReqSourceAlternate;
+    OSPTLIST ospmAuthReqDestinationAlternate;
+    unsigned ospmAuthReqMaxDest;
+    unsigned long ospmAuthReqTNCustId;
+    unsigned long ospmAuthReqTNDeviceId;
+    OSPTLIST ospmAuthReqDeviceInfo;
+} OSPTAUTHREQ;
 
-typedef struct
-{
-    OSPTTIME          ospmAuthReqTimestamp;
-    unsigned char    *ospmAuthReqMessageId;
-    unsigned char    *ospmAuthReqComponentId;
-    OSPTLIST          ospmAuthReqCallId;
-    unsigned char     ospmAuthReqSourceNumber[OSPC_E164NUMSIZE];
-    unsigned char     ospmAuthReqDestNumber[OSPC_E164NUMSIZE];
-    OSPTLIST          ospmAuthReqSourceAlternate;
-    OSPTLIST          ospmAuthReqDestinationAlternate;
-    unsigned          ospmAuthReqMaxDest;
-    unsigned long     ospmAuthReqTNCustId;
-    unsigned long     ospmAuthReqTNDeviceId;
-    OSPTLIST          ospmAuthReqDeviceInfo;
-}
-OSPTAUTHREQ;
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
-    /**/
-    /*-----------------------------------------------------------------------*
-     *  function prototypes
-     *-----------------------------------------------------------------------*/
 
-    OSPTAUTHREQ   *OSPPAuthReqNew(void);
-    void           OSPPAuthReqDelete(OSPTAUTHREQ **);
-    int            OSPPAuthReqToElement(OSPTAUTHREQ *, OSPTXMLELEM **, void *);
-    unsigned       OSPPAuthReqHasMessageId(OSPTAUTHREQ *);
-
-    unsigned       OSPPAuthReqHasTimestamp(OSPTAUTHREQ *);
-    void           OSPPAuthReqSetTimestamp(OSPTAUTHREQ *, OSPTTIME);
-    OSPTTIME       OSPPAuthReqGetTimestamp(OSPTAUTHREQ *);
-
-    unsigned       OSPPAuthReqHasComponentId(OSPTAUTHREQ *);
-
-    unsigned       OSPPAuthReqHasCallId(OSPTAUTHREQ *);
-    OSPTCALLID    *OSPPAuthReqFirstCallId(OSPTAUTHREQ *);
-    OSPTCALLID    *OSPPAuthReqNextCallId(OSPTAUTHREQ *, OSPTCALLID *);
-
-    unsigned       OSPPAuthReqHasSourceNumber(OSPTAUTHREQ *);
-    void           OSPPAuthReqSetSourceNumber(OSPTAUTHREQ *, const unsigned char *);
+    OSPTAUTHREQ *OSPPAuthReqNew(void);
+    void OSPPAuthReqDelete(OSPTAUTHREQ **);
+    int OSPPAuthReqToElement(OSPTAUTHREQ *, OSPTXMLELEM **, void *);
+    unsigned OSPPAuthReqHasMessageId(OSPTAUTHREQ *);
+    unsigned OSPPAuthReqHasTimestamp(OSPTAUTHREQ *);
+    void OSPPAuthReqSetTimestamp(OSPTAUTHREQ *, OSPTTIME);
+    OSPTTIME OSPPAuthReqGetTimestamp(OSPTAUTHREQ *);
+    unsigned OSPPAuthReqHasComponentId(OSPTAUTHREQ *);
+    unsigned OSPPAuthReqHasCallId(OSPTAUTHREQ *);
+    OSPTCALLID *OSPPAuthReqFirstCallId(OSPTAUTHREQ *);
+    OSPTCALLID *OSPPAuthReqNextCallId(OSPTAUTHREQ *, OSPTCALLID *);
+    unsigned OSPPAuthReqHasSourceNumber(OSPTAUTHREQ *);
+    void OSPPAuthReqSetSourceNumber(OSPTAUTHREQ *, const unsigned char *);
     unsigned char *OSPPAuthReqGetSourceNumber(OSPTAUTHREQ *);
-
-    unsigned       OSPPAuthReqHasSourceAlt(OSPTAUTHREQ *);
-    OSPTALTINFO   *OSPPAuthReqFirstSourceAlt(OSPTAUTHREQ *);
-    OSPTALTINFO   *OSPPAuthReqNextSourceAlt(OSPTAUTHREQ *, OSPTALTINFO  *);
-
-    unsigned       OSPPAuthReqHasDestNumber(OSPTAUTHREQ *);
-    void           OSPPAuthReqSetDestNumber(OSPTAUTHREQ *, const unsigned char *);
+    unsigned OSPPAuthReqHasSourceAlt(OSPTAUTHREQ *);
+    OSPTALTINFO *OSPPAuthReqFirstSourceAlt(OSPTAUTHREQ *);
+    OSPTALTINFO *OSPPAuthReqNextSourceAlt(OSPTAUTHREQ *, OSPTALTINFO *);
+    unsigned OSPPAuthReqHasDestNumber(OSPTAUTHREQ *);
+    void OSPPAuthReqSetDestNumber(OSPTAUTHREQ *, const unsigned char *);
     unsigned char *OSPPAuthReqGetDestNumber(OSPTAUTHREQ *);
-
-    unsigned       OSPPAuthReqHasDestinationAlt(OSPTAUTHREQ *);
-    OSPTALTINFO   *OSPPAuthReqFirstDestinationAlt(OSPTAUTHREQ *);
-    OSPTALTINFO   *OSPPAuthReqNextDestinationAlt(OSPTAUTHREQ *, OSPTALTINFO  *);
-
-    void           OSPPAuthReqSetMaxDest(OSPTAUTHREQ *, unsigned);
-    unsigned       OSPPAuthReqGetMaxDest(OSPTAUTHREQ *);
-
-    unsigned       OSPPAuthReqHasTNCustId(OSPTAUTHREQ *);
-    void           OSPPAuthReqSetTNCustId(OSPTAUTHREQ *, unsigned long);
-    unsigned long  OSPPAuthReqGetTNCustId(OSPTAUTHREQ *);
-
-    unsigned       OSPPAuthReqHasTNDeviceId(OSPTAUTHREQ *ospvAuthReq);
-    void           OSPPAuthReqSetTNDeviceId(OSPTAUTHREQ *, unsigned long);
-    unsigned long  OSPPAuthReqGetTNDeviceId(OSPTAUTHREQ *);
+    unsigned OSPPAuthReqHasDestinationAlt(OSPTAUTHREQ *);
+    OSPTALTINFO *OSPPAuthReqFirstDestinationAlt(OSPTAUTHREQ *);
+    OSPTALTINFO *OSPPAuthReqNextDestinationAlt(OSPTAUTHREQ *, OSPTALTINFO *);
+    void OSPPAuthReqSetMaxDest(OSPTAUTHREQ *, unsigned);
+    unsigned OSPPAuthReqGetMaxDest(OSPTAUTHREQ *);
+    unsigned OSPPAuthReqHasTNCustId(OSPTAUTHREQ *);
+    void OSPPAuthReqSetTNCustId(OSPTAUTHREQ *, unsigned long);
+    unsigned long OSPPAuthReqGetTNCustId(OSPTAUTHREQ *);
+    unsigned OSPPAuthReqHasTNDeviceId(OSPTAUTHREQ *ospvAuthReq);
+    void OSPPAuthReqSetTNDeviceId(OSPTAUTHREQ *, unsigned long);
+    unsigned long OSPPAuthReqGetTNDeviceId(OSPTAUTHREQ *);
 
 #ifdef __cplusplus
 }

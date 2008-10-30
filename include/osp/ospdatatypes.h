@@ -15,18 +15,12 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospdatatypes.h - Structures and defines for OSP api.
  */
 
-#ifndef _OSP_DATATYPES_H
-#define _OSP_DATATYPES_H
+#ifndef _OSPDATATYPES_H
+#define _OSPDATATYPES_H
 
 #include "osp/osposincl.h"
 #include "osp/osplist.h"
@@ -34,71 +28,70 @@
 
 /* NOTE: ospcallid.h is included at the end of this file. */
 
-/*-------------------------------------------*/
-/* common data type typedefs                 */
-/*-------------------------------------------*/               
+/*
+ * common data type typedefs
+ */
 #ifndef _WIN32
 
 #ifdef __alpha__
-typedef unsigned long       OSPTUINT64;
+typedef unsigned long OSPTUINT64;
 #else
-typedef unsigned long long  OSPTUINT64;
-#endif /* __alpha__*/
+typedef unsigned long long OSPTUINT64;
+#endif /* __alpha__ */
 
 #ifdef _POSIX_THREADS
 /* POSIX thread typedefs */
-typedef pthread_t           OSPTTHREADID;
-typedef pthread_attr_t      OSPTTHRATTR;
-typedef pthread_cond_t      OSPTCONDVAR;
-typedef pthread_mutex_t     OSPTMUTEX;
-typedef void *              OSPTTHREADRETURN;
-#define OSPTTHREADRETURN_NULL()	return (OSPTTHREADRETURN)NULL
+typedef pthread_t OSPTTHREADID;
+typedef pthread_attr_t OSPTTHRATTR;
+typedef pthread_cond_t OSPTCONDVAR;
+typedef pthread_mutex_t OSPTMUTEX;
+typedef void *OSPTTHREADRETURN;
+#define OSPTTHREADRETURN_NULL() return (OSPTTHREADRETURN)NULL
 #else
 /* SVR4 thread typedefs */
-typedef thread_t            OSPTTHREADID;
-typedef long                OSPTTHRATTR;
-typedef cond_t              OSPTCONDVAR;
-typedef mutex_t             OSPTMUTEX;
-typedef void *              OSPTTHREADRETURN;
-#define OSPTTHREADRETURN_NULL()	return (OSPTTHREADRETURN)NULL
+typedef thread_t OSPTTHREADID;
+typedef long OSPTTHRATTR;
+typedef cond_t OSPTCONDVAR;
+typedef mutex_t OSPTMUTEX;
+typedef void *OSPTTHREADRETURN;
+#define OSPTTHREADRETURN_NULL() return (OSPTTHREADRETURN)NULL
 #endif /* _POSIX_THREADS */
 
-typedef ssize_t             OSPTSSIZE_T;
-typedef int                 OSPTSOCKET;
+typedef ssize_t OSPTSSIZE_T;
+typedef int OSPTSOCKET;
 
 #else /* _WIN32 */
 
 #ifdef _POSIX_THREADS
 /* POSIX thread typedefs */
-typedef pthread_t           OSPTTHREADID;
-typedef pthread_attr_t      OSPTTHRATTR;
-typedef pthread_cond_t      OSPTCONDVAR;
-typedef pthread_mutex_t     OSPTMUTEX;
-typedef void *              OSPTTHREADRETURN;
-#define OSPTTHREADRETURN_NULL()	return (OSPTTHREADRETURN)NULL
+typedef pthread_t OSPTTHREADID;
+typedef pthread_attr_t OSPTTHRATTR;
+typedef pthread_cond_t OSPTCONDVAR;
+typedef pthread_mutex_t OSPTMUTEX;
+typedef void *OSPTTHREADRETURN;
+#define OSPTTHREADRETURN_NULL() return (OSPTTHREADRETURN)NULL
 #else
 /* WIN32 thread typedefs */
-typedef unsigned long       OSPTTHREADID;
-typedef unsigned            OSPTTHRATTR;
-typedef struct
-{
-    HANDLE     Semaphore;
-    int        SemaCount;
-    unsigned   WaitLimit;
+typedef unsigned long OSPTTHREADID;
+typedef unsigned OSPTTHRATTR;
+typedef struct {
+    HANDLE Semaphore;
+    int SemaCount;
+    unsigned WaitLimit;
 } OSPTCONDVAR;
-typedef HANDLE              OSPTMUTEX;
-typedef void                OSPTTHREADRETURN;
-#define OSPTTHREADRETURN_NULL()	return
+typedef HANDLE OSPTMUTEX;
+typedef void OSPTTHREADRETURN;
+#define OSPTTHREADRETURN_NULL() return
 #endif /* _POSIX_THREADS */
 
-typedef unsigned            OSPTSSIZE_T;
-typedef unsigned __int64    OSPTUINT64;
-typedef SOCKET              OSPTSOCKET;
+typedef unsigned OSPTSSIZE_T;
+typedef unsigned __int64 OSPTUINT64;
+typedef SOCKET OSPTSOCKET;
 
 #endif /* _WIN32 */
 
-typedef long        OSPTIPADDR;
-typedef unsigned    OSPTBOOL;
+typedef long OSPTIPADDR;
+typedef unsigned OSPTBOOL;
 
 #define OSPC_OSNULL     NULL
 #define OSPTTIME        time_t
@@ -110,110 +103,99 @@ typedef int OSPTPROVHANDLE;
 typedef int OSPTTRANHANDLE;
 
 #ifndef tr_min
-#define tr_min(a,b) ((a) < (b) ? (a) : (b)) 
+#define tr_min(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
-/*-------------------------------------------*/
-/* Transaction Id typedef                    */
-/*-------------------------------------------*/ 
+/*
+ * Transaction Id typedef
+ */
 typedef OSPTUINT64 OSPTTRXID;
 
-/*-------------------------------------------*/
-/* transaction id tracking typedef           */
-/*-------------------------------------------*/ 
-typedef struct _OSPTTXID
-{
-    OSPTUINT64          TransId;
+/*
+ * transaction id tracking typedef
+ */
+typedef struct _OSPTTXID {
+    OSPTUINT64 TransId;
     struct _OSPTIDTRACK *Next;
 } OSPTTXID;
 
-/*-------------------------------------------*/
-/* call delay typedef                        */
-/*-------------------------------------------*/ 
-typedef struct _OSPTDELAY
-{
-    unsigned    HasValue;
-    unsigned    NumberOfSamples;
-    unsigned    Minimum;
-    unsigned    Mean;
-    float       Variance;
-    double      SumOfSampSquares;
+/*
+ * call delay typedef
+ */
+typedef struct _OSPTDELAY {
+    unsigned HasValue;
+    unsigned NumberOfSamples;
+    unsigned Minimum;
+    unsigned Mean;
+    float Variance;
+    double SumOfSampSquares;
 } OSPTDELAY;
 
-/*-------------------------------------------*/
-/* collection index typedef                  */
-/*-------------------------------------------*/ 
-typedef struct  _OSPTCOLLECTIONINDEX
-{
+/*
+ * collection index typedef
+ */
+typedef struct _OSPTCOLLECTIONINDEX {
     int Index;
 } OSPTCOLLECTIONINDEX;
 
-
-/*-------------------------------------------*/
-/* Security - Private Key                    */
-/*-------------------------------------------*/
-typedef struct _OSPTPRIVATEKEY
-{
+/*
+ * Security - Private Key
+ */
+typedef struct _OSPTPRIVATEKEY {
     unsigned char *PrivateKeyData;
     unsigned PrivateKeyLength;
 } OSPTPRIVATEKEY;
 
-
-/*-------------------------------------------*/
-/* Security - Cert                           */
-/*-------------------------------------------*/
-typedef struct _OSPTCERT
-{
+/*
+ * Security - Cert
+ */
+typedef struct _OSPTCERT {
     unsigned char *CertData;
     unsigned CertDataLength;
 } OSPTCERT;
 
-/*-------------------------------------------*/
-/* Misc Lock Modes                           */
-/*-------------------------------------------*/
-typedef enum _OSPELOCKMODE
-{
+/*
+ * Misc Lock Modes
+ */
+typedef enum _OSPELOCKMODE {
     OSPE_LOCK_WRITE,
     OSPE_LOCK_READ,
     OSPE_LOCK_TRY
 } OSPELOCKMODE;
 
-/*-------------------------------------------*/
-/* Enumerated Data Types for Auditing        */
-/*-------------------------------------------*/
+/*
+ * Enumerated Data Types for Auditing
+ */
 typedef enum {
-    OSPC_AUDIT_LOWER_BOUND=10,
+    OSPC_AUDIT_LOWER_BOUND = 10,
     OSPC_AUDIT_INIT,
     OSPC_AUDIT_FLUSH_BUFFER,
     OSPC_AUDIT_OK,
     OSPC_AUDIT_UPPER_BOUND
 } OSPE_AUDIT_STATE;
 
-#define OSPC_CURRENCYSIZE 5 /* We support only 3 digit Currency codes */
-#define OSPC_CONFIDSIZE 128 /* Same as Call Id Size */
-#define OSPC_UNITSIZE 20
+#define OSPC_CURRENCYSIZE   5       /* We support only 3 digit Currency codes */
+#define OSPC_CONFIDSIZE     128     /* Same as Call Id Size */
+#define OSPC_UNITSIZE       20
 
-typedef enum
-{
-    OSPC_E164=0,
+typedef enum {
+    OSPC_E164 = 0,
     OSPC_SIP,
     OSPC_URL
-}OSPE_NUMBERING_FORMAT;
+} OSPE_NUMBERING_FORMAT;
 
-typedef enum
-{
-    OSPC_VOICE=0,
+typedef enum {
+    OSPC_VOICE = 0,
     OSPC_DATA
-}OSPE_SERVICE_TYPE;
+} OSPE_SERVICE_TYPE;
 
-typedef struct
-{
+typedef struct {
     float amount;
     unsigned increment;
     unsigned char unit[OSPC_UNITSIZE];
-    unsigned char currency[OSPC_CURRENCYSIZE]; 
-}OSPT_PRICING_INFO;
+    unsigned char currency[OSPC_CURRENCYSIZE];
+} OSPT_PRICING_INFO;
 
 #include "ospcallid.h"
 
-#endif
+#endif /* _OSPDATATYPES_H */

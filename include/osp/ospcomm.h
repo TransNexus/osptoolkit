@@ -15,17 +15,12 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospcomm.h - Constants and prototypes for Comm object.
  */
-#ifndef _OSP_COMM_H
-#define _OSP_COMM_H
+
+#ifndef _OSPCOMM_H
+#define _OSPCOMM_H
 
 #include "osp/osp.h"
 #include "osp/ospmsgque.h"
@@ -52,96 +47,96 @@
 
 #define OSPM_COMM_SECURED_IO(sp) (sp->Flags & OSPC_COMM_SVCPT_SECURITY_BIT)
 
-/*-------------------------------------------*/
-/* service point typedef                     */
-/*-------------------------------------------*/ 
-typedef struct _OSPTSVCPT
-{
-    OSPTLISTLINK       Link;
-    OSPTIPADDR         IpAddr;  /* network byte order */
-    time_t             DegradedTime;
-    unsigned           Index;
-    unsigned short     Port;    /* network byte order */
-    unsigned char      Flags;   /* bit 1: 0 - http      1 - https    */
-                                /* bit 2: 0 - ok        1 - degraded */
-    char              *HostName;
-    char              *URI;
-    unsigned long      MaxMsgAllowed;
+/*
+ * service point typedef
+ */
+typedef struct _OSPTSVCPT {
+    OSPTLISTLINK Link;
+    OSPTIPADDR IpAddr;      /* network byte order */
+    time_t DegradedTime;
+    unsigned Index;
+    unsigned short Port;    /* network byte order */
+    /* bit 1: 0 - http      1 - https    */
+    /* bit 2: 0 - ok        1 - degraded */
+    unsigned char Flags;    
+    char *HostName;
+    char *URI;
+    unsigned long MaxMsgAllowed;
 } OSPTSVCPT;
 
-/*-------------------------------------------*/
-/* communication manager typedef             */
-/*-------------------------------------------*/ 
-typedef struct _OSPTCOMM
-{
-    OSPTMUTEX           Mutex; 
-    OSPTTHREADID        ThreadId;
-    unsigned char       Flags;  /* bit 1: 0 - run       1 - commshutdown */
-                                /* bit 2: 0 - run       1 - http shutdown */
-                                /* bit 3: 0 - audit off 1- audit on */
-    OSPTMSGQUEUE        *MsgQueue;
-    unsigned            NumberOfServicePoints;
-    unsigned            HttpMaxConnections;
-    unsigned            HttpPersistence;
-    unsigned            HttpRetryDelay;
-    unsigned            HttpRetryLimit;
-    unsigned            HttpTimeout;
-    OSPTUINT64          ConnSelectionTimeout;
-    OSPTSVCPT           *ServicePointList;
-    OSPTSVCPT           *AuditURL;
-    unsigned            HttpConnCount;
-    struct _OSPTHTTP    *HttpConnList;
-    int                 ShutdownTimeLimit;            
-    OSPTSEC             *Security;
-    int                 RoundRobinIndex;
-    OSPTMUTEX           HttpSelectMutex;
-    OSPTCONDVAR         HttpSelCondVar;
+/*
+ * communication manager typedef
+ */
+typedef struct _OSPTCOMM {
+    OSPTMUTEX Mutex;
+    OSPTTHREADID ThreadId;
+    /* bit 1: 0 - run       1 - commshutdown */
+    /* bit 2: 0 - run       1 - http shutdown */
+    /* bit 3: 0 - audit off 1- audit on */
+    unsigned char Flags;
+    OSPTMSGQUEUE *MsgQueue;
+    unsigned NumberOfServicePoints;
+    unsigned HttpMaxConnections;
+    unsigned HttpPersistence;
+    unsigned HttpRetryDelay;
+    unsigned HttpRetryLimit;
+    unsigned HttpTimeout;
+    OSPTUINT64 ConnSelectionTimeout;
+    OSPTSVCPT *ServicePointList;
+    OSPTSVCPT *AuditURL;
+    unsigned HttpConnCount;
+    struct _OSPTHTTP *HttpConnList;
+    int ShutdownTimeLimit;
+    OSPTSEC *Security;
+    int RoundRobinIndex;
+    OSPTMUTEX HttpSelectMutex;
+    OSPTCONDVAR HttpSelCondVar;
 } OSPTCOMM;
 
-#define OSPPCommAddTransaction(comm,msginfo)  \
-    OSPPMsgQueueAddTransaction(comm->MsgQueue, msginfo)
+#define OSPPCommAddTransaction(comm,msginfo)    OSPPMsgQueueAddTransaction(comm->MsgQueue, msginfo)
+
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    int      OSPPCommNew(OSPTCOMM **);
-    void     OSPPCommDelete(OSPTCOMM **);
-    int      OSPPCommGetPersistence(OSPTCOMM *, unsigned *);
-    int      OSPPCommGetRetryDelay(OSPTCOMM *, unsigned *);
-    int      OSPPCommGetRetryLimit(OSPTCOMM *, unsigned *);
-    int      OSPPCommGetTimeout(OSPTCOMM *, unsigned *);
-    int      OSPPCommSetPersistence(OSPTCOMM *, unsigned);
-    int      OSPPCommSetRetryDelay(OSPTCOMM *, unsigned);
-    int      OSPPCommSetRetryLimit(OSPTCOMM *, unsigned);
-    int      OSPPCommSetTimeout(OSPTCOMM *, unsigned);
-    int      OSPPCommSetConnSelectionTimeout(OSPTCOMM *, OSPTUINT64);
-    int      OSPPCommGetMaxConnections(OSPTCOMM *, unsigned *);
-    int      OSPPCommSetMaxConnections(OSPTCOMM *, unsigned);
-    int      OSPPCommIncrementHttpConnCount(OSPTCOMM *);
-    int      OSPPCommDecrementHttpConnCount(OSPTCOMM *);
-    int      OSPPCommGetHttpConnCount(OSPTCOMM *, unsigned *);
-    int      OSPPCommGetNumberOfServicePoints(OSPTCOMM *, unsigned *);
-    void     OSPPCommGetServicePointList(OSPTCOMM *, OSPTSVCPT **);
-    int      OSPPCommGetServicePoints(OSPTCOMM *, unsigned, unsigned, char *[]);
-    int      OSPPCommSetServicePoints(OSPTCOMM *, unsigned, const char **);
-    int      OSPPCommSetAuditURL(OSPTCOMM *, const char  *);
-    void     OSPPCommSetAuditFlag(OSPTCOMM *, unsigned);
-    int      OSPPCommBuildServicePoint(OSPTSVCPT *, char *);
-    void     OSPPCommSetShutdown(OSPTCOMM **, int );
-    void     OSPPCommShutdownConnections(OSPTCOMM *, int);
-    void     OSPPCommSetSecurity(OSPTCOMM *, OSPTSEC *);
+    int OSPPCommNew(OSPTCOMM **);
+    void OSPPCommDelete(OSPTCOMM **);
+    int OSPPCommGetPersistence(OSPTCOMM *, unsigned *);
+    int OSPPCommGetRetryDelay(OSPTCOMM *, unsigned *);
+    int OSPPCommGetRetryLimit(OSPTCOMM *, unsigned *);
+    int OSPPCommGetTimeout(OSPTCOMM *, unsigned *);
+    int OSPPCommSetPersistence(OSPTCOMM *, unsigned);
+    int OSPPCommSetRetryDelay(OSPTCOMM *, unsigned);
+    int OSPPCommSetRetryLimit(OSPTCOMM *, unsigned);
+    int OSPPCommSetTimeout(OSPTCOMM *, unsigned);
+    int OSPPCommSetConnSelectionTimeout(OSPTCOMM *, OSPTUINT64);
+    int OSPPCommGetMaxConnections(OSPTCOMM *, unsigned *);
+    int OSPPCommSetMaxConnections(OSPTCOMM *, unsigned);
+    int OSPPCommIncrementHttpConnCount(OSPTCOMM *);
+    int OSPPCommDecrementHttpConnCount(OSPTCOMM *);
+    int OSPPCommGetHttpConnCount(OSPTCOMM *, unsigned *);
+    int OSPPCommGetNumberOfServicePoints(OSPTCOMM *, unsigned *);
+    void OSPPCommGetServicePointList(OSPTCOMM *, OSPTSVCPT **);
+    int OSPPCommGetServicePoints(OSPTCOMM *, unsigned, unsigned, char *[]);
+    int OSPPCommSetServicePoints(OSPTCOMM *, unsigned, const char **);
+    int OSPPCommSetAuditURL(OSPTCOMM *, const char *);
+    void OSPPCommSetAuditFlag(OSPTCOMM *, unsigned);
+    int OSPPCommBuildServicePoint(OSPTSVCPT *, char *);
+    void OSPPCommSetShutdown(OSPTCOMM **, int);
+    void OSPPCommShutdownConnections(OSPTCOMM *, int);
+    void OSPPCommSetSecurity(OSPTCOMM *, OSPTSEC *);
     OSPTSEC *OSPPCommGetSecurity(OSPTCOMM *);
-    void     OSPPCommSignalAllConnections(OSPTCOMM *ospvComm);
-    int      OSPPCommParseSvcPt(const char *ospvURL, OSPTSVCPT  **ospvSvcPt, unsigned   ospvIndex);
-    int      OSPPCommValidateSvcPts(unsigned ospvNumberOfServicePoints, const char **ospvServicePoint);
-	int      OSPPCommUpdateURLs(OSPTCOMM *, unsigned, const char **);
-    int      OSPPCommGetNumberOfTransactions(OSPTCOMM *, unsigned *);
-    void     OSPPHttpDecrementConnectionCount(OSPTCOMM *);
+    void OSPPCommSignalAllConnections(OSPTCOMM *ospvComm);
+    int OSPPCommParseSvcPt(const char *ospvURL, OSPTSVCPT **ospvSvcPt, unsigned ospvIndex);
+    int OSPPCommValidateSvcPts(unsigned ospvNumberOfServicePoints, const char **ospvServicePoint);
+    int OSPPCommUpdateURLs(OSPTCOMM *, unsigned, const char **);
+    int OSPPCommGetNumberOfTransactions(OSPTCOMM *, unsigned *);
+    void OSPPHttpDecrementConnectionCount(OSPTCOMM *);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPCOMM_H */

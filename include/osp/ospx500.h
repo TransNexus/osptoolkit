@@ -15,28 +15,22 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospx500.h - Constants for X500 objects.
  */
 
-#ifndef _OSP_X500_H
-#define _OSP_X500_H
+#ifndef _OSPX500_H
+#define _OSPX500_H
 
 #include "osp/osp.h"
 #include "osp/ospasn1.h"
 
-#define OSPC_DN_ELEMENT_TERMINATOR (-1)  /* Not a legal OID value */
+#define OSPC_DN_ELEMENT_TERMINATOR  (-1)    /* Not a legal OID value */
 
-#define OSPC_MAX_DN_ELEMENTS       10    /* Max DN elements */
+#define OSPC_MAX_DN_ELEMENTS        10      /* Max DN elements */
 
-#define OSPC_MAX_FIELDNAME_LENGTH  50
-#define OSPC_MAX_FIELDVALUE_LENGTH 50
+#define OSPC_MAX_FIELDNAME_LENGTH   50
+#define OSPC_MAX_FIELDVALUE_LENGTH  50
 
 typedef struct {
     char fieldname[OSPC_MAX_FIELDNAME_LENGTH];
@@ -44,8 +38,8 @@ typedef struct {
 } OSPTDNTEXTELEMENT;
 
 typedef struct {
-    unsigned int     elementCount;
+    unsigned int elementCount;
     OSPTATTRTYPEVAL *elements[OSPC_MAX_DN_ELEMENTS];
 } OSPTDISTINGUISHEDNAME;
 
-#endif
+#endif /* _OSPX500_H */

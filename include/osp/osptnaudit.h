@@ -15,57 +15,46 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * osptnaudit.h - TNAudit elements.
  */
+
 #ifndef _OSPTNAUDIT_H
 #define _OSPTNAUDIT_H
 
 #include "osp/osp.h"
 
-typedef struct
-{
-    unsigned          ospmAuditState;
-    unsigned char     *ospmAuditURL;
-    unsigned          ospmAuditTimeLimit;
-    unsigned          ospmAuditMaxMessages;
-}
-OSPTTNAUDIT;
+typedef struct {
+    unsigned ospmAuditState;
+    unsigned char *ospmAuditURL;
+    unsigned ospmAuditTimeLimit;
+    unsigned ospmAuditMaxMessages;
+} OSPTTNAUDIT;
 
+/* Function Prototypes */
 
-/* Function prototypes */
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
-    void           OSPPTNAuditDelete(OSPTTNAUDIT **ospvTNAudit);
-    int            OSPPTNAuditFromElement(OSPTXMLELEM *, OSPTTNAUDIT **);
 
-    unsigned            OSPPTNAuditGetMaxMessages(OSPTTNAUDIT *);
-    OSPE_AUDIT_STATE    OSPPTNAuditGetState(OSPTTNAUDIT *);
-    unsigned            OSPPTNAuditGetTimeLimit(OSPTTNAUDIT *);
-    unsigned char       *OSPPTNAuditGetURL(OSPTTNAUDIT *);
-    
-    unsigned       OSPPTNAuditHasMaxMessages(OSPTTNAUDIT *);
-    unsigned       OSPPTNAuditHasState(OSPTTNAUDIT *);
-    unsigned       OSPPTNAuditHasTimeLimit(OSPTTNAUDIT *);
-    unsigned       OSPPTNAuditHasURL(OSPTTNAUDIT *);
-
-    OSPTTNAUDIT    *OSPPTNAuditNew(void);
-
-    void           OSPPTNAuditSetMaxMessages(OSPTTNAUDIT *, unsigned);
-    void           OSPPTNAuditSetState(OSPTTNAUDIT *, OSPE_AUDIT_STATE);
-    void           OSPPTNAuditSetTimeLimit(OSPTTNAUDIT *, unsigned);
-    void           OSPPTNAuditSetURL(OSPTTNAUDIT *, unsigned char *);
+    void OSPPTNAuditDelete(OSPTTNAUDIT **ospvTNAudit);
+    int OSPPTNAuditFromElement(OSPTXMLELEM *, OSPTTNAUDIT **);
+    unsigned OSPPTNAuditGetMaxMessages(OSPTTNAUDIT *);
+    OSPE_AUDIT_STATE OSPPTNAuditGetState(OSPTTNAUDIT *);
+    unsigned OSPPTNAuditGetTimeLimit(OSPTTNAUDIT *);
+    unsigned char *OSPPTNAuditGetURL(OSPTTNAUDIT *);
+    unsigned OSPPTNAuditHasMaxMessages(OSPTTNAUDIT *);
+    unsigned OSPPTNAuditHasState(OSPTTNAUDIT *);
+    unsigned OSPPTNAuditHasTimeLimit(OSPTTNAUDIT *);
+    unsigned OSPPTNAuditHasURL(OSPTTNAUDIT *);
+    OSPTTNAUDIT *OSPPTNAuditNew(void);
+    void OSPPTNAuditSetMaxMessages(OSPTTNAUDIT *, unsigned);
+    void OSPPTNAuditSetState(OSPTTNAUDIT *, OSPE_AUDIT_STATE);
+    void OSPPTNAuditSetTimeLimit(OSPTTNAUDIT *, unsigned);
+    void OSPPTNAuditSetURL(OSPTTNAUDIT *, unsigned char *);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPTNAUDIT_H */

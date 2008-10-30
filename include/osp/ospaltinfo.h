@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  *  ospaltinfo.h - OSP Alternate information element
  */
@@ -33,12 +27,10 @@
 #include "osp/ospmsgelem.h"
 #include "osp/ospmsg.h"
 
-
 /* max size of an altinfo (bytes) */
 #define OSPC_ALTINFOMAXSIZE 1024
 
-typedef enum
-{
+typedef enum {
     ospetypeupper,
     ospeE164,
     ospeH323,
@@ -54,50 +46,38 @@ typedef enum
     ospetypelower,
     ospeSip,
     ospeDeviceId
-}OSPE_TYPE_ATTR_VAL;
+} OSPE_TYPE_ATTR_VAL;
 
 /* the basic altinfo structure */
 
-typedef struct
-{
-    OSPTLISTLINK        ospmAltInfoLink;
-    unsigned            ospmAltInfoLen;
-    OSPE_TYPE_ATTR_VAL  ospmAltInfoType;
-    unsigned char       *ospmAltInfoVal;
-}
-OSPTALTINFO;
+typedef struct {
+    OSPTLISTLINK ospmAltInfoLink;
+    unsigned ospmAltInfoLen;
+    OSPE_TYPE_ATTR_VAL ospmAltInfoType;
+    unsigned char *ospmAltInfoVal;
+} OSPTALTINFO;
 
-typedef struct
-{
-    OSPE_TYPE_ATTR_VAL  ospmType;
-    const char         *ospmTypeStr;
-}OSP_TYPE_ATTR_STRUCT;
+typedef struct {
+    OSPE_TYPE_ATTR_VAL ospmType;
+    const char *ospmTypeStr;
+} OSP_TYPE_ATTR_STRUCT;
 
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
-    /**/
-    /*-----------------------------------------------------------------------*
-     * function prototypes
-     *-----------------------------------------------------------------------*/
 
-    OSPTALTINFO *OSPPAltInfoNew(unsigned, const unsigned char *, 
-                                              OSPE_TYPE_ATTR_VAL);
-
-    void                OSPPAltInfoDelete(OSPTALTINFO **);
-    unsigned            OSPPAltInfoGetSize(OSPTALTINFO *);
-    OSPE_TYPE_ATTR_VAL  OSPPAltInfoGetType(OSPTALTINFO *);
+    OSPTALTINFO *OSPPAltInfoNew(unsigned, const unsigned char *, OSPE_TYPE_ATTR_VAL);
+    void OSPPAltInfoDelete(OSPTALTINFO **);
+    unsigned OSPPAltInfoGetSize(OSPTALTINFO *);
+    OSPE_TYPE_ATTR_VAL OSPPAltInfoGetType(OSPTALTINFO *);
     const unsigned char *OSPPAltInfoGetValue(OSPTALTINFO *);
-
-    unsigned            OSPPAltInfoToElement(OSPTALTINFO *, 
-                                        OSPTXMLELEM **, OSPTMSGELEMPART);
+    unsigned OSPPAltInfoToElement(OSPTALTINFO *, OSPTXMLELEM **, OSPTMSGELEMPART);
     const char *OSPPAltInfoGetTypeName(OSPTALTINFO *);
 
-
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPALTINFO_H */

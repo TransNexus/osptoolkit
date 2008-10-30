@@ -34,16 +34,16 @@
 
 typedef struct {
     OSPTTIME ospmAuthRspTimestamp;
-    unsigned char* ospmAuthRspMessageId;
-    unsigned char* ospmAuthRspComponentId;
-    OSPTSTATUS* ospmAuthRspStatus;
-    OSPTTNAUDIT* ospmAuthRspTNAudit;
+    unsigned char *ospmAuthRspMessageId;
+    unsigned char *ospmAuthRspComponentId;
+    OSPTSTATUS *ospmAuthRspStatus;
+    OSPTTNAUDIT *ospmAuthRspTNAudit;
     OSPTTRXID ospmAuthRspTrxId;
     OSPTLIST ospmAuthRspDest;
     unsigned ospmAuthRspTNDelayLimit;
     unsigned ospmAuthRspTNDelayPref;
     unsigned ospmNumDests;
-    OSPTCSAUDIT* ospmAuthRspCSAudit;
+    OSPTCSAUDIT *ospmAuthRspCSAudit;
     OSPE_MSG_ROLETYPES ospmAuthRspRole;
     OSPTBOOL ospmAuthRspHasRole;
 } OSPTAUTHRSP;
@@ -67,73 +67,54 @@ typedef struct {
 #define OSPPAuthRspDestGetCallId(ospvDest) OSPPDestGetCallId(ospvDest)
 #define OSPPAuthRspDestGetCallIdSize(ospvDest) OSPPDestGetCallIdSize(ospvDest)
 #define OSPPAuthRspDestGetCallIdValue(ospvDest) OSPPDestGetCallIdValue(ospvDest)
-#define OSPPAuthRspDestHasToken(ospvDest) OSPPDestHasToken(ospvDest) 
+#define OSPPAuthRspDestHasToken(ospvDest) OSPPDestHasToken(ospvDest)
 #define OSPPAuthRspDestAddToken(ospvDest, ospvToken) OSPPDestAddToken(ospvDest, ospvToken)
 #define OSPPAuthRspDestFirstToken(ospvDest) OSPPDestFirstToken(ospvDest)
 #define OSPPAuthRspDestNextToken(ospvDest, ospvToken) OSPPDestNextToken(ospvDest, ospvToken)
 #define OSPPAuthRspDestTokenGetSize(ospvToken) OSPPTokenGetSize(ospvToken)
 #define OSPPAuthRspDestTokenGetValue(ospvToken) OSPPTokenGetValue(ospvToken)
-#define OSPPAuthRspDestHasLimit(ospvDest) OSPPDestHasLimit(ospvDest) 
-#define OSPPAuthRspDestGetLimit(ospvDest) OSPPDestGetLimit(ospvDest) 
+#define OSPPAuthRspDestHasLimit(ospvDest) OSPPDestHasLimit(ospvDest)
+#define OSPPAuthRspDestGetLimit(ospvDest) OSPPDestGetLimit(ospvDest)
 #define OSPPAuthRspDestSetLimit(ospvDest, ospvLimit) OSPPDestSetLimit(ospvDest, ospvLimit)
 
-/**/
-/*
- *-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*
- */
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    OSPTAUTHRSP* OSPPAuthRspNew(void);
-    void OSPPAuthRspDelete(OSPTAUTHRSP**);
-
-    unsigned OSPPAuthRspFromElement(OSPTXMLELEM*, OSPTAUTHRSP**);
-
+    OSPTAUTHRSP *OSPPAuthRspNew(void);
+    void OSPPAuthRspDelete(OSPTAUTHRSP **);
+    unsigned OSPPAuthRspFromElement(OSPTXMLELEM *, OSPTAUTHRSP **);
     int OSPPAuthRspHasDest(OSPTAUTHRSP *ospvAuthRsp);
-    OSPTDEST* OSPPAuthRspAddDest(OSPTAUTHRSP*, OSPTDEST*);
-    OSPTDEST* OSPPAuthRspFirstDest(OSPTAUTHRSP*);
-    OSPTDEST* OSPPAuthRspNextDest(OSPTAUTHRSP*, OSPTDEST*);
-
-    int OSPPAuthRspHasComponentId(OSPTAUTHRSP*);
-    void OSPPAuthRspSetComponentId(OSPTAUTHRSP*, unsigned char*);
-    void OSPPAuthRspComponentIdFromElement(OSPTXMLELEM*, unsigned char**);
-
-    int OSPPAuthRspHasMessageId(OSPTAUTHRSP*);
-    void OSPPAuthRspSetMessageId(OSPTAUTHRSP*, unsigned char*);
-    void OSPPAuthRspMessageIdFromElement(OSPTXMLELEM*, unsigned char**);
-    unsigned char* OSPPAuthRspGetMessageId(OSPTAUTHRSP*);
-
-    void OSPPAuthRspSetTimestamp(OSPTAUTHRSP*, OSPTTIME);
-
-    int OSPPAuthRspHasStatus(OSPTAUTHRSP*);
-    OSPTSTATUS* OSPPAuthRspGetStatus(OSPTAUTHRSP*);
-
-    void OSPPAuthRspSetTrxId(OSPTAUTHRSP*, OSPTTRXID);
-
-    int OSPPAuthRspHasTNDelayLimit(OSPTAUTHRSP*);
-    void OSPPAuthRspSetTNDelayLimit(OSPTAUTHRSP*, unsigned);
-    unsigned OSPPAuthRspGetTNDelayLimit(OSPTAUTHRSP*);
-
-    int OSPPAuthRspHasTNDelayPref(OSPTAUTHRSP*);
-    void OSPPAuthRspSetTNDelayPref(OSPTAUTHRSP*, unsigned);
-
-    unsigned OSPPAuthRspHasNumDests(OSPTAUTHRSP*);
-    void OSPPAuthRspIncNumDests(OSPTAUTHRSP*);
-    unsigned OSPPAuthRspGetNumDests(OSPTAUTHRSP*);
-
-    OSPTTNAUDIT* OSPPAuthRspGetTNAudit(OSPTAUTHRSP*);
-
-    int OSPPAuthRspHasCSAudit(OSPTAUTHRSP*);
-    OSPTCSAUDIT* OSPPAuthRspGetCSAudit(OSPTAUTHRSP*);
-
-    int OSPPAuthRspHasRole(OSPTAUTHRSP*);
-    void OSPPAuthRspSetRole(OSPTAUTHRSP*, OSPE_MSG_ROLETYPES);
-    OSPE_MSG_ROLETYPES OSPPAuthRspGetRole(OSPTAUTHRSP*);
+    OSPTDEST *OSPPAuthRspAddDest(OSPTAUTHRSP *, OSPTDEST *);
+    OSPTDEST *OSPPAuthRspFirstDest(OSPTAUTHRSP *);
+    OSPTDEST *OSPPAuthRspNextDest(OSPTAUTHRSP *, OSPTDEST *);
+    int OSPPAuthRspHasComponentId(OSPTAUTHRSP *);
+    void OSPPAuthRspSetComponentId(OSPTAUTHRSP *, unsigned char *);
+    void OSPPAuthRspComponentIdFromElement(OSPTXMLELEM *, unsigned char **);
+    int OSPPAuthRspHasMessageId(OSPTAUTHRSP *);
+    void OSPPAuthRspSetMessageId(OSPTAUTHRSP *, unsigned char *);
+    void OSPPAuthRspMessageIdFromElement(OSPTXMLELEM *, unsigned char **);
+    unsigned char *OSPPAuthRspGetMessageId(OSPTAUTHRSP *);
+    void OSPPAuthRspSetTimestamp(OSPTAUTHRSP *, OSPTTIME);
+    int OSPPAuthRspHasStatus(OSPTAUTHRSP *);
+    OSPTSTATUS *OSPPAuthRspGetStatus(OSPTAUTHRSP *);
+    void OSPPAuthRspSetTrxId(OSPTAUTHRSP *, OSPTTRXID);
+    int OSPPAuthRspHasTNDelayLimit(OSPTAUTHRSP *);
+    void OSPPAuthRspSetTNDelayLimit(OSPTAUTHRSP *, unsigned);
+    unsigned OSPPAuthRspGetTNDelayLimit(OSPTAUTHRSP *);
+    int OSPPAuthRspHasTNDelayPref(OSPTAUTHRSP *);
+    void OSPPAuthRspSetTNDelayPref(OSPTAUTHRSP *, unsigned);
+    unsigned OSPPAuthRspHasNumDests(OSPTAUTHRSP *);
+    void OSPPAuthRspIncNumDests(OSPTAUTHRSP *);
+    unsigned OSPPAuthRspGetNumDests(OSPTAUTHRSP *);
+    OSPTTNAUDIT *OSPPAuthRspGetTNAudit(OSPTAUTHRSP *);
+    int OSPPAuthRspHasCSAudit(OSPTAUTHRSP *);
+    OSPTCSAUDIT *OSPPAuthRspGetCSAudit(OSPTAUTHRSP *);
+    int OSPPAuthRspHasRole(OSPTAUTHRSP *);
+    void OSPPAuthRspSetRole(OSPTAUTHRSP *, OSPE_MSG_ROLETYPES);
+    OSPE_MSG_ROLETYPES OSPPAuthRspGetRole(OSPTAUTHRSP *);
 
 #ifdef __cplusplus
 }

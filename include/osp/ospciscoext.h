@@ -15,45 +15,33 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
- * ospciscoaudit.h - Cisco Audit elements.
+ * ospciscoext.h - Cisco Audit elements.
  */
 
-#ifndef _OSPCSAUDIT_H
-#define _OSPCSAUDIT_H
+#ifndef _OSPCISCOEXT_H
+#define _OSPCISCOEXT_H
 
 #include "osp/osp.h"
 
+typedef struct {
+    unsigned char *ospmAuditTrigger;
+} OSPTCSAUDIT;
 
-typedef struct
-{
-    unsigned char  *ospmAuditTrigger;      
-}
-OSPTCSAUDIT;
+/* Function Prototypes */
 
-/* Function prototypes */
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
-    void            OSPPCSAuditDelete(OSPTCSAUDIT **ospvCSAudit);
-    int             OSPPCSAuditFromElement(OSPTXMLELEM *, OSPTCSAUDIT **);
-
-    unsigned char   *OSPPCSAuditGetTrigger(OSPTCSAUDIT *);
-
-    unsigned        OSPPCSAuditHasTrigger(OSPTCSAUDIT *);
-
-    OSPTCSAUDIT     *OSPPCSAuditNew(void);
-    void            OSPPCSAuditSetTrigger(OSPTCSAUDIT *, unsigned char *);
-    int             OSPPCSAuditToElement(OSPTCSAUDIT *, OSPTXMLELEM **);
+    void OSPPCSAuditDelete(OSPTCSAUDIT **ospvCSAudit);
+    int OSPPCSAuditFromElement(OSPTXMLELEM *, OSPTCSAUDIT **);
+    unsigned char *OSPPCSAuditGetTrigger(OSPTCSAUDIT *);
+    unsigned OSPPCSAuditHasTrigger(OSPTCSAUDIT *);
+    OSPTCSAUDIT *OSPPCSAuditNew(void);
+    void OSPPCSAuditSetTrigger(OSPTCSAUDIT *, unsigned char *);
+    int OSPPCSAuditToElement(OSPTCSAUDIT *, OSPTXMLELEM **);
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPCISCOEXT_H */

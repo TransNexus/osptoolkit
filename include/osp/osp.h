@@ -15,16 +15,10 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * osp.h - Universal OSP includes.
  */
+
 #ifndef _OSP_H
 #define _OSP_H
 
@@ -45,4 +39,4 @@
 #include "osp/osptransapi.h"
 #include "osp/osplibversion.h"
 
-#endif
+#endif /* _OSP_H */

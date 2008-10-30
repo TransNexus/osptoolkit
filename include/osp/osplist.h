@@ -15,18 +15,12 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * osplist.h - Structures and prototypes for linked lists.
  */
 
-#ifndef osplist_h
-#define osplist_h
+#ifndef _OSPLIST_H
+#define _OSPLIST_H
 
 #include "osp/osp.h"
 
@@ -46,19 +40,15 @@
  * of the list. 
  */
 
-typedef struct OSPSListLink
-{
+typedef struct OSPSListLink {
     struct OSPSListLink *ospmLinkNext;
-}
-OSPTLISTLINK;
+} OSPTLISTLINK;
 
 typedef OSPTLISTLINK *OSPTLIST;
 
-
-/**/
-/*-----------------------------------------------------------------------*/
-/* true macros                                                           */
-/*-----------------------------------------------------------------------*/
+/*
+ * true macros
+ */
 #define OSPPListItemInList(List,InItem,ItemFld,ItemSize,PtrType,Found) { \
     PtrType  *item   = OSPC_OSNULL; \
     int       result = 0; \
@@ -74,33 +64,28 @@ typedef OSPTLISTLINK *OSPTLIST;
     } \
 }
 
-/**/
-/*-----------------------------------------------------------------------*/
-/* function prototypes                                                   */
-/*-----------------------------------------------------------------------*/
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    void      OSPPListAppend (OSPTLIST *, void *);
-    void     *OSPPListRemove (OSPTLIST *);
-    void     *OSPPListRemoveSpecificItem (OSPTLIST *, void *);
-    unsigned  OSPPListCount(OSPTLIST *);
-    void     *OSPPListNextToLast(OSPTLIST *);
-
-    void      OSPPListLinkNew (OSPTLISTLINK *);
-    void      OSPPListNew (OSPTLIST *);
-    void      OSPPListDelete (OSPTLIST *);
-    unsigned  OSPPListEmpty (OSPTLIST *);
-    void     *OSPPListLast (OSPTLIST *);
-    void     *OSPPListFirst (OSPTLIST *);
-    void     *OSPPListNext (OSPTLIST *, void *);
-    void      OSPPListMove (OSPTLIST *, OSPTLIST *);
-
+    void OSPPListAppend(OSPTLIST *, void *);
+    void *OSPPListRemove(OSPTLIST *);
+    void *OSPPListRemoveSpecificItem(OSPTLIST *, void *);
+    unsigned OSPPListCount(OSPTLIST *);
+    void *OSPPListNextToLast(OSPTLIST *);
+    void OSPPListLinkNew(OSPTLISTLINK *);
+    void OSPPListNew(OSPTLIST *);
+    void OSPPListDelete(OSPTLIST *);
+    unsigned OSPPListEmpty(OSPTLIST *);
+    void *OSPPListLast(OSPTLIST *);
+    void *OSPPListFirst(OSPTLIST *);
+    void *OSPPListNext(OSPTLIST *, void *);
+    void OSPPListMove(OSPTLIST *, OSPTLIST *);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* osplist_h */
+#endif /* _OSPLIST_H */

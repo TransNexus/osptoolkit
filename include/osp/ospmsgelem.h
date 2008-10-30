@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospmsgelem.h - Definitions for OSP message elements.
  */
@@ -33,8 +27,7 @@
 
 /* the elements defined by the Open Settlement Protocol */
 
-typedef enum
-{
+typedef enum {
     ospeElemUnknown = OSPC_MSGPARTUNKNOWN,
     ospeElemAlmostOutOfResources,
     ospeElemAmount,
@@ -112,25 +105,18 @@ typedef enum
     ospeElemServiceType,
     ospeElemGroup,
     ospeElemGroupId
-}
-OSPTMSGELEMPART;
+} OSPTMSGELEMPART;
 
-
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * externally declared global variables
- *-----------------------------------------------------------------------*/
+ */
 
 extern const OSPTMSGDESC OSPVElemDescs[];
-extern const unsigned    OSPVNumElemDesc;
+extern const unsigned OSPVNumElemDesc;
 
+/* Function Prototypes */
 
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
 const char *OSPPMsgGetElemName(OSPTMSGELEMPART);
 OSPTMSGELEMPART OSPPMsgGetElemPart(const char *);
 
 #endif /* _OSPMSGELEM_H */
-

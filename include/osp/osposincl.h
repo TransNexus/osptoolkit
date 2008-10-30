@@ -15,17 +15,12 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * osposincl.h - OS common includes.
  */
-#ifndef _OSP_OS_H
-#define _OSP_OS_H
+
+#ifndef _OSPOSINCL_H
+#define _OSPOSINCL_H
 
 /* OS common headers */
 #include <stdlib.h>
@@ -40,12 +35,10 @@
 #include <float.h>
 #include <limits.h>
 
-
 /* Applies to both UNIX and WIN32 */
 #ifdef _POSIX_THREADS
-  #include <pthread.h>
+#include <pthread.h>
 #endif
-
 
 #ifdef _WIN32
 
@@ -74,4 +67,4 @@
 #include <fcntl.h>
 #endif
 
-#endif
+#endif /* _OSPOSINCL_H */
