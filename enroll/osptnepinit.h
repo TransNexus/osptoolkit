@@ -15,37 +15,32 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 #include "osp/osposincl.h"
 #include "openssl/ssl.h"
 
 #ifdef __cplusplus
 extern "C" {
-#endif 
+#endif
 
 /* Constants for the maximum sizes of the enrollment parameters: */
-#define OSPC_ENROLL_MAX_FUNCTION_SIZE    16 
-#define OSPC_ENROLL_MAX_USERNAME_SIZE    32 
-#define OSPC_ENROLL_MAX_PASSWORD_SIZE    32
-#define OSPC_ENROLL_MAX_DEVICEID_SIZE    20 
-#define OSPC_ENROLL_MAX_CUSTOMERID_SIZE  20 
-#define OSPC_ENROLL_MAX_CERTREQ_SIZE     2048
-#define OSPC_ENROLL_MAX_CACERT_SIZE      2048
-#define OSPC_ENROLL_MAX_URL_SIZE         2048 
+#define OSPC_ENROLL_MAX_FUNCTION_SIZE       16
+#define OSPC_ENROLL_MAX_USERNAME_SIZE       32
+#define OSPC_ENROLL_MAX_PASSWORD_SIZE       32
+#define OSPC_ENROLL_MAX_DEVICEID_SIZE       20
+#define OSPC_ENROLL_MAX_CUSTOMERID_SIZE     20
+#define OSPC_ENROLL_MAX_CERTREQ_SIZE        2048
+#define OSPC_ENROLL_MAX_CACERT_SIZE         2048
+#define OSPC_ENROLL_MAX_URL_SIZE            2048
 
-/* An SHA-1 fingerprint is 20 bytes long, so expect at most
+/* 
+ * An SHA-1 fingerprint is 20 bytes long, so expect at most
  * 40 bytes of hex characters ( since an MD5 digest is 16 bytes
  * long ):
  */
-#define OSPC_ENROLL_MAX_FPRINT_SIZE      40 
+#define OSPC_ENROLL_MAX_FPRINT_SIZE         40
 
-
-/* This template will be used for finding the value of a field being
+/* 
+ * This template will be used for finding the value of a field being
  * searched for in a string. Here's what it does:
  *
  * %*[^=]     matches on the beginning of the string up to an "="; this 
@@ -56,9 +51,10 @@ extern "C" {
  * %[^& ]     matches on everything up to an "&" or a " "; this field is
  *            saved in the first argument to sscanf
  */
-#define OSPC_ENROLL_SEARCH_PATTERN       "%*[^=]=%[^& ]"
+#define OSPC_ENROLL_SEARCH_PATTERN          "%*[^=]=%[^& ]"
 
-/* These are the only characters that may precede a field name in a URL.
+/* 
+ * These are the only characters that may precede a field name in a URL.
  * The '&' comes up when the field follows another field ( as in
  * a=b&c=d, where 'c' is the field name being searched for. ) The
  * newline may come up in cases where we receive the entire HTTP header
@@ -67,7 +63,7 @@ extern "C" {
  * but it may if the body has other information in it ( and the space is
  * a delimiter. )
  */
-#define OSPC_ENROLL_URL_FIELD_DELIMITERS "&\n "
+#define OSPC_ENROLL_URL_FIELD_DELIMITERS    "&\n "
 
 /* 
  * Initialize the Enrollment Parameter object sent in. All of the
@@ -79,9 +75,7 @@ extern "C" {
  *     o the pointer to the OSPTENROLLPARAMS is null;
  *     o malloc or initialization fails on any member of the OSPTENROLLPARAMS.
  */
-int OSPPInitEnrollParams (
-    OSPTENROLLPARAMS* ospvEnrollParamsIn
-);
+int OSPPInitEnrollParams(OSPTENROLLPARAMS *ospvEnrollParamsIn);
 
 /* 
  * This function is called for freeing up all the memory taken up
@@ -93,9 +87,7 @@ int OSPPInitEnrollParams (
  * Errors:
  *     o if the input variable is null ( OSPC_ERR_ENROLL_ENROLL_PARAMS_FREE ) 
  */
-int OSPPFreeEnrollParams (
-    OSPTENROLLPARAMS* ospvEnrollParamsIn
-);
+int OSPPFreeEnrollParams(OSPTENROLLPARAMS *ospvEnrollParamsIn);
 
 /* 
  * This function will take a list of enrollment parameters and communications
@@ -114,13 +106,10 @@ int OSPPFreeEnrollParams (
  *         return value will be non-zero. Otherwise, the return value should
  *         be zero.
  */
-int OSPPInitSecureCommMgr(
-    OSPTENROLLPARAMS* ospvEnrollParamsIn,
-    OSPTCOMMPARAMS*  ospvCommParamsIn,
-    OSPTCOMM**       ospvCommOut 
-);
+int OSPPInitSecureCommMgr(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPTCOMMPARAMS *ospvCommParamsIn, OSPTCOMM **ospvCommOut);
 
-/* This is just a minimal wrapper for calling OSPPInitCommMgr;
+/* 
+ * This is just a minimal wrapper for calling OSPPInitCommMgr;
  * it just extracts the service point for the CA from the enrollment 
  * parameters and passes it along as the service point to be explicitly 
  * contacted.
@@ -134,11 +123,7 @@ int OSPPInitSecureCommMgr(
  *         return value will be non-zero. Otherwise, the return value should
  *         be zero.
  */
-int OSPPInitCACommMgr(
-    OSPTENROLLPARAMS* ospvEnrollParamsIn,
-    OSPTCOMMPARAMS*   ospvCommParamsIn,
-    OSPTCOMM**        ospvCommOut 
-);
+int OSPPInitCACommMgr(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPTCOMMPARAMS *ospvCommParamsIn, OSPTCOMM **ospvCommOut);
 
 /*
  * Initialize the communications manager. First a service point for the
@@ -152,11 +137,7 @@ int OSPPInitCACommMgr(
  * ospvHTTPRetryLimit, and ospvHTTPTimeout in the OSPTCOMMPARAMS parameter ) 
  * set.
  */
-int OSPPInitCommMgr(
-    unsigned char*    ospvServicePtUrlIn,
-    OSPTCOMMPARAMS*   ospvCommParamsIn,
-    OSPTCOMM**        ospvCommOut
-);
+int OSPPInitCommMgr(unsigned char *ospvServicePtUrlIn, OSPTCOMMPARAMS *ospvCommParamsIn, OSPTCOMM **ospvCommOut);
 
 /*
  * Initialize the communications manager's SSL-related parameters. In this
@@ -176,13 +157,10 @@ int OSPPInitCommMgr(
  *         there have been no problems. Any other return value will indicate
  *         an error.
  */
-int OSPPInitSSLCommMgrParams(
-    OSPTENROLLPARAMS* ospvEnrollParamsIn,
-    OSPTCOMMPARAMS*   ospvCommParamsIn,
-    OSPTCOMM*         ospvCommOut
-);
+int OSPPInitSSLCommMgrParams(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPTCOMMPARAMS *ospvCommParamsIn, OSPTCOMM *ospvCommOut);
 
-/* Initialize all of the non-SSL related parameters; we'll set the
+/* 
+ * Initialize all of the non-SSL related parameters; we'll set the
  * retry delay, http timeout, persistence values, and so on. All of
  * the SSL-related parameters are set in the OSPPInitSSLCommMgrParams,
  * which won't be necessary for certain functions ( like retrieving the
@@ -195,11 +173,7 @@ int OSPPInitSSLCommMgrParams(
  *         A return value of OSPC_ERR_NO_ERROR is returned if everything
  *         worked out; otherwise, an error code is returned.
  */
-int OSPPInitNonSSLCommMgrParams(
-    unsigned char*    ospvServicePtUrlIn,
-    OSPTCOMMPARAMS*   ospvCommParamsIn,
-    OSPTCOMM*         ospvCommOut 
-);
+int OSPPInitNonSSLCommMgrParams(unsigned char *ospvServicePtUrlIn, OSPTCOMMPARAMS *ospvCommParamsIn, OSPTCOMM *ospvCommOut);
 
 /*
  * This function will: initialize a communications manager; construct
@@ -218,22 +192,17 @@ int OSPPInitNonSSLCommMgrParams(
  *         list ( under the CACert field ). OSPC_ERR_NO_ERROR is returned
  *         if everything went ok; otherwise, some other error code is returned.
  */
-int OSPPRetrieveCACert (
-    OSPTENROLLPARAMS* ospvEnrollParamsInOut,
-    OSPTCOMMPARAMS*   ospvCommParamsIn
-);
+int OSPPRetrieveCACert(OSPTENROLLPARAMS *ospvEnrollParamsInOut, OSPTCOMMPARAMS *ospvCommParamsIn);
 
 /*
  * Create the request for retrieving a CA certificate and store it in
  * ospvCARequestOut. We'll need the enrollment parameters so that we can
  * add in the username, password, device id, and customer id.
  */
-int OSPPCreateCARetrievalRequest (
-    OSPTENROLLPARAMS* ospvEnrollParamsIn,
-    unsigned char**   ospvCARequestOut
-);
+int OSPPCreateCARetrievalRequest(OSPTENROLLPARAMS *ospvEnrollParamsIn, unsigned char **ospvCARequestOut);
 
-/* Extract the CA certificate from the response and base64-decode it.
+/* 
+ * Extract the CA certificate from the response and base64-decode it.
  * We'll also use the base64-encoded certificate to be passed back to
  * the user so that they can use it again on input ( instead of having
  * to redo the base64 encoding. )
@@ -248,16 +217,11 @@ int OSPPCreateCARetrievalRequest (
  *         allocated and assigned properly. Otherwise, a return value of
  *         something other than OSPC_ERR_NO_ERROR is returned.
  */
-int OSPPExtractCACertFromResponse( 
-    unsigned char*  ospvResponseIn,
-    unsigned        ospvResponseLenIn,
-    unsigned char** ospvCACertOut,
-    unsigned*       ospvCACertLenOut,
-    unsigned char** ospvCACertB64Out,
-    unsigned*       ospvCACertB64LenOut
-);
+int OSPPExtractCACertFromResponse(unsigned char *ospvResponseIn, unsigned ospvResponseLenIn, unsigned char **ospvCACertOut,
+            unsigned *ospvCACertLenOut, unsigned char **ospvCACertB64Out, unsigned *ospvCACertB64LenOut);
 
-/* Now take the enrollment parameter's CA certificate fingerprint in hex
+/* 
+ * Now take the enrollment parameter's CA certificate fingerprint in hex
  * ( which should have been taken from a secure channel, such as paper 
  * [ if ubiquity can be considered security ] or an SSL session with the
  * enrollment server's accompanying web site ( if available. ) If the 
@@ -275,19 +239,13 @@ int OSPPExtractCACertFromResponse(
  * Output: an error code if anything is null or if the fingerprint cannot be
  *         taken or doesn't match up to what's expected.
  */
-int OSPPValidateCACertificate(
-    OSPTENROLLPARAMS* ospvEnrollParams
-);
+int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams);
 
 /* Translate the given hex string into binary, if possible. */
-int OSPPHexToBinary (
-    unsigned char* ospvHexStr,
-    unsigned       ospvHexStrLen,
-    unsigned char* ospvBinaryStr,
-    unsigned*      ospvBinaryStrLen 
-);
+int OSPPHexToBinary(unsigned char *ospvHexStr, unsigned ospvHexStrLen, unsigned char *ospvBinaryStr, unsigned *ospvBinaryStrLen);
 
-/* Given the response to scan and the field to search for, extract the
+/* 
+ * Given the response to scan and the field to search for, extract the
  * contents of that field into the outgoing value. We'll be careful
  * not to accidentally use names that look similar but which have different
  * lengths. For example, if we're looking for the field "def" and we're
@@ -304,14 +262,10 @@ int OSPPHexToBinary (
  *         other than OSPC_ERR_NO_ERROR will be returned and *ospvValueOut
  *         will be untouched.
  */
-int OSPPExtractFieldFromResponse (
-    unsigned char*  ospvResponse,
-    unsigned        ospvResponseLen,
-    unsigned char*  ospvSearchField,
-    unsigned char** ospvValueOut 
-);
+int OSPPExtractFieldFromResponse(unsigned char *ospvResponse, unsigned ospvResponseLen, unsigned char *ospvSearchField, unsigned char **ospvValueOut);
 
-/* copy the source string to the destination string; allocate and initialize
+/* 
+ * copy the source string to the destination string; allocate and initialize
  * enough space in the destination string that we can fit everything in
  * the source string.
  *
@@ -322,19 +276,14 @@ int OSPPExtractFieldFromResponse (
  *         well; in this case, OSPC_ERR_NO_ERROR is returned. Otherwise,
  *         an error code other than OSPC_ERR_NO_ERROR is returned.
  */
-int OSPPCopyString (
-    unsigned char** ospvDestStr,
-    unsigned char*  ospvSrcStr
-);
+int OSPPCopyString(unsigned char **ospvDestStr, unsigned char *ospvSrcStr);
 
 /*
  * Cleanup everything that we initialized. In this case, we just need to
  * cleanup the communications manager; other structures or objects may need
  * to be cleaned up, too.
  */
-int OSPPEnrollCleanup ( 
-    OSPTCOMM* ospvCommMgr
-);
+int OSPPEnrollCleanup(OSPTCOMM *ospvCommMgr);
 
 #define OSPPCommMgrSetSPMessageCount(ospvComm,ospvMessageCount) OSPPProviderSetSPMessageCount(ospvComm,ospvMessageCount)
 #ifdef __cplusplus
