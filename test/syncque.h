@@ -15,17 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
-
-
-
-
 /*
  *  syncque.h - Structures and prototypes for sync queue object.
  *  
@@ -47,49 +36,30 @@
 #include "osp/osp.h"
 #include "osp/osplist.h"
 
-
-/*-------------------------------------------*/
-/* sync queue typedef                        */
-/*-------------------------------------------*/ 
-typedef struct _SYNCQUEUE
-{
-    unsigned            NumberOfTransactions;
-    OSPTMUTEX           Mutex; 
-    OSPTCONDVAR         CondVarNotEmpty;  
-    OSPTCONDVAR         CondVarEmpty; 
-    OSPTLIST            PayloadList;
+/*
+ * sync queue typedef
+ */
+typedef struct _SYNCQUEUE {
+    unsigned NumberOfTransactions;
+    OSPTMUTEX Mutex;
+    OSPTCONDVAR CondVarNotEmpty;
+    OSPTCONDVAR CondVarEmpty;
+    OSPTLIST PayloadList;
 } SYNCQUEUE;
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    int       SyncQueueNew(                     SYNCQUEUE **);
-    void      SyncQueueDelete(                  SYNCQUEUE **);
-    unsigned  SyncQueueGetNumberOfTransactions( SYNCQUEUE *);
-    int       SyncQueueBlockWhileNotEmpty(      SYNCQUEUE *);
-    int       SyncQueueAddTransaction(          SYNCQUEUE *, void *);   //  non-blocking
-    int       SyncQueueRemoveTransaction(       SYNCQUEUE *, void **);  //  blocks if the queue is emtpy
+    int SyncQueueNew(SYNCQUEUE **);
+    void SyncQueueDelete(SYNCQUEUE **);
+    unsigned SyncQueueGetNumberOfTransactions(SYNCQUEUE *);
+    int SyncQueueBlockWhileNotEmpty(SYNCQUEUE *);
+    int SyncQueueAddTransaction(SYNCQUEUE *, void *);       //  non-blocking
+    int SyncQueueRemoveTransaction(SYNCQUEUE *, void **);   //  blocks if the queue is emtpy
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif /* _SYNCQUE_H */
