@@ -115,18 +115,17 @@
 
 /* character encodings supported */
 typedef enum {
-    ospeXMLEncUnknown,      /* unrecognized encoding */
-    ospeXMLEncUTF8,         /* UTF-8 (8-bit Unicode) */
-    ospeXMLEncUTF16l,       /* UTF-16 little endian  */
-    ospeXMLEncUTF16b        /* UTF-16 big endian */
-} OSPTXMLENC;
-
+    OSPC_XENC_UNKNOW,       /* unrecognized encoding */
+    OSPC_XENC_UTF8,         /* UTF-8 (8-bit Unicode) */
+    OSPC_XENC_UTF16L,       /* UTF-16 little endian  */
+    OSPC_XENC_UTF16B        /* UTF-16 big endian */
+} OSPE_XML_ENC;
 
 /* structure used to store entity references */
 typedef struct {
     unsigned char ospmEntValue;
     unsigned char *ospmEntName;
-} OSPTXMLDOCENTITY;
+} OSPT_XML_ENTITY;
 
 /* Function Prototypes */
 
@@ -134,13 +133,13 @@ typedef struct {
 extern "C" {
 #endif
 
-    unsigned OSPPXMLDocIsMatch(OSPTBFR **, OSPTXMLENC, const unsigned char *, unsigned, unsigned char *, unsigned *);
-    unsigned OSPPXMLDocSkipPast(OSPTBFR **, OSPTXMLENC, const unsigned char *, unsigned char *);
-    unsigned OSPPXMLDocSkipPastChar(OSPTBFR **, OSPTXMLENC, unsigned char);
-    unsigned OSPPXMLDocGetEncoding(OSPTBFR **, OSPTXMLENC *);
+    unsigned OSPPXMLDocIsMatch(OSPTBFR **, OSPE_XML_ENC, const unsigned char *, unsigned, unsigned char *, unsigned *);
+    unsigned OSPPXMLDocSkipPast(OSPTBFR **, OSPE_XML_ENC, const unsigned char *, unsigned char *);
+    unsigned OSPPXMLDocSkipPastChar(OSPTBFR **, OSPE_XML_ENC, unsigned char);
+    unsigned OSPPXMLDocGetEncoding(OSPTBFR **, OSPE_XML_ENC *);
     unsigned OSPPXMLDocTranslateEntity(unsigned char *, unsigned char *);
-    unsigned OSPPXMLDocReadChar(OSPTBFR **, OSPTXMLENC, unsigned char *);
-    unsigned OSPPXMLDocSkipWhite(OSPTBFR **, OSPTXMLENC);
+    unsigned OSPPXMLDocReadChar(OSPTBFR **, OSPE_XML_ENC, unsigned char *);
+    unsigned OSPPXMLDocSkipWhite(OSPTBFR **, OSPE_XML_ENC);
     unsigned OSPPXMLAddReference(const unsigned char *, unsigned, OSPTBFR **);
     unsigned OSPPXMLDereference(const unsigned char *, unsigned *, unsigned char *);
 
@@ -156,35 +155,35 @@ extern "C" {
     /* functions in ospxmlparse.c */
 
     unsigned OSPPXMLDocParse(OSPTBFR **, OSPTXMLELEM **);
-    unsigned OSPPXMLDocParseElem(OSPTBFR **, OSPTXMLENC, OSPTXMLELEM **);
-    unsigned OSPPXMLDocGetAttrs(OSPTBFR **, OSPTXMLENC, OSPTLIST *);
-    unsigned OSPPXMLDocGetAttr(OSPTBFR **, OSPTXMLENC, OSPTXMLATTR **);
-    unsigned OSPPXMLDocGetContent(OSPTBFR **, OSPTXMLENC, OSPTLIST *, OSPTBFR **);
-    unsigned OSPPXMLDocGetCdata(OSPTBFR **, OSPTXMLENC, OSPTBFR **);
-    unsigned OSPPXMLDocGetName(OSPTBFR **, OSPTXMLENC, OSPTBFR **);
-    unsigned OSPPXMLDocSkipProlog(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocSkipAllMisc(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocSkipDTD(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocSkipMarkupDecl(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocSkipDecl(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocSkipComment(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocSkipPI(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocSkipElementDecl(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocSkipEntityDecl(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocSkipAttlist(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocSkipPastCdataBeg(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocSkipPastCdataEnd(OSPTBFR **, OSPTXMLENC);
-    unsigned OSPPXMLDocIsDecl(OSPTBFR **, OSPTXMLENC, unsigned *);
-    unsigned OSPPXMLDocIsComment(OSPTBFR **, OSPTXMLENC, unsigned *);
-    unsigned OSPPXMLDocIsPI(OSPTBFR **, OSPTXMLENC, unsigned *);
-    unsigned OSPPXMLDocIsDTD(OSPTBFR **, OSPTXMLENC, unsigned *);
-    unsigned OSPPXMLDocIsElementDecl(OSPTBFR **, OSPTXMLENC, unsigned *);
-    unsigned OSPPXMLDocIsAttlist(OSPTBFR **, OSPTXMLENC, unsigned *);
-    unsigned OSPPXMLDocIsEntityDecl(OSPTBFR **, OSPTXMLENC, unsigned *);
-    unsigned OSPPXMLDocIsCdata(OSPTBFR **, OSPTXMLENC, unsigned *);
-    unsigned OSPPXMLDocIsCdataEnd(OSPTBFR **, OSPTXMLENC, unsigned *);
+    unsigned OSPPXMLDocParseElem(OSPTBFR **, OSPE_XML_ENC, OSPTXMLELEM **);
+    unsigned OSPPXMLDocGetAttrs(OSPTBFR **, OSPE_XML_ENC, OSPTLIST *);
+    unsigned OSPPXMLDocGetAttr(OSPTBFR **, OSPE_XML_ENC, OSPTXMLATTR **);
+    unsigned OSPPXMLDocGetContent(OSPTBFR **, OSPE_XML_ENC, OSPTLIST *, OSPTBFR **);
+    unsigned OSPPXMLDocGetCdata(OSPTBFR **, OSPE_XML_ENC, OSPTBFR **);
+    unsigned OSPPXMLDocGetName(OSPTBFR **, OSPE_XML_ENC, OSPTBFR **);
+    unsigned OSPPXMLDocSkipProlog(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocSkipAllMisc(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocSkipDTD(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocSkipMarkupDecl(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocSkipDecl(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocSkipComment(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocSkipPI(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocSkipElementDecl(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocSkipEntityDecl(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocSkipAttlist(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocSkipPastCdataBeg(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocSkipPastCdataEnd(OSPTBFR **, OSPE_XML_ENC);
+    unsigned OSPPXMLDocIsDecl(OSPTBFR **, OSPE_XML_ENC, unsigned *);
+    unsigned OSPPXMLDocIsComment(OSPTBFR **, OSPE_XML_ENC, unsigned *);
+    unsigned OSPPXMLDocIsPI(OSPTBFR **, OSPE_XML_ENC, unsigned *);
+    unsigned OSPPXMLDocIsDTD(OSPTBFR **, OSPE_XML_ENC, unsigned *);
+    unsigned OSPPXMLDocIsElementDecl(OSPTBFR **, OSPE_XML_ENC, unsigned *);
+    unsigned OSPPXMLDocIsAttlist(OSPTBFR **, OSPE_XML_ENC, unsigned *);
+    unsigned OSPPXMLDocIsEntityDecl(OSPTBFR **, OSPE_XML_ENC, unsigned *);
+    unsigned OSPPXMLDocIsCdata(OSPTBFR **, OSPE_XML_ENC, unsigned *);
+    unsigned OSPPXMLDocIsCdataEnd(OSPTBFR **, OSPE_XML_ENC, unsigned *);
 
-    void OSPPXMLDocPeekCharN(OSPTBFR **, OSPTXMLENC, unsigned, unsigned char *, int *);
+    void OSPPXMLDocPeekCharN(OSPTBFR **, OSPE_XML_ENC, unsigned, unsigned char *, int *);
 
 #ifdef __cplusplus
 }

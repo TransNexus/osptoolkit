@@ -49,7 +49,7 @@ OSPPXMLDocParse(
 )
 {
     unsigned     ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLENC   encoding = ospeXMLEncUnknown;
+    OSPE_XML_ENC   encoding = OSPC_XENC_UNKNOW;
 
     if (ospvBfrAddr  == OSPC_OSNULL)
     {
@@ -72,7 +72,7 @@ OSPPXMLDocParse(
 
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        if (encoding == ospeXMLEncUnknown)
+        if (encoding == OSPC_XENC_UNKNOW)
         {
             /*
              * If we couldn't recognize the encoding, then punt by
@@ -110,7 +110,7 @@ OSPPXMLDocParse(
 unsigned                           /* returns error code */
 OSPPXMLDocParseElem(
     OSPTBFR     **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,     /* character encoding for the document */
     OSPTXMLELEM **ospvElemAddr     /* where to put parsed element */
 )
 {
@@ -136,7 +136,7 @@ OSPPXMLDocParseElem(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -328,7 +328,7 @@ OSPPXMLDocParseElem(
 unsigned                          /* returns error code */
 OSPPXMLDocGetAttrs(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,    /* character encoding for the document */
     OSPTLIST    *ospvAttrs        /* list for attributes */
 )
 {
@@ -344,7 +344,7 @@ OSPPXMLDocGetAttrs(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -401,7 +401,7 @@ OSPPXMLDocGetAttrs(
 unsigned                           /* returns error code */
 OSPPXMLDocGetAttr(
     OSPTBFR     **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC    ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC    ospvEncoding,    /* character encoding for the document */
     OSPTXMLATTR **ospvAttrAddr     /* list for attributes */
 )
 {
@@ -421,7 +421,7 @@ OSPPXMLDocGetAttr(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -529,7 +529,7 @@ OSPPXMLDocGetAttr(
 unsigned                          /* returns error code */
 OSPPXMLDocGetContent(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,    /* character encoding for the document */
     OSPTLIST    *ospvChild,       /* list for children */
     OSPTBFR    **ospvValBfr       /* place to store value */
 )
@@ -553,7 +553,7 @@ OSPPXMLDocGetContent(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -694,7 +694,7 @@ OSPPXMLDocGetContent(
 unsigned                          /* returns error code */
 OSPPXMLDocGetCdata(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,    /* character encoding for the document */
     OSPTBFR    **ospvValBfr       /* place to store value */
 )
 {
@@ -712,7 +712,7 @@ OSPPXMLDocGetCdata(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -775,7 +775,7 @@ OSPPXMLDocGetCdata(
 unsigned                          /* returns error code */
 OSPPXMLDocGetName(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,    /* character encoding for the document */
     OSPTBFR    **ospvNameBfr      /* buffer for storing name */
 )
 {
@@ -799,7 +799,7 @@ OSPPXMLDocGetName(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -890,7 +890,7 @@ OSPPXMLDocGetName(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipProlog(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -910,7 +910,7 @@ OSPPXMLDocSkipProlog(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -951,7 +951,7 @@ OSPPXMLDocSkipProlog(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipAllMisc(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned   ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -973,7 +973,7 @@ OSPPXMLDocSkipAllMisc(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1034,7 +1034,7 @@ OSPPXMLDocSkipAllMisc(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipDTD(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned            ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -1049,7 +1049,7 @@ OSPPXMLDocSkipDTD(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1125,7 +1125,7 @@ OSPPXMLDocSkipDTD(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipMarkupDecl(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -1158,7 +1158,7 @@ OSPPXMLDocSkipMarkupDecl(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1266,7 +1266,7 @@ OSPPXMLDocSkipMarkupDecl(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipDecl(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned            ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -1282,7 +1282,7 @@ OSPPXMLDocSkipDecl(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1321,7 +1321,7 @@ OSPPXMLDocSkipDecl(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipComment(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned            ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -1337,7 +1337,7 @@ OSPPXMLDocSkipComment(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1376,7 +1376,7 @@ OSPPXMLDocSkipComment(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipPI(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned            ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -1392,7 +1392,7 @@ OSPPXMLDocSkipPI(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1431,7 +1431,7 @@ OSPPXMLDocSkipPI(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipElementDecl(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned            ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -1447,7 +1447,7 @@ OSPPXMLDocSkipElementDecl(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1486,7 +1486,7 @@ OSPPXMLDocSkipElementDecl(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipEntityDecl(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned            ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -1502,7 +1502,7 @@ OSPPXMLDocSkipEntityDecl(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1541,7 +1541,7 @@ OSPPXMLDocSkipEntityDecl(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipAttlist(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned            ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -1557,7 +1557,7 @@ OSPPXMLDocSkipAttlist(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1596,7 +1596,7 @@ OSPPXMLDocSkipAttlist(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipPastCdataBeg(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned            ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -1611,7 +1611,7 @@ OSPPXMLDocSkipPastCdataBeg(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1632,7 +1632,7 @@ OSPPXMLDocSkipPastCdataBeg(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipPastCdataEnd(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned            ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -1647,7 +1647,7 @@ OSPPXMLDocSkipPastCdataEnd(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1666,7 +1666,7 @@ OSPPXMLDocSkipPastCdataEnd(
 unsigned                          /* returns error code */
 OSPPXMLDocIsDecl(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,    /* character encoding for the document */
     unsigned    *ospvIsDecl       /* place to put answer */
 )
 {
@@ -1683,7 +1683,7 @@ OSPPXMLDocIsDecl(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1728,7 +1728,7 @@ OSPPXMLDocIsDecl(
 unsigned                          /* returns error code */
 OSPPXMLDocIsComment(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,    /* character encoding for the document */
     unsigned    *ospvIsComment    /* place to put answer */
 )
 {
@@ -1744,7 +1744,7 @@ OSPPXMLDocIsComment(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1773,7 +1773,7 @@ OSPPXMLDocIsComment(
 unsigned                          /* returns error code */
 OSPPXMLDocIsPI(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,    /* character encoding for the document */
     unsigned    *ospvIsPI         /* place to put answer */
 )
 {
@@ -1789,7 +1789,7 @@ OSPPXMLDocIsPI(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1819,7 +1819,7 @@ OSPPXMLDocIsPI(
 unsigned                          /* returns error code */
 OSPPXMLDocIsDTD(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,    /* character encoding for the document */
     unsigned    *ospvIsDTD        /* place to put answer */
 )
 {
@@ -1835,7 +1835,7 @@ OSPPXMLDocIsDTD(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1865,7 +1865,7 @@ OSPPXMLDocIsDTD(
 unsigned                          /* returns error code */
 OSPPXMLDocIsElementDecl(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,    /* character encoding for the document */
     unsigned    *ospvIsElemDecl   /* place to put answer */
 )
 {
@@ -1881,7 +1881,7 @@ OSPPXMLDocIsElementDecl(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1911,7 +1911,7 @@ OSPPXMLDocIsElementDecl(
 unsigned                          /* returns error code */
 OSPPXMLDocIsAttlist(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,    /* character encoding for the document */
     unsigned    *ospvIsAttlist   /* place to put answer */
 )
 {
@@ -1927,7 +1927,7 @@ OSPPXMLDocIsAttlist(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -1957,7 +1957,7 @@ OSPPXMLDocIsAttlist(
 unsigned                           /* returns error code */
 OSPPXMLDocIsEntityDecl(
     OSPTBFR    **ospvBfrAddr,      /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,     /* character encoding for the document */
     unsigned    *ospvIsEntityDecl  /* place to put answer */
 )
 {
@@ -1973,7 +1973,7 @@ OSPPXMLDocIsEntityDecl(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -2003,7 +2003,7 @@ OSPPXMLDocIsEntityDecl(
 unsigned                           /* returns error code */
 OSPPXMLDocIsCdata(
     OSPTBFR    **ospvBfrAddr,      /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,     /* character encoding for the document */
     unsigned    *ospvIsCdata       /* place to put answer */
 )
 {
@@ -2019,7 +2019,7 @@ OSPPXMLDocIsCdata(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -2049,7 +2049,7 @@ OSPPXMLDocIsCdata(
 unsigned                           /* returns error code */
 OSPPXMLDocIsCdataEnd(
     OSPTBFR    **ospvBfrAddr,      /* buffer containing document */
-    OSPTXMLENC   ospvEncoding,     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding,     /* character encoding for the document */
     unsigned    *ospvIsCdataEnd    /* place to put answer */
 )
 {
@@ -2065,7 +2065,7 @@ OSPPXMLDocIsCdataEnd(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }

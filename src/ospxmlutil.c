@@ -33,7 +33,7 @@
 
 
 /* pre-defined entity names */
-const OSPTXMLDOCENTITY OSPVXMLDocEntities[] =
+const OSPT_XML_ENTITY OSPVXMLDocEntities[] =
 {
     { '<'  ,  (unsigned char *)"lt"   },
     { '>'  ,  (unsigned char *)"gt"   },
@@ -43,7 +43,7 @@ const OSPTXMLDOCENTITY OSPVXMLDocEntities[] =
 };
 
 const unsigned OSPVXMLDocEntitiesSize =
-                   sizeof(OSPVXMLDocEntities)/sizeof(OSPTXMLDOCENTITY);
+                   sizeof(OSPVXMLDocEntities)/sizeof(OSPT_XML_ENTITY);
 
 
 /**/
@@ -54,7 +54,7 @@ const unsigned OSPVXMLDocEntitiesSize =
 unsigned                                 /* returns error code */
 OSPPXMLDocIsMatch(
     OSPTBFR            **ospvBfrAddr,    /* buffer containing document */
-    OSPTXMLENC           ospvEncoding,   /* character encoding         */
+    OSPE_XML_ENC           ospvEncoding,   /* character encoding         */
     const unsigned char *ospvString,     /* string to check for match  */
     unsigned             ospvStringLen,  /* length of match string     */
     unsigned char        ospvScratch[],  /* place to store characters  */
@@ -73,7 +73,7 @@ OSPPXMLDocIsMatch(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -149,7 +149,7 @@ OSPPXMLDocIsMatch(
 unsigned                                 /* returns error code */
 OSPPXMLDocSkipPast(
     OSPTBFR            **ospvBfrAddr,    /* buffer containing document */
-    OSPTXMLENC           ospvEncoding,   /* character encoding */
+    OSPE_XML_ENC           ospvEncoding,   /* character encoding */
     const unsigned char *ospvString,     /* string to skip past */
     unsigned char        ospvScratch[]   /* place to store characters */
 )
@@ -166,7 +166,7 @@ OSPPXMLDocSkipPast(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -239,7 +239,7 @@ OSPPXMLDocSkipPast(
 unsigned                           /* returns error code */
 OSPPXMLDocSkipPastChar(
     OSPTBFR     **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC    ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC    ospvEncoding,    /* character encoding for the document */
     unsigned char ospvChar         /* character to skip past */
 )
 {
@@ -254,7 +254,7 @@ OSPPXMLDocSkipPastChar(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -282,7 +282,7 @@ OSPPXMLDocSkipPastChar(
 unsigned                             /* returns error code */
 OSPPXMLDocGetEncoding(
     OSPTBFR    **ospvBfrAddr,        /* buffer containing document */
-    OSPTXMLENC  *ospvEncoding        /* place to store encoding type */
+    OSPE_XML_ENC  *ospvEncoding        /* place to store encoding type */
 )
 {
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -298,7 +298,7 @@ OSPPXMLDocGetEncoding(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    *ospvEncoding = ospeXMLEncUnknown;
+    *ospvEncoding = OSPC_XENC_UNKNOW;
 
     /*
      * First have a look at the first two bytes in the buffer. From
@@ -340,31 +340,31 @@ OSPPXMLDocGetEncoding(
             (char2 == OSPC_XMLDOC_UTF16LSB))
         {
             /* we found the UTF-16 byte order mark, it's big-endian */
-            *ospvEncoding = ospeXMLEncUTF16b;
+            *ospvEncoding = OSPC_XENC_UTF16B;
         }
         else if ((char1 == OSPC_XMLDOC_UTF16LSB) &&
             (char2 == OSPC_XMLDOC_UTF16LSB))
         {
             /* we found the UTF-16 byte order mark, it's little-endian */
-            *ospvEncoding = ospeXMLEncUTF16l;
+            *ospvEncoding = OSPC_XENC_UTF16L;
         }
         else if ((char1 == OSPC_XMLDOC_UTF16NULL) &&
             (char2 == OSPC_XMLDOC_OPEN))
         {
             /* UTF-16 without the byte order mark, big-endian */
-            *ospvEncoding = ospeXMLEncUTF16b;
+            *ospvEncoding = OSPC_XENC_UTF16B;
         }
         else if ((char1 == OSPC_XMLDOC_OPEN) &&
             (char2 == OSPC_XMLDOC_UTF16NULL))
         {
             /* UTF-16 without the byte order mark, little-endian */
-            *ospvEncoding = ospeXMLEncUTF16l;
+            *ospvEncoding = OSPC_XENC_UTF16L;
         }
         else if ((char1 == OSPC_XMLDOC_OPEN) &&
             (char2 == OSPC_XMLDOC_QUEST))
         {
             /* this is UTF-8 */
-            *ospvEncoding = ospeXMLEncUTF8;
+            *ospvEncoding = OSPC_XENC_UTF8;
         }
         else
         {
@@ -376,7 +376,7 @@ OSPPXMLDocGetEncoding(
              * for the start of a character encoding, that
              * only leaves UTF8.
              */
-            *ospvEncoding = ospeXMLEncUTF8;
+            *ospvEncoding = OSPC_XENC_UTF8;
         }
     }
 
@@ -495,7 +495,7 @@ OSPPXMLDocTranslateEntity(
 unsigned                            /* returns error code */
 OSPPXMLDocReadChar(
     OSPTBFR      **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC     ospvEncoding,    /* character encoding for document */
+    OSPE_XML_ENC     ospvEncoding,    /* character encoding for document */
     unsigned char *ospvChar         /* place to store read character */
 )
 {
@@ -510,7 +510,7 @@ OSPPXMLDocReadChar(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -533,13 +533,13 @@ OSPPXMLDocReadChar(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         /* UTF-8 is pretty easy -- we're done */
-        if (ospvEncoding == ospeXMLEncUTF8)
+        if (ospvEncoding == OSPC_XENC_UTF8)
         {
             *ospvChar = (unsigned char)readChar;
         }
         else
         {
-            if (ospvEncoding == ospeXMLEncUTF16l)
+            if (ospvEncoding == OSPC_XENC_UTF16L)
             {
                 *ospvChar = (unsigned char)readChar;
                 readChar = OSPPBfrReadByte(*ospvBfrAddr);
@@ -554,7 +554,7 @@ OSPPXMLDocReadChar(
             }
             else
             {
-                if (ospvEncoding == ospeXMLEncUTF16b)
+                if (ospvEncoding == OSPC_XENC_UTF16B)
                 {
                     readChar = OSPPBfrReadByte(*ospvBfrAddr);
                     if (readChar == -1)
@@ -586,7 +586,7 @@ OSPPXMLDocReadChar(
 void
 OSPPXMLDocPeekCharN(
     OSPTBFR      **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC     ospvEncoding,    /* character encoding for the document */
+    OSPE_XML_ENC     ospvEncoding,    /* character encoding for the document */
     unsigned       ospvCnt,         /* character to look at */
     unsigned char *ospvChar,        /* place to store character */
     int           *ospvErrCode      /* error code               */
@@ -602,7 +602,7 @@ OSPPXMLDocPeekCharN(
     {
         *ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         *ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
@@ -616,13 +616,13 @@ OSPPXMLDocPeekCharN(
         /* handle each encoding separately */
         switch (ospvEncoding)
         {
-            case ospeXMLEncUTF8:
+            case OSPC_XENC_UTF8:
             readChar = OSPPBfrPeekByteN(*ospvBfrAddr, ospvCnt);
             break;
-            case ospeXMLEncUTF16l:
+            case OSPC_XENC_UTF16L:
             readChar = OSPPBfrPeekByteN(*ospvBfrAddr, 2*ospvCnt);
             break;
-            case ospeXMLEncUTF16b:
+            case OSPC_XENC_UTF16B:
             readChar = OSPPBfrPeekByteN(*ospvBfrAddr, (2*ospvCnt+1));
             break;
             default:
@@ -653,7 +653,7 @@ OSPPXMLDocPeekCharN(
 unsigned                          /* returns error code */
 OSPPXMLDocSkipWhite(
     OSPTBFR    **ospvBfrAddr,     /* buffer containing document */
-    OSPTXMLENC   ospvEncoding     /* character encoding for the document */
+    OSPE_XML_ENC   ospvEncoding     /* character encoding for the document */
 )
 {
     unsigned      ospvErrCode   = OSPC_ERR_NO_ERROR;
@@ -667,7 +667,7 @@ OSPPXMLDocSkipWhite(
     {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
     }
-    if (ospvEncoding == ospeXMLEncUnknown)
+    if (ospvEncoding == OSPC_XENC_UNKNOW)
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ENC;
     }
