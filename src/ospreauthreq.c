@@ -778,7 +778,7 @@ OSPPReauthReqToElement(
     if(ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         /* create the "Message" element as the parent */
-    *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemMessage), "");
+    *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_MESSAGE), "");
 
         if(*ospvElem == OSPC_OSNULL)
         {
@@ -786,7 +786,7 @@ OSPPReauthReqToElement(
         }
         else
         {
-            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrMessageId), 
+            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID), 
                 (OSPPReauthReqHasMessageId(ospvReauthReq))?(const unsigned char *)(ospvReauthReq->ospmReauthReqMessageId): (const unsigned char *)"NULL");
 
             if (attr != OSPC_OSNULL) 
@@ -803,7 +803,7 @@ OSPPReauthReqToElement(
             if((OSPPUtilGetRandom(random, 0) > 0) &&
                 (ospvErrCode == OSPC_ERR_NO_ERROR))
             {
-                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrRandom),
+                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_RANDOM),
                     (const unsigned char *)random);
 
                 if (attr != OSPC_OSNULL) 
@@ -822,7 +822,7 @@ OSPPReauthReqToElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         /* now the message type element */
-        reauthelem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemReauthReq), "");
+        reauthelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_REAUTHREQ), "");
         if (*ospvElem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -833,7 +833,7 @@ OSPPReauthReqToElement(
      */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrComponentId), 
+        attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_COMPONENTID), 
             (OSPPReauthReqHasComponentId(ospvReauthReq))?(const unsigned char *)(ospvReauthReq->ospmReauthReqComponentId): (const unsigned char *)"NULL");
 
         if (attr == OSPC_OSNULL)
@@ -851,7 +851,7 @@ OSPPReauthReqToElement(
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasTimestamp(ospvReauthReq))
     {
         ospvErrCode = OSPPMsgTimeToElement(OSPPReauthReqGetTimestamp(ospvReauthReq),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTimestamp), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TIMESTAMP), &elem);
     }
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
@@ -862,7 +862,7 @@ OSPPReauthReqToElement(
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasRole(ospvReauthReq))
     {
         ospvErrCode = OSPPMsgRoleToElement(OSPPReauthReqGetRole(ospvReauthReq),
-            (const unsigned char *) OSPPMsgGetElemName(ospeElemRole), &elem);
+            (const unsigned char *) OSPPMsgElemGetName(OSPC_MELEM_ROLE), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(reauthelem, elem);
@@ -884,7 +884,7 @@ OSPPReauthReqToElement(
     /* add the source number */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemSrcInfo),
+        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SRCINFO),
             (const char *)OSPPReauthReqGetSourceNumber(ospvReauthReq));
         if (elem == OSPC_OSNULL)
         {
@@ -895,17 +895,17 @@ OSPPReauthReqToElement(
     {
         if (trans->CallingNumberFormat == OSPC_E164)
         {
-            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
                 (const unsigned char *) "e164");
         }
         else if (trans->CallingNumberFormat == OSPC_SIP)
         {
-            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
                 (const unsigned char *) "sip");
         }
         else if (trans->CallingNumberFormat == OSPC_URL)
         {
-            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
                 (const unsigned char *) "url");
         }
         if (attr == OSPC_OSNULL)
@@ -930,7 +930,7 @@ OSPPReauthReqToElement(
             ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
             altinfo =  (OSPTALTINFO *)OSPPListNext( &(ospvReauthReq->ospmReauthReqDevInfo), altinfo))
         {
-            ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, ospeElemDeviceInfo);
+            ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
             if (ospvErrCode == OSPC_ERR_NO_ERROR)
             {
                 OSPPXMLElemAddChild(reauthelem, elem);
@@ -947,7 +947,7 @@ OSPPReauthReqToElement(
             ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
             altinfo = OSPPReauthReqNextSourceAlt(ospvReauthReq, altinfo))
         {
-            ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, ospeElemSrcAlt);
+            ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
             if (ospvErrCode == OSPC_ERR_NO_ERROR)
             {
                 OSPPXMLElemAddChild(reauthelem, elem);
@@ -959,7 +959,7 @@ OSPPReauthReqToElement(
     /* add the dest number */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemDestInfo),
+        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DESTINFO),
             (const char *)OSPPReauthReqGetDestNumber(ospvReauthReq));
         if (elem == OSPC_OSNULL)
         {
@@ -970,17 +970,17 @@ OSPPReauthReqToElement(
     {
         if (trans->CalledNumberFormat == OSPC_E164)
         {
-            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
                 (const unsigned char *)"e164");
         }
         else if (trans->CalledNumberFormat == OSPC_SIP)
         {
-            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
                 (const unsigned char *)"sip");
         }
         else if (trans->CalledNumberFormat == OSPC_URL)
         {
-            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType), 
+            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
                 (const unsigned char *)"url");
         }
 
@@ -1006,7 +1006,7 @@ OSPPReauthReqToElement(
             ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
             altinfo = OSPPReauthReqNextDestinationAlt(ospvReauthReq, altinfo))
         {
-            ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, ospeElemDestAlt);
+            ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DESTALT);
             if (ospvErrCode == OSPC_ERR_NO_ERROR)
             {
                 OSPPXMLElemAddChild(reauthelem, elem);
@@ -1020,7 +1020,7 @@ OSPPReauthReqToElement(
     {
         trxid = OSPPReauthReqGetTrxId(ospvReauthReq);
         ospvErrCode = OSPPMsgTXToElement( trxid,
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTransId),
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TRANSID),
             &elem);
     }
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
@@ -1061,7 +1061,7 @@ OSPPReauthReqToElement(
         {
             ospvErrCode = OSPPMsgNumToElement( 
                 OSPPReauthReqGetTNCustId(ospvReauthReq),
-                (const unsigned char *)OSPPMsgGetElemName(ospeElemTNCustId),
+                (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNCUSTID),
                 &elem);
 
             if (ospvErrCode == OSPC_ERR_NO_ERROR)
@@ -1073,7 +1073,7 @@ OSPPReauthReqToElement(
                 {
                     ospvErrCode = OSPPMsgNumToElement( 
                         OSPPReauthReqGetTNDeviceId(ospvReauthReq),
-                        (const unsigned char *)OSPPMsgGetElemName(ospeElemTNDeviceId),
+                        (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNDEVICEID),
                         &elem);
 
                     if (ospvErrCode == OSPC_ERR_NO_ERROR)

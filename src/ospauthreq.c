@@ -659,7 +659,7 @@ unsigned OSPPAuthReqAddServiceInfo(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         /* create the parent element */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemService), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICE), "");
         if (*ospvElem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -669,11 +669,11 @@ unsigned OSPPAuthReqAddServiceInfo(
     {
         if (ServiceType == OSPC_VOICE)
         {
-            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemServiceType), "voice");
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICETYPE), "voice");
         }
         else
         {
-            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemServiceType), "data");
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICETYPE), "data");
         }
         if (elem == OSPC_OSNULL)
         {
@@ -716,7 +716,7 @@ unsigned OSPPAuthReqAddPricingInfo(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         /* create the parent element */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemPricingInd), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_PRICINGIND), "");
         if (*ospvElem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -726,7 +726,7 @@ unsigned OSPPAuthReqAddPricingInfo(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         ospvErrCode = OSPPMsgFloatToElement(PricingInfo.amount,
-                (const unsigned char *)OSPPMsgGetElemName(ospeElemAmount), &elem);
+                (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
 
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
@@ -738,7 +738,7 @@ unsigned OSPPAuthReqAddPricingInfo(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         ospvErrCode = OSPPMsgNumToElement(PricingInfo.increment,
-                (const unsigned char *)OSPPMsgGetElemName(ospeElemIncrement), &elem);
+                (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
     
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
@@ -749,7 +749,7 @@ unsigned OSPPAuthReqAddPricingInfo(
     /* now we need to add units */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemUnit),(const char *)PricingInfo.unit);
+        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_UNIT),(const char *)PricingInfo.unit);
         if (elem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -764,7 +764,7 @@ unsigned OSPPAuthReqAddPricingInfo(
     /* add currency */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemCurrency),(const char *)PricingInfo.currency);
+        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CURRENCY),(const char *)PricingInfo.currency);
         if (elem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -820,7 +820,7 @@ OSPPAuthReqToElement(
     }
 
     /* create the "Message" element as the parent */
-    *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemMessage), "");
+    *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_MESSAGE), "");
 
     if(*ospvElem == OSPC_OSNULL)
     {
@@ -828,7 +828,7 @@ OSPPAuthReqToElement(
     }
     else
     {
-        attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrMessageId), 
+        attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID), 
             (OSPPAuthReqHasMessageId(ospvAuthReq))?(const unsigned char *)(ospvAuthReq->ospmAuthReqMessageId): (const unsigned char *)"NULL");
 
         if (attr != OSPC_OSNULL) 
@@ -845,7 +845,7 @@ OSPPAuthReqToElement(
         if((OSPPUtilGetRandom(random, 0) > 0) &&
             (ospvErrCode == OSPC_ERR_NO_ERROR))
         {
-            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrRandom),
+            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_RANDOM),
                 (const unsigned char *)random);
 
             if (attr != OSPC_OSNULL) 
@@ -863,7 +863,7 @@ OSPPAuthReqToElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         /* create the authreq element */
-        authreqelem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemAuthReq), "");
+        authreqelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_AUTHREQ), "");
         if (authreqelem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -873,7 +873,7 @@ OSPPAuthReqToElement(
          */
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
-            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrComponentId), 
+            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_COMPONENTID), 
                 (OSPPAuthReqHasComponentId(ospvAuthReq))?(const unsigned char *)(ospvAuthReq->ospmAuthReqComponentId): (const unsigned char *)"NULL");
             if (attr == OSPC_OSNULL)
             {
@@ -891,7 +891,7 @@ OSPPAuthReqToElement(
         if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasTimestamp(ospvAuthReq))
         {
             ospvErrCode = OSPPMsgTimeToElement(OSPPAuthReqGetTimestamp(ospvAuthReq),
-                (const unsigned char *)OSPPMsgGetElemName(ospeElemTimestamp), &elem);
+                (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TIMESTAMP), &elem);
             if (ospvErrCode == OSPC_ERR_NO_ERROR)
             {
                 OSPPXMLElemAddChild(authreqelem, elem);
@@ -919,7 +919,7 @@ OSPPAuthReqToElement(
         /* add the source number */
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
-            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemSrcInfo),
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SRCINFO),
                 (const char *)OSPPAuthReqGetSourceNumber(ospvAuthReq));
             if (elem == OSPC_OSNULL)
             {
@@ -930,17 +930,17 @@ OSPPAuthReqToElement(
         {
             if (trans->CallingNumberFormat == OSPC_E164)
             {
-                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType),
+                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE),
                     (const unsigned char *)"e164");
             }
             else if (trans->CallingNumberFormat == OSPC_SIP)
             {
-                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType),
+                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE),
                     (const unsigned char *)"sip");
             }
             else if (trans->CallingNumberFormat == OSPC_URL)
             {
-                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType),
+                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE),
                     (const unsigned char *)"url");
             }
 
@@ -972,7 +972,7 @@ OSPPAuthReqToElement(
             altinfo!= (OSPTALTINFO *)OSPC_OSNULL;
             altinfo = (OSPTALTINFO *)OSPPListNext( &(ospvAuthReq->ospmAuthReqDeviceInfo), altinfo))
             {
-                OSPPAltInfoToElement(altinfo, &elem, ospeElemDeviceInfo);
+                OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
                 OSPPXMLElemAddChild(authreqelem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -986,7 +986,7 @@ OSPPAuthReqToElement(
                 ((altinfo != (OSPTALTINFO *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
                 altinfo = (OSPTALTINFO *)OSPPAuthReqNextSourceAlt(ospvAuthReq, altinfo))
             {
-                ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, ospeElemSrcAlt);
+                ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
                     OSPPXMLElemAddChild(authreqelem, elem);
@@ -998,7 +998,7 @@ OSPPAuthReqToElement(
         /* add the dest number */
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
-            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemDestInfo),
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DESTINFO),
                 (const char *)OSPPAuthReqGetDestNumber(ospvAuthReq));
             if (elem == OSPC_OSNULL)
             {
@@ -1009,17 +1009,17 @@ OSPPAuthReqToElement(
         {
             if (trans->CalledNumberFormat == OSPC_E164)
             {
-                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType),
+                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE),
                     (const unsigned char *)"e164");
             }
             else if (trans->CalledNumberFormat == OSPC_SIP)
             {
-                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType),
+                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE),
                     (const unsigned char *)"sip");
             }
             else if (trans->CalledNumberFormat == OSPC_URL)
             {
-                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(ospeAttrType),
+                attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE),
                     (const unsigned char *)"url");
             }
             if (attr == OSPC_OSNULL)
@@ -1045,7 +1045,7 @@ OSPPAuthReqToElement(
                 ((altinfo != (OSPTALTINFO *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
                 altinfo = (OSPTALTINFO *)OSPPAuthReqNextDestinationAlt(ospvAuthReq, altinfo))
             {
-                ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, ospeElemDestAlt);
+                ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DESTALT);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
                     OSPPXMLElemAddChild(authreqelem, elem);
@@ -1089,7 +1089,7 @@ OSPPAuthReqToElement(
         {
             if (ospvErrCode == OSPC_ERR_NO_ERROR)
             {
-                elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemService),"");
+                elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICE),"");
                 if (elem == OSPC_OSNULL)
                 {
                     ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -1107,7 +1107,7 @@ OSPPAuthReqToElement(
         {
             ospvErrCode = OSPPMsgNumToElement( 
                 OSPPAuthReqGetMaxDest(ospvAuthReq),
-                (const unsigned char *)OSPPMsgGetElemName(ospeElemMaxDest),
+                (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_MAXDEST),
                 &elem);
         }
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
@@ -1123,14 +1123,14 @@ OSPPAuthReqToElement(
             {
                 ospvErrCode = OSPPMsgNumToElement( 
                     OSPPAuthReqGetTNCustId(ospvAuthReq),
-                    (const unsigned char *) OSPPMsgGetElemName(ospeElemTNCustId),
+                    (const unsigned char *) OSPPMsgElemGetName(OSPC_MELEM_TNCUSTID),
                     &elem);
 
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
 
                    attr = OSPPXMLAttrNew(
-                        (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                        (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                         (const unsigned char *)"False");
 
                     if (attr != OSPC_OSNULL)
@@ -1153,13 +1153,13 @@ OSPPAuthReqToElement(
                     {
                         ospvErrCode = OSPPMsgNumToElement( 
                             OSPPAuthReqGetTNDeviceId(ospvAuthReq),
-                            (const unsigned char *) OSPPMsgGetElemName(ospeElemTNDeviceId),
+                            (const unsigned char *) OSPPMsgElemGetName(OSPC_MELEM_TNDEVICEID),
                             &elem);
 
                         if (ospvErrCode == OSPC_ERR_NO_ERROR)
                         {
                             attr = OSPPXMLAttrNew(
-                                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                                 (const unsigned char *)"False");
 
                             if (attr != OSPC_OSNULL)

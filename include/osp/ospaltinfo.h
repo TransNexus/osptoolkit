@@ -27,40 +27,36 @@
 #include "osp/ospmsgelem.h"
 #include "osp/ospmsg.h"
 
-/* max size of an altinfo (bytes) */
+/* Max size of an altinfo (bytes) */
 #define OSPC_ALTINFOMAXSIZE 1024
 
 typedef enum {
-    ospetypeupper,
-    ospeE164,
-    ospeH323,
-    ospeUrl,
-    ospeEmail,
-    ospeTransport,
-    ospeInternational,
-    ospeNational,
-    ospeNetwork,
-    ospeSubscriber,
-    ospeAbbreviated,
-    ospeE164prefix,
-    ospetypelower,
-    ospeSip,
-    ospeDeviceId
-} OSPE_TYPE_ATTR_VAL;
+    OSPC_ATYPE_UNKNOWN = OSPC_MPART_UNKNOWN,
+    OSPC_ATYPE_E164,
+    OSPC_ATYPE_H323,
+    OSPC_ATYPE_URL,
+    OSPC_ATYPE_EMAIL,
+    OSPC_ATYPE_TRANSPORT,
+    OSPC_ATYPE_INTERNATIONAL,
+    OSPC_ATYPE_NATIONAL,
+    OSPC_ATYPE_NETWORK,
+    OSPC_ATYPE_SUBSCRIBER,
+    OSPC_ATYPE_ABBREVIATED,
+    OSPC_ATYPE_E164PREFIX,
+    OSPC_ATYPE_SIP,
+    OSPC_ATYPE_DEVICEID,
+    /* Number of element attributes */
+    OSPC_ATYPE_NUMBER
+} OSPE_ALTINFO_TYPE;
 
 /* the basic altinfo structure */
 
 typedef struct {
     OSPTLISTLINK ospmAltInfoLink;
     unsigned ospmAltInfoLen;
-    OSPE_TYPE_ATTR_VAL ospmAltInfoType;
+    OSPE_ALTINFO_TYPE ospmAltInfoType;
     unsigned char *ospmAltInfoVal;
 } OSPTALTINFO;
-
-typedef struct {
-    OSPE_TYPE_ATTR_VAL ospmType;
-    const char *ospmTypeStr;
-} OSP_TYPE_ATTR_STRUCT;
 
 /* Function Prototypes */
 
@@ -68,13 +64,13 @@ typedef struct {
 extern "C" {
 #endif
 
-    OSPTALTINFO *OSPPAltInfoNew(unsigned, const unsigned char *, OSPE_TYPE_ATTR_VAL);
+    OSPTALTINFO *OSPPAltInfoNew(unsigned, const unsigned char *, OSPE_ALTINFO_TYPE);
     void OSPPAltInfoDelete(OSPTALTINFO **);
     unsigned OSPPAltInfoGetSize(OSPTALTINFO *);
-    OSPE_TYPE_ATTR_VAL OSPPAltInfoGetType(OSPTALTINFO *);
+    OSPE_ALTINFO_TYPE OSPPAltInfoGetType(OSPTALTINFO *);
     const unsigned char *OSPPAltInfoGetValue(OSPTALTINFO *);
-    unsigned OSPPAltInfoToElement(OSPTALTINFO *, OSPTXMLELEM **, OSPTMSGELEMPART);
-    const char *OSPPAltInfoGetTypeName(OSPTALTINFO *);
+    unsigned OSPPAltInfoToElement(OSPTALTINFO *, OSPTXMLELEM **, OSPE_MSG_ELEM);
+    const char *OSPPAltInfoTypeGetName(OSPE_ALTINFO_TYPE);
 
 #ifdef __cplusplus
 }

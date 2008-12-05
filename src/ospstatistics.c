@@ -318,7 +318,7 @@ OSPPStatisticsLossReceivedToElement(
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
 
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemTNLossRcvd), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TNLOSSRCVD), "");
         if(*ospvElem == OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -327,7 +327,7 @@ OSPPStatisticsLossReceivedToElement(
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
 
             if (attr != OSPC_OSNULL)
@@ -346,12 +346,12 @@ OSPPStatisticsLossReceivedToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetPktReceived(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNPackets), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNPACKETS), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -375,12 +375,12 @@ OSPPStatisticsLossReceivedToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetFracReceived(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNFraction), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNFRACTION), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -440,7 +440,7 @@ OSPPStatisticsLossSentToElement(
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
 
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemTNLossSent), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TNLOSSSENT), "");
         if(*ospvElem == OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -449,7 +449,7 @@ OSPPStatisticsLossSentToElement(
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
 
             if (attr != OSPC_OSNULL)
@@ -468,12 +468,12 @@ OSPPStatisticsLossSentToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetPktSent(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNPackets), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNPACKETS), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -497,12 +497,12 @@ OSPPStatisticsLossSentToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetFracSent(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNFraction), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNFRACTION), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -577,7 +577,7 @@ OSPPStatisticsOneWayToElement(
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
 
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemTNOneWayDelay), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TNONEWAYDELAY), "");
         if(*ospvElem == OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -586,7 +586,7 @@ OSPPStatisticsOneWayToElement(
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
 
             if (attr != OSPC_OSNULL)
@@ -605,12 +605,12 @@ OSPPStatisticsOneWayToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetOneWayMinimum(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNMinimum), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNMINIMUM), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -634,12 +634,12 @@ OSPPStatisticsOneWayToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetOneWayMean(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNMean), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNMEAN), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -663,12 +663,12 @@ OSPPStatisticsOneWayToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgFloatToElement(OSPPStatisticsGetOneWayVariance(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNVariance), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNVARIANCE), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -692,12 +692,12 @@ OSPPStatisticsOneWayToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetOneWaySamples(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNSamples), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNSAMPLES), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -756,7 +756,7 @@ OSPPStatisticsRoundTripToElement(
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
 
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemTNRoundTripDelay), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TNROUNDTRIPDELAY), ""); \
         if(*ospvElem == OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -765,7 +765,7 @@ OSPPStatisticsRoundTripToElement(
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
 
             if (attr != OSPC_OSNULL)
@@ -784,12 +784,12 @@ OSPPStatisticsRoundTripToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetRoundTripMinimum(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNMinimum), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNMINIMUM), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -813,12 +813,12 @@ OSPPStatisticsRoundTripToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetRoundTripMean(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNMean), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNMEAN), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -842,12 +842,12 @@ OSPPStatisticsRoundTripToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgFloatToElement(OSPPStatisticsGetRoundTripVariance(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNVariance), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNVARIANCE), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -871,12 +871,12 @@ OSPPStatisticsRoundTripToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetRoundTripSamples(ospvStatistics),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemTNSamples), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNSAMPLES), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {
@@ -1047,7 +1047,7 @@ OSPPStatisticsToElement(
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
         /* create the Statistics element as the parent */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemTNStatistics), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TNSTATISTICS), "");
 
         if(*ospvElem == OSPC_OSNULL)
         {
@@ -1056,7 +1056,7 @@ OSPPStatisticsToElement(
         else
         {
             attr = OSPPXMLAttrNew(
-                (const unsigned char *)OSPPMsgGetAttrName(ospeAttrCritical),
+                (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL),
                 (const unsigned char *)"False");
             if (attr != OSPC_OSNULL) 
             {

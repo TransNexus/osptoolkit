@@ -455,7 +455,7 @@ unsigned OSPPAuthRspFromElement(
             ospvErrCode = OSPC_ERR_DATA_NO_AUTHRSP;
         } else {
 
-            if (OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvElem))==ospeElemMessage) {
+            if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem))==OSPC_MELEM_MESSAGE) {
                 OSPPAuthRspMessageIdFromElement(ospvElem, &messageId);
                 if(messageId != OSPC_OSNULL) {
                     OSPPAuthRspSetMessageId(authrsp, messageId);
@@ -486,8 +486,8 @@ unsigned OSPPAuthRspFromElement(
             (elem != (OSPTXMLELEM*)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             elem = (OSPTXMLELEM*)OSPPXMLElemNextChild(ospvElem, elem))
         {
-            switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem))) {
-                case ospeElemMessage:
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
+                case OSPC_MELEM_MESSAGE:
                     OSPPAuthRspMessageIdFromElement(elem, &messageId);
                     if(messageId != OSPC_OSNULL) {
                         OSPPAuthRspSetMessageId(authrsp, messageId);
@@ -495,52 +495,52 @@ unsigned OSPPAuthRspFromElement(
                 break;
 
                 /*
-                ** ospeElemAuthRzp -- OSP Stds spell Authorization not Authorisation
+                ** OSPC_MELEM_AUTHRZP -- OSP Stds spell Authorization not Authorisation
                 */
-                case ospeElemAuthRzp:
-                case ospeElemAuthRsp:
+                case OSPC_MELEM_AUTHRZP:
+                case OSPC_MELEM_AUTHRSP:
                     OSPPAuthRspComponentIdFromElement(elem, &compid);
                     if(compid != OSPC_OSNULL) {
                         OSPPAuthRspSetComponentId(authrsp, compid);
                     }
                 break;
-                case ospeElemTimestamp:
+                case OSPC_MELEM_TIMESTAMP:
                     ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
                     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                         OSPPAuthRspSetTimestamp(authrsp,t);
                     }
                     break;
-                case ospeElemStatus:
+                case OSPC_MELEM_STATUS:
                     if (authrsp->ospmAuthRspStatus != OSPC_OSNULL) {
                         OSPPStatusDelete(&(authrsp->ospmAuthRspStatus));
                     }
                     ospvErrCode = OSPPStatusFromElement(elem, &(authrsp->ospmAuthRspStatus));
                     break;
-                case ospeElemTransId:
+                case OSPC_MELEM_TRANSID:
                     len = sizeof(OSPTTRXID);
                     ospvErrCode = OSPPMsgTXFromElement(elem, &transid);
                     OSPPAuthRspSetTrxId(authrsp, transid);
                     break;
 
-                case ospeElemTNDelayLimit:
+                case OSPC_MELEM_TNDELAYLIMIT:
                     ospvErrCode = OSPPMsgNumFromElement(elem, &delaylimit);
                     OSPPAuthRspSetTNDelayLimit(authrsp, (unsigned)delaylimit);
                 break;
 
-                case ospeElemTNAudit:
+                case OSPC_MELEM_TNAUDIT:
                     ospvErrCode = OSPPTNAuditFromElement(elem, &(authrsp->ospmAuthRspTNAudit));
                     break;
 
-                case ospeElemCSAuditTrigger:
+                case OSPC_MELEM_CSAUDITTRIGGER:
                     ospvErrCode = OSPPCSAuditFromElement(elem, &(authrsp->ospmAuthRspCSAudit));
                     break;
 
-                case ospeElemTNDelayPref:
+                case OSPC_MELEM_TNDELAYPREF:
                     ospvErrCode = OSPPMsgNumFromElement(elem, &delaypref);
                     OSPPAuthRspSetTNDelayPref(authrsp, (unsigned)delaypref);
                     break;
 
-                case ospeElemDest:
+                case OSPC_MELEM_DEST:
                     ospvErrCode = OSPPDestFromElement(elem, &dest);
                     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                         if(dest != OSPC_OSNULL) {
@@ -637,7 +637,7 @@ void OSPPAuthRspMessageIdFromElement(
         (attr != (OSPTXMLATTR*)OSPC_OSNULL);
         attr = (OSPTXMLATTR*)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
-        if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrMessageId) {
+        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_MESSAGEID) {
             /* we found the message attribute. Get the value */
             *ospvMessageId = (unsigned char*)OSPPXMLAttrGetValue(attr);
             break;
@@ -662,7 +662,7 @@ void OSPPAuthRspComponentIdFromElement(
         attr = (OSPTXMLATTR*)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
 
-        if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrComponentId) {
+        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_COMPONENTID) {
             /* we found the component attribute. Get the value */
             *ospvComponentId = (unsigned char*)OSPPXMLAttrGetValue(attr);
             break;

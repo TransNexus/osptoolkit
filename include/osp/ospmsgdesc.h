@@ -38,18 +38,18 @@
  */
 
 /*
- * An OPSMsgDesc structure is used to associate a part (for an attribute
+ * An OPST_MSG_DESC structure is used to associate a part (for an attribute
  * or an element) with a name.
  */
 
 typedef struct {
-    OSPTMSGPART ospmMsgDescPart;
-    const char *ospmMsgDescName;
-} OSPTMSGDESC;
+    OSPT_MSG_PART ospmPart;
+    const char *ospmName;
+} OSPT_MSG_DESC;
 
 /* Function Prototypes */
 
-OSPTMSGPART OSPPMsgDescGetPart(const char *, const OSPTMSGDESC *, unsigned);
-const char *OSPPMsgDescGetName(OSPTMSGPART, const OSPTMSGDESC *, unsigned);
+OSPT_MSG_PART OSPPMsgDescGetPart(const char *, const OSPT_MSG_DESC *, unsigned);
+const char *OSPPMsgDescGetName(OSPT_MSG_PART, const OSPT_MSG_DESC *, unsigned);
 
 #endif /* _OSPMSGDESC_H */

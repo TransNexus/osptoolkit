@@ -191,8 +191,8 @@ OSPPCallIdFromElement(
     {
         ospvErrCode = OSPC_ERR_DATA_NOCALLID;
     }
-    /*    assert(OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvElem)) ==
-               ospeElemCallId);
+    /*    assert(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) ==
+               OSPC_MELEM_CALLID);
     */
 
     /* start by assuming we will fail */
@@ -266,7 +266,7 @@ OSPPCallIdToElement(
     {
         ospvErrCode = OSPPMsgBinToElement(OSPPCallIdGetSize(ospvCallId),
             OSPPCallIdGetValue(ospvCallId),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemCallId),
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_CALLID),
             ospvElem, ospvIsBase64);
     }
 

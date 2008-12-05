@@ -168,7 +168,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                       */
                      altinfo = OSPPAltInfoNew(strlen(ospvSource),
                                 (const unsigned char *)ospvSource,
-                                ospeTransport);
+                                OSPC_ATYPE_TRANSPORT);
 
                      if (altinfo != OSPC_OSNULL) {
                          OSPPListAppend(
@@ -197,7 +197,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                      */
                      altinfo = OSPPAltInfoNew(strlen(ospvSourceDevice),
                                 (const unsigned char *)ospvSourceDevice,
-                                ospeTransport);
+                                OSPC_ATYPE_TRANSPORT);
 
                      if (altinfo != OSPC_OSNULL) {
                           OSPPListAppend(
@@ -233,7 +233,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                         altinfoToKeep = NULL;
                         while(!OSPPListEmpty(&(trans->AuthInd->ospmAuthIndSourceAlternate))) {
                             altinfo = (OSPTALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndSourceAlternate));
-                            if (altinfo->ospmAltInfoType == ospeNetwork) {
+                            if (altinfo->ospmAltInfoType == OSPC_ATYPE_NETWORK) {
                                /*
                                 * This node in the list corresponds to
                                 * Network Id. Do not delete it.
@@ -256,7 +256,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                     }
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource),
                                 (const unsigned char *)ospvSource,
-                                ospeTransport);
+                                OSPC_ATYPE_TRANSPORT);
 
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend(
@@ -278,7 +278,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                         altinfoToKeep = NULL;
                         while(!OSPPListEmpty(&(trans->AuthInd->ospmAuthIndDeviceInfo))) {
                             altinfo = (OSPTALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndDeviceInfo));
-                            if (altinfo->ospmAltInfoType == ospeNetwork) {
+                            if (altinfo->ospmAltInfoType == OSPC_ATYPE_NETWORK) {
                                /*
                                 * This node in the list corresponds to
                                 * Network Id. Do not delete it.
@@ -301,7 +301,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                     }
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice),
                                 (const unsigned char *)ospvSourceDevice,
-                                ospeTransport);
+                                OSPC_ATYPE_TRANSPORT);
 
                     if (altinfo != OSPC_OSNULL) {
 
@@ -323,13 +323,13 @@ int OSPPTransactionModifyDeviceIdentifiers(
                      {
                          altinfo = (OSPTALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndDestinationAlternate));
                          if (altinfo != OSPC_OSNULL) {
-                             if (altinfo->ospmAltInfoType == ospeH323) {
+                             if (altinfo->ospmAltInfoType == OSPC_ATYPE_H323) {
                                  /*
                                   * This node in the list corresponds to
                                   * DestinationDevice. Do not delete it.
                                   */
                                  altinfoToKeep = altinfo;
-                             } else if (altinfo->ospmAltInfoType == ospeNetwork) {
+                             } else if (altinfo->ospmAltInfoType == OSPC_ATYPE_NETWORK) {
                                  /*
                                   * This node in the list corresponds to
                                   * Network Id. Do not delete it.
@@ -366,7 +366,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                       altinfo =
                            OSPPAltInfoNew(OSPM_STRLEN(ospvDestination),
                            (const unsigned char *)ospvDestination,
-                           ospeTransport);
+                           OSPC_ATYPE_TRANSPORT);
 
                       if (altinfo != OSPC_OSNULL) {
                            OSPPListAppend(
@@ -387,13 +387,13 @@ int OSPPTransactionModifyDeviceIdentifiers(
                      {
                          altinfo = (OSPTALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndDestinationAlternate));
                          if (altinfo != OSPC_OSNULL) {
-                             if (altinfo->ospmAltInfoType == ospeTransport) {
+                             if (altinfo->ospmAltInfoType == OSPC_ATYPE_TRANSPORT) {
                                  /*
                                   * This node in the list corresponds to
                                   * Destination. Do not delete it.
                                   */
                                  altinfoToKeep = altinfo;
-                             } else if (altinfo->ospmAltInfoType == ospeNetwork) {
+                             } else if (altinfo->ospmAltInfoType == OSPC_ATYPE_NETWORK) {
                                  /*
                                   * This node in the list corresponds to
                                   * NetworkId. Do not delete it.
@@ -432,7 +432,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                       altinfo =
                            OSPPAltInfoNew(OSPM_STRLEN(ospvDestinationDevice),
                            (const unsigned char *)ospvDestinationDevice,
-                           ospeH323);
+                           OSPC_ATYPE_H323);
 
                       if (altinfo != OSPC_OSNULL) {
                            OSPPListAppend(
@@ -503,7 +503,7 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
             {
                 altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate));
                 if (altinfo != OSPC_OSNULL) {
-                    if (altinfo->ospmAltInfoType == ospeNetwork) {
+                    if (altinfo->ospmAltInfoType == OSPC_ATYPE_NETWORK) {
                         /*
                         * This node in the list corresponds to
                         * Network Id. Do not delete it.
@@ -536,7 +536,7 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
            altinfo =
                 OSPPAltInfoNew(OSPM_STRLEN((const char *)destinfo),
                 (const unsigned char *)destinfo,
-                ospeTransport);
+                OSPC_ATYPE_TRANSPORT);
 
            if (altinfo != OSPC_OSNULL) {
                OSPPListAppend(
@@ -602,7 +602,7 @@ int OSPPTransactionGetDestNetworkId(OSPTTRANHANDLE  ospvTransaction,/* In - Tran
            found = OSPC_FALSE;
            destination = (OSPTALTINFO *)OSPPAuthIndFirstDestinationAlt(trans->AuthInd);
            while(destination != OSPC_OSNULL) {
-               if (destination->ospmAltInfoType == ospeNetwork) {
+               if (destination->ospmAltInfoType == OSPC_ATYPE_NETWORK) {
                    found = OSPC_TRUE;
                    destval = OSPPAuthIndGetDestinationAltValue(destination);
                    if (destval != NULL) {
@@ -820,7 +820,7 @@ int OSPPTransactionSetNetworkIds(
                         /*
                          * add to the list
                          */
-                        altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDstNetworkId),(const unsigned char *)ospvDstNetworkId,ospeNetwork);
+                        altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDstNetworkId),(const unsigned char *)ospvDstNetworkId,OSPC_ATYPE_NETWORK);
                         if (altinfo != OSPC_OSNULL) {
                             OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate),(void *)altinfo);
                             altinfo = OSPC_OSNULL;
@@ -853,7 +853,7 @@ int OSPPTransactionSetNetworkIds(
                     /*
                      * add to the list
                      */
-                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSrcNetworkId),(const unsigned char *)ospvSrcNetworkId,ospeNetwork);
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSrcNetworkId),(const unsigned char *)ospvSrcNetworkId,OSPC_ATYPE_NETWORK);
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate),(void *)altinfo);
                         altinfo = OSPC_OSNULL;
@@ -1902,7 +1902,7 @@ int OSPPTransactionBuildUsageFromScratch(
 
                         altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice),
                             (const unsigned char*)ospvSourceDevice,
-                            ospeTransport);
+                            OSPC_ATYPE_TRANSPORT);
 
                         if (altinfo != OSPC_OSNULL) {
                             OSPPListAppend(
@@ -1925,7 +1925,7 @@ int OSPPTransactionBuildUsageFromScratch(
                             if (trans->SrcNetworkId != OSPC_OSNULL) {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->SrcNetworkId),
                                     (const unsigned char*)trans->SrcNetworkId,
-                                    ospeNetwork);
+                                    OSPC_ATYPE_NETWORK);
 
                                 if (altinfo != OSPC_OSNULL) {
                                     OSPPListAppend(
@@ -1938,7 +1938,7 @@ int OSPPTransactionBuildUsageFromScratch(
                             if (ospvSource != OSPC_OSNULL) {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource),
                                     (const unsigned char*)ospvSource,
-                                    ospeTransport);
+                                    OSPC_ATYPE_TRANSPORT);
 
                                 if (altinfo != OSPC_OSNULL) {
                                     OSPPListAppend(
@@ -1968,7 +1968,7 @@ int OSPPTransactionBuildUsageFromScratch(
                             if (trans->DstNetworkId != OSPC_OSNULL) {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->DstNetworkId),
                                     (const unsigned char*)trans->DstNetworkId,
-                                    ospeNetwork);
+                                    OSPC_ATYPE_NETWORK);
 
                                 if (altinfo != OSPC_OSNULL) {
                                     OSPPListAppend(
@@ -1982,7 +1982,7 @@ int OSPPTransactionBuildUsageFromScratch(
                             if (ospvDestination != OSPC_OSNULL) {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestination),
                                     (const unsigned char*)ospvDestination,
-                                    ospeTransport);
+                                    OSPC_ATYPE_TRANSPORT);
 
                                 if (altinfo != OSPC_OSNULL) {
                                     OSPPListAppend(
@@ -1996,7 +1996,7 @@ int OSPPTransactionBuildUsageFromScratch(
                             if (ospvDestinationDevice != OSPC_OSNULL) {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestinationDevice),
                                     (const unsigned char*)ospvDestinationDevice,
-                                    ospeH323);
+                                    OSPC_ATYPE_H323);
 
                                 if (altinfo != OSPC_OSNULL) {
                                     OSPPListAppend(
@@ -3823,7 +3823,7 @@ int OSPPTransactionValidateAuthorisation(
 
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice),
                                 (const unsigned char *)ospvSourceDevice,
-                                ospeTransport);
+                                OSPC_ATYPE_TRANSPORT);
 
                     if (altinfo != OSPC_OSNULL) {
 
@@ -3850,7 +3850,7 @@ int OSPPTransactionValidateAuthorisation(
 
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->SrcNetworkId),
                                 (const unsigned char *)trans->SrcNetworkId,
-                                ospeNetwork);
+                                OSPC_ATYPE_NETWORK);
 
                             if (altinfo != OSPC_OSNULL) {
 
@@ -3865,7 +3865,7 @@ int OSPPTransactionValidateAuthorisation(
 
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource),
                                 (const unsigned char *)ospvSource,
-                                ospeTransport);
+                                OSPC_ATYPE_TRANSPORT);
 
                             if (altinfo != OSPC_OSNULL) {
 
@@ -3910,7 +3910,7 @@ int OSPPTransactionValidateAuthorisation(
 
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->DstNetworkId),
                                 (const unsigned char *)trans->DstNetworkId,
-                                ospeNetwork);
+                                OSPC_ATYPE_NETWORK);
 
                             if (altinfo != OSPC_OSNULL) {
 
@@ -3927,7 +3927,7 @@ int OSPPTransactionValidateAuthorisation(
                             altinfo =
                                 OSPPAltInfoNew(OSPM_STRLEN(ospvDestination),
                                 (const unsigned char *)ospvDestination,
-                                ospeTransport);
+                                OSPC_ATYPE_TRANSPORT);
 
                             if (altinfo != OSPC_OSNULL) {
 
@@ -3943,7 +3943,7 @@ int OSPPTransactionValidateAuthorisation(
 
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestinationDevice),
                                 (const unsigned char *)ospvDestinationDevice,
-                                ospeH323);
+                                OSPC_ATYPE_H323);
 
                             if (altinfo != OSPC_OSNULL) {
 
@@ -4044,7 +4044,7 @@ int OSPPTransactionValidateAuthorisation(
              altinfo = NULL;
              altinfo = OSPPAltInfoNew(OSPM_STRLEN((char *)OSPPTokenInfoGetDstNetworkId(tokeninfo)),
                                 (const unsigned char *)OSPPTokenInfoGetDstNetworkId(tokeninfo),
-                                ospeNetwork);
+                                OSPC_ATYPE_NETWORK);
 
              if (altinfo != OSPC_OSNULL) {
 

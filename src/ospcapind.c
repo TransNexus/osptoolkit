@@ -184,7 +184,7 @@ OSPPCapIndNew(
 
             altinfo = OSPPAltInfoNew(strlen(ospvSource), 
                                      (const unsigned char *)ospvSource,
-                                      ospeTransport);
+                                      OSPC_ATYPE_TRANSPORT);
 
             if(OSPC_OSNULL != altinfo)
             {
@@ -199,7 +199,7 @@ OSPPCapIndNew(
             OSPPListNew(&(capInd->ospmDeviceInfo));
             altinfo = OSPPAltInfoNew(strlen(ospvSourceDevice), 
                                      (const unsigned char *)ospvSourceDevice,
-                                      ospeTransport);
+                                      OSPC_ATYPE_TRANSPORT);
 
             if(OSPC_OSNULL != altinfo)
             {
@@ -219,7 +219,7 @@ OSPPCapIndNew(
 
             altinfo = OSPPAltInfoNew(strlen(ospvSourceNetworkId), 
                                      (const unsigned char *)ospvSourceNetworkId,
-                                      ospeNetwork);
+                                      OSPC_ATYPE_NETWORK);
 
             if(OSPC_OSNULL != altinfo)
             {
@@ -355,13 +355,13 @@ OSPPCapIndToElement(
      *  Create the "Message" element as the parent 
      * 
      */
-    *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemMessage), "");
+    *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_MESSAGE), "");
 
     /*
      * Create/Add messageId attribute
      */
     attr = OSPPXMLAttrNew(
-                      (const unsigned char *)OSPPMsgGetAttrName(ospeAttrMessageId), 
+                      (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID), 
                       ospvCapInd->ospmMessageId);
     OSPPXMLElemAddAttr(*ospvElem, attr);
     
@@ -371,7 +371,7 @@ OSPPCapIndToElement(
      */
     OSPPUtilGetRandom(random, 0);
     attr = OSPPXMLAttrNew(
-                      (const unsigned char *)OSPPMsgGetAttrName(ospeAttrRandom),
+                      (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_RANDOM),
                       (const unsigned char *)random);
     OSPPXMLElemAddAttr(*ospvElem, attr);
     
@@ -385,13 +385,13 @@ OSPPCapIndToElement(
      * Create/Add the CapabilitiesIndication element
      * 
      */
-    capindelem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemCapInd), "");
+    capindelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CAPIND), "");
     
     /*
      * Create/Add componentId attribute
      */
     attr = OSPPXMLAttrNew(
-                      (const unsigned char *)OSPPMsgGetAttrName(ospeAttrComponentId), 
+                      (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_COMPONENTID), 
                       ospvCapInd->ospmComponentId);
     OSPPXMLElemAddAttr(capindelem, attr);
     
@@ -412,7 +412,7 @@ OSPPCapIndToElement(
         altinfo!= (OSPTALTINFO *)OSPC_OSNULL;
         altinfo = (OSPTALTINFO *)OSPPListNext( &(ospvCapInd->ospmDeviceInfo),altinfo))
     {
-        OSPPAltInfoToElement(altinfo, &elem, ospeElemDeviceInfo);
+        OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
         OSPPXMLElemAddChild(capindelem, elem);
     }
     
@@ -425,7 +425,7 @@ OSPPCapIndToElement(
         altinfo!= (OSPTALTINFO *)OSPC_OSNULL;
         altinfo = (OSPTALTINFO *)OSPPListNext( &(ospvCapInd->ospmSrcAlternate),altinfo))
     {
-        OSPPAltInfoToElement(altinfo, &elem, ospeElemSrcAlt);
+        OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
         OSPPXMLElemAddChild(capindelem, elem);
     }
     
@@ -434,7 +434,7 @@ OSPPCapIndToElement(
      * Create/Add OSPVersion
      * 
      */
-     elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemDestOSPVersion),"2.1.1");
+     elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DESTOSPVERSION), "2.1.1");
      OSPPXMLElemAddChild(capindelem, elem);
     
     
@@ -444,7 +444,7 @@ OSPPCapIndToElement(
      * Create/Add Resources element
      * 
      */
-     elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemResources),"");
+     elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_RESOURCES),"");
      OSPPXMLElemAddChild(capindelem, elem);
 
     /*
@@ -452,7 +452,7 @@ OSPPCapIndToElement(
      * Create/Add AlmostOutOfResources sub-element
      * 
      */
-     subelem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemAlmostOutOfResources),
+     subelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ALMOSTOUTOFRESOURCES),
                               ospvCapInd->ospmAlmostOutOfResources==0?"false":"true");
      OSPPXMLElemAddChild(elem,subelem);
 

@@ -86,7 +86,7 @@ OSPPTNAuditFromElement(
          */
         if((elem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvElem)) == OSPC_OSNULL)
         {
-            if(OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvElem)) == ospeElemTNAuditState)
+            if(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_TNAUDITSTATE)
             {
                 errorcode = OSPPMsgNumFromElement(ospvElem, &temp);
                 if(errorcode == OSPC_ERR_NO_ERROR)
@@ -106,12 +106,12 @@ OSPPTNAuditFromElement(
             (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (errorcode == OSPC_ERR_NO_ERROR);
             elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
-            switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem)))
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
-                case ospeElemTNAudit:
+                case OSPC_MELEM_TNAUDIT:
                 break;
                 
-                case ospeElemTNAuditState:
+                case OSPC_MELEM_TNAUDITSTATE:
                     errorcode = OSPPMsgNumFromElement(elem, &temp);
                     if(errorcode == OSPC_ERR_NO_ERROR)
                     {
@@ -120,11 +120,11 @@ OSPPTNAuditFromElement(
                     }
                 break;
 
-                case ospeElemTNAuditURL:
+                case OSPC_MELEM_TNAUDITURL:
                     OSPPTNAuditSetURL(*ospvTNAudit, (unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
 
-                case ospeElemTNAuditTimeLimit:
+                case OSPC_MELEM_TNAUDITTIMELIMIT:
                     errorcode = OSPPMsgNumFromElement(elem, &temp);
                     if(errorcode == OSPC_ERR_NO_ERROR)
                     {
@@ -133,7 +133,7 @@ OSPPTNAuditFromElement(
                     }
                 break;
 
-                case ospeElemTNAuditMaxMessages:
+                case OSPC_MELEM_TNAUDITMAXMESSAGES:
                     errorcode = OSPPMsgNumFromElement(elem, &temp);
                     if(errorcode == OSPC_ERR_NO_ERROR)
                     {

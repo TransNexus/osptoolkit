@@ -171,7 +171,7 @@ OSPPStatusFromElement(
     }
 
 #if 0
-    assert(OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvElem)) ==ospeElemStatus);
+    assert(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_STATUS);
 #endif
 
     /* create the Status structure */
@@ -196,14 +196,14 @@ OSPPStatusFromElement(
             (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
-            switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem)))
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
-                case ospeElemCode:
+                case OSPC_MELEM_CODE:
                 ospvErrCode = OSPPMsgCodeFromElement(elem, &temp);
                 OSPPStatusSetCode(*ospvStatus, temp);
                 break;
 
-                case ospeElemDesc:
+                case OSPC_MELEM_DESC:
                 OSPPStatusSetDesc(*ospvStatus, (unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
 

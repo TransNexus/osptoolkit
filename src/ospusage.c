@@ -70,20 +70,20 @@ OSPPUsageFromElement(
             (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
-            switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem)))
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
-                case ospeElemAmount:
+                case OSPC_MELEM_AMOUNT:
                 gotAmount = OSPC_TRUE;
                 ospvErrCode = OSPPMsgNumFromElement(elem, &amount);
                 break;
-                case ospeElemIncrement:
+                case OSPC_MELEM_INCREMENT:
                 ospvErrCode = OSPPMsgNumFromElement(elem, &increment);
                 gotIncrement = OSPC_TRUE;
                 break;
-                case ospeElemService:
+                case OSPC_MELEM_SERVICE:
                 /* we don't do anything with service at this point */
                 break;
-                case ospeElemUnit:
+                case OSPC_MELEM_UNIT:
                 gotUnit = OSPC_TRUE;
                 /*
                  * The only unit we support is seconds. If this is
@@ -144,7 +144,7 @@ unsigned OSPPAddServiceTypeToUsageElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         /* create the parent element */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemService), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICE), "");
         if (*ospvElem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -154,11 +154,11 @@ unsigned OSPPAddServiceTypeToUsageElement(
     {
         if (ServiceType == OSPC_VOICE)
         {
-            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemServiceType), "voice");
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICETYPE), "voice");
         }
         else
         {
-            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemServiceType), "data");
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICETYPE), "data");
         }
         if (elem == OSPC_OSNULL)
         {
@@ -200,7 +200,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         /* create the parent element */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemPricingInd), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_PRICINGIND), "");
         if (*ospvElem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -210,7 +210,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         ospvErrCode = OSPPMsgFloatToElement(PricingInfo.amount,
-                (const unsigned char *)OSPPMsgGetElemName(ospeElemAmount), &elem);
+                (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
 
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
@@ -222,7 +222,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         ospvErrCode = OSPPMsgNumToElement(PricingInfo.increment,
-                (const unsigned char *)OSPPMsgGetElemName(ospeElemIncrement),&elem);
+                (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_INCREMENT),&elem);
 
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
@@ -233,7 +233,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
     /* now we need to add units */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemUnit),(const char *)PricingInfo.unit);
+        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_UNIT),(const char *)PricingInfo.unit);
         if (elem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -248,7 +248,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
     /* add currency */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemCurrency),(const char *)PricingInfo.currency);
+        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CURRENCY),(const char *)PricingInfo.currency);
         if (elem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -289,7 +289,7 @@ unsigned OSPPAddConfIdToUsageElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         /* create the parent element */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemGroup), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_GROUP), "");
         if (*ospvElem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -300,7 +300,7 @@ unsigned OSPPAddConfIdToUsageElement(
     {
         if (ospvConferenceId && ospvConferenceId[0] != '\0')
         {
-            elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemGroupId),(const char *)ospvConferenceId);
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_GROUPID),(const char *)ospvConferenceId);
             if (elem == OSPC_OSNULL)
             {
                 ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -352,7 +352,7 @@ OSPPUsageToElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         /* create the parent element */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemUsageDetail), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_USAGEDETAIL), "");
         if (*ospvElem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -363,7 +363,7 @@ OSPPUsageToElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         ospvErrCode = OSPPMsgNumToElement(ospvUsage,
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemAmount), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
     }
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
@@ -374,7 +374,7 @@ OSPPUsageToElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         ospvErrCode = OSPPMsgNumToElement(1,
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemIncrement), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
     }
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
@@ -384,7 +384,7 @@ OSPPUsageToElement(
     /* the units are seconds */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        elem = OSPPXMLElemNew(OSPPMsgGetElemName(ospeElemUnit), "s");
+        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_UNIT), "s");
         if (elem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -399,7 +399,7 @@ OSPPUsageToElement(
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvStartTime != 0))
     {
         ospvErrCode = OSPPMsgTimeToElement(ospvStartTime,
-                                          (const unsigned char *)OSPPMsgGetElemName(ospeElemStartTime), &elem);
+                                          (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_STARTTIME), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(*ospvElem, elem);
@@ -410,7 +410,7 @@ OSPPUsageToElement(
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvEndTime != 0))
     {
         ospvErrCode = OSPPMsgTimeToElement(ospvEndTime,
-                                          (const unsigned char *)OSPPMsgGetElemName(ospeElemEndTime), &elem);
+                                          (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_ENDTIME), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(*ospvElem, elem);
@@ -421,7 +421,7 @@ OSPPUsageToElement(
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvAlertTime != 0))
     {
         ospvErrCode = OSPPMsgTimeToElement(ospvAlertTime,
-                                          (const unsigned char *)OSPPMsgGetElemName(ospeElemAlertTime), &elem);
+                                          (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_ALERTTIME), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(*ospvElem, elem);
@@ -432,7 +432,7 @@ OSPPUsageToElement(
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvConnectTime != 0))
     {
         ospvErrCode = OSPPMsgTimeToElement(ospvConnectTime,
-                                          (const unsigned char *)OSPPMsgGetElemName(ospeElemConnectTime), &elem);
+                                          (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_CONNECTTIME), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(*ospvElem, elem);
@@ -443,7 +443,7 @@ OSPPUsageToElement(
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvIsPDDInfoPresnt))
     {
         ospvErrCode = OSPPMsgNumToElement(ospvPostDialDelay,
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemPostDialDelay), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_POSTDIALDELAY), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(*ospvElem, elem);
@@ -454,7 +454,7 @@ OSPPUsageToElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         ospvErrCode = OSPPMsgNumToElement(ospvReleaseSource,
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemReleaseSource), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_RELEASESOURCE), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(*ospvElem, elem);

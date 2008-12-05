@@ -28,26 +28,27 @@
 /* attributes defined by the Open Settlement Protocol */
 
 typedef enum {
-    ospeAttrUnknown = OSPC_MSGPARTUNKNOWN,
-    ospeAttrComponentId,
-    ospeAttrCritical,
-    ospeAttrEncoding,
-    ospeAttrMessageId,
-    ospeAttrType,
-    ospeAttrVersion,
-    ospeAttrRandom
-} OSPTMSGATTRPART;
+    OSPC_MATTR_UNKNOWN = OSPC_MPART_UNKNOWN,
+    OSPC_MATTR_COMPONENTID,
+    OSPC_MATTR_CRITICAL,
+    OSPC_MATTR_ENCODING,
+    OSPC_MATTR_MESSAGEID,
+    OSPC_MATTR_TYPE,
+    OSPC_MATTR_VERSION,
+    OSPC_MATTR_RANDOM,
+    /* Number of message attribtes */
+    OSPC_MATTR_NUMBER
+} OSPE_MSG_ATTR;
 
 /*
  * externally declared global variables
  */
 
-extern const OSPTMSGDESC OSPVAttrDescs[];
-extern const unsigned OSPVNumAttrDesc;
+extern const OSPT_MSG_DESC OSPC_MATTR_DESCS[];
 
 /* Function Prototypes */
 
-const char *OSPPMsgGetAttrName(OSPTMSGATTRPART);
-OSPTMSGATTRPART OSPPMsgGetAttrPart(const char *);
+OSPE_MSG_ATTR OSPPMsgAttrGetPart(const char *);
+const char *OSPPMsgAttrGetName(OSPE_MSG_ATTR);
 
 #endif /* _OSPMSGATTR_H */

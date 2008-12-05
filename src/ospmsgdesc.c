@@ -15,13 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * ospmsgdesc.c - generic message descriptor processing functions.
  */
@@ -29,58 +22,46 @@
 #include "osp/osp.h"
 #include "osp/ospmsgdesc.h"
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPMsgDescGetPart() - find a part from a name
- *-----------------------------------------------------------------------*/
-OSPTMSGPART
-    OSPPMsgDescGetPart(
-    const char        *ospvName,           /* name for which to find tag */
-    const OSPTMSGDESC *ospvDesc,       /* array of descriptors to search */
-    unsigned           ospvNumDesc                      /* size of array */
-    )
+ */
+OSPT_MSG_PART OSPPMsgDescGetPart(
+    const char *ospvName,           /* name for which to find tag */
+    const OSPT_MSG_DESC *ospvDesc,  /* array of descriptors to search */
+    unsigned ospvNumDesc)           /* size of array */
 {
-    unsigned    cnt;
-    OSPTMSGPART ospvPart = OSPC_MSGPARTUNKNOWN;
+    OSPT_MSG_PART ospvPart = OSPC_MPART_UNKNOWN;
+    unsigned cnt;
 
-    if (ospvName != OSPC_OSNULL) 
-    {
-        /* now just search through the array looking for the name */
-        for (cnt=0; cnt<ospvNumDesc; cnt++)
-        {
-            if (OSPM_STRCMP(ospvDesc->ospmMsgDescName, ospvName) == 0)
-            {
-                ospvPart = ospvDesc->ospmMsgDescPart;
+    if (ospvName != OSPC_OSNULL) {
+        for (cnt = 0; cnt < ospvNumDesc; cnt++) {
+            if (OSPM_STRCMP(ospvDesc[cnt].ospmName, ospvName) == 0) {
+                ospvPart = ospvDesc[cnt].ospmPart;
                 break;
             }
-            ospvDesc++;
         }
     }
-    return(ospvPart);
+
+    return (ospvPart);
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPMsgDescGetName() - find a name from a part
- *-----------------------------------------------------------------------*/
-const char *                           /* returns the name found or NULL */
-OSPPMsgDescGetName(
-    OSPTMSGPART        ospvPart,          /* part for which to find name */
-    const OSPTMSGDESC *ospvDesc,       /* array of descriptors to search */
-    unsigned           ospvNumDesc                      /* size of array */
-)
+ */
+const char *OSPPMsgDescGetName(     /* returns the name found or NULL */
+    OSPT_MSG_PART ospvPart,         /* part for which to find name */
+    const OSPT_MSG_DESC *ospvDesc,  /* array of descriptors to search */
+    unsigned ospvNumDesc)           /* size of array */
 {
     const char *ospvName = OSPC_OSNULL;
+    unsigned cnt;
 
-    if (ospvPart != OSPC_MSGPARTUNKNOWN) 
-    {
-
-        /* alternate approach - faster, but array must be built appropriately */
-        if ((unsigned)ospvPart < ospvNumDesc) 
-        {
-            ospvName = ospvDesc[(int)ospvPart].ospmMsgDescName;
+    for (cnt = 0; cnt < ospvNumDesc; cnt++) {
+        if (ospvDesc[cnt].ospmPart == ospvPart) {
+            ospvName = ospvDesc[cnt].ospmName;
+            break;
         }
-
     }
-    return(ospvName);
+
+    return (ospvName);
 }

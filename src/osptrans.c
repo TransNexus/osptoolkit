@@ -365,7 +365,7 @@ OSPPTransactionBuildUsage(
             /* add DestinationSignalAddress to DestinationAlternates for Usage */
             if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPDestHasAddr(ospvDest)) {
                 dest = OSPPDestGetAddr(ospvDest);
-                altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,ospeTransport);
+                altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,OSPC_ATYPE_TRANSPORT);
 
                 OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
                 altinfo = OSPC_OSNULL;
@@ -373,14 +373,14 @@ OSPPTransactionBuildUsage(
             }
             if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPDestDevHasAddr(ospvDest)) {
                 dest = OSPPDestDevGetAddr(ospvDest);
-                altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,ospeH323);
+                altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,OSPC_ATYPE_H323);
 
                 OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
                 altinfo = OSPC_OSNULL;
             }
             if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPDestHasNetworkAddr(ospvDest)) {
                 dest = OSPPDestGetNetworkAddr(ospvDest);
-                altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,ospeNetwork);
+                altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,OSPC_ATYPE_NETWORK);
 
                 OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
                 altinfo = OSPC_OSNULL;
@@ -2125,7 +2125,7 @@ OSPPTransactionRequestNew(
                 OSPPListNew((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqDeviceInfo));
                 altinfo = OSPPAltInfoNew(strlen(ospvSourceDevice),
                                      (const unsigned char *)ospvSourceDevice,
-                                      ospeTransport);
+                                      OSPC_ATYPE_TRANSPORT);
 
                 if(OSPC_OSNULL != altinfo)
                 {
@@ -2153,7 +2153,7 @@ OSPPTransactionRequestNew(
 
                     altinfo = OSPPAltInfoNew(strlen(ospvTrans->SrcNetworkId), 
                         (const unsigned char *)ospvTrans->SrcNetworkId,
-                        ospeNetwork);
+                        OSPC_ATYPE_NETWORK);
 
                     if(altinfo != OSPC_OSNULL)
                     {
@@ -2171,7 +2171,7 @@ OSPPTransactionRequestNew(
 
                     altinfo = OSPPAltInfoNew(strlen(ospvSource), 
                         (const unsigned char *)ospvSource,
-                        ospeTransport);
+                        OSPC_ATYPE_TRANSPORT);
 
                     if(altinfo != OSPC_OSNULL)
                     {
@@ -2189,7 +2189,7 @@ OSPPTransactionRequestNew(
 
                     altinfo = OSPPAltInfoNew(strlen(ospvUser),
                         (const unsigned char *)ospvUser,
-                        ospeSubscriber);
+                        OSPC_ATYPE_SUBSCRIBER);
 
                     if (altinfo != OSPC_OSNULL)
                     {
@@ -2236,7 +2236,7 @@ OSPPTransactionRequestNew(
                     {
                         altinfo = OSPPAltInfoNew(strlen(ospvPreferredDestinations[i]), 
                             (const unsigned char *)ospvPreferredDestinations[i],
-                            ospeTransport);
+                            OSPC_ATYPE_TRANSPORT);
 
 
                         if(altinfo != OSPC_OSNULL)

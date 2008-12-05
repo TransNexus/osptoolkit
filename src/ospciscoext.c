@@ -85,7 +85,7 @@ OSPPCSAuditFromElement(
          * The CSAudit element should consist of one element.
          *  
          */
-        if(OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvElem)) == ospeElemCSAuditTrigger)
+        if(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_CSAUDITTRIGGER)
         {
             OSPPCSAuditSetTrigger(*ospvCSAudit, (unsigned char *)OSPPXMLElemGetValue(ospvElem));
         }

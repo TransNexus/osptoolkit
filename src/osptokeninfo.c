@@ -658,15 +658,15 @@ OSPPTokenInfoFromElement(
             (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
-            switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem)))
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
-                case ospeElemMessage:
+                case OSPC_MELEM_MESSAGE:
                 break;
 
-                case ospeElemTokenInfo:
+                case OSPC_MELEM_TOKENINFO:
                 break;
 
-                case ospeElemDestAlt:
+                case OSPC_MELEM_DESTALT:
                 /*
                  * We need to check the "ospmXMLAttrValue"
                  * to decide whether it is the destination Signaling  
@@ -693,25 +693,25 @@ OSPPTokenInfoFromElement(
                 }
                 break;
 
-                case ospeElemDestProtocol:
+                case OSPC_MELEM_DESTPROTOCOL:
                 tokeninfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_TRUE;
                 OSPPTokenInfoSetLookAheadDestProtocol(&(tokeninfo->ospmTokenLookAheadInfo), (const unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
 
-                case ospeElemDestOSPVersion:
+                case OSPC_MELEM_DESTOSPVERSION:
                 tokeninfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_TRUE;
                 OSPPTokenInfoSetLookAheadOSPVersion(&(tokeninfo->ospmTokenLookAheadInfo), (const unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
 
-                case ospeElemSrcInfo:
+                case OSPC_MELEM_SRCINFO:
                 OSPPTokenInfoSetSourceNumber(tokeninfo, (const unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
 
-                case ospeElemDestInfo:
+                case OSPC_MELEM_DESTINFO:
                 OSPPTokenInfoSetDestNumber(tokeninfo, (const unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
 
-                case ospeElemCallId:
+                case OSPC_MELEM_CALLID:
                 ospvErrCode = OSPPCallIdFromElement(elem, &callId);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
@@ -720,12 +720,12 @@ OSPPTokenInfoFromElement(
                 }
                 break;
 
-                case ospeElemTransId:
+                case OSPC_MELEM_TRANSID:
                 ospvErrCode = OSPPMsgTXFromElement(elem, &trxid);
                 OSPPTokenInfoSetTrxId(tokeninfo, trxid);
                 break;
 
-                case ospeElemValidAfter:
+                case OSPC_MELEM_VALIDAFTER:
                 ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
@@ -733,7 +733,7 @@ OSPPTokenInfoFromElement(
                 }
                 break;
 
-                case ospeElemValidUntil:
+                case OSPC_MELEM_VALIDUNTIL:
                 ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
@@ -741,7 +741,7 @@ OSPPTokenInfoFromElement(
                 }
                 break;
 
-                case ospeElemUsageDetail:
+                case OSPC_MELEM_USAGEDETAIL:
                 OSPPUsageFromElement(elem, &duration);
                 OSPPTokenInfoSetDuration(tokeninfo, (int)duration);
                 break;

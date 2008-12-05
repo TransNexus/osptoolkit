@@ -237,7 +237,7 @@ OSPPReauthRspFromElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
 
-        if(OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvElem))==ospeElemMessage)
+        if(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem))==OSPC_MELEM_MESSAGE)
         {
             OSPPReauthRspMessageIdFromElement(ospvElem, &messageId);
             OSPPReauthRspSetMessageId(reauthrsp, messageId);
@@ -262,7 +262,7 @@ OSPPReauthRspFromElement(
         else
         {
         /* Have to get ComponentId here */
-            if(OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvElem)) == ospeElemReauthReq)
+            if(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_REAUTHREQ)
             {
                 OSPPReauthRspComponentIdFromElement(ospvElem, &compid);
                 if(compid != OSPC_OSNULL)
@@ -283,23 +283,23 @@ OSPPReauthRspFromElement(
             (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
-            switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem)))
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
-                case ospeElemMessage:
+                case OSPC_MELEM_MESSAGE:
                 if(messageId != OSPC_OSNULL)
                 {
                     OSPPReauthRspSetMessageId(reauthrsp, messageId);
                 }
                 break;
 
-                case ospeElemReauthReq:
+                case OSPC_MELEM_REAUTHREQ:
                 if(compid != OSPC_OSNULL)
                 {
                     OSPPReauthRspSetComponentId(reauthrsp, compid);
                 }
                 break;
 
-                case ospeElemTimestamp:
+                case OSPC_MELEM_TIMESTAMP:
                 ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
@@ -307,23 +307,23 @@ OSPPReauthRspFromElement(
                 }
                 break;
 
-                case ospeElemStatus:
+                case OSPC_MELEM_STATUS:
                 if(reauthrsp->ospmReauthRspStatus == OSPC_OSNULL)
                 {
                     ospvErrCode = OSPPStatusFromElement(elem, &(reauthrsp->ospmReauthRspStatus));
                 }
                 break;
 
-                case ospeElemTransId:
+                case OSPC_MELEM_TRANSID:
                 ospvErrCode = OSPPMsgTXFromElement(elem, &transid);
                 OSPPReauthRspSetTrxId(reauthrsp, transid);
                 break;
 
-                case ospeElemTNAudit:
+                case OSPC_MELEM_TNAUDIT:
                 ospvErrCode = OSPPTNAuditFromElement(elem, &(reauthrsp->ospmReauthRspTNAudit));
                 break;
 
-                case ospeElemDest:
+                case OSPC_MELEM_DEST:
                 ospvErrCode = OSPPDestFromElement(elem, &dest);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
@@ -455,7 +455,7 @@ OSPPReauthRspMessageIdFromElement(
         attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
 
-        if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrMessageId)
+        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_MESSAGEID)
         {
             /* we found the message attribute. Get the value */
             *ospvMessageId = (unsigned char *)OSPPXMLAttrGetValue(attr);
@@ -482,7 +482,7 @@ OSPPReauthRspComponentIdFromElement(
         attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
 
-        if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrComponentId)
+        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_COMPONENTID)
         {
             /* we found the component attribute. Get the value */
             *ospvComponentId = (unsigned char *)OSPPXMLAttrGetValue(attr);

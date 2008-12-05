@@ -138,8 +138,8 @@ OSPPTokenFromElement(
     {
         ospvErrCode = OSPC_ERR_DATA_NO_TOKEN;
     }
-    if (OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvElem)) !=
-        ospeElemToken) 
+    if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) !=
+        OSPC_MELEM_TOKEN) 
     {
         ospvErrCode = OSPC_ERR_DATA_INVALID_TYPE;
     }
@@ -240,7 +240,7 @@ OSPPTokenToElement(
     {
         ospvErrCode = OSPPMsgBinToElement(OSPPTokenGetSize(ospvToken),
             (unsigned char *) OSPPTokenGetValue(ospvToken),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemToken),
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TOKEN),
             ospvElem, OSPC_TRUE);
     }
     return(ospvErrCode);

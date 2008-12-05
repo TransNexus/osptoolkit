@@ -32,8 +32,8 @@
  * elements will likely use enumerated types.
  */
 
-typedef int OSPTMSGPART;
+typedef int OSPT_MSG_PART;
 
-#define OSPC_MSGPARTUNKNOWN ((OSPTMSGPART)0)    /* rsv'd for unknown part */
+#define OSPC_MPART_UNKNOWN  ((OSPT_MSG_PART)0)  /* rsv'd for unknown part */
 
 #endif /* _OSPMSGPART_H */

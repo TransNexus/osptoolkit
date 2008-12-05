@@ -902,39 +902,39 @@ OSPPDestFromElement(
             (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
-            switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem)))
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
-                case ospeElemDestProtocol:
+                case OSPC_MELEM_DESTPROTOCOL:
                 	OSPPDestSetProtocol(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
                 	break;
 
-                case ospeElemDestOSPVersion:
+                case OSPC_MELEM_DESTOSPVERSION:
                 	OSPPDestSetOSPVersion(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
                 	break;
 
-                case ospeElemSrcInfo:
+                case OSPC_MELEM_SRCINFO:
                 OSPPDestSetSrcNumber(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
 
-                case ospeElemDestInfo:
+                case OSPC_MELEM_DESTINFO:
                 OSPPDestSetNumber(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
-                case ospeElemDestAlt:
+                case OSPC_MELEM_DESTALT:
                 /*                OSPPDestSetAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem)); */
                 OSPPDestSetNetworkAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
-                case ospeElemDestSigAddr:
+                case OSPC_MELEM_DESTSIGADDR:
                 /*                OSPPDestDevSetAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem)); */
                 OSPPDestSetAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem)); 
                 break;
-                case ospeElemToken:
+                case OSPC_MELEM_TOKEN:
                 ospvErrCode = OSPPTokenFromElement(elem, &token);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
                     OSPPDestAddToken(dest, token);
                 }
                 break;
-                case ospeElemValidAfter:
+                case OSPC_MELEM_VALIDAFTER:
                     t=0;
                     if(*(OSPPXMLElemGetValue(elem)) != 0)
                     {
@@ -949,7 +949,7 @@ OSPPDestFromElement(
                         OSPPDestSetValidAfter(dest,t);
                     }
                 break;
-                case ospeElemValidUntil:
+                case OSPC_MELEM_VALIDUNTIL:
                     t=0;
                     if(*(OSPPXMLElemGetValue(elem)) != 0)
                     {
@@ -964,17 +964,17 @@ OSPPDestFromElement(
                         OSPPDestSetValidUntil(dest,t);
                     }
                 break;
-                case ospeElemUsageDetail:
+                case OSPC_MELEM_USAGEDETAIL:
                 ospvErrCode = OSPPUsageFromElement(elem, &limit);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
                     OSPPDestSetLimit(dest,limit);
                 }
                 break;
-                case ospeElemAuthURL:
+                case OSPC_MELEM_AUTHURL:
                 OSPPDestSetAuthority(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
-                case ospeElemCallId:
+                case OSPC_MELEM_CALLID:
                 ospvErrCode = OSPPCallIdFromElement(elem, &callId);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                 {
@@ -982,7 +982,7 @@ OSPPDestFromElement(
                     OSPPCallIdDelete(&callId);
                 }
                 break;
-                case ospeElemTNFailReason:
+                case OSPC_MELEM_TNFAILREASON:
                 ospvErrCode = OSPPMsgNumFromElement(elem, &failure);
                 OSPPDestSetTNFailReason(dest, (unsigned)failure);
                 break;

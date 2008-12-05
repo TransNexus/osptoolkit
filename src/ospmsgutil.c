@@ -115,7 +115,7 @@ OSPPMsgBinFromElement(
             (attr != (OSPTXMLATTR *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
         {
-            if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrEncoding)
+            if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_ENCODING)
             {
                 /* we found an encoding attribute - is it base64 */
                 if (OSPM_STRCMP(OSPPXMLAttrGetValue(attr), "base64") == 0)
@@ -900,7 +900,7 @@ OSPPMsgElemIsCritical(
             attr != (OSPTXMLATTR *)OSPC_OSNULL;
             attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
         {
-            if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrCritical)
+            if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_CRITICAL)
             {
                 /* we found an critical attribute - is it false? */
                 if (OSPM_STRCASECMP(OSPPXMLAttrGetValue(attr), "False") == 0)

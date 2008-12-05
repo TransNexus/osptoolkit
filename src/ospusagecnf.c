@@ -279,7 +279,7 @@ OSPPUsageCnfComponentIdFromElement(
         attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
     {
 
-        if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrComponentId)
+        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_COMPONENTID)
         {
             /* we found the component attribute. Get the value */
             *ospvComponentId = (const unsigned char *)OSPPXMLAttrGetValue(attr);
@@ -324,7 +324,7 @@ OSPPUsageCnfFromElement(
 
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
-            if(OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvElem))==ospeElemMessage)
+            if(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem))==OSPC_MELEM_MESSAGE)
             {
                 OSPPUsageCnfMessageIdFromElement(ospvElem, &messageId);
 
@@ -362,7 +362,7 @@ OSPPUsageCnfFromElement(
                         OSPPUsageCnfSetMessageId(usagecnf, messageId);
                     }
 
-                    if(OSPPMsgGetElemPart(OSPPXMLElemGetName(elem1)) == ospeElemUsageCnf)
+                    if(OSPPMsgElemGetPart(OSPPXMLElemGetName(elem1)) == OSPC_MELEM_USAGECNF)
                     {
                         /* Get ComponentId */
                     if(elem1 != OSPC_OSNULL)
@@ -378,10 +378,10 @@ OSPPUsageCnfFromElement(
                             (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
                             elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(elem1, elem) )
                         {
-                            switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem)))
+                            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
                             {
-                                case ospeElemMessage:
-                                if(OSPPMsgGetElemPart(OSPPXMLElemGetName(elem))==ospeElemMessage)
+                                case OSPC_MELEM_MESSAGE:
+                                if(OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))==OSPC_MELEM_MESSAGE)
                                 {
                                     OSPPUsageCnfMessageIdFromElement(elem, &messageId);
                                     if(messageId != OSPC_OSNULL)
@@ -391,7 +391,7 @@ OSPPUsageCnfFromElement(
                                 }
                                 break;
 
-                                case ospeElemUsageCnf:
+                                case OSPC_MELEM_USAGECNF:
                                 OSPPUsageCnfComponentIdFromElement(elem,(const unsigned char **)  &compid);
                                 if(compid != OSPC_OSNULL)
                                 {
@@ -399,7 +399,7 @@ OSPPUsageCnfFromElement(
                                 }
                                 break;
 
-                                case ospeElemTimestamp:
+                                case OSPC_MELEM_TIMESTAMP:
                                 ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
                                 if (ospvErrCode == OSPC_ERR_NO_ERROR)
                                 {
@@ -407,7 +407,7 @@ OSPPUsageCnfFromElement(
                                 }
                                 break;
     
-                                case ospeElemStatus:
+                                case OSPC_MELEM_STATUS:
                                 if(usagecnf->ospmUsageCnfStatus == OSPC_OSNULL)
                                 {
                                     /* usagecnf->ospmUsageCnfStatus = OSPPStatusNew(); */
@@ -415,11 +415,11 @@ OSPPUsageCnfFromElement(
                                 }
                                 break;
 
-                                case ospeElemTNAudit:
+                                case OSPC_MELEM_TNAUDIT:
                                 ospvErrCode = OSPPTNAuditFromElement(elem, &(usagecnf->ospmUsageCnfTNAudit));
                                 break;
     
-                                case ospeElemCSAuditTrigger:
+                                case OSPC_MELEM_CSAUDITTRIGGER:
                                 ospvErrCode = OSPPCSAuditFromElement(elem, &(usagecnf->ospmUsageCnfCSAudit));
                                 break;
     
@@ -535,7 +535,7 @@ OSPPUsageCnfMessageIdFromElement(
         attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
 
-        if (OSPPMsgGetAttrPart(OSPPXMLAttrGetName(attr)) == ospeAttrMessageId)
+        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_MESSAGEID)
         {
             /* we found the message attribute. Get the value */
             *ospvMessageId = (unsigned char *)OSPPXMLAttrGetValue(attr);

@@ -223,7 +223,7 @@ OSPPXMLGetDataType(
     }
     else
     {
-        if(OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvXMLElem)) == ospeElemMessage)
+        if(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvXMLElem)) == OSPC_MELEM_MESSAGE)
         {
             parent = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvXMLElem);
         }
@@ -395,7 +395,7 @@ OSPPXMLMessageParse(
             if((*ospvDataType == OSPC_MSG_UIND) || (*ospvDataType == OSPC_MSG_UCNF))
             {
 
-                if(OSPPMsgGetElemPart(OSPPXMLElemGetName(xmlelem))==ospeElemMessage)
+                if(OSPPMsgElemGetPart(OSPPXMLElemGetName(xmlelem))==OSPC_MELEM_MESSAGE)
                 {
                     tempxmlelem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(xmlelem);
                     xmlelem->ospmXMLElemChild = OSPC_OSNULL;

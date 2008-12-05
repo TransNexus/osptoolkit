@@ -128,14 +128,14 @@ OSPPCapCnfFromElement(
             (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
              elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(capCnfElem,elem))
         {
-            switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem)))
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
-                case ospeElemTimestamp:
-                case ospeElemDestOSPVersion:
+                case OSPC_MELEM_TIMESTAMP:
+                case OSPC_MELEM_DESTOSPVERSION:
                     /* For now, we aren't interested in the value */
                     break;
 
-                case ospeElemStatus:
+                case OSPC_MELEM_STATUS:
                     ospvErrCode = OSPPStatusFromElement(elem, &(capcnf->ospmStatus));
                     break;
                 
