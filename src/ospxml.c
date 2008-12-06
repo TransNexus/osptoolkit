@@ -35,7 +35,7 @@
 #include "osp/ospcapind.h"
 
 int OSPPXMLElementProcess(
-    OSPT_XML_ELEM * ospvElem,         /* In - xmlelement to be processed */
+    OSPT_XML_ELEM * ospvElem,       /* In - xmlelement to be processed */
     unsigned char **ospvMessage,    /* Out - xml doc as unsigned char */
     unsigned *ospvSizeOfMessage)    /* Out - size of xml doc */
 {                               
@@ -107,11 +107,11 @@ int OSPPXMLElementProcess(
 }
 
 int OSPPXMLMessageCreate(
-    OSPE_MSG_TYPE ospvDataType,    /* In - what data type (AREQ, ARESP...) */
-    unsigned char **ospvMessage,        /* Out - actual xml message */
-    unsigned *ospvSizeOfMessage,        /* Out - size of xml message */
-    void *ospvInfo,                     /* In - structure holding data */
-    OSPTTRANS * trans)                  /* In - transaction handle */
+    OSPE_MSG_TYPE ospvDataType,     /* In - what data type (AREQ, ARESP...) */
+    unsigned char **ospvMessage,    /* Out - actual xml message */
+    unsigned *ospvSizeOfMessage,    /* Out - size of xml message */
+    void *ospvInfo,                 /* In - structure holding data */
+    OSPTTRANS * trans)              /* In - transaction handle */
 {                              
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *xmlelem = NULL;
@@ -125,27 +125,27 @@ int OSPPXMLMessageCreate(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         switch (ospvDataType) {
             case OSPC_MSG_AREQ:
-                errorcode = OSPPAuthReqToElement((OSPTAUTHREQ *) ospvInfo, &xmlelem, trans);
+                errorcode = OSPPAuthReqToElement((OSPTAUTHREQ *)ospvInfo, &xmlelem, trans);
                 break;
             case OSPC_MSG_UIND:
-                errorcode = OSPPUsageIndToElement((OSPTLIST *) ospvInfo, &xmlelem, trans);
+                errorcode = OSPPUsageIndToElement((OSPTLIST *)ospvInfo, &xmlelem, trans);
                 break;
             case OSPC_MSG_REAREQ:
-                errorcode = OSPPReauthReqToElement((OSPTREAUTHREQ *) ospvInfo, &xmlelem, trans);
+                errorcode = OSPPReauthReqToElement((OSPTREAUTHREQ *)ospvInfo, &xmlelem, trans);
                 break;
             case OSPC_MSG_CAPIND:
-                errorcode = OSPPCapIndToElement((OSPTCAPIND *) ospvInfo, &xmlelem);
+                errorcode = OSPPCapIndToElement((OSPTCAPIND *)ospvInfo, &xmlelem);
                 break;
 #ifndef OSP_SDK
             case OSPC_MSG_REARESP:
-                errorcode = OSPPReauthRspToElement((OSPTREAUTHRSP *) ospvInfo, &xmlelem);
+                errorcode = OSPPReauthRspToElement((OSPTREAUTHRSP *)ospvInfo, &xmlelem);
                 break;
             case OSPC_MSG_ARESP:
             case OSPC_MSG_AREZP:
-                errorcode = OSPPAuthRspToElement((OSPTAUTHRSP *) ospvInfo, &xmlelem, ospvDataType);
+                errorcode = OSPPAuthRspToElement((OSPTAUTHRSP *)ospvInfo, &xmlelem, ospvDataType);
                 break;
             case OSPC_MSG_UCNF:
-                errorcode = OSPPUsageCnfToElement((OSPTLIST *) ospvInfo, &xmlelem);
+                errorcode = OSPPUsageCnfToElement((OSPTLIST *)ospvInfo, &xmlelem);
                 break;
 #endif
             default:
@@ -164,8 +164,8 @@ int OSPPXMLMessageCreate(
 }
 
 int OSPPXMLGetDataType(
-    OSPT_XML_ELEM * ospvXMLElem,          /* In - xml element */
-    OSPE_MSG_TYPE * ospvDataType)  /* Out - datatype for this element */
+    OSPT_XML_ELEM * ospvXMLElem,    /* In - xml element */
+    OSPE_MSG_TYPE * ospvDataType)   /* Out - datatype for this element */
 {                               
     OSPT_XML_ELEM *parent = OSPC_OSNULL;
     char *name = OSPC_OSNULL;
@@ -235,10 +235,10 @@ int OSPPXMLGetDataType(
 }
 
 int OSPPXMLMessageParse(
-    unsigned char *ospvXMLMessage,      /* In - xml message */
-    unsigned ospvSizeOfMessage,         /* In - size of message */
-    void **ospvData,                    /* Out - pointer to struct w/data from message */
-    OSPE_MSG_TYPE * ospvDataType)  /* Out - what type struct void pointer is pointing to */
+    unsigned char *ospvXMLMessage,  /* In - xml message */
+    unsigned ospvSizeOfMessage,     /* In - size of message */
+    void **ospvData,                /* Out - pointer to struct w/data from message */
+    OSPE_MSG_TYPE * ospvDataType)   /* Out - what type struct void pointer is pointing to */
 {                               
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *xmlelem = OSPC_OSNULL;
@@ -318,38 +318,38 @@ int OSPPXMLMessageParse(
 }
 
 int OSPPXMLMessageProcess(
-    OSPT_XML_ELEM * ospvElem,             /* In - xml element for this datatype */
-    void **ospvStruct,                  /* Out- pointer to struct to be filled in */
-    OSPE_MSG_TYPE ospvDataType)    /* In - datatype for this struct */
+    OSPT_XML_ELEM * ospvElem,       /* In - xml element for this datatype */
+    void **ospvStruct,              /* Out- pointer to struct to be filled in */
+    OSPE_MSG_TYPE ospvDataType)     /* In - datatype for this struct */
 {                         
     int errorcode = OSPC_ERR_NO_ERROR;
 
     switch (ospvDataType) {
         case OSPC_MSG_ARESP:
     
-            errorcode = OSPPAuthRspFromElement(ospvElem, (OSPTAUTHRSP **) ospvStruct);
+            errorcode = OSPPAuthRspFromElement(ospvElem, (OSPTAUTHRSP **)ospvStruct);
             break;
         case OSPC_MSG_UCNF:
-            errorcode = OSPPUsageCnfFromElement(ospvElem, (OSPTLIST *) ospvStruct);
+            errorcode = OSPPUsageCnfFromElement(ospvElem, (OSPTLIST *)ospvStruct);
             break;
         case OSPC_MSG_TOKINFO:
-            errorcode = OSPPTokenInfoFromElement(ospvElem, (OSPTTOKENINFO **) ospvStruct);
+            errorcode = OSPPTokenInfoFromElement(ospvElem, (OSPTTOKENINFO **)ospvStruct);
             break;
         case OSPC_MSG_REARESP:
-            errorcode = OSPPReauthRspFromElement(ospvElem, (OSPTREAUTHRSP **) ospvStruct);
+            errorcode = OSPPReauthRspFromElement(ospvElem, (OSPTREAUTHRSP **)ospvStruct);
             break;
         case OSPC_MSG_CAPCNF:
-            errorcode = OSPPCapCnfFromElement(ospvElem, (OSPTCAPCNF **) ospvStruct);
+            errorcode = OSPPCapCnfFromElement(ospvElem, (OSPTCAPCNF **)ospvStruct);
             break;
 #ifndef OSP_SDK
         case OSPC_MSG_AREQ:
-            errorcode = OSPPAuthReqFromElement(ospvElem, (OSPTAUTHREQ **) ospvStruct);
+            errorcode = OSPPAuthReqFromElement(ospvElem, (OSPTAUTHREQ **)ospvStruct);
             break;
         case OSPC_MSG_UIND:
-            errorcode = OSPPUsageIndFromElement(ospvElem, (OSPTLIST *) ospvStruct);
+            errorcode = OSPPUsageIndFromElement(ospvElem, (OSPTLIST *)ospvStruct);
             break;
         case OSPC_MSG_REAREQ:
-            errorcode = OSPPReauthReqFromElement(ospvElem, (OSPTREAUTHREQ **) ospvStruct);
+            errorcode = OSPPReauthReqFromElement(ospvElem, (OSPTREAUTHREQ **)ospvStruct);
             break;
 #endif
         default:

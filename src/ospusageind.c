@@ -1665,17 +1665,17 @@ OSPPUsageIndToElement(
                 if (trans->CallingNumberFormat == OSPC_E164)
                 {
                     attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
-                        (const unsigned char *)"e164");
+                        (const unsigned char *)OSPPAltInfoTypeGetName(OSPC_ATYPE_E164));
                 }
                 else if (trans->CallingNumberFormat == OSPC_SIP)
                 {
                     attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
-                        (const unsigned char *)"sip");
+                        (const unsigned char *)OSPPAltInfoTypeGetName(OSPC_ATYPE_SIP));
                 }
                 else if (trans->CallingNumberFormat == OSPC_URL)
                 {
                     attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
-                        (const unsigned char *)"url");
+                        (const unsigned char *)OSPPAltInfoTypeGetName(OSPC_ATYPE_URL));
                 }
 
                 if (attr == OSPC_OSNULL)
@@ -1743,17 +1743,17 @@ OSPPUsageIndToElement(
                 if (trans->CalledNumberFormat == OSPC_E164)
                 {
                     attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
-                        (const unsigned char *)"e164");
+                        (const unsigned char *)OSPPAltInfoTypeGetName(OSPC_ATYPE_E164));
                 }
                 else if (trans->CalledNumberFormat == OSPC_SIP)
                 {
                     attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
-                        (const unsigned char *)"sip");
+                        (const unsigned char *)OSPPAltInfoTypeGetName(OSPC_ATYPE_SIP));
                 }
                 else if (trans->CalledNumberFormat == OSPC_URL)
                 {
                     attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
-                        (const unsigned char *)"url");
+                        (const unsigned char *)OSPPAltInfoTypeGetName(OSPC_ATYPE_URL));
                 }
 
                 if (attr == OSPC_OSNULL)

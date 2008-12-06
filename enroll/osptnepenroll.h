@@ -119,7 +119,7 @@ int OSPPBase64DecodeCACert(OSPTENROLLPARAMS *ospvEnrollParamsIn);
  * manager passed in ); extract the status and certificate from the
  * response, validate the certificate, and return the certificate.
  */
-int OSPPEnrollDevice(OSPTCOMM *ospvCommMgr, OSPTMSGINFO *ospvEnrollMsg, OSPTASN1OBJECT *ospvRequestPublicKeyIn, unsigned *ospvEnrollStatusOut,
+int OSPPEnrollDevice(OSPTCOMM *ospvCommMgr, OSPT_MSG_INFO *ospvEnrollMsg, OSPTASN1OBJECT *ospvRequestPublicKeyIn, unsigned *ospvEnrollStatusOut,
             unsigned char **ospvCertOut, unsigned *ospvCertLenOut);
 
 /*
@@ -131,7 +131,7 @@ int OSPPEnrollDevice(OSPTCOMM *ospvCommMgr, OSPTMSGINFO *ospvEnrollMsg, OSPTASN1
 int OSPPValidateDeviceCert(OSPTSEC *ospvSecIn, OSPTASN1OBJECT *ospvRequestPublicKeyIn, unsigned char *ospvCertB64In, unsigned char **ospvCertOut,
             unsigned *ospvCertLenOut);
 
-int OSPPCreateEnrollmentRequestHeader(OSPTMSGINFO *ospvEnrollmentReqMsgInfo);
+int OSPPCreateEnrollmentRequestHeader(OSPT_MSG_INFO *ospvEnrollmentReqMsgInfo);
 
 int OSPPCreateEnrollmentRequestBody(unsigned char **ospvRequestBfrOut, OSPTENROLLPARAMS * ospvEnrollParamsIn);
                                        
@@ -229,14 +229,14 @@ int OSPPAppendUrlEncodedString(unsigned char *destStr, unsigned char *srcStr, un
  * that's contained in the Response field. If the status field cannot be found,
  * then this function will return an error.
  */
-int OSPPGetStatusFromResponse(const OSPTMSGINFO *ospvMsgInfo, unsigned *ospvEnrollStatusOut);
+int OSPPGetStatusFromResponse(const OSPT_MSG_INFO *ospvMsgInfo, unsigned *ospvEnrollStatusOut);
 
 /*
  * Given a MessageInfo structure, extract the certificate from it. There
  * is no need to check the base64 encoding of the certificate or any other
  * structural constraints.
  */
-int OSPPGetCertificateFromResponse(const OSPTMSGINFO *ospvMsgInfo, unsigned char *ospvCertOut, unsigned *ospvCertLenOut);
+int OSPPGetCertificateFromResponse(const OSPT_MSG_INFO *ospvMsgInfo, unsigned char *ospvCertOut, unsigned *ospvCertLenOut);
 
 /*
  * Given the CA certificate and a certificate that is supposedly for the
@@ -269,20 +269,20 @@ int OSPPASN1Compare(OSPTASN1OBJECT *ospvLHSObject, OSPTASN1OBJECT *ospvRHSObject
 
 /*
  * This is for constructing the enrollment request that is sent to the 
- * enrollment server; the output is an OSPTMSGINFO structure that
+ * enrollment server; the output is an OSPT_MSG_INFO structure that
  * contains it.
  *
  * Input: A pointer to the enrollment parameters and to the MessageInfo that
  *        contains the parameters for the enrollment request.
  *
- * Output: The OSPTMSGINFO should contain all of the information necessary
+ * Output: The OSPT_MSG_INFO should contain all of the information necessary
  *         for transmitting a request to the enrollment server. In this case,
  *         the return value will be OSPC_ERR_NO_ERROR. If something
  *         goes wrong, then the return value will be something other than
  *         OSPC_ERR_NO_ERROR. In that case, there is no guarantee about what
- *         the OSPTMSGINFO* structure will contain.
+ *         the OSPT_MSG_INFO* structure will contain.
  */
-int OSPPConstructEnrollmentRequest(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPTMSGINFO *ospvMsgInfoOut);
+int OSPPConstructEnrollmentRequest(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPT_MSG_INFO *ospvMsgInfoOut);
 
 /* 
  * Given a base64 encoding of a certificate request, retrieve the 

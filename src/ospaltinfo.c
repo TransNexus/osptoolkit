@@ -47,7 +47,7 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ATYPE_NUMBER] = {
 /*
  * OSPPAltInfoNew() - create a new altinfo object
  */
-OSPT_ALTINFO *OSPPAltInfoNew(        /* returns ptr to altinfo or null */
+OSPT_ALTINFO *OSPPAltInfoNew(       /* returns ptr to altinfo or null */
     unsigned ospvLen,               /* size of altinfo */
     const unsigned char *ospvValue, /* altinfo value */
     OSPE_ALTINFO_TYPE ospvType)
@@ -119,7 +119,7 @@ OSPT_ALTINFO *OSPPAltInfoNew(        /* returns ptr to altinfo or null */
  * OSPPAltInfoDelete() - destroy a altinfo object
  */
 void OSPPAltInfoDelete(
-    OSPT_ALTINFO **ospvAltInfo)  /* AltInfo to destroy */
+    OSPT_ALTINFO **ospvAltInfo)     /* AltInfo to destroy */
 {
     if (*ospvAltInfo != OSPC_OSNULL) {
         OSPM_FREE(*ospvAltInfo);
@@ -175,10 +175,10 @@ const unsigned char *OSPPAltInfoGetValue(
 /*
  * OSPPAltInfoToElement() - create an XML element from a altinfo
  */
-unsigned OSPPAltInfoToElement(  /* returns error code */
-    OSPT_ALTINFO * ospvAltInfo,  /* In - altinfo */
-    OSPT_XML_ELEM ** ospvElem,    /* Out - XML element pointer */
-    OSPE_MSG_ELEM ospvPart)     /* In -source or dest alternate */
+unsigned OSPPAltInfoToElement(      /* returns error code */
+    OSPT_ALTINFO * ospvAltInfo,     /* In - altinfo */
+    OSPT_XML_ELEM ** ospvElem,      /* Out - XML element pointer */
+    OSPE_MSG_ELEM ospvPart)         /* In -source or dest alternate */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;

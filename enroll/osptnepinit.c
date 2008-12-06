@@ -557,7 +557,7 @@ int OSPPRetrieveCACert(OSPTENROLLPARAMS *ospvEnrollParamsInOut,
     int retVal = OSPC_ERR_NO_ERROR;
 
     /* The structure used for encapsulating the request and response: */
-    OSPTMSGINFO *certReqMsg = OSPC_OSNULL;
+    OSPT_MSG_INFO *certReqMsg = OSPC_OSNULL;
 
     /* 
      * The request that we'll be building and sending to the CA via the

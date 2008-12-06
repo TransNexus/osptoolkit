@@ -111,7 +111,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
 /*
  * OSPPMsgElemGetName() - get an element name from a part value
  */
-const char *OSPPMsgElemGetName( /* returns pointer to the name */
+const char *OSPPMsgElemGetName(     /* returns pointer to the name */
     OSPE_MSG_ELEM ospvPart)
 {
     const char *ospvName = OSPC_OSNULL;

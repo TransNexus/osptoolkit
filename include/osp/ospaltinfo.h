@@ -49,6 +49,12 @@ typedef enum {
     OSPC_ATYPE_NUMBER
 } OSPE_ALTINFO_TYPE;
 
+/*
+ * externally declared global variables
+ */
+
+extern const OSPT_MSG_DESC OSPV_ATYPE_DESCS[];
+
 /* the basic altinfo structure */
 
 typedef struct {

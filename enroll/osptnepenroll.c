@@ -58,7 +58,7 @@ int OSPPEnroll(OSPTENROLLPARAMS *ospvEnrollParamsIn,
      * This is the structure whose request is transmitted to the enrollment
      * server and whose Response field is scanned for the response.
      */
-    OSPTMSGINFO *enrollMsg = OSPC_OSNULL;
+    OSPT_MSG_INFO *enrollMsg = OSPC_OSNULL;
 
     /* This is the communications manager that will handle all of the  requests to the enrollment server: */
     OSPTCOMM *commMgr = OSPC_OSNULL;
@@ -284,7 +284,7 @@ int OSPPBase64DecodeCACert(OSPTENROLLPARAMS *ospvEnrollParamsIn)
  * response, validate the certificate, and return the certificate.
  *
  * Input: pointer to a communications manager for transmitting the request;
- *        a pointer to a MessageInfo ( OSPTMSGINFO* ) that should contain
+ *        a pointer to a MessageInfo ( OSPT_MSG_INFO* ) that should contain
  *        the request; a pointer to the subjectPublicKeyInfo of the
  *        request ( for validation ); a pointer to an integer for returning
  *        the status of the request; and a pointer to a (null) string for
@@ -300,7 +300,7 @@ int OSPPBase64DecodeCACert(OSPTENROLLPARAMS *ospvEnrollParamsIn)
  *         potentially useless.
  */
 int OSPPEnrollDevice(OSPTCOMM *ospvCommMgrIn,
-    OSPTMSGINFO *ospvEnrollMsgIn,
+    OSPT_MSG_INFO *ospvEnrollMsgIn,
     OSPTASN1OBJECT *ospvRequestPublicKeyIn,
     unsigned *ospvEnrollStatusOut,
     unsigned char **ospvCertOut, 
@@ -1088,21 +1088,21 @@ int OSPPGetPublicKeyInfoFromCertReq(unsigned char *ospvCertReqB64In,
 
 /*
  * This is for constructing the enrollment request that is sent to the 
- * enrollment server; the output is an OSPTMSGINFO structure that
+ * enrollment server; the output is an OSPT_MSG_INFO structure that
  * contains it.
  *
  * Input: A pointer to the enrollment parameters and to the MessageInfo that
  *        contains the parameters for the enrollment request.
  *
- * Output: The OSPTMSGINFO should contain all of the information necessary
+ * Output: The OSPT_MSG_INFO should contain all of the information necessary
  *         for transmitting a request to the enrollment server. In this case,
  *         the return value will be OSPC_ERR_NO_ERROR. If something
  *         goes wrong, then the return value will be something other than
  *         OSPC_ERR_NO_ERROR. In that case, there is no guarantee about what
- *         the OSPTMSGINFO* structure will contain.
+ *         the OSPT_MSG_INFO* structure will contain.
  */
 int OSPPConstructEnrollmentRequest(OSPTENROLLPARAMS *ospvEnrollParamsIn,
-    OSPTMSGINFO *ospvMsgInfoOut)
+    OSPT_MSG_INFO *ospvMsgInfoOut)
 {
     int retVal = OSPC_ERR_NO_ERROR;
 
@@ -1565,7 +1565,7 @@ int OSPPCreateEnrollmentRequestBody(unsigned char **ospvRequestBfrOut,
  *         Otherwise, an errorcode should be returned and 
  *         ospvEnrollReqMsgInfo->ContentType should be null or empty.
  */
-int OSPPCreateEnrollmentRequestHeader(OSPTMSGINFO *ospvEnrollReqMsgInfo)
+int OSPPCreateEnrollmentRequestHeader(OSPT_MSG_INFO *ospvEnrollReqMsgInfo)
 {
     int retVal = OSPC_ERR_NO_ERROR;
 
