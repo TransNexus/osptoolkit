@@ -427,11 +427,11 @@ OSPTDEST* OSPPAuthRspAddDest(
  *-----------------------------------------------------------------------*
  */
 unsigned OSPPAuthRspFromElement(
-    OSPTXMLELEM* ospvElem,      /* input is XML element */
+    OSPT_XML_ELEM* ospvElem,      /* input is XML element */
     OSPTAUTHRSP** ospvAuthRsp)  /* where to put authorisation response pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM* elem = OSPC_OSNULL;
+    OSPT_XML_ELEM* elem = OSPC_OSNULL;
     OSPTAUTHRSP* authrsp = OSPC_OSNULL;
     OSPTDEST* dest = OSPC_OSNULL;
     OSPTTIME t = 0L;
@@ -440,7 +440,7 @@ unsigned OSPPAuthRspFromElement(
     unsigned long delaylimit = 0L;
     unsigned long delaypref = 0L;
     unsigned char* compid = OSPC_OSNULL;
-    OSPTXMLELEM* ospvParent = OSPC_OSNULL;
+    OSPT_XML_ELEM* ospvParent = OSPC_OSNULL;
     unsigned char* messageId = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
@@ -467,7 +467,7 @@ unsigned OSPPAuthRspFromElement(
                  * pointing to the Message element to the Component element.
                  */
                 ospvParent = ospvElem;
-                ospvElem = (OSPTXMLELEM*)OSPPXMLElemFirstChild(ospvParent);
+                ospvElem = (OSPT_XML_ELEM*)OSPPXMLElemFirstChild(ospvParent);
             }
 
             OSPPAuthRspComponentIdFromElement(ospvElem, &compid);
@@ -482,9 +482,9 @@ unsigned OSPPAuthRspFromElement(
          * the information we need.
          */
 
-        for (elem = (OSPTXMLELEM*)OSPPXMLElemFirstChild(ospvElem);
-            (elem != (OSPTXMLELEM*)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-            elem = (OSPTXMLELEM*)OSPPXMLElemNextChild(ospvElem, elem))
+        for (elem = (OSPT_XML_ELEM*)OSPPXMLElemFirstChild(ospvElem);
+            (elem != (OSPT_XML_ELEM*)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM*)OSPPXMLElemNextChild(ospvElem, elem))
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
                 case OSPC_MELEM_MESSAGE:
@@ -627,15 +627,15 @@ void OSPPAuthRspSetMessageId(
  *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspMessageIdFromElement(
-    OSPTXMLELEM* ospvElemIn, 
+    OSPT_XML_ELEM* ospvElemIn, 
     unsigned char** ospvMessageId)
 {
-    OSPTXMLATTR* attr = (OSPTXMLATTR*)OSPC_OSNULL;
+    OSPT_XML_ATTR* attr = (OSPT_XML_ATTR*)OSPC_OSNULL;
 
     /* look for the message id attribute */
-    for (attr = (OSPTXMLATTR*)OSPPXMLElemFirstAttr(ospvElemIn);
-        (attr != (OSPTXMLATTR*)OSPC_OSNULL);
-        attr = (OSPTXMLATTR*)OSPPXMLElemNextAttr(ospvElemIn, attr))
+    for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElemIn);
+        (attr != (OSPT_XML_ATTR*)OSPC_OSNULL);
+        attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_MESSAGEID) {
             /* we found the message attribute. Get the value */
@@ -651,15 +651,15 @@ void OSPPAuthRspMessageIdFromElement(
  *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspComponentIdFromElement(
-    OSPTXMLELEM* ospvElemIn, 
+    OSPT_XML_ELEM* ospvElemIn, 
     unsigned char** ospvComponentId)
 {
-    OSPTXMLATTR* attr = (OSPTXMLATTR*)OSPC_OSNULL;
+    OSPT_XML_ATTR* attr = (OSPT_XML_ATTR*)OSPC_OSNULL;
 
     /* look for the component id attribute */
-    for (attr = (OSPTXMLATTR*)OSPPXMLElemFirstAttr(ospvElemIn);
-        (attr != (OSPTXMLATTR*)OSPC_OSNULL);
-        attr = (OSPTXMLATTR*)OSPPXMLElemNextAttr(ospvElemIn, attr))
+    for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElemIn);
+        (attr != (OSPT_XML_ATTR*)OSPC_OSNULL);
+        attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
 
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_COMPONENTID) {
@@ -695,7 +695,7 @@ int OSPPAuthRspHasRole(
  */
 void OSPPAuthRspSetRole(
     OSPTAUTHRSP* ospvAuthRsp,
-    OSPE_MSG_ROLETYPES ospvRole)
+    OSPE_MSG_ROLE ospvRole)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
         ospvAuthRsp->ospmAuthRspRole = ospvRole;
@@ -709,13 +709,13 @@ void OSPPAuthRspSetRole(
  * OSPPAuthRspGetRole() - returns role for an AuthResponse
  *-----------------------------------------------------------------------*
  */
-OSPE_MSG_ROLETYPES OSPPAuthRspGetRole(
+OSPE_MSG_ROLE OSPPAuthRspGetRole(
     OSPTAUTHRSP* ospvAuthRsp)
 {
-    OSPE_MSG_ROLETYPES ospvRole = OSPC_UNDEFINED_ROLE;
+    OSPE_MSG_ROLE ospvRole = OSPC_MROLE_UNDEFINED;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvRole = (OSPE_MSG_ROLETYPES)ospvAuthRsp->ospmAuthRspRole;
+        ospvRole = (OSPE_MSG_ROLE)ospvAuthRsp->ospmAuthRspRole;
     }
     return ospvRole;
 }

@@ -139,7 +139,7 @@ extern "C" {
 #endif
 
     int OSPPTransactionBuildReauthRequest(OSPTTRANS *, unsigned);
-    int OSPPTransactionBuildUsage(OSPTTRANS *, OSPTUSAGEIND **, OSPTDEST *, OSPE_MSG_DATATYPES);
+    int OSPPTransactionBuildUsage(OSPTTRANS *, OSPTUSAGEIND **, OSPTDEST *, OSPE_MSG_TYPE);
     OSPTTRANS *OSPPTransactionCollectionGetItem(OSPTTRANCOLLECTION *, OSPTCOLLECTIONINDEX);
     OSPTTRANHANDLE OSPPTransactionCollectionGetNewItem(OSPTPROVHANDLE, OSPTTRANCOLLECTION *, int *);
     void OSPPTransactionCollectionRemoveItem(OSPTTRANCOLLECTION *, OSPTCOLLECTIONINDEX);
@@ -167,8 +167,8 @@ extern "C" {
     void OSPPTransactionGetState(OSPTTRANS *, OSPE_TRANS_STATE *);
     void OSPPTransactionGetStatistics(OSPTTRANS *, OSPTSTATISTICS *);
     OSPTBOOL OSPPTransactionHasStatistics(OSPTTRANS *);
-    int OSPPTransactionPrepareAndQueMessage(OSPTTRANS *, unsigned char *, unsigned, OSPTMSGINFO **);
-    int OSPPTransactionProcessReturn(OSPTTRANS *, OSPTMSGINFO *);
+    int OSPPTransactionPrepareAndQueMessage(OSPTTRANS *, unsigned char *, unsigned, OSPT_MSG_INFO **);
+    int OSPPTransactionProcessReturn(OSPTTRANS *, OSPT_MSG_INFO *);
     int OSPPTransactionRequestNew(OSPTTRANS *, const char *, const char *, const char *, const char *, const char *, unsigned,
             OSPTCALLID *[], const char *[], unsigned *, unsigned *, void *);
     int OSPPTransactionResponseBuild(OSPTTRANS *, const char *, const char *, unsigned, const void *, unsigned, const void *);

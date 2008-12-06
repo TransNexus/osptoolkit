@@ -27,11 +27,11 @@
  * OSPPXMLAttrNew() - create a new attribute
  */
 
-OSPTXMLATTR *OSPPXMLAttrNew(        /* returns the new attribute (or NULL) */ 
+OSPT_XML_ATTR *OSPPXMLAttrNew(        /* returns the new attribute (or NULL) */ 
     const unsigned char *ospvName,  /* name of attribute */
     const unsigned char *ospvValue) /* character string value for attr */
 {
-    OSPTXMLATTR *ospvAttr = OSPC_OSNULL;
+    OSPT_XML_ATTR *ospvAttr = OSPC_OSNULL;
     char *nameptr = OSPC_OSNULL;
     unsigned namelen = 0;
     char *valptr = OSPC_OSNULL;
@@ -78,12 +78,12 @@ OSPTXMLATTR *OSPPXMLAttrNew(        /* returns the new attribute (or NULL) */
             vallen = OSPM_STRLEN((const char *) ospvValue) + 1;    /* including terminating 0 */
 
             /* try to allocate the memory for the entire object */
-            OSPM_MALLOC(ospvAttr, OSPTXMLATTR, sizeof(OSPTXMLATTR) + namelen + vallen);
+            OSPM_MALLOC(ospvAttr, OSPT_XML_ATTR, sizeof(OSPT_XML_ATTR) + namelen + vallen);
 
             /* make sure the allocation succeeded before proceeding */
             if (ospvAttr != OSPC_OSNULL) {
                 /* calculate where the "hidden" values will go */
-                nameptr = ((char *) (ospvAttr)) + sizeof(OSPTXMLATTR);
+                nameptr = ((char *) (ospvAttr)) + sizeof(OSPT_XML_ATTR);
                 valptr = nameptr + namelen;
 
                 /* copy the values into their hidden location */
@@ -106,7 +106,7 @@ OSPTXMLATTR *OSPPXMLAttrNew(        /* returns the new attribute (or NULL) */
  */
 
 void OSPPXMLAttrDelete(         /* no return value */
-    OSPTXMLATTR **ospvAttr)    /* attribute to destroy */
+    OSPT_XML_ATTR **ospvAttr)    /* attribute to destroy */
 {
     if (*ospvAttr != OSPC_OSNULL) {
         OSPM_FREE(*ospvAttr);
@@ -119,7 +119,7 @@ void OSPPXMLAttrDelete(         /* no return value */
  */
 
 const char *OSPPXMLAttrGetName(
-    OSPTXMLATTR * ospvAttr)
+    OSPT_XML_ATTR * ospvAttr)
 {
     const char *ospvName = OSPC_OSNULL;
 
@@ -135,7 +135,7 @@ const char *OSPPXMLAttrGetName(
  */
 
 const char *OSPPXMLAttrGetValue(
-    OSPTXMLATTR * ospvAttr)
+    OSPT_XML_ATTR * ospvAttr)
 {
     const char *ospvValue = OSPC_OSNULL;
 

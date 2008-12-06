@@ -29,15 +29,15 @@
 #include "osp/osptoken.h"
 
 typedef struct {
-    unsigned char lookAheadDest[OSPC_SIGNALADDRSIZE];
+    unsigned char lookAheadDest[OSPC_SIZE_SIGNALADDR];
     OSPE_DEST_PROT lookAheadDestProt;
     OSPE_DEST_OSP_ENABLED lookAheadDestOSPStatus;
 } OSPTTOKENLOOKAHEADINFO;
 
 
 typedef struct {
-    unsigned char ospmTokenInfoSourceNumber[OSPC_E164NUMSIZE];
-    unsigned char ospmTokenInfoDestNumber[OSPC_E164NUMSIZE];
+    unsigned char ospmTokenInfoSourceNumber[OSPC_SIZE_E164NUM];
+    unsigned char ospmTokenInfoDestNumber[OSPC_SIZE_E164NUM];
     OSPTCALLID *ospmTokenInfoCallId;
     OSPTTIME ospmTokenInfoValidAfter;
     OSPTTIME ospmTokenInfoValidUntil;
@@ -46,7 +46,7 @@ typedef struct {
     OSPTBOOL ospmTokenInfoIsLookAheadInfoPresent;
     OSPTTOKENLOOKAHEADINFO ospmTokenLookAheadInfo;
     OSPTBOOL ospmTokenInfoIsDstNetworkIdPresent;
-    char dstNetworkId[OSPC_E164NUMSIZE];
+    char dstNetworkId[OSPC_SIZE_E164NUM];
 } OSPTTOKENINFO;
 
 /* Function Prototypes */
@@ -57,7 +57,7 @@ extern "C" {
 
     OSPTTOKENINFO *OSPPTokenInfoNew(void);
     void OSPPTokenInfoDelete(OSPTTOKENINFO **);
-    unsigned OSPPTokenInfoFromElement(OSPTXMLELEM *, OSPTTOKENINFO **);
+    unsigned OSPPTokenInfoFromElement(OSPT_XML_ELEM *, OSPTTOKENINFO **);
     void OSPPTokenInfoSetSourceNumber(OSPTTOKENINFO *, const unsigned char *);
     unsigned char *OSPPTokenInfoGetSourceNumber(OSPTTOKENINFO *);
     void OSPPTokenInfoSetDestNumber(OSPTTOKENINFO *, const unsigned char *);

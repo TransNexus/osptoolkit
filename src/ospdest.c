@@ -155,7 +155,7 @@ OSPPDestSetSrcNumber(
         {
             OSPM_MEMCPY((ospvDest)->ospmSrcNumber, 
                 (ospvNum), 
-                tr_min(OSPC_E164NUMSIZE,OSPM_STRLEN((const char *)ospvNum)+1));
+                tr_min(OSPC_SIZE_E164NUM,OSPM_STRLEN((const char *)ospvNum)+1));
         }
     }
 }
@@ -197,7 +197,7 @@ OSPPDestSetNumber(
         {
             OSPM_MEMCPY((ospvDest)->ospmDestNumber, 
                 (ospvNum), 
-                tr_min(OSPC_E164NUMSIZE,OSPM_STRLEN((const char *)ospvNum)+1));
+                tr_min(OSPC_SIZE_E164NUM,OSPM_STRLEN((const char *)ospvNum)+1));
         }
     }
 }
@@ -256,7 +256,7 @@ OSPPDestSetAddr(
         if (ospvAddr != OSPC_OSNULL) 
         {
             OSPM_MEMCPY((ospvDest)->ospmDestAddr, (ospvAddr), 
-                tr_min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1));
+                tr_min(OSPC_SIZE_SIGNALADDR,OSPM_STRLEN((const char *)ospvAddr)+1));
         }
     }
 }
@@ -373,7 +373,7 @@ OSPPDestDevSetAddr(
         if (ospvAddr != OSPC_OSNULL) 
         {
             OSPM_MEMCPY((ospvDest)->ospmDestDevAddr, (ospvAddr), 
-                tr_min(OSPC_SIGNALADDRSIZE,OSPM_STRLEN((const char *)ospvAddr)+1));
+                tr_min(OSPC_SIZE_SIGNALADDR,OSPM_STRLEN((const char *)ospvAddr)+1));
         }
     }
 }
@@ -535,7 +535,7 @@ OSPPDestSetAuthority(
         {
             OSPM_STRNCPY((char *)((ospvDest)->ospmDestAuthority),
                 (const char *)(ospvAuth), 
-                tr_min(OSPM_STRLEN((const char *)ospvAuth)+1,OSPC_URLSIZE-1));
+                tr_min(OSPM_STRLEN((const char *)ospvAuth)+1,OSPC_SIZE_URL-1));
         }
     }
 }
@@ -804,7 +804,7 @@ OSPPDestDelete(
 {
     /*   OSPTTOKEN *token, *otoken = OSPC_OSNULL; */
     OSPTTOKEN *tmptoken = OSPC_OSNULL;
-    OSPTALTINFO *altinfo        = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo        = OSPC_OSNULL;
 
     if (*ospvDest != OSPC_OSNULL) 
     {
@@ -827,9 +827,9 @@ OSPPDestDelete(
 
         while (!OSPPListEmpty((OSPTLIST *)&((*ospvDest)->ospmUpdatedSourceAddr))) 
         {
-            altinfo = (OSPTALTINFO *)OSPPListRemove(
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(
                 (OSPTLIST *)&((*ospvDest)->ospmUpdatedSourceAddr));
-            if (altinfo != (OSPTALTINFO *)OSPC_OSNULL) 
+            if (altinfo != (OSPT_ALTINFO *)OSPC_OSNULL) 
             {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
@@ -839,9 +839,9 @@ OSPPDestDelete(
 
         while (!OSPPListEmpty((OSPTLIST *)&((*ospvDest)->ospmUpdatedDeviceInfo))) 
         {
-            altinfo = (OSPTALTINFO *)OSPPListRemove(
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(
                 (OSPTLIST *)&((*ospvDest)->ospmUpdatedDeviceInfo));
-            if (altinfo != (OSPTALTINFO *)OSPC_OSNULL) 
+            if (altinfo != (OSPT_ALTINFO *)OSPC_OSNULL) 
             {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
@@ -860,12 +860,12 @@ OSPPDestDelete(
  *-----------------------------------------------------------------------*/
 unsigned                          /* returns error code */
 OSPPDestFromElement(
-    OSPTXMLELEM *ospvElem,        /* input is XML element */
+    OSPT_XML_ELEM *ospvElem,        /* input is XML element */
     OSPTDEST   **ospvDest         /* where to put destination pointer */
 )
 {
     unsigned      ospvErrCode   = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM  *elem          = OSPC_OSNULL;
+    OSPT_XML_ELEM  *elem          = OSPC_OSNULL;
     OSPTDEST     *dest          = OSPC_OSNULL;
     OSPTTOKEN    *token         = OSPC_OSNULL;
     OSPTCALLID   *callId        = OSPC_OSNULL;
@@ -898,9 +898,9 @@ OSPPDestFromElement(
          * the information we need.
          */
 
-        for ( elem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvElem);
-            (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-            elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
+        for ( elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
+            (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {

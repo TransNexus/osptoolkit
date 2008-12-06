@@ -46,7 +46,7 @@ extern "C" {
     unsigned OSPPGenerateUniqueId(OSPTTRANS *, unsigned char **);
     unsigned OSPPCapIndNew(OSPTCAPIND **, OSPTTRANS *, const char *, const char *, const char *, unsigned);
     void OSPPCapIndDelete(OSPTCAPIND **);
-    int OSPPCapIndToElement(OSPTCAPIND *, OSPTXMLELEM **);
+    int OSPPCapIndToElement(OSPTCAPIND *, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

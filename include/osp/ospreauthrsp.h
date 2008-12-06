@@ -49,12 +49,12 @@ extern "C" {
 
     OSPTREAUTHRSP *OSPPReauthRspNew(void);
     void OSPPReauthRspDelete(OSPTREAUTHRSP **);
-    int OSPPReauthRspFromElement(OSPTXMLELEM *, OSPTREAUTHRSP **);
+    int OSPPReauthRspFromElement(OSPT_XML_ELEM *, OSPTREAUTHRSP **);
     void OSPPReauthRspSetComponentId(OSPTREAUTHRSP *, unsigned char *);
     unsigned OSPPReauthRspHasMessageId(OSPTREAUTHRSP *);
     void OSPPReauthRspSetMessageId(OSPTREAUTHRSP *, unsigned char *);
-    void OSPPReauthRspMessageIdFromElement(OSPTXMLELEM *, unsigned char **);
-    void OSPPReauthRspComponentIdFromElement(OSPTXMLELEM *, unsigned char **);
+    void OSPPReauthRspMessageIdFromElement(OSPT_XML_ELEM *, unsigned char **);
+    void OSPPReauthRspComponentIdFromElement(OSPT_XML_ELEM *, unsigned char **);
     void OSPPReauthRspSetTimestamp(OSPTREAUTHRSP *, OSPTTIME);
     unsigned OSPPReauthRspHasComponentId(OSPTREAUTHRSP *);
     unsigned OSPPReauthRspHasStatus(OSPTREAUTHRSP *ospvReauthRsp);

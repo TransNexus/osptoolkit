@@ -46,8 +46,8 @@ extern "C" {
 
     OSPTCALLID *OSPPCallIdNew(unsigned, const unsigned char *);
     void OSPPCallIdDelete(OSPTCALLID **);
-    unsigned OSPPCallIdFromElement(OSPTXMLELEM *, OSPTCALLID **);
-    unsigned OSPPCallIdToElement(OSPTCALLID *, OSPTXMLELEM **, OSPTBOOL);
+    unsigned OSPPCallIdFromElement(OSPT_XML_ELEM *, OSPTCALLID **);
+    unsigned OSPPCallIdToElement(OSPTCALLID *, OSPT_XML_ELEM **, OSPTBOOL);
     unsigned OSPPCallIdGetSize(OSPTCALLID *);
     unsigned char *OSPPCallIdGetValue(OSPTCALLID *);
     unsigned OSPPCallIdFromASCIIElement(unsigned char *, OSPTCALLID **);

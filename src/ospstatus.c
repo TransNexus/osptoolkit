@@ -153,12 +153,12 @@ OSPPStatusGetCode(
  *-----------------------------------------------------------------------*/
 unsigned                          /* returns error code */
 OSPPStatusFromElement(
-    OSPTXMLELEM *ospvElem,        /* input is XML element */
+    OSPT_XML_ELEM *ospvElem,        /* input is XML element */
     OSPTSTATUS  **ospvStatus      /* where to put status pointer */
 )
 {
     unsigned       ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM   *elem = OSPC_OSNULL;
+    OSPT_XML_ELEM   *elem = OSPC_OSNULL;
     unsigned long temp = 0;
 
     if (ospvElem  == OSPC_OSNULL) 
@@ -192,9 +192,9 @@ OSPPStatusFromElement(
          * the information we need. First, though, let's zero out
          * the values that we expect to find.
          */
-        for ( elem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvElem);
-            (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-            elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
+        for ( elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
+            (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {

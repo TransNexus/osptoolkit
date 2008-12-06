@@ -31,7 +31,7 @@
 static
 int
 osppMsgInfoInitSync(
-    OSPTMSGINFO *ospvMsgInfo)
+    OSPT_MSG_INFO *ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR,
         tmperror  = OSPC_ERR_NO_ERROR;
@@ -52,21 +52,21 @@ osppMsgInfoInitSync(
 
 int
 OSPPMsgInfoNew(
-    OSPTMSGINFO **ospvMsgInfo)
+    OSPT_MSG_INFO **ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoNew()\n"));
-    OSPM_MALLOC(*ospvMsgInfo, OSPTMSGINFO, sizeof(OSPTMSGINFO));
-    if (*ospvMsgInfo != (OSPTMSGINFO *)OSPC_OSNULL)
+    OSPM_MALLOC(*ospvMsgInfo, OSPT_MSG_INFO, sizeof(OSPT_MSG_INFO));
+    if (*ospvMsgInfo != (OSPT_MSG_INFO *)OSPC_OSNULL)
     {
-        OSPM_MEMSET(*ospvMsgInfo, 0, sizeof(OSPTMSGINFO));
+        OSPM_MEMSET(*ospvMsgInfo, 0, sizeof(OSPT_MSG_INFO));
 
         errorcode = osppMsgInfoInitSync(*ospvMsgInfo);
         if (errorcode != OSPC_ERR_NO_ERROR)
         {
             OSPM_FREE(*ospvMsgInfo);
-            *ospvMsgInfo = (OSPTMSGINFO *)OSPC_OSNULL;
+            *ospvMsgInfo = (OSPT_MSG_INFO *)OSPC_OSNULL;
         }
     }
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoNew()\n"));
@@ -75,7 +75,7 @@ OSPPMsgInfoNew(
 
 void
 OSPPMsgInfoDelete(
-    OSPTMSGINFO **ospvMsgInfo)
+    OSPT_MSG_INFO **ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
@@ -97,7 +97,7 @@ OSPPMsgInfoDelete(
         OSPM_CONDVAR_DESTROY((*ospvMsgInfo)->CondVar, errorcode);
 
         OSPM_FREE(*ospvMsgInfo);
-        *ospvMsgInfo = (OSPTMSGINFO *)OSPC_OSNULL;
+        *ospvMsgInfo = (OSPT_MSG_INFO *)OSPC_OSNULL;
     }
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoDelete()\n"));
     return;
@@ -105,12 +105,12 @@ OSPPMsgInfoDelete(
 
 void
 OSPPMsgInfoAssignRequestMsg(
-    OSPTMSGINFO   *ospvMsgInfo,
+    OSPT_MSG_INFO   *ospvMsgInfo,
     unsigned char *ospvRequestMsg,
     unsigned      ospvRequestSz)
 {
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoAssignRequestMsg()\n"));
-    if (ospvMsgInfo != (OSPTMSGINFO *)OSPC_OSNULL) 
+    if (ospvMsgInfo != (OSPT_MSG_INFO *)OSPC_OSNULL) 
     {
 
         ospvMsgInfo->RequestMsg = ospvRequestMsg;
@@ -122,7 +122,7 @@ OSPPMsgInfoAssignRequestMsg(
 
 int
 OSPPMsgInfoProcessResponse(
-    OSPTMSGINFO *ospvMsgInfo)
+    OSPT_MSG_INFO *ospvMsgInfo)
 {
     int errorcode  = OSPC_ERR_NO_ERROR,
         tmperrcode = OSPC_ERR_NO_ERROR;
@@ -155,7 +155,7 @@ OSPPMsgInfoProcessResponse(
 
 int
 OSPPMsgInfoWaitForMsg(
-    OSPTMSGINFO *ospvMsgInfo)
+    OSPT_MSG_INFO *ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 

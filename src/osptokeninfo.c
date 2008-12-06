@@ -52,7 +52,7 @@ OSPPTokenInfoSetLookAheadDestAlt(
     {
         if (ospvLookAheadRoute  != OSPC_OSNULL)
         {
-            OSPM_STRNCPY(ospvTokenLookAheadInfo->lookAheadDest, (ospvLookAheadRoute), OSPC_SIGNALADDRSIZE-1);
+            OSPM_STRNCPY(ospvTokenLookAheadInfo->lookAheadDest, (ospvLookAheadRoute), OSPC_SIZE_SIGNALADDR-1);
         }
     }
     return;
@@ -199,7 +199,7 @@ OSPPTokenInfoSetSourceNumber(
     {
         if (ospvSourceNumber  != OSPC_OSNULL)
         {
-            OSPM_STRNCPY((ospvTokenInfo)->ospmTokenInfoSourceNumber, (ospvSourceNumber), OSPC_E164NUMSIZE-1);
+            OSPM_STRNCPY((ospvTokenInfo)->ospmTokenInfoSourceNumber, (ospvSourceNumber), OSPC_SIZE_E164NUM-1);
         }
     }
     return;
@@ -236,7 +236,7 @@ OSPPTokenInfoSetDestNumber(
     {
         if (ospvDestNumber != OSPC_OSNULL)
         {
-            OSPM_STRNCPY((ospvTokenInfo)->ospmTokenInfoDestNumber, (ospvDestNumber), OSPC_E164NUMSIZE-1);
+            OSPM_STRNCPY((ospvTokenInfo)->ospmTokenInfoDestNumber, (ospvDestNumber), OSPC_SIZE_E164NUM-1);
         }
     }
     return;
@@ -274,7 +274,7 @@ OSPPTokenInfoSetDstNetworkId(
     {
         if (ospvDestId != OSPC_OSNULL)
         {
-            OSPM_STRNCPY((ospvTokenInfo)->dstNetworkId, (ospvDestId), OSPC_E164NUMSIZE-1);
+            OSPM_STRNCPY((ospvTokenInfo)->dstNetworkId, (ospvDestId), OSPC_SIZE_E164NUM-1);
         }
     }
     return;
@@ -616,12 +616,12 @@ OSPPTokenInfoDelete(OSPTTOKENINFO **ospvTokenInfo)
 
 unsigned                          /* returns error code */
 OSPPTokenInfoFromElement(
-    OSPTXMLELEM  *ospvElem,       /* input is XML element */
+    OSPT_XML_ELEM  *ospvElem,       /* input is XML element */
     OSPTTOKENINFO **ospvTokenInfo   /* where to put token info pointer */
 )
 {
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM  *elem = OSPC_OSNULL;
+    OSPT_XML_ELEM  *elem = OSPC_OSNULL;
     OSPTTOKENINFO *tokeninfo = OSPC_OSNULL;
     OSPTCALLID   *callId;
     OSPTTIME      t;
@@ -654,9 +654,9 @@ OSPPTokenInfoFromElement(
      */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        for ( elem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvElem);
-            (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-            elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
+        for ( elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
+            (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
@@ -672,9 +672,9 @@ OSPPTokenInfoFromElement(
                  * to decide whether it is the destination Signaling  
                  * address or the network addr
                  */
-                if (OSPPXMLAttrGetValue((OSPTXMLATTR *)elem->ospmXMLElemAttrs))
+                if (OSPPXMLAttrGetValue((OSPT_XML_ATTR *)elem->ospmXMLElemAttrs))
                 {
-                    if (!(OSPM_STRCMP("network",OSPPXMLAttrGetValue((OSPTXMLATTR *)OSPPListFirst(&elem->ospmXMLElemAttrs)))))
+                    if (!(OSPM_STRCMP("network",OSPPXMLAttrGetValue((OSPT_XML_ATTR *)OSPPListFirst(&elem->ospmXMLElemAttrs)))))
                     {
                         /* 
                          * This is network information

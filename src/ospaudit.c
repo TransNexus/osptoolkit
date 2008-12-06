@@ -149,7 +149,7 @@ void
 OSPPAuditCheck(
     OSPTAUDIT           *ospvAudit,
     void                *ospvResponse, 
-    OSPE_MSG_DATATYPES  ospvMsgType
+    OSPE_MSG_TYPE  ospvMsgType
 )
 {
     OSPTTNAUDIT     *tnaudit    = OSPC_OSNULL;
@@ -833,7 +833,7 @@ OSPPAuditPrepareAndSend(
     unsigned        auditbuffersz       = 0;
     unsigned char   *outgoingmessage    = OSPC_OSNULL;
     unsigned        sizeofoutmsg        = 0;
-    OSPTMSGINFO     *msginfo            = OSPC_OSNULL;
+    OSPT_MSG_INFO     *msginfo            = OSPC_OSNULL;
     int             numbyteswritten     = 0;
 
     if(ospvAudit != OSPC_OSNULL)
@@ -927,7 +927,7 @@ OSPPAuditPrepareAndSend(
                             }
 
                             /* set the audit flag */
-                            msginfo->Flags = (unsigned char)(msginfo->Flags | OSPC_MSGINFO_AUDIT_TYPE);
+                            msginfo->Flags = (unsigned char)(msginfo->Flags | OSPC_MINFO_AUDITTYPE);
                         }
                         else
                         {   /* msginfo isn't here */
@@ -977,7 +977,7 @@ OSPPAuditPrepareAndSend(
 int
 OSPPAuditProcessReturn(
     OSPTAUDIT *ospvAudit, 
-    OSPTMSGINFO *ospvMsgInfo
+    OSPT_MSG_INFO *ospvMsgInfo
 )
 {
     int             errorcode           = OSPC_ERR_NO_ERROR;
@@ -986,7 +986,7 @@ OSPPAuditProcessReturn(
     unsigned        sizeofmsg           = 0;
     unsigned        sizeofsig           = 0;
     void            *resultrsp          = OSPC_OSNULL;
-    OSPE_MSG_DATATYPES msgtype          = OSPC_MSG_LOWER_BOUND;
+    OSPE_MSG_TYPE msgtype          = OSPC_MSG_UNKNOWN;
     OSPTUSAGECNF    *usagecnf           = (OSPTUSAGECNF *)OSPC_OSNULL;
     
     if(ospvMsgInfo != OSPC_OSNULL)

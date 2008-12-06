@@ -72,7 +72,7 @@ int OSPPAuthIndHasRole(
  */
 void OSPPAuthIndSetRole(
     OSPTAUTHIND* ospvAuthInd,
-    OSPE_MSG_ROLETYPES ospvRole)
+    OSPE_MSG_ROLE ospvRole)
 {
     if (ospvAuthInd != OSPC_OSNULL) {
         ospvAuthInd->ospmAuthIndRole = ospvRole;
@@ -86,13 +86,13 @@ void OSPPAuthIndSetRole(
  * OSPPAuthIndGetRole() - returns role for an AuthIndication
  *-----------------------------------------------------------------------*
  */
-OSPE_MSG_ROLETYPES OSPPAuthIndGetRole(
+OSPE_MSG_ROLE OSPPAuthIndGetRole(
     OSPTAUTHIND* ospvAuthInd)
 {
-    OSPE_MSG_ROLETYPES ospvRole = OSPC_UNDEFINED_ROLE;
+    OSPE_MSG_ROLE ospvRole = OSPC_MROLE_UNDEFINED;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvRole = (OSPE_MSG_ROLETYPES)ospvAuthInd->ospmAuthIndRole;
+        ospvRole = (OSPE_MSG_ROLE)ospvAuthInd->ospmAuthIndRole;
     }
     return ospvRole;
 }
@@ -198,7 +198,7 @@ void OSPPAuthIndSetSourceNumber(
         if (ospvNum != OSPC_OSNULL) {
             OSPM_STRNCPY((char*)ospvAuthInd->ospmAuthIndSourceNumber, 
                 (const char*)ospvNum, 
-                tr_min(OSPM_STRLEN((const char*)ospvNum)+1,OSPC_E164NUMSIZE-1));
+                tr_min(OSPM_STRLEN((const char*)ospvNum)+1,OSPC_SIZE_E164NUM-1));
         }
     }
 }
@@ -254,7 +254,7 @@ void OSPPAuthIndSetDestNumber(
         if (ospvNum != OSPC_OSNULL) {
             OSPM_STRNCPY((char*)ospvAuthInd->ospmAuthIndDestNumber, 
                 (const char*)ospvNum, 
-                tr_min(OSPM_STRLEN((const char*)ospvNum)+1,OSPC_E164NUMSIZE-1));
+                tr_min(OSPM_STRLEN((const char*)ospvNum)+1,OSPC_SIZE_E164NUM-1));
         }
     }
 }
@@ -302,13 +302,13 @@ int OSPPAuthIndHasSourceAlt(
  * authorisation indication
  *-----------------------------------------------------------------------*
  */
-OSPTALTINFO* OSPPAuthIndFirstSourceAlt(
+OSPT_ALTINFO* OSPPAuthIndFirstSourceAlt(
     OSPTAUTHIND* ospvAuthInd)              /* authorisation indication */
 {
-    OSPTALTINFO* ospvAltInfo = OSPC_OSNULL;
+    OSPT_ALTINFO* ospvAltInfo = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvAltInfo = (OSPTALTINFO*)OSPPListFirst(&(ospvAuthInd->ospmAuthIndSourceAlternate));
+        ospvAltInfo = (OSPT_ALTINFO*)OSPPListFirst(&(ospvAuthInd->ospmAuthIndSourceAlternate));
     }
     return ospvAltInfo;
 }
@@ -320,14 +320,14 @@ OSPTALTINFO* OSPPAuthIndFirstSourceAlt(
  * authorisation indication
  *-----------------------------------------------------------------------*
  */
-OSPTALTINFO*  OSPPAuthIndNextSourceAlt(
+OSPT_ALTINFO*  OSPPAuthIndNextSourceAlt(
     OSPTAUTHIND* ospvAuthInd,   /* authorisation indication */
-    OSPTALTINFO* ospvAltInfo)
+    OSPT_ALTINFO* ospvAltInfo)
 {
-    OSPTALTINFO* altinfo = OSPC_OSNULL;
+    OSPT_ALTINFO* altinfo = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        altinfo = (OSPTALTINFO*)OSPPListNext(&(ospvAuthInd->ospmAuthIndSourceAlternate), 
+        altinfo = (OSPT_ALTINFO*)OSPPListNext(&(ospvAuthInd->ospmAuthIndSourceAlternate), 
             ospvAltInfo);
     }
     return altinfo;
@@ -341,7 +341,7 @@ OSPTALTINFO*  OSPPAuthIndNextSourceAlt(
  *-----------------------------------------------------------------------*
  */
 unsigned char* OSPPAuthIndGetSourceAltValue(
-    OSPTALTINFO* ospvAltInfo)   /* Alt info ptr */
+    OSPT_ALTINFO* ospvAltInfo)   /* Alt info ptr */
 {
     unsigned char* ospvAltInfoValue = OSPC_OSNULL;
 
@@ -376,13 +376,13 @@ int OSPPAuthIndHasDestinationAlt(
  * authorisation indication
  *-----------------------------------------------------------------------*
  */
-OSPTALTINFO* OSPPAuthIndFirstDestinationAlt(
+OSPT_ALTINFO* OSPPAuthIndFirstDestinationAlt(
     OSPTAUTHIND* ospvAuthInd)   /* authorisation indication */
 {
-    OSPTALTINFO* ospvAltInfo = OSPC_OSNULL;
+    OSPT_ALTINFO* ospvAltInfo = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvAltInfo = (OSPTALTINFO*)OSPPListFirst(&(ospvAuthInd->ospmAuthIndDestinationAlternate)); 
+        ospvAltInfo = (OSPT_ALTINFO*)OSPPListFirst(&(ospvAuthInd->ospmAuthIndDestinationAlternate)); 
     }
     return ospvAltInfo;
 }
@@ -394,14 +394,14 @@ OSPTALTINFO* OSPPAuthIndFirstDestinationAlt(
  * authorisation indication
  *-----------------------------------------------------------------------*
  */
-OSPTALTINFO* OSPPAuthIndNextDestinationAlt(
+OSPT_ALTINFO* OSPPAuthIndNextDestinationAlt(
     OSPTAUTHIND* ospvAuthInd,   /* authorisation indication */
-    OSPTALTINFO* ospvAltInfo)
+    OSPT_ALTINFO* ospvAltInfo)
 {
-    OSPTALTINFO* altinfo = OSPC_OSNULL;
+    OSPT_ALTINFO* altinfo = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        altinfo = (OSPTALTINFO*)OSPPListNext(&(ospvAuthInd->ospmAuthIndDestinationAlternate),  
+        altinfo = (OSPT_ALTINFO*)OSPPListNext(&(ospvAuthInd->ospmAuthIndDestinationAlternate),  
             ospvAltInfo);
     }
     return altinfo;
@@ -415,7 +415,7 @@ OSPTALTINFO* OSPPAuthIndNextDestinationAlt(
  *-----------------------------------------------------------------------*
  */
 unsigned char* OSPPAuthIndGetDestinationAltValue(
-    OSPTALTINFO* ospvAltInfo)   /* Alt info ptr */
+    OSPT_ALTINFO* ospvAltInfo)   /* Alt info ptr */
 {
     unsigned char* ospvAltInfoValue = OSPC_OSNULL;
 
@@ -516,7 +516,7 @@ OSPTAUTHIND* OSPPAuthIndNew()
 void OSPPAuthIndDelete(OSPTAUTHIND** ospvAuthInd)
 {
     OSPTTOKEN* token = OSPC_OSNULL;
-    OSPTALTINFO* altinfo = OSPC_OSNULL;
+    OSPT_ALTINFO* altinfo = OSPC_OSNULL;
 
     if (*ospvAuthInd != OSPC_OSNULL) {
         if (OSPPAuthIndHasCallId(*ospvAuthInd)) {
@@ -533,7 +533,7 @@ void OSPPAuthIndDelete(OSPTAUTHIND** ospvAuthInd)
         OSPPListDelete(&((*ospvAuthInd)->ospmAuthIndTokens));
 
         while(!OSPPListEmpty(&((*ospvAuthInd)->ospmAuthIndSourceAlternate))) {
-            altinfo = (OSPTALTINFO*)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndSourceAlternate));
+            altinfo = (OSPT_ALTINFO*)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndSourceAlternate));
             if(altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
@@ -543,7 +543,7 @@ void OSPPAuthIndDelete(OSPTAUTHIND** ospvAuthInd)
         OSPPListDelete(&((*ospvAuthInd)->ospmAuthIndSourceAlternate));
 
         while(!OSPPListEmpty(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate))) {
-            altinfo = (OSPTALTINFO*)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate));
+            altinfo = (OSPT_ALTINFO*)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate));
             if(altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
@@ -553,7 +553,7 @@ void OSPPAuthIndDelete(OSPTAUTHIND** ospvAuthInd)
         OSPPListDelete(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate));
 
         while(!OSPPListEmpty(&((*ospvAuthInd)->ospmAuthIndDeviceInfo))) {
-            altinfo = (OSPTALTINFO*)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndDeviceInfo));
+            altinfo = (OSPT_ALTINFO*)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndDeviceInfo));
             if(altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;

@@ -32,11 +32,11 @@
 
 typedef struct {
     OSPTTIME ospmAuthIndTimestamp;
-    OSPE_MSG_ROLETYPES ospmAuthIndRole;
+    OSPE_MSG_ROLE ospmAuthIndRole;
     OSPTBOOL ospmAuthIndHasRole;
     OSPTCALLID *ospmAuthIndCallId;
-    unsigned char ospmAuthIndSourceNumber[OSPC_E164NUMSIZE];
-    unsigned char ospmAuthIndDestNumber[OSPC_E164NUMSIZE];
+    unsigned char ospmAuthIndSourceNumber[OSPC_SIZE_E164NUM];
+    unsigned char ospmAuthIndDestNumber[OSPC_SIZE_E164NUM];
     OSPTLIST ospmAuthIndSourceAlternate;
     OSPTLIST ospmAuthIndDeviceInfo;
     OSPTLIST ospmAuthIndDestinationAlternate;
@@ -61,8 +61,8 @@ extern "C" {
     void OSPPAuthIndSetCallId(OSPTAUTHIND *, OSPTCALLID *);
     void OSPPAuthIndSetTimestamp(OSPTAUTHIND *, OSPTTIME);
     int OSPPAuthIndHasRole(OSPTAUTHIND *);
-    void OSPPAuthIndSetRole(OSPTAUTHIND *, OSPE_MSG_ROLETYPES);
-    OSPE_MSG_ROLETYPES OSPPAuthIndGetRole(OSPTAUTHIND *);
+    void OSPPAuthIndSetRole(OSPTAUTHIND *, OSPE_MSG_ROLE);
+    OSPE_MSG_ROLE OSPPAuthIndGetRole(OSPTAUTHIND *);
     int OSPPAuthIndHasCallId(OSPTAUTHIND *);
     OSPTCALLID *OSPPAuthIndGetCallId(OSPTAUTHIND *);
     unsigned OSPPAuthIndGetCallIdSize(OSPTAUTHIND *);
@@ -76,14 +76,14 @@ extern "C" {
     void OSPPAuthIndSetDest(OSPTAUTHIND *, OSPTDEST *);
     int OSPPAuthIndHasDest(OSPTAUTHIND *);
     int OSPPAuthIndHasSourceAlt(OSPTAUTHIND *);
-    OSPTALTINFO *OSPPAuthIndFirstSourceAlt(OSPTAUTHIND *);
-    OSPTALTINFO *OSPPAuthIndNextSourceAlt(OSPTAUTHIND *, OSPTALTINFO *);
-    unsigned char *OSPPAuthIndGetSourceAltValue(OSPTALTINFO *);
+    OSPT_ALTINFO *OSPPAuthIndFirstSourceAlt(OSPTAUTHIND *);
+    OSPT_ALTINFO *OSPPAuthIndNextSourceAlt(OSPTAUTHIND *, OSPT_ALTINFO *);
+    unsigned char *OSPPAuthIndGetSourceAltValue(OSPT_ALTINFO *);
     int OSPPAuthIndHasDestinationAlt(OSPTAUTHIND *);
-    unsigned OSPPAuthIndGetDestinationAltSize(OSPTALTINFO *);
-    OSPTALTINFO *OSPPAuthIndFirstDestinationAlt(OSPTAUTHIND *);
-    OSPTALTINFO *OSPPAuthIndNextDestinationAlt(OSPTAUTHIND *, OSPTALTINFO *);
-    unsigned char *OSPPAuthIndGetDestinationAltValue(OSPTALTINFO *);
+    unsigned OSPPAuthIndGetDestinationAltSize(OSPT_ALTINFO *);
+    OSPT_ALTINFO *OSPPAuthIndFirstDestinationAlt(OSPTAUTHIND *);
+    OSPT_ALTINFO *OSPPAuthIndNextDestinationAlt(OSPTAUTHIND *, OSPT_ALTINFO *);
+    unsigned char *OSPPAuthIndGetDestinationAltValue(OSPT_ALTINFO *);
     void OSPPAuthIndSetTimeLimit(OSPTAUTHIND *, unsigned);
 
 #ifdef __cplusplus

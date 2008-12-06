@@ -130,7 +130,7 @@ OSPPMsgQueueDecrementNumberOfTransactions(
 int
 OSPPMsgQueueAddTransaction(
     OSPTMSGQUEUE *ospvMsgQueue,
-    OSPTMSGINFO  *ospvMsgInfo)
+    OSPT_MSG_INFO  *ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTBOOL IsNonBlocking = OSPC_FALSE;

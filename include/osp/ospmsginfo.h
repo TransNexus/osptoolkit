@@ -23,7 +23,7 @@
 /*
  * message info typedef
  */
-typedef struct _OSPTMSGINFO {
+typedef struct {
     OSPTLISTLINK Link;
     unsigned char *RequestMsg;
     unsigned char *ResponseMsg;
@@ -48,9 +48,9 @@ typedef struct _OSPTMSGINFO {
      */
     int IsNonBlocking;
     int HasBeenProcessed;
-} OSPTMSGINFO;
+} OSPT_MSG_INFO;
 
-#define OSPC_MSGINFO_AUDIT_TYPE 0x01    /* bit 1 - Message type flag */
+#define OSPC_MINFO_AUDITTYPE 0x01    /* bit 1 - Message type flag */
 
 /* Function Prototypes */
 
@@ -58,11 +58,11 @@ typedef struct _OSPTMSGINFO {
 extern "C" {
 #endif
 
-    int OSPPMsgInfoNew(OSPTMSGINFO **);
-    void OSPPMsgInfoDelete(OSPTMSGINFO **);
-    int OSPPMsgInfoWaitForMsg(OSPTMSGINFO *);
-    int OSPPMsgInfoProcessResponse(OSPTMSGINFO *);
-    void OSPPMsgInfoAssignRequestMsg(OSPTMSGINFO *, unsigned char *, unsigned);
+    int OSPPMsgInfoNew(OSPT_MSG_INFO **);
+    void OSPPMsgInfoDelete(OSPT_MSG_INFO **);
+    int OSPPMsgInfoWaitForMsg(OSPT_MSG_INFO *);
+    int OSPPMsgInfoProcessResponse(OSPT_MSG_INFO *);
+    void OSPPMsgInfoAssignRequestMsg(OSPT_MSG_INFO *, unsigned char *, unsigned);
 
 #ifdef __cplusplus
 }

@@ -38,7 +38,7 @@ extern "C" {
 #endif
 
     void OSPPTNAuditDelete(OSPTTNAUDIT **ospvTNAudit);
-    int OSPPTNAuditFromElement(OSPTXMLELEM *, OSPTTNAUDIT **);
+    int OSPPTNAuditFromElement(OSPT_XML_ELEM *, OSPTTNAUDIT **);
     unsigned OSPPTNAuditGetMaxMessages(OSPTTNAUDIT *);
     OSPE_AUDIT_STATE OSPPTNAuditGetState(OSPTTNAUDIT *);
     unsigned OSPPTNAuditGetTimeLimit(OSPTTNAUDIT *);

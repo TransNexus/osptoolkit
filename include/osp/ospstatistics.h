@@ -61,15 +61,15 @@ extern "C" {
     OSPTBOOL OSPPStatisticsHasLossSent(OSPTSTATISTICS *);
     OSPTBOOL OSPPStatisticsHasOneWay(OSPTSTATISTICS *);
     OSPTBOOL OSPPStatisticsHasRoundTrip(OSPTSTATISTICS *);
-    int OSPPStatisticsLossReceivedToElement(OSPTSTATISTICS *, OSPTXMLELEM **);
-    int OSPPStatisticsLossSentToElement(OSPTSTATISTICS *, OSPTXMLELEM **);
+    int OSPPStatisticsLossReceivedToElement(OSPTSTATISTICS *, OSPT_XML_ELEM **);
+    int OSPPStatisticsLossSentToElement(OSPTSTATISTICS *, OSPT_XML_ELEM **);
     OSPTSTATISTICS *OSPPStatisticsNew(void);
-    int OSPPStatisticsOneWayToElement(OSPTSTATISTICS *, OSPTXMLELEM **);
-    int OSPPStatisticsRoundTripToElement(OSPTSTATISTICS *, OSPTXMLELEM **);
+    int OSPPStatisticsOneWayToElement(OSPTSTATISTICS *, OSPT_XML_ELEM **);
+    int OSPPStatisticsRoundTripToElement(OSPTSTATISTICS *, OSPT_XML_ELEM **);
     int OSPPStatisticsReportUsage(OSPTSTATISTICS **, unsigned, signed, unsigned, signed);
     void OSPPStatisticsSetReceivedStatistics(OSPTSTATISTICS *, unsigned, signed);
     void OSPPStatisticsSetSentStatistics(OSPTSTATISTICS *, unsigned, signed);
-    int OSPPStatisticsToElement(OSPTSTATISTICS *, OSPTXMLELEM **);
+    int OSPPStatisticsToElement(OSPTSTATISTICS *, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

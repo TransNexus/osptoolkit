@@ -89,14 +89,14 @@ OSPPMsgBinFromASCIIElement(
 
 unsigned                          /* returns error code */
 OSPPMsgBinFromElement(
-    OSPTXMLELEM   *ospvElem,      /* input is XML element */
+    OSPT_XML_ELEM   *ospvElem,      /* input is XML element */
     unsigned      *ospvDataLen,   /* in: max size  out: actual size */
     unsigned char **ospvData      /* where to put binary data */
 )
 
 {
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLATTR  *attr;
+    OSPT_XML_ATTR  *attr;
     unsigned      isBase64;
     unsigned      verifyDataLen = 0;
 
@@ -111,9 +111,9 @@ OSPPMsgBinFromElement(
         isBase64 = OSPC_FALSE;
 
         /* look for a type attribute that will identify the encoding */
-        for (attr = (OSPTXMLATTR *)OSPPXMLElemFirstAttr(ospvElem);
-            (attr != (OSPTXMLATTR *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-            attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
+        for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElem);
+            (attr != (OSPT_XML_ATTR *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
         {
             if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_ENCODING)
             {
@@ -240,7 +240,7 @@ OSPPMsgBinToElement(
     unsigned       ospvDataLen,      /* size of binary data */
     unsigned char *ospvData,         /* pointer to binary data */
     const unsigned char *ospvName,   /* name of element */
-    OSPTXMLELEM **ospvElem,          /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem,          /* where to put XML element pointer */
     OSPTBOOL      ospvUseBase64      /* base64 (1) or CDATA (0) encoding */
 )
 {
@@ -407,7 +407,7 @@ OSPPMsgBinToElement(
             {
                 if (ospvUseBase64 == OSPC_TRUE)
                 {
-                    OSPTXMLATTR *attr = OSPC_OSNULL;
+                    OSPT_XML_ATTR *attr = OSPC_OSNULL;
                     attr = OSPPXMLAttrNew((const unsigned char *)"encoding", 
                         (const unsigned char *)"base64");
                     if (attr != OSPC_OSNULL) 
@@ -440,7 +440,7 @@ OSPPMsgBinToElement(
  *-----------------------------------------------------------------------*/
 unsigned                          /* returns error code */
 OSPPMsgNumFromElement(
-    OSPTXMLELEM   *ospvElem,      /* input is XML element */
+    OSPT_XML_ELEM   *ospvElem,      /* input is XML element */
     unsigned long *ospvNumber     /* where to put number */
 )
 {
@@ -479,7 +479,7 @@ unsigned                           /* returns error code */
 OSPPMsgNumToElement(
     unsigned long  ospvNumber,     /* number to serve as data */
     const unsigned char *ospvName, /* name of element */
-    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -537,7 +537,7 @@ OSPPMsgNumToElement(
  *-----------------------------------------------------------------------*/
 int                          /* returns error code */
 OSPPMsgFloatFromElement(
-    OSPTXMLELEM   *ospvElem,      /* input is XML element */
+    OSPT_XML_ELEM   *ospvElem,      /* input is XML element */
     float         *ospvNumber     /* where to put number */
 )
 {
@@ -568,7 +568,7 @@ int                                 /* returns error code */
 OSPPMsgFloatToElement(
     float  ospvFloat,               /* number to serve as data */
     const unsigned char *ospvName,  /* name of element */
-    OSPTXMLELEM **ospvElem          /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem          /* where to put XML element pointer */
 )
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -608,7 +608,7 @@ OSPPMsgFloatToElement(
  *-----------------------------------------------------------------------*/
 unsigned                          /* returns error code */
 OSPPMsgCodeFromElement(
-    OSPTXMLELEM   *ospvElem,      /* input is XML element */
+    OSPT_XML_ELEM   *ospvElem,      /* input is XML element */
     unsigned long *ospvNumber     /* where to put number */
 )
 {
@@ -624,7 +624,7 @@ unsigned                           /* returns error code */
 OSPPMsgCodeToElement(
     unsigned long  ospvNumber,     /* number to serve as data */
     const unsigned char *ospvName, /* name of element */
-    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -663,7 +663,7 @@ OSPPMsgCodeToElement(
  *-----------------------------------------------------------------------*/
 unsigned                          /* returns error code */
 OSPPMsgTXFromElement(
-    OSPTXMLELEM   *ospvElem,      /* input is XML element */
+    OSPT_XML_ELEM   *ospvElem,      /* input is XML element */
     OSPTTRXID     *ospvTX         /* where to put transaction ID */
 )
 {
@@ -712,7 +712,7 @@ unsigned                           /* returns error code */
 OSPPMsgTXToElement(
     OSPTTRXID     ospvNumber,     /* number to serve as data */
     const unsigned char *ospvName, /* name of element */
-    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -770,7 +770,7 @@ OSPPMsgTXToElement(
  *-----------------------------------------------------------------------*/
 unsigned                        /* returns error code */
 OSPPMsgTimeFromElement(
-    OSPTXMLELEM *ospvElem,      /* input is XML element */
+    OSPT_XML_ELEM *ospvElem,      /* input is XML element */
     OSPTTIME    *ospvTime)      /* where to put time */
 {
     unsigned  ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -800,7 +800,7 @@ unsigned                              /* returns error code */
 OSPPMsgTimeToElement(
     OSPTTIME             ospvTime,    /* number to serve as data */
     const unsigned char *ospvName,    /* name of element */
-    OSPTXMLELEM        **ospvElem     /* where to put XML element pointer */
+    OSPT_XML_ELEM        **ospvElem     /* where to put XML element pointer */
 )
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -843,13 +843,13 @@ unsigned                              /* returns error code */
 OSPPMsgRoleToElement(
     unsigned             ospvRole,    /* number to serve as data */
     const unsigned char *ospvName,    /* name of element */
-    OSPTXMLELEM        **ospvElem     /* where to put XML element pointer */
+    OSPT_XML_ELEM        **ospvElem     /* where to put XML element pointer */
 )
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
-    char     rolestr[OSPC_ROLESTRSZ];
+    char     rolestr[OSPC_SIZE_ROLESTR];
 
-    OSPM_MEMSET(rolestr, 0, OSPC_ROLESTRSZ);
+    OSPM_MEMSET(rolestr, 0, OSPC_SIZE_ROLESTR);
 
     if (ospvElem == OSPC_OSNULL) 
     {
@@ -887,18 +887,18 @@ OSPPMsgRoleToElement(
  *-----------------------------------------------------------------------*/
 unsigned                          /* returns non-zero if critical */
 OSPPMsgElemIsCritical(
-    OSPTXMLELEM   *ospvElem       /* input is XML element */
+    OSPT_XML_ELEM   *ospvElem       /* input is XML element */
 )
 {
     unsigned      ospvIsCritical = OSPC_TRUE;
-    OSPTXMLATTR  *attr;
+    OSPT_XML_ATTR  *attr;
 
     if (ospvElem != OSPC_OSNULL) 
     {
         /* look for a critical attribute */
-        for (attr = (OSPTXMLATTR *)OSPPXMLElemFirstAttr(ospvElem);
-            attr != (OSPTXMLATTR *)OSPC_OSNULL;
-            attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
+        for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElem);
+            attr != (OSPT_XML_ATTR *)OSPC_OSNULL;
+            attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
         {
             if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_CRITICAL)
             {
@@ -928,25 +928,25 @@ OSPPOSRoleValToString(unsigned ospvRole,
 
     switch(ospvRole)
     {
-        case OSPC_SOURCE:
+        case OSPC_MROLE_SOURCE:
             memcpy(ospvRolestr, "source", strlen("source"));
             break;
-        case OSPC_DESTINATION:
+        case OSPC_MROLE_DESTINATION:
             memcpy(ospvRolestr, "destination", strlen("destination"));
             break;
-        case OSPC_OTHER:
+        case OSPC_MROLE_OTHER:
             memcpy(ospvRolestr, "other", strlen("other"));
             break;
-        case OSPC_RADSRCSTART:
+        case OSPC_MROLE_RADSRCSTART:
             memcpy(ospvRolestr, "radsrcstart", strlen("radsrcstart"));
             break;
-        case OSPC_RADDSTSTART:
+        case OSPC_MROLE_RADDSTSTART:
             memcpy(ospvRolestr, "raddststart", strlen("raddststart"));
             break;
-        case OSPC_RADSRCSTOP:
+        case OSPC_MROLE_RADSRCSTOP:
             memcpy(ospvRolestr, "radsrcstop", strlen("radsrcstop"));
             break;
-        case OSPC_RADDSTSTOP:
+        case OSPC_MROLE_RADDSTSTOP:
             memcpy(ospvRolestr, "raddststop", strlen("raddststop"));
             break;
         default:

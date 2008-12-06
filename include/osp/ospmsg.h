@@ -27,7 +27,7 @@
 #include "osp/osplist.h"
 
 typedef enum {
-    OSPC_MSG_LOWER_BOUND = 10,
+    OSPC_MSG_UNKNOWN = 0,
     OSPC_MSG_AREQ,
     OSPC_MSG_ARESP,
     OSPC_MSG_AREZP,
@@ -40,26 +40,27 @@ typedef enum {
     OSPC_MSG_TOKINFO,
     OSPC_MSG_CAPIND,
     OSPC_MSG_CAPCNF,
-    OSPC_MSG_UPPER_BOUND
-} OSPE_MSG_DATATYPES;
+    /* Number of message types */
+    OSPC_MSG_NUMBER
+} OSPE_MSG_TYPE;
 
 typedef enum {
-    OSPC_UNDEFINED_ROLE = 0,    /* Not a known role */
-    OSPC_DESTINATION,
-    OSPC_SOURCE,
-    OSPC_OTHER,
-    OSPC_RADSRCSTART,
-    OSPC_RADDSTSTART,
-    OSPC_RADSRCSTOP,
-    OSPC_RADDSTSTOP
-} OSPE_MSG_ROLETYPES;
+    OSPC_MROLE_UNDEFINED = 0,    /* Not a known role */
+    OSPC_MROLE_DESTINATION,
+    OSPC_MROLE_SOURCE,
+    OSPC_MROLE_OTHER,
+    OSPC_MROLE_RADSRCSTART,
+    OSPC_MROLE_RADDSTSTART,
+    OSPC_MROLE_RADSRCSTOP,
+    OSPC_MROLE_RADDSTSTOP
+} OSPE_MSG_ROLE;
 
 /* general constants */
 
-#define OSPC_E164NUMSIZE    132 /* max digits in E.164 number */
-#define OSPC_SIGNALADDRSIZE 262 /* max characters in [name]:port */
-#define OSPC_URLSIZE        512 /* max characters in URL */
-#define OSPC_ROLESTRSZ      12  /* max characters in role string */
+#define OSPC_SIZE_E164NUM    132    /* max digits in E.164 number */
+#define OSPC_SIZE_SIGNALADDR 262    /* max characters in [name]:port */
+#define OSPC_SIZE_URL        512    /* max characters in URL */
+#define OSPC_SIZE_ROLESTR    16     /* max characters in role string */
 
 /* Function Prototypes */
 
@@ -67,22 +68,22 @@ typedef enum {
 extern "C" {
 #endif
 
-    unsigned OSPPMsgBinFromElement(OSPTXMLELEM *, unsigned *, unsigned char **);
-    unsigned OSPPMsgBinToElement(unsigned, unsigned char *, const unsigned char *, OSPTXMLELEM **, OSPTBOOL);
-    unsigned OSPPMsgNumFromElement(OSPTXMLELEM *, unsigned long *);
-    unsigned OSPPMsgNumToElement(unsigned long, const unsigned char *, OSPTXMLELEM **);
-    int OSPPMsgFloatFromElement(OSPTXMLELEM *, float *);
-    int OSPPMsgFloatToElement(float, const unsigned char *, OSPTXMLELEM **);
-    unsigned OSPPMsgCodeFromElement(OSPTXMLELEM *, unsigned long *);
-    unsigned OSPPMsgCodeToElement(unsigned long, const unsigned char *, OSPTXMLELEM **);
-    unsigned OSPPMsgTXToElement(OSPTTRXID, const unsigned char *, OSPTXMLELEM **);
-    unsigned OSPPMsgTXFromElement(OSPTXMLELEM *, OSPTTRXID *);
-    unsigned OSPPMsgTimeToElement(OSPTTIME, const unsigned char *, OSPTXMLELEM **);
-    unsigned OSPPMsgElemIsCritical(OSPTXMLELEM *);
-    unsigned OSPPMsgRoleToElement(unsigned, const unsigned char *, OSPTXMLELEM **);
+    unsigned OSPPMsgBinFromElement(OSPT_XML_ELEM *, unsigned *, unsigned char **);
+    unsigned OSPPMsgBinToElement(unsigned, unsigned char *, const unsigned char *, OSPT_XML_ELEM **, OSPTBOOL);
+    unsigned OSPPMsgNumFromElement(OSPT_XML_ELEM *, unsigned long *);
+    unsigned OSPPMsgNumToElement(unsigned long, const unsigned char *, OSPT_XML_ELEM **);
+    int OSPPMsgFloatFromElement(OSPT_XML_ELEM *, float *);
+    int OSPPMsgFloatToElement(float, const unsigned char *, OSPT_XML_ELEM **);
+    unsigned OSPPMsgCodeFromElement(OSPT_XML_ELEM *, unsigned long *);
+    unsigned OSPPMsgCodeToElement(unsigned long, const unsigned char *, OSPT_XML_ELEM **);
+    unsigned OSPPMsgTXToElement(OSPTTRXID, const unsigned char *, OSPT_XML_ELEM **);
+    unsigned OSPPMsgTXFromElement(OSPT_XML_ELEM *, OSPTTRXID *);
+    unsigned OSPPMsgTimeToElement(OSPTTIME, const unsigned char *, OSPT_XML_ELEM **);
+    unsigned OSPPMsgElemIsCritical(OSPT_XML_ELEM *);
+    unsigned OSPPMsgRoleToElement(unsigned, const unsigned char *, OSPT_XML_ELEM **);
     int OSPPOSRoleValToString(unsigned, char *ospvRolestr);
     int OSPPBase64DecodeWrap(const unsigned char *, unsigned *, unsigned char *);
-    unsigned OSPPMsgTimeFromElement(OSPTXMLELEM *, OSPTTIME *);
+    unsigned OSPPMsgTimeFromElement(OSPT_XML_ELEM *, OSPTTIME *);
     unsigned OSPPMsgBinFromASCIIElement(unsigned char *, unsigned *, unsigned char **);
 
 #ifdef __cplusplus

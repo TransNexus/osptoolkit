@@ -40,7 +40,7 @@ extern "C" {
 
     unsigned OSPPCapCnfNew(OSPTCAPCNF **);
     void OSPPCapCnfDelete(OSPTCAPCNF **);
-    unsigned OSPPCapCnfFromElement(OSPTXMLELEM *, OSPTCAPCNF **);
+    unsigned OSPPCapCnfFromElement(OSPT_XML_ELEM *, OSPTCAPCNF **);
 
 #ifdef __cplusplus
 }

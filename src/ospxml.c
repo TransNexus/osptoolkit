@@ -35,7 +35,7 @@
 #include "osp/ospcapind.h"
 
 int OSPPXMLElementProcess(
-    OSPTXMLELEM * ospvElem,         /* In - xmlelement to be processed */
+    OSPT_XML_ELEM * ospvElem,         /* In - xmlelement to be processed */
     unsigned char **ospvMessage,    /* Out - xml doc as unsigned char */
     unsigned *ospvSizeOfMessage)    /* Out - size of xml doc */
 {                               
@@ -43,7 +43,7 @@ int OSPPXMLElementProcess(
     unsigned transferlen = 0;
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvElem == (OSPTXMLELEM *) NULL) {
+    if (ospvElem == (OSPT_XML_ELEM *) NULL) {
         errorcode = OSPC_ERR_XML_INVALID_ARGS;
         OSPM_DBGERRORLOG(errorcode, "ospvElem == NULL");
     }
@@ -107,17 +107,17 @@ int OSPPXMLElementProcess(
 }
 
 int OSPPXMLMessageCreate(
-    OSPE_MSG_DATATYPES ospvDataType,    /* In - what data type (AREQ, ARESP...) */
+    OSPE_MSG_TYPE ospvDataType,    /* In - what data type (AREQ, ARESP...) */
     unsigned char **ospvMessage,        /* Out - actual xml message */
     unsigned *ospvSizeOfMessage,        /* Out - size of xml message */
     void *ospvInfo,                     /* In - structure holding data */
     OSPTTRANS * trans)                  /* In - transaction handle */
 {                              
     int errorcode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM *xmlelem = NULL;
+    OSPT_XML_ELEM *xmlelem = NULL;
 
     /* verify input */
-    if ((ospvDataType > OSPC_MSG_UPPER_BOUND) || (ospvDataType < OSPC_MSG_LOWER_BOUND) || (ospvInfo == NULL)) {
+    if ((ospvDataType > OSPC_MSG_NUMBER) || (ospvDataType < OSPC_MSG_UNKNOWN) || (ospvInfo == NULL)) {
         errorcode = OSPC_ERR_XML_INVALID_ARGS;
         OSPM_DBGERRORLOG(errorcode, "invalid arg in osppxmlmessagecreate");
     }
@@ -164,10 +164,10 @@ int OSPPXMLMessageCreate(
 }
 
 int OSPPXMLGetDataType(
-    OSPTXMLELEM * ospvXMLElem,          /* In - xml element */
-    OSPE_MSG_DATATYPES * ospvDataType)  /* Out - datatype for this element */
+    OSPT_XML_ELEM * ospvXMLElem,          /* In - xml element */
+    OSPE_MSG_TYPE * ospvDataType)  /* Out - datatype for this element */
 {                               
-    OSPTXMLELEM *parent = OSPC_OSNULL;
+    OSPT_XML_ELEM *parent = OSPC_OSNULL;
     char *name = OSPC_OSNULL;
     int errorcode = OSPC_ERR_NO_ERROR;
 
@@ -176,7 +176,7 @@ int OSPPXMLGetDataType(
         OSPM_DBGERRORLOG(errorcode, "ospvXMLElem is NULL");
     } else {
         if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvXMLElem)) == OSPC_MELEM_MESSAGE) {
-            parent = (OSPTXMLELEM *) OSPPXMLElemFirstChild(ospvXMLElem);
+            parent = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvXMLElem);
         } else {
             parent = ospvXMLElem;
         }
@@ -238,14 +238,14 @@ int OSPPXMLMessageParse(
     unsigned char *ospvXMLMessage,      /* In - xml message */
     unsigned ospvSizeOfMessage,         /* In - size of message */
     void **ospvData,                    /* Out - pointer to struct w/data from message */
-    OSPE_MSG_DATATYPES * ospvDataType)  /* Out - what type struct void pointer is pointing to */
+    OSPE_MSG_TYPE * ospvDataType)  /* Out - what type struct void pointer is pointing to */
 {                               
     int errorcode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM *xmlelem = OSPC_OSNULL;
+    OSPT_XML_ELEM *xmlelem = OSPC_OSNULL;
     OSPTBFR *xmlbufr = OSPC_OSNULL;
     unsigned numbyteswritten = 0;
-    OSPTXMLELEM *elem1 = OSPC_OSNULL;
-    OSPTXMLELEM *tempxmlelem = OSPC_OSNULL;
+    OSPT_XML_ELEM *elem1 = OSPC_OSNULL;
+    OSPT_XML_ELEM *tempxmlelem = OSPC_OSNULL;
 
     /* check input */
     if ((ospvXMLMessage == (unsigned char *) NULL) ||
@@ -295,13 +295,13 @@ int OSPPXMLMessageParse(
             if ((*ospvDataType == OSPC_MSG_UIND) || (*ospvDataType == OSPC_MSG_UCNF)) {
                 if (OSPPMsgElemGetPart(OSPPXMLElemGetName(xmlelem)) ==
                     OSPC_MELEM_MESSAGE) {
-                    tempxmlelem = (OSPTXMLELEM *) OSPPXMLElemFirstChild(xmlelem);
+                    tempxmlelem = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(xmlelem);
                     xmlelem->ospmXMLElemChild = OSPC_OSNULL;
                     OSPPXMLElemDelete(&xmlelem);
                     xmlelem = tempxmlelem;
                 }
 
-                while ((elem1 = (OSPTXMLELEM *) OSPPListRemove((OSPTLIST *) & xmlelem)) != OSPC_OSNULL) {
+                while ((elem1 = (OSPT_XML_ELEM *) OSPPListRemove((OSPTLIST *) & xmlelem)) != OSPC_OSNULL) {
                     OSPPXMLElemDelete(&elem1);
                     elem1 = OSPC_OSNULL;
                 }
@@ -318,9 +318,9 @@ int OSPPXMLMessageParse(
 }
 
 int OSPPXMLMessageProcess(
-    OSPTXMLELEM * ospvElem,             /* In - xml element for this datatype */
+    OSPT_XML_ELEM * ospvElem,             /* In - xml element for this datatype */
     void **ospvStruct,                  /* Out- pointer to struct to be filled in */
-    OSPE_MSG_DATATYPES ospvDataType)    /* In - datatype for this struct */
+    OSPE_MSG_TYPE ospvDataType)    /* In - datatype for this struct */
 {                         
     int errorcode = OSPC_ERR_NO_ERROR;
 

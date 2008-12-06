@@ -28,7 +28,7 @@
  */
 
 /* Array that associates attribute and names */
-const OSPT_MSG_DESC OSPC_MATTR_DESCS[] = {
+const OSPT_MSG_DESC OSPV_MATTR_DESCS[OSPC_MATTR_NUMBER] = {
     { OSPC_MATTR_UNKNOWN,       "" },
     { OSPC_MATTR_COMPONENTID,   "componentId" },
     { OSPC_MATTR_CRITICAL,      "critical" },
@@ -48,7 +48,7 @@ const char *OSPPMsgAttrGetName(     /* returns pointer to the name */
     const char *ospvName = OSPC_OSNULL;
 
     if (ospvPart != OSPC_MATTR_UNKNOWN) {
-        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPC_MATTR_DESCS, OSPC_MATTR_NUMBER);
+        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_MATTR_DESCS, OSPC_MATTR_NUMBER);
     }
 
     return (ospvName);
@@ -63,7 +63,7 @@ OSPE_MSG_ATTR OSPPMsgAttrGetPart(   /* returns part */
     OSPE_MSG_ATTR ospvPart = OSPC_MATTR_UNKNOWN;
 
     if (ospvName != OSPC_OSNULL) {
-        ospvPart = (OSPE_MSG_ATTR)OSPPMsgDescGetPart(ospvName, OSPC_MATTR_DESCS, OSPC_MATTR_NUMBER);
+        ospvPart = (OSPE_MSG_ATTR)OSPPMsgDescGetPart(ospvName, OSPV_MATTR_DESCS, OSPC_MATTR_NUMBER);
     }
 
     return (ospvPart);

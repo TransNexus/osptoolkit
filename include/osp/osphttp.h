@@ -54,7 +54,7 @@ typedef struct _OSPTHTTP {
     OSPTSSLSESSION *SSLSession;
     OSPTSSIZE_T ByteCount;
     unsigned char Flags;
-    OSPTMSGINFO *MsgInfoList;
+    OSPT_MSG_INFO *MsgInfoList;
     OSPTSVCPT *ServicePointList;
     unsigned long CurrentMsgCount;
 } OSPTHTTP;

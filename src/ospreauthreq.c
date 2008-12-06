@@ -147,10 +147,10 @@ OSPPReauthReqSetSourceNumber(
     {
         if (ospvNum  != OSPC_OSNULL)
         {
-            if (OSPM_STRLEN((const char *)ospvNum) < OSPC_E164NUMSIZE)
+            if (OSPM_STRLEN((const char *)ospvNum) < OSPC_SIZE_E164NUM)
             {
                 OSPM_STRNCPY((char *) (ospvReauthReq->ospmReauthReqSourceNumber), 
-                    (const char *)ospvNum, OSPC_E164NUMSIZE-1);
+                    (const char *)ospvNum, OSPC_SIZE_E164NUM-1);
             }
         }
     }
@@ -191,10 +191,10 @@ OSPPReauthReqSetDestNumber(
     {
         if (ospvNum  != OSPC_OSNULL)
         {
-            if (OSPM_STRLEN((const char *)ospvNum) < OSPC_E164NUMSIZE)
+            if (OSPM_STRLEN((const char *)ospvNum) < OSPC_SIZE_E164NUM)
             {
                 OSPM_STRNCPY((char *) (ospvReauthReq->ospmReauthReqDestNumber), 
-                    (const char *)ospvNum, OSPC_E164NUMSIZE-1);
+                    (const char *)ospvNum, OSPC_SIZE_E164NUM-1);
             }
         }
     }
@@ -451,7 +451,7 @@ OSPPReauthReqSetCallId(
 void 
 OSPPReauthReqAddSourceAlt(
     OSPTREAUTHREQ *ospvReauthReq,           /* authorisation request */
-    OSPTALTINFO *ospvAltInfo            /* altinfo to add */
+    OSPT_ALTINFO *ospvAltInfo            /* altinfo to add */
     )
 {
     if ((ospvReauthReq != OSPC_OSNULL) &&
@@ -487,17 +487,17 @@ OSPPReauthReqHasSourceAlt(
  * OSPPReauthReqFirstSourceAlt() - gets the First Source alternate for an 
  * authorisation request
  *-----------------------------------------------------------------------*/
-OSPTALTINFO *                              /* returns alt info pointer */
+OSPT_ALTINFO *                              /* returns alt info pointer */
     OSPPReauthReqFirstSourceAlt(
     OSPTREAUTHREQ *ospvReauthReq               /* authorisation request */
     )
 {
-    OSPTALTINFO *ospvAltInfo = OSPC_OSNULL;
+    OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
         ospvAltInfo = 
-            (OSPTALTINFO *)OSPPListFirst(&((ospvReauthReq)->ospmReauthReqSourceAlternate));
+            (OSPT_ALTINFO *)OSPPListFirst(&((ospvReauthReq)->ospmReauthReqSourceAlternate));
     }
     return(ospvAltInfo);
 }
@@ -507,18 +507,18 @@ OSPTALTINFO *                              /* returns alt info pointer */
  * OSPPReauthReqNextSourceAlt() - gets the next source alternate for an 
  * authorisation request
  *-----------------------------------------------------------------------*/
-OSPTALTINFO *                               /* returns alt info pointer */
+OSPT_ALTINFO *                               /* returns alt info pointer */
     OSPPReauthReqNextSourceAlt(
     OSPTREAUTHREQ *ospvReauthReq,               /* authorisation request */
-    OSPTALTINFO  *ospvAltInfo
+    OSPT_ALTINFO  *ospvAltInfo
     )
 {
-    OSPTALTINFO *altinfo = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
         altinfo = 
-            (OSPTALTINFO *)OSPPListNext(&((ospvReauthReq)->ospmReauthReqSourceAlternate), 
+            (OSPT_ALTINFO *)OSPPListNext(&((ospvReauthReq)->ospmReauthReqSourceAlternate), 
             ospvAltInfo);
     }
     return(altinfo);
@@ -532,7 +532,7 @@ OSPTALTINFO *                               /* returns alt info pointer */
 void 
 OSPPReauthReqAddDestinationAlt(
     OSPTREAUTHREQ *ospvReauthReq,   /* authorisation request */
-    OSPTALTINFO *ospvAltInfo    /* altinfo struct */        
+    OSPT_ALTINFO *ospvAltInfo    /* altinfo struct */        
     )
 {
 
@@ -569,17 +569,17 @@ OSPPReauthReqHasDestinationAlt(
  * OSPPReauthReqFirstDestinationAlt() - gets the First Destination alternate for an 
  * authorisation request
  *-----------------------------------------------------------------------*/
-OSPTALTINFO *                              /* returns alt info pointer */
+OSPT_ALTINFO *                              /* returns alt info pointer */
     OSPPReauthReqFirstDestinationAlt(
     OSPTREAUTHREQ *ospvReauthReq               /* authorisation request */
     )
 {
-    OSPTALTINFO *ospvAltInfo = OSPC_OSNULL;
+    OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
         ospvAltInfo = 
-            (OSPTALTINFO *)OSPPListFirst(&((ospvReauthReq)->ospmReauthReqDestinationAlternate));
+            (OSPT_ALTINFO *)OSPPListFirst(&((ospvReauthReq)->ospmReauthReqDestinationAlternate));
     }
     return(ospvAltInfo);
 }
@@ -589,18 +589,18 @@ OSPTALTINFO *                              /* returns alt info pointer */
  * OSPPReauthReqNextDestinationAlt() - gets the next Destination alternate for an 
  * authorisation request
  *-----------------------------------------------------------------------*/
-OSPTALTINFO *                               /* returns alt info pointer */
+OSPT_ALTINFO *                               /* returns alt info pointer */
     OSPPReauthReqNextDestinationAlt(
     OSPTREAUTHREQ *ospvReauthReq,               /* authorisation request */
-    OSPTALTINFO  *ospvAltInfo
+    OSPT_ALTINFO  *ospvAltInfo
     )
 {
-    OSPTALTINFO *altinfo = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
         altinfo = 
-            (OSPTALTINFO *)OSPPListNext(&((ospvReauthReq)->ospmReauthReqDestinationAlternate), 
+            (OSPT_ALTINFO *)OSPPListNext(&((ospvReauthReq)->ospmReauthReqDestinationAlternate), 
             ospvAltInfo);
     }
     return(altinfo);
@@ -613,7 +613,7 @@ OSPTALTINFO *                               /* returns alt info pointer */
  *-----------------------------------------------------------------------*/
 unsigned char *                             /* returns alt info value */
     OSPPReauthReqGetDestinationAltValue(
-    OSPTALTINFO *ospvAltInfo                /* Alt info ptr */
+    OSPT_ALTINFO *ospvAltInfo                /* Alt info ptr */
     )
 {
     unsigned char *ospvAltInfoValue = OSPC_OSNULL;
@@ -631,7 +631,7 @@ unsigned char *                             /* returns alt info value */
 void 
 OSPPReauthReqDelete(OSPTREAUTHREQ **ospvReauthReq)
 {
-    OSPTALTINFO *altinfo    = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo    = OSPC_OSNULL;
     OSPTTOKEN   *token      = OSPC_OSNULL;
 
     if (*ospvReauthReq)
@@ -643,7 +643,7 @@ OSPPReauthReqDelete(OSPTREAUTHREQ **ospvReauthReq)
 
         while(!OSPPListEmpty(&((*ospvReauthReq)->ospmReauthReqSourceAlternate)))
         {
-            altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvReauthReq)->ospmReauthReqSourceAlternate));
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvReauthReq)->ospmReauthReqSourceAlternate));
             if(altinfo != OSPC_OSNULL)
             {
                 OSPM_FREE(altinfo);
@@ -655,7 +655,7 @@ OSPPReauthReqDelete(OSPTREAUTHREQ **ospvReauthReq)
 
         while(!OSPPListEmpty(&((*ospvReauthReq)->ospmReauthReqDevInfo)))
         {
-            altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvReauthReq)->ospmReauthReqDevInfo));
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvReauthReq)->ospmReauthReqDevInfo));
             if(altinfo != OSPC_OSNULL)
             {
                 OSPM_FREE(altinfo);
@@ -667,7 +667,7 @@ OSPPReauthReqDelete(OSPTREAUTHREQ **ospvReauthReq)
 
         while(!OSPPListEmpty(&((*ospvReauthReq)->ospmReauthReqDestinationAlternate)))
         {
-            altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvReauthReq)->ospmReauthReqDestinationAlternate));
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvReauthReq)->ospmReauthReqDestinationAlternate));
             if(altinfo != OSPC_OSNULL)
             {
                 OSPM_FREE(altinfo);
@@ -745,17 +745,17 @@ OSPTREAUTHREQ *                              /* returns pointer or NULL */
 int                                     /* returns error code */
 OSPPReauthReqToElement(
     OSPTREAUTHREQ  *ospvReauthReq,      /* authorisation request value */
-    OSPTXMLELEM    **ospvElem,           /* where to put XML element pointer */
+    OSPT_XML_ELEM    **ospvElem,           /* where to put XML element pointer */
     void           *ospvtrans
 )
 {
     int             ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM     *elem       = OSPC_OSNULL,
+    OSPT_XML_ELEM     *elem       = OSPC_OSNULL,
         *reauthelem = OSPC_OSNULL;
-    OSPTXMLATTR     *attr       = OSPC_OSNULL;
+    OSPT_XML_ATTR     *attr       = OSPC_OSNULL;
     OSPTTOKEN       *token      = OSPC_OSNULL;
     OSPTTRXID       trxid       = 0L;
-    OSPTALTINFO     *altinfo    = OSPC_OSNULL;
+    OSPT_ALTINFO     *altinfo    = OSPC_OSNULL;
     char            random[OSPC_MAX_RANDOM];
     OSPTBOOL        isbase64    = OSPC_TRUE;
     OSPTTRANS       *trans=(OSPTTRANS *)ospvtrans;
@@ -926,9 +926,9 @@ OSPPReauthReqToElement(
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && 
         (ospvReauthReq->ospmReauthReqDevInfo != NULL))
     {
-        for (altinfo = (OSPTALTINFO *)OSPPListFirst( &(ospvReauthReq->ospmReauthReqDevInfo));
+        for (altinfo = (OSPT_ALTINFO *)OSPPListFirst( &(ospvReauthReq->ospmReauthReqDevInfo));
             ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
-            altinfo =  (OSPTALTINFO *)OSPPListNext( &(ospvReauthReq->ospmReauthReqDevInfo), altinfo))
+            altinfo =  (OSPT_ALTINFO *)OSPPListNext( &(ospvReauthReq->ospmReauthReqDevInfo), altinfo))
         {
             ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
             if (ospvErrCode == OSPC_ERR_NO_ERROR)
@@ -1141,16 +1141,16 @@ OSPPReauthReqHasRole(
 /*-----------------------------------------------------------------------*
  * OSPPReauthReqGetRole() - returns role for an reauth request
  *-----------------------------------------------------------------------*/
-OSPE_MSG_ROLETYPES                         /* returns the role (OGW/TGW) */
+OSPE_MSG_ROLE                         /* returns the role (OGW/TGW) */
     OSPPReauthReqGetRole(
     OSPTREAUTHREQ *ospvReauthReq             /* reauth request */
     )
 {
-    OSPE_MSG_ROLETYPES ospvRole = OSPC_UNDEFINED_ROLE;
+    OSPE_MSG_ROLE ospvRole = OSPC_MROLE_UNDEFINED;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
-        ospvRole = (OSPE_MSG_ROLETYPES)ospvReauthReq->ospmReauthReqRole;
+        ospvRole = (OSPE_MSG_ROLE)ospvReauthReq->ospmReauthReqRole;
     }
     return(ospvRole);
 }
@@ -1163,7 +1163,7 @@ OSPE_MSG_ROLETYPES                         /* returns the role (OGW/TGW) */
 void                              
 OSPPReauthReqSetRole(
     OSPTREAUTHREQ       *ospvReauthReq,
-    OSPE_MSG_ROLETYPES  ospvRole)
+    OSPE_MSG_ROLE  ospvRole)
 {
 
     if (ospvReauthReq != OSPC_OSNULL)

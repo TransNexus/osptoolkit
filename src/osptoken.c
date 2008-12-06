@@ -119,7 +119,7 @@ OSPTTOKEN *                           /* returns ptr to token or null */
  *-----------------------------------------------------------------------*/
 unsigned                          /* returns error code */
 OSPPTokenFromElement(
-    OSPTXMLELEM *ospvElem,        /* input is XML element */
+    OSPT_XML_ELEM *ospvElem,        /* input is XML element */
     OSPTTOKEN  **ospvToken        /* where to put token pointer */
 )
 {
@@ -223,7 +223,7 @@ OSPPTokenGetValue(
 unsigned                           /* returns error code */
 OSPPTokenToElement(
     OSPTTOKEN    *ospvToken,       /* token */
-    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;

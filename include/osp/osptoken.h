@@ -52,11 +52,11 @@ extern "C" {
 #endif
 
     OSPTTOKEN *OSPPTokenNew(unsigned, const unsigned char *);
-    unsigned OSPPTokenFromElement(OSPTXMLELEM *, OSPTTOKEN **);
+    unsigned OSPPTokenFromElement(OSPT_XML_ELEM *, OSPTTOKEN **);
     unsigned OSPPTokenGetSize(OSPTTOKEN *);
     const unsigned char *OSPPTokenGetValue(OSPTTOKEN *);
     void OSPPTokenDelete(OSPTTOKEN **);
-    unsigned OSPPTokenToElement(OSPTTOKEN *, OSPTXMLELEM **);
+    unsigned OSPPTokenToElement(OSPTTOKEN *, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

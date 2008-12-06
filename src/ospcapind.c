@@ -52,7 +52,7 @@ OSPPCapIndDelete(
 )
 {
     OSPTCAPIND  *pTmp    = OSPC_OSNULL;
-    OSPTALTINFO *altinfo = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
     if (OSPC_OSNULL != *ospvCapInd)
     {
@@ -75,7 +75,7 @@ OSPPCapIndDelete(
         {
             while(!OSPPListEmpty(&(pTmp->ospmDeviceInfo)))
             {
-                altinfo = (OSPTALTINFO *)OSPPListRemove(&(pTmp->ospmDeviceInfo));
+                altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(pTmp->ospmDeviceInfo));
                 if(altinfo != OSPC_OSNULL)
                 {
                     OSPPAltInfoDelete(&altinfo);
@@ -90,7 +90,7 @@ OSPPCapIndDelete(
         {
             while(!OSPPListEmpty(&(pTmp->ospmSrcAlternate)))
             {
-                altinfo = (OSPTALTINFO *)OSPPListRemove(&(pTmp->ospmSrcAlternate));
+                altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(pTmp->ospmSrcAlternate));
                 if(altinfo != OSPC_OSNULL)
                 {
                     OSPPAltInfoDelete(&altinfo);
@@ -128,7 +128,7 @@ OSPPCapIndNew(
     unsigned     ospvAlmostOutOfResources)  /* In - Boolean indicator of availability */
 {
     int         errorcode       = OSPC_ERR_NO_ERROR;
-    OSPTALTINFO *altinfo        = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo        = OSPC_OSNULL;
     OSPTCAPIND  *capInd         = OSPC_OSNULL;
 
     /*
@@ -336,15 +336,15 @@ OSPPGenerateUniqueId(
 int                                /* returns error code */
 OSPPCapIndToElement(
     OSPTCAPIND   *ospvCapInd,      /* capability indication value */
-    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
     int           ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM  *elem        = OSPC_OSNULL,
+    OSPT_XML_ELEM  *elem        = OSPC_OSNULL,
                  *subelem     = OSPC_OSNULL,
                  *capindelem  = OSPC_OSNULL;
-    OSPTXMLATTR  *attr        = OSPC_OSNULL;
-    OSPTALTINFO  *altinfo     = OSPC_OSNULL;
+    OSPT_XML_ATTR  *attr        = OSPC_OSNULL;
+    OSPT_ALTINFO  *altinfo     = OSPC_OSNULL;
     char         random[OSPC_MAX_RANDOM];
 
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
@@ -408,9 +408,9 @@ OSPPCapIndToElement(
      * Create/Add DeviceInfo elements
      * 
      */
-    for(altinfo = (OSPTALTINFO *)OSPPListFirst( &(ospvCapInd->ospmDeviceInfo) );
-        altinfo!= (OSPTALTINFO *)OSPC_OSNULL;
-        altinfo = (OSPTALTINFO *)OSPPListNext( &(ospvCapInd->ospmDeviceInfo),altinfo))
+    for(altinfo = (OSPT_ALTINFO *)OSPPListFirst( &(ospvCapInd->ospmDeviceInfo) );
+        altinfo!= (OSPT_ALTINFO *)OSPC_OSNULL;
+        altinfo = (OSPT_ALTINFO *)OSPPListNext( &(ospvCapInd->ospmDeviceInfo),altinfo))
     {
         OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
         OSPPXMLElemAddChild(capindelem, elem);
@@ -421,9 +421,9 @@ OSPPCapIndToElement(
      * Create/Add SrcAltTransport elements
      * 
      */
-    for(altinfo = (OSPTALTINFO *)OSPPListFirst( &(ospvCapInd->ospmSrcAlternate) );
-        altinfo!= (OSPTALTINFO *)OSPC_OSNULL;
-        altinfo = (OSPTALTINFO *)OSPPListNext( &(ospvCapInd->ospmSrcAlternate),altinfo))
+    for(altinfo = (OSPT_ALTINFO *)OSPPListFirst( &(ospvCapInd->ospmSrcAlternate) );
+        altinfo!= (OSPT_ALTINFO *)OSPC_OSNULL;
+        altinfo = (OSPT_ALTINFO *)OSPPListNext( &(ospvCapInd->ospmSrcAlternate),altinfo))
     {
         OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
         OSPPXMLElemAddChild(capindelem, elem);

@@ -44,7 +44,7 @@ typedef struct {
     unsigned ospmAuthRspTNDelayPref;
     unsigned ospmNumDests;
     OSPTCSAUDIT *ospmAuthRspCSAudit;
-    OSPE_MSG_ROLETYPES ospmAuthRspRole;
+    OSPE_MSG_ROLE ospmAuthRspRole;
     OSPTBOOL ospmAuthRspHasRole;
 } OSPTAUTHRSP;
 
@@ -85,17 +85,17 @@ extern "C" {
 
     OSPTAUTHRSP *OSPPAuthRspNew(void);
     void OSPPAuthRspDelete(OSPTAUTHRSP **);
-    unsigned OSPPAuthRspFromElement(OSPTXMLELEM *, OSPTAUTHRSP **);
+    unsigned OSPPAuthRspFromElement(OSPT_XML_ELEM *, OSPTAUTHRSP **);
     int OSPPAuthRspHasDest(OSPTAUTHRSP *ospvAuthRsp);
     OSPTDEST *OSPPAuthRspAddDest(OSPTAUTHRSP *, OSPTDEST *);
     OSPTDEST *OSPPAuthRspFirstDest(OSPTAUTHRSP *);
     OSPTDEST *OSPPAuthRspNextDest(OSPTAUTHRSP *, OSPTDEST *);
     int OSPPAuthRspHasComponentId(OSPTAUTHRSP *);
     void OSPPAuthRspSetComponentId(OSPTAUTHRSP *, unsigned char *);
-    void OSPPAuthRspComponentIdFromElement(OSPTXMLELEM *, unsigned char **);
+    void OSPPAuthRspComponentIdFromElement(OSPT_XML_ELEM *, unsigned char **);
     int OSPPAuthRspHasMessageId(OSPTAUTHRSP *);
     void OSPPAuthRspSetMessageId(OSPTAUTHRSP *, unsigned char *);
-    void OSPPAuthRspMessageIdFromElement(OSPTXMLELEM *, unsigned char **);
+    void OSPPAuthRspMessageIdFromElement(OSPT_XML_ELEM *, unsigned char **);
     unsigned char *OSPPAuthRspGetMessageId(OSPTAUTHRSP *);
     void OSPPAuthRspSetTimestamp(OSPTAUTHRSP *, OSPTTIME);
     int OSPPAuthRspHasStatus(OSPTAUTHRSP *);
@@ -113,8 +113,8 @@ extern "C" {
     int OSPPAuthRspHasCSAudit(OSPTAUTHRSP *);
     OSPTCSAUDIT *OSPPAuthRspGetCSAudit(OSPTAUTHRSP *);
     int OSPPAuthRspHasRole(OSPTAUTHRSP *);
-    void OSPPAuthRspSetRole(OSPTAUTHRSP *, OSPE_MSG_ROLETYPES);
-    OSPE_MSG_ROLETYPES OSPPAuthRspGetRole(OSPTAUTHRSP *);
+    void OSPPAuthRspSetRole(OSPTAUTHRSP *, OSPE_MSG_ROLE);
+    OSPE_MSG_ROLE OSPPAuthRspGetRole(OSPTAUTHRSP *);
 
 #ifdef __cplusplus
 }

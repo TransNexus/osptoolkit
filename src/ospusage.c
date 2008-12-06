@@ -43,12 +43,12 @@
 
 unsigned                          /* returns error code */
 OSPPUsageFromElement(
-    OSPTXMLELEM *ospvElem,        /* input is XML element */
+    OSPT_XML_ELEM *ospvElem,        /* input is XML element */
     unsigned    *ospvUsage        /* where to put usage value */
 )
 {
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM  *elem = OSPC_OSNULL;
+    OSPT_XML_ELEM  *elem = OSPC_OSNULL;
     unsigned      gotAmount = OSPC_FALSE;
     unsigned      gotIncrement = OSPC_FALSE;
     unsigned      gotUnit = OSPC_FALSE;
@@ -66,9 +66,9 @@ OSPPUsageFromElement(
 
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        for ( elem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvElem);
-            (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-            elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
+        for ( elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
+            (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
@@ -130,11 +130,11 @@ OSPPUsageFromElement(
  *-----------------------------------------------------------------------*/
 unsigned OSPPAddServiceTypeToUsageElement(
     OSPE_SERVICE_TYPE ServiceType,
-    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM  *elem = OSPC_OSNULL;
+    OSPT_XML_ELEM  *elem = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL)
     {
@@ -186,11 +186,11 @@ unsigned OSPPAddServiceTypeToUsageElement(
  *-----------------------------------------------------------------------*/
 unsigned OSPPAddPricingInfoToUsageElement(
     OSPT_PRICING_INFO PricingInfo,
-    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM  *elem = OSPC_OSNULL;
+    OSPT_XML_ELEM  *elem = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL)
     {
@@ -275,11 +275,11 @@ unsigned OSPPAddPricingInfoToUsageElement(
  *-----------------------------------------------------------------------*/
 unsigned OSPPAddConfIdToUsageElement(
     unsigned char *ospvConferenceId,
-    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM  *elem = OSPC_OSNULL;
+    OSPT_XML_ELEM  *elem = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL)
     {
@@ -338,11 +338,11 @@ OSPPUsageToElement(
     unsigned      ospvIsPDDInfoPresnt,       /* Is PDD info present variable */
     unsigned      ospvPostDialDelay,       /* PDD value */
     unsigned      ospvReleaseSource,       /* Rel Src value */
-    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
     unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM  *elem = OSPC_OSNULL;
+    OSPT_XML_ELEM  *elem = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL)
     {

@@ -34,11 +34,11 @@
  * be linked together.
  */
 
-typedef struct OSPSXMLAttr {
+typedef struct {
     OSPTLISTLINK ospmXMLAttrLink;
     const char *ospmXMLAttrName;
     const char *ospmXMLAttrValue;
-} OSPTXMLATTR;
+} OSPT_XML_ATTR;
 
 
 #define OSPC_MAX_ID_LEN     25
@@ -49,10 +49,10 @@ typedef struct OSPSXMLAttr {
 extern "C" {
 #endif
 
-    OSPTXMLATTR *OSPPXMLAttrNew(const unsigned char *, const unsigned char *);
-    void OSPPXMLAttrDelete(OSPTXMLATTR **);
-    const char *OSPPXMLAttrGetName(OSPTXMLATTR *);
-    const char *OSPPXMLAttrGetValue(OSPTXMLATTR *);
+    OSPT_XML_ATTR *OSPPXMLAttrNew(const unsigned char *, const unsigned char *);
+    void OSPPXMLAttrDelete(OSPT_XML_ATTR **);
+    const char *OSPPXMLAttrGetName(OSPT_XML_ATTR *);
+    const char *OSPPXMLAttrGetValue(OSPT_XML_ATTR *);
 
 #ifdef __cplusplus
 }

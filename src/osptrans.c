@@ -54,7 +54,7 @@ OSPPTransactionBuildReauthRequest(
     int         errorcode   = OSPC_ERR_NO_ERROR;
     OSPTTOKEN   *token      = OSPC_OSNULL,
         *token1     = OSPC_OSNULL;
-    OSPTALTINFO *altinfo    = OSPC_OSNULL,
+    OSPT_ALTINFO *altinfo    = OSPC_OSNULL,
         *altinfo2   = OSPC_OSNULL;
     OSPTTIME    timestamp   = 0;
  
@@ -79,7 +79,7 @@ OSPPTransactionBuildReauthRequest(
         timestamp = time(NULL);
         OSPPReauthReqSetTimestamp(ospvTrans->ReauthReq, timestamp);
 
-        OSPPReauthReqSetRole(ospvTrans->ReauthReq, OSPC_SOURCE);
+        OSPPReauthReqSetRole(ospvTrans->ReauthReq, OSPC_MROLE_SOURCE);
 
         /* Get Callid from trans->currdest->callid */
         if(ospvTrans->CurrentDest != OSPC_OSNULL)
@@ -183,9 +183,9 @@ OSPPTransactionBuildReauthRequest(
             /* Get device info from trans->AuthReq->ospmAuthReqDeviceInfo */
             if(ospvTrans->AuthReq->ospmAuthReqDeviceInfo != NULL)
             {
-                for(altinfo = (OSPTALTINFO *)OSPPListFirst( &(ospvTrans->AuthReq->ospmAuthReqDeviceInfo));
-                    altinfo!= (OSPTALTINFO *)OSPC_OSNULL;
-                    altinfo = (OSPTALTINFO *)OSPPListNext( &(ospvTrans->AuthReq->ospmAuthReqDeviceInfo), altinfo))
+                for(altinfo = (OSPT_ALTINFO *)OSPPListFirst( &(ospvTrans->AuthReq->ospmAuthReqDeviceInfo));
+                    altinfo!= (OSPT_ALTINFO *)OSPC_OSNULL;
+                    altinfo = (OSPT_ALTINFO *)OSPPListNext( &(ospvTrans->AuthReq->ospmAuthReqDeviceInfo), altinfo))
                 {
 
                     altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), 
@@ -207,9 +207,9 @@ OSPPTransactionBuildReauthRequest(
             /* Get SourceAlternates from trans->AuthReq->SourceAlternates */
             if(OSPPAuthReqHasSourceAlt(ospvTrans->AuthReq))
             {
-                for (altinfo = (OSPTALTINFO *)OSPPAuthReqFirstSourceAlt(ospvTrans->AuthReq);
-                    altinfo != (OSPTALTINFO *)OSPC_OSNULL;
-                    altinfo = (OSPTALTINFO *)OSPPAuthReqNextSourceAlt(ospvTrans->AuthReq, altinfo))
+                for (altinfo = (OSPT_ALTINFO *)OSPPAuthReqFirstSourceAlt(ospvTrans->AuthReq);
+                    altinfo != (OSPT_ALTINFO *)OSPC_OSNULL;
+                    altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextSourceAlt(ospvTrans->AuthReq, altinfo))
                 {
 
                     altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), 
@@ -231,9 +231,9 @@ OSPPTransactionBuildReauthRequest(
             /* Get DestinationAlternates from trans->AuthReq->DestinationAlternates */
             if(OSPPAuthReqHasDestinationAlt(ospvTrans->AuthReq))
             {
-                for (altinfo = (OSPTALTINFO *)OSPPAuthReqFirstDestinationAlt(ospvTrans->AuthReq);
-                    altinfo != (OSPTALTINFO *)OSPC_OSNULL;
-                    altinfo = (OSPTALTINFO *)OSPPAuthReqNextDestinationAlt(ospvTrans->AuthReq, altinfo))
+                for (altinfo = (OSPT_ALTINFO *)OSPPAuthReqFirstDestinationAlt(ospvTrans->AuthReq);
+                    altinfo != (OSPT_ALTINFO *)OSPC_OSNULL;
+                    altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextDestinationAlt(ospvTrans->AuthReq, altinfo))
                 {
 
                     altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), 
@@ -280,12 +280,12 @@ OSPPTransactionBuildUsage(
     OSPTTRANS* ospvTrans,       /* In - Pointer to transaction context */
     OSPTUSAGEIND** ospvUsage,   /* In - Pointer to usage to be initialized*/
     OSPTDEST* ospvDest,         /* In - Pointer to dest associated w/usage*/
-    OSPE_MSG_DATATYPES ospvType)/* In - Indicates what usage to build */
+    OSPE_MSG_TYPE ospvType)/* In - Indicates what usage to build */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     unsigned char* dest = OSPC_OSNULL;
-    OSPTALTINFO* altinfo = OSPC_OSNULL;
-    OSPE_MSG_ROLETYPES role;
+    OSPT_ALTINFO* altinfo = OSPC_OSNULL;
+    OSPE_MSG_ROLE role;
 
     *ospvUsage = OSPPUsageIndNew();
 
@@ -297,7 +297,7 @@ OSPPTransactionBuildUsage(
             {
                 OSPPUsageIndSetRole(*ospvUsage, OSPPAuthRspGetRole(ospvTrans->AuthRsp));
             } else {
-                OSPPUsageIndSetRole(*ospvUsage, OSPC_SOURCE);
+                OSPPUsageIndSetRole(*ospvUsage, OSPC_MROLE_SOURCE);
             }
 
             /* Get CallId */
@@ -416,13 +416,13 @@ OSPPTransactionBuildUsage(
             /* Terminating */
             if ((ospvTrans->AuthInd != (OSPTAUTHIND*)OSPC_OSNULL) &&
                 (OSPPAuthIndHasRole(ospvTrans->AuthInd)) &&
-                ((role = OSPPAuthIndGetRole(ospvTrans->AuthInd)) != OSPC_DESTINATION))
+                ((role = OSPPAuthIndGetRole(ospvTrans->AuthInd)) != OSPC_MROLE_DESTINATION))
             {
                 OSPPUsageIndSetRole(*ospvUsage, role);
             } else if (ospvTrans->WasLookAheadInfoGivenToApp == OSPC_TRUE) {
-                OSPPUsageIndSetRole(*ospvUsage, OSPC_OTHER);
+                OSPPUsageIndSetRole(*ospvUsage, OSPC_MROLE_OTHER);
             } else {
-                OSPPUsageIndSetRole(*ospvUsage, OSPC_DESTINATION);
+                OSPPUsageIndSetRole(*ospvUsage, OSPC_MROLE_DESTINATION);
             }
 
             /* Get CallId */
@@ -1672,7 +1672,7 @@ OSPPTransactionPrepareAndQueMessage(
     OSPTTRANS      *ospvTrans,       /* In - Pointer to transaction structure */
     unsigned char  *ospvXMLDoc,      /* In - Pointer to form data */
     unsigned       ospvSizeOfXMLDoc, /* In - Size of form data */
-    OSPTMSGINFO    **ospvMsgInfo)    /* In - Pointer to msginfo structure */
+    OSPT_MSG_INFO    **ospvMsgInfo)    /* In - Pointer to msginfo structure */
 {
     int             errorcode        = OSPC_ERR_NO_ERROR;
     unsigned char   *signature       = OSPC_OSNULL;
@@ -1726,7 +1726,7 @@ OSPPTransactionPrepareAndQueMessage(
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
-            if (*ospvMsgInfo != (OSPTMSGINFO *)OSPC_OSNULL)
+            if (*ospvMsgInfo != (OSPT_MSG_INFO *)OSPC_OSNULL)
             {
 
                 /* set the content type depending on the presence 
@@ -1827,7 +1827,7 @@ OSPPTransactionPrepareAndQueMessage(
 int
 OSPPTransactionProcessReturn(
     OSPTTRANS         *ospvTrans,   /* In - Pointer to transaction */
-    OSPTMSGINFO       *ospvMsgInfo) /* In - Pointer to pointer to msginfo structure */
+    OSPT_MSG_INFO       *ospvMsgInfo) /* In - Pointer to pointer to msginfo structure */
 {
 
     int                errorcode          = OSPC_ERR_NO_ERROR;
@@ -1836,7 +1836,7 @@ OSPPTransactionProcessReturn(
     unsigned           sizeofmsg          = 0;
     unsigned           sizeofsig          = 0;
     void               *resultrsp         = OSPC_OSNULL;
-    OSPE_MSG_DATATYPES msgtype            = OSPC_MSG_LOWER_BOUND;
+    OSPE_MSG_TYPE msgtype            = OSPC_MSG_UNKNOWN;
     OSPTAUDIT          *audit             = OSPC_OSNULL;
     OSPTUSAGECNF       *usagecnf          = OSPC_OSNULL;
 
@@ -1846,7 +1846,7 @@ OSPPTransactionProcessReturn(
 #endif
 
     if((ospvTrans == (OSPTTRANS *)OSPC_OSNULL) ||
-        (ospvMsgInfo == (OSPTMSGINFO *)OSPC_OSNULL))
+        (ospvMsgInfo == (OSPT_MSG_INFO *)OSPC_OSNULL))
     {
 
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -2049,7 +2049,7 @@ OSPPTransactionRequestNew(
                 numbytescounter = 0;
     unsigned    i               = 0;
     OSPTTIME    timestamp       = 0;
-    OSPTALTINFO *altinfo        = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo        = OSPC_OSNULL;
     OSPTCALLID  *callid         = OSPC_OSNULL;
     char         random[OSPC_MAX_RANDOM];
     char         counter[OSPC_MAX_RANDOM];

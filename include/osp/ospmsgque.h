@@ -34,7 +34,7 @@ typedef struct _OSPTMSGQUEUE {
     unsigned NumberOfTransactions;
     OSPTMUTEX Mutex;
     OSPTCONDVAR CondVar;
-    OSPTMSGINFO *MsgInfoList;
+    OSPT_MSG_INFO *MsgInfoList;
 } OSPTMSGQUEUE;
 
 /* Function Prototypes */
@@ -45,7 +45,7 @@ extern "C" {
 
     int OSPPMsgQueueNew(OSPTMSGQUEUE **);
     void OSPPMsgQueueDelete(OSPTMSGQUEUE **);
-    int OSPPMsgQueueAddTransaction(OSPTMSGQUEUE *, OSPTMSGINFO *);
+    int OSPPMsgQueueAddTransaction(OSPTMSGQUEUE *, OSPT_MSG_INFO *);
     void OSPPMsgQueueIncrementNumberOfTransactions(OSPTMSGQUEUE *);
     void OSPPMsgQueueDecrementNumberOfTransactions(OSPTMSGQUEUE *);
     int OSPPMsgQueueGetNumberOfTransactions(OSPTMSGQUEUE *, unsigned *);

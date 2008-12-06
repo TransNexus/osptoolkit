@@ -46,13 +46,13 @@ extern "C" {
 #endif
 
     OSPTUSAGECNF *OSPPUsageCnfNew(void);
-    unsigned OSPPUsageCnfFromElement(OSPTXMLELEM *, OSPTLIST *);
+    unsigned OSPPUsageCnfFromElement(OSPT_XML_ELEM *, OSPTLIST *);
     void OSPPUsageCnfDelete(OSPTUSAGECNF **);
     unsigned char *OSPPUsageCnfGetComponentId(OSPTUSAGECNF *);
     unsigned OSPPUsageCnfHasComponentId(OSPTUSAGECNF *);
     void OSPPUsageCnfSetComponentId(OSPTUSAGECNF *, unsigned char *);
-    void OSPPUsageCnfComponentIdFromElement(OSPTXMLELEM *, const unsigned char **);
-    void OSPPUsageCnfMessageIdFromElement(OSPTXMLELEM *, unsigned char **);
+    void OSPPUsageCnfComponentIdFromElement(OSPT_XML_ELEM *, const unsigned char **);
+    void OSPPUsageCnfMessageIdFromElement(OSPT_XML_ELEM *, unsigned char **);
     unsigned OSPPUsageCnfHasMessageId(OSPTUSAGECNF *);
     void OSPPUsageCnfSetMessageId(OSPTUSAGECNF *, unsigned char *);
     void OSPPUsageCnfSetTimestamp(OSPTUSAGECNF *, OSPTTIME);

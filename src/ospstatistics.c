@@ -298,12 +298,12 @@ OSPTBOOL
 int
 OSPPStatisticsLossReceivedToElement(
     OSPTSTATISTICS *ospvStatistics, 
-    OSPTXMLELEM    **ospvElem
+    OSPT_XML_ELEM    **ospvElem
 )
 {
     int         errorcode   = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM *elem       = OSPC_OSNULL;
-    OSPTXMLATTR *attr       = OSPC_OSNULL;
+    OSPT_XML_ELEM *elem       = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr       = OSPC_OSNULL;
 
     if(ospvElem == OSPC_OSNULL)
     {
@@ -420,12 +420,12 @@ OSPPStatisticsLossReceivedToElement(
 int
 OSPPStatisticsLossSentToElement(
     OSPTSTATISTICS *ospvStatistics, 
-    OSPTXMLELEM    **ospvElem
+    OSPT_XML_ELEM    **ospvElem
 )
 {
     int         errorcode   = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM *elem       = OSPC_OSNULL;
-    OSPTXMLATTR *attr       = OSPC_OSNULL;
+    OSPT_XML_ELEM *elem       = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr       = OSPC_OSNULL;
 
     if(ospvElem == OSPC_OSNULL)
     {
@@ -558,12 +558,12 @@ OSPTSTATISTICS *
 int
 OSPPStatisticsOneWayToElement(
     OSPTSTATISTICS  *ospvStatistics,
-    OSPTXMLELEM     **ospvElem
+    OSPT_XML_ELEM     **ospvElem
 )
 {
     int         errorcode   = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM *elem       = OSPC_OSNULL;
-    OSPTXMLATTR *attr       = OSPC_OSNULL;
+    OSPT_XML_ELEM *elem       = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr       = OSPC_OSNULL;
 
     if(ospvElem == OSPC_OSNULL)
     {
@@ -737,12 +737,12 @@ OSPPStatisticsOneWayToElement(
 int
 OSPPStatisticsRoundTripToElement(
     OSPTSTATISTICS  *ospvStatistics,
-    OSPTXMLELEM     **ospvElem
+    OSPT_XML_ELEM     **ospvElem
 )
 {
     int         errorcode   = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM *elem       = OSPC_OSNULL;
-    OSPTXMLATTR *attr       = OSPC_OSNULL;
+    OSPT_XML_ELEM *elem       = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr       = OSPC_OSNULL;
 
     if(ospvElem == OSPC_OSNULL)
     {
@@ -1027,12 +1027,12 @@ OSPPStatisticsSetSentStatistics(
 int
 OSPPStatisticsToElement(
     OSPTSTATISTICS  *ospvStatistics,
-    OSPTXMLELEM     **ospvElem
+    OSPT_XML_ELEM     **ospvElem
 )
 {
     int             errorcode   = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM     *elem       = OSPC_OSNULL;
-    OSPTXMLATTR     *attr       = OSPC_OSNULL;
+    OSPT_XML_ELEM     *elem       = OSPC_OSNULL;
+    OSPT_XML_ATTR     *attr       = OSPC_OSNULL;
 
     if(ospvStatistics == OSPC_OSNULL)
     {

@@ -175,7 +175,7 @@ OSPPCallIdFromASCIIElement(
 
 unsigned                          /* returns error code */
 OSPPCallIdFromElement(
-    OSPTXMLELEM *ospvElem,        /* input is XML element */
+    OSPT_XML_ELEM *ospvElem,        /* input is XML element */
     OSPTCALLID **ospvCallId       /* where to put CallID pointer */
 )
 {
@@ -248,7 +248,7 @@ OSPPCallIdDelete(
 unsigned                           /* returns error code */
 OSPPCallIdToElement(
     OSPTCALLID   *ospvCallId,      /* Call ID */
-    OSPTXMLELEM **ospvElem,        /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem,        /* where to put XML element pointer */
     OSPTBOOL    ospvIsBase64       /* indicates base64 or cdata */
 )
 {

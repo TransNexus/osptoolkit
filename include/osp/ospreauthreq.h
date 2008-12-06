@@ -37,8 +37,8 @@ typedef struct {
     unsigned ospmReauthReqRole;
     unsigned ospmReauthReqHasRole;
     OSPTCALLID *ospmReauthReqCallId;
-    unsigned char ospmReauthReqSourceNumber[OSPC_E164NUMSIZE];
-    unsigned char ospmReauthReqDestNumber[OSPC_E164NUMSIZE];
+    unsigned char ospmReauthReqSourceNumber[OSPC_SIZE_E164NUM];
+    unsigned char ospmReauthReqDestNumber[OSPC_SIZE_E164NUM];
     OSPTLIST ospmReauthReqSourceAlternate;
     OSPTLIST ospmReauthReqDestinationAlternate;
     OSPTTRXID ospmReauthReqTrxId;
@@ -57,12 +57,12 @@ extern "C" {
 
     OSPTREAUTHREQ *OSPPReauthReqNew(void);
     void OSPPReauthReqDelete(OSPTREAUTHREQ **);
-    int OSPPReauthReqToElement(OSPTREAUTHREQ *, OSPTXMLELEM **, void *);
-    void OSPPReauthReqSetRole(OSPTREAUTHREQ *, OSPE_MSG_ROLETYPES);
+    int OSPPReauthReqToElement(OSPTREAUTHREQ *, OSPT_XML_ELEM **, void *);
+    void OSPPReauthReqSetRole(OSPTREAUTHREQ *, OSPE_MSG_ROLE);
     unsigned OSPPReauthReqHasRole(OSPTREAUTHREQ *);
-    OSPE_MSG_ROLETYPES OSPPReauthReqGetRole(OSPTREAUTHREQ *);
-    void OSPPReauthReqAddSourceAlt(OSPTREAUTHREQ *, OSPTALTINFO *);
-    void OSPPReauthReqAddDestinationAlt(OSPTREAUTHREQ *, OSPTALTINFO *);
+    OSPE_MSG_ROLE OSPPReauthReqGetRole(OSPTREAUTHREQ *);
+    void OSPPReauthReqAddSourceAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
+    void OSPPReauthReqAddDestinationAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
     void OSPPReauthReqSetCallId(OSPTREAUTHREQ *, OSPTCALLID *);
     unsigned OSPPReauthReqHasMessageId(OSPTREAUTHREQ *);
     unsigned char *OSPPReauthReqGetMessageId(OSPTREAUTHREQ *);
@@ -87,12 +87,12 @@ extern "C" {
     OSPTTOKEN *OSPPReauthReqFirstToken(OSPTREAUTHREQ *);
     OSPTTOKEN *OSPPReauthReqNextToken(OSPTREAUTHREQ *, OSPTTOKEN *);
     unsigned OSPPReauthReqHasDestinationAlt(OSPTREAUTHREQ *);
-    OSPTALTINFO *OSPPReauthReqFirstDestinationAlt(OSPTREAUTHREQ *);
-    OSPTALTINFO *OSPPReauthReqNextDestinationAlt(OSPTREAUTHREQ *, OSPTALTINFO *);
-    unsigned char *OSPPReauthReqGetDestinationAltValue(OSPTALTINFO *);
+    OSPT_ALTINFO *OSPPReauthReqFirstDestinationAlt(OSPTREAUTHREQ *);
+    OSPT_ALTINFO *OSPPReauthReqNextDestinationAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
+    unsigned char *OSPPReauthReqGetDestinationAltValue(OSPT_ALTINFO *);
     unsigned OSPPReauthReqHasSourceAlt(OSPTREAUTHREQ *);
-    OSPTALTINFO *OSPPReauthReqFirstSourceAlt(OSPTREAUTHREQ *);
-    OSPTALTINFO *OSPPReauthReqNextSourceAlt(OSPTREAUTHREQ *, OSPTALTINFO *);
+    OSPT_ALTINFO *OSPPReauthReqFirstSourceAlt(OSPTREAUTHREQ *);
+    OSPT_ALTINFO *OSPPReauthReqNextSourceAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
     unsigned OSPPReauthReqHasTNCustId(OSPTREAUTHREQ *);
     void OSPPReauthReqSetTNCustId(OSPTREAUTHREQ *, unsigned long);
     unsigned long OSPPReauthReqGetTNCustId(OSPTREAUTHREQ *);

@@ -59,20 +59,20 @@ typedef enum {
 #define DEST_OSP_UNKNOWN                ""
 #define DEFAULT_GETNEXTDEST_NO_ERROR    99999
 
-#define OSPC_NETWORKIDSIZE  OSPC_E164NUMSIZE
+#define OSPC_NETWORKIDSIZE  OSPC_SIZE_E164NUM
 
 typedef struct {
     OSPTLISTLINK ospmDestLink;
-    unsigned char ospmDestNumber[OSPC_E164NUMSIZE];
-    unsigned char ospmSrcNumber[OSPC_E164NUMSIZE];
-    unsigned char ospmDestAddr[OSPC_SIGNALADDRSIZE];
-    unsigned char ospmDestDevAddr[OSPC_SIGNALADDRSIZE];
+    unsigned char ospmDestNumber[OSPC_SIZE_E164NUM];
+    unsigned char ospmSrcNumber[OSPC_SIZE_E164NUM];
+    unsigned char ospmDestAddr[OSPC_SIZE_SIGNALADDR];
+    unsigned char ospmDestDevAddr[OSPC_SIZE_SIGNALADDR];
     OSPTLIST ospmUpdatedSourceAddr;
     OSPTLIST ospmUpdatedDeviceInfo;
     OSPTTIME ospmDestValidAfter;
     OSPTTIME ospmDestValidUntil;
     OSPTLIST ospmDestTokens;
-    unsigned char ospmDestAuthority[OSPC_URLSIZE];
+    unsigned char ospmDestAuthority[OSPC_SIZE_URL];
     unsigned ospmDestHasLimit;
     unsigned ospmDestLimit;
     OSPTCALLID *ospmDestCallId;
@@ -92,7 +92,7 @@ extern "C" {
 
     OSPTDEST *OSPPDestNew(void);
     void OSPPDestDelete(OSPTDEST **);
-    unsigned OSPPDestFromElement(OSPTXMLELEM *, OSPTDEST **);
+    unsigned OSPPDestFromElement(OSPT_XML_ELEM *, OSPTDEST **);
     void OSPPDestSetCallId(OSPTDEST *, const unsigned char *, unsigned);
     void OSPPDestSetProtocol(OSPTDEST *, const unsigned char *);
     void OSPPDestSetOSPVersion(OSPTDEST *, const unsigned char *);

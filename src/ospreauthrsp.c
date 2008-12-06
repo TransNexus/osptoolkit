@@ -211,17 +211,17 @@ OSPTREAUTHRSP *                              /* returns pointer or NULL */
  *-----------------------------------------------------------------------*/
 int                                   /* returns error code */
 OSPPReauthRspFromElement(
-    OSPTXMLELEM     *ospvElem,        /* input is XML element */
+    OSPT_XML_ELEM     *ospvElem,        /* input is XML element */
     OSPTREAUTHRSP   **ospvReauthRsp   /* where to put reauthorisation response pointer */
 )
 {
     unsigned        ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM     *elem       = OSPC_OSNULL;
+    OSPT_XML_ELEM     *elem       = OSPC_OSNULL;
     OSPTREAUTHRSP   *reauthrsp  = OSPC_OSNULL;
     OSPTDEST        *dest       = OSPC_OSNULL;
     OSPTTIME        t           = 0L;
     OSPTTRXID       transid     = 0L;
-    OSPTXMLELEM     *ospvParent	= OSPC_OSNULL;
+    OSPT_XML_ELEM     *ospvParent	= OSPC_OSNULL;
     unsigned char   *messageId  = OSPC_OSNULL;
     unsigned char   *compid     = OSPC_OSNULL;
 
@@ -248,7 +248,7 @@ OSPPReauthRspFromElement(
              * pointing to the Message element to the Component element.
              */
             ospvParent = ospvElem;
-            ospvElem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvParent);
+            ospvElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvParent);
         }
 
         /* create the reauthorisation response object */
@@ -279,9 +279,9 @@ OSPPReauthRspFromElement(
      */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        for ( elem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvElem);
-            (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-            elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
+        for ( elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
+            (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
@@ -443,16 +443,16 @@ OSPPReauthRspSetMessageId(
  * -----------------------------------------------------------------------------*/
 void   
 OSPPReauthRspMessageIdFromElement(
-    OSPTXMLELEM *ospvElemIn, 
+    OSPT_XML_ELEM *ospvElemIn, 
     unsigned char **ospvMessageId
 )
 {
-    OSPTXMLATTR *attr = (OSPTXMLATTR *)OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = (OSPT_XML_ATTR *)OSPC_OSNULL;
 
     /* look for the message id attribute */
-    for (attr = (OSPTXMLATTR *)OSPPXMLElemFirstAttr(ospvElemIn);
-        (attr != (OSPTXMLATTR *)OSPC_OSNULL);
-        attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElemIn, attr))
+    for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElemIn);
+        (attr != (OSPT_XML_ATTR *)OSPC_OSNULL);
+        attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
 
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_MESSAGEID)
@@ -470,16 +470,16 @@ OSPPReauthRspMessageIdFromElement(
  * -----------------------------------------------------------------------------*/
 void   
 OSPPReauthRspComponentIdFromElement(
-    OSPTXMLELEM *ospvElemIn, 
+    OSPT_XML_ELEM *ospvElemIn, 
     unsigned char **ospvComponentId
 )
 {
-    OSPTXMLATTR *attr = (OSPTXMLATTR *)OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = (OSPT_XML_ATTR *)OSPC_OSNULL;
 
     /* look for the component id attribute */
-    for (attr = (OSPTXMLATTR *)OSPPXMLElemFirstAttr(ospvElemIn);
-        (attr != (OSPTXMLATTR *)OSPC_OSNULL);
-        attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElemIn, attr))
+    for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElemIn);
+        (attr != (OSPT_XML_ATTR *)OSPC_OSNULL);
+        attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
 
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_COMPONENTID)

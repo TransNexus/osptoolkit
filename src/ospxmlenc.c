@@ -32,7 +32,7 @@
  */
 
 int OSPPXMLDocCreate(         /* returns error code */
-    OSPTXMLELEM *ospvElem,    /* root element for document */
+    OSPT_XML_ELEM *ospvElem,    /* root element for document */
     OSPTBFR **ospvBfrAddr)    /* buffer in which to put doc */
 {
     int ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -83,12 +83,12 @@ int OSPPXMLDocCreate(         /* returns error code */
  */
 
 int OSPPXMLDocAddElem(        /* returns error code */
-    OSPTXMLELEM *ospvElem,    /* element to add */
+    OSPT_XML_ELEM *ospvElem,    /* element to add */
     OSPTBFR **ospvBfrAddr)    /* buffer to add to */
 {
     int ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM *child = OSPC_OSNULL;
-    OSPTXMLATTR *attr = OSPC_OSNULL;
+    OSPT_XML_ELEM *child = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
     const char *val = OSPC_OSNULL;
     unsigned vallen = 0;
     unsigned cnt;
@@ -135,9 +135,9 @@ int OSPPXMLDocAddElem(        /* returns error code */
     /**** STEP 3: add the attributes */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* the "for" loop steps through each attribute */
-        for (attr = (OSPTXMLATTR *) OSPPXMLElemFirstAttr(ospvElem);
+        for (attr = (OSPT_XML_ATTR *) OSPPXMLElemFirstAttr(ospvElem);
             ((attr != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
-            attr = (OSPTXMLATTR *) OSPPXMLElemNextAttr(ospvElem, attr))
+            attr = (OSPT_XML_ATTR *) OSPPXMLElemNextAttr(ospvElem, attr))
         {
             /*
              * Attributes are separated by spaces, and we add a space
@@ -161,7 +161,7 @@ int OSPPXMLDocAddElem(        /* returns error code */
          * can, however, include attributes (so make sure the step
          * followes adding attributes
          */
-        child = (OSPTXMLELEM *) OSPPXMLElemFirstChild(ospvElem);
+        child = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvElem);
         if ((child == OSPC_OSNULL) && (vallen == 0)) {
             /* if the element is empty, go ahead and add the trailer */
             ospvErrCode = OSPPXMLDocAddChar(ospvBfrAddr, OSPC_XMLDOC_TRAILER);
@@ -178,9 +178,9 @@ int OSPPXMLDocAddElem(        /* returns error code */
     /**** STEP 6: add the child elements */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* the "for" loop walks through all child elements */
-        for (child = (OSPTXMLELEM *) OSPPXMLElemFirstChild(ospvElem);
+        for (child = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvElem);
             ((child != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
-            child = (OSPTXMLELEM *) OSPPXMLElemNextChild(ospvElem, child))
+            child = (OSPT_XML_ELEM *) OSPPXMLElemNextChild(ospvElem, child))
         {
             /*
              * Call ourselves recursively. Since OSP documents aren't
@@ -210,7 +210,7 @@ int OSPPXMLDocAddElem(        /* returns error code */
          * can, however, include attributes (so we don't bother to
          * check for attributes or not).
          */
-        child = (OSPTXMLELEM *) OSPPXMLElemFirstChild(ospvElem);
+        child = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvElem);
         if ((child != OSPC_OSNULL) || (vallen != 0)) {
             /* first is the opening bracket */
             ospvErrCode = OSPPXMLDocAddChar(ospvBfrAddr, OSPC_XMLDOC_OPEN);
@@ -242,7 +242,7 @@ int OSPPXMLDocAddElem(        /* returns error code */
  */
 
 int OSPPXMLDocAddElemName(    /* returns error code */
-    OSPTXMLELEM *ospvElem,    /* element whose name to add */
+    OSPT_XML_ELEM *ospvElem,    /* element whose name to add */
     OSPTBFR **ospvBfrAddr)    /* buffer to add to */
 {
     int ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -284,7 +284,7 @@ int OSPPXMLDocAddElemName(    /* returns error code */
  */
 
 int OSPPXMLDocAddAttr(        /* returns error code */
-    OSPTXMLATTR *ospvAttr,    /* attribute to add */
+    OSPT_XML_ATTR *ospvAttr,    /* attribute to add */
     OSPTBFR **ospvBfrAddr)    /* buffer to add to */
 {
     int ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -349,7 +349,7 @@ int OSPPXMLDocAddAttr(        /* returns error code */
  */
 
 int OSPPXMLDocAddAttrName(    /* returns error code */
-    OSPTXMLATTR *ospvAttr,    /* attribute whose name to add */
+    OSPT_XML_ATTR *ospvAttr,    /* attribute whose name to add */
     OSPTBFR **ospvBfrAddr)    /* buffer to add to */
 {
     int ospvErrCode = OSPC_ERR_NO_ERROR;

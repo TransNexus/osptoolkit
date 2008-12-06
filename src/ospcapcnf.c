@@ -84,13 +84,13 @@ OSPPCapCnfDelete(OSPTCAPCNF **ospvCapCnf)
 
 unsigned                          /* returns error code */
 OSPPCapCnfFromElement(
-    OSPTXMLELEM *ospvParent,      /* input is XML element */
+    OSPT_XML_ELEM *ospvParent,      /* input is XML element */
     OSPTCAPCNF **ospvCapCnf       /* where to put capability confirmation pointer */
 )
 {
     unsigned      ospvErrCode   = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM  *elem          = OSPC_OSNULL;
-    OSPTXMLELEM  *capCnfElem    = OSPC_OSNULL;
+    OSPT_XML_ELEM  *elem          = OSPC_OSNULL;
+    OSPT_XML_ELEM  *capCnfElem    = OSPC_OSNULL;
     OSPTCAPCNF   *capcnf        = OSPC_OSNULL;
 
     /*
@@ -117,16 +117,16 @@ OSPPCapCnfFromElement(
          * The Parent points to Message, its 1st child is 
          * CapabilityConfirmation
          */
-        capCnfElem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvParent);
+        capCnfElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvParent);
 
         /*
          * The Confirmation element should consist of several
          * child elements. We'll run through what's there and pick out
          * the information we need.
          */
-        for (elem  = (OSPTXMLELEM *)OSPPXMLElemFirstChild(capCnfElem);
-            (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-             elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(capCnfElem,elem))
+        for (elem  = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(capCnfElem);
+            (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(capCnfElem,elem))
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {

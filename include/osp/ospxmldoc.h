@@ -123,8 +123,8 @@ typedef enum {
 
 /* structure used to store entity references */
 typedef struct {
-    unsigned char ospmEntValue;
-    unsigned char *ospmEntName;
+    unsigned char ospmXMLEntValue;
+    unsigned char *ospmXMLEntName;
 } OSPT_XML_ENTITY;
 
 /* Function Prototypes */
@@ -145,19 +145,19 @@ extern "C" {
 
     /* functions in ospxmlenc.c */
 
-    int OSPPXMLDocCreate(OSPTXMLELEM *, OSPTBFR **);
-    int OSPPXMLDocAddElem(OSPTXMLELEM *, OSPTBFR **);
-    int OSPPXMLDocAddElemName(OSPTXMLELEM *, OSPTBFR **);
-    int OSPPXMLDocAddAttr(OSPTXMLATTR *, OSPTBFR **);
-    int OSPPXMLDocAddAttrName(OSPTXMLATTR *, OSPTBFR **);
+    int OSPPXMLDocCreate(OSPT_XML_ELEM *, OSPTBFR **);
+    int OSPPXMLDocAddElem(OSPT_XML_ELEM *, OSPTBFR **);
+    int OSPPXMLDocAddElemName(OSPT_XML_ELEM *, OSPTBFR **);
+    int OSPPXMLDocAddAttr(OSPT_XML_ATTR *, OSPTBFR **);
+    int OSPPXMLDocAddAttrName(OSPT_XML_ATTR *, OSPTBFR **);
     int OSPPXMLDocAddChar(OSPTBFR **, char);
 
     /* functions in ospxmlparse.c */
 
-    unsigned OSPPXMLDocParse(OSPTBFR **, OSPTXMLELEM **);
-    unsigned OSPPXMLDocParseElem(OSPTBFR **, OSPE_XML_ENC, OSPTXMLELEM **);
+    unsigned OSPPXMLDocParse(OSPTBFR **, OSPT_XML_ELEM **);
+    unsigned OSPPXMLDocParseElem(OSPTBFR **, OSPE_XML_ENC, OSPT_XML_ELEM **);
     unsigned OSPPXMLDocGetAttrs(OSPTBFR **, OSPE_XML_ENC, OSPTLIST *);
-    unsigned OSPPXMLDocGetAttr(OSPTBFR **, OSPE_XML_ENC, OSPTXMLATTR **);
+    unsigned OSPPXMLDocGetAttr(OSPTBFR **, OSPE_XML_ENC, OSPT_XML_ATTR **);
     unsigned OSPPXMLDocGetContent(OSPTBFR **, OSPE_XML_ENC, OSPTLIST *, OSPTBFR **);
     unsigned OSPPXMLDocGetCdata(OSPTBFR **, OSPE_XML_ENC, OSPTBFR **);
     unsigned OSPPXMLDocGetName(OSPTBFR **, OSPE_XML_ENC, OSPTBFR **);

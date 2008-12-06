@@ -56,7 +56,7 @@ typedef struct {
     unsigned ospmAltInfoLen;
     OSPE_ALTINFO_TYPE ospmAltInfoType;
     unsigned char *ospmAltInfoVal;
-} OSPTALTINFO;
+} OSPT_ALTINFO;
 
 /* Function Prototypes */
 
@@ -64,12 +64,12 @@ typedef struct {
 extern "C" {
 #endif
 
-    OSPTALTINFO *OSPPAltInfoNew(unsigned, const unsigned char *, OSPE_ALTINFO_TYPE);
-    void OSPPAltInfoDelete(OSPTALTINFO **);
-    unsigned OSPPAltInfoGetSize(OSPTALTINFO *);
-    OSPE_ALTINFO_TYPE OSPPAltInfoGetType(OSPTALTINFO *);
-    const unsigned char *OSPPAltInfoGetValue(OSPTALTINFO *);
-    unsigned OSPPAltInfoToElement(OSPTALTINFO *, OSPTXMLELEM **, OSPE_MSG_ELEM);
+    OSPT_ALTINFO *OSPPAltInfoNew(unsigned, const unsigned char *, OSPE_ALTINFO_TYPE);
+    void OSPPAltInfoDelete(OSPT_ALTINFO **);
+    unsigned OSPPAltInfoGetSize(OSPT_ALTINFO *);
+    OSPE_ALTINFO_TYPE OSPPAltInfoGetType(OSPT_ALTINFO *);
+    const unsigned char *OSPPAltInfoGetValue(OSPT_ALTINFO *);
+    unsigned OSPPAltInfoToElement(OSPT_ALTINFO *, OSPT_XML_ELEM **, OSPE_MSG_ELEM);
     const char *OSPPAltInfoTypeGetName(OSPE_ALTINFO_TYPE);
 
 #ifdef __cplusplus

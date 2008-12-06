@@ -35,7 +35,7 @@
 
 unsigned OSPPXMLDocParse(       /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
-    OSPTXMLELEM **ospvElemAddr) /* where to put parsed element */
+    OSPT_XML_ELEM **ospvElemAddr) /* where to put parsed element */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPE_XML_ENC encoding = OSPC_XENC_UNKNOW;
@@ -91,15 +91,15 @@ unsigned OSPPXMLDocParse(       /* returns error code */
 unsigned OSPPXMLDocParseElem( /* returns error code */
     OSPTBFR ** ospvBfrAddr,    /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,    /* character encoding for the document */
-    OSPTXMLELEM ** ospvElemAddr)   /* where to put parsed element */
+    OSPT_XML_ELEM ** ospvElemAddr)   /* where to put parsed element */
 {
     /*
      * CAUTION: This function is called recursively; be sure to account for that in any modifications
      */
 
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM *elem = OSPC_OSNULL;
-    OSPTXMLATTR *attr = OSPC_OSNULL;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
     OSPTBFR *nameBfr = OSPC_OSNULL;
     OSPTBFR *valBfr = OSPC_OSNULL;
     OSPTLIST attrList = OSPC_OSNULL;
@@ -250,15 +250,15 @@ unsigned OSPPXMLDocParseElem( /* returns error code */
     }
 
     /* and delete any lists that are still hanging around */
-    for (elem = (OSPTXMLELEM *) OSPPListRemove(&childList);
+    for (elem = (OSPT_XML_ELEM *) OSPPListRemove(&childList);
          elem != OSPC_OSNULL;
-         elem = (OSPTXMLELEM *) OSPPListRemove(&childList)) 
+         elem = (OSPT_XML_ELEM *) OSPPListRemove(&childList)) 
     {
         OSPPXMLElemDelete(&elem);
     }
-    for (attr = (OSPTXMLATTR *) OSPPListRemove(&attrList);
+    for (attr = (OSPT_XML_ATTR *) OSPPListRemove(&attrList);
          attr != OSPC_OSNULL;
-         attr = (OSPTXMLATTR *) OSPPListRemove(&attrList)) 
+         attr = (OSPT_XML_ATTR *) OSPPListRemove(&attrList)) 
     {
         OSPPXMLAttrDelete(&attr);
     }
@@ -277,7 +277,7 @@ unsigned OSPPXMLDocGetAttrs(    /* returns error code */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     unsigned char readChar = '\0';
-    OSPTXMLATTR *attr = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
     if (ospvBfrAddr == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;
@@ -330,12 +330,12 @@ unsigned OSPPXMLDocGetAttrs(    /* returns error code */
 unsigned OSPPXMLDocGetAttr(     /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */
-    OSPTXMLATTR **ospvAttrAddr) /* list for attributes */
+    OSPT_XML_ATTR **ospvAttrAddr) /* list for attributes */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     unsigned char readChar = '\0';
     unsigned char quoteChar = '\0';
-    OSPTXMLATTR *attr = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
     OSPTBFR *nameBfr = OSPC_OSNULL;
     OSPTBFR *valBfr = OSPC_OSNULL;
     unsigned cnt;
@@ -448,7 +448,7 @@ unsigned OSPPXMLDocGetContent(  /* returns error code */
     unsigned isCdata = OSPC_FALSE;
 #endif
     unsigned cnt;
-    OSPTXMLELEM *elem = OSPC_OSNULL;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
 
     if (ospvBfrAddr == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_BUF_EMPTY;

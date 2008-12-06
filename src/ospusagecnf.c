@@ -267,16 +267,16 @@ OSPPUsageCnfGetTNAudit(
  */
 void   
 OSPPUsageCnfComponentIdFromElement(
-    OSPTXMLELEM *ospvElem, 
+    OSPT_XML_ELEM *ospvElem, 
     const unsigned char **ospvComponentId
 )
 {
-    OSPTXMLATTR *attr = (OSPTXMLATTR *)OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = (OSPT_XML_ATTR *)OSPC_OSNULL;
 
     /* look for the component id attribute */
-    for (attr = (OSPTXMLATTR *)OSPPXMLElemFirstAttr(ospvElem);
-        (attr != (OSPTXMLATTR *)OSPC_OSNULL);
-        attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
+    for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElem);
+        (attr != (OSPT_XML_ATTR *)OSPC_OSNULL);
+        attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
     {
 
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_COMPONENTID)
@@ -296,18 +296,18 @@ OSPPUsageCnfComponentIdFromElement(
 
 unsigned                          /* returns error code */
 OSPPUsageCnfFromElement(
-    OSPTXMLELEM *ospvElem,       /* input is XML element */
+    OSPT_XML_ELEM *ospvElem,       /* input is XML element */
     OSPTLIST    *ospvUsageCnf   /* where to put usage cnf list */
 )
 {
     unsigned        ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM     *elem       = OSPC_OSNULL;
-    OSPTXMLELEM     *elem1      = OSPC_OSNULL;
+    OSPT_XML_ELEM     *elem       = OSPC_OSNULL;
+    OSPT_XML_ELEM     *elem1      = OSPC_OSNULL;
     OSPTUSAGECNF    *usagecnf   = OSPC_OSNULL;
     OSPTTIME        t           = 0;
     unsigned char   *compid     = OSPC_OSNULL;
     unsigned char   *messageId  = OSPC_OSNULL;
-    OSPTXMLELEM     *ospvParent = OSPC_OSNULL;
+    OSPT_XML_ELEM     *ospvParent = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL)
     {
@@ -334,13 +334,13 @@ OSPPUsageCnfFromElement(
                  * pointing to the Message element to the Component element.
                  */
                 ospvParent = ospvElem;
-                ospvElem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvParent);
+                ospvElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvParent);
             }
 
-            for(elem1 = (OSPTXMLELEM *)OSPPListFirst((OSPTLIST *)ospvElem);
+            for(elem1 = (OSPT_XML_ELEM *)OSPPListFirst((OSPTLIST *)ospvElem);
                 (elem1 != OSPC_OSNULL) &&
                 (ospvErrCode == OSPC_ERR_NO_ERROR);
-                elem1 = (OSPTXMLELEM *)OSPPListNext((OSPTLIST *)ospvElem, elem1))
+                elem1 = (OSPT_XML_ELEM *)OSPPListNext((OSPTLIST *)ospvElem, elem1))
             {
                 /* create the usage confirmation object */
                 usagecnf = OSPPUsageCnfNew();
@@ -374,9 +374,9 @@ OSPPUsageCnfFromElement(
                             }
                         }
 
-                        for (elem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(elem1);
-                            (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-                            elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(elem1, elem) )
+                        for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(elem1);
+                            (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+                            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(elem1, elem) )
                         {
                             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
                             {
@@ -523,16 +523,16 @@ OSPPUsageCnfSetMessageId(
  * -----------------------------------------------------------------------------*/
 void   
 OSPPUsageCnfMessageIdFromElement(
-    OSPTXMLELEM *ospvElemIn, 
+    OSPT_XML_ELEM *ospvElemIn, 
     unsigned char **ospvMessageId
 )
 {
-    OSPTXMLATTR *attr = (OSPTXMLATTR *)OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = (OSPT_XML_ATTR *)OSPC_OSNULL;
 
     /* look for the message id attribute */
-    for (attr = (OSPTXMLATTR *)OSPPXMLElemFirstAttr(ospvElemIn);
-        (attr != (OSPTXMLATTR *)OSPC_OSNULL);
-        attr = (OSPTXMLATTR *)OSPPXMLElemNextAttr(ospvElemIn, attr))
+    for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElemIn);
+        (attr != (OSPT_XML_ATTR *)OSPC_OSNULL);
+        attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
 
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_MESSAGEID)

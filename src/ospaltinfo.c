@@ -27,7 +27,7 @@
 #include "osp/ospmsgattr.h"
 #include "osp/ospaltinfo.h"
 
-const OSPT_MSG_DESC OSPC_ATYPE_DESCS[] = {
+const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ATYPE_NUMBER] = {
     { OSPC_ATYPE_UNKNOWN,       "" },
     { OSPC_ATYPE_E164,          "e164" },
     { OSPC_ATYPE_H323,          "h323" },
@@ -47,12 +47,12 @@ const OSPT_MSG_DESC OSPC_ATYPE_DESCS[] = {
 /*
  * OSPPAltInfoNew() - create a new altinfo object
  */
-OSPTALTINFO *OSPPAltInfoNew(        /* returns ptr to altinfo or null */
+OSPT_ALTINFO *OSPPAltInfoNew(        /* returns ptr to altinfo or null */
     unsigned ospvLen,               /* size of altinfo */
     const unsigned char *ospvValue, /* altinfo value */
     OSPE_ALTINFO_TYPE ospvType)
 {
-    OSPTALTINFO *ospvAltInfo = OSPC_OSNULL;
+    OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
     unsigned char *valptr;
 
     /*
@@ -92,12 +92,12 @@ OSPTALTINFO *OSPPAltInfoNew(        /* returns ptr to altinfo or null */
         if (ospvValue != OSPC_OSNULL) {
 
             /* try to allocate the memory for the entire object */
-            OSPM_MALLOC(ospvAltInfo, OSPTALTINFO, sizeof(OSPTALTINFO) + ospvLen + 1);
+            OSPM_MALLOC(ospvAltInfo, OSPT_ALTINFO, sizeof(OSPT_ALTINFO) + ospvLen + 1);
 
             /* make sure the allocation succeeded before proceeding */
             if (ospvAltInfo != OSPC_OSNULL) {
                 /* calculate where the "hidden" values will go */
-                valptr = ((unsigned char *)ospvAltInfo) + sizeof(OSPTALTINFO);
+                valptr = ((unsigned char *)ospvAltInfo) + sizeof(OSPT_ALTINFO);
 
                 /* copy the values into their hidden location */
                 OSPM_MEMCPY(valptr, ospvValue, ospvLen);
@@ -119,7 +119,7 @@ OSPTALTINFO *OSPPAltInfoNew(        /* returns ptr to altinfo or null */
  * OSPPAltInfoDelete() - destroy a altinfo object
  */
 void OSPPAltInfoDelete(
-    OSPTALTINFO **ospvAltInfo)  /* AltInfo to destroy */
+    OSPT_ALTINFO **ospvAltInfo)  /* AltInfo to destroy */
 {
     if (*ospvAltInfo != OSPC_OSNULL) {
         OSPM_FREE(*ospvAltInfo);
@@ -131,7 +131,7 @@ void OSPPAltInfoDelete(
  * OSPPAltInfoGetSize() - returns size of altinfo value
  */
 unsigned OSPPAltInfoGetSize(
-    OSPTALTINFO *ospvAltInfo)
+    OSPT_ALTINFO *ospvAltInfo)
 {
     unsigned ospvSize = 0;
 
@@ -146,7 +146,7 @@ unsigned OSPPAltInfoGetSize(
  * OSPPAltInfoGetType() - returns altinfo type
  */
 OSPE_ALTINFO_TYPE OSPPAltInfoGetType(
-    OSPTALTINFO *ospvAltInfo)
+    OSPT_ALTINFO *ospvAltInfo)
 {
     OSPE_ALTINFO_TYPE ospvType = OSPC_ATYPE_UNKNOWN;
 
@@ -161,7 +161,7 @@ OSPE_ALTINFO_TYPE OSPPAltInfoGetType(
  * OSPPAltInfoGetValue() - returns pointer to altinfo value
  */
 const unsigned char *OSPPAltInfoGetValue(
-    OSPTALTINFO *ospvAltInfo)
+    OSPT_ALTINFO *ospvAltInfo)
 {
     const unsigned char *ospvVal = OSPC_OSNULL;
 
@@ -176,12 +176,12 @@ const unsigned char *OSPPAltInfoGetValue(
  * OSPPAltInfoToElement() - create an XML element from a altinfo
  */
 unsigned OSPPAltInfoToElement(  /* returns error code */
-    OSPTALTINFO * ospvAltInfo,  /* In - altinfo */
-    OSPTXMLELEM ** ospvElem,    /* Out - XML element pointer */
+    OSPT_ALTINFO * ospvAltInfo,  /* In - altinfo */
+    OSPT_XML_ELEM ** ospvElem,    /* Out - XML element pointer */
     OSPE_MSG_ELEM ospvPart)     /* In -source or dest alternate */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLATTR *attr = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -220,7 +220,7 @@ const char *OSPPAltInfoTypeGetName( /* Returns a pointer to the name */
     const char *ospvName = OSPC_OSNULL;
 
     if (ospvPart != OSPC_ATYPE_UNKNOWN) {
-        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPC_ATYPE_DESCS, OSPC_ATYPE_NUMBER);
+        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_ATYPE_DESCS, OSPC_ATYPE_NUMBER);
     }
 
     return (ospvName);

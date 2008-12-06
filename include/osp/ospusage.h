@@ -27,10 +27,10 @@
 
 /* Function Prototypes */
 
-unsigned OSPPUsageFromElement(OSPTXMLELEM *, unsigned *);
-unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned,unsigned, unsigned, OSPTXMLELEM **);
-unsigned OSPPAddConfIdToUsageElement(unsigned char *, OSPTXMLELEM **);
-unsigned OSPPAddServiceTypeToUsageElement(OSPE_SERVICE_TYPE, OSPTXMLELEM **);
-unsigned OSPPAddPricingInfoToUsageElement(OSPT_PRICING_INFO, OSPTXMLELEM **);
+unsigned OSPPUsageFromElement(OSPT_XML_ELEM *, unsigned *);
+unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned,unsigned, unsigned, OSPT_XML_ELEM **);
+unsigned OSPPAddConfIdToUsageElement(unsigned char *, OSPT_XML_ELEM **);
+unsigned OSPPAddServiceTypeToUsageElement(OSPE_SERVICE_TYPE, OSPT_XML_ELEM **);
+unsigned OSPPAddPricingInfoToUsageElement(OSPT_PRICING_INFO, OSPT_XML_ELEM **);
 
 #endif /* _OSPUSAGE_H */

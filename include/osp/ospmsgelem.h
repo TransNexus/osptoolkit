@@ -112,7 +112,7 @@ typedef enum {
  * externally declared global variables
  */
 
-extern const OSPT_MSG_DESC OSPC_MELEM_DESCS[];
+extern const OSPT_MSG_DESC OSPV_MELEM_DESCS[];
 
 /* Function Prototypes */
 

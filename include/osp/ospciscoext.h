@@ -34,12 +34,12 @@ typedef struct {
 extern "C" {
 #endif
     void OSPPCSAuditDelete(OSPTCSAUDIT **ospvCSAudit);
-    int OSPPCSAuditFromElement(OSPTXMLELEM *, OSPTCSAUDIT **);
+    int OSPPCSAuditFromElement(OSPT_XML_ELEM *, OSPTCSAUDIT **);
     unsigned char *OSPPCSAuditGetTrigger(OSPTCSAUDIT *);
     unsigned OSPPCSAuditHasTrigger(OSPTCSAUDIT *);
     OSPTCSAUDIT *OSPPCSAuditNew(void);
     void OSPPCSAuditSetTrigger(OSPTCSAUDIT *, unsigned char *);
-    int OSPPCSAuditToElement(OSPTCSAUDIT *, OSPTXMLELEM **);
+    int OSPPCSAuditToElement(OSPTCSAUDIT *, OSPT_XML_ELEM **);
 #ifdef __cplusplus
 }
 #endif

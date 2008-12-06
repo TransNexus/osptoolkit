@@ -46,7 +46,7 @@ extern "C" {
 
     OSPTSTATUS *OSPPStatusNew(void);
     void OSPPStatusDelete(OSPTSTATUS **ospvStatus);
-    unsigned OSPPStatusFromElement(OSPTXMLELEM *, OSPTSTATUS **);
+    unsigned OSPPStatusFromElement(OSPT_XML_ELEM *, OSPTSTATUS **);
     void OSPPStatusSetDesc(OSPTSTATUS *, unsigned char *);
     void OSPPStatusSetCode(OSPTSTATUS *, unsigned);
     unsigned OSPPStatusHasCode(OSPTSTATUS *);

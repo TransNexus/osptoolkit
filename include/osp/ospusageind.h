@@ -47,8 +47,8 @@ typedef struct {
     OSPTTRXID ospmUsageIndTransactionId;
     OSPTCALLID *ospmUsageIndCallId;
     int ospmUsageIndDuration;
-    unsigned char ospmUsageIndSourceNumber[OSPC_E164NUMSIZE];
-    unsigned char ospmUsageIndDestNumber[OSPC_E164NUMSIZE];
+    unsigned char ospmUsageIndSourceNumber[OSPC_SIZE_E164NUM];
+    unsigned char ospmUsageIndDestNumber[OSPC_SIZE_E164NUM];
     OSPTLIST ospmUsageIndSourceAlternate;
     OSPTLIST ospmUsageIndDeviceInfo;
     OSPTLIST ospmUsageIndDestinationAlternate;
@@ -61,7 +61,7 @@ typedef struct {
     OSPT_PRICING_INFO osmpUsageIndPricingInfo;
     OSPTBOOL osmpUsageIndIsServiceInfoPresent;
     OSPE_SERVICE_TYPE osmpUsageIndServiceType;
-    OSPTALTINFO *ospmUsageIndDestinationCount;
+    OSPT_ALTINFO *ospmUsageIndDestinationCount;
 } OSPTUSAGEIND;
 
 /* Function Prototypes */
@@ -72,7 +72,7 @@ extern "C" {
 
     OSPTUSAGEIND *OSPPUsageIndNew(void);
     void OSPPUsageIndDelete(OSPTUSAGEIND **);
-    int OSPPUsageIndToElement(OSPTLIST *, OSPTXMLELEM **, void *);
+    int OSPPUsageIndToElement(OSPTLIST *, OSPT_XML_ELEM **, void *);
     void OSPPUsageIndSetCallId(OSPTUSAGEIND *, OSPTCALLID *);
     void OSPPUsageIndMoveSourceAlt(OSPTUSAGEIND *, OSPTLIST *);
     void OSPPUsageIndMoveDeviceInfo(OSPTUSAGEIND *, OSPTLIST *);
@@ -89,7 +89,7 @@ extern "C" {
     unsigned OSPPUsageIndHasComponentId(OSPTUSAGEIND *);
     unsigned char *OSPPUsageIndGetComponentId(OSPTUSAGEIND *);
     unsigned OSPPUsageIndHasRole(OSPTUSAGEIND *);
-    OSPE_MSG_ROLETYPES OSPPUsageIndGetRole(OSPTUSAGEIND *);
+    OSPE_MSG_ROLE OSPPUsageIndGetRole(OSPTUSAGEIND *);
     void OSPPUsageIndSetRole(OSPTUSAGEIND *, unsigned);
     unsigned OSPPUsageIndHasTransactionId(OSPTUSAGEIND *);
     void OSPPUsageIndSetTransactionId(OSPTUSAGEIND *, OSPTTRXID ospvTransactionId);
@@ -103,12 +103,12 @@ extern "C" {
     void OSPPUsageIndSetDestNumber(OSPTUSAGEIND *, unsigned char *);
     unsigned char *OSPPUsageIndGetDestNumber(OSPTUSAGEIND *);
     unsigned OSPPUsageIndHasSourceAlt(OSPTUSAGEIND *);
-    OSPTALTINFO *OSPPUsageIndFirstSourceAlt(OSPTUSAGEIND *);
-    OSPTALTINFO *OSPPUsageIndNextSourceAlt(OSPTUSAGEIND *, OSPTALTINFO *);
+    OSPT_ALTINFO *OSPPUsageIndFirstSourceAlt(OSPTUSAGEIND *);
+    OSPT_ALTINFO *OSPPUsageIndNextSourceAlt(OSPTUSAGEIND *, OSPT_ALTINFO *);
     unsigned OSPPUsageIndHasDestinationAlt(OSPTUSAGEIND *);
-    unsigned OSPPUsageIndGetDestinationAltSize(OSPTALTINFO *);
-    OSPTALTINFO *OSPPUsageIndFirstDestinationAlt(OSPTUSAGEIND *);
-    OSPTALTINFO *OSPPUsageIndNextDestinationAlt(OSPTUSAGEIND *, OSPTALTINFO *);
+    unsigned OSPPUsageIndGetDestinationAltSize(OSPT_ALTINFO *);
+    OSPT_ALTINFO *OSPPUsageIndFirstDestinationAlt(OSPTUSAGEIND *);
+    OSPT_ALTINFO *OSPPUsageIndNextDestinationAlt(OSPTUSAGEIND *, OSPT_ALTINFO *);
     unsigned OSPPUsageIndHasDuration(OSPTUSAGEIND *);
     void OSPPUsageIndSetDuration(OSPTUSAGEIND *, int ospvDuration);
     int OSPPUsageIndGetDuration(OSPTUSAGEIND *);
@@ -123,7 +123,7 @@ extern "C" {
     unsigned OSPPUsageIndGetTNFailReason(OSPTUSAGEIND *);
     OSPTBOOL OSPPUsageIndHasTNStatistics(OSPTUSAGEIND *);
     void OSPPUsageIndSetTNStatistics(OSPTUSAGEIND *, OSPTSTATISTICS *);
-    void OSPPUsageIndAddDestinationAlt(OSPTUSAGEIND *ospvUsageInd, OSPTALTINFO *ospvAltInfo);
+    void OSPPUsageIndAddDestinationAlt(OSPTUSAGEIND *ospvUsageInd, OSPT_ALTINFO *ospvAltInfo);
     void OSPPUsageIndSetStartTime(OSPTUSAGEIND *, OSPTTIME ospvStartTime);
     OSPTTIME OSPPUsageIndGetStartTime(OSPTUSAGEIND *);
     void OSPPUsageIndSetEndTime(OSPTUSAGEIND *, OSPTTIME ospvEndTime);
@@ -141,7 +141,7 @@ extern "C" {
     void OSPPUsageIndSetConferenceId(OSPTUSAGEIND *, unsigned char *);
     unsigned char *OSPPUsageIndGetConferenceId(OSPTUSAGEIND *);
     void OSPPUsageIndSetDestinationCount(OSPTUSAGEIND *, unsigned ospvDestinationCount);
-    OSPTALTINFO *OSPPUsageIndGetDestinationCount(OSPTUSAGEIND *);
+    OSPT_ALTINFO *OSPPUsageIndGetDestinationCount(OSPTUSAGEIND *);
 
 #ifdef __cplusplus
 }

@@ -28,7 +28,7 @@
  */
 
 /* Array that associates elements and names */
-const OSPT_MSG_DESC OSPC_MELEM_DESCS[] = { 
+const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = { 
     { OSPC_MELEM_UNKNOWN,              "" },
     { OSPC_MELEM_ALMOSTOUTOFRESOURCES, "AlmostOutOfResources" },
     { OSPC_MELEM_AMOUNT,               "Amount" },
@@ -117,7 +117,7 @@ const char *OSPPMsgElemGetName( /* returns pointer to the name */
     const char *ospvName = OSPC_OSNULL;
 
     if (ospvPart != OSPC_MELEM_UNKNOWN) {
-        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPC_MELEM_DESCS, OSPC_MELEM_NUMBER);
+        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_MELEM_DESCS, OSPC_MELEM_NUMBER);
     }
 
     return (ospvName);
@@ -132,7 +132,7 @@ OSPE_MSG_ELEM OSPPMsgElemGetPart(   /* returns part */
     OSPE_MSG_ELEM ospvPart = OSPC_MELEM_UNKNOWN;
 
     if (ospvName != OSPC_OSNULL) {
-        ospvPart = (OSPE_MSG_ELEM)OSPPMsgDescGetPart(ospvName, OSPC_MELEM_DESCS, OSPC_MELEM_NUMBER);
+        ospvPart = (OSPE_MSG_ELEM)OSPPMsgDescGetPart(ospvName, OSPV_MELEM_DESCS, OSPC_MELEM_NUMBER);
     }
 
     return (ospvPart);

@@ -53,7 +53,7 @@ OSPPCSAuditDelete(
 
 int       
 OSPPCSAuditFromElement(
-    OSPTXMLELEM *ospvElem, 
+    OSPT_XML_ELEM *ospvElem, 
     OSPTCSAUDIT **ospvCSAudit
 )
 {

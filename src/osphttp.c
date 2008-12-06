@@ -287,7 +287,7 @@ static
 int
 osppHttpBuildAndSend(
     OSPTHTTP      *ospvHttp,
-    OSPTMSGINFO   *ospvMsginfo)
+    OSPT_MSG_INFO   *ospvMsginfo)
 {
     int            errorcode = OSPC_ERR_NO_ERROR;
     unsigned char *httpmsg   = OSPC_OSNULL;
@@ -345,7 +345,7 @@ osppHttpSetupAndMonitor(
     void *ospvArg)  /* In - HTTP pointer casted to a void */
 {
     OSPTHTTP      *httpconn          = OSPC_OSNULL;
-    OSPTMSGINFO   *msginfo           = OSPC_OSNULL;
+    OSPT_MSG_INFO   *msginfo           = OSPC_OSNULL;
     OSPTCOMM      *comm              = OSPC_OSNULL;
     int           errorcode          = OSPC_ERR_NO_ERROR,
                   tmperror           = OSPC_ERR_NO_ERROR;
@@ -364,7 +364,7 @@ osppHttpSetupAndMonitor(
     {
         OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() monitor start\n"));
 
-        msginfo = (OSPTMSGINFO *)OSPC_OSNULL;
+        msginfo = (OSPT_MSG_INFO *)OSPC_OSNULL;
         comm    = (OSPTCOMM *)httpconn->Comm;
 
         /*
@@ -455,17 +455,17 @@ osppHttpSetupAndMonitor(
             /*
              * get the msginfo item from the queue
              */
-            msginfo = (OSPTMSGINFO *)OSPPListFirst(
+            msginfo = (OSPT_MSG_INFO *)OSPPListFirst(
                 (OSPTLIST *)&(httpconn->MsgInfoList));
 
-            if (msginfo == (OSPTMSGINFO *)OSPC_OSNULL)
+            if (msginfo == (OSPT_MSG_INFO *)OSPC_OSNULL)
             {
                 errorcode = OSPC_ERR_HTTP_BAD_QUEUE;
                 OSPM_DBGERRORLOG(errorcode, "http msg queue corrupted");
             }
             else
             {
-                if(msginfo->Flags & OSPC_MSGINFO_AUDIT_TYPE)
+                if(msginfo->Flags & OSPC_MINFO_AUDITTYPE)
                 {
                     /* set up retry delay and retry limit */
                     retrydelay = OSPC_AUDIT_RETRY_DELAY;
@@ -506,7 +506,7 @@ osppHttpSetupAndMonitor(
                     /* AuditURL should never be connected since audit thread
                      * dies after every send.
                      */
-                    if(msginfo->Flags & OSPC_MSGINFO_AUDIT_TYPE)
+                    if(msginfo->Flags & OSPC_MINFO_AUDITTYPE)
                     {
 
                         /* try auditurl */
@@ -573,10 +573,10 @@ osppHttpSetupAndMonitor(
                 /*
                  * remove the processed msg from the queue
                  */
-                msginfo = (OSPTMSGINFO *)OSPPListRemove(
+                msginfo = (OSPT_MSG_INFO *)OSPPListRemove(
                     (OSPTLIST *)&(httpconn->MsgInfoList));
 
-                if (msginfo == (OSPTMSGINFO *)OSPC_OSNULL)
+                if (msginfo == (OSPT_MSG_INFO *)OSPC_OSNULL)
                 {
                     errorcode = OSPC_ERR_HTTP_BAD_QUEUE;
                     OSPM_DBGERRORLOG(errorcode, "http msg queue corrupted");
@@ -636,7 +636,7 @@ osppHttpSetupAndMonitor(
              * now signal the application thread that
              * we've got a response for it.
              */
-            if (msginfo != (OSPTMSGINFO *)OSPC_OSNULL)
+            if (msginfo != (OSPT_MSG_INFO *)OSPC_OSNULL)
             {
                 errorcode = OSPPMsgInfoProcessResponse(msginfo);
                 assert(errorcode == OSPC_ERR_NO_ERROR);
@@ -882,7 +882,7 @@ osppHttpSelectConnection(
              * check connection type. make sure it syncs up with the type of
              * msginfo we are about to send.
              */
-            if ((ospvMsgInfoType & OSPC_MSGINFO_AUDIT_TYPE) == 0)
+            if ((ospvMsgInfoType & OSPC_MINFO_AUDITTYPE) == 0)
             {
                 if (((*ospvHttp)->Flags & OSPC_HTTP_AUDIT_TYPE) == OSPC_HTTP_AUDIT_TYPE)
                 createnew = OSPC_TRUE;
@@ -907,7 +907,7 @@ osppHttpSelectConnection(
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
             /* set up the connection type */
-            if((ospvMsgInfoType & OSPC_MSGINFO_AUDIT_TYPE) == OSPC_MSGINFO_AUDIT_TYPE)
+            if((ospvMsgInfoType & OSPC_MINFO_AUDITTYPE) == OSPC_MINFO_AUDITTYPE)
             {
                 (*ospvHttp)->Flags |= OSPC_HTTP_AUDIT_TYPE;
             }
@@ -1167,7 +1167,7 @@ static
 int
 osppHttpAddRequest(
     OSPTHTTP *ospvHttp,
-    OSPTMSGINFO *ospvMsgInfo)
+    OSPT_MSG_INFO *ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
@@ -1202,7 +1202,7 @@ OSPPHttpRequestHandoff(
     OSPTMSGQUEUE *ospvMsgQueue)
 {
     int         err=OSPC_ERR_NO_ERROR,errorcode  = OSPC_ERR_NO_ERROR;
-    OSPTMSGINFO *msginfo   = OSPC_OSNULL;
+    OSPT_MSG_INFO *msginfo   = OSPC_OSNULL;
     OSPTHTTP    *httpconn  = OSPC_OSNULL;
     int         attempts   = 0;
 
@@ -1225,9 +1225,9 @@ OSPPHttpRequestHandoff(
        /*
         * get the first msginfo item from the msg queue list
         */
-       msginfo = (OSPTMSGINFO *)OSPPListFirst(
+       msginfo = (OSPT_MSG_INFO *)OSPPListFirst(
         (OSPTLIST *)&(ospvMsgQueue->MsgInfoList));
-       if (msginfo == (OSPTMSGINFO *)OSPC_OSNULL)
+       if (msginfo == (OSPT_MSG_INFO *)OSPC_OSNULL)
        {
         /*
          * release the mutex lock
@@ -1244,9 +1244,9 @@ OSPPHttpRequestHandoff(
          * Now remove the message info item from the comm
          * message queue
          */
-        msginfo = (OSPTMSGINFO *)OSPPListRemove(
+        msginfo = (OSPT_MSG_INFO *)OSPPListRemove(
             (OSPTLIST *)&(ospvMsgQueue->MsgInfoList));
-        if (msginfo == (OSPTMSGINFO *)OSPC_OSNULL)
+        if (msginfo == (OSPT_MSG_INFO *)OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_HTTP_MALLOC_FAILED;
             OSPM_DBGERRORLOG(errorcode, "msg queue item delete failed");

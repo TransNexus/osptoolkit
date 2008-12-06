@@ -51,12 +51,12 @@ OSPPTNAuditDelete(
 
 int       
 OSPPTNAuditFromElement(
-    OSPTXMLELEM *ospvElem, 
+    OSPT_XML_ELEM *ospvElem, 
     OSPTTNAUDIT **ospvTNAudit
 )
 {
     int             errorcode   = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM     *elem       = OSPC_OSNULL;
+    OSPT_XML_ELEM     *elem       = OSPC_OSNULL;
     unsigned long   temp        = 0;
 
     if (ospvElem  == OSPC_OSNULL) 
@@ -84,7 +84,7 @@ OSPPTNAuditFromElement(
         /* If the elem has no children, we are probably dealing with
          * an AuditConfirm. Make sure it gets processed properly.
          */
-        if((elem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvElem)) == OSPC_OSNULL)
+        if((elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem)) == OSPC_OSNULL)
         {
             if(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_TNAUDITSTATE)
             {
@@ -102,9 +102,9 @@ OSPPTNAuditFromElement(
          * elements. We'll run through what's there and pick out
          * the information we need. 
          */
-        for ( elem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvElem);
-            (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (errorcode == OSPC_ERR_NO_ERROR);
-            elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
+        for ( elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
+            (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (errorcode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {

@@ -83,7 +83,7 @@ extern "C" {
 #endif
 
     int OSPPAuditAddMessageToBuffer(OSPTAUDIT *ospvAudit, unsigned char *ospvAuditData, unsigned ospvAuditDataSz);
-    void OSPPAuditCheck(OSPTAUDIT *, void *, OSPE_MSG_DATATYPES);
+    void OSPPAuditCheck(OSPTAUDIT *, void *, OSPE_MSG_TYPE);
     OSPTCOMPONENTID *OSPPAuditComponentIdNew(unsigned char *ospvComponentId, int ospvComponentIdLen);
     void OSPPAuditComponentIdDelete(OSPTAUDIT *ospvAudit);
     int OSPPAuditDelete(OSPTAUDIT **ospvAudit);
@@ -99,7 +99,7 @@ extern "C" {
     void OSPPAuditInitializeBuffer(OSPTAUDIT *ospvAudit);
     OSPTAUDIT *OSPPAuditNew(const char *ospvAuditURL);
     int OSPPAuditPrepareAndSend(OSPTAUDIT *ospvAudit);
-    int OSPPAuditProcessReturn(OSPTAUDIT *ospvAudit, OSPTMSGINFO *ospvMsgInfo);
+    int OSPPAuditProcessReturn(OSPTAUDIT *ospvAudit, OSPT_MSG_INFO *ospvMsgInfo);
     void OSPPAuditRemoveComponentIdFromList(unsigned char *ospvCompid, OSPTAUDIT *ospvAudit);
     int OSPPAuditResetDefaults(OSPTAUDIT *ospvAudit);
     void OSPPAuditSetComm(OSPTAUDIT *ospvAudit, OSPTCOMM *ospvComm);

@@ -121,16 +121,16 @@ OSPPUsageIndHasRole(
 /*-----------------------------------------------------------------------*
  * OSPPUsageIndGetRole() - returns role for an usage indication
  *-----------------------------------------------------------------------*/
-OSPE_MSG_ROLETYPES                         /* returns the role (OGW/TGW) */
+OSPE_MSG_ROLE                         /* returns the role (OGW/TGW) */
     OSPPUsageIndGetRole(
     OSPTUSAGEIND *ospvUsageInd             /* usage indication */
     )
 {
-    OSPE_MSG_ROLETYPES ospvRole = OSPC_UNDEFINED_ROLE;
+    OSPE_MSG_ROLE ospvRole = OSPC_MROLE_UNDEFINED;
 
     if (ospvUsageInd != OSPC_OSNULL)
     {
-        ospvRole = (OSPE_MSG_ROLETYPES)ospvUsageInd->ospmUsageIndRole;
+        ospvRole = (OSPE_MSG_ROLE)ospvUsageInd->ospmUsageIndRole;
     }
     return(ospvRole);
 }
@@ -294,7 +294,7 @@ OSPPUsageIndSetSourceNumber(
         {
             OSPM_STRNCPY((char *)(ospvUsageInd)->ospmUsageIndSourceNumber, 
                 (const char *)(ospvSourceNumber),
-                tr_min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvSourceNumber)+1));
+                tr_min(OSPC_SIZE_E164NUM-1, OSPM_STRLEN((const char *) ospvSourceNumber)+1));
         }
     }
     return;
@@ -396,7 +396,7 @@ OSPPUsageIndSetDestNumber(
         {
             OSPM_STRNCPY((char *)(ospvUsageInd)->ospmUsageIndDestNumber, 
                 (const char *)(ospvDestNumber), 
-                tr_min(OSPC_E164NUMSIZE-1, OSPM_STRLEN((const char *) ospvDestNumber)+1));
+                tr_min(OSPC_SIZE_E164NUM-1, OSPM_STRLEN((const char *) ospvDestNumber)+1));
         }
     }
     return;
@@ -768,17 +768,17 @@ OSPPUsageIndHasSourceAlt(
  * OSPPUsageIndFirstSourceAlt() - gets the First Source alternate for an 
  * usage indication
  *-----------------------------------------------------------------------*/
-OSPTALTINFO *                              /* returns alt info pointer */
+OSPT_ALTINFO *                              /* returns alt info pointer */
     OSPPUsageIndFirstSourceAlt(
     OSPTUSAGEIND *ospvUsageInd             /* usage indication */
     )
 {
-    OSPTALTINFO *ospvAltInfo = OSPC_OSNULL;
+    OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
 
     if (ospvUsageInd != OSPC_OSNULL)
     {
         ospvAltInfo = 
-            (OSPTALTINFO *)OSPPListFirst(&((ospvUsageInd)->ospmUsageIndSourceAlternate));
+            (OSPT_ALTINFO *)OSPPListFirst(&((ospvUsageInd)->ospmUsageIndSourceAlternate));
     }
     return(ospvAltInfo);
 }
@@ -788,18 +788,18 @@ OSPTALTINFO *                              /* returns alt info pointer */
  * OSPPUsageIndNextSourceAlt() - gets the next source alternate for an 
  * usage indication
  *-----------------------------------------------------------------------*/
-OSPTALTINFO *                               /* returns alt info pointer */
+OSPT_ALTINFO *                               /* returns alt info pointer */
     OSPPUsageIndNextSourceAlt(
     OSPTUSAGEIND *ospvUsageInd,             /* usage indication */
-    OSPTALTINFO  *ospvAltInfo
+    OSPT_ALTINFO  *ospvAltInfo
     )
 {
-    OSPTALTINFO *altinfo = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
     if (ospvUsageInd != OSPC_OSNULL)
     {
         altinfo = 
-            (OSPTALTINFO *)OSPPListNext(&((ospvUsageInd)->ospmUsageIndSourceAlternate), 
+            (OSPT_ALTINFO *)OSPPListNext(&((ospvUsageInd)->ospmUsageIndSourceAlternate), 
             ospvAltInfo);
     }
     return(altinfo);
@@ -829,17 +829,17 @@ OSPPUsageIndHasDestinationAlt(
  * OSPPUsageIndFirstDestinationAlt() - gets the First Destination alternate for an 
  * usage indication
  *-----------------------------------------------------------------------*/
-OSPTALTINFO *                              /* returns alt info pointer */
+OSPT_ALTINFO *                              /* returns alt info pointer */
     OSPPUsageIndFirstDestinationAlt(
     OSPTUSAGEIND *ospvUsageInd             /* usage indication */
     )
 {
-    OSPTALTINFO *ospvAltInfo = OSPC_OSNULL;
+    OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
 
     if (ospvUsageInd != OSPC_OSNULL)
     {
         ospvAltInfo = 
-            (OSPTALTINFO *)OSPPListFirst(&((ospvUsageInd)->ospmUsageIndDestinationAlternate));
+            (OSPT_ALTINFO *)OSPPListFirst(&((ospvUsageInd)->ospmUsageIndDestinationAlternate));
     }
     return(ospvAltInfo);
 }
@@ -849,18 +849,18 @@ OSPTALTINFO *                              /* returns alt info pointer */
  * OSPPUsageIndNextDestinationAlt() - gets the next Destination alternate for an 
  * usage indication
  *-----------------------------------------------------------------------*/
-OSPTALTINFO *                               /* returns alt info pointer */
+OSPT_ALTINFO *                               /* returns alt info pointer */
     OSPPUsageIndNextDestinationAlt(
     OSPTUSAGEIND *ospvUsageInd,             /* usage indication */
-    OSPTALTINFO  *ospvAltInfo
+    OSPT_ALTINFO  *ospvAltInfo
     )
 {
-    OSPTALTINFO *altinfo = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
     if (ospvUsageInd != OSPC_OSNULL)
     {
         altinfo = 
-            (OSPTALTINFO *)OSPPListNext(&((ospvUsageInd)->ospmUsageIndDestinationAlternate), 
+            (OSPT_ALTINFO *)OSPPListNext(&((ospvUsageInd)->ospmUsageIndDestinationAlternate), 
             ospvAltInfo);
     }
     return(altinfo);
@@ -873,7 +873,7 @@ OSPTALTINFO *                               /* returns alt info pointer */
  *-----------------------------------------------------------------------*/
 unsigned                                    /* returns alt info size */
     OSPPUsageIndGetDestinationAltSize(
-    OSPTALTINFO *ospvAltInfo                /* Alt info ptr */
+    OSPT_ALTINFO *ospvAltInfo                /* Alt info ptr */
     )
 {
     unsigned ospvAltInfoSize = 0;
@@ -1111,7 +1111,7 @@ OSPPUsageIndCopyDeviceInfo(
     OSPTLIST     *ospvList          /* list to move */
     )
 {
-    OSPTALTINFO *altinfo1    = OSPC_OSNULL,
+    OSPT_ALTINFO *altinfo1    = OSPC_OSNULL,
         *altinfo2    = OSPC_OSNULL;
 
     if((ospvUsageInd != OSPC_OSNULL) &&
@@ -1121,9 +1121,9 @@ OSPPUsageIndCopyDeviceInfo(
         OSPPListNew(&(ospvUsageInd->ospmUsageIndDeviceInfo));
 
 
-        for(altinfo1 = (OSPTALTINFO *)OSPPListFirst(ospvList);
+        for(altinfo1 = (OSPT_ALTINFO *)OSPPListFirst(ospvList);
             altinfo1 != OSPC_OSNULL;
-            altinfo1 = (OSPTALTINFO *)OSPPListNext(ospvList, altinfo1))
+            altinfo1 = (OSPT_ALTINFO *)OSPPListNext(ospvList, altinfo1))
         {
 
             altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1),
@@ -1160,7 +1160,7 @@ OSPPUsageIndMergeSourceAlt(
     OSPTLIST     *ospvList2          
     )
 {
-    OSPTALTINFO *altinfo1    = OSPC_OSNULL,
+    OSPT_ALTINFO *altinfo1    = OSPC_OSNULL,
         *altinfo2    = OSPC_OSNULL;
 
     if ((ospvUsageInd != OSPC_OSNULL) && ((ospvList1 != OSPC_OSNULL) || (ospvList2 != OSPC_OSNULL)))
@@ -1174,9 +1174,9 @@ OSPPUsageIndMergeSourceAlt(
     if((ospvUsageInd != OSPC_OSNULL) &&
         (ospvList2 != OSPC_OSNULL))
     {
-        for(altinfo1 = (OSPTALTINFO *)OSPPListFirst(ospvList2);
+        for(altinfo1 = (OSPT_ALTINFO *)OSPPListFirst(ospvList2);
             altinfo1 != OSPC_OSNULL;
-            altinfo1 = (OSPTALTINFO *)OSPPListNext(ospvList2, altinfo1))
+            altinfo1 = (OSPT_ALTINFO *)OSPPListNext(ospvList2, altinfo1))
         {
             altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1),
                     OSPPAltInfoGetValue(altinfo1),
@@ -1200,9 +1200,9 @@ OSPPUsageIndMergeSourceAlt(
     if((ospvUsageInd != OSPC_OSNULL) &&
         (ospvList1 != OSPC_OSNULL))
     {
-        for(altinfo1 = (OSPTALTINFO *)OSPPListFirst(ospvList1);
+        for(altinfo1 = (OSPT_ALTINFO *)OSPPListFirst(ospvList1);
             altinfo1 != OSPC_OSNULL;
-            altinfo1 = (OSPTALTINFO *)OSPPListNext(ospvList1, altinfo1))
+            altinfo1 = (OSPT_ALTINFO *)OSPPListNext(ospvList1, altinfo1))
         {
             if (OSPPAltInfoGetType(altinfo1) != OSPC_ATYPE_TRANSPORT)
             {
@@ -1236,7 +1236,7 @@ OSPPUsageIndCopySourceAlt(
     OSPTLIST     *ospvList          /* list to move */
     )
 {
-    OSPTALTINFO *altinfo1    = OSPC_OSNULL,
+    OSPT_ALTINFO *altinfo1    = OSPC_OSNULL,
         *altinfo2    = OSPC_OSNULL;
 
     if((ospvUsageInd != OSPC_OSNULL) &&
@@ -1246,9 +1246,9 @@ OSPPUsageIndCopySourceAlt(
         OSPPListNew(&(ospvUsageInd->ospmUsageIndSourceAlternate));
 
 
-        for(altinfo1 = (OSPTALTINFO *)OSPPListFirst(ospvList);
+        for(altinfo1 = (OSPT_ALTINFO *)OSPPListFirst(ospvList);
             altinfo1 != OSPC_OSNULL;
-            altinfo1 = (OSPTALTINFO *)OSPPListNext(ospvList, altinfo1))
+            altinfo1 = (OSPT_ALTINFO *)OSPPListNext(ospvList, altinfo1))
         {
 
             altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1),
@@ -1334,7 +1334,7 @@ OSPTUSAGEIND *                                 /* returns pointer or NULL */
         ospvUsageInd->ospmUsageIndMessageId = OSPC_OSNULL;
         ospvUsageInd->ospmUsageIndIsPricingInfoPresent = OSPC_FALSE;
         ospvUsageInd->osmpUsageIndIsServiceInfoPresent = OSPC_FALSE;
-        ospvUsageInd->ospmUsageIndDestinationCount = (OSPTALTINFO *)OSPC_OSNULL;
+        ospvUsageInd->ospmUsageIndDestinationCount = (OSPT_ALTINFO *)OSPC_OSNULL;
     }
 
     return ospvUsageInd;
@@ -1347,7 +1347,7 @@ OSPTUSAGEIND *                                 /* returns pointer or NULL */
 void
 OSPPUsageIndDelete(OSPTUSAGEIND **ospvUsageInd)
 {
-    OSPTALTINFO     *altinfo    = OSPC_OSNULL;
+    OSPT_ALTINFO     *altinfo    = OSPC_OSNULL;
 
     if (*ospvUsageInd)
     {
@@ -1363,7 +1363,7 @@ OSPPUsageIndDelete(OSPTUSAGEIND **ospvUsageInd)
 
         while(!OSPPListEmpty(&((*ospvUsageInd)->ospmUsageIndSourceAlternate)))
         {
-            altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvUsageInd)->ospmUsageIndSourceAlternate));
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvUsageInd)->ospmUsageIndSourceAlternate));
             OSPM_FREE(altinfo);
             altinfo = OSPC_OSNULL;
         }  
@@ -1372,7 +1372,7 @@ OSPPUsageIndDelete(OSPTUSAGEIND **ospvUsageInd)
 
         while(!OSPPListEmpty(&((*ospvUsageInd)->ospmUsageIndDeviceInfo)))
         {
-            altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvUsageInd)->ospmUsageIndDeviceInfo));
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvUsageInd)->ospmUsageIndDeviceInfo));
             OSPM_FREE(altinfo);
             altinfo = OSPC_OSNULL;
         }  
@@ -1381,7 +1381,7 @@ OSPPUsageIndDelete(OSPTUSAGEIND **ospvUsageInd)
 
         while(!OSPPListEmpty(&((*ospvUsageInd)->ospmUsageIndDestinationAlternate)))
         {
-            altinfo = (OSPTALTINFO *)OSPPListRemove(&((*ospvUsageInd)->ospmUsageIndDestinationAlternate));
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvUsageInd)->ospmUsageIndDestinationAlternate));
             OSPM_FREE(altinfo);
             altinfo = OSPC_OSNULL;
         }
@@ -1401,7 +1401,7 @@ OSPPUsageIndDelete(OSPTUSAGEIND **ospvUsageInd)
             OSPM_FREE((*ospvUsageInd)->ospmUsageIndMessageId);
         }
 
-        if(OSPPUsageIndGetDestinationCount(*ospvUsageInd) != (OSPTALTINFO *)OSPC_OSNULL)
+        if(OSPPUsageIndGetDestinationCount(*ospvUsageInd) != (OSPT_ALTINFO *)OSPC_OSNULL)
         {
             OSPM_FREE((*ospvUsageInd)->ospmUsageIndDestinationCount);
         }
@@ -1492,17 +1492,17 @@ OSPPUsageIndSetTNStatistics(
 int                                 /* returns error code */
 OSPPUsageIndToElement(
     OSPTLIST         *ospvUsageInd, /* usage ind list */
-    OSPTXMLELEM      **ospvElem,     /* where to put XML element pointer */
+    OSPT_XML_ELEM      **ospvElem,     /* where to put XML element pointer */
     void        *ospvtrans
 )
 {
     int             ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM     *usgindelem   = OSPC_OSNULL,
+    OSPT_XML_ELEM     *usgindelem   = OSPC_OSNULL,
         *subelem    = OSPC_OSNULL;
-    OSPTXMLATTR     *attr       = OSPC_OSNULL;
+    OSPT_XML_ATTR     *attr       = OSPC_OSNULL;
     int             len         = 0;
     OSPTTRXID       trxid       = 0;
-    OSPTALTINFO     *altinfo    = OSPC_OSNULL;
+    OSPT_ALTINFO     *altinfo    = OSPC_OSNULL;
     OSPTUSAGEIND    *usage      = OSPC_OSNULL;
     char            random[OSPC_MAX_RANDOM];
     OSPTBOOL        isbase64    = OSPC_TRUE;
@@ -1698,9 +1698,9 @@ OSPPUsageIndToElement(
             if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
                   (usage->ospmUsageIndDeviceInfo != NULL))
             {
-                for(altinfo = (OSPTALTINFO *)OSPPListFirst( &(usage->ospmUsageIndDeviceInfo));
-                           altinfo!= (OSPTALTINFO *)OSPC_OSNULL;
-                           altinfo = (OSPTALTINFO *)OSPPListNext( &(usage->ospmUsageIndDeviceInfo), altinfo))
+                for(altinfo = (OSPT_ALTINFO *)OSPPListFirst( &(usage->ospmUsageIndDeviceInfo));
+                           altinfo!= (OSPT_ALTINFO *)OSPC_OSNULL;
+                           altinfo = (OSPT_ALTINFO *)OSPPListNext( &(usage->ospmUsageIndDeviceInfo), altinfo))
                 {
                      ospvErrCode = OSPPAltInfoToElement(altinfo, &subelem, OSPC_MELEM_DEVICEINFO);
                      if (ospvErrCode == OSPC_ERR_NO_ERROR)
@@ -1715,9 +1715,9 @@ OSPPUsageIndToElement(
             if ((ospvErrCode == OSPC_ERR_NO_ERROR) && 
                 OSPPUsageIndHasSourceAlt(usage))
             {
-                for (altinfo = (OSPTALTINFO *)OSPPUsageIndFirstSourceAlt(usage);
-                    ((altinfo != (OSPTALTINFO *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
-                    altinfo = (OSPTALTINFO *)OSPPUsageIndNextSourceAlt(usage, altinfo))
+                for (altinfo = (OSPT_ALTINFO *)OSPPUsageIndFirstSourceAlt(usage);
+                    ((altinfo != (OSPT_ALTINFO *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
+                    altinfo = (OSPT_ALTINFO *)OSPPUsageIndNextSourceAlt(usage, altinfo))
                 {
                     ospvErrCode = OSPPAltInfoToElement(altinfo, &subelem, OSPC_MELEM_SRCALT);
                     if (ospvErrCode == OSPC_ERR_NO_ERROR)
@@ -1776,9 +1776,9 @@ OSPPUsageIndToElement(
             if ((ospvErrCode == OSPC_ERR_NO_ERROR) && 
                 OSPPUsageIndHasDestinationAlt(usage))
             {
-                for (altinfo = (OSPTALTINFO *)OSPPUsageIndFirstDestinationAlt(usage);
-                    ((altinfo != (OSPTALTINFO *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
-                    altinfo = (OSPTALTINFO *)OSPPUsageIndNextDestinationAlt(usage, altinfo))
+                for (altinfo = (OSPT_ALTINFO *)OSPPUsageIndFirstDestinationAlt(usage);
+                    ((altinfo != (OSPT_ALTINFO *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
+                    altinfo = (OSPT_ALTINFO *)OSPPUsageIndNextDestinationAlt(usage, altinfo))
                 {
                     ospvErrCode = OSPPAltInfoToElement(altinfo, &subelem, OSPC_MELEM_DESTALT);
                     if (ospvErrCode == OSPC_ERR_NO_ERROR)
@@ -1790,7 +1790,7 @@ OSPPUsageIndToElement(
             }
 
             /* add destination count */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndGetDestinationCount(usage) != (OSPTALTINFO *)OSPC_OSNULL))
+            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndGetDestinationCount(usage) != (OSPT_ALTINFO *)OSPC_OSNULL))
             {
                 altinfo = OSPPUsageIndGetDestinationCount(usage);
 
@@ -1997,7 +1997,7 @@ OSPPUsageIndToElement(
 void
 OSPPUsageIndAddDestinationAlt(
     OSPTUSAGEIND *ospvUsageInd,   /* authorisation indication */
-    OSPTALTINFO *ospvAltInfo      /* alt info to add */
+    OSPT_ALTINFO *ospvAltInfo      /* alt info to add */
     )
 {
     if((ospvUsageInd != OSPC_OSNULL) &&
@@ -2059,7 +2059,7 @@ OSPPUsageIndSetDestinationCount(
 }
 
 
-OSPTALTINFO *
+OSPT_ALTINFO *
 OSPPUsageIndGetDestinationCount(
     OSPTUSAGEIND *ospvUsageInd
 )
