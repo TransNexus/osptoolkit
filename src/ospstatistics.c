@@ -318,7 +318,7 @@ OSPPStatisticsLossReceivedToElement(
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
 
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TNLOSSRCVD), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_LOSSRCVD), "");
         if(*ospvElem == OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -346,7 +346,7 @@ OSPPStatisticsLossReceivedToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetPktReceived(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNPACKETS), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_PACKETS), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -375,7 +375,7 @@ OSPPStatisticsLossReceivedToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetFracReceived(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNFRACTION), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_FRACTION), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -440,7 +440,7 @@ OSPPStatisticsLossSentToElement(
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
 
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TNLOSSSENT), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_LOSSSENT), "");
         if(*ospvElem == OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -468,7 +468,7 @@ OSPPStatisticsLossSentToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetPktSent(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNPACKETS), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_PACKETS), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -497,7 +497,7 @@ OSPPStatisticsLossSentToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetFracSent(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNFRACTION), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_FRACTION), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -577,7 +577,7 @@ OSPPStatisticsOneWayToElement(
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
 
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TNONEWAYDELAY), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ONEWAYDELAY), "");
         if(*ospvElem == OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -605,7 +605,7 @@ OSPPStatisticsOneWayToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetOneWayMinimum(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNMINIMUM), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_MINIMUM), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -634,7 +634,7 @@ OSPPStatisticsOneWayToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetOneWayMean(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNMEAN), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_MEAN), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -663,7 +663,7 @@ OSPPStatisticsOneWayToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgFloatToElement(OSPPStatisticsGetOneWayVariance(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNVARIANCE), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_VARIANCE), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -692,7 +692,7 @@ OSPPStatisticsOneWayToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetOneWaySamples(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNSAMPLES), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_SAMPLES), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -756,7 +756,7 @@ OSPPStatisticsRoundTripToElement(
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
 
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TNROUNDTRIPDELAY), ""); \
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ROUNDTRIPDELAY), ""); \
         if(*ospvElem == OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -784,7 +784,7 @@ OSPPStatisticsRoundTripToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetRoundTripMinimum(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNMINIMUM), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_MINIMUM), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -813,7 +813,7 @@ OSPPStatisticsRoundTripToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetRoundTripMean(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNMEAN), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_MEAN), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -842,7 +842,7 @@ OSPPStatisticsRoundTripToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgFloatToElement(OSPPStatisticsGetRoundTripVariance(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNVARIANCE), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_VARIANCE), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -871,7 +871,7 @@ OSPPStatisticsRoundTripToElement(
     if(errorcode== OSPC_ERR_NO_ERROR)
     {
         errorcode = OSPPMsgNumToElement(OSPPStatisticsGetRoundTripSamples(ospvStatistics),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNSAMPLES), &elem);
+            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_SAMPLES), &elem);
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
@@ -1047,7 +1047,7 @@ OSPPStatisticsToElement(
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
         /* create the Statistics element as the parent */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TNSTATISTICS), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_STATISTICS), "");
 
         if(*ospvElem == OSPC_OSNULL)
         {

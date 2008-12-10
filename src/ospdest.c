@@ -982,7 +982,7 @@ OSPPDestFromElement(
                     OSPPCallIdDelete(&callId);
                 }
                 break;
-                case OSPC_MELEM_TNFAILREASON:
+                case OSPC_MELEM_FAILREASON:
                 ospvErrCode = OSPPMsgNumFromElement(elem, &failure);
                 OSPPDestSetTNFailReason(dest, (unsigned)failure);
                 break;

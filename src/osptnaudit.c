@@ -86,7 +86,7 @@ OSPPTNAuditFromElement(
          */
         if((elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem)) == OSPC_OSNULL)
         {
-            if(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_TNAUDITSTATE)
+            if(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_AUDITSTATE)
             {
                 errorcode = OSPPMsgNumFromElement(ospvElem, &temp);
                 if(errorcode == OSPC_ERR_NO_ERROR)
@@ -108,10 +108,10 @@ OSPPTNAuditFromElement(
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
-                case OSPC_MELEM_TNAUDIT:
+                case OSPC_MELEM_AUDIT:
                 break;
                 
-                case OSPC_MELEM_TNAUDITSTATE:
+                case OSPC_MELEM_AUDITSTATE:
                     errorcode = OSPPMsgNumFromElement(elem, &temp);
                     if(errorcode == OSPC_ERR_NO_ERROR)
                     {
@@ -120,11 +120,11 @@ OSPPTNAuditFromElement(
                     }
                 break;
 
-                case OSPC_MELEM_TNAUDITURL:
+                case OSPC_MELEM_AUDITURL:
                     OSPPTNAuditSetURL(*ospvTNAudit, (unsigned char *)OSPPXMLElemGetValue(elem));
                 break;
 
-                case OSPC_MELEM_TNAUDITTIMELIMIT:
+                case OSPC_MELEM_AUDITTIMELIMIT:
                     errorcode = OSPPMsgNumFromElement(elem, &temp);
                     if(errorcode == OSPC_ERR_NO_ERROR)
                     {
@@ -133,7 +133,7 @@ OSPPTNAuditFromElement(
                     }
                 break;
 
-                case OSPC_MELEM_TNAUDITMAXMESSAGES:
+                case OSPC_MELEM_AUDITMAXMESSAGES:
                     errorcode = OSPPMsgNumFromElement(elem, &temp);
                     if(errorcode == OSPC_ERR_NO_ERROR)
                     {

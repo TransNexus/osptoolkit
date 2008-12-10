@@ -415,7 +415,7 @@ OSPPUsageCnfFromElement(
                                 }
                                 break;
 
-                                case OSPC_MELEM_TNAUDIT:
+                                case OSPC_MELEM_AUDIT:
                                 ospvErrCode = OSPPTNAuditFromElement(elem, &(usagecnf->ospmUsageCnfTNAudit));
                                 break;
     

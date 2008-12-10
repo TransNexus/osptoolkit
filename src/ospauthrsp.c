@@ -522,12 +522,12 @@ unsigned OSPPAuthRspFromElement(
                     OSPPAuthRspSetTrxId(authrsp, transid);
                     break;
 
-                case OSPC_MELEM_TNDELAYLIMIT:
+                case OSPC_MELEM_DELAYLIMIT:
                     ospvErrCode = OSPPMsgNumFromElement(elem, &delaylimit);
                     OSPPAuthRspSetTNDelayLimit(authrsp, (unsigned)delaylimit);
                 break;
 
-                case OSPC_MELEM_TNAUDIT:
+                case OSPC_MELEM_AUDIT:
                     ospvErrCode = OSPPTNAuditFromElement(elem, &(authrsp->ospmAuthRspTNAudit));
                     break;
 
@@ -535,7 +535,7 @@ unsigned OSPPAuthRspFromElement(
                     ospvErrCode = OSPPCSAuditFromElement(elem, &(authrsp->ospmAuthRspCSAudit));
                     break;
 
-                case OSPC_MELEM_TNDELAYPREF:
+                case OSPC_MELEM_DELAYPREF:
                     ospvErrCode = OSPPMsgNumFromElement(elem, &delaypref);
                     OSPPAuthRspSetTNDelayPref(authrsp, (unsigned)delaypref);
                     break;

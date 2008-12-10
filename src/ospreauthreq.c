@@ -1061,7 +1061,7 @@ OSPPReauthReqToElement(
         {
             ospvErrCode = OSPPMsgNumToElement( 
                 OSPPReauthReqGetTNCustId(ospvReauthReq),
-                (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNCUSTID),
+                (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_CUSTID),
                 &elem);
 
             if (ospvErrCode == OSPC_ERR_NO_ERROR)
@@ -1073,7 +1073,7 @@ OSPPReauthReqToElement(
                 {
                     ospvErrCode = OSPPMsgNumToElement( 
                         OSPPReauthReqGetTNDeviceId(ospvReauthReq),
-                        (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNDEVICEID),
+                        (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_DEVICEID),
                         &elem);
 
                     if (ospvErrCode == OSPC_ERR_NO_ERROR)

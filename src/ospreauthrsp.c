@@ -319,7 +319,7 @@ OSPPReauthRspFromElement(
                 OSPPReauthRspSetTrxId(reauthrsp, transid);
                 break;
 
-                case OSPC_MELEM_TNAUDIT:
+                case OSPC_MELEM_AUDIT:
                 ospvErrCode = OSPPTNAuditFromElement(elem, &(reauthrsp->ospmReauthRspTNAudit));
                 break;
 

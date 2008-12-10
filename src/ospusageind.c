@@ -1867,7 +1867,7 @@ OSPPUsageIndToElement(
                 {
                     ospvErrCode = OSPPMsgNumToElement( 
                         OSPPUsageIndGetTNCustId(usage),
-                        (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNCUSTID),
+                        (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_CUSTID),
                         &subelem);
                     /*add attribute critical = "False" since not all servers understand */
                     if (ospvErrCode == OSPC_ERR_NO_ERROR)
@@ -1892,7 +1892,7 @@ OSPPUsageIndToElement(
                      {
                          ospvErrCode = OSPPMsgNumToElement( 
                               OSPPUsageIndGetTNDeviceId(usage),
-                              (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNDEVICEID),
+                              (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_DEVICEID),
                               &subelem);
                
                           /*add attribute critical = "False" since not all servers understand */
@@ -1926,7 +1926,7 @@ OSPPUsageIndToElement(
 
                     ospvErrCode = OSPPMsgNumToElement( 
                         OSPPUsageIndGetTNFailReason(usage),
-                        (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TNFAILREASON),
+                        (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_FAILREASON),
                         &subelem);
 
                     if(ospvErrCode == OSPC_ERR_NO_ERROR)
