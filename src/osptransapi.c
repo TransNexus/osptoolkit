@@ -466,7 +466,7 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
     OSPTBOOL	*ospvIsLookAheadInfoPresent, /* Out */
     char        *ospvLookAheadDestination, /* Out */
     OSPE_DEST_PROT	*ospvLookAheadDestProt, /* Out */
-    OSPE_DEST_OSP_ENABLED	*ospvLookAheadDestOSPStatus) /* Out */
+    OSPE_DEST_OSPENABLED	*ospvLookAheadDestOSPStatus) /* Out */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans=NULL;
@@ -680,12 +680,12 @@ int OSPPTransactionGetDestProtocol(
  *   ospvDestinationOSPStatus: the memory location in which
  *                            the Toolkit puts the destination OSP Status.
  *                            The returned value is one of the types
- *                            defined in OSPE_DEST_OSP_ENABLED.
+ *                            defined in OSPE_DEST_OSPENABLED.
  * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
  */
 int OSPPTransactionIsDestOSPEnabled(
     OSPTTRANHANDLE  ospvTransaction,    /* In - Transaction handle             */
-    OSPE_DEST_OSP_ENABLED *ospvDestinationOSPStatus)      /* Out - Destination OSP Status     */
+    OSPE_DEST_OSPENABLED *ospvDestinationOSPStatus)      /* Out - Destination OSP Status     */
 {
     int         errorcode   = OSPC_ERR_NO_ERROR;
     OSPTTRANS   *trans      = OSPC_OSNULL;
@@ -951,10 +951,10 @@ int OSPPTransactionAccumulateOneWayDelay(
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* if no statistics structure, make one */
-        if (trans->TNStatistics == OSPC_OSNULL) {
-            trans->TNStatistics = OSPPStatisticsNew();
+        if (trans->Statistics == OSPC_OSNULL) {
+            trans->Statistics = OSPPStatisticsNew();
 
-            if (trans->TNStatistics == OSPC_OSNULL) {
+            if (trans->Statistics == OSPC_OSNULL) {
                 errorcode = OSPC_ERR_TRAN_STATS_NEW_FAIL;
                 OSPM_DBGERRORLOG(errorcode, "New failed for stats struct.");
             }
@@ -962,7 +962,7 @@ int OSPPTransactionAccumulateOneWayDelay(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             /* make temporary copy so we don't corrupt our accumulator */
-            OSPM_MEMCPY(&tmpstats, &(trans->TNStatistics->ospmOneWay), sizeof(OSPTDELAY));
+            OSPM_MEMCPY(&tmpstats, &(trans->Statistics->ospmOneWay), sizeof(OSPTDELAY));
 
             /* number of measurements */
             currnumber = tmpstats.NumberOfSamples;
@@ -1025,9 +1025,9 @@ int OSPPTransactionAccumulateOneWayDelay(
              */
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 tmpstats.HasValue = OSPC_TRUE;
-                trans->TNStatistics->ospmHasOneWay = OSPC_TRUE;
+                trans->Statistics->ospmHasOneWay = OSPC_TRUE;
                 /* now copy values back to permanent accumulator */
-                OSPM_MEMCPY(&(trans->TNStatistics->ospmOneWay),
+                OSPM_MEMCPY(&(trans->Statistics->ospmOneWay),
                     &(tmpstats), sizeof(OSPTDELAY));
                 OSPPTransactionSetState(trans, OSPC_ACCUMULATE_SUCCESS);
             } else {
@@ -1123,10 +1123,10 @@ int OSPPTransactionAccumulateRoundTripDelay(
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* if no statistics structure, make one */
-        if (trans->TNStatistics == OSPC_OSNULL) {
-            trans->TNStatistics = OSPPStatisticsNew();
+        if (trans->Statistics == OSPC_OSNULL) {
+            trans->Statistics = OSPPStatisticsNew();
 
-            if (trans->TNStatistics == OSPC_OSNULL) {
+            if (trans->Statistics == OSPC_OSNULL) {
                 errorcode = OSPC_ERR_TRAN_STATS_NEW_FAIL;
                 OSPM_DBGERRORLOG(errorcode, "New failed for stats struct.");
             }
@@ -1135,7 +1135,7 @@ int OSPPTransactionAccumulateRoundTripDelay(
         if (errorcode == OSPC_ERR_NO_ERROR) {
             /* make temporary copy so we don't corrupt our accumulator */
             OSPM_MEMCPY(&tmpstats,
-                                &(trans->TNStatistics->ospmRoundTrip),
+                                &(trans->Statistics->ospmRoundTrip),
                                 sizeof(OSPTDELAY));
 
             /* number of measurements */
@@ -1198,9 +1198,9 @@ int OSPPTransactionAccumulateRoundTripDelay(
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 tmpstats.HasValue = OSPC_TRUE;
 
-                trans->TNStatistics->ospmHasRoundTrip = OSPC_TRUE;
+                trans->Statistics->ospmHasRoundTrip = OSPC_TRUE;
                 /* now copy values back to permanent accumulator */
-                OSPM_MEMCPY(&(trans->TNStatistics->ospmRoundTrip),
+                OSPM_MEMCPY(&(trans->Statistics->ospmRoundTrip),
                     &(tmpstats), sizeof(OSPTDELAY));
                 OSPPTransactionSetState(trans, OSPC_ACCUMULATE_SUCCESS);
             } else {
@@ -1774,7 +1774,7 @@ int OSPPTransactionBuildUsageFromScratch(
                     /* We are only adding a destination
                      * first set failure code in authrsp->currentdest
                      */
-                    OSPPDestSetTNFailReason(trans->CurrentDest, ospvFailureReason);
+                    OSPPDestSetFailReason(trans->CurrentDest, ospvFailureReason);
 
                     /* now build new dest */
                     errorcode = OSPPTransactionResponseBuild(trans,
@@ -2402,7 +2402,7 @@ int OSPPTransactionRecordFailure(
         if (errorcode == OSPC_ERR_NO_ERROR) {
 
             /* Set failure reason for current destination */
-            OSPPDestSetTNFailReason(trans->CurrentDest, ospvFailureReason);
+            OSPPDestSetFailReason(trans->CurrentDest, ospvFailureReason);
 
         }
     } else if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -2585,7 +2585,7 @@ int OSPPTransactionReinitializeAtDevice(
             if (ospvRole == OSPC_MROLE_SOURCE) {
                 /* we are only adding a destination */
                 /* first set failure code in authrsp->currentdest */
-                OSPPDestSetTNFailReason(trans->CurrentDest, ospvFailureReason);
+                OSPPDestSetFailReason(trans->CurrentDest, ospvFailureReason);
                 /* now build new dest */
                 errorcode = OSPPTransactionResponseBuild(trans,
                     ospvDestination, ospvCallingNumber,ospvSizeOfCallId,
@@ -2675,20 +2675,20 @@ int OSPPTransactionReportUsage(
 {
     int                     errorcode    = OSPC_ERR_NO_ERROR;
     OSPTTRANS               *trans       = OSPC_OSNULL;
-    OSPTUSAGEIND            *usage       = OSPC_OSNULL;
+    OSPT_USAGEIND            *usage       = OSPC_OSNULL;
     OSPE_MSG_TYPE      datatype     = OSPC_MSG_UNKNOWN;
     unsigned char           *xmldoc      = OSPC_OSNULL;
     unsigned                sizeofxmldoc = 0;
     OSPT_MSG_INFO             *msginfo     = OSPC_OSNULL;
     OSPTDEST                *dest        = OSPC_OSNULL;
     OSPTBOOL                usageallowed = OSPC_FALSE;
-    OSPTSTATISTICS          stats;
-    unsigned                destHasTNFailReason = OSPC_FALSE;
+    OSPT_STATISTICS          stats;
+    OSPTBOOL                destHasFailReason = OSPC_FALSE;
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
 
-    OSPM_MEMSET(&stats, 0, sizeof(OSPTSTATISTICS));
+    OSPM_MEMSET(&stats, 0, sizeof(OSPT_STATISTICS));
 
     /* Verify Input */
     if (ospvTransaction == OSPC_TRAN_HANDLE_INVALID) {
@@ -2718,7 +2718,7 @@ int OSPPTransactionReportUsage(
     /* Set up Statistics */
     if (errorcode == OSPC_ERR_NO_ERROR) {
 
-        errorcode = OSPPStatisticsReportUsage(&(trans->TNStatistics),
+        errorcode = OSPPStatisticsReportUsage(&(trans->Statistics),
             ospvLossPacketsSent,
             ospvLossFractionSent,
             ospvLossPacketsReceived,
@@ -2753,7 +2753,7 @@ int OSPPTransactionReportUsage(
                     /*
                      * All dests up to current (if any) must have failreasons.
                      */
-                    if (!OSPPDestHasTNFailReason(dest)) {
+                    if (!OSPPDestHasFailReason(dest)) {
                         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
                         OSPM_DBGERRORLOG(errorcode, "No failure code found.");
                         break;
@@ -2772,7 +2772,7 @@ int OSPPTransactionReportUsage(
                         OSPPUsageIndSetDestinationCount(usage, OSPPDestGetDestinationCount(dest));
 
                         /* set FailureReason */
-                        OSPPUsageIndSetTNFailReason(usage, OSPPDestGetTNFailReason(dest));
+                        OSPPUsageIndSetFailReason(usage, OSPPDestGetFailReason(dest));
                         OSPPListAppend(&(trans->UsageInd), usage);
                         usage = OSPC_OSNULL;
                     }
@@ -2787,11 +2787,11 @@ int OSPPTransactionReportUsage(
                         errorcode = OSPPTransactionBuildUsage(trans, &usage, dest, datatype);
 
                         if (errorcode == OSPC_ERR_NO_ERROR) {
-                            destHasTNFailReason = OSPPDestHasTNFailReason(dest);
-                            if (destHasTNFailReason) {
+                            destHasFailReason = OSPPDestHasFailReason(dest);
+                            if (destHasFailReason) {
 
                                 /* Set failure reason */
-                                OSPPUsageIndSetTNFailReason(usage, OSPPDestGetTNFailReason(dest));
+                                OSPPUsageIndSetFailReason(usage, OSPPDestGetFailReason(dest));
                             }
 
                             OSPPUsageIndSetDestinationCount(usage, OSPPDestGetDestinationCount(dest));
@@ -2817,7 +2817,7 @@ int OSPPTransactionReportUsage(
                             /* Get Stats */
                             if (OSPPTransactionHasStatistics(trans)) {
                                 OSPPTransactionGetStatistics(trans, &stats);
-                                OSPPUsageIndSetTNStatistics(usage, &stats);
+                                OSPPUsageIndSetStatistics(usage, &stats);
                             }
                         }
 
@@ -2839,10 +2839,10 @@ int OSPPTransactionReportUsage(
             errorcode = OSPPTransactionBuildUsage(trans, &usage, dest, datatype);
 
             if (errorcode == OSPC_ERR_NO_ERROR) {
-                destHasTNFailReason = OSPPDestHasTNFailReason(trans->CurrentDest);
-                if (destHasTNFailReason) {
+                destHasFailReason = OSPPDestHasFailReason(trans->CurrentDest);
+                if (destHasFailReason) {
                     /* Set failure reason */
-                    OSPPUsageIndSetTNFailReason(usage, OSPPDestGetTNFailReason(trans->CurrentDest));
+                    OSPPUsageIndSetFailReason(usage, OSPPDestGetFailReason(trans->CurrentDest));
                 }
             }
 
@@ -3136,8 +3136,8 @@ int OSPPTransactionRequestAuthorisation(
                                         if ((*ospvNumberOfDestinations > 0) && (errorcode == OSPC_ERR_NO_ERROR)) {
                                             /* Do we need to run probe? */
                                             if ((*ospvNumberOfDestinations > 1) &&
-                                                (OSPPAuthRspHasTNDelayLimit(trans->AuthRsp) ||
-                                                OSPPAuthRspHasTNDelayPref(trans->AuthRsp)))
+                                                (OSPPAuthRspHasDelayLimit(trans->AuthRsp) ||
+                                                OSPPAuthRspHasDelayPref(trans->AuthRsp)))
                                             {
 
                                                 /* build probe list */
@@ -3185,21 +3185,21 @@ int OSPPTransactionRequestAuthorisation(
 
                                                 /* Check for delay, if present, change from default.
                                                  * Call probe */
-                                                if (OSPPAuthRspHasTNDelayLimit(trans->AuthRsp)) {
-                                                    delay = OSPPAuthRspGetTNDelayLimit(trans->AuthRsp);
+                                                if (OSPPAuthRspHasDelayLimit(trans->AuthRsp)) {
+                                                    delay = OSPPAuthRspGetDelayLimit(trans->AuthRsp);
                                                 }
 
                                                 errorcode = OSPPTNProbe(probelist, probecnt, delay);
 
                                                 if (errorcode == OSPC_ERR_NO_ERROR) {
-                                                    if (OSPPAuthRspHasTNDelayLimit(trans->AuthRsp)) {
+                                                    if (OSPPAuthRspHasDelayLimit(trans->AuthRsp)) {
                                                         OSPPTNProbePruneList(&(trans->AuthRsp->ospmAuthRspDest),
                                                             probelist,
-                                                            OSPPAuthRspGetTNDelayLimit(trans->AuthRsp),
+                                                            OSPPAuthRspGetDelayLimit(trans->AuthRsp),
                                                             ospvNumberOfDestinations);
                                                     }
 
-                                                    if ((OSPPAuthRspHasTNDelayPref(trans->AuthRsp)) &&
+                                                    if ((OSPPAuthRspHasDelayPref(trans->AuthRsp)) &&
                                                         (*ospvNumberOfDestinations > 1))
                                                     {
 
@@ -3590,7 +3590,7 @@ int OSPPTransactionValidateAuthorisation(
     int                 BAllowDupTransId = OSPC_TRUE;
     token_algo_t        tokenAlgo = (token_algo_t)ospvTokenAlgo;
     OSPTBOOL            IsTokenSigned=OSPC_FALSE;
-    OSPE_DEST_OSP_ENABLED dstOSPStatus;
+    OSPE_DEST_OSPENABLED dstOSPStatus;
     OSPE_DEST_PROT dstProt;
     unsigned char *CallIdValue = OSPC_OSNULL;
     unsigned CallIdSize = 0;

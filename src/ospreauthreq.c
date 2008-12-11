@@ -729,8 +729,8 @@ OSPTREAUTHREQ *                              /* returns pointer or NULL */
         ospvReauthReq->ospmReauthReqTrxId = 0;
         ospvReauthReq->ospmReauthReqDuration = -1;
         OSPPListNew(&ospvReauthReq->ospmReauthReqTokens);
-        ospvReauthReq->ospmReauthReqTNCustId = 0;
-        ospvReauthReq->ospmReauthReqTNDeviceId = 0;
+        ospvReauthReq->ospmReauthReqCustId = 0;
+        ospvReauthReq->ospmReauthReqDeviceId = 0;
         ospvReauthReq->ospmReauthReqComponentId = OSPC_OSNULL;
         ospvReauthReq->ospmReauthReqMessageId = OSPC_OSNULL;
     }
@@ -1057,10 +1057,10 @@ OSPPReauthReqToElement(
     /* now add the transnexus extensions (if available) */
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
-        if (OSPPReauthReqHasTNCustId(ospvReauthReq))
+        if (OSPPReauthReqHasCustId(ospvReauthReq))
         {
             ospvErrCode = OSPPMsgNumToElement( 
-                OSPPReauthReqGetTNCustId(ospvReauthReq),
+                OSPPReauthReqGetCustId(ospvReauthReq),
                 (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_CUSTID),
                 &elem);
 
@@ -1069,10 +1069,10 @@ OSPPReauthReqToElement(
                 OSPPXMLElemAddChild(reauthelem, elem);
                 elem = OSPC_OSNULL;
 
-                if (OSPPReauthReqHasTNDeviceId(ospvReauthReq))
+                if (OSPPReauthReqHasDeviceId(ospvReauthReq))
                 {
                     ospvErrCode = OSPPMsgNumToElement( 
-                        OSPPReauthReqGetTNDeviceId(ospvReauthReq),
+                        OSPPReauthReqGetDeviceId(ospvReauthReq),
                         (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_DEVICEID),
                         &elem);
 
@@ -1176,106 +1176,106 @@ OSPPReauthReqSetRole(
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPReauthReqHasTNCustId() - Does reauthreq have a TransNexus Customer Id?
+ * OSPPReauthReqHasCustId() - Does reauthreq have a Customer Id?
  *-----------------------------------------------------------------------*/
-unsigned                                   /* returns non-zero if true */
-OSPPReauthReqHasTNCustId(
+OSPTBOOL                                   /* returns non-zero if true */
+OSPPReauthReqHasCustId(
     OSPTREAUTHREQ *ospvReauthReq           /* reauthreq in question */
 )
 {
-    unsigned ospvHasTNCustId = OSPC_FALSE;
+    OSPTBOOL ospvHasCustId = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
-        ospvHasTNCustId = ((ospvReauthReq)->ospmReauthReqTNCustId != 0L);
+        ospvHasCustId = (ospvReauthReq->ospmReauthReqCustId != 0L);
     }
-    return(ospvHasTNCustId);
+    return ospvHasCustId;
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPReauthReqSetTNCustId() - Set TransNexus Customer Id
+ * OSPPReauthReqSetCustId() - Set Customer Id
  *-----------------------------------------------------------------------*/
 void                                       /* nothing returned */
-OSPPReauthReqSetTNCustId(
+OSPPReauthReqSetCustId(
     OSPTREAUTHREQ   *ospvReauthReq,
-    unsigned long ospvTNCustId
+    unsigned long ospvCustId
 )
 {
     if (ospvReauthReq != OSPC_OSNULL)
     {
-        (ospvReauthReq)->ospmReauthReqTNCustId = (ospvTNCustId);
+        ospvReauthReq->ospmReauthReqCustId = ospvCustId;
     }
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPReauthReqGetTNCustId() - returns TN Customer Id for a reauthreq
+ * OSPPReauthReqGetCustId() - returns Customer Id for a reauthreq
  *-----------------------------------------------------------------------*/
 unsigned long                              /* returns the cust id */
-    OSPPReauthReqGetTNCustId(
+    OSPPReauthReqGetCustId(
     OSPTREAUTHREQ *ospvReauthReq           /* usage request */
     )
 {
-    unsigned long ospvTNCustId = 0L;
+    unsigned long ospvCustId = 0L;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
-        ospvTNCustId = (ospvReauthReq)->ospmReauthReqTNCustId;
+        ospvCustId = ospvReauthReq->ospmReauthReqCustId;
     }
-    return(ospvTNCustId);
+    return ospvCustId;
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPReauthReqHasTNDeviceId() - Does request have a TransNexus Device Id?
+ * OSPPReauthReqHasDeviceId() - Does request have a Device Id?
  *-----------------------------------------------------------------------*/
-unsigned                                   /* returns non-zero if true */
-OSPPReauthReqHasTNDeviceId(
+OSPTBOOL                                   /* returns non-zero if true */
+OSPPReauthReqHasDeviceId(
     OSPTREAUTHREQ *ospvReauthReq           /* reauthrequest in question */
 )
 {
-    unsigned ospvHasTNDeviceId = OSPC_FALSE;
+    OSPTBOOL ospvHasDeviceId = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
-        ospvHasTNDeviceId = ((ospvReauthReq)->ospmReauthReqTNDeviceId != 0L);
+        ospvHasDeviceId = (ospvReauthReq->ospmReauthReqDeviceId != 0L);
     }
-    return(ospvHasTNDeviceId);
+    return ospvHasDeviceId;
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPReauthReqSetTNDeviceId() - Set TransNexus Device Id
+ * OSPPReauthReqSetTNDeviceId() - Set Device Id
  *-----------------------------------------------------------------------*/
 void                                       /* nothing returned */
-OSPPReauthReqSetTNDeviceId(
+OSPPReauthReqSetDeviceId(
     OSPTREAUTHREQ    *ospvReauthReq,
-    unsigned long  ospvTNDeviceId
+    unsigned long  ospvDeviceId
 )
 {
     if (ospvReauthReq != OSPC_OSNULL)
     {
-        (ospvReauthReq)->ospmReauthReqTNDeviceId = (ospvTNDeviceId);
+        ospvReauthReq->ospmReauthReqDeviceId = ospvDeviceId;
     }
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPReauthReqGetTNDeviceId() - returns TN Device Id for an reauth request
+ * OSPPReauthReqGetDeviceId() - returns Device Id for an reauth request
  *-----------------------------------------------------------------------*/
 unsigned long                              /* returns the device id */
-    OSPPReauthReqGetTNDeviceId(
+    OSPPReauthReqGetDeviceId(
     OSPTREAUTHREQ *ospvReauthReq           /* reauth request */
     )
 {
-    unsigned long ospvTNDeviceId = 0L;
+    unsigned long ospvDeviceId = 0L;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
-        ospvTNDeviceId = (ospvReauthReq)->ospmReauthReqTNDeviceId;
+        ospvDeviceId = (ospvReauthReq)->ospmReauthReqDeviceId;
     }
-    return(ospvTNDeviceId);
+    return ospvDeviceId;
 }
 
 /*-----------------------------------------------------------------------*

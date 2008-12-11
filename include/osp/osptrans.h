@@ -77,7 +77,7 @@ typedef struct _OSPTTRANS {
     OSPTDEST *CurrentDest;
     OSPTAUTHIND *AuthInd;
     OSPTAUTHCNF *AuthCnf;
-    OSPTLIST UsageInd;            /* list of OSPTUSAGEIND */
+    OSPTLIST UsageInd;            /* list of OSPT_USAGEIND */
     OSPTUSAGECNF *UsageCnf;
     OSPTCAPCNF *CapCnf;
     OSPE_TRANS_STATE State;
@@ -90,7 +90,7 @@ typedef struct _OSPTTRANS {
     char *DstNetworkId;
     unsigned SizeOfDetailLog;
     void *DetailLog;
-    OSPTSTATISTICS *TNStatistics;
+    OSPT_STATISTICS *Statistics;
     OSPTREAUTHREQ *ReauthReq;
     OSPTREAUTHRSP *ReauthRsp;
     OSPTBOOL WasLookAheadInfoGivenToApp;
@@ -139,7 +139,7 @@ extern "C" {
 #endif
 
     int OSPPTransactionBuildReauthRequest(OSPTTRANS *, unsigned);
-    int OSPPTransactionBuildUsage(OSPTTRANS *, OSPTUSAGEIND **, OSPTDEST *, OSPE_MSG_TYPE);
+    int OSPPTransactionBuildUsage(OSPTTRANS *, OSPT_USAGEIND **, OSPTDEST *, OSPE_MSG_TYPE);
     OSPTTRANS *OSPPTransactionCollectionGetItem(OSPTTRANCOLLECTION *, OSPTCOLLECTIONINDEX);
     OSPTTRANHANDLE OSPPTransactionCollectionGetNewItem(OSPTPROVHANDLE, OSPTTRANCOLLECTION *, int *);
     void OSPPTransactionCollectionRemoveItem(OSPTTRANCOLLECTION *, OSPTCOLLECTIONINDEX);
@@ -165,7 +165,7 @@ extern "C" {
     int OSPPTransactionGetProvider(OSPTTRANS *, struct _OSPTPROVIDER **);
     void OSPPTransactionGetReportUsageAllowed(OSPTTRANS *, OSPTBOOL *);
     void OSPPTransactionGetState(OSPTTRANS *, OSPE_TRANS_STATE *);
-    void OSPPTransactionGetStatistics(OSPTTRANS *, OSPTSTATISTICS *);
+    void OSPPTransactionGetStatistics(OSPTTRANS *, OSPT_STATISTICS *);
     OSPTBOOL OSPPTransactionHasStatistics(OSPTTRANS *);
     int OSPPTransactionPrepareAndQueMessage(OSPTTRANS *, unsigned char *, unsigned, OSPT_MSG_INFO **);
     int OSPPTransactionProcessReturn(OSPTTRANS *, OSPT_MSG_INFO *);

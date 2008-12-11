@@ -427,106 +427,106 @@ OSPPAuthReqGetMaxDest(
 }
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPAuthReqHasTNCustId() - Does request have a TransNexus Customer Id?
+ * OSPPAuthReqHasCustId() - Does request have a Customer Id?
  *-----------------------------------------------------------------------*/
-unsigned                                   /* returns non-zero if time */
-OSPPAuthReqHasTNCustId(
+OSPTBOOL                                   /* returns non-zero if time */
+OSPPAuthReqHasCustId(
     OSPTAUTHREQ *ospvAuthReq               /* authorisation request in question */
 )
 {
-    unsigned ospvHasTNCustId = OSPC_FALSE;
+    OSPTBOOL ospvHasCustId = OSPC_FALSE;
 
     if (ospvAuthReq != OSPC_OSNULL)
     {
-        ospvHasTNCustId = ((ospvAuthReq)->ospmAuthReqTNCustId != 0L);
+        ospvHasCustId = (ospvAuthReq->ospmAuthReqCustId != 0L);
     }
-    return(ospvHasTNCustId);
+    return ospvHasCustId;
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPAuthReqSetTNCustId() - Set TransNexus Customer Id
+ * OSPPAuthReqSetCustId() - Set Customer Id
  *-----------------------------------------------------------------------*/
 void                                       /* nothing returned */
-OSPPAuthReqSetTNCustId(
+OSPPAuthReqSetCustId(
     OSPTAUTHREQ   *ospvAuthReq,
-    unsigned long ospvTNCustId
+    unsigned long ospvCustId
 )
 {
     if (ospvAuthReq != OSPC_OSNULL)
     {
-        (ospvAuthReq)->ospmAuthReqTNCustId = (ospvTNCustId);
+        ospvAuthReq->ospmAuthReqCustId = ospvCustId;
     }
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPAuthReqGetTNCustId() - returns TN Customer Id for an auth request
+ * OSPPAuthReqGetCustId() - returns Customer Id for an auth request
  *-----------------------------------------------------------------------*/
 unsigned long                              /* returns the time value */
-    OSPPAuthReqGetTNCustId(
+    OSPPAuthReqGetCustId(
     OSPTAUTHREQ *ospvAuthReq               /* authorisation request */
     )
 {
-    unsigned long ospvTNCustId = 0L;
+    unsigned long ospvCustId = 0L;
 
     if (ospvAuthReq != OSPC_OSNULL)
     {
-        ospvTNCustId = (ospvAuthReq)->ospmAuthReqTNCustId;
+        ospvCustId = ospvAuthReq->ospmAuthReqCustId;
     }
-    return(ospvTNCustId);
+    return ospvCustId;
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPAuthReqHasTNDeviceId() - Does request have a TransNexus Device Id?
+ * OSPPAuthReqHasDeviceId() - Does request have a Device Id?
  *-----------------------------------------------------------------------*/
-unsigned                                   /* returns non-zero if time */
-OSPPAuthReqHasTNDeviceId(
+OSPTBOOL                                   /* returns non-zero if time */
+OSPPAuthReqHasDeviceId(
     OSPTAUTHREQ *ospvAuthReq               /* authorisation request in question */
 )
 {
-    unsigned ospvHasTNDeviceId = OSPC_FALSE;
+    OSPTBOOL ospvHasDeviceId = OSPC_FALSE;
 
     if (ospvAuthReq != OSPC_OSNULL)
     {
-        ospvHasTNDeviceId = ((ospvAuthReq)->ospmAuthReqTNDeviceId != 0L);
+        ospvHasDeviceId = (ospvAuthReq->ospmAuthReqDeviceId != 0L);
     }
-    return(ospvHasTNDeviceId);
+    return ospvHasDeviceId;
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPAuthReqSetTNDeviceId() - Set TransNexus Device Id
+ * OSPPAuthReqSetDeviceId() - Set Device Id
  *-----------------------------------------------------------------------*/
 void                                       /* nothing returned */
-OSPPAuthReqSetTNDeviceId(
+OSPPAuthReqSetDeviceId(
     OSPTAUTHREQ    *ospvAuthReq,
-    unsigned long  ospvTNDeviceId
+    unsigned long  ospvDeviceId
 )
 {
     if (ospvAuthReq != OSPC_OSNULL)
     {
-        (ospvAuthReq)->ospmAuthReqTNDeviceId = (ospvTNDeviceId);
+        ospvAuthReq->ospmAuthReqDeviceId = ospvDeviceId;
     }
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPAuthReqGetTNDeviceId() - returns TN Device Id for an auth request
+ * OSPPAuthReqGetDeviceId() - returns Device Id for an auth request
  *-----------------------------------------------------------------------*/
 unsigned long                              /* returns the time value */
-    OSPPAuthReqGetTNDeviceId(
+    OSPPAuthReqGetDeviceId(
     OSPTAUTHREQ *ospvAuthReq               /* authorisation request */
     )
 {
-    unsigned long ospvTNDeviceId = 0L;
+    unsigned long ospvDeviceId = 0L;
 
     if (ospvAuthReq != OSPC_OSNULL)
     {
-        ospvTNDeviceId = (ospvAuthReq)->ospmAuthReqTNDeviceId;
+        ospvDeviceId = ospvAuthReq->ospmAuthReqDeviceId;
     }
-    return(ospvTNDeviceId);
+    return ospvDeviceId;
 }
 
 /**/
@@ -1119,10 +1119,10 @@ OSPPAuthReqToElement(
         /* now add the transnexus extentions (if available) */
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
-            if (OSPPAuthReqHasTNCustId(ospvAuthReq))
+            if (OSPPAuthReqHasCustId(ospvAuthReq))
             {
                 ospvErrCode = OSPPMsgNumToElement( 
-                    OSPPAuthReqGetTNCustId(ospvAuthReq),
+                    OSPPAuthReqGetCustId(ospvAuthReq),
                     (const unsigned char *) OSPPMsgElemGetName(OSPC_MELEM_CUSTID),
                     &elem);
 
@@ -1149,10 +1149,10 @@ OSPPAuthReqToElement(
                         elem = OSPC_OSNULL;
                     }
 
-                    if (OSPPAuthReqHasTNDeviceId(ospvAuthReq) && ospvErrCode == OSPC_ERR_NO_ERROR)
+                    if (OSPPAuthReqHasDeviceId(ospvAuthReq) && ospvErrCode == OSPC_ERR_NO_ERROR)
                     {
                         ospvErrCode = OSPPMsgNumToElement( 
-                            OSPPAuthReqGetTNDeviceId(ospvAuthReq),
+                            OSPPAuthReqGetDeviceId(ospvAuthReq),
                             (const unsigned char *) OSPPMsgElemGetName(OSPC_MELEM_DEVICEID),
                             &elem);
 

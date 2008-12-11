@@ -259,13 +259,13 @@ OSPPTransactionBuildReauthRequest(
 
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
-        /* Get TNCustId from trans->provider->tncustid */
-        OSPPReauthReqSetTNCustId(ospvTrans->ReauthReq, 
-            OSPPProviderGetTNCustId(ospvTrans->Provider));
+        /* Get CustId from trans->provider->custid */
+        OSPPReauthReqSetCustId(ospvTrans->ReauthReq, 
+            OSPPProviderGetCustId(ospvTrans->Provider));
 
         /* Get TNDeviceID from trans->provider->tndeviceid */
-        OSPPReauthReqSetTNDeviceId(ospvTrans->ReauthReq, 
-            OSPPProviderGetTNDeviceId(ospvTrans->Provider));
+        OSPPReauthReqSetDeviceId(ospvTrans->ReauthReq, 
+            OSPPProviderGetDeviceId(ospvTrans->Provider));
     }
 
     return errorcode;
@@ -278,7 +278,7 @@ OSPPTransactionBuildReauthRequest(
 int
 OSPPTransactionBuildUsage(
     OSPTTRANS* ospvTrans,       /* In - Pointer to transaction context */
-    OSPTUSAGEIND** ospvUsage,   /* In - Pointer to usage to be initialized*/
+    OSPT_USAGEIND** ospvUsage,  /* In - Pointer to usage to be initialized*/
     OSPTDEST* ospvDest,         /* In - Pointer to dest associated w/usage*/
     OSPE_MSG_TYPE ospvType)/* In - Indicates what usage to build */
 {
@@ -534,11 +534,11 @@ OSPPTransactionBuildUsage(
     /* TransNexus extensions */
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* set Customer Id */
-        OSPPUsageIndSetTNCustId(*ospvUsage, OSPPProviderGetTNCustId(ospvTrans->Provider));
+        OSPPUsageIndSetCustId(*ospvUsage, OSPPProviderGetCustId(ospvTrans->Provider));
         /* set Device Id */
-        OSPPUsageIndSetTNDeviceId(*ospvUsage, OSPPProviderGetTNDeviceId(ospvTrans->Provider));
+        OSPPUsageIndSetDeviceId(*ospvUsage, OSPPProviderGetDeviceId(ospvTrans->Provider));
         /* set Fail Reason */
-        OSPPUsageIndSetTNFailReason(*ospvUsage, OSPPDestGetTNFailReason(ospvTrans->CurrentDest));
+        OSPPUsageIndSetFailReason(*ospvUsage, OSPPDestGetFailReason(ospvTrans->CurrentDest));
     } else {
         /* Some error occurred. Get rid of this usage */
         if(ospvUsage != OSPC_OSNULL) {
@@ -724,8 +724,8 @@ void
 OSPPTransactionDeleteStatistics(
     OSPTTRANS   *ospvTrans) /* In - Pointer to transaction */
 {
-    OSPPStatisticsDelete(&(ospvTrans)->TNStatistics);
-    ospvTrans->TNStatistics = OSPC_OSNULL;
+    OSPPStatisticsDelete(&ospvTrans->Statistics);
+    ospvTrans->Statistics = OSPC_OSNULL;
     return;
 }
 
@@ -750,7 +750,7 @@ void
 OSPPTransactionDeleteUsageInd(
     OSPTTRANS       *ospvTrans) /* In - Pointer to transaction */
 {
-    OSPTUSAGEIND    *usage = OSPC_OSNULL;
+    OSPT_USAGEIND    *usage = OSPC_OSNULL;
 
     if((ospvTrans != OSPC_OSNULL) &&
         (ospvTrans->UsageInd != OSPC_OSNULL))
@@ -758,7 +758,7 @@ OSPPTransactionDeleteUsageInd(
         while(!OSPPListEmpty(&((ospvTrans)->UsageInd)))
         {
 
-            usage = (OSPTUSAGEIND *)OSPPListRemove(&((ospvTrans)->UsageInd));
+            usage = (OSPT_USAGEIND *)OSPPListRemove(&((ospvTrans)->UsageInd));
 
             if(usage != OSPC_OSNULL)
             {
@@ -1226,7 +1226,7 @@ OSPPTransactionGetDestination(
                     ospvFailureReason = OSPC_FAIL_NONE;
                 }
 
-                OSPPDestSetTNFailReason(ospvTrans->CurrentDest, ospvFailureReason);
+                OSPPDestSetFailReason(ospvTrans->CurrentDest, ospvFailureReason);
 
                 ospvTrans->CurrentDest = dest;
             }
@@ -1622,7 +1622,7 @@ OSPPTransactionGetState(
 void
 OSPPTransactionGetStatistics(
     OSPTTRANS           *ospvTrans,     /* In- pointer to transaction */
-    OSPTSTATISTICS      *ospvStats      /* In - pointer to stats struct */
+    OSPT_STATISTICS      *ospvStats      /* In - pointer to stats struct */
 )
 {
     if((ospvTrans != OSPC_OSNULL) && (ospvStats != OSPC_OSNULL))
@@ -1630,8 +1630,8 @@ OSPPTransactionGetStatistics(
         if(OSPPTransactionHasStatistics(ospvTrans))
         {
             OSPM_MEMCPY(ospvStats, 
-                ospvTrans->TNStatistics, 
-                sizeof(OSPTSTATISTICS));
+                ospvTrans->Statistics, 
+                sizeof(OSPT_STATISTICS));
         }
     }
 
@@ -1649,7 +1649,7 @@ OSPTBOOL
 
     if(ospvTrans != OSPC_OSNULL)
     {
-        if(ospvTrans->TNStatistics != OSPC_OSNULL)
+        if(ospvTrans->Statistics != OSPC_OSNULL)
         {
             hasstats = OSPC_TRUE;   
         }
@@ -2271,18 +2271,18 @@ OSPPTransactionRequestNew(
 
             /* !!!TK added following lines */
             /* -----------------------------------------
-             * ospmAuthReqTNCustId (TransNexus Customer Id)
+             * ospmAuthReqCustId (Customer Id)
              * -----------------------------------------
              */
-            OSPPAuthReqSetTNCustId(ospvTrans->AuthReq, 
-                OSPPProviderGetTNCustId(ospvTrans->Provider));
+            OSPPAuthReqSetCustId(ospvTrans->AuthReq, 
+                OSPPProviderGetCustId(ospvTrans->Provider));
 
             /* -----------------------------------------
-            * ospmAuthReqTNDeviceId (TransNexus Device Id)
+            * ospmAuthReqDeviceId (Device Id)
             * -----------------------------------------
             */
-            OSPPAuthReqSetTNDeviceId(ospvTrans->AuthReq, 
-                OSPPProviderGetTNDeviceId(ospvTrans->Provider));
+            OSPPAuthReqSetDeviceId(ospvTrans->AuthReq, 
+                OSPPProviderGetDeviceId(ospvTrans->Provider));
 
             /* Set ComponentID. We have to use the random generator
                because there is no transaction id yet.

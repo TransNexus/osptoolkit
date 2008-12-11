@@ -24,7 +24,7 @@
 
 #include "osp/osp.h"
 
-/* Basic structure for TN statistics */
+/* Basic structure for statistics */
 typedef struct {
     OSPTBOOL ospmHasSentStats;
     unsigned ospmLossPacketsSent;
@@ -36,7 +36,7 @@ typedef struct {
     OSPTDELAY ospmOneWay;
     OSPTBOOL ospmHasRoundTrip;
     OSPTDELAY ospmRoundTrip;
-} OSPTSTATISTICS;
+} OSPT_STATISTICS;
 
 /* Function Prototypes */
 
@@ -44,32 +44,32 @@ typedef struct {
 extern "C" {
 #endif
 
-    void OSPPStatisticsDelete(OSPTSTATISTICS **);
-    signed OSPPStatisticsGetFracReceived(OSPTSTATISTICS *);
-    signed OSPPStatisticsGetFracSent(OSPTSTATISTICS *);
-    unsigned OSPPStatisticsGetOneWayMinimum(OSPTSTATISTICS *);
-    unsigned OSPPStatisticsGetOneWayMean(OSPTSTATISTICS *);
-    unsigned OSPPStatisticsGetOneWaySamples(OSPTSTATISTICS *);
-    float OSPPStatisticsGetOneWayVariance(OSPTSTATISTICS *);
-    unsigned OSPPStatisticsGetPktReceived(OSPTSTATISTICS *);
-    unsigned OSPPStatisticsGetPktSent(OSPTSTATISTICS *);
-    unsigned OSPPStatisticsGetRoundTripMinimum(OSPTSTATISTICS *);
-    unsigned OSPPStatisticsGetRoundTripMean(OSPTSTATISTICS *);
-    unsigned OSPPStatisticsGetRoundTripSamples(OSPTSTATISTICS *);
-    float OSPPStatisticsGetRoundTripVariance(OSPTSTATISTICS *);
-    OSPTBOOL OSPPStatisticsHasLossReceived(OSPTSTATISTICS *);
-    OSPTBOOL OSPPStatisticsHasLossSent(OSPTSTATISTICS *);
-    OSPTBOOL OSPPStatisticsHasOneWay(OSPTSTATISTICS *);
-    OSPTBOOL OSPPStatisticsHasRoundTrip(OSPTSTATISTICS *);
-    int OSPPStatisticsLossReceivedToElement(OSPTSTATISTICS *, OSPT_XML_ELEM **);
-    int OSPPStatisticsLossSentToElement(OSPTSTATISTICS *, OSPT_XML_ELEM **);
-    OSPTSTATISTICS *OSPPStatisticsNew(void);
-    int OSPPStatisticsOneWayToElement(OSPTSTATISTICS *, OSPT_XML_ELEM **);
-    int OSPPStatisticsRoundTripToElement(OSPTSTATISTICS *, OSPT_XML_ELEM **);
-    int OSPPStatisticsReportUsage(OSPTSTATISTICS **, unsigned, signed, unsigned, signed);
-    void OSPPStatisticsSetReceivedStatistics(OSPTSTATISTICS *, unsigned, signed);
-    void OSPPStatisticsSetSentStatistics(OSPTSTATISTICS *, unsigned, signed);
-    int OSPPStatisticsToElement(OSPTSTATISTICS *, OSPT_XML_ELEM **);
+    void OSPPStatisticsDelete(OSPT_STATISTICS **);
+    signed OSPPStatisticsGetFracReceived(OSPT_STATISTICS *);
+    signed OSPPStatisticsGetFracSent(OSPT_STATISTICS *);
+    unsigned OSPPStatisticsGetOneWayMinimum(OSPT_STATISTICS *);
+    unsigned OSPPStatisticsGetOneWayMean(OSPT_STATISTICS *);
+    unsigned OSPPStatisticsGetOneWaySamples(OSPT_STATISTICS *);
+    float OSPPStatisticsGetOneWayVariance(OSPT_STATISTICS *);
+    unsigned OSPPStatisticsGetPktReceived(OSPT_STATISTICS *);
+    unsigned OSPPStatisticsGetPktSent(OSPT_STATISTICS *);
+    unsigned OSPPStatisticsGetRoundTripMinimum(OSPT_STATISTICS *);
+    unsigned OSPPStatisticsGetRoundTripMean(OSPT_STATISTICS *);
+    unsigned OSPPStatisticsGetRoundTripSamples(OSPT_STATISTICS *);
+    float OSPPStatisticsGetRoundTripVariance(OSPT_STATISTICS *);
+    OSPTBOOL OSPPStatisticsHasLossReceived(OSPT_STATISTICS *);
+    OSPTBOOL OSPPStatisticsHasLossSent(OSPT_STATISTICS *);
+    OSPTBOOL OSPPStatisticsHasOneWay(OSPT_STATISTICS *);
+    OSPTBOOL OSPPStatisticsHasRoundTrip(OSPT_STATISTICS *);
+    int OSPPStatisticsLossReceivedToElement(OSPT_STATISTICS *, OSPT_XML_ELEM **);
+    int OSPPStatisticsLossSentToElement(OSPT_STATISTICS *, OSPT_XML_ELEM **);
+    OSPT_STATISTICS *OSPPStatisticsNew(void);
+    int OSPPStatisticsOneWayToElement(OSPT_STATISTICS *, OSPT_XML_ELEM **);
+    int OSPPStatisticsRoundTripToElement(OSPT_STATISTICS *, OSPT_XML_ELEM **);
+    int OSPPStatisticsReportUsage(OSPT_STATISTICS **, unsigned, signed, unsigned, signed);
+    void OSPPStatisticsSetReceivedStatistics(OSPT_STATISTICS *, unsigned, signed);
+    void OSPPStatisticsSetSentStatistics(OSPT_STATISTICS *, unsigned, signed);
+    int OSPPStatisticsToElement(OSPT_STATISTICS *, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

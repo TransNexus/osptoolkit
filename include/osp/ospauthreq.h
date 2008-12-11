@@ -39,8 +39,8 @@ typedef struct {
     OSPTLIST ospmAuthReqSourceAlternate;
     OSPTLIST ospmAuthReqDestinationAlternate;
     unsigned ospmAuthReqMaxDest;
-    unsigned long ospmAuthReqTNCustId;
-    unsigned long ospmAuthReqTNDeviceId;
+    unsigned long ospmAuthReqCustId;
+    unsigned long ospmAuthReqDeviceId;
     OSPTLIST ospmAuthReqDeviceInfo;
 } OSPTAUTHREQ;
 
@@ -75,12 +75,12 @@ extern "C" {
     OSPT_ALTINFO *OSPPAuthReqNextDestinationAlt(OSPTAUTHREQ *, OSPT_ALTINFO *);
     void OSPPAuthReqSetMaxDest(OSPTAUTHREQ *, unsigned);
     unsigned OSPPAuthReqGetMaxDest(OSPTAUTHREQ *);
-    unsigned OSPPAuthReqHasTNCustId(OSPTAUTHREQ *);
-    void OSPPAuthReqSetTNCustId(OSPTAUTHREQ *, unsigned long);
-    unsigned long OSPPAuthReqGetTNCustId(OSPTAUTHREQ *);
-    unsigned OSPPAuthReqHasTNDeviceId(OSPTAUTHREQ *ospvAuthReq);
-    void OSPPAuthReqSetTNDeviceId(OSPTAUTHREQ *, unsigned long);
-    unsigned long OSPPAuthReqGetTNDeviceId(OSPTAUTHREQ *);
+    OSPTBOOL OSPPAuthReqHasCustId(OSPTAUTHREQ *);
+    void OSPPAuthReqSetCustId(OSPTAUTHREQ *, unsigned long);
+    unsigned long OSPPAuthReqGetCustId(OSPTAUTHREQ *);
+    OSPTBOOL OSPPAuthReqHasDeviceId(OSPTAUTHREQ *ospvAuthReq);
+    void OSPPAuthReqSetDeviceId(OSPTAUTHREQ *, unsigned long);
+    unsigned long OSPPAuthReqGetDeviceId(OSPTAUTHREQ *);
 
 #ifdef __cplusplus
 }

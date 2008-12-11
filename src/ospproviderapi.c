@@ -864,10 +864,10 @@ OSPPProviderNew(
             {
                 /* set Customer Id */
                 custid = atol(ospvCustomerId);
-                OSPPProviderSetTNCustId(provider, custid);
+                OSPPProviderSetCustId(provider, custid);
                 /* set Device Id */
                 deviceid = atol(ospvDeviceId);
-                OSPPProviderSetTNDeviceId(provider, deviceid);
+                OSPPProviderSetDeviceId(provider, deviceid);
                 /*
                  * set the private key. 
                  */
@@ -1207,10 +1207,10 @@ OSPPProviderSetLocalKeys(
             if((errorcode==OSPC_ERR_NO_ERROR)&&(custId!=0)&&(devId!=0))
             {
                 /* set Customer Id */
-                OSPPProviderSetTNCustId(provider, custId);
+                OSPPProviderSetCustId(provider, custId);
 
                 /* set Device Id */
-                OSPPProviderSetTNDeviceId(provider, devId);
+                OSPPProviderSetDeviceId(provider, devId);
 
             }
         }

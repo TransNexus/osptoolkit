@@ -40,8 +40,8 @@ typedef struct {
     OSPTTNAUDIT *ospmAuthRspTNAudit;
     OSPTTRXID ospmAuthRspTrxId;
     OSPTLIST ospmAuthRspDest;
-    unsigned ospmAuthRspTNDelayLimit;
-    unsigned ospmAuthRspTNDelayPref;
+    unsigned ospmAuthRspDelayLimit;
+    unsigned ospmAuthRspDelayPref;
     unsigned ospmNumDests;
     OSPTCSAUDIT *ospmAuthRspCSAudit;
     OSPE_MSG_ROLE ospmAuthRspRole;
@@ -101,11 +101,11 @@ extern "C" {
     int OSPPAuthRspHasStatus(OSPTAUTHRSP *);
     OSPTSTATUS *OSPPAuthRspGetStatus(OSPTAUTHRSP *);
     void OSPPAuthRspSetTrxId(OSPTAUTHRSP *, OSPTTRXID);
-    int OSPPAuthRspHasTNDelayLimit(OSPTAUTHRSP *);
-    void OSPPAuthRspSetTNDelayLimit(OSPTAUTHRSP *, unsigned);
-    unsigned OSPPAuthRspGetTNDelayLimit(OSPTAUTHRSP *);
-    int OSPPAuthRspHasTNDelayPref(OSPTAUTHRSP *);
-    void OSPPAuthRspSetTNDelayPref(OSPTAUTHRSP *, unsigned);
+    int OSPPAuthRspHasDelayLimit(OSPTAUTHRSP *);
+    void OSPPAuthRspSetDelayLimit(OSPTAUTHRSP *, unsigned);
+    unsigned OSPPAuthRspGetDelayLimit(OSPTAUTHRSP *);
+    int OSPPAuthRspHasDelayPref(OSPTAUTHRSP *);
+    void OSPPAuthRspSetDelayPref(OSPTAUTHRSP *, unsigned);
     unsigned OSPPAuthRspHasNumDests(OSPTAUTHRSP *);
     void OSPPAuthRspIncNumDests(OSPTAUTHRSP *);
     unsigned OSPPAuthRspGetNumDests(OSPTAUTHRSP *);

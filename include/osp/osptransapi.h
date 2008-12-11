@@ -37,7 +37,7 @@ extern "C" {
 #endif
 
     int OSPPTransactionGetDestProtocol(OSPTTRANHANDLE, OSPE_DEST_PROT *);
-    int OSPPTransactionIsDestOSPEnabled(OSPTTRANHANDLE, OSPE_DEST_OSP_ENABLED *);
+    int OSPPTransactionIsDestOSPEnabled(OSPTTRANHANDLE, OSPE_DEST_OSPENABLED *);
     int OSPPTransactionSetNetworkIds(OSPTTRANHANDLE, const char *, const char *);
     int OSPPTransactionAccumulateOneWayDelay(OSPTTRANHANDLE, unsigned, unsigned, unsigned, float);
     int OSPPTransactionAccumulateRoundTripDelay(OSPTTRANHANDLE, unsigned,    unsigned, unsigned, float);
@@ -85,7 +85,7 @@ extern "C" {
             OSPTBOOL *ospvIsLookAheadInfoPresent,                               /* Out */
             char *ospvLookAheadDestination,                                     /* Out */
             OSPE_DEST_PROT *ospvLookAheadDestProt,                              /* Out */
-            OSPE_DEST_OSP_ENABLED *ospvLookAheadDestOSPStatus);                 /* Out */
+            OSPE_DEST_OSPENABLED *ospvLookAheadDestOSPStatus);                 /* Out */
     int OSPPTransactionModifyDeviceIdentifiers(OSPTTRANHANDLE ospvTransaction,  /* In - Transaction handle */
             const char *ospvSource,                                             /* In - optional */
             const char *ospvSourceDevice,                                       /* In - optional */

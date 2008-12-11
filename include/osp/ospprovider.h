@@ -48,8 +48,8 @@ typedef struct _OSPTPROVIDER {
      *          Trans not allowed - 0x00 
      */
     unsigned char Flags;
-    unsigned long TNCustId;
-    unsigned long TNDeviceId;
+    unsigned long CustId;
+    unsigned long DeviceId;
     OSPTTRANSID *TreeRoot;
     OSPTTRANSID Sentinel;
     OSPTMUTEX TransIdMutex;
@@ -79,10 +79,10 @@ extern "C" {
     void OSPPProviderTransactionCollectionDelete(struct _OSPTTRANCOLLECTION **);
     int OSPPProviderTransactionCollectionNew(struct _OSPTTRANCOLLECTION **);
     int OSPPProviderInitializeStorage(OSPTPROVIDER *);
-    unsigned long OSPPProviderGetTNCustId(OSPTPROVIDER *);
-    void OSPPProviderSetTNCustId(OSPTPROVIDER *, unsigned long);
-    unsigned long OSPPProviderGetTNDeviceId(OSPTPROVIDER *);
-    void OSPPProviderSetTNDeviceId(OSPTPROVIDER *, unsigned long);
+    unsigned long OSPPProviderGetCustId(OSPTPROVIDER *);
+    void OSPPProviderSetCustId(OSPTPROVIDER *, unsigned long);
+    unsigned long OSPPProviderGetDeviceId(OSPTPROVIDER *);
+    void OSPPProviderSetDeviceId(OSPTPROVIDER *, unsigned long);
     int OSPPProviderGetSecurity(OSPTPROVIDER *, OSPTSEC **);
 
 #ifdef __cplusplus

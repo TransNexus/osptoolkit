@@ -41,7 +41,9 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ATYPE_NUMBER] = {
     { OSPC_ATYPE_ABBREVIATED,   "abbreviated" },
     { OSPC_ATYPE_E164PREFIX,    "e164prefix" },
     { OSPC_ATYPE_SIP,           "sip" },
-    { OSPC_ATYPE_DEVICEID,      "deviceId" }
+    { OSPC_ATYPE_XMPP,          "xmpp" },
+    { OSPC_ATYPE_DEVICEID,      "deviceId" },
+    { OSPC_ATYPE_DEVICEID,      "assertedId" }
 };
 
 /*

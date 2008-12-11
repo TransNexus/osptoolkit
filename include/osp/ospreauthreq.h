@@ -44,8 +44,8 @@ typedef struct {
     OSPTTRXID ospmReauthReqTrxId;
     int ospmReauthReqDuration;
     OSPTLIST ospmReauthReqTokens;
-    unsigned long ospmReauthReqTNCustId;
-    unsigned long ospmReauthReqTNDeviceId;
+    unsigned long ospmReauthReqCustId;
+    unsigned long ospmReauthReqDeviceId;
     OSPTLIST ospmReauthReqDevInfo;
 } OSPTREAUTHREQ;
 
@@ -93,12 +93,12 @@ extern "C" {
     unsigned OSPPReauthReqHasSourceAlt(OSPTREAUTHREQ *);
     OSPT_ALTINFO *OSPPReauthReqFirstSourceAlt(OSPTREAUTHREQ *);
     OSPT_ALTINFO *OSPPReauthReqNextSourceAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
-    unsigned OSPPReauthReqHasTNCustId(OSPTREAUTHREQ *);
-    void OSPPReauthReqSetTNCustId(OSPTREAUTHREQ *, unsigned long);
-    unsigned long OSPPReauthReqGetTNCustId(OSPTREAUTHREQ *);
-    unsigned OSPPReauthReqHasTNDeviceId(OSPTREAUTHREQ *);
-    void OSPPReauthReqSetTNDeviceId(OSPTREAUTHREQ *, unsigned long);
-    unsigned long OSPPReauthReqGetTNDeviceId(OSPTREAUTHREQ *);
+    OSPTBOOL OSPPReauthReqHasCustId(OSPTREAUTHREQ *);
+    void OSPPReauthReqSetCustId(OSPTREAUTHREQ *, unsigned long);
+    unsigned long OSPPReauthReqGetCustId(OSPTREAUTHREQ *);
+    OSPTBOOL OSPPReauthReqHasDeviceId(OSPTREAUTHREQ *);
+    void OSPPReauthReqSetDeviceId(OSPTREAUTHREQ *, unsigned long);
+    unsigned long OSPPReauthReqGetDeviceId(OSPTREAUTHREQ *);
 
 #ifdef __cplusplus
 }

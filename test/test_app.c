@@ -824,22 +824,25 @@ int testOSPPTransactionGetDestProtocol()
         OSPPTransactionGetDestProtocol(OSPVTransactionHandle, &dest_prot);
     if (errorcode == OSPC_ERR_NO_ERROR) {
         switch (dest_prot) {
-        case OSPE_DEST_PROT_UNDEFINED:
+        case OSPC_DPROT_UNDEFINED:
             printf("Destination Protocol is Not Configured at Server \n");
             break;
-        case OSPE_DEST_PROT_SIP:
+        case OSPC_DPROT_SIP:
             printf("Destination Protocol is SIP \n");
             break;
-        case OSPE_DEST_PROT_IAX:
-            printf("Destination Protocol is IAX \n");
-            break;
-        case OSPE_DEST_PROT_H323_LRQ:
+        case OSPC_DPROT_LRQ:
             printf("Destination Protocol is h323-LRQ \n");
             break;
-        case OSPE_DEST_PROT_H323_SETUP:
+        case OSPC_DPROT_Q931:
             printf("Destination Protocol is h323-Q931\n");
             break;
-        case OSPE_DEST_PROT_UNKNOWN:
+        case OSPC_DPROT_IAX:
+            printf("Destination Protocol is IAX \n");
+            break;
+        case OSPC_DPROT_XMPP:
+            printf("Destination Protocol is XMPP \n");
+            break;
+        case OSPC_DPROT_UNKNOWN:
             printf("Destination Protocol is Unknown \n");
             break;
         }
@@ -850,22 +853,22 @@ int testOSPPTransactionGetDestProtocol()
 
 int testOSPPTransactionIsDestOSPEnabled()
 {
-    OSPE_DEST_OSP_ENABLED dest_osp_ver;
+    OSPE_DEST_OSPENABLED dest_osp_ver;
     int errorcode = OSPC_ERR_NO_ERROR;
 
     errorcode = OSPPTransactionIsDestOSPEnabled(OSPVTransactionHandle, &dest_osp_ver);
     if (errorcode == OSPC_ERR_NO_ERROR) {
         switch (dest_osp_ver) {
-        case OSPE_OSP_UNDEFINED:
+        case OSPC_DOSP_UNDEFINED:
             printf("Destination OSP Version Not Configured at Server \n");
             break;
-        case OSPE_OSP_TRUE:
+        case OSPC_DOSP_TRUE:
             printf("Destination is OSP Enabled\n");
             break;
-        case OSPE_OSP_FALSE:
+        case OSPC_DOSP_FALSE:
             printf("Destination is Not OSP Enabled\n");
             break;
-        case OSPE_OSP_UNKNOWN:
+        case OSPC_DOSP_UNKNOWN:
             printf("Destination OSP Status is Unknown \n");
             break;
         }
@@ -1508,8 +1511,8 @@ int testOSPPTransactionModifyDeviceIdentifiers()
 int testOSPPTransactionGetLookAheadInfoIfPresent()
 {
     int errorcode = 0;
-    OSPE_DEST_PROT DestProt = OSPE_DEST_PROT_UNDEFINED;
-    OSPE_DEST_OSP_ENABLED DestOSPStatus = OSPE_OSP_UNDEFINED;
+    OSPE_DEST_PROT DestProt = OSPC_DPROT_UNDEFINED;
+    OSPE_DEST_OSPENABLED DestOSPStatus = OSPC_DOSP_UNDEFINED;
     char LookAheadDest[DESTINATION_SZ] = { "" };
     OSPTBOOL IsLookAheadInfoPresent = OSPC_FALSE;
 
@@ -1523,37 +1526,40 @@ int testOSPPTransactionGetLookAheadInfoIfPresent()
         if (errorcode == 0 && IsLookAheadInfoPresent) {
             printf("Look Ahead Info Present .. \nLookAheadDest = %s\n", LookAheadDest);
             switch (DestProt) {
-            case OSPE_DEST_PROT_UNDEFINED:
+            case OSPC_DPROT_UNDEFINED:
                 printf("Destination Protocol is Not Configured at Server \n");
                 break;
-            case OSPE_DEST_PROT_SIP:
+            case OSPC_DPROT_SIP:
                 printf("Destination Protocol is SIP \n");
                 break;
-            case OSPE_DEST_PROT_IAX:
-                printf("Destination Protocol is IAX \n");
-                break;
-            case OSPE_DEST_PROT_H323_LRQ:
+            case OSPC_DPROT_LRQ:
                 printf("Destination Protocol is h323-LRQ \n");
                 break;
-            case OSPE_DEST_PROT_H323_SETUP:
+            case OSPC_DPROT_Q931:
                 printf("Destination Protocol is h323-Q931\n");
                 break;
-            case OSPE_DEST_PROT_UNKNOWN:
+            case OSPC_DPROT_IAX:
+                printf("Destination Protocol is IAX \n");
+                break;
+            case OSPC_DPROT_XMPP:
+                printf("Destination Protocol is XMPP \n");
+                break;
+            case OSPC_DPROT_UNKNOWN:
                 printf("Destination Protocol is Unknown \n");
                 break;
             }
 
             switch (DestOSPStatus) {
-            case OSPE_OSP_UNDEFINED:
+            case OSPC_DOSP_UNDEFINED:
                 printf("Destination OSP Version Not Configured at Server \n");
                 break;
-            case OSPE_OSP_TRUE:
+            case OSPC_DOSP_TRUE:
                 printf("Destination is OSP Enabled\n");
                 break;
-            case OSPE_OSP_FALSE:
+            case OSPC_DOSP_FALSE:
                 printf("Destination is Not OSP Enabled\n");
                 break;
-            case OSPE_OSP_UNKNOWN:
+            case OSPC_DOSP_UNKNOWN:
                 printf("Destination OSP Status is Unknown \n");
                 break;
             }

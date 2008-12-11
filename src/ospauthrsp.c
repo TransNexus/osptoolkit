@@ -151,81 +151,81 @@ OSPTDEST* OSPPAuthRspNextDest(
 /**/
 /*
  *-----------------------------------------------------------------------*
- * OSPPAuthRspHasTNDelayLimit() - does an AuthResponse have delay limit?
+ * OSPPAuthRspHasDelayLimit() - does an AuthResponse have delay limit?
  *-----------------------------------------------------------------------*
  */
-int OSPPAuthRspHasTNDelayLimit(
+int OSPPAuthRspHasDelayLimit(
     OSPTAUTHRSP* ospvAuthRsp)   /* authorisation response */
 {
-    int ospvHasTNDelayLimit = OSPC_FALSE;
+    int ospvHasDelayLimit = OSPC_FALSE;
 
     if(ospvAuthRsp != OSPC_OSNULL) {
-        ospvHasTNDelayLimit = (ospvAuthRsp->ospmAuthRspTNDelayLimit > 0);
+        ospvHasDelayLimit = (ospvAuthRsp->ospmAuthRspDelayLimit > 0);
     }
-    return ospvHasTNDelayLimit;
+    return ospvHasDelayLimit;
 }
 
 /**/
 /*
  *-----------------------------------------------------------------------*
- * OSPPAuthRspSetTNDelayLimit() - sets the delay limit for an authorisation
+ * OSPPAuthRspSetDelayLimit() - sets the delay limit for an authorisation
  *-----------------------------------------------------------------------*
  */
-void OSPPAuthRspSetTNDelayLimit(
+void OSPPAuthRspSetDelayLimit(
     OSPTAUTHRSP* ospvAuthRsp,   /* authorisation response */
-    unsigned ospvTNDelayLimit)  /* delay limit to set */
+    unsigned ospvDelayLimit)  /* delay limit to set */
 {
     if(ospvAuthRsp != OSPC_OSNULL) {
-        ospvAuthRsp->ospmAuthRspTNDelayLimit = ospvTNDelayLimit;
+        ospvAuthRsp->ospmAuthRspDelayLimit = ospvDelayLimit;
     }
 }
 
 /**/
 /*
  *-----------------------------------------------------------------------*
- * OSPPAuthRspGetTNDelayLimit() - gets the delay limit for an AuthResponse
+ * OSPPAuthRspGetDelayLimit() - gets the delay limit for an AuthResponse
  *-----------------------------------------------------------------------*
  */
-unsigned OSPPAuthRspGetTNDelayLimit(
+unsigned OSPPAuthRspGetDelayLimit(
     OSPTAUTHRSP* ospvAuthRsp)   /* authorisation response */
 {
-    unsigned ospvTNDelayLimit = 0;
+    unsigned ospvDelayLimit = 0;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvTNDelayLimit = (ospvAuthRsp->ospmAuthRspTNDelayLimit);
+        ospvDelayLimit = (ospvAuthRsp->ospmAuthRspDelayLimit);
     }
-    return ospvTNDelayLimit;
+    return ospvDelayLimit;
 }
 
 /**/
 /*
  *-----------------------------------------------------------------------*
- * OSPPAuthRspHasTNDelayPref() - does an AuthResponse have delay pref?
+ * OSPPAuthRspHasDelayPref() - does an AuthResponse have delay pref?
  *-----------------------------------------------------------------------*
  */
-int OSPPAuthRspHasTNDelayPref(
+int OSPPAuthRspHasDelayPref(
     OSPTAUTHRSP* ospvAuthRsp)   /* authorisation response */
 {
-    int ospvHasTNDelayPref = OSPC_FALSE;
+    int ospvHasDelayPref = OSPC_FALSE;
 
     if(ospvAuthRsp != OSPC_OSNULL) {
-        ospvHasTNDelayPref = (ospvAuthRsp->ospmAuthRspTNDelayPref > 0);
+        ospvHasDelayPref = (ospvAuthRsp->ospmAuthRspDelayPref > 0);
     }
-    return ospvHasTNDelayPref;
+    return ospvHasDelayPref;
 }
 
 /**/
 /*
  *-----------------------------------------------------------------------*
- * OSPPAuthRspSetTNDelayPref() - sets the delay pref for an authorisation
+ * OSPPAuthRspSetDelayPref() - sets the delay pref for an authorisation
  *-----------------------------------------------------------------------*
  */
-void OSPPAuthRspSetTNDelayPref(
+void OSPPAuthRspSetDelayPref(
     OSPTAUTHRSP* ospvAuthRsp,   /* authorisation response */
-    unsigned ospvTNDelayPref)   /* delay pref to set */
+    unsigned ospvDelayPref)   /* delay pref to set */
 {
     if(ospvAuthRsp != OSPC_OSNULL) {
-        ospvAuthRsp->ospmAuthRspTNDelayPref = ospvTNDelayPref;
+        ospvAuthRsp->ospmAuthRspDelayPref = ospvDelayPref;
     }
 }
 
@@ -524,7 +524,7 @@ unsigned OSPPAuthRspFromElement(
 
                 case OSPC_MELEM_DELAYLIMIT:
                     ospvErrCode = OSPPMsgNumFromElement(elem, &delaylimit);
-                    OSPPAuthRspSetTNDelayLimit(authrsp, (unsigned)delaylimit);
+                    OSPPAuthRspSetDelayLimit(authrsp, (unsigned)delaylimit);
                 break;
 
                 case OSPC_MELEM_AUDIT:
@@ -537,7 +537,7 @@ unsigned OSPPAuthRspFromElement(
 
                 case OSPC_MELEM_DELAYPREF:
                     ospvErrCode = OSPPMsgNumFromElement(elem, &delaypref);
-                    OSPPAuthRspSetTNDelayPref(authrsp, (unsigned)delaypref);
+                    OSPPAuthRspSetDelayPref(authrsp, (unsigned)delaypref);
                     break;
 
                 case OSPC_MELEM_DEST:

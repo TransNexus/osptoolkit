@@ -337,48 +337,48 @@ OSPPProviderInitializeStorage(
 
 /* !!!TK added following functions/methods */
 unsigned long 
-OSPPProviderGetTNCustId(
+OSPPProviderGetCustId(
     OSPTPROVIDER *ospvProvider)
 {
     unsigned long custid = 0;
     if (ospvProvider != OSPC_OSNULL)
     {
-        custid = ospvProvider->TNCustId;
+        custid = ospvProvider->CustId;
     }
     return custid;
 }
 
 void
-OSPPProviderSetTNCustId(
+OSPPProviderSetCustId(
     OSPTPROVIDER *ospvProvider,
     unsigned long ospvCustId)
 {
     if (ospvProvider != OSPC_OSNULL)
     {
-        ospvProvider->TNCustId = ospvCustId;
+        ospvProvider->CustId = ospvCustId;
     }
 }
 
 unsigned long 
-OSPPProviderGetTNDeviceId(
+OSPPProviderGetDeviceId(
     OSPTPROVIDER *ospvProvider)
 {
     unsigned long deviceid = 0;
     if (ospvProvider != OSPC_OSNULL)
     {
-        deviceid = ospvProvider->TNDeviceId;
+        deviceid = ospvProvider->DeviceId;
     }
     return deviceid;
 }
 
 void
-OSPPProviderSetTNDeviceId(
+OSPPProviderSetDeviceId(
     OSPTPROVIDER *ospvProvider,
     unsigned long ospvDeviceId)
 {
     if (ospvProvider != OSPC_OSNULL)
     {
-        ospvProvider->TNDeviceId = ospvDeviceId;
+        ospvProvider->DeviceId = ospvDeviceId;
     }
 }
 

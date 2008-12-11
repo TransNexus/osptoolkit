@@ -51,17 +51,17 @@ OSPPDestSetOSPVersion(
 {
     if (!(OSPM_STRCMP((const char *)ospvVersion,DEST_OSP_DIABLED)))
     {
-        ospvDest->ospmDestOSPVersion = OSPE_OSP_FALSE;
+        ospvDest->ospmDestOSPVersion = OSPC_DOSP_FALSE;
     }
     else
     {
         if (!(OSPM_STRCMP((const char *)ospvVersion,DEST_OSP_UNKNOWN)))
         {
-            ospvDest->ospmDestOSPVersion = OSPE_OSP_UNKNOWN;
+            ospvDest->ospmDestOSPVersion = OSPC_DOSP_UNKNOWN;
         }
         else
         {
-            ospvDest->ospmDestOSPVersion = OSPE_OSP_TRUE;
+            ospvDest->ospmDestOSPVersion = OSPC_DOSP_TRUE;
         }
     }
 }
@@ -77,25 +77,18 @@ OSPPDestSetProtocol(
     const unsigned char *ospvProt           /* Protocol (as string) */
 )
 {
-    if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_SIP)))
-    {
-        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_SIP;
-    }
-    else if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_IAX)))
-    {
-        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_IAX;
-    }
-    else if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_H323_LRQ)))
-    {
-        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_LRQ;
-    }
-    else if (!(OSPM_STRCMP((const char *)ospvProt,DEST_PROT_H323_Q931)))
-    {
-        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_H323_SETUP;
-    }
-    else
-    {
-        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_UNKNOWN;
+    if (!(OSPM_STRCMP((const char *)ospvProt, OSPC_DPDESC_SIP))) {
+        ospvDest->ospmDestProtocol = OSPC_DPROT_SIP;
+    } else if (!(OSPM_STRCMP((const char *)ospvProt, OSPC_DPDESC_LRQ))) {
+        ospvDest->ospmDestProtocol = OSPC_DPROT_LRQ;
+    } else if (!(OSPM_STRCMP((const char *)ospvProt, OSPC_DPDESC_Q931))) {
+        ospvDest->ospmDestProtocol = OSPC_DPROT_Q931;
+    } else if (!(OSPM_STRCMP((const char *)ospvProt, OSPC_DPDESC_IAX))) {
+        ospvDest->ospmDestProtocol = OSPC_DPROT_IAX;
+    } else if (!(OSPM_STRCMP((const char *)ospvProt, OSPC_DPDESC_XMPP))) {
+        ospvDest->ospmDestProtocol = OSPC_DPROT_XMPP;
+    } else {
+        ospvDest->ospmDestProtocol = OSPC_DPROT_UNKNOWN;
     }
 }
 
@@ -714,55 +707,55 @@ OSPPDestGetLimit(
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPDestHasTNFailReason() - Does dest have a TransNexus Fail Rsn
+ * OSPPDestHasFailReason() - Does dest have a Fail Reason
  *-----------------------------------------------------------------------*/
-unsigned                                   /* returns non-zero if time */
-OSPPDestHasTNFailReason(
+OSPTBOOL                                   /* returns non-zero if time */
+OSPPDestHasFailReason(
     OSPTDEST *ospvDest               /* dest in question */
 )
 {
-    unsigned ospvHasTNFailReason = OSPC_FALSE;
+    OSPTBOOL ospvHasFailReason = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL)
     {
-        ospvHasTNFailReason = ((ospvDest)->ospmDestTNFailReasonInd);
+        ospvHasFailReason = ospvDest->ospmDestHasFailReason;
     }
-    return(ospvHasTNFailReason);
+    return ospvHasFailReason;
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPDestSetTNFailReason() - Set TransNexus Fail Reason
+ * OSPPDestSetFailReason() - Set Fail Reason
  *-----------------------------------------------------------------------*/
 void                                       /* nothing returned */
-OSPPDestSetTNFailReason(
+OSPPDestSetFailReason(
     OSPTDEST *ospvDest,
-    unsigned     ospvTNFailReason
+    unsigned ospvFailReason
 )
 {
     if (ospvDest != OSPC_OSNULL)
     {
-        (ospvDest)->ospmDestTNFailReason    = (ospvTNFailReason);
-        (ospvDest)->ospmDestTNFailReasonInd = 1;
+        ospvDest->ospmDestFailReason = ospvFailReason;
+        ospvDest->ospmDestHasFailReason = OSPC_TRUE;
     }
 }
 
 /**/
 /*-----------------------------------------------------------------------*
- * OSPPDestGetTNFailReason() - returns TN Fail Rsn for a dest
+ * OSPPDestGetFailReason() - returns Fail Reason for a dest
  *-----------------------------------------------------------------------*/
 unsigned                                 /* returns the fail reason value */
-OSPPDestGetTNFailReason(
+OSPPDestGetFailReason(
     OSPTDEST *ospvDest               /* usage request */
     )
 {
-    unsigned ospvTNFailReason = 0;
+    unsigned ospvFailReason = 0;
 
     if (ospvDest != OSPC_OSNULL)
     {
-        ospvTNFailReason = (ospvDest)->ospmDestTNFailReason;
+        ospvFailReason = ospvDest->ospmDestFailReason;
     }
-    return(ospvTNFailReason);
+    return ospvFailReason;
 }
 
 /**/
@@ -782,8 +775,8 @@ OSPPDestNew()
         OSPPListLinkNew(&(ospvDest->ospmDestLink));
         ospvDest->ospmDestValidAfter = OSPC_TIMEMIN;
         ospvDest->ospmDestValidUntil = OSPC_TIMEMAX;
-        ospvDest->ospmDestProtocol = OSPE_DEST_PROT_UNDEFINED;
-        ospvDest->ospmDestOSPVersion = OSPE_OSP_UNDEFINED;
+        ospvDest->ospmDestProtocol = OSPC_DPROT_UNDEFINED;
+        ospvDest->ospmDestOSPVersion = OSPC_DOSP_UNDEFINED;
         OSPPListNew(&(ospvDest->ospmDestTokens));
         OSPPListNew(&(ospvDest->ospmUpdatedSourceAddr));
         OSPPListNew(&(ospvDest->ospmUpdatedDeviceInfo));
@@ -984,7 +977,7 @@ OSPPDestFromElement(
                 break;
                 case OSPC_MELEM_FAILREASON:
                 ospvErrCode = OSPPMsgNumFromElement(elem, &failure);
-                OSPPDestSetTNFailReason(dest, (unsigned)failure);
+                OSPPDestSetFailReason(dest, (unsigned)failure);
                 break;
                 default:
                 /*

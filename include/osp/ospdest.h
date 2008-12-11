@@ -32,31 +32,34 @@
  * Destination Protocol Data Type
  */
 typedef enum {
-    OSPE_DEST_PROT_UNDEFINED = 0,   /* Not Configured at Server */
-    OSPE_DEST_PROT_SIP = 2,         /* Destination Protocol - SIP */
-    OSPE_DEST_PROT_H323_LRQ = 4,    /* Destination Protocol - H323, Send LRQ to GK to Complete Call */
-    OSPE_DEST_PROT_H323_SETUP = 8,  /* Destination Protocol - H323, Send Setup to Complete Call */
-    OSPE_DEST_PROT_IAX = 16,        /* Destination Protocol - IAX */
-    OSPE_DEST_PROT_UNKNOWN = 32     /* Could not be understood by the Client as Sent by the Server */
+    OSPC_DPROT_UNDEFINED = 0,   /* Not Configured at Server */
+    OSPC_DPROT_SIP,             /* Destination Protocol - SIP */
+    OSPC_DPROT_LRQ,             /* Destination Protocol - H323, Send LRQ to GK to Complete Call */
+    OSPC_DPROT_Q931,            /* Destination Protocol - H323, Send Setup to Complete Call */
+    OSPC_DPROT_IAX,             /* Destination Protocol - IAX */
+    OSPC_DPROT_XMPP,            /* Destination Protocol - XMPP */
+    OSPC_DPROT_UNKNOWN          /* Could not be understood by the Client as Sent by the Server */
 } OSPE_DEST_PROT;
 
-#define DEST_PROT_IAX       "iax"
-#define DEST_PROT_SIP       "sip"
-#define DEST_PROT_H323_LRQ  "h323-LRQ"
-#define DEST_PROT_H323_Q931 "h323-Q931"
+#define OSPC_DPDESC_SIP     "sip"
+#define OSPC_DPDESC_LRQ     "h323-LRQ"
+#define OSPC_DPDESC_Q931    "h323-Q931"
+#define OSPC_DPDESC_IAX     "iax"
+#define OSPC_DPDESC_XMPP    "xmpp"
 
 /*-----------------------------------------------------------------------*
  * Destination OSP Enabled Data Type
  *-----------------------------------------------------------------------*/
 typedef enum {
-    OSPE_OSP_UNDEFINED = 0,     /* Not Configured at Server */
-    OSPE_OSP_TRUE = 128,        /* Destination is OSP Enabled */
-    OSPE_OSP_FALSE = 256,       /* Destination os Not OSP Enabled */
-    OSPE_OSP_UNKNOWN = 512      /* Could not be understood by the Client as Sent by the Server */
-} OSPE_DEST_OSP_ENABLED;
+    OSPC_DOSP_UNDEFINED = 0,    /* Not Configured at Server */
+    OSPC_DOSP_TRUE,             /* Destination is OSP Enabled */
+    OSPC_DOSP_FALSE,            /* Destination os Not OSP Enabled */
+    OSPC_DOSP_UNKNOWN           /* Could not be understood by the Client as Sent by the Server */
+} OSPE_DEST_OSPENABLED;
 
 #define DEST_OSP_DIABLED                "0.0.0"
 #define DEST_OSP_UNKNOWN                ""
+
 #define DEFAULT_GETNEXTDEST_NO_ERROR    99999
 
 #define OSPC_NETWORKIDSIZE  OSPC_SIZE_E164NUM
@@ -76,10 +79,10 @@ typedef struct {
     unsigned ospmDestHasLimit;
     unsigned ospmDestLimit;
     OSPTCALLID *ospmDestCallId;
-    unsigned ospmDestTNFailReason;
-    unsigned ospmDestTNFailReasonInd;
+    unsigned ospmDestFailReason;
+    OSPTBOOL ospmDestHasFailReason;
     OSPE_DEST_PROT ospmDestProtocol;
-    OSPE_DEST_OSP_ENABLED ospmDestOSPVersion;
+    OSPE_DEST_OSPENABLED ospmDestOSPVersion;
     unsigned char ospmDestNetworkId[OSPC_NETWORKIDSIZE];
     unsigned ospmDestDestinationCount;
 } OSPTDEST;
@@ -128,9 +131,9 @@ extern "C" {
     unsigned OSPPDestHasLimit(OSPTDEST *);
     unsigned OSPPDestGetLimit(OSPTDEST *);
     void OSPPDestSetLimit(OSPTDEST *, unsigned);
-    unsigned OSPPDestHasTNFailReason(OSPTDEST *);
-    void OSPPDestSetTNFailReason(OSPTDEST *, unsigned);
-    unsigned OSPPDestGetTNFailReason(OSPTDEST *);
+    unsigned OSPPDestHasFailReason(OSPTDEST *);
+    void OSPPDestSetFailReason(OSPTDEST *, unsigned);
+    unsigned OSPPDestGetFailReason(OSPTDEST *);
     void OSPPDestSetDestinationCount(OSPTDEST *, unsigned);
     unsigned OSPPDestGetDestinationCount(OSPTDEST *);
 

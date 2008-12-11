@@ -34,7 +34,7 @@
 /* Delete Statistics structure */
 void
 OSPPStatisticsDelete(
-    OSPTSTATISTICS  **ospvStatistics
+    OSPT_STATISTICS  **ospvStatistics
 )
 {
     if(*ospvStatistics != OSPC_OSNULL)
@@ -49,7 +49,7 @@ OSPPStatisticsDelete(
 /* Get value for fractionreceived */
 signed
 OSPPStatisticsGetFracReceived(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     signed fracrecvd = 0;
@@ -65,7 +65,7 @@ OSPPStatisticsGetFracReceived(
 /* Get value for OneWay.Minimum */
 unsigned
 OSPPStatisticsGetOneWayMinimum(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     unsigned min = 0;
@@ -80,7 +80,7 @@ OSPPStatisticsGetOneWayMinimum(
 /* Get value for OneWay.Mean */
 unsigned
 OSPPStatisticsGetOneWayMean(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     unsigned mean = 0;
@@ -95,7 +95,7 @@ OSPPStatisticsGetOneWayMean(
 /* Get value for OneWay.Variance */
 float
 OSPPStatisticsGetOneWayVariance(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     float var = 0;
@@ -110,7 +110,7 @@ OSPPStatisticsGetOneWayVariance(
 /* Get value for OneWay.Samples */
 unsigned
 OSPPStatisticsGetOneWaySamples(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     unsigned samp = 0;
@@ -125,7 +125,7 @@ OSPPStatisticsGetOneWaySamples(
 /* Get value for packetsreceived */
 unsigned
 OSPPStatisticsGetPktReceived(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     unsigned pktsrecvd = 0;
@@ -141,7 +141,7 @@ OSPPStatisticsGetPktReceived(
 /* Get value for fractionsent */
 signed
 OSPPStatisticsGetFracSent(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     signed fracsent = 0;
@@ -157,7 +157,7 @@ OSPPStatisticsGetFracSent(
 /* Get value for packetssent */
 unsigned
 OSPPStatisticsGetPktSent(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     unsigned pktssent = 0;
@@ -173,7 +173,7 @@ OSPPStatisticsGetPktSent(
 /* Get value for RoundTrip.Minimum */
 unsigned
 OSPPStatisticsGetRoundTripMinimum(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     unsigned min = 0;
@@ -188,7 +188,7 @@ OSPPStatisticsGetRoundTripMinimum(
 /* Get value for RoundTrip.Mean */
 unsigned
 OSPPStatisticsGetRoundTripMean(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     unsigned mean = 0;
@@ -203,7 +203,7 @@ OSPPStatisticsGetRoundTripMean(
 /* Get value for RoundTrip.Variance */
 float
 OSPPStatisticsGetRoundTripVariance(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     float var = 0;
@@ -218,7 +218,7 @@ OSPPStatisticsGetRoundTripVariance(
 /* Get value for RoundTrip.Samples */
 unsigned
 OSPPStatisticsGetRoundTripSamples(
-    OSPTSTATISTICS  *ospvStatistics
+    OSPT_STATISTICS  *ospvStatistics
 )
 {
     unsigned samp = 0;
@@ -233,7 +233,7 @@ OSPPStatisticsGetRoundTripSamples(
 /* Check for existence of LossReceived statistics */
 OSPTBOOL
     OSPPStatisticsHasLossReceived(
-    OSPTSTATISTICS *ospvStatistics
+    OSPT_STATISTICS *ospvStatistics
     )
 {
     if(ospvStatistics != OSPC_OSNULL)
@@ -249,7 +249,7 @@ OSPTBOOL
 /* Check for existence of LossSent statistics */
 OSPTBOOL
     OSPPStatisticsHasLossSent(
-    OSPTSTATISTICS *ospvStatistics
+    OSPT_STATISTICS *ospvStatistics
     )
 {
     if(ospvStatistics != OSPC_OSNULL)
@@ -265,7 +265,7 @@ OSPTBOOL
 /* Check for existence of OneWay statistics */
 OSPTBOOL
     OSPPStatisticsHasOneWay(
-    OSPTSTATISTICS *ospvStatistics
+    OSPT_STATISTICS *ospvStatistics
     )
 {
     if(ospvStatistics != OSPC_OSNULL)
@@ -281,7 +281,7 @@ OSPTBOOL
 /* Check for existence of RoundTrip statistics */
 OSPTBOOL
     OSPPStatisticsHasRoundTrip(
-    OSPTSTATISTICS *ospvStatistics
+    OSPT_STATISTICS *ospvStatistics
     )
 {
     if(ospvStatistics != OSPC_OSNULL)
@@ -297,7 +297,7 @@ OSPTBOOL
 /* Create loss received element */
 int
 OSPPStatisticsLossReceivedToElement(
-    OSPTSTATISTICS *ospvStatistics, 
+    OSPT_STATISTICS *ospvStatistics, 
     OSPT_XML_ELEM    **ospvElem
 )
 {
@@ -419,7 +419,7 @@ OSPPStatisticsLossReceivedToElement(
 /* Create loss sent element */
 int
 OSPPStatisticsLossSentToElement(
-    OSPTSTATISTICS *ospvStatistics, 
+    OSPT_STATISTICS *ospvStatistics, 
     OSPT_XML_ELEM    **ospvElem
 )
 {
@@ -539,16 +539,16 @@ OSPPStatisticsLossSentToElement(
 }
 
 /* Create new Statistics Structure */
-OSPTSTATISTICS *
+OSPT_STATISTICS *
     OSPPStatisticsNew(void)
 {
-    OSPTSTATISTICS  *ospvStatistics = OSPC_OSNULL;
+    OSPT_STATISTICS  *ospvStatistics = OSPC_OSNULL;
 
-    OSPM_MALLOC(ospvStatistics, OSPTSTATISTICS, sizeof(OSPTSTATISTICS));
+    OSPM_MALLOC(ospvStatistics, OSPT_STATISTICS, sizeof(OSPT_STATISTICS));
 
     if (ospvStatistics != OSPC_OSNULL)
     {
-        OSPM_MEMSET(ospvStatistics, 0, sizeof(OSPTSTATISTICS));
+        OSPM_MEMSET(ospvStatistics, 0, sizeof(OSPT_STATISTICS));
     }
 
     return ospvStatistics;
@@ -557,7 +557,7 @@ OSPTSTATISTICS *
 /* OneWay to Element */
 int
 OSPPStatisticsOneWayToElement(
-    OSPTSTATISTICS  *ospvStatistics,
+    OSPT_STATISTICS  *ospvStatistics,
     OSPT_XML_ELEM     **ospvElem
 )
 {
@@ -736,7 +736,7 @@ OSPPStatisticsOneWayToElement(
 /* RoundTrip to Element */
 int
 OSPPStatisticsRoundTripToElement(
-    OSPTSTATISTICS  *ospvStatistics,
+    OSPT_STATISTICS  *ospvStatistics,
     OSPT_XML_ELEM     **ospvElem
 )
 {
@@ -915,7 +915,7 @@ OSPPStatisticsRoundTripToElement(
 /* Report statistics for this transaction. */
 int
 OSPPStatisticsReportUsage(
-    OSPTSTATISTICS  **ospvStatistics,           /* In - pter to place for stats
+    OSPT_STATISTICS  **ospvStatistics,           /* In - pter to place for stats
                                                         struct */
     unsigned        ospvLossPacketsSent,        /* In  */
     signed          ospvLossFractionSent,       /* In  */
@@ -990,7 +990,7 @@ OSPPStatisticsReportUsage(
 /* Set Received statistics */
 void
 OSPPStatisticsSetReceivedStatistics(
-    OSPTSTATISTICS  *ospvStatistics,
+    OSPT_STATISTICS  *ospvStatistics,
     unsigned        ospvLossPacketsReceived,
     signed          ospvLossFractionReceived
 )
@@ -1008,7 +1008,7 @@ OSPPStatisticsSetReceivedStatistics(
 /* Set Sent statistics */
 void
 OSPPStatisticsSetSentStatistics(
-    OSPTSTATISTICS  *ospvStatistics,
+    OSPT_STATISTICS  *ospvStatistics,
     unsigned        ospvLossPacketsSent,
     signed          ospvLossFractionSent
 )
@@ -1026,7 +1026,7 @@ OSPPStatisticsSetSentStatistics(
 /* Create xml element from statistics structure */
 int
 OSPPStatisticsToElement(
-    OSPTSTATISTICS  *ospvStatistics,
+    OSPT_STATISTICS  *ospvStatistics,
     OSPT_XML_ELEM     **ospvElem
 )
 {
