@@ -40,7 +40,7 @@
 OSPTBOOL OSPPUsageIndHasTimestamp(  /* returns non-zero if number exists */
     OSPT_USAGEIND *ospvUsageInd)    /* Usage Indication effected */
 {
-    unsigned ospvHasTimestamp = OSPC_FALSE;
+    OSPTBOOL ospvHasTimestamp = OSPC_FALSE;
 
     if (ospvUsageInd != OSPC_OSNULL) {
         ospvHasTimestamp = ospvUsageInd->ospmUsageIndTimestamp;
@@ -155,7 +155,7 @@ unsigned char *OSPPUsageIndGetComponentId(
 OSPTBOOL OSPPUsageIndHasTransactionId(  /* returns non-zero if number exists */
     OSPT_USAGEIND *ospvUsageInd)        /* Usage Indication effected */
 {
-    unsigned ospvHasTransactionId = OSPC_FALSE;
+    OSPTBOOL ospvHasTransactionId = OSPC_FALSE;
 
     if (ospvUsageInd != OSPC_OSNULL) {
         ospvHasTransactionId = (ospvUsageInd->ospmUsageIndTransactionId != 0);
@@ -199,7 +199,7 @@ OSPTTRXID OSPPUsageIndGetTransactionId(
 OSPTBOOL OSPPUsageIndHasCallId(     /* returns non-zero if exists */
     OSPT_USAGEIND *ospvUsageInd)    /* usage indication */
 {
-    unsigned ospvHasCallId = OSPC_FALSE;
+    OSPTBOOL ospvHasCallId = OSPC_FALSE;
 
     if (ospvUsageInd != OSPC_OSNULL) {
         ospvHasCallId = (ospvUsageInd->ospmUsageIndCallId != OSPC_OSNULL);
@@ -275,7 +275,7 @@ void OSPPUsageIndSetConferenceId(       /* nothing returned */
 int OSPPUsageIndGetIsConfIdPresent(
     OSPT_USAGEIND *ospvUsageInd)    /* usage ind */
 {
-    unsigned ospvIsConfIdPresent = 0;
+    OSPTBOOL ospvIsConfIdPresent = 0;
 
     if (ospvUsageInd != OSPC_OSNULL) {
         if (ospvUsageInd->ospmUsageIndConferenceId[0] == '\0') {
@@ -341,7 +341,7 @@ unsigned char *OSPPUsageIndGetDestNumber(
 OSPTBOOL OSPPUsageIndHasDuration(   /* returns non-zero if number exists */
     OSPT_USAGEIND *ospvUsageInd)    /* Usage Indication effected */
 {
-    unsigned ospvHasDuration = OSPC_FALSE;
+    OSPTBOOL ospvHasDuration = OSPC_FALSE;
 
     if (ospvUsageInd != OSPC_OSNULL) {
         ospvHasDuration = (ospvUsageInd->ospmUsageIndDuration >= 0);
@@ -598,7 +598,7 @@ unsigned OSPPUsageIndGetFailReason( /* returns the fail reason value */
 OSPTBOOL OSPPUsageIndHasSourceAlt(  /* returns non-zero if exists */
     OSPT_USAGEIND *ospvUsageInd)    /* usage indication */
 {
-    unsigned ospvHasSourceAlt = OSPC_FALSE;
+    OSPTBOOL ospvHasSourceAlt = OSPC_FALSE;
 
     if (ospvUsageInd != OSPC_OSNULL) {
         ospvHasSourceAlt = (OSPPUsageIndFirstSourceAlt(ospvUsageInd) != OSPC_OSNULL);
@@ -647,7 +647,7 @@ OSPT_ALTINFO *OSPPUsageIndNextSourceAlt(    /* returns alt info pointer */
 OSPTBOOL OSPPUsageIndHasDestinationAlt( /* returns non-zero if exists */
     OSPT_USAGEIND *ospvUsageInd)        /* usage indication */
 {
-    unsigned ospvHasDestinationAlt = OSPC_FALSE;
+    OSPTBOOL ospvHasDestinationAlt = OSPC_FALSE;
 
     if (ospvUsageInd != OSPC_OSNULL) {
         ospvHasDestinationAlt = (OSPPUsageIndFirstDestinationAlt(ospvUsageInd) != OSPC_OSNULL);
@@ -1232,7 +1232,7 @@ int OSPPUsageIndToElement(      /* returns error code */
              */
             if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                 attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_COMPONENTID),
-                    (OSPPUsageIndHasComponentId(usage)) ? (const unsigned char *)(usage->ospmUsageIndComponentId) : (const unsigned char *) "NULL");
+                    (OSPPUsageIndHasComponentId(usage)) ? (const unsigned char *)(usage->ospmUsageIndComponentId) : (const unsigned char *)"NULL");
                 if (attr == OSPC_OSNULL) {
                     ospvErrCode = OSPC_ERR_XML_NO_ATTR;
                 }
@@ -1246,8 +1246,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
                 OSPPUsageIndHasTimestamp(usage)) {
                 ospvErrCode = OSPPMsgTimeToElement(OSPPUsageIndGetTimestamp(usage),
-                    (const unsigned char *)OSPPMsgElemGetName
-                    (OSPC_MELEM_TIMESTAMP), 
+                    (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TIMESTAMP), 
                     &subelem);
             }
             if (ospvErrCode == OSPC_ERR_NO_ERROR) {
@@ -1272,8 +1271,9 @@ int OSPPUsageIndToElement(      /* returns error code */
                 len = sizeof(OSPTTRXID);
                 trxid = OSPPUsageIndGetTransactionId(usage);
                 ospvErrCode = OSPPMsgTXToElement(trxid,
-                    (const unsigned char *)OSPPMsgElemGetName
-                    (OSPC_MELEM_TRANSID),&subelem);
+                    (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TRANSID),
+                    &subelem);
+                    
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usgindelem, subelem);
                     subelem = OSPC_OSNULL;
@@ -1446,18 +1446,20 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* add usage detail (if appropriate) */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
-                OSPPUsageIndHasDuration(usage)) {
-                ospvErrCode = OSPPUsageToElement((unsigned)
-                    OSPPUsageIndGetDuration(usage),
-                    OSPPUsageIndGetStartTime(usage),
-                    OSPPUsageIndGetEndTime(usage),
-                    OSPPUsageIndGetAlertTime(usage),
-                    OSPPUsageIndGetConnectTime(usage),
-                    OSPPUsageIndGetIsPDDInfoPresent(usage),
-                    OSPPUsageIndGetPostDialDelay(usage),
-                    OSPPUsageIndGetReleaseSource(usage),
-                    &subelem);
+            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if (OSPPUsageIndHasDuration(usage)) {
+                    ospvErrCode = OSPPUsageToElement(
+                        (unsigned)OSPPUsageIndGetDuration(usage),
+                        OSPPUsageIndGetStartTime(usage),
+                        OSPPUsageIndGetEndTime(usage),
+                        OSPPUsageIndGetAlertTime(usage),
+                        OSPPUsageIndGetConnectTime(usage),
+                        OSPPUsageIndGetIsPDDInfoPresent(usage),
+                        OSPPUsageIndGetPostDialDelay(usage),
+                        OSPPUsageIndGetReleaseSource(usage),
+                        &subelem);
+                }
+
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usgindelem, subelem);
                     subelem = OSPC_OSNULL;
@@ -1567,8 +1569,7 @@ void OSPPUsageIndAddDestinationAlt(
     OSPT_ALTINFO *ospvAltInfo)      /* alt info to add */
 {
     if ((ospvUsageInd != OSPC_OSNULL) && (ospvAltInfo != OSPC_OSNULL)) {
-        OSPPListAppend(&(ospvUsageInd->ospmUsageIndDestinationAlternate),
-                       (ospvAltInfo));
+        OSPPListAppend(&(ospvUsageInd->ospmUsageIndDestinationAlternate), (ospvAltInfo));
     }
 }
 
