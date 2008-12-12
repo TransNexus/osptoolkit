@@ -211,14 +211,14 @@ int OSPPTransactionModifyDeviceIdentifiers(
                     /*
                      * Just overwrite on the old values, if any
                      */
-                    OSPPDestSetAddr(dest,(const unsigned char *)ospvDestination);
+                    OSPPDestSetAddr(dest, ospvDestination);
                 }
 
                 if (ospvDestinationDevice != NULL) {
                     /*
                      * Just overwrite on the old values, if any
                      */
-                    OSPPDestDevSetAddr(dest,(const unsigned char *)ospvDestinationDevice);
+                    OSPPDestDevSetAddr(dest, ospvDestinationDevice);
                 }
             } else if (trans->AuthInd != (OSPTAUTHIND *)OSPC_OSNULL) {
                 if ((ospvSource != NULL) && (errorcode == OSPC_ERR_NO_ERROR)) {
@@ -1864,9 +1864,9 @@ int OSPPTransactionBuildUsageFromScratch(
                     if (callid != (OSPTCALLID*)OSPC_OSNULL) {
                         OSPPAuthIndSetRole(authind,ospvRole);
                         OSPPAuthIndSetCallId(authind, callid);
-                        OSPPAuthIndSetSourceNumber(authind, (const unsigned char*)ospvCallingNumber);
+                        OSPPAuthIndSetSourceNumber(authind, ospvCallingNumber);
                         trans->CallingNumberFormat = ospvCallingNumberFormat;
-                        OSPPAuthIndSetDestNumber(authind, (const unsigned char*)ospvCalledNumber);
+                        OSPPAuthIndSetDestNumber(authind, ospvCalledNumber);
                         trans->CalledNumberFormat = ospvCalledNumberFormat;
                         OSPPListNew(&(authind->ospmAuthIndTokens));
                         OSPPCallIdDelete(&callid);
@@ -1886,7 +1886,7 @@ int OSPPTransactionBuildUsageFromScratch(
                                 (const unsigned char*)ospvCallId,
                                 ospvSizeOfCallId);
 
-                            OSPPDestSetNumber(dest, (const unsigned char*)ospvCalledNumber);
+                            OSPPDestSetNumber(dest, ospvCalledNumber);
 
                             OSPPAuthIndSetDest(authind, dest);
 
@@ -2665,7 +2665,7 @@ int OSPPTransactionReportUsage(
     unsigned                ospvIsPDDInfoPresent,       /* In - Is PDD Info present */
     unsigned                ospvPostDialDelay,          /* In - Post Dial Delay */
     unsigned                ospvReleaseSource,          /* In - EP that released the call */
-    unsigned char           *ospvConferenceId,          /* In - conference Id. Max 100 char long */
+    const char              *ospvConferenceId,          /* In - conference Id. Max 100 char long */
     unsigned                ospvLossPacketsSent,        /* In - Packets not received by peer */
     signed                  ospvLossFractionSent,       /* In - Fraction of packets not received by peer */
     unsigned                ospvLossPacketsReceived,    /* In - Packets not received that were expected */
@@ -2764,7 +2764,7 @@ int OSPPTransactionReportUsage(
                     /*
                      * Add conference Id
                      */
-                    if ((ospvConferenceId) && (ospvConferenceId[0] != '\0') && (OSPM_STRLEN((const char *)ospvConferenceId) < OSPC_CONFIDSIZE)) {
+                    if (ospvConferenceId && (ospvConferenceId[0] != '\0') && (OSPM_STRLEN((const char *)ospvConferenceId) < OSPC_CONFIDSIZE)) {
                         OSPPUsageIndSetConferenceId(usage,ospvConferenceId);
                     }
 
@@ -3768,12 +3768,10 @@ int OSPPTransactionValidateAuthorisation(
 
                 if (errorcode == OSPC_ERR_NO_ERROR) {
                     OSPPAuthIndSetRole(authind,OSPC_MROLE_DESTINATION);
-                    OSPPAuthIndSetSourceNumber(authind,
-                        (const unsigned char *)ospvCallingNumber);
+                    OSPPAuthIndSetSourceNumber(authind, ospvCallingNumber);
                     trans->CallingNumberFormat = ospvCallingNumberFormat;
 
-                    OSPPAuthIndSetDestNumber(authind,
-                        (const unsigned char *)ospvCalledNumber);
+                    OSPPAuthIndSetDestNumber(authind, ospvCalledNumber);
                     trans->CalledNumberFormat = ospvCalledNumberFormat;
 
                     OSPPListNew(&(authind->ospmAuthIndTokens));
@@ -3790,7 +3788,7 @@ int OSPPTransactionValidateAuthorisation(
                                           ospvSizeOfCallId);
                         }
 
-                        OSPPDestSetNumber(dest, (const unsigned char *)ospvCalledNumber);
+                        OSPPDestSetNumber(dest, ospvCalledNumber);
 
                         OSPPAuthIndSetDest(authind, dest);
 

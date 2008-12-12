@@ -197,8 +197,7 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ospvPart), (const char *)OSPPAltInfoGetValue(ospvAltInfo));
 
         if (ospvElem != OSPC_OSNULL) {
-            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_TYPE), 
-                       (const unsigned char *)OSPPAltInfoTypeGetName(ospvAltInfo->ospmAltInfoType));
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->ospmAltInfoType));       
 
             if (attr == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ATTR;

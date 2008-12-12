@@ -27,9 +27,9 @@
  * OSPPXMLAttrNew() - create a new attribute
  */
 
-OSPT_XML_ATTR *OSPPXMLAttrNew(        /* returns the new attribute (or NULL) */ 
-    const unsigned char *ospvName,  /* name of attribute */
-    const unsigned char *ospvValue) /* character string value for attr */
+OSPT_XML_ATTR *OSPPXMLAttrNew(  /* returns the new attribute (or NULL) */ 
+    const char *ospvName,       /* name of attribute */
+    const char *ospvValue)      /* character string value for attr */
 {
     OSPT_XML_ATTR *ospvAttr = OSPC_OSNULL;
     char *nameptr = OSPC_OSNULL;
@@ -74,8 +74,8 @@ OSPT_XML_ATTR *OSPPXMLAttrNew(        /* returns the new attribute (or NULL) */
     if (ospvName != OSPC_OSNULL) {
         if (ospvValue != OSPC_OSNULL) {
             /* get the length of the name and value since we'll need it a few times */
-            namelen = OSPM_STRLEN((const char *) ospvName) + 1;    /* including terminating 0 */
-            vallen = OSPM_STRLEN((const char *) ospvValue) + 1;    /* including terminating 0 */
+            namelen = OSPM_STRLEN(ospvName) + 1;    /* including terminating 0 */
+            vallen = OSPM_STRLEN(ospvValue) + 1;    /* including terminating 0 */
 
             /* try to allocate the memory for the entire object */
             OSPM_MALLOC(ospvAttr, OSPT_XML_ATTR, sizeof(OSPT_XML_ATTR) + namelen + vallen);

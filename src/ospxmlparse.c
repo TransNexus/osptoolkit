@@ -414,7 +414,7 @@ unsigned OSPPXMLDocGetAttr(     /* returns error code */
 
     /* create the attribute object */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        attr = OSPPXMLAttrNew((const unsigned char *)OSPPBfrLinearPtr(nameBfr), (const unsigned char *)OSPPBfrLinearPtr(valBfr));
+        attr = OSPPXMLAttrNew((const char *)OSPPBfrLinearPtr(nameBfr), (const char *)OSPPBfrLinearPtr(valBfr));
         *ospvAttrAddr = attr;
     }
 

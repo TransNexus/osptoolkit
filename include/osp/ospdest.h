@@ -66,8 +66,8 @@ typedef enum {
 
 typedef struct {
     OSPTLISTLINK ospmDestLink;
-    unsigned char ospmDestNumber[OSPC_SIZE_E164NUM];
-    unsigned char ospmSrcNumber[OSPC_SIZE_E164NUM];
+    char ospmDestNumber[OSPC_SIZE_E164NUM];
+    char ospmSrcNumber[OSPC_SIZE_E164NUM];
     unsigned char ospmDestAddr[OSPC_SIZE_SIGNALADDR];
     unsigned char ospmDestDevAddr[OSPC_SIZE_SIGNALADDR];
     OSPTLIST ospmUpdatedSourceAddr;
@@ -97,22 +97,22 @@ extern "C" {
     void OSPPDestDelete(OSPTDEST **);
     unsigned OSPPDestFromElement(OSPT_XML_ELEM *, OSPTDEST **);
     void OSPPDestSetCallId(OSPTDEST *, const unsigned char *, unsigned);
-    void OSPPDestSetProtocol(OSPTDEST *, const unsigned char *);
-    void OSPPDestSetOSPVersion(OSPTDEST *, const unsigned char *);
+    void OSPPDestSetProtocol(OSPTDEST *, const char *);
+    void OSPPDestSetOSPVersion(OSPTDEST *, const char *);
     unsigned OSPPDestHasNumber(OSPTDEST *ospvDest);
-    void OSPPDestSetNumber(OSPTDEST *, const unsigned char *);
-    unsigned char *OSPPDestGetNumber(OSPTDEST *);
+    void OSPPDestSetNumber(OSPTDEST *, const char *);
+    char *OSPPDestGetNumber(OSPTDEST *);
     unsigned OSPPDestHasSrcNumber(OSPTDEST *ospvDest);
-    void OSPPDestSetSrcNumber(OSPTDEST *, const unsigned char *);
-    unsigned char *OSPPDestGetSrcNumber(OSPTDEST *);
+    void OSPPDestSetSrcNumber(OSPTDEST *, const char *);
+    char *OSPPDestGetSrcNumber(OSPTDEST *);
     unsigned OSPPDestHasAddr(OSPTDEST *);
-    void OSPPDestSetAddr(OSPTDEST *, const unsigned char *);
+    void OSPPDestSetAddr(OSPTDEST *, const char *);
     unsigned char *OSPPDestGetAddr(OSPTDEST *);
     unsigned OSPPDestDevHasAddr(OSPTDEST *);
-    void OSPPDestDevSetAddr(OSPTDEST *, const unsigned char *);
+    void OSPPDestDevSetAddr(OSPTDEST *, const char *);
     unsigned char *OSPPDestDevGetAddr(OSPTDEST *);
     unsigned OSPPDestHasNetworkAddr(OSPTDEST *);
-    void OSPPDestSetNetworkAddr(OSPTDEST *, const unsigned char *);
+    void OSPPDestSetNetworkAddr(OSPTDEST *, const char *);
     unsigned char *OSPPDestGetNetworkAddr(OSPTDEST *);
     unsigned OSPPDestHasValidAfter(OSPTDEST *);
     void OSPPDestSetValidAfter(OSPTDEST *, OSPTTIME);
@@ -121,7 +121,7 @@ extern "C" {
     void OSPPDestSetValidUntil(OSPTDEST *, OSPTTIME);
     OSPTTIME OSPPDestGetValidUntil(OSPTDEST *);
     unsigned OSPPDestHasAuthority(OSPTDEST *);
-    void OSPPDestSetAuthority(OSPTDEST *, const unsigned char *);
+    void OSPPDestSetAuthority(OSPTDEST *, const char *);
     unsigned OSPPDestHasCallId(OSPTDEST *);
     OSPTCALLID *OSPPDestGetCallId(OSPTDEST *);
     unsigned OSPPDestHasToken(OSPTDEST *);

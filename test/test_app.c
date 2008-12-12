@@ -1628,7 +1628,7 @@ int testOSPPTransactionReportUsage()
         errorcode = OSPPTransactionReportUsage(OSPVTransactionHandle, 
             duration, call_start_time, call_end_time, call_alert_time, call_connect_time, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
             0,    /* Release Source */
-            (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
             1,
             2,
             100,
@@ -1643,7 +1643,7 @@ int testOSPPTransactionReportUsage()
         errorcode = OSPPTransactionReportUsage(tranhandle2, 
             duration, call_start_time, call_end_time, call_alert_time, call_connect_time, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
             0,    /* Release Source */
-            (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
             1,
             2,
             100,
@@ -2696,7 +2696,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
             OTransactionHandles[i], 
             duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
             3,    /* Release Source */
-            (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
             1,
             2,
             100,
@@ -2713,7 +2713,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
             TTransactionHandles[i], 
             duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
             3,    /* Release Source */
-            (unsigned char *)"E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
             1,
             2,
             100,

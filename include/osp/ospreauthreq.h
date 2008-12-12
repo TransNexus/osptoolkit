@@ -73,9 +73,9 @@ extern "C" {
     unsigned char *OSPPReauthReqGetComponentId(OSPTREAUTHREQ *);
     unsigned OSPPReauthReqHasCallId(OSPTREAUTHREQ *);
     OSPTCALLID *OSPPReauthReqGetCallId(OSPTREAUTHREQ *);
-    void OSPPReauthReqSetSourceNumber(OSPTREAUTHREQ *, const unsigned char *);
+    void OSPPReauthReqSetSourceNumber(OSPTREAUTHREQ *, const char *);
     const unsigned char *OSPPReauthReqGetSourceNumber(OSPTREAUTHREQ *);
-    void OSPPReauthReqSetDestNumber(OSPTREAUTHREQ *, const unsigned char *);
+    void OSPPReauthReqSetDestNumber(OSPTREAUTHREQ *, const char *);
     const unsigned char *OSPPReauthReqGetDestNumber(OSPTREAUTHREQ *);
     unsigned OSPPReauthReqHasTrxId(OSPTREAUTHREQ *);
     void OSPPReauthReqSetTrxId(OSPTREAUTHREQ *, OSPTTRXID);

@@ -28,8 +28,8 @@
 /* Function Prototypes */
 
 unsigned OSPPUsageFromElement(OSPT_XML_ELEM *, unsigned *);
-unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned, OSPT_XML_ELEM **);
-unsigned OSPPAddConfIdToUsageElement(unsigned char *, OSPT_XML_ELEM **);
+unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned, OSPT_XML_ELEM *);
+unsigned OSPPAddConfIdToUsageElement(const char *, OSPT_XML_ELEM **);
 unsigned OSPPAddServiceTypeToUsageElement(OSPE_SERVICE_TYPE, OSPT_XML_ELEM **);
 unsigned OSPPAddPricingInfoToUsageElement(OSPT_PRICING_INFO, OSPT_XML_ELEM **);
 

@@ -192,13 +192,11 @@ int OSPPAuthIndHasSourceNumber(
  */
 void OSPPAuthIndSetSourceNumber(
     OSPTAUTHIND* ospvAuthInd,       /* authorisation indication  to set */
-    const unsigned char* ospvNum)   /* source number (as string) */
+    const char* ospvNum)   /* source number (as string) */
 {
     if (ospvAuthInd != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
-            OSPM_STRNCPY((char*)ospvAuthInd->ospmAuthIndSourceNumber, 
-                (const char*)ospvNum, 
-                tr_min(OSPM_STRLEN((const char*)ospvNum)+1,OSPC_SIZE_E164NUM-1));
+            OSPM_STRNCPY(ospvAuthInd->ospmAuthIndSourceNumber, ospvNum, tr_min(OSPM_STRLEN(ospvNum) + 1, OSPC_SIZE_E164NUM - 1));
         }
     }
 }
@@ -210,10 +208,10 @@ void OSPPAuthIndSetSourceNumber(
  * authorisation indication
  *-----------------------------------------------------------------------*
  */
-unsigned char* OSPPAuthIndGetSourceNumber(
+char* OSPPAuthIndGetSourceNumber(
     OSPTAUTHIND* ospvAuthInd)   /* authorisation indication */
 {
-    unsigned char* ospvSourceNumber = OSPC_OSNULL;
+    char* ospvSourceNumber = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
         ospvSourceNumber = ospvAuthInd->ospmAuthIndSourceNumber;
@@ -248,13 +246,11 @@ int OSPPAuthIndHasDestNumber(
  */
 void OSPPAuthIndSetDestNumber(
     OSPTAUTHIND* ospvAuthInd,       /* authorisation indication to set */
-    const unsigned char* ospvNum)   /* destination number (as string) */
+    const char* ospvNum)   /* destination number (as string) */
 {
     if (ospvAuthInd != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
-            OSPM_STRNCPY((char*)ospvAuthInd->ospmAuthIndDestNumber, 
-                (const char*)ospvNum, 
-                tr_min(OSPM_STRLEN((const char*)ospvNum)+1,OSPC_SIZE_E164NUM-1));
+            OSPM_STRNCPY(ospvAuthInd->ospmAuthIndDestNumber, ospvNum, tr_min(OSPM_STRLEN(ospvNum) + 1, OSPC_SIZE_E164NUM - 1));
         }
     }
 }
@@ -266,13 +262,13 @@ void OSPPAuthIndSetDestNumber(
  * authorisation indication
  *-----------------------------------------------------------------------*
  */
-unsigned char* OSPPAuthIndGetDestNumber(
+char* OSPPAuthIndGetDestNumber(
     OSPTAUTHIND* ospvAuthInd)   /* authorisation indication */
 {
-    unsigned char* ospvDestNumber = OSPC_OSNULL;
+    char* ospvDestNumber = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvDestNumber = (ospvAuthInd->ospmAuthIndDestNumber);
+        ospvDestNumber = ospvAuthInd->ospmAuthIndDestNumber;
     }
     return ospvDestNumber;
 }

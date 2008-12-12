@@ -55,7 +55,7 @@ extern "C" {
             const char *, const char *, const char *, const char *, unsigned, const void *, unsigned, const void *, unsigned *,
             unsigned *, unsigned *, void *, unsigned);
     int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned,
-            unsigned char *, unsigned, signed, unsigned, signed, unsigned *, void *);
+            const char *, unsigned, signed, unsigned, signed, unsigned *, void *);
     int OSPPTransactionRequestAuthorisation(OSPTTRANHANDLE, const char *, const char *, const char *, OSPE_NUMBERING_FORMAT, const char *,
             OSPE_NUMBERING_FORMAT, const char *, unsigned, OSPTCALLID *[], const char *[], unsigned *, unsigned *, void *);
     int OSPPTransactionIndicateCapabilities(OSPTTRANHANDLE, const char *, const char *, const char *, unsigned, unsigned *, void *);

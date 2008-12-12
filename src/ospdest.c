@@ -46,16 +46,16 @@
 void                                       /* nothing returned */
 OSPPDestSetOSPVersion(
     OSPTDEST            *ospvDest,         /* destination to set */
-    const unsigned char *ospvVersion       /* Version (as string) */
+    const char *ospvVersion       /* Version (as string) */
 )
 {
-    if (!(OSPM_STRCMP((const char *)ospvVersion,DEST_OSP_DIABLED)))
+    if (!(OSPM_STRCMP(ospvVersion,DEST_OSP_DIABLED)))
     {
         ospvDest->ospmDestOSPVersion = OSPC_DOSP_FALSE;
     }
     else
     {
-        if (!(OSPM_STRCMP((const char *)ospvVersion,DEST_OSP_UNKNOWN)))
+        if (!(OSPM_STRCMP(ospvVersion,DEST_OSP_UNKNOWN)))
         {
             ospvDest->ospmDestOSPVersion = OSPC_DOSP_UNKNOWN;
         }
@@ -74,18 +74,18 @@ OSPPDestSetOSPVersion(
 void                                       /* nothing returned */
 OSPPDestSetProtocol(
     OSPTDEST            *ospvDest,         /* destination to set */
-    const unsigned char *ospvProt           /* Protocol (as string) */
+    const char *ospvProt           /* Protocol (as string) */
 )
 {
-    if (!(OSPM_STRCMP((const char *)ospvProt, OSPC_DPDESC_SIP))) {
+    if (!(OSPM_STRCMP(ospvProt, OSPC_DPDESC_SIP))) {
         ospvDest->ospmDestProtocol = OSPC_DPROT_SIP;
-    } else if (!(OSPM_STRCMP((const char *)ospvProt, OSPC_DPDESC_LRQ))) {
+    } else if (!(OSPM_STRCMP(ospvProt, OSPC_DPDESC_LRQ))) {
         ospvDest->ospmDestProtocol = OSPC_DPROT_LRQ;
-    } else if (!(OSPM_STRCMP((const char *)ospvProt, OSPC_DPDESC_Q931))) {
+    } else if (!(OSPM_STRCMP(ospvProt, OSPC_DPDESC_Q931))) {
         ospvDest->ospmDestProtocol = OSPC_DPROT_Q931;
-    } else if (!(OSPM_STRCMP((const char *)ospvProt, OSPC_DPDESC_IAX))) {
+    } else if (!(OSPM_STRCMP(ospvProt, OSPC_DPDESC_IAX))) {
         ospvDest->ospmDestProtocol = OSPC_DPROT_IAX;
-    } else if (!(OSPM_STRCMP((const char *)ospvProt, OSPC_DPDESC_XMPP))) {
+    } else if (!(OSPM_STRCMP(ospvProt, OSPC_DPDESC_XMPP))) {
         ospvDest->ospmDestProtocol = OSPC_DPROT_XMPP;
     } else {
         ospvDest->ospmDestProtocol = OSPC_DPROT_UNKNOWN;
@@ -136,7 +136,7 @@ OSPPDestHasSrcNumber(
 void                                       /* nothing returned */
 OSPPDestSetSrcNumber(
     OSPTDEST            *ospvDest,         /* destination to set */
-    const unsigned char *ospvNum           /* calling number (as string) */
+    const char *ospvNum           /* calling number (as string) */
 )
 {
     size_t  len = 0;
@@ -146,9 +146,7 @@ OSPPDestSetSrcNumber(
     {
         if (ospvNum  != OSPC_OSNULL) 
         {
-            OSPM_MEMCPY((ospvDest)->ospmSrcNumber, 
-                (ospvNum), 
-                tr_min(OSPC_SIZE_E164NUM,OSPM_STRLEN((const char *)ospvNum)+1));
+            OSPM_MEMCPY((ospvDest)->ospmSrcNumber, ospvNum, tr_min(OSPC_SIZE_E164NUM, OSPM_STRLEN(ospvNum) + 1));
         }
     }
 }
@@ -157,12 +155,12 @@ OSPPDestSetSrcNumber(
 /*-----------------------------------------------------------------------*
  * OSPPDestGetSrcNumber() - returns the calling number for a destination
  *-----------------------------------------------------------------------*/
-unsigned char *                     /* returns number as string */
+char *                     /* returns number as string */
 OSPPDestGetSrcNumber(
     OSPTDEST *ospvDest                     /* destination */
 )
 {
-    unsigned char *ospvNum = OSPC_OSNULL;
+    char *ospvNum = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) 
     {
@@ -178,7 +176,7 @@ OSPPDestGetSrcNumber(
 void                                       /* nothing returned */
 OSPPDestSetNumber(
     OSPTDEST            *ospvDest,         /* destination to set */
-    const unsigned char *ospvNum           /* called number (as string) */
+    const char *ospvNum           /* called number (as string) */
 )
 {
     size_t  len = 0;
@@ -188,9 +186,7 @@ OSPPDestSetNumber(
     {
         if (ospvNum  != OSPC_OSNULL) 
         {
-            OSPM_MEMCPY((ospvDest)->ospmDestNumber, 
-                (ospvNum), 
-                tr_min(OSPC_SIZE_E164NUM,OSPM_STRLEN((const char *)ospvNum)+1));
+            OSPM_MEMCPY(ospvDest->ospmDestNumber, ospvNum, tr_min(OSPC_SIZE_E164NUM, OSPM_STRLEN(ospvNum) + 1));
         }
     }
 }
@@ -199,12 +195,12 @@ OSPPDestSetNumber(
 /*-----------------------------------------------------------------------*
  * OSPPDestGetNumber() - returns the called number for a destination
  *-----------------------------------------------------------------------*/
-unsigned char *                     /* returns number as string */
+char *                     /* returns number as string */
 OSPPDestGetNumber(
     OSPTDEST *ospvDest                     /* destination */
 )
 {
-    unsigned char *ospvNum = OSPC_OSNULL;
+    char *ospvNum = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) 
     {
@@ -238,7 +234,7 @@ OSPPDestHasAddr(
 void                                       /* nothing returned */
 OSPPDestSetAddr(
     OSPTDEST            *ospvDest,         /* destination */
-    const unsigned char *ospvAddr          /* signal address as string */
+    const char *ospvAddr          /* signal address as string */
 )
 {
     size_t  len;
@@ -248,8 +244,7 @@ OSPPDestSetAddr(
     {
         if (ospvAddr != OSPC_OSNULL) 
         {
-            OSPM_MEMCPY((ospvDest)->ospmDestAddr, (ospvAddr), 
-                tr_min(OSPC_SIZE_SIGNALADDR,OSPM_STRLEN((const char *)ospvAddr)+1));
+            OSPM_MEMCPY(ospvDest->ospmDestAddr, ospvAddr, tr_min(OSPC_SIZE_SIGNALADDR, OSPM_STRLEN(ospvAddr) + 1));
         }
     }
 }
@@ -313,7 +308,7 @@ OSPPDestHasNetworkAddr(
 void                                       /* nothing returned */
 OSPPDestSetNetworkAddr(
     OSPTDEST            *ospvDest,         /* destination */
-    const unsigned char *ospvAddr          /* network address as string */
+    const char *ospvAddr          /* network address as string */
 )
 {
     size_t  len;
@@ -323,8 +318,7 @@ OSPPDestSetNetworkAddr(
     {
         if (ospvAddr != OSPC_OSNULL) 
         {
-            OSPM_MEMCPY((ospvDest)->ospmDestNetworkId, (ospvAddr), 
-                tr_min(OSPC_NETWORKIDSIZE,OSPM_STRLEN((const char *)ospvAddr)+1));
+            OSPM_MEMCPY(ospvDest->ospmDestNetworkId, ospvAddr, tr_min(OSPC_NETWORKIDSIZE,OSPM_STRLEN(ospvAddr) + 1));
         }
     }
 }
@@ -355,7 +349,7 @@ OSPPDestGetNetworkAddr(
 void                                       /* nothing returned */
 OSPPDestDevSetAddr(
     OSPTDEST            *ospvDest,         /* destination */
-    const unsigned char *ospvAddr          /* signal address as string */
+    const char *ospvAddr          /* signal address as string */
 )
 {
     size_t  len;
@@ -365,8 +359,7 @@ OSPPDestDevSetAddr(
     {
         if (ospvAddr != OSPC_OSNULL) 
         {
-            OSPM_MEMCPY((ospvDest)->ospmDestDevAddr, (ospvAddr), 
-                tr_min(OSPC_SIZE_SIGNALADDR,OSPM_STRLEN((const char *)ospvAddr)+1));
+            OSPM_MEMCPY(ospvDest->ospmDestDevAddr, ospvAddr, tr_min(OSPC_SIZE_SIGNALADDR, OSPM_STRLEN(ospvAddr) + 1));
         }
     }
 }
@@ -519,16 +512,14 @@ OSPPDestHasAuthority(
 void                                       /* nothing returned */
 OSPPDestSetAuthority(
     OSPTDEST            *ospvDest,         /* destination in question */
-    const unsigned char *ospvAuth          /* authority URL */
+    const char *ospvAuth          /* authority URL */
 )
 {
     if (ospvDest != OSPC_OSNULL) 
     {
         if (ospvAuth != OSPC_OSNULL) 
         {
-            OSPM_STRNCPY((char *)((ospvDest)->ospmDestAuthority),
-                (const char *)(ospvAuth), 
-                tr_min(OSPM_STRLEN((const char *)ospvAuth)+1,OSPC_SIZE_URL-1));
+            OSPM_STRNCPY((char *)(ospvDest->ospmDestAuthority), ospvAuth, tr_min(OSPM_STRLEN(ospvAuth) + 1, OSPC_SIZE_URL - 1));
         }
     }
 }
@@ -898,27 +889,27 @@ OSPPDestFromElement(
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
             {
                 case OSPC_MELEM_DESTPROTOCOL:
-                	OSPPDestSetProtocol(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
+                	OSPPDestSetProtocol(dest, OSPPXMLElemGetValue(elem));
                 	break;
 
                 case OSPC_MELEM_DESTOSPVERSION:
-                	OSPPDestSetOSPVersion(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
+                	OSPPDestSetOSPVersion(dest, OSPPXMLElemGetValue(elem));
                 	break;
 
                 case OSPC_MELEM_SRCINFO:
-                OSPPDestSetSrcNumber(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
+                OSPPDestSetSrcNumber(dest, OSPPXMLElemGetValue(elem));
                 break;
 
                 case OSPC_MELEM_DESTINFO:
-                OSPPDestSetNumber(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
+                OSPPDestSetNumber(dest, OSPPXMLElemGetValue(elem));
                 break;
                 case OSPC_MELEM_DESTALT:
-                /*                OSPPDestSetAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem)); */
-                OSPPDestSetNetworkAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
+                /*                OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem)); */
+                OSPPDestSetNetworkAddr(dest, OSPPXMLElemGetValue(elem));
                 break;
                 case OSPC_MELEM_DESTSIGADDR:
-                /*                OSPPDestDevSetAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem)); */
-                OSPPDestSetAddr(dest, (const unsigned char *)OSPPXMLElemGetValue(elem)); 
+                /*                OSPPDestDevSetAddr(dest, OSPPXMLElemGetValue(elem)); */
+                OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem)); 
                 break;
                 case OSPC_MELEM_TOKEN:
                 ospvErrCode = OSPPTokenFromElement(elem, &token);
@@ -965,7 +956,7 @@ OSPPDestFromElement(
                 }
                 break;
                 case OSPC_MELEM_AUTHURL:
-                OSPPDestSetAuthority(dest, (const unsigned char *)OSPPXMLElemGetValue(elem));
+                OSPPDestSetAuthority(dest, OSPPXMLElemGetValue(elem));
                 break;
                 case OSPC_MELEM_CALLID:
                 ospvErrCode = OSPPCallIdFromElement(elem, &callId);

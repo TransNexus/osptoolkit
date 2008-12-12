@@ -240,7 +240,7 @@ OSPPTokenToElement(
     {
         ospvErrCode = OSPPMsgBinToElement(OSPPTokenGetSize(ospvToken),
             (unsigned char *) OSPPTokenGetValue(ospvToken),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_TOKEN),
+            OSPPMsgElemGetName(OSPC_MELEM_TOKEN),
             ospvElem, OSPC_TRUE);
     }
     return(ospvErrCode);

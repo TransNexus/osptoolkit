@@ -171,7 +171,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
     }
 
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgFloatToElement(PricingInfo.amount, (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
+        ospvErrCode = OSPPMsgFloatToElement(PricingInfo.amount, OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
 
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(*ospvElem, elem);
@@ -180,7 +180,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
 
     /* now add the increment */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgNumToElement(PricingInfo.increment, (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
+        ospvErrCode = OSPPMsgNumToElement(PricingInfo.increment, OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
 
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(*ospvElem, elem);
@@ -223,7 +223,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
  * OSPPAddConfIdToUsageElement() - Add conf ID to usage  
  */
 unsigned OSPPAddConfIdToUsageElement(
-    unsigned char *ospvConferenceId, 
+    const char *ospvConferenceId, 
     OSPT_XML_ELEM ** ospvElem)          /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -275,7 +275,7 @@ unsigned OSPPUsageToElement(        /* returns error code */
     unsigned ospvIsPDDInfoPresnt,   /* Is PDD info present variable */
     unsigned ospvPostDialDelay,     /* PDD value */
     unsigned ospvReleaseSource,     /* Release source value */
-    OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
+    OSPT_XML_ELEM *ospvElem)        /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
@@ -284,28 +284,22 @@ unsigned OSPPUsageToElement(        /* returns error code */
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        /* create the parent element */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_USAGEDETAIL), "");
-        if (*ospvElem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-    }
-
     /* now add the amount (which is the usage) */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgNumToElement(ospvUsage, (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
-    }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddChild(*ospvElem, elem);
+        ospvErrCode = OSPPMsgNumToElement(ospvUsage, OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
+        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            OSPPXMLElemAddChild(ospvElem, elem);
+            elem = OSPC_OSNULL;
+        }
     }
 
     /* now add the increment - for us always 1 */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgNumToElement(1, (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
-    }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddChild(*ospvElem, elem);
+        ospvErrCode = OSPPMsgNumToElement(1, OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
+        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            OSPPXMLElemAddChild(ospvElem, elem);
+            elem = OSPC_OSNULL;
+        }
     }
 
     /* the units are seconds */
@@ -314,62 +308,74 @@ unsigned OSPPUsageToElement(        /* returns error code */
         if (elem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         }
-    }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddChild(*ospvElem, elem);
+        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            OSPPXMLElemAddChild(ospvElem, elem);
+            elem = OSPC_OSNULL;
+        }
     }
 
     /* optional (if not null) call start time */
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvStartTime != 0)) {
-        ospvErrCode = OSPPMsgTimeToElement(ospvStartTime, (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_STARTTIME), &elem);
+        ospvErrCode = OSPPMsgTimeToElement(ospvStartTime, OSPPMsgElemGetName(OSPC_MELEM_STARTTIME), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
+            OSPPXMLElemAddChild(ospvElem, elem);
+            elem = OSPC_OSNULL;
         }
     }
 
     /* optional (if not null) call end time */
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvEndTime != 0)) {
-        ospvErrCode = OSPPMsgTimeToElement(ospvEndTime, (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_ENDTIME), &elem);
+        ospvErrCode = OSPPMsgTimeToElement(ospvEndTime, OSPPMsgElemGetName(OSPC_MELEM_ENDTIME), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
+            OSPPXMLElemAddChild(ospvElem, elem);
+            elem = OSPC_OSNULL;
         }
     }
 
     /* optional (if not null) call alert time */
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvAlertTime != 0)) {
-        ospvErrCode = OSPPMsgTimeToElement(ospvAlertTime, (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_ALERTTIME), &elem);
+        ospvErrCode = OSPPMsgTimeToElement(ospvAlertTime, OSPPMsgElemGetName(OSPC_MELEM_ALERTTIME), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
+            OSPPXMLElemAddChild(ospvElem, elem);
+            elem = OSPC_OSNULL;
         }
     }
 
     /* optional (if not null) call connect time */
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvConnectTime != 0)) {
-        ospvErrCode = OSPPMsgTimeToElement(ospvConnectTime, (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_CONNECTTIME), &elem);
+        ospvErrCode = OSPPMsgTimeToElement(ospvConnectTime, OSPPMsgElemGetName(OSPC_MELEM_CONNECTTIME), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
+            OSPPXMLElemAddChild(ospvElem, elem);
+            elem = OSPC_OSNULL;
         }
     }
 
     /* now add the PDD */
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvIsPDDInfoPresnt)) {
-        ospvErrCode = OSPPMsgNumToElement(ospvPostDialDelay, (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_POSTDIALDELAY), &elem);
+        ospvErrCode = OSPPMsgNumToElement(ospvPostDialDelay, OSPPMsgElemGetName(OSPC_MELEM_POSTDIALDELAY), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
+            OSPPXMLElemAddChild(ospvElem, elem);
+            elem = OSPC_OSNULL;
         }
     }
 
     /* now add the Rel src */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgNumToElement(ospvReleaseSource, (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_RELEASESOURCE), &elem);
+        ospvErrCode = OSPPMsgNumToElement(ospvReleaseSource, OSPPMsgElemGetName(OSPC_MELEM_RELEASESOURCE), &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
+            OSPPXMLElemAddChild(ospvElem, elem);
+            elem = OSPC_OSNULL;
         }
     }
 
     /* if for any reason we found an error - destroy any elements created */
-    if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
-        OSPPXMLElemDelete(ospvElem);
+    if (ospvErrCode != OSPC_ERR_NO_ERROR) {
+    	if (elem != OSPC_OSNULL) {
+    		OSPPXMLElemDelete(&elem);
+    	}
+    	if (ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(&ospvElem);
+    	}
     }
 
     return (ospvErrCode);

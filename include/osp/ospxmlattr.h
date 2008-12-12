@@ -49,7 +49,7 @@ typedef struct {
 extern "C" {
 #endif
 
-    OSPT_XML_ATTR *OSPPXMLAttrNew(const unsigned char *, const unsigned char *);
+    OSPT_XML_ATTR *OSPPXMLAttrNew(const char *, const char *);
     void OSPPXMLAttrDelete(OSPT_XML_ATTR **);
     const char *OSPPXMLAttrGetName(OSPT_XML_ATTR *);
     const char *OSPPXMLAttrGetValue(OSPT_XML_ATTR *);

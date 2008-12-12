@@ -56,7 +56,7 @@ typedef struct _NBUSEIND {
     unsigned ospvIsPDDInfoPresent;                      /* In - Is PDD info present */
     unsigned ospvPostDialDelay;                         /* In - PDD */
     unsigned ospvReleaseSource;                         /* In - Rel Src */
-    unsigned char ospvConferenceId[OSPC_CONFIDSIZE];    /* In - ConferenceId */
+    char ospvConferenceId[OSPC_CONFIDSIZE];             /* In - ConferenceId */
     unsigned ospvLossPacketsSent;                       /* In - Packets not received by peer */
     signed ospvLossFractionSent;                        /* In - Fraction of packets not received by peer */
     unsigned ospvLossPacketsReceived;                   /* In - Packets not received that were expected */
@@ -735,7 +735,7 @@ int OSPPTransactionReportUsage_nb(NBMONITOR *nbMonitor,     /* In - NBMonitor Po
     unsigned ospvIsPDDInfoPresent,                          /* In - Is PDD info available */
     unsigned ospvPostDialDelay,                             /* In - PDD */
     unsigned ospvReleaseSource,                             /* In - Release Src */
-    unsigned char *ospvConferenceId,                        /* In - ConferenceId */
+    const char *ospvConferenceId,                           /* In - ConferenceId */
     unsigned ospvLossPacketsSent,                           /* In - Packets not received by peer */
     signed ospvLossFractionSent,                            /* In - Fraction of packets not received by peer */
     unsigned ospvLossPacketsReceived,                       /* In - Packets not received that were expected */
@@ -767,7 +767,7 @@ int OSPPTransactionReportUsage_nb(NBMONITOR *nbMonitor,     /* In - NBMonitor Po
             nbData->Message.UseInd.ospvPostDialDelay = ospvPostDialDelay;
             nbData->Message.UseInd.ospvReleaseSource = ospvReleaseSource;
             if (ospvConferenceId) {
-                OSPM_STRCPY((char *) nbData->Message.UseInd.ospvConferenceId, (const char *) ospvConferenceId);
+                OSPM_STRCPY(nbData->Message.UseInd.ospvConferenceId, (const char *)ospvConferenceId);
             }
             nbData->Message.UseInd.ospvLossPacketsSent = ospvLossPacketsSent;
             nbData->Message.UseInd.ospvLossFractionSent = ospvLossFractionSent;

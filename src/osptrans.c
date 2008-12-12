@@ -150,8 +150,7 @@ OSPPTransactionBuildReauthRequest(
         {
             if(OSPPAuthReqHasSourceNumber(ospvTrans->AuthReq))
             {
-                OSPPReauthReqSetSourceNumber(ospvTrans->ReauthReq, 
-                    OSPPAuthReqGetSourceNumber(ospvTrans->AuthReq));
+                OSPPReauthReqSetSourceNumber(ospvTrans->ReauthReq, OSPPAuthReqGetSourceNumber(ospvTrans->AuthReq));
             }
             else
             {
@@ -169,8 +168,7 @@ OSPPTransactionBuildReauthRequest(
             /* Get Called number from trans->AuthReq->DestinationNumber */
             if(OSPPAuthReqHasDestNumber(ospvTrans->AuthReq))
             {
-                OSPPReauthReqSetDestNumber(ospvTrans->ReauthReq, 
-                    OSPPAuthReqGetDestNumber(ospvTrans->AuthReq));
+                OSPPReauthReqSetDestNumber(ospvTrans->ReauthReq, OSPPAuthReqGetDestNumber(ospvTrans->AuthReq));
             }
             else
             {
@@ -311,7 +309,7 @@ OSPPTransactionBuildUsage(
             if(errorcode == OSPC_ERR_NO_ERROR) {
                 /* Get Source Number (Calling) */
                 if (OSPPDestHasSrcNumber(ospvDest)) {
-                    OSPPUsageIndSetSourceNumber(*ospvUsage,(unsigned char *)OSPPDestGetSrcNumber(ospvDest));
+                    OSPPUsageIndSetSourceNumber(*ospvUsage, OSPPDestGetSrcNumber(ospvDest));
                 } else {
                     /*
                      * It is now acceptable to report source usage indications w/o calling number
@@ -1124,9 +1122,9 @@ OSPPTransactionGetDestination(
     OSPTDEST      *dest       = OSPC_OSNULL;
     OSPTSTATUS    *status     = OSPC_OSNULL;
     OSPTTIME      validtime   = 0;
-    unsigned char *destnum    = OSPC_OSNULL,
-                  *sigaddr    = OSPC_OSNULL,
+    char *destnum    = OSPC_OSNULL,
                   *callingnum = '\0';
+    unsigned char *sigaddr    = OSPC_OSNULL;
     OSPTTOKEN     *token      = OSPC_OSNULL;
 
     if ((ospvSizeOfCalledNumber == 0) || (ospvCalledNumber == NULL))
@@ -1376,7 +1374,7 @@ OSPPTransactionGetDestination(
                 }
                 else
                 {
-                    callingnum = (unsigned char *)OSPPDestGetSrcNumber(dest);
+                    callingnum = OSPPDestGetSrcNumber(dest);
                 }
                 if (ospvSizeOfCallingNumber < strlen((const char *)callingnum)+1)
                 {
@@ -2118,7 +2116,7 @@ OSPPTransactionRequestNew(
            * ospmAuthReqSourceNumber (SourceInfo)
            * --------------------------------------
            */
-            OSPPAuthReqSetSourceNumber(ospvTrans->AuthReq, (const unsigned char *)ospvCallingNumber);
+            OSPPAuthReqSetSourceNumber(ospvTrans->AuthReq, ospvCallingNumber);
 
             if(ospvSourceDevice != OSPC_OSNULL && strlen(ospvSourceDevice) > 0)
             {
@@ -2211,7 +2209,7 @@ OSPPTransactionRequestNew(
              * ospmAuthReqDestNumber (DestinationInfo)
              * ----------------------------------------
              */
-            OSPPAuthReqSetDestNumber(ospvTrans->AuthReq, (const unsigned char *)ospvCalledNumber);
+            OSPPAuthReqSetDestNumber(ospvTrans->AuthReq, ospvCalledNumber);
 
             /* -------------------------------------------
              * ospmAuthReqDestAlt (DestinationAlternative)
@@ -2428,8 +2426,8 @@ OSPPTransactionResponseBuild(OSPTTRANS    *ospvTrans,
                           (const unsigned char *)ospvCallId,
                           ospvSizeOfCallId);
 
-        OSPPDestSetAddr(dest, (const unsigned char *)ospvDestination);
-        OSPPDestSetSrcNumber(dest, (const unsigned char *)ospvCallingNumber);
+        OSPPDestSetAddr(dest, ospvDestination);
+        OSPPDestSetSrcNumber(dest, ospvCallingNumber);
 
         OSPPAuthRspAddDest(ospvTrans->AuthRsp,dest);
 

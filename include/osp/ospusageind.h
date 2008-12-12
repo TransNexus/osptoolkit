@@ -39,7 +39,7 @@ typedef struct {
     OSPTTIME ospmUsageIndPostDialDelay;
     OSPTBOOL ospmUsageIndHasPDD;
     unsigned ospmUsageIndReleaseSource;
-    unsigned char ospmUsageIndConferenceId[OSPC_CONFIDSIZE];    /* This is in chararcters */
+    char ospmUsageIndConferenceId[OSPC_CONFIDSIZE];    /* This is in chararcters */
     unsigned char *ospmUsageIndMessageId;
     unsigned char *ospmUsageIndComponentId;
     OSPE_MSG_ROLE ospmUsageIndRole;
@@ -47,8 +47,8 @@ typedef struct {
     OSPTTRXID ospmUsageIndTransactionId;
     OSPTCALLID *ospmUsageIndCallId;
     int ospmUsageIndDuration;
-    unsigned char ospmUsageIndSourceNumber[OSPC_SIZE_E164NUM];
-    unsigned char ospmUsageIndDestNumber[OSPC_SIZE_E164NUM];
+    char ospmUsageIndSourceNumber[OSPC_SIZE_E164NUM];
+    char ospmUsageIndDestNumber[OSPC_SIZE_E164NUM];
     OSPTLIST ospmUsageIndSourceAlternate;
     OSPTLIST ospmUsageIndDeviceInfo;
     OSPTLIST ospmUsageIndDestinationAlternate;
@@ -96,12 +96,12 @@ extern "C" {
     OSPTTRXID OSPPUsageIndGetTransactionId(OSPT_USAGEIND *);
     OSPTBOOL OSPPUsageIndHasCallId(OSPT_USAGEIND *);
     OSPTCALLID *OSPPUsageIndGetCallId(OSPT_USAGEIND *);
-    void OSPPUsageIndSetSourceNumber(OSPT_USAGEIND *, unsigned char *);
-    unsigned char *OSPPUsageIndGetSourceNumber(OSPT_USAGEIND *);
+    void OSPPUsageIndSetSourceNumber(OSPT_USAGEIND *, const char *);
+    char *OSPPUsageIndGetSourceNumber(OSPT_USAGEIND *);
     void OSPPUsageIndSetCurrency(OSPT_USAGEIND *, unsigned char *);
     unsigned char *OSPPUsageIndGetCurrency(OSPT_USAGEIND *);
-    void OSPPUsageIndSetDestNumber(OSPT_USAGEIND *, unsigned char *);
-    unsigned char *OSPPUsageIndGetDestNumber(OSPT_USAGEIND *);
+    void OSPPUsageIndSetDestNumber(OSPT_USAGEIND *, const char *);
+    char *OSPPUsageIndGetDestNumber(OSPT_USAGEIND *);
     OSPTBOOL OSPPUsageIndHasSourceAlt(OSPT_USAGEIND *);
     OSPT_ALTINFO *OSPPUsageIndFirstSourceAlt(OSPT_USAGEIND *);
     OSPT_ALTINFO *OSPPUsageIndNextSourceAlt(OSPT_USAGEIND *, OSPT_ALTINFO *);
@@ -138,8 +138,8 @@ extern "C" {
     int OSPPUsageIndGetIsPDDInfoPresent(OSPT_USAGEIND *);
     void OSPPUsageIndSetReleaseSource(OSPT_USAGEIND *, unsigned ospvReleaseSource);
     unsigned OSPPUsageIndGetReleaseSource(OSPT_USAGEIND *);
-    void OSPPUsageIndSetConferenceId(OSPT_USAGEIND *, unsigned char *);
-    unsigned char *OSPPUsageIndGetConferenceId(OSPT_USAGEIND *);
+    void OSPPUsageIndSetConferenceId(OSPT_USAGEIND *, const char *);
+    char *OSPPUsageIndGetConferenceId(OSPT_USAGEIND *);
     void OSPPUsageIndSetDestinationCount(OSPT_USAGEIND *, unsigned ospvDestinationCount);
     OSPT_ALTINFO *OSPPUsageIndGetDestinationCount(OSPT_USAGEIND *);
 

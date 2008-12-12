@@ -239,7 +239,7 @@ unsigned                             /* returns error code */
 OSPPMsgBinToElement(
     unsigned       ospvDataLen,      /* size of binary data */
     unsigned char *ospvData,         /* pointer to binary data */
-    const unsigned char *ospvName,   /* name of element */
+    const char *ospvName,   /* name of element */
     OSPT_XML_ELEM **ospvElem,          /* where to put XML element pointer */
     OSPTBOOL      ospvUseBase64      /* base64 (1) or CDATA (0) encoding */
 )
@@ -398,43 +398,32 @@ OSPPMsgBinToElement(
         /* create the element */
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
-            *ospvElem = OSPPXMLElemNew((const char *)ospvName,(const char *)OSPPBfrLinearPtr(bfr));
-            if (*ospvElem == OSPC_OSNULL)
-            {
+            *ospvElem = OSPPXMLElemNew(ospvName,(const char *)OSPPBfrLinearPtr(bfr));
+            if (*ospvElem == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-            }
-            else
-            {
-                if (ospvUseBase64 == OSPC_TRUE)
-                {
+            } else {
+                if (ospvUseBase64 == OSPC_TRUE) {
                     OSPT_XML_ATTR *attr = OSPC_OSNULL;
-                    attr = OSPPXMLAttrNew((const unsigned char *)"encoding", 
-                        (const unsigned char *)"base64");
-                    if (attr != OSPC_OSNULL) 
-                    {
+                    attr = OSPPXMLAttrNew("encoding", "base64");
+                    if (attr != OSPC_OSNULL) {
                         OSPPXMLElemAddAttr(*ospvElem, attr);
                         attr = OSPC_OSNULL;
-                    }
-                    else
-                    {
+                    } else {
                         ospvErrCode = OSPC_ERR_XML_NO_ATTR;
                     }
                 }
             }
-
         }
 
         /* destroy the buffer */
-        if (bfr != OSPC_OSNULL)
-        {
+        if (bfr != OSPC_OSNULL) {
             OSPPBfrDelete(&bfr);
         }
     }
+    
     return(ospvErrCode);
 }
 
-
-/**/
 /*-----------------------------------------------------------------------*
  * OSPPMsgNumFromElement() - extract number value from an element
  *-----------------------------------------------------------------------*/
@@ -478,7 +467,7 @@ OSPPMsgNumFromElement(
 unsigned                           /* returns error code */
 OSPPMsgNumToElement(
     unsigned long  ospvNumber,     /* number to serve as data */
-    const unsigned char *ospvName, /* name of element */
+    const char *ospvName, /* name of element */
     OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
@@ -521,7 +510,7 @@ OSPPMsgNumToElement(
         else
         {
             /* create the element */
-            *ospvElem = OSPPXMLElemNew((const char *)ospvName, &val[cptr-&val[0]+1]);
+            *ospvElem = OSPPXMLElemNew(ospvName, &val[cptr-&val[0]+1]);
             if (*ospvElem == OSPC_OSNULL)
             {
                 ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -567,7 +556,7 @@ OSPPMsgFloatFromElement(
 int                                 /* returns error code */
 OSPPMsgFloatToElement(
     float  ospvFloat,               /* number to serve as data */
-    const unsigned char *ospvName,  /* name of element */
+    const char *ospvName,  /* name of element */
     OSPT_XML_ELEM **ospvElem          /* where to put XML element pointer */
 )
 {
@@ -592,7 +581,7 @@ OSPPMsgFloatToElement(
         OSPM_SPRINTF(val, "%.4f", ospvFloat);
 
         /* create the element */
-        *ospvElem = OSPPXMLElemNew((const char *)ospvName, val);
+        *ospvElem = OSPPXMLElemNew(ospvName, val);
         if (*ospvElem == OSPC_OSNULL)
         {
 
@@ -711,7 +700,7 @@ OSPPMsgTXFromElement(
 unsigned                           /* returns error code */
 OSPPMsgTXToElement(
     OSPTTRXID     ospvNumber,     /* number to serve as data */
-    const unsigned char *ospvName, /* name of element */
+    const char *ospvName, /* name of element */
     OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
@@ -754,7 +743,7 @@ OSPPMsgTXToElement(
         else
         {
             /* create the element */
-            *ospvElem = OSPPXMLElemNew((const char *)ospvName, &val[cptr-&val[0]+1]);
+            *ospvElem = OSPPXMLElemNew(ospvName, &val[cptr-&val[0]+1]);
             if (*ospvElem == OSPC_OSNULL)
             {
                 ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -792,14 +781,13 @@ OSPPMsgTimeFromElement(
     return(ospvErrCode);
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPMsgTimeToElement() - create an XML element from a time value
- *-----------------------------------------------------------------------*/
+ */
 unsigned                              /* returns error code */
 OSPPMsgTimeToElement(
     OSPTTIME             ospvTime,    /* number to serve as data */
-    const unsigned char *ospvName,    /* name of element */
+    const char *ospvName,    /* name of element */
     OSPT_XML_ELEM        **ospvElem     /* where to put XML element pointer */
 )
 {
@@ -825,7 +813,7 @@ OSPPMsgTimeToElement(
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             /* create the element */
-            *ospvElem = OSPPXMLElemNew((const char *)ospvName, tstr);
+            *ospvElem = OSPPXMLElemNew(ospvName, tstr);
             if (*ospvElem == OSPC_OSNULL)
             {
                 ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -842,7 +830,7 @@ OSPPMsgTimeToElement(
 unsigned                              /* returns error code */
 OSPPMsgRoleToElement(
     unsigned             ospvRole,    /* number to serve as data */
-    const unsigned char *ospvName,    /* name of element */
+    const char *ospvName,    /* name of element */
     OSPT_XML_ELEM        **ospvElem     /* where to put XML element pointer */
 )
 {
@@ -870,7 +858,7 @@ OSPPMsgRoleToElement(
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             /* create the element */
-            *ospvElem = OSPPXMLElemNew((const char *)ospvName, rolestr);
+            *ospvElem = OSPPXMLElemNew(ospvName, rolestr);
             if (*ospvElem == OSPC_OSNULL)
             {
                 ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;

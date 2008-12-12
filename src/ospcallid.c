@@ -266,7 +266,7 @@ OSPPCallIdToElement(
     {
         ospvErrCode = OSPPMsgBinToElement(OSPPCallIdGetSize(ospvCallId),
             OSPPCallIdGetValue(ospvCallId),
-            (const unsigned char *)OSPPMsgElemGetName(OSPC_MELEM_CALLID),
+            OSPPMsgElemGetName(OSPC_MELEM_CALLID),
             ospvElem, ospvIsBase64);
     }
 

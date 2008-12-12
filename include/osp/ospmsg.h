@@ -69,18 +69,18 @@ extern "C" {
 #endif
 
     unsigned OSPPMsgBinFromElement(OSPT_XML_ELEM *, unsigned *, unsigned char **);
-    unsigned OSPPMsgBinToElement(unsigned, unsigned char *, const unsigned char *, OSPT_XML_ELEM **, OSPTBOOL);
+    unsigned OSPPMsgBinToElement(unsigned, unsigned char *, const char *, OSPT_XML_ELEM **, OSPTBOOL);
     unsigned OSPPMsgNumFromElement(OSPT_XML_ELEM *, unsigned long *);
-    unsigned OSPPMsgNumToElement(unsigned long, const unsigned char *, OSPT_XML_ELEM **);
+    unsigned OSPPMsgNumToElement(unsigned long, const char *, OSPT_XML_ELEM **);
     int OSPPMsgFloatFromElement(OSPT_XML_ELEM *, float *);
-    int OSPPMsgFloatToElement(float, const unsigned char *, OSPT_XML_ELEM **);
+    int OSPPMsgFloatToElement(float, const char *, OSPT_XML_ELEM **);
     unsigned OSPPMsgCodeFromElement(OSPT_XML_ELEM *, unsigned long *);
     unsigned OSPPMsgCodeToElement(unsigned long, const unsigned char *, OSPT_XML_ELEM **);
-    unsigned OSPPMsgTXToElement(OSPTTRXID, const unsigned char *, OSPT_XML_ELEM **);
+    unsigned OSPPMsgTXToElement(OSPTTRXID, const char *, OSPT_XML_ELEM **);
     unsigned OSPPMsgTXFromElement(OSPT_XML_ELEM *, OSPTTRXID *);
-    unsigned OSPPMsgTimeToElement(OSPTTIME, const unsigned char *, OSPT_XML_ELEM **);
+    unsigned OSPPMsgTimeToElement(OSPTTIME, const char *, OSPT_XML_ELEM **);
     unsigned OSPPMsgElemIsCritical(OSPT_XML_ELEM *);
-    unsigned OSPPMsgRoleToElement(unsigned, const unsigned char *, OSPT_XML_ELEM **);
+    unsigned OSPPMsgRoleToElement(unsigned, const char *, OSPT_XML_ELEM **);
     int OSPPOSRoleValToString(unsigned, char *ospvRolestr);
     int OSPPBase64DecodeWrap(const unsigned char *, unsigned *, unsigned char *);
     unsigned OSPPMsgTimeFromElement(OSPT_XML_ELEM *, OSPTTIME *);

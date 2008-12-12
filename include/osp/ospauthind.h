@@ -35,8 +35,8 @@ typedef struct {
     OSPE_MSG_ROLE ospmAuthIndRole;
     OSPTBOOL ospmAuthIndHasRole;
     OSPTCALLID *ospmAuthIndCallId;
-    unsigned char ospmAuthIndSourceNumber[OSPC_SIZE_E164NUM];
-    unsigned char ospmAuthIndDestNumber[OSPC_SIZE_E164NUM];
+    char ospmAuthIndSourceNumber[OSPC_SIZE_E164NUM];
+    char ospmAuthIndDestNumber[OSPC_SIZE_E164NUM];
     OSPTLIST ospmAuthIndSourceAlternate;
     OSPTLIST ospmAuthIndDeviceInfo;
     OSPTLIST ospmAuthIndDestinationAlternate;
@@ -68,11 +68,11 @@ extern "C" {
     unsigned OSPPAuthIndGetCallIdSize(OSPTAUTHIND *);
     unsigned char *OSPPAuthIndGetCallIdValue(OSPTAUTHIND *);
     int OSPPAuthIndHasSourceNumber(OSPTAUTHIND *ospvAuthInd);
-    void OSPPAuthIndSetSourceNumber(OSPTAUTHIND *, const unsigned char *);
-    unsigned char *OSPPAuthIndGetSourceNumber(OSPTAUTHIND *);
+    void OSPPAuthIndSetSourceNumber(OSPTAUTHIND *, const char *);
+    char *OSPPAuthIndGetSourceNumber(OSPTAUTHIND *);
     int OSPPAuthIndHasDestNumber(OSPTAUTHIND *ospvAuthInd);
-    void OSPPAuthIndSetDestNumber(OSPTAUTHIND *, const unsigned char *);
-    unsigned char *OSPPAuthIndGetDestNumber(OSPTAUTHIND *);
+    void OSPPAuthIndSetDestNumber(OSPTAUTHIND *, const char *);
+    char *OSPPAuthIndGetDestNumber(OSPTAUTHIND *);
     void OSPPAuthIndSetDest(OSPTAUTHIND *, OSPTDEST *);
     int OSPPAuthIndHasDest(OSPTAUTHIND *);
     int OSPPAuthIndHasSourceAlt(OSPTAUTHIND *);

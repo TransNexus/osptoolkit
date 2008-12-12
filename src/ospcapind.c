@@ -360,25 +360,15 @@ OSPPCapIndToElement(
     /*
      * Create/Add messageId attribute
      */
-    attr = OSPPXMLAttrNew(
-                      (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID), 
-                      ospvCapInd->ospmMessageId);
+    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID), (const char *)ospvCapInd->ospmMessageId);
     OSPPXMLElemAddAttr(*ospvElem, attr);
-    
-    
+        
     /*
      * Create/Add random attribute
      */
     OSPPUtilGetRandom(random, 0);
-    attr = OSPPXMLAttrNew(
-                      (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_RANDOM),
-                      (const unsigned char *)random);
+    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_RANDOM), (const char *)random);
     OSPPXMLElemAddAttr(*ospvElem, attr);
-    
-    
-    
-    
-    
     
     /*
      * 
@@ -390,9 +380,7 @@ OSPPCapIndToElement(
     /*
      * Create/Add componentId attribute
      */
-    attr = OSPPXMLAttrNew(
-                      (const unsigned char *)OSPPMsgAttrGetName(OSPC_MATTR_COMPONENTID), 
-                      ospvCapInd->ospmComponentId);
+    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_COMPONENTID), (const char *)ospvCapInd->ospmComponentId);
     OSPPXMLElemAddAttr(capindelem, attr);
     
     /*
@@ -400,10 +388,7 @@ OSPPCapIndToElement(
      */
     OSPPXMLElemAddChild(*ospvElem, capindelem);
     
-    
-    
-    
-     /*
+    /*
      * 
      * Create/Add DeviceInfo elements
      * 

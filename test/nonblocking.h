@@ -129,7 +129,7 @@ extern "C" {
         unsigned ospvIsPDDInfoPresent,                                  /* In - Is PDD present */
         unsigned ospvPostDialDelay,                                     /* In - PDD */
         unsigned ospvReleaseSource,                                     /* In - Rel Src */
-        unsigned char *ospvConferenceId,                                /* In - Conference Id */
+        const char *ospvConferenceId,                                   /* In - Conference Id */
         unsigned ospvLossPacketsSent,                                   /* In - Packets not received by peer */
         signed ospvLossFractionSent,                                    /* In - Fraction of packets not received by peer */
         unsigned ospvLossPacketsReceived,                               /* In - Packets not received that were expected */
