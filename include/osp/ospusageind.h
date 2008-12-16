@@ -40,8 +40,8 @@ typedef struct {
     OSPTBOOL ospmUsageIndHasPDD;
     unsigned ospmUsageIndReleaseSource;
     char ospmUsageIndConferenceId[OSPC_CONFIDSIZE];    /* This is in chararcters */
-    unsigned char *ospmUsageIndMessageId;
-    unsigned char *ospmUsageIndComponentId;
+    char *ospmUsageIndMessageId;
+    char *ospmUsageIndComponentId;
     OSPE_MSG_ROLE ospmUsageIndRole;
     OSPTBOOL ospmUsageIndHasRole;
     OSPTTRXID ospmUsageIndTransactionId;
@@ -80,14 +80,14 @@ extern "C" {
     void OSPPUsageIndCopySourceAlt(OSPT_USAGEIND *, OSPTLIST *);
     void OSPPUsageIndMergeSourceAlt(OSPT_USAGEIND *, OSPTLIST *, OSPTLIST *);
     void OSPPUsageIndCopyDeviceInfo(OSPT_USAGEIND *, OSPTLIST *);
-    void OSPPUsageIndSetComponentId(OSPT_USAGEIND *, unsigned char *);
+    void OSPPUsageIndSetComponentId(OSPT_USAGEIND *, const char *);
     OSPTBOOL OSPPUsageIndHasMessageId(OSPT_USAGEIND *);
-    unsigned char *OSPPUsageIndGetMessageId(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetMessageId(OSPT_USAGEIND *);
     OSPTBOOL OSPPUsageIndHasTimestamp(OSPT_USAGEIND *);
     void OSPPUsageIndSetTimestamp(OSPT_USAGEIND *, OSPTTIME);
     OSPTTIME OSPPUsageIndGetTimestamp(OSPT_USAGEIND *);
     OSPTBOOL OSPPUsageIndHasComponentId(OSPT_USAGEIND *);
-    unsigned char *OSPPUsageIndGetComponentId(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetComponentId(OSPT_USAGEIND *);
     OSPTBOOL OSPPUsageIndHasRole(OSPT_USAGEIND *);
     OSPE_MSG_ROLE OSPPUsageIndGetRole(OSPT_USAGEIND *);
     void OSPPUsageIndSetRole(OSPT_USAGEIND *, OSPE_MSG_ROLE);
@@ -98,8 +98,8 @@ extern "C" {
     OSPTCALLID *OSPPUsageIndGetCallId(OSPT_USAGEIND *);
     void OSPPUsageIndSetSourceNumber(OSPT_USAGEIND *, const char *);
     char *OSPPUsageIndGetSourceNumber(OSPT_USAGEIND *);
-    void OSPPUsageIndSetCurrency(OSPT_USAGEIND *, unsigned char *);
-    unsigned char *OSPPUsageIndGetCurrency(OSPT_USAGEIND *);
+    void OSPPUsageIndSetCurrency(OSPT_USAGEIND *, const char *);
+    const char *OSPPUsageIndGetCurrency(OSPT_USAGEIND *);
     void OSPPUsageIndSetDestNumber(OSPT_USAGEIND *, const char *);
     char *OSPPUsageIndGetDestNumber(OSPT_USAGEIND *);
     OSPTBOOL OSPPUsageIndHasSourceAlt(OSPT_USAGEIND *);

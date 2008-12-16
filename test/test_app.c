@@ -127,7 +127,7 @@ int WORK_THREAD_NUM = 30;        /* make sure that this number does not exceed D
 
 int TEST_NUM = 0;
 char **Tokens;
-int CallingNumFormat = 0, CalledNumFormat = 0;
+OSPE_NUMBER_FORMAT CallingNumFormat, CalledNumFormat;
 unsigned long SPMsgCount[50];
 unsigned long *MsgCount = SPMsgCount;
 int DEF_HTTP_MAXCONN = 30;
@@ -693,19 +693,19 @@ int testOSPPTransactionSetServiceAndPricingInfo()
 
     PricingInfo1.amount = 0.10f;
     PricingInfo1.increment = 60;
-    OSPM_STRCPY((char *) PricingInfo1.unit, (const char *) "s");
-    OSPM_STRCPY((char *) PricingInfo1.currency, (const char *) "USD");
+    OSPM_STRCPY(PricingInfo1.unit, "s");
+    OSPM_STRCPY(PricingInfo1.currency, "USD");
 
     PricingInfo2.amount = 0.15f;
     PricingInfo2.increment = 10;
-    OSPM_STRCPY((char *) PricingInfo2.unit, (const char *) "s");
-    OSPM_STRCPY((char *) PricingInfo2.currency, (const char *) "EUR");
+    OSPM_STRCPY(PricingInfo2.unit, "s");
+    OSPM_STRCPY(PricingInfo2.currency, "EUR");
 
     ospvPricingInfo[0] = &PricingInfo1;
     ospvPricingInfo[1] = &PricingInfo2;
     ospvPricingInfo[2] = NULL;
 
-    errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_VOICE,    /* voice */
+    errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_STYPE_VOICE,    /* voice */
         ospvPricingInfo);
 
     return errorcode;
@@ -982,7 +982,7 @@ int testInitializeCallIds()
     };
 
     for (i = 0; i < NUM_CALL_IDS; i++) {
-        callids[i] = OSPPCallIdNew(lens[i], (const unsigned char *) val[i]);
+        callids[i] = OSPPCallIdNew(lens[i], (const unsigned char *)val[i]);
         if (callids[i] == OSPC_OSNULL) {
             errorcode = OSPC_ERR_OS_FAILURE;
             break;
@@ -1006,8 +1006,8 @@ int testBuildUsageFromScratch(int IsSource, int BuildNew)
 
     PricingInfo.amount = 10;
     PricingInfo.increment = 2;
-    OSPM_STRCPY((char *) PricingInfo.unit, (const char *) "sec");
-    OSPM_STRCPY((char *) PricingInfo.currency, (const char *) "USD");
+    OSPM_STRCPY(PricingInfo.unit, "sec");
+    OSPM_STRCPY(PricingInfo.currency, "USD");
 
     ospvPricingInfo[0] = &PricingInfo;
     ospvPricingInfo[1] = NULL;
@@ -1026,7 +1026,7 @@ int testBuildUsageFromScratch(int IsSource, int BuildNew)
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR && BuildNew) {
-        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_VOICE,    /* voice */
+        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_STYPE_VOICE,    /* voice */
             ospvPricingInfo);
     }
 
@@ -1038,10 +1038,8 @@ int testBuildUsageFromScratch(int IsSource, int BuildNew)
             DstIP, SourceDevIP,
             DstDevIP,
             callingnumber,
-            (OSPE_NUMBERING_FORMAT)
             CallingNumFormat,
             callednumber,
-            (OSPE_NUMBERING_FORMAT)
             CalledNumFormat,
             callidsize, callid,
             (enum OSPEFAILREASON)
@@ -1156,8 +1154,8 @@ int testOSPPTransactionInitializeAtDevice(int IsSource)
 
     PricingInfo.amount = 10;
     PricingInfo.increment = 2;
-    OSPM_STRCPY((char *) PricingInfo.unit, (const char *) "sec");
-    OSPM_STRCPY((char *) PricingInfo.currency, (const char *) "USD");
+    OSPM_STRCPY(PricingInfo.unit, "sec");
+    OSPM_STRCPY(PricingInfo.currency, "USD");
 
     ospvPricingInfo[0] = &PricingInfo;
     ospvPricingInfo[1] = NULL;
@@ -1175,7 +1173,7 @@ int testOSPPTransactionInitializeAtDevice(int IsSource)
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_VOICE,    /* voice */
+        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_STYPE_VOICE,    /* voice */
             ospvPricingInfo);
     }
 
@@ -1189,10 +1187,8 @@ int testOSPPTransactionInitializeAtDevice(int IsSource)
             IsSource, SourceIP,
             DstIP, SourceDevIP,
             NULL, callingnumber,
-            (OSPE_NUMBERING_FORMAT)
             CallingNumFormat,
             callednumber,
-            (OSPE_NUMBERING_FORMAT)
             CalledNumFormat,
             callidsize, callid,
             tokensize, token,
@@ -1310,10 +1306,8 @@ int testOSPPTransactionRequestSuggestedAuthorisation()
             SourceIP, 
             SourceDevIP,    /* Some random IP address that would probably not be in the Server */
             callingnumber,
-            (OSPE_NUMBERING_FORMAT)
             CallingNumFormat,
             callednumber,
-            (OSPE_NUMBERING_FORMAT)
             CalledNumFormat,
             "919404556#4444",
             NUM_CALL_IDS, callids,
@@ -1346,10 +1340,10 @@ int testOSPPTransactionRequestAuthorisation()
             SourceIP,
             SourceDevIP,
             callingnumber,
-            (OSPE_NUMBERING_FORMAT)
+            (OSPE_NUMBER_FORMAT)
             CallingNumFormat,
             callednumber,
-            (OSPE_NUMBERING_FORMAT)
+            (OSPE_NUMBER_FORMAT)
             CalledNumFormat,
             "919404556#4444",
             NUM_CALL_IDS, callids,
@@ -1448,7 +1442,7 @@ int testSetCallingNumber()
     while ((callingnumber[i] = getchar()) != '\n')
         i++;
     callingnumber[i] = '\0';
-    if (!strcmp(callingnumber, "")) {
+    if (!OSPM_STRCMP(callingnumber, "")) {
         printf("WARNING : You have set an Empty Calling Number !!\n");
     }
     printf("Calling Number Set to the new value\n");
@@ -1459,7 +1453,7 @@ int testSetCallId()
 {
     int errorcode = 0;
 
-    strcpy((char *) ret_cid, "");
+    OSPM_STRCPY((char *) ret_cid, "");
     printf("Call Id Set to the Empty for Validate Authorization \n");
     return errorcode;
 }
@@ -1473,7 +1467,7 @@ int testSetCalledNumber()
     while ((callednumber[i] = getchar()) != '\n')
         i++;
     callednumber[i] = '\0';
-    if (!strcmp(callednumber, "")) {
+    if (!OSPM_STRCMP(callednumber, "")) {
         printf("WARNING : You have set an Empty Called Number !!\n");
     }
     printf("Called Number Set to the new value\n");
@@ -1595,9 +1589,9 @@ int testOSPPTransactionValidateAuthorisation()
                 SourceIP, dest,
                 SourceDevIP, destdev,
                 callingnumber,
-                (OSPE_NUMBERING_FORMAT)CallingNumFormat,
+                CallingNumFormat,
                 callednumber,
-                (OSPE_NUMBERING_FORMAT)CalledNumFormat,
+                CalledNumFormat,
                 callidsize, ret_cid,
                 tokensize, c_token,
                 &authorised, &timelimit,
@@ -2175,11 +2169,11 @@ int GetConfiguration()
             if (inbuf[0] == '#' || inbuf[0] == '\n')
                 continue;
 
-            inbuf[strlen(inbuf) - 1] = '\0';
+            inbuf[OSPM_STRLEN(inbuf) - 1] = '\0';
 
-            if (strncmp(inbuf, "AUDIT=", 6) == 0) {
+            if (OSPM_STRNCMP(inbuf, "AUDIT=", 6) == 0) {
                 auditurl = _Strdup(&inbuf[6]);
-            } else if (strncmp(inbuf, "SP=", 3) == 0) {
+            } else if (OSPM_STRNCMP(inbuf, "SP=", 3) == 0) {
                 servicepoints[num_serv_points++] = _Strdup(&inbuf[3]);
 
                 if (num_serv_points == MAX_SERVICE_POINTS) {
@@ -2189,8 +2183,8 @@ int GetConfiguration()
                     errorcode = 1;
                     break;
                 }
-            } else if (strncmp(inbuf, "CapURL=", strlen("CapURL=")) == 0) {
-                capURLs[num_capURLs++] = _Strdup(&inbuf[strlen("CapURL=")]);
+            } else if (OSPM_STRNCMP(inbuf, "CapURL=", OSPM_STRLEN("CapURL=")) == 0) {
+                capURLs[num_capURLs++] = _Strdup(&inbuf[OSPM_STRLEN("CapURL=")]);
 
                 if (num_capURLs == MAX_SERVICE_POINTS) {
                     fprintf(stderr,
@@ -2199,84 +2193,84 @@ int GetConfiguration()
                     errorcode = 1;
                     break;
                 }
-            } else if (strncmp(inbuf, "CUSTID=", 7) == 0) {
-                custid = atol((const char *) &inbuf[7]);
-            } else if (strncmp(inbuf, "DEVID=", 6) == 0) {
-                devid = atol((const char *) &inbuf[6]);
-            } else if (strncmp(inbuf, "CALLED=", 7) == 0) {
-                strcpy(callednumber, (&inbuf[7]));
-            } else if (strncmp(inbuf, "CALLING=", 8) == 0) {
-                strcpy(callingnumber, (&inbuf[8]));
-            } else if (strncmp(inbuf, "TEST_CALLS=", 11) == 0) {
+            } else if (OSPM_STRNCMP(inbuf, "CUSTID=", 7) == 0) {
+                custid = atol((const char *)&inbuf[7]);
+            } else if (OSPM_STRNCMP(inbuf, "DEVID=", 6) == 0) {
+                devid = atol((const char *)&inbuf[6]);
+            } else if (OSPM_STRNCMP(inbuf, "CALLED=", 7) == 0) {
+                OSPM_STRCPY(callednumber, (&inbuf[7]));
+            } else if (OSPM_STRNCMP(inbuf, "CALLING=", 8) == 0) {
+                OSPM_STRCPY(callingnumber, (&inbuf[8]));
+            } else if (OSPM_STRNCMP(inbuf, "TEST_CALLS=", 11) == 0) {
                 num_test_calls = atoi(&inbuf[11]);
-            } else if (strncmp(inbuf, "TOKENALGO=", 10) == 0) {
+            } else if (OSPM_STRNCMP(inbuf, "TOKENALGO=", 10) == 0) {
                 tokenalgo = (token_algo_t) atoi(&inbuf[10]);
-            } else if (strncmp(inbuf, "SRC=", 4) == 0) {
-                strcpy(tmp_addr, (&inbuf[4]));
-                if (strcmp(tmp_addr, "0") != 0) {
+            } else if (OSPM_STRNCMP(inbuf, "SRC=", 4) == 0) {
+                OSPM_STRCPY(tmp_addr, (&inbuf[4]));
+                if (OSPM_STRCMP(tmp_addr, "0") != 0) {
                     SourceIP = _Strdup(tmp_addr);
                 }
-            } else if (strncmp(inbuf, "SRCDEV=", 7) == 0) {
-                strcpy(tmp_addr, (&inbuf[7]));
-                if (strcmp(tmp_addr, "0") != 0) {
+            } else if (OSPM_STRNCMP(inbuf, "SRCDEV=", 7) == 0) {
+                OSPM_STRCPY(tmp_addr, (&inbuf[7]));
+                if (OSPM_STRCMP(tmp_addr, "0") != 0) {
                     SourceDevIP = _Strdup(tmp_addr);
                 }
-            } else if (strncmp(inbuf, "DST=", 4) == 0) {
-                strcpy(tmp_addr, (&inbuf[4]));
-                if (strcmp(tmp_addr, "0") != 0) {
+            } else if (OSPM_STRNCMP(inbuf, "DST=", 4) == 0) {
+                OSPM_STRCPY(tmp_addr, (&inbuf[4]));
+                if (OSPM_STRCMP(tmp_addr, "0") != 0) {
                     DstIP = _Strdup(tmp_addr);
                 }
-            } else if (strncmp(inbuf, "DSTDEV=", 7) == 0) {
-                strcpy(tmp_addr, (&inbuf[7]));
-                if (strcmp(tmp_addr, "0") != 0) {
+            } else if (OSPM_STRNCMP(inbuf, "DSTDEV=", 7) == 0) {
+                OSPM_STRCPY(tmp_addr, (&inbuf[7]));
+                if (OSPM_STRCMP(tmp_addr, "0") != 0) {
                     DstDevIP = _Strdup(tmp_addr);
                 }
-            } else if (strncmp(inbuf, "OUTOFRESOURCES=", 15) == 0) {
+            } else if (OSPM_STRNCMP(inbuf, "OUTOFRESOURCES=", 15) == 0) {
                 almostOutOfResources = atoi(&inbuf[15]);
-            } else if (strncmp(inbuf, "HWSUPPORT=", 10) == 0) {
+            } else if (OSPM_STRNCMP(inbuf, "HWSUPPORT=", 10) == 0) {
                 hardwareSupport = atoi(&inbuf[10]);
-            } else if (strncmp(inbuf, "TCCODE=", 7) == 0) {
+            } else if (OSPM_STRNCMP(inbuf, "TCCODE=", 7) == 0) {
                 TCcode = atoi(&inbuf[7]);
-            } else if (strncmp(inbuf, "CALLING_NUM_FORMAT=", 19) == 0) {
-                CallingNumFormat = atoi(&inbuf[19]);
-            } else if (strncmp(inbuf, "CALLED_NUM_FORMAT=", 18) == 0) {
-                CalledNumFormat = atoi(&inbuf[18]);
-            } else if (strncmp(inbuf, "MSGCOUNT=", 9) == 0) {
-                if (strcmp(&inbuf[9], "NULL") == 0) {
+            } else if (OSPM_STRNCMP(inbuf, "CALLING_NUM_FORMAT=", 19) == 0) {
+                CallingNumFormat = (OSPE_NUMBER_FORMAT)atoi(&inbuf[19]);
+            } else if (OSPM_STRNCMP(inbuf, "CALLED_NUM_FORMAT=", 18) == 0) {
+                CalledNumFormat = (OSPE_NUMBER_FORMAT)atoi(&inbuf[18]);
+            } else if (OSPM_STRNCMP(inbuf, "MSGCOUNT=", 9) == 0) {
+                if (OSPM_STRCMP(&inbuf[9], "NULL") == 0) {
                     MsgCount = NULL;
                 } else {
                     SPMsgCount[spindex++] = atoi(&inbuf[9]);
                 }
-            } else if (strncmp(inbuf, "DEF_HTTP_MAXCONN=", 17) == 0) {
+            } else if (OSPM_STRNCMP(inbuf, "DEF_HTTP_MAXCONN=", 17) == 0) {
                 DEF_HTTP_MAXCONN = atoi(&inbuf[17]);
                 WORK_THREAD_NUM = DEF_HTTP_MAXCONN;
-            } else if (strncmp(inbuf, "CapMSGCOUNT=", 12) == 0) {
-                if (strcmp(&inbuf[12], "NULL") == 0) {
+            } else if (OSPM_STRNCMP(inbuf, "CapMSGCOUNT=", 12) == 0) {
+                if (OSPM_STRCMP(&inbuf[12], "NULL") == 0) {
                     CapMsgCount = NULL;
                 } else {
                     CapSPMsgCount[Capspindex++] = atoi(&inbuf[12]);
                 }
-            } else if (strncmp(inbuf, "ModifiedSRC=", 12) == 0) {
-                strcpy(tmp_addr, (&inbuf[12]));
-                if (strcmp(tmp_addr, "0") != 0) {
+            } else if (OSPM_STRNCMP(inbuf, "ModifiedSRC=", 12) == 0) {
+                OSPM_STRCPY(tmp_addr, (&inbuf[12]));
+                if (OSPM_STRCMP(tmp_addr, "0") != 0) {
                     ModifiedSourceIP = _Strdup(tmp_addr);
                 }
-            } else if (strncmp(inbuf, "ModifiedSRCDEV=", 15) == 0) {
-                strcpy(tmp_addr, (&inbuf[15]));
-                if (strcmp(tmp_addr, "0") != 0) {
+            } else if (OSPM_STRNCMP(inbuf, "ModifiedSRCDEV=", 15) == 0) {
+                OSPM_STRCPY(tmp_addr, (&inbuf[15]));
+                if (OSPM_STRCMP(tmp_addr, "0") != 0) {
                     ModifiedSourceDevIP = _Strdup(tmp_addr);
                 }
-            } else if (strncmp(inbuf, "ModifiedDST=", 12) == 0) {
-                strcpy(tmp_addr, (&inbuf[12]));
-                if (strcmp(tmp_addr, "0") != 0) {
+            } else if (OSPM_STRNCMP(inbuf, "ModifiedDST=", 12) == 0) {
+                OSPM_STRCPY(tmp_addr, (&inbuf[12]));
+                if (OSPM_STRCMP(tmp_addr, "0") != 0) {
                     ModifiedDstIP = _Strdup(tmp_addr);
                 }
-            } else if (strncmp(inbuf, "ModifiedDSTDEV=", 15) == 0) {
-                strcpy(tmp_addr, (&inbuf[15]));
-                if (strcmp(tmp_addr, "0") != 0) {
+            } else if (OSPM_STRNCMP(inbuf, "ModifiedDSTDEV=", 15) == 0) {
+                OSPM_STRCPY(tmp_addr, (&inbuf[15]));
+                if (OSPM_STRCMP(tmp_addr, "0") != 0) {
                     ModifiedDstDevIP = _Strdup(tmp_addr);
                 }
-            } else if (strncmp(inbuf, "IS_PDD_INFO_AVAILABLE=", 22) == 0) {
+            } else if (OSPM_STRNCMP(inbuf, "IS_PDD_INFO_AVAILABLE=", 22) == 0) {
                 IS_PDD_INFO_AVAILABLE = atoi(&inbuf[22]);
             }
         }
@@ -2317,7 +2311,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
     if (argc == 2) {
-        if (strcmp(argv[1], "-q") == 0)
+        if (OSPM_STRCMP(argv[1], "-q") == 0)
             quietmode = 1;
         else {
             if (servicepoints[0] != OSPC_OSNULL)
@@ -2524,8 +2518,8 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
          * Initialize call ids
          */
         CallIdsNum[i] = 1;
-        CallIdsLen[i] = strlen("123");
-        CallIds[i] = OSPPCallIdNew(3, (const unsigned char *) "123");
+        CallIdsLen[i] = OSPM_STRLEN("123");
+        CallIds[i] = OSPPCallIdNew(3, (const unsigned char *)"123");
     }
 
     errorcode = testOSPPProviderNew(&provHandle);

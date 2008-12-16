@@ -28,9 +28,9 @@
 
 typedef struct {
     unsigned ospmStatusCode;
-    unsigned char *ospmStatusDesc;
-    unsigned ospmHasCode;
-    unsigned ospmHasDesc;
+    char *ospmStatusDesc;
+    OSPTBOOL ospmHasCode;
+    OSPTBOOL ospmHasDesc;
 } OSPTSTATUS;
 
 /*
@@ -47,9 +47,9 @@ extern "C" {
     OSPTSTATUS *OSPPStatusNew(void);
     void OSPPStatusDelete(OSPTSTATUS **ospvStatus);
     unsigned OSPPStatusFromElement(OSPT_XML_ELEM *, OSPTSTATUS **);
-    void OSPPStatusSetDesc(OSPTSTATUS *, unsigned char *);
+    void OSPPStatusSetDesc(OSPTSTATUS *, const char *);
     void OSPPStatusSetCode(OSPTSTATUS *, unsigned);
-    unsigned OSPPStatusHasCode(OSPTSTATUS *);
+    OSPTBOOL OSPPStatusHasCode(OSPTSTATUS *);
     unsigned OSPPStatusGetCode(OSPTSTATUS *);
 
 #ifdef __cplusplus

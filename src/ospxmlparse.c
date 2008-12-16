@@ -233,7 +233,7 @@ unsigned OSPPXMLDocParseElem( /* returns error code */
          * Now that we've got all the pieces, put them together into
          * the element.
          */
-        elem = OSPPXMLElemNew((const char *) OSPPBfrLinearPtr(nameBfr), (const char *) OSPPBfrLinearPtr(valBfr));
+        elem = OSPPXMLElemNew((const char *)OSPPBfrLinearPtr(nameBfr), (const char *)OSPPBfrLinearPtr(valBfr));
         if (elem != OSPC_OSNULL) {
             OSPPListMove(&elem->ospmXMLElemAttrs, &attrList);
             OSPPListMove(&elem->ospmXMLElemChild, &childList);

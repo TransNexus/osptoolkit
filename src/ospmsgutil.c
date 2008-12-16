@@ -74,8 +74,7 @@ OSPPMsgBinFromASCIIElement(
          OSPM_MEMSET(*ospvData, 0, outlen + 1);
 
          /* decode the base64 */
-         ospvErrCode = OSPPBase64Decode((const char *)encodeddata,
-                    OSPM_STRLEN((char *)encodeddata), *ospvData, &outlen);
+         ospvErrCode = OSPPBase64Decode((const char *)encodeddata, OSPM_STRLEN((char *)encodeddata), *ospvData, &outlen);
 
          *ospvDataLen = outlen;
     }
@@ -612,7 +611,7 @@ OSPPMsgCodeFromElement(
 unsigned                           /* returns error code */
 OSPPMsgCodeToElement(
     unsigned long  ospvNumber,     /* number to serve as data */
-    const unsigned char *ospvName, /* name of element */
+    const char *ospvName, /* name of element */
     OSPT_XML_ELEM **ospvElem         /* where to put XML element pointer */
 )
 {
@@ -636,7 +635,7 @@ OSPPMsgCodeToElement(
         /* format the status code with leading zeroes */
         sprintf(val,"%03ld",ospvNumber);
         /* create the element */
-        *ospvElem = OSPPXMLElemNew((const char *)ospvName, (const char *)val);
+        *ospvElem = OSPPXMLElemNew(ospvName, (const char *)val);
         if (*ospvElem == OSPC_OSNULL)
         {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -917,25 +916,25 @@ OSPPOSRoleValToString(unsigned ospvRole,
     switch(ospvRole)
     {
         case OSPC_MROLE_SOURCE:
-            memcpy(ospvRolestr, "source", strlen("source"));
+            memcpy(ospvRolestr, "source", OSPM_STRLEN("source"));
             break;
         case OSPC_MROLE_DESTINATION:
-            memcpy(ospvRolestr, "destination", strlen("destination"));
+            memcpy(ospvRolestr, "destination", OSPM_STRLEN("destination"));
             break;
         case OSPC_MROLE_OTHER:
-            memcpy(ospvRolestr, "other", strlen("other"));
+            memcpy(ospvRolestr, "other", OSPM_STRLEN("other"));
             break;
         case OSPC_MROLE_RADSRCSTART:
-            memcpy(ospvRolestr, "radsrcstart", strlen("radsrcstart"));
+            memcpy(ospvRolestr, "radsrcstart", OSPM_STRLEN("radsrcstart"));
             break;
         case OSPC_MROLE_RADDSTSTART:
-            memcpy(ospvRolestr, "raddststart", strlen("raddststart"));
+            memcpy(ospvRolestr, "raddststart", OSPM_STRLEN("raddststart"));
             break;
         case OSPC_MROLE_RADSRCSTOP:
-            memcpy(ospvRolestr, "radsrcstop", strlen("radsrcstop"));
+            memcpy(ospvRolestr, "radsrcstop", OSPM_STRLEN("radsrcstop"));
             break;
         case OSPC_MROLE_RADDSTSTOP:
-            memcpy(ospvRolestr, "raddststop", strlen("raddststop"));
+            memcpy(ospvRolestr, "raddststop", OSPM_STRLEN("raddststop"));
             break;
         default:
             errorcode = OSPC_ERR_DATA_INVALID;

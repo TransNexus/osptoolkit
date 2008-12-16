@@ -47,7 +47,7 @@ extern "C" {
     int OSPPTransactionGetNextDestination(OSPTTRANHANDLE, enum OSPEFAILREASON, unsigned, char *, char *, unsigned *,
             unsigned *, void *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned *, void *);
     int OSPPTransactionInitializeAtDevice(OSPTTRANHANDLE, unsigned, const char *, const char *, const char *, const char *,
-            const char *, OSPE_NUMBERING_FORMAT, const char *, OSPE_NUMBERING_FORMAT, unsigned, const void *, unsigned, const void *,
+            const char *, OSPE_NUMBER_FORMAT, const char *, OSPE_NUMBER_FORMAT, unsigned, const void *, unsigned, const void *,
             unsigned *, unsigned *, unsigned *, void *, unsigned);
     int OSPPTransactionNew(OSPTPROVHANDLE, OSPTTRANHANDLE *);
     int OSPPTransactionRecordFailure(OSPTTRANHANDLE, enum OSPEFAILREASON);
@@ -56,12 +56,12 @@ extern "C" {
             unsigned *, unsigned *, void *, unsigned);
     int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned,
             const char *, unsigned, signed, unsigned, signed, unsigned *, void *);
-    int OSPPTransactionRequestAuthorisation(OSPTTRANHANDLE, const char *, const char *, const char *, OSPE_NUMBERING_FORMAT, const char *,
-            OSPE_NUMBERING_FORMAT, const char *, unsigned, OSPTCALLID *[], const char *[], unsigned *, unsigned *, void *);
+    int OSPPTransactionRequestAuthorisation(OSPTTRANHANDLE, const char *, const char *, const char *, OSPE_NUMBER_FORMAT, const char *,
+            OSPE_NUMBER_FORMAT, const char *, unsigned, OSPTCALLID *[], const char *[], unsigned *, unsigned *, void *);
     int OSPPTransactionIndicateCapabilities(OSPTTRANHANDLE, const char *, const char *, const char *, unsigned, unsigned *, void *);
     int OSPPTransactionRequestReauthorisation(OSPTTRANHANDLE, unsigned, unsigned *, void *, unsigned *, unsigned *, unsigned *, void *);
-    int OSPPTransactionValidateAuthorisation(OSPTTRANHANDLE, const char *, const char *, const char *, const char *, const char *, OSPE_NUMBERING_FORMAT,
-            const char *, OSPE_NUMBERING_FORMAT, unsigned, const void *, unsigned, const void *, unsigned *, unsigned *, unsigned *, void *, unsigned);
+    int OSPPTransactionValidateAuthorisation(OSPTTRANHANDLE, const char *, const char *, const char *, const char *, const char *, OSPE_NUMBER_FORMAT,
+            const char *, OSPE_NUMBER_FORMAT, unsigned, const void *, unsigned, const void *, unsigned *, unsigned *, unsigned *, void *, unsigned);
     int OSPPTransactionValidateReAuthorisation(OSPTTRANHANDLE, unsigned, const void *, unsigned *, unsigned *, unsigned *, void *, unsigned);
     int OSPPTransactionBuildUsageFromScratch(OSPTTRANHANDLE ospvTransaction,    /* In - Transaction handle */
             OSPTUINT64 ospvServerTransactionId,                                 /* In - OSP Server Transaction Id */
@@ -71,9 +71,9 @@ extern "C" {
             const char *ospvSourceDevice,                                       /* In - SourceDevice */
             const char *ospvDestinationDevice,                                  /* In - DestinationDevice */
             const char *ospvCallingNumber,                                      /* In - Calling number */
-            OSPE_NUMBERING_FORMAT ospvCallingNumberFormat,                      /* In - Calling number formaat : sip/e.164/url */
+            OSPE_NUMBER_FORMAT ospvCallingNumberFormat,                      /* In - Calling number formaat : sip/e.164/url */
             const char *ospvCalledNumber,                                       /* In - Called number */
-            OSPE_NUMBERING_FORMAT ospvCalledNumberFormat,                       /* In - Called number formaat : sip/e.164/url */
+            OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                       /* In - Called number formaat : sip/e.164/url */
             unsigned ospvSizeOfCallId,                                          /* In - Size of Callid */
             const void *ospvCallId,                                             /* In - Call identifier */
             enum OSPEFAILREASON ospvFailureReason, 

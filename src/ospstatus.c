@@ -80,15 +80,13 @@ OSPPStatusDelete(
         *ospvStatus = OSPC_OSNULL;
     }
 }
-/**/
-/*-----------------------------------------------------------------------*
+
+/*
  * OSPPStatusSetDesc() - set the status description
- *-----------------------------------------------------------------------*/
-void                                  /* no return */
-OSPPStatusSetDesc(
-    OSPTSTATUS *ospvStatus,            /* Status to set */
-    unsigned char *ospvDesc
-)
+ */
+void OSPPStatusSetDesc(         /* no return */
+    OSPTSTATUS *ospvStatus,     /* Status to set */
+    const char *ospvDesc)
 {
     if (ospvStatus != OSPC_OSNULL) 
     {
@@ -97,17 +95,13 @@ OSPPStatusSetDesc(
             OSPM_FREE(ospvStatus->ospmStatusDesc);
             ospvStatus->ospmStatusDesc = OSPC_OSNULL;
         }
-        OSPM_MALLOC(ospvStatus->ospmStatusDesc, unsigned char, 
-            strlen((const char *)ospvDesc)+1);
+        OSPM_MALLOC(ospvStatus->ospmStatusDesc, char, OSPM_STRLEN(ospvDesc)+1);
         if (ospvStatus->ospmStatusDesc != OSPC_OSNULL)
         {
-
-            OSPM_MEMCPY((ospvStatus->ospmStatusDesc), 
-                (const char *)(ospvDesc), strlen((const char *)ospvDesc)+1);
+            OSPM_MEMCPY((ospvStatus->ospmStatusDesc), ospvDesc, OSPM_STRLEN(ospvDesc) + 1);
             ospvStatus->ospmHasDesc = OSPC_TRUE;
         }
-    }
-    return; 
+    } 
 }
 
 /**/
@@ -196,31 +190,28 @@ OSPPStatusFromElement(
             (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
-            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
-            {
-                case OSPC_MELEM_CODE:
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
+            case OSPC_MELEM_CODE:
                 ospvErrCode = OSPPMsgCodeFromElement(elem, &temp);
                 OSPPStatusSetCode(*ospvStatus, temp);
                 break;
-
-                case OSPC_MELEM_DESC:
-                OSPPStatusSetDesc(*ospvStatus, (unsigned char *)OSPPXMLElemGetValue(elem));
+            case OSPC_MELEM_DESC:
+                OSPPStatusSetDesc(*ospvStatus, OSPPXMLElemGetValue(elem));
                 break;
-
-                default:
+            default:
                 /*
                  * This is an element we don't understand. If it's
                  * critical, then we have to report an error.
                  * Otherwise we can ignore it.
                  */
-                if (OSPPMsgElemIsCritical(elem))
-                {
+                if (OSPPMsgElemIsCritical(elem)) {
                     ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
                 }
                 break;
             }
         }
     }
+    
     return ospvErrCode;
 }
 

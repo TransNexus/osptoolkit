@@ -42,6 +42,7 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ATYPE_NUMBER] = {
     { OSPC_ATYPE_E164PREFIX,    "e164prefix" },
     { OSPC_ATYPE_SIP,           "sip" },
     { OSPC_ATYPE_XMPP,          "xmpp" },
+    { OSPC_ATYPE_Q850,          "q850" },
     { OSPC_ATYPE_DEVICEID,      "deviceId" },
     { OSPC_ATYPE_DEVICEID,      "assertedId" }
 };
@@ -51,11 +52,11 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ATYPE_NUMBER] = {
  */
 OSPT_ALTINFO *OSPPAltInfoNew(       /* returns ptr to altinfo or null */
     unsigned ospvLen,               /* size of altinfo */
-    const unsigned char *ospvValue, /* altinfo value */
+    const char *ospvValue, /* altinfo value */
     OSPE_ALTINFO_TYPE ospvType)
 {
     OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
-    unsigned char *valptr;
+    char *valptr;
 
     /*
      * AltInfo objects are actually two parts -- the first is the AltInfo
@@ -99,7 +100,7 @@ OSPT_ALTINFO *OSPPAltInfoNew(       /* returns ptr to altinfo or null */
             /* make sure the allocation succeeded before proceeding */
             if (ospvAltInfo != OSPC_OSNULL) {
                 /* calculate where the "hidden" values will go */
-                valptr = ((unsigned char *)ospvAltInfo) + sizeof(OSPT_ALTINFO);
+                valptr = (char *)ospvAltInfo + sizeof(OSPT_ALTINFO);
 
                 /* copy the values into their hidden location */
                 OSPM_MEMCPY(valptr, ospvValue, ospvLen);
@@ -162,10 +163,10 @@ OSPE_ALTINFO_TYPE OSPPAltInfoGetType(
 /*
  * OSPPAltInfoGetValue() - returns pointer to altinfo value
  */
-const unsigned char *OSPPAltInfoGetValue(
+const char *OSPPAltInfoGetValue(
     OSPT_ALTINFO *ospvAltInfo)
 {
-    const unsigned char *ospvVal = OSPC_OSNULL;
+    const char *ospvVal = OSPC_OSNULL;
 
     if (ospvAltInfo != OSPC_OSNULL) {
         ospvVal = ospvAltInfo->ospmAltInfoVal;
@@ -194,7 +195,7 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
     }
 
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ospvPart), (const char *)OSPPAltInfoGetValue(ospvAltInfo));
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ospvPart), OSPPAltInfoGetValue(ospvAltInfo));
 
         if (ospvElem != OSPC_OSNULL) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->ospmAltInfoType));       

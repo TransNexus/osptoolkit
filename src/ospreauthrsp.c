@@ -154,7 +154,7 @@ OSPPReauthRspSetDest(
 /*-----------------------------------------------------------------------*
  * OSPPReauthRspHasComponentId() - is the component id set ?
  *-----------------------------------------------------------------------*/
-unsigned                    /* returns non-zero if component id is set */
+OSPTBOOL                    /* returns non-zero if component id is set */
 OSPPReauthRspHasComponentId(
     OSPTREAUTHRSP *ospvReauthRsp
 )
@@ -222,8 +222,8 @@ OSPPReauthRspFromElement(
     OSPTTIME        t           = 0L;
     OSPTTRXID       transid     = 0L;
     OSPT_XML_ELEM     *ospvParent	= OSPC_OSNULL;
-    unsigned char   *messageId  = OSPC_OSNULL;
-    unsigned char   *compid     = OSPC_OSNULL;
+    const char   *messageId  = OSPC_OSNULL;
+    const char   *compid     = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL)
     {
@@ -404,7 +404,7 @@ void OSPPReauthRspDelete(
 /*-----------------------------------------------------------------------*
  * OSPPReauthRspHasMessageId() - is the message id set ?
  *-----------------------------------------------------------------------*/
-unsigned                   /* returns non-zero if message id is set */
+OSPTBOOL                   /* returns non-zero if message id is set */
 OSPPReauthRspHasMessageId(
     OSPTREAUTHRSP *ospvReauthRsp
 )
@@ -418,10 +418,10 @@ OSPPReauthRspHasMessageId(
 void      
 OSPPReauthRspSetMessageId(
     OSPTREAUTHRSP  *ospvReauthRsp,    /* In - pointer to Usage Indication struct */
-    unsigned char  *ospvMessageId     /* In - pointer to message id string */
+    const char  *ospvMessageId     /* In - pointer to message id string */
     )
 {
-    int len = OSPM_STRLEN((const char *)ospvMessageId);
+    int len = OSPM_STRLEN(ospvMessageId);
 
     if(ospvReauthRsp != OSPC_OSNULL)
     {
@@ -430,7 +430,7 @@ OSPPReauthRspSetMessageId(
             OSPM_FREE(ospvReauthRsp->ospmReauthRspMessageId);    
         }
 
-        OSPM_MALLOC(ospvReauthRsp->ospmReauthRspMessageId, unsigned char, len + 1);
+        OSPM_MALLOC(ospvReauthRsp->ospmReauthRspMessageId, char, len + 1);
         OSPM_MEMSET(ospvReauthRsp->ospmReauthRspMessageId, 0, len + 1);
         OSPM_MEMCPY(ospvReauthRsp->ospmReauthRspMessageId, ospvMessageId, len);
     }
@@ -444,7 +444,7 @@ OSPPReauthRspSetMessageId(
 void   
 OSPPReauthRspMessageIdFromElement(
     OSPT_XML_ELEM *ospvElemIn, 
-    unsigned char **ospvMessageId
+    const char **ospvMessageId
 )
 {
     OSPT_XML_ATTR *attr = (OSPT_XML_ATTR *)OSPC_OSNULL;
@@ -458,7 +458,7 @@ OSPPReauthRspMessageIdFromElement(
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_MESSAGEID)
         {
             /* we found the message attribute. Get the value */
-            *ospvMessageId = (unsigned char *)OSPPXMLAttrGetValue(attr);
+            *ospvMessageId = OSPPXMLAttrGetValue(attr);
             break;
 
         }
@@ -471,7 +471,7 @@ OSPPReauthRspMessageIdFromElement(
 void   
 OSPPReauthRspComponentIdFromElement(
     OSPT_XML_ELEM *ospvElemIn, 
-    unsigned char **ospvComponentId
+    const char **ospvComponentId
 )
 {
     OSPT_XML_ATTR *attr = (OSPT_XML_ATTR *)OSPC_OSNULL;
@@ -485,7 +485,7 @@ OSPPReauthRspComponentIdFromElement(
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_COMPONENTID)
         {
             /* we found the component attribute. Get the value */
-            *ospvComponentId = (unsigned char *)OSPPXMLAttrGetValue(attr);
+            *ospvComponentId = OSPPXMLAttrGetValue(attr);
             break;
 
         }
@@ -499,10 +499,10 @@ OSPPReauthRspComponentIdFromElement(
 void      
 OSPPReauthRspSetComponentId(
     OSPTREAUTHRSP  *ospvReauthRsp,    /* In - pointer to Usage Indication struct */
-    unsigned char *ospvComponentId  /* In - pointer to component id string */
+    const char *ospvComponentId  /* In - pointer to component id string */
     )
 {
-    int len = OSPM_STRLEN((const char *)ospvComponentId);
+    int len = OSPM_STRLEN(ospvComponentId);
 
     if(ospvReauthRsp != OSPC_OSNULL)
     {
@@ -511,7 +511,7 @@ OSPPReauthRspSetComponentId(
             OSPM_FREE(ospvReauthRsp->ospmReauthRspComponentId);    
         }
 
-        OSPM_MALLOC(ospvReauthRsp->ospmReauthRspComponentId, unsigned char, len + 1);
+        OSPM_MALLOC(ospvReauthRsp->ospmReauthRspComponentId, char, len + 1);
         OSPM_MEMSET(ospvReauthRsp->ospmReauthRspComponentId, 0, len + 1);
         OSPM_MEMCPY(ospvReauthRsp->ospmReauthRspComponentId, ospvComponentId, len);
     }

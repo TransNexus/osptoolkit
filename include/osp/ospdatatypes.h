@@ -179,21 +179,31 @@ typedef enum {
 #define OSPC_UNITSIZE       20
 
 typedef enum {
-    OSPC_E164 = 0,
-    OSPC_SIP,
-    OSPC_URL
-} OSPE_NUMBERING_FORMAT;
+    OSPC_NFORMAT_UNDEFINED = 0,
+	OSPC_NFORMAT_E164,
+    OSPC_NFORMAT_SIP,
+    OSPC_NFORMAT_URL,
+    /* Number of call party formats */
+    OSPC_NFORMAT_NUMBER
+} OSPE_NUMBER_FORMAT;
 
 typedef enum {
-    OSPC_VOICE = 0,
-    OSPC_DATA
+    OSPC_STYPE_VOICE = 0,
+    OSPC_STYPE_DATA
 } OSPE_SERVICE_TYPE;
+
+typedef enum {
+	OSPC_TCTYPE_Q850 = 0,
+	OSPC_TCTYPE_H323,
+	OSPC_TCTYPE_SIP,
+	OSPC_TCTYPE_XMPP
+} OSPE_TERMCAUSE_TYPE;
 
 typedef struct {
     float amount;
     unsigned increment;
-    unsigned char unit[OSPC_UNITSIZE];
-    unsigned char currency[OSPC_CURRENCYSIZE];
+    char unit[OSPC_UNITSIZE];
+    char currency[OSPC_CURRENCYSIZE];
 } OSPT_PRICING_INFO;
 
 #include "ospcallid.h"

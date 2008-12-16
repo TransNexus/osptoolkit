@@ -737,7 +737,7 @@ OSPPCommGetServicePoints(
             if (svcpt == (OSPTSVCPT *)OSPC_OSNULL)
                 break;
 
-            if ((strlen(svcpt->HostName) + strlen(svcpt->URI) 
+            if ((OSPM_STRLEN(svcpt->HostName) + OSPM_STRLEN(svcpt->URI) 
                 + OSPC_COMM_SPARE_CHARS) > ospvSizeOfServicePoint) 
             {
                 errorcode = OSPC_ERR_COMM_INVALID_SIZE;
@@ -889,7 +889,7 @@ OSPPCommParseSvcPt(
         next = strchr(curr, '/');
         if(!next)
         {
-            length = strlen(curr);
+            length = OSPM_STRLEN(curr);
             next = curr + length;
         }
     }
@@ -911,7 +911,7 @@ OSPPCommParseSvcPt(
     /* if bracket at the end, NULL it out */
     if(hasbracket)
     {
-        svcpt->HostName[strlen(svcpt->HostName)-1] = '\0';
+        svcpt->HostName[OSPM_STRLEN(svcpt->HostName)-1] = '\0';
     }
 
     curr = next + (hasport ? 1 : 0);
@@ -940,7 +940,7 @@ OSPPCommParseSvcPt(
         next = strchr(curr, '/');
         if(!next)
         {
-            length = strlen(curr);
+            length = OSPM_STRLEN(curr);
             next = curr + length;
         }
 
@@ -975,7 +975,7 @@ OSPPCommParseSvcPt(
      *
      * -- START --
      */
-    OSPM_MALLOC(svcpt->URI, char, strlen(curr) + 1);
+    OSPM_MALLOC(svcpt->URI, char, OSPM_STRLEN(curr) + 1);
     if (svcpt->URI == (char *)OSPC_OSNULL)
     {
         OSPM_FREE(svcpt->HostName);
@@ -983,8 +983,8 @@ OSPPCommParseSvcPt(
         OSPM_DBGERRORLOG(OSPC_ERR_COMM_PARSER, "URI is OSPC_OSNULL");
         return OSPC_ERR_COMM_PARSER;
     }
-    OSPM_MEMCPY(svcpt->URI, curr, strlen(curr));
-    svcpt->URI[strlen(curr)] = '\0';
+    OSPM_MEMCPY(svcpt->URI, curr, OSPM_STRLEN(curr));
+    svcpt->URI[OSPM_STRLEN(curr)] = '\0';
 
     /* -- END -- */
 

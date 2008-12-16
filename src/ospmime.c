@@ -397,10 +397,10 @@ OSPPMimeMessageBuild(
     if(ospvMessage->SigPart->Length > 0)
     {
         msszln = sprintf(msgtmp, "%d", ospvMessage->MsgPart->Length);
-        mshdrln = strlen(OSPC_MIME_MSG_HEADER);
-        boundln = strlen(OSPC_MIME_BOUNDARY);
+        mshdrln = OSPM_STRLEN(OSPC_MIME_MSG_HEADER);
+        boundln = OSPM_STRLEN(OSPC_MIME_BOUNDARY);
         sigszln = sprintf(sigtmp, "%d", ospvMessage->SigPart->Length),
-        sighdrln = strlen(OSPC_MIME_SIG_HEADER);
+        sighdrln = OSPM_STRLEN(OSPC_MIME_SIG_HEADER);
         numdelims = 4;
         numcrlfs = 12;
     }
@@ -723,7 +723,7 @@ OSPPMimeMessageInit(
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
-            ospvMessage->Length = strlen(OSPC_MIME_MSG_HEADER) + strlen(OSPC_MIME_SIG_HEADER);
+            ospvMessage->Length = OSPM_STRLEN(OSPC_MIME_MSG_HEADER) + OSPM_STRLEN(OSPC_MIME_SIG_HEADER);
             ospvMessage->NumParts = 2;
         }
     }
@@ -806,7 +806,7 @@ OSPPMimeMessageParse(
         errorcode = OSPPUtilMemCaseCmp(content.FieldBody.Content,
             content.FieldBody.Length,
             "text/plain",
-            strlen("text/plain"),
+            OSPM_STRLEN("text/plain"),
             &result);
 
         if((errorcode == OSPC_ERR_NO_ERROR) &&
@@ -880,7 +880,7 @@ OSPPMimeMessageParse(
 
     OSPPMimeFieldFree(&content);
 
-    if(strstr((const char *)content.FieldBody.Content, "multipart"))
+    if(OSPM_STRSTR((const char *)content.FieldBody.Content, "multipart"))
     {
         OSPPMimeBodyFree(&mimebody);
     }
@@ -1221,7 +1221,7 @@ OSPPMimeVerifyParameters(
         errorcode = OSPPUtilMemCaseCmp(ospvContent->FieldBody.Content,
             ospvContent->FieldBody.Length,
             "multipart/signed",
-            strlen("multipart/signed"),
+            OSPM_STRLEN("multipart/signed"),
             &result);
 
         if((errorcode == OSPC_ERR_NO_ERROR) &&
@@ -1246,7 +1246,7 @@ OSPPMimeVerifyParameters(
                     errorcode = OSPPUtilMemCaseCmp( ospvContent->Params[pcount]->ParamName->Content,
                         ospvContent->Params[pcount]->ParamName->Length,
                         "protocol",
-                        strlen("protocol"),
+                        OSPM_STRLEN("protocol"),
                         &result);
 
                     if((errorcode == OSPC_ERR_NO_ERROR) &&
@@ -1288,7 +1288,7 @@ OSPPMimeVerifyParameters(
                     errorcode = OSPPUtilMemCaseCmp( ospvContent->Params[pcount]->ParamName->Content,
                         ospvContent->Params[pcount]->ParamName->Length,
                         "micalg",
-                        strlen("micalg"),
+                        OSPM_STRLEN("micalg"),
                         &result);
 
                     if((errorcode == OSPC_ERR_NO_ERROR) &&
@@ -1328,7 +1328,7 @@ OSPPMimeVerifyParameters(
                     errorcode = OSPPUtilMemCaseCmp( ospvContent->Params[pcount]->ParamName->Content,
                         ospvContent->Params[pcount]->ParamName->Length,
                         "boundary",
-                        strlen("boundary"),
+                        OSPM_STRLEN("boundary"),
                         &result);
 
                     if((errorcode == OSPC_ERR_NO_ERROR) &&
@@ -1384,7 +1384,7 @@ OSPPMimeVerifyParameters(
             errorcode = OSPPUtilMemCaseCmp(ospvContent->FieldBody.Content,
                 ospvContent->FieldBody.Length,
                 "text/plain",
-                strlen("text/plain"),
+                OSPM_STRLEN("text/plain"),
                 &result);
             
             if(errorcode == OSPC_ERR_NO_ERROR)

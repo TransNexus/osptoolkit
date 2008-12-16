@@ -160,12 +160,12 @@ OSPPReauthReqSetSourceNumber(
  * OSPPReauthReqGetSourceNumber() - returns the source number for an 
  * authorisation request
  *-----------------------------------------------------------------------*/
-const unsigned char *                      /* returns number as string */
+const char *                      /* returns number as string */
 OSPPReauthReqGetSourceNumber(
     OSPTREAUTHREQ *ospvReauthReq               /* authorisation request */
 )
 {
-    const unsigned char *ospvNum = OSPC_OSNULL;
+    const char *ospvNum = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
@@ -202,18 +202,19 @@ OSPPReauthReqSetDestNumber(
  * OSPPReauthReqGetDestNumber() - returns the destination number for an
  * authorisation request
  *-----------------------------------------------------------------------*/
-const unsigned char *                      /* returns number as string */
+const char *                      /* returns number as string */
 OSPPReauthReqGetDestNumber(
     OSPTREAUTHREQ *ospvReauthReq               /* authorisation request */
 )
 {
-    const unsigned char *ospvNum = OSPC_OSNULL;
+    const char *ospvNum = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
         ospvNum = ospvReauthReq->ospmReauthReqDestNumber;
     }
-    return(ospvNum);
+    
+    return ospvNum;
 }
 
 /**/
@@ -385,7 +386,7 @@ OSPTTOKEN *                                /* returns NULL if no more */
 /*-----------------------------------------------------------------------*
  * OSPPReauthReqHasComponentId() - is the component id set ?
  *-----------------------------------------------------------------------*/
-unsigned                    /* returns non-zero if component id is set */
+OSPTBOOL                    /* returns non-zero if component id is set */
 OSPPReauthReqHasComponentId(
     OSPTREAUTHREQ *ospvReauthReq
 )
@@ -397,18 +398,16 @@ OSPPReauthReqHasComponentId(
 /*-----------------------------------------------------------------------*
  * OSPPReauthReqGetComponentId() - returns a new copy of the component id.
  *-----------------------------------------------------------------------*/
-unsigned char  *
-OSPPReauthReqGetComponentId(
-    OSPTREAUTHREQ *ospvReauthReq
-)
+const char *OSPPReauthReqGetComponentId(
+    OSPTREAUTHREQ *ospvReauthReq)
 {
-    unsigned char   *componentstring   = OSPC_OSNULL;
-    int             len                = 0;
+    const char *componentstring   = OSPC_OSNULL;
+    int len;
 
     if (OSPPReauthReqHasComponentId(ospvReauthReq))
     {
-        len = OSPM_STRLEN((const char *)ospvReauthReq->ospmReauthReqComponentId);
-        OSPM_MALLOC(componentstring, unsigned char, len + 1);
+        len = OSPM_STRLEN(ospvReauthReq->ospmReauthReqComponentId);
+        OSPM_MALLOC(componentstring, char, len + 1);
         OSPM_MEMSET(componentstring, 0, len + 1);
         OSPM_MEMCPY(componentstring, ospvReauthReq->ospmReauthReqComponentId, len);
     }
@@ -603,23 +602,19 @@ OSPT_ALTINFO *                               /* returns alt info pointer */
     return(altinfo);
 }
 
-/**/
-/*-----------------------------------------------------------------------*
- * OSPPReauthReqGetDestinationAltValue() - gets the Destination alternate value for 
- * an authorisation request
- *-----------------------------------------------------------------------*/
-unsigned char *                             /* returns alt info value */
-    OSPPReauthReqGetDestinationAltValue(
-    OSPT_ALTINFO *ospvAltInfo                /* Alt info ptr */
-    )
+/*
+ * OSPPReauthReqGetDestinationAltValue() - gets the Destination alternate value for an authorisation request
+ */
+const char *OSPPReauthReqGetDestinationAltValue(    /* returns alt info value */
+    OSPT_ALTINFO *ospvAltInfo)                      /* Alt info ptr */
 {
-    unsigned char *ospvAltInfoValue = OSPC_OSNULL;
+    const char *ospvAltInfoValue = OSPC_OSNULL;
 
-    if (ospvAltInfo != OSPC_OSNULL)
-    {
-        ospvAltInfoValue = (unsigned char *)OSPPAltInfoGetValue(ospvAltInfo);
+    if (ospvAltInfo != OSPC_OSNULL) {
+        ospvAltInfoValue = OSPPAltInfoGetValue(ospvAltInfo);
     }
-    return(ospvAltInfoValue);
+    
+    return ospvAltInfoValue;
 }
 
 /*-----------------------------------------------------------------------*
@@ -857,33 +852,17 @@ OSPPReauthReqToElement(
     }
 
     /* add the source number */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-    {
-        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SRCINFO),
-            (const char *)OSPPReauthReqGetSourceNumber(ospvReauthReq));
-        if (elem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-    }
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        if (trans->CallingNumberFormat == OSPC_E164) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_E164));
-        } else if (trans->CallingNumberFormat == OSPC_SIP) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_SIP));
-        } else if (trans->CallingNumberFormat == OSPC_URL) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_URL));
+        ospvErrCode = OSPPCallPartyNumToElement(OSPC_MELEM_SRCINFO, 
+            OSPPReauthReqGetSourceNumber(ospvReauthReq),
+            trans->CallingNumberFormat,
+            &elem);
+        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            OSPPXMLElemAddChild(reauthelem, elem);
+            elem = OSPC_OSNULL;
         }
-        if (attr == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-        }
-    }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddAttr(elem, attr);
-    }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddChild(reauthelem, elem);
-    }
-
+    }    
+    
     /* add the device info element */
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvReauthReq->ospmReauthReqDevInfo != NULL)) {
         for (altinfo = (OSPT_ALTINFO *)OSPPListFirst( &(ospvReauthReq->ospmReauthReqDevInfo));
@@ -917,34 +896,17 @@ OSPPReauthReqToElement(
     }
 
     /* add the dest number */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-    {
-        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DESTINFO),
-            (const char *)OSPPReauthReqGetDestNumber(ospvReauthReq));
-        if (elem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-    }
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        if (trans->CalledNumberFormat == OSPC_E164) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_E164));
-        } else if (trans->CalledNumberFormat == OSPC_SIP) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_SIP));
-        } else if (trans->CalledNumberFormat == OSPC_URL) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_URL));
+        ospvErrCode = OSPPCallPartyNumToElement(OSPC_MELEM_DESTINFO, 
+            OSPPReauthReqGetDestNumber(ospvReauthReq),
+            trans->CalledNumberFormat,
+            &elem);
+        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            OSPPXMLElemAddChild(reauthelem, elem);
+            elem = OSPC_OSNULL;
         }
-
-        if (attr == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-        }
-    }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddAttr(elem, attr);
-    }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddChild(reauthelem, elem);
-    }
-
+    }    
+    
     /* add the destination alternates */
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasDestinationAlt(ospvReauthReq)) {
         for (altinfo = OSPPReauthReqFirstDestinationAlt(ospvReauthReq);

@@ -106,7 +106,7 @@ OSPPAuditAddMessageToBuffer(
 
                             if((endptr = (unsigned char *)OSPM_STRSTR((const char *)begptr, "\"")) != OSPC_OSNULL)
                             {
-                                compid = OSPPAuditComponentIdNew(begptr, (endptr -begptr));
+                                compid = OSPPAuditComponentIdNew((const char*)begptr, (endptr -begptr));
                                 if(compid != OSPC_OSNULL)
                                 {
                                     OSPPListAppend(&(ospvAudit)->ospmAuditComponentIdList, 
@@ -208,8 +208,8 @@ OSPPAuditCheck(
         {
             if(OSPPTNAuditHasURL(tnaudit))
             {
-                OSPPAuditSetURL(ospvAudit, (const char *)OSPPTNAuditGetURL(tnaudit));
-                OSPPCommSetAuditURL(ospvAudit->ospmAuditComm, (const char *)OSPPTNAuditGetURL(tnaudit));
+                OSPPAuditSetURL(ospvAudit, OSPPTNAuditGetURL(tnaudit));
+                OSPPCommSetAuditURL(ospvAudit->ospmAuditComm, OSPPTNAuditGetURL(tnaudit));
             }
 
             if(OSPPTNAuditHasTimeLimit(tnaudit))
@@ -339,11 +339,9 @@ OSPPAuditComponentIdDelete(
 }
 
 /* Create new component id item */
-OSPTCOMPONENTID *
-OSPPAuditComponentIdNew(
-    unsigned char *ospvComponentId, 
-    int           ospvComponentIdLen
-)
+OSPTCOMPONENTID *OSPPAuditComponentIdNew(
+    const char *ospvComponentId, 
+    unsigned ospvComponentIdLen)
 {
     OSPTCOMPONENTID *compid = OSPC_OSNULL;
 
@@ -353,7 +351,7 @@ OSPPAuditComponentIdNew(
         if (compid != OSPC_OSNULL)
         {
             OSPPListLinkNew (&(compid->ospmComponentIdLink));
-            OSPM_MALLOC(compid->ospmComponentId, unsigned char, ospvComponentIdLen + 1);
+            OSPM_MALLOC(compid->ospmComponentId, char, ospvComponentIdLen + 1);
             OSPM_MEMSET(compid->ospmComponentId, 0, ospvComponentIdLen + 1);
             OSPM_MEMCPY(compid->ospmComponentId, ospvComponentId, ospvComponentIdLen);
         }
@@ -897,32 +895,32 @@ OSPPAuditPrepareAndSend(
                             {
                                 OSPM_MALLOC(msginfo->ContentType, 
                                              unsigned char, 
-                                             strlen(OSPC_COMM_MULTI_MSG)+1);
+                                             OSPM_STRLEN(OSPC_COMM_MULTI_MSG)+1);
                                 if(msginfo->ContentType != OSPC_OSNULL)
                                 {
                                     OSPM_MEMSET(msginfo->ContentType,
                                                  0,
-                                                 strlen(OSPC_COMM_MULTI_MSG)+1);
+                                                 OSPM_STRLEN(OSPC_COMM_MULTI_MSG)+1);
 
                                     OSPM_MEMCPY(msginfo->ContentType,
                                                  OSPC_COMM_MULTI_MSG,
-                                                 strlen(OSPC_COMM_MULTI_MSG));
+                                                 OSPM_STRLEN(OSPC_COMM_MULTI_MSG));
                                 }
                             }
                             else
                             {
                                 OSPM_MALLOC(msginfo->ContentType, 
                                              unsigned char, 
-                                             strlen(OSPC_COMM_TEXT_MSG)+1);
+                                             OSPM_STRLEN(OSPC_COMM_TEXT_MSG)+1);
                                 if(msginfo->ContentType != OSPC_OSNULL)
                                 {
                                     OSPM_MEMSET(msginfo->ContentType,
                                                  0,
-                                                 strlen(OSPC_COMM_TEXT_MSG)+1);
+                                                 OSPM_STRLEN(OSPC_COMM_TEXT_MSG)+1);
 
                                     OSPM_MEMCPY(msginfo->ContentType,
                                                  OSPC_COMM_TEXT_MSG,
-                                                 strlen(OSPC_COMM_TEXT_MSG));
+                                                 OSPM_STRLEN(OSPC_COMM_TEXT_MSG));
                                 }
                             }
 
@@ -1111,23 +1109,22 @@ OSPPAuditProcessReturn(
 
 /* Subtract Usage Indications from the buffer according to the component ID
  */
-void
-OSPPAuditRemoveComponentIdFromList(
-    unsigned char   *ospvCompid,
-    OSPTAUDIT       *ospvAudit
+void OSPPAuditRemoveComponentIdFromList(
+    const char *ospvCompid,
+    OSPTAUDIT *ospvAudit
 )
 {
     OSPTCOMPONENTID *compid     = (OSPTCOMPONENTID *)OSPC_OSNULL;
     
     for(compid = (OSPTCOMPONENTID *)OSPPListFirst(&(ospvAudit->ospmAuditComponentIdList));
-       (compid != OSPC_OSNULL);
+        (compid != OSPC_OSNULL);
         compid = (OSPTCOMPONENTID *)OSPPListNext(&(ospvAudit->ospmAuditComponentIdList), compid))
     {
         if(compid != OSPC_OSNULL)
         {
             if(compid->ospmComponentId != OSPC_OSNULL)
             {
-                if(OSPM_STRCMP((const char *)(compid->ospmComponentId), (const char *)ospvCompid) == 0)
+                if(OSPM_STRCMP(compid->ospmComponentId, ospvCompid) == 0)
                 {
                     ospvAudit->ospmAuditNumMessages--;
                     break;
@@ -1135,8 +1132,6 @@ OSPPAuditRemoveComponentIdFromList(
             }
         }
     }
-
-    return;
 }
 
 /* Reset audit values to current defaults */
@@ -1279,34 +1274,27 @@ OSPPAuditSetStartTime(
 }
 
 /* Set the URL for audit purposes */
-void        
-OSPPAuditSetURL(
+void OSPPAuditSetURL(
     OSPTAUDIT	*ospvAudit, 
     const char *ospvAuditURL)
 {
     if(ospvAudit != OSPC_OSNULL)
     {
-        if(ospvAuditURL != (const char *)OSPC_OSNULL)
+        if(ospvAuditURL != OSPC_OSNULL)
         {
             if(ospvAudit->ospmAuditURL != OSPC_OSNULL)
             {
                 OSPM_FREE(ospvAudit->ospmAuditURL);
             }
 
-            OSPM_MALLOC(ospvAudit->ospmAuditURL,
-                        char, 
-                        strlen(ospvAuditURL)+1);
+            OSPM_MALLOC(ospvAudit->ospmAuditURL, char, OSPM_STRLEN(ospvAuditURL)+1);
 
             if(ospvAudit->ospmAuditURL != OSPC_OSNULL)
             {
-                OSPM_MEMCPY(ospvAudit->ospmAuditURL,
-                            ospvAuditURL,
-                            strlen(ospvAuditURL)+1);
+                OSPM_MEMCPY(ospvAudit->ospmAuditURL, ospvAuditURL, OSPM_STRLEN(ospvAuditURL)+1);
             }
         }
     }
-
-    return;
 }
 
 void        
@@ -1364,17 +1352,15 @@ OSPPAuditStartWorker(
     return errorcode;
 }
 
-void
-OSPPAuditVerifyUsageCnf(
-    OSPTUSAGECNF    *ospvUsageCnf,
-    OSPTAUDIT       *ospvAudit
-)
+void OSPPAuditVerifyUsageCnf(
+    OSPTUSAGECNF *ospvUsageCnf,
+    OSPTAUDIT *ospvAudit)
 {
     /* Get the component Id from the Usage Confirm,
      * remove the associated Usage Indication from the
      * storage buffer.
      */
-    unsigned char   *compid = OSPC_OSNULL;
+    const char   *compid = OSPC_OSNULL;
 
     if (OSPPUsageCnfHasComponentId(ospvUsageCnf))
     {
@@ -1382,5 +1368,4 @@ OSPPAuditVerifyUsageCnf(
         OSPPAuditRemoveComponentIdFromList(compid, ospvAudit);
     }
 
-    return;
 }

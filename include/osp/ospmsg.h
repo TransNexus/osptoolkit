@@ -75,7 +75,7 @@ extern "C" {
     int OSPPMsgFloatFromElement(OSPT_XML_ELEM *, float *);
     int OSPPMsgFloatToElement(float, const char *, OSPT_XML_ELEM **);
     unsigned OSPPMsgCodeFromElement(OSPT_XML_ELEM *, unsigned long *);
-    unsigned OSPPMsgCodeToElement(unsigned long, const unsigned char *, OSPT_XML_ELEM **);
+    unsigned OSPPMsgCodeToElement(unsigned long, const char *, OSPT_XML_ELEM **);
     unsigned OSPPMsgTXToElement(OSPTTRXID, const char *, OSPT_XML_ELEM **);
     unsigned OSPPMsgTXFromElement(OSPT_XML_ELEM *, OSPTTRXID *);
     unsigned OSPPMsgTimeToElement(OSPTTIME, const char *, OSPT_XML_ELEM **);

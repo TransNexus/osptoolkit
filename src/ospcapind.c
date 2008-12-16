@@ -177,14 +177,12 @@ OSPPCapIndNew(
     if (OSPC_ERR_NO_ERROR == errorcode)
     {
         /* Add Source if it is present */
-         if (OSPC_OSNULL != ospvSource && strlen(ospvSource) > 0)
+         if (OSPC_OSNULL != ospvSource && OSPM_STRLEN(ospvSource) > 0)
         {
             /* Initialize the list */
             OSPPListNew(&(capInd->ospmSrcAlternate));
 
-            altinfo = OSPPAltInfoNew(strlen(ospvSource), 
-                                     (const unsigned char *)ospvSource,
-                                      OSPC_ATYPE_TRANSPORT);
+            altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ATYPE_TRANSPORT);
 
             if(OSPC_OSNULL != altinfo)
             {
@@ -194,12 +192,10 @@ OSPPCapIndNew(
         }
         
         /* Add SourceDevice if it is present */
-         if (OSPC_OSNULL != ospvSourceDevice && strlen(ospvSourceDevice) > 0)
+         if (OSPC_OSNULL != ospvSourceDevice && OSPM_STRLEN(ospvSourceDevice) > 0)
         {
             OSPPListNew(&(capInd->ospmDeviceInfo));
-            altinfo = OSPPAltInfoNew(strlen(ospvSourceDevice), 
-                                     (const unsigned char *)ospvSourceDevice,
-                                      OSPC_ATYPE_TRANSPORT);
+            altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ATYPE_TRANSPORT);
 
             if(OSPC_OSNULL != altinfo)
             {
@@ -209,17 +205,15 @@ OSPPCapIndNew(
         }
 
         /* Add Network info if it is present */
-         if (OSPC_OSNULL != ospvSourceNetworkId && strlen(ospvSourceNetworkId) > 0)
+         if (OSPC_OSNULL != ospvSourceNetworkId && OSPM_STRLEN(ospvSourceNetworkId) > 0)
         {
             /* Initialize the list only if the list has not been initialized above*/
-            if (strlen(ospvSource)==0)
+            if (OSPM_STRLEN(ospvSource)==0)
             {
                 OSPPListNew(&(capInd->ospmSrcAlternate));
             }
 
-            altinfo = OSPPAltInfoNew(strlen(ospvSourceNetworkId), 
-                                     (const unsigned char *)ospvSourceNetworkId,
-                                      OSPC_ATYPE_NETWORK);
+            altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceNetworkId), ospvSourceNetworkId, OSPC_ATYPE_NETWORK);
 
             if(OSPC_OSNULL != altinfo)
             {
@@ -258,7 +252,7 @@ OSPPCapIndNew(
 unsigned
 OSPPGenerateUniqueId(
     OSPTTRANS      *ospvTrans,        /* In  - Transaction Pointer */
-    unsigned char **ospvIdBuffer      /* Out - Buffer for storing the unique id */
+    char **ospvIdBuffer      /* Out - Buffer for storing the unique id */
 )
 {
     int  errorcode       = OSPC_ERR_NO_ERROR;
@@ -286,9 +280,7 @@ OSPPGenerateUniqueId(
     /*
      * Allocate enough space for both random and counter
      */
-    OSPM_MALLOC((*ospvIdBuffer), 
-                unsigned char, 
-                numbytesrandom + numbytescounter +1);
+    OSPM_MALLOC(*ospvIdBuffer, char, numbytesrandom + numbytescounter + 1);
                 
     if (OSPC_OSNULL != *ospvIdBuffer)
     { 

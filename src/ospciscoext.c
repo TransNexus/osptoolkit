@@ -163,14 +163,11 @@ OSPPCSAuditSetTrigger(
                 ospvCSAudit->ospmAuditTrigger = OSPC_OSNULL;
             }
 
-            OSPM_MALLOC(ospvCSAudit->ospmAuditTrigger, unsigned char, 
-                strlen((const char *)ospvAuditTrigger)+1);
+            OSPM_MALLOC(ospvCSAudit->ospmAuditTrigger, unsigned char, OSPM_STRLEN((const char *)ospvAuditTrigger)+1);
 
             if (ospvCSAudit->ospmAuditTrigger != OSPC_OSNULL)
             {
-
-                OSPM_MEMCPY((ospvCSAudit->ospmAuditTrigger), 
-                    (const char *)(ospvAuditTrigger), strlen((const char *)ospvAuditTrigger)+1);
+                OSPM_MEMCPY((ospvCSAudit->ospmAuditTrigger), (const char *)(ospvAuditTrigger), OSPM_STRLEN((const char *)ospvAuditTrigger)+1);
             }
         }
     }

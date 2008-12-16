@@ -192,7 +192,7 @@ OSPPSSLSessionRead(
      */
     if (ospvDelimiter != OSPC_OSNULL)
     {
-        delimitsz = strlen(ospvDelimiter);
+        delimitsz = OSPM_STRLEN(ospvDelimiter);
         tmpptr = (unsigned char *)ospvBuffer;
 
         while (delimitsz != delimitidx && 

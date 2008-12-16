@@ -58,7 +58,7 @@ typedef struct _OSPTAUDIT {
  */
 typedef struct _OSPTCOMPONENTID {
     OSPTLISTLINK ospmComponentIdLink;
-    unsigned char *ospmComponentId;
+    char *ospmComponentId;
 } OSPTCOMPONENTID;
 
 #define OSPC_AUDIT_FLUSH_BUFFER_NOW     0x01
@@ -84,7 +84,7 @@ extern "C" {
 
     int OSPPAuditAddMessageToBuffer(OSPTAUDIT *ospvAudit, unsigned char *ospvAuditData, unsigned ospvAuditDataSz);
     void OSPPAuditCheck(OSPTAUDIT *, void *, OSPE_MSG_TYPE);
-    OSPTCOMPONENTID *OSPPAuditComponentIdNew(unsigned char *ospvComponentId, int ospvComponentIdLen);
+    OSPTCOMPONENTID *OSPPAuditComponentIdNew(const char *ospvComponentId, unsigned ospvComponentIdLen);
     void OSPPAuditComponentIdDelete(OSPTAUDIT *ospvAudit);
     int OSPPAuditDelete(OSPTAUDIT **ospvAudit);
     OSPTCONDVAR OSPPAuditGetAccessCondVar(OSPTAUDIT *ospvAudit);
@@ -100,7 +100,7 @@ extern "C" {
     OSPTAUDIT *OSPPAuditNew(const char *ospvAuditURL);
     int OSPPAuditPrepareAndSend(OSPTAUDIT *ospvAudit);
     int OSPPAuditProcessReturn(OSPTAUDIT *ospvAudit, OSPT_MSG_INFO *ospvMsgInfo);
-    void OSPPAuditRemoveComponentIdFromList(unsigned char *ospvCompid, OSPTAUDIT *ospvAudit);
+    void OSPPAuditRemoveComponentIdFromList(const char *ospvCompid, OSPTAUDIT *ospvAudit);
     int OSPPAuditResetDefaults(OSPTAUDIT *ospvAudit);
     void OSPPAuditSetComm(OSPTAUDIT *ospvAudit, OSPTCOMM *ospvComm);
     void OSPPAuditSetMaxMessages(OSPTAUDIT *ospvAudit, unsigned ospvNumMessages);

@@ -1310,7 +1310,7 @@ int OSPPExtractFieldFromResponse(unsigned char *ospvResponse,
     /* 
      * We know that the parameters are valid, so allocate enough memory
      * to store the value that we find. The maximum possible size is
-     * strlen( ospvResponse ) - 2, which would happen if the response
+     * OSPM_STRLEN( ospvResponse ) - 2, which would happen if the response
      * was a one-field value with a one-character name ( such as
      * "a=1073741824" .) So, go ahead and allocate the size of the string.
      */

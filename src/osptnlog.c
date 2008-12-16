@@ -86,7 +86,7 @@ tnlog(char *fmt, ...)
     if (!isspace(tmpbuf[0])) 
     {
         sprintf( tmpbuf, "\n%s", buf);
-        strcpy(buf, tmpbuf);
+        OSPM_STRCPY(buf, tmpbuf);
     }
 
     /*
@@ -97,7 +97,7 @@ tnlog(char *fmt, ...)
     /*
      * Write the log message.
      */
-    write(logfd, buf, strlen(buf));
+    write(logfd, buf, OSPM_STRLEN(buf));
 }
 
 int
@@ -140,7 +140,7 @@ tnlogdump(unsigned char *data, int len, char *msg)
         /*
         * Write the log message.
         */
-        write(logfd, buf, strlen(buf));
+        write(logfd, buf, OSPM_STRLEN(buf));
     } 
 
     /* 
@@ -151,8 +151,8 @@ tnlogdump(unsigned char *data, int len, char *msg)
         if (i && !(i%DUMPLEN)) 
         {
             sprintf(buf, "%05d: %s   %s\n", (((i-1)/DUMPLEN)*DUMPLEN), hexbuf, txtbuf);
-            write(logfd, buf, strlen(buf));
-            strcpy(hexbuf, "");
+            write(logfd, buf, OSPM_STRLEN(buf));
+            OSPM_STRCPY(hexbuf, "");
             j=0;
             txtbuf[j] = '\0';
             if (i >= len) break;
@@ -184,8 +184,8 @@ tnlogdump(unsigned char *data, int len, char *msg)
     sprintf(buf, "%s    %s\n", hexbuf, txtbuf);
     strcat(buf, "=========================================================================\n\n");
 
-    write(logfd, buf, strlen(buf));
-    strcpy(hexbuf, "");
+    write(logfd, buf, OSPM_STRLEN(buf));
+    OSPM_STRCPY(hexbuf, "");
     j=0;
     txtbuf[j] = '\0';
 
@@ -204,11 +204,11 @@ tninitlog(char *filename)
     /* Point to stderr for output if no logfile specification */
     if ((filename == (char *)NULL) || (filename[0] == '\0'))
     {
-        strcpy(logfile, "/dev/stdout");
+        OSPM_STRCPY(logfile, "/dev/stdout");
     } 
     else 
     {
-        strcpy(logfile, filename);
+        OSPM_STRCPY(logfile, filename);
     }
 
     /*

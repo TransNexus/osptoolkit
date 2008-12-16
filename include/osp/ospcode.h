@@ -24,7 +24,7 @@
 
 typedef struct statuscode {
     unsigned ospmCode;
-    unsigned char *ospmDesc;
+    char *ospmDesc;
 } OSPTSTATLIST;
 
 #define MAX_STATS   23

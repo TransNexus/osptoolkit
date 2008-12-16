@@ -31,8 +31,8 @@
 
 typedef struct {
     OSPTTIME ospmAuthReqTimestamp;
-    unsigned char *ospmAuthReqMessageId;
-    unsigned char *ospmAuthReqComponentId;
+    char *ospmAuthReqMessageId;
+    char *ospmAuthReqComponentId;
     OSPTLIST ospmAuthReqCallId;
     char ospmAuthReqSourceNumber[OSPC_SIZE_E164NUM];
     char ospmAuthReqDestNumber[OSPC_SIZE_E164NUM];
@@ -53,24 +53,24 @@ extern "C" {
     OSPTAUTHREQ *OSPPAuthReqNew(void);
     void OSPPAuthReqDelete(OSPTAUTHREQ **);
     int OSPPAuthReqToElement(OSPTAUTHREQ *, OSPT_XML_ELEM **, void *);
-    unsigned OSPPAuthReqHasMessageId(OSPTAUTHREQ *);
-    unsigned OSPPAuthReqHasTimestamp(OSPTAUTHREQ *);
+    OSPTBOOL OSPPAuthReqHasMessageId(OSPTAUTHREQ *);
+    OSPTBOOL OSPPAuthReqHasTimestamp(OSPTAUTHREQ *);
     void OSPPAuthReqSetTimestamp(OSPTAUTHREQ *, OSPTTIME);
     OSPTTIME OSPPAuthReqGetTimestamp(OSPTAUTHREQ *);
-    unsigned OSPPAuthReqHasComponentId(OSPTAUTHREQ *);
-    unsigned OSPPAuthReqHasCallId(OSPTAUTHREQ *);
+    OSPTBOOL OSPPAuthReqHasComponentId(OSPTAUTHREQ *);
+    OSPTBOOL OSPPAuthReqHasCallId(OSPTAUTHREQ *);
     OSPTCALLID *OSPPAuthReqFirstCallId(OSPTAUTHREQ *);
     OSPTCALLID *OSPPAuthReqNextCallId(OSPTAUTHREQ *, OSPTCALLID *);
-    unsigned OSPPAuthReqHasSourceNumber(OSPTAUTHREQ *);
+    OSPTBOOL OSPPAuthReqHasSourceNumber(OSPTAUTHREQ *);
     void OSPPAuthReqSetSourceNumber(OSPTAUTHREQ *, const char *);
     char *OSPPAuthReqGetSourceNumber(OSPTAUTHREQ *);
-    unsigned OSPPAuthReqHasSourceAlt(OSPTAUTHREQ *);
+    OSPTBOOL OSPPAuthReqHasSourceAlt(OSPTAUTHREQ *);
     OSPT_ALTINFO *OSPPAuthReqFirstSourceAlt(OSPTAUTHREQ *);
     OSPT_ALTINFO *OSPPAuthReqNextSourceAlt(OSPTAUTHREQ *, OSPT_ALTINFO *);
-    unsigned OSPPAuthReqHasDestNumber(OSPTAUTHREQ *);
+    OSPTBOOL OSPPAuthReqHasDestNumber(OSPTAUTHREQ *);
     void OSPPAuthReqSetDestNumber(OSPTAUTHREQ *, const char *);
-    char *OSPPAuthReqGetDestNumber(OSPTAUTHREQ *);
-    unsigned OSPPAuthReqHasDestinationAlt(OSPTAUTHREQ *);
+    const char *OSPPAuthReqGetDestNumber(OSPTAUTHREQ *);
+    OSPTBOOL OSPPAuthReqHasDestinationAlt(OSPTAUTHREQ *);
     OSPT_ALTINFO *OSPPAuthReqFirstDestinationAlt(OSPTAUTHREQ *);
     OSPT_ALTINFO *OSPPAuthReqNextDestinationAlt(OSPTAUTHREQ *, OSPT_ALTINFO *);
     void OSPPAuthReqSetMaxDest(OSPTAUTHREQ *, unsigned);

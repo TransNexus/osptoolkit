@@ -186,10 +186,7 @@ OSPPTransactionBuildReauthRequest(
                     altinfo = (OSPT_ALTINFO *)OSPPListNext( &(ospvTrans->AuthReq->ospmAuthReqDeviceInfo), altinfo))
                 {
 
-                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), 
-                        OSPPAltInfoGetValue(altinfo), 
-                        OSPPAltInfoGetType(altinfo));
-
+                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), OSPPAltInfoGetValue(altinfo), OSPPAltInfoGetType(altinfo));
                     if(altinfo2 != OSPC_OSNULL)
                     {
                         OSPPListAppend(&(ospvTrans->ReauthReq->ospmReauthReqDevInfo), altinfo2);
@@ -210,9 +207,7 @@ OSPPTransactionBuildReauthRequest(
                     altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextSourceAlt(ospvTrans->AuthReq, altinfo))
                 {
 
-                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), 
-                        OSPPAltInfoGetValue(altinfo), 
-                        OSPPAltInfoGetType(altinfo));
+                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), OSPPAltInfoGetValue(altinfo), OSPPAltInfoGetType(altinfo));
 
                     if(altinfo2 != OSPC_OSNULL)
                     {
@@ -234,9 +229,7 @@ OSPPTransactionBuildReauthRequest(
                     altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextDestinationAlt(ospvTrans->AuthReq, altinfo))
                 {
 
-                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), 
-                        OSPPAltInfoGetValue(altinfo), 
-                        OSPPAltInfoGetType(altinfo));
+                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), OSPPAltInfoGetValue(altinfo), OSPPAltInfoGetType(altinfo));
 
                     if(altinfo2 != OSPC_OSNULL)
                     {
@@ -281,7 +274,7 @@ OSPPTransactionBuildUsage(
     OSPE_MSG_TYPE ospvType)/* In - Indicates what usage to build */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
-    unsigned char* dest = OSPC_OSNULL;
+    const char* dest = OSPC_OSNULL;
     OSPT_ALTINFO* altinfo = OSPC_OSNULL;
     OSPE_MSG_ROLE role;
 
@@ -363,7 +356,7 @@ OSPPTransactionBuildUsage(
             /* add DestinationSignalAddress to DestinationAlternates for Usage */
             if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPDestHasAddr(ospvDest)) {
                 dest = OSPPDestGetAddr(ospvDest);
-                altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,OSPC_ATYPE_TRANSPORT);
+                altinfo = OSPPAltInfoNew(OSPM_STRLEN(dest), dest, OSPC_ATYPE_TRANSPORT);
 
                 OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
                 altinfo = OSPC_OSNULL;
@@ -371,14 +364,14 @@ OSPPTransactionBuildUsage(
             }
             if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPDestDevHasAddr(ospvDest)) {
                 dest = OSPPDestDevGetAddr(ospvDest);
-                altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,OSPC_ATYPE_H323);
+                altinfo = OSPPAltInfoNew(OSPM_STRLEN(dest), dest, OSPC_ATYPE_H323);
 
                 OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
                 altinfo = OSPC_OSNULL;
             }
             if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPDestHasNetworkAddr(ospvDest)) {
                 dest = OSPPDestGetNetworkAddr(ospvDest);
-                altinfo = OSPPAltInfoNew(strlen((const char*)dest),dest,OSPC_ATYPE_NETWORK);
+                altinfo = OSPPAltInfoNew(OSPM_STRLEN(dest), dest, OSPC_ATYPE_NETWORK);
 
                 OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
                 altinfo = OSPC_OSNULL;
@@ -394,8 +387,8 @@ OSPPTransactionBuildUsage(
             if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->IsPricingInfoPresent)) {
                 (*ospvUsage)->osmpUsageIndPricingInfo.amount = ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].amount;
                 (*ospvUsage)->osmpUsageIndPricingInfo.increment = ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].increment;
-                OSPM_STRCPY((char*)(*ospvUsage)->osmpUsageIndPricingInfo.unit,(const char*)ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].unit);
-                OSPM_STRCPY((char*)(*ospvUsage)->osmpUsageIndPricingInfo.currency,(const char*)ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].currency);
+                OSPM_STRCPY((*ospvUsage)->osmpUsageIndPricingInfo.unit,(const char*)ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].unit);
+                OSPM_STRCPY((*ospvUsage)->osmpUsageIndPricingInfo.currency,(const char*)ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].currency);
                
                 /*
                  * Now increment the current pointer so that it points
@@ -1122,10 +1115,10 @@ OSPPTransactionGetDestination(
     OSPTDEST      *dest       = OSPC_OSNULL;
     OSPTSTATUS    *status     = OSPC_OSNULL;
     OSPTTIME      validtime   = 0;
-    char *destnum    = OSPC_OSNULL,
-                  *callingnum = '\0';
-    unsigned char *sigaddr    = OSPC_OSNULL;
-    OSPTTOKEN     *token      = OSPC_OSNULL;
+    const char *destnum    = OSPC_OSNULL;
+    const char *callingnum = '\0';
+    const char *sigaddr    = OSPC_OSNULL;
+    OSPTTOKEN *token      = OSPC_OSNULL;
 
     if ((ospvSizeOfCalledNumber == 0) || (ospvCalledNumber == NULL))
     {
@@ -1329,7 +1322,7 @@ OSPPTransactionGetDestination(
             }
             else if (callednumflag == OSPC_TRUE)
             {
-                if (ospvSizeOfCalledNumber < strlen((const char *)destnum)+1)
+                if (ospvSizeOfCalledNumber < OSPM_STRLEN(destnum) + 1)
                 {
                     errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
                     OSPM_DBGERRORLOG(errorcode, 
@@ -1340,9 +1333,7 @@ OSPPTransactionGetDestination(
                     /*
                      * Get the destination number 
                      */
-                    OSPM_MEMCPY(ospvCalledNumber, 
-                        destnum,
-                        strlen((const char *)destnum)+1);
+                    OSPM_MEMCPY(ospvCalledNumber, destnum, OSPM_STRLEN(destnum) + 1);
                 }
             }
         }
@@ -1376,7 +1367,7 @@ OSPPTransactionGetDestination(
                 {
                     callingnum = OSPPDestGetSrcNumber(dest);
                 }
-                if (ospvSizeOfCallingNumber < strlen((const char *)callingnum)+1)
+                if (ospvSizeOfCallingNumber < OSPM_STRLEN(callingnum)+1)
                 {
                     errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
                         OSPM_DBGERRORLOG(errorcode, 
@@ -1389,7 +1380,7 @@ OSPPTransactionGetDestination(
                      */
                     OSPM_MEMCPY(ospvCallingNumber, 
                             callingnum,
-                            strlen((const char *)callingnum)+1);
+                            OSPM_STRLEN(callingnum)+1);
                 }
             }
         }
@@ -1411,7 +1402,7 @@ OSPPTransactionGetDestination(
                 }
                 else
                 {
-                    if (ospvSizeOfDestination < strlen((const char *)sigaddr)+1)
+                    if (ospvSizeOfDestination < OSPM_STRLEN(sigaddr)+1)
                     {
                         errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
                         OSPM_DBGERRORLOG(errorcode, 
@@ -1424,7 +1415,7 @@ OSPPTransactionGetDestination(
                          */
                         OSPM_MEMCPY(ospvDestination, 
                             sigaddr,
-                            strlen((const char *)sigaddr)+1);
+                            OSPM_STRLEN(sigaddr)+1);
                     }
                 }
             }
@@ -1444,7 +1435,7 @@ OSPPTransactionGetDestination(
                 }
                 else
                 {
-                    if (ospvSizeOfDestinationDevice < strlen((const char *)sigaddr)+1)
+                    if (ospvSizeOfDestinationDevice < OSPM_STRLEN(sigaddr)+1)
                     {
                         errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
                         OSPM_DBGERRORLOG(errorcode, 
@@ -1457,7 +1448,7 @@ OSPPTransactionGetDestination(
                          */
                         OSPM_MEMCPY(ospvDestinationDevice, 
                             sigaddr,
-                            strlen((const char *)sigaddr)+1);
+                            OSPM_STRLEN(sigaddr)+1);
                     }
                 }
             }
@@ -1734,32 +1725,32 @@ OSPPTransactionPrepareAndQueMessage(
                 {
                     OSPM_MALLOC((*ospvMsgInfo)->ContentType, 
                                  unsigned char, 
-                                 strlen(OSPC_COMM_MULTI_MSG)+1);
+                                 OSPM_STRLEN(OSPC_COMM_MULTI_MSG)+1);
                     if((*ospvMsgInfo)->ContentType != OSPC_OSNULL)
                     {
                         OSPM_MEMSET((*ospvMsgInfo)->ContentType,
                                      0,
-                                     strlen(OSPC_COMM_MULTI_MSG)+1);
+                                     OSPM_STRLEN(OSPC_COMM_MULTI_MSG)+1);
 
                         OSPM_MEMCPY((*ospvMsgInfo)->ContentType,
                                      OSPC_COMM_MULTI_MSG,
-                                     strlen(OSPC_COMM_MULTI_MSG));
+                                     OSPM_STRLEN(OSPC_COMM_MULTI_MSG));
                     }
                 }
                 else
                 {
                     OSPM_MALLOC((*ospvMsgInfo)->ContentType, 
                                  unsigned char, 
-                                 strlen(OSPC_COMM_TEXT_MSG)+1);
+                                 OSPM_STRLEN(OSPC_COMM_TEXT_MSG)+1);
                     if((*ospvMsgInfo)->ContentType != OSPC_OSNULL)
                     {
                         OSPM_MEMSET((*ospvMsgInfo)->ContentType,
                                      0,
-                                     strlen(OSPC_COMM_TEXT_MSG)+1);
+                                     OSPM_STRLEN(OSPC_COMM_TEXT_MSG)+1);
 
                         OSPM_MEMCPY((*ospvMsgInfo)->ContentType,
                                      OSPC_COMM_TEXT_MSG,
-                                     strlen(OSPC_COMM_TEXT_MSG));
+                                     OSPM_STRLEN(OSPC_COMM_TEXT_MSG));
                     }
                 }
 
@@ -2022,25 +2013,12 @@ OSPPTransactionRequestNew(
     const char  *ospvCallingNumber,         /* In - Calling number      */
     const char  *ospvCalledNumber,          /* In - Called number       */
     const char  *ospvUser,                  /* In - End user (optional) */
-
-    unsigned    ospvNumberOfCallIds, 
-                /* In - Number of call identifiers */
-
-    OSPTCALLID  *ospvCallIds[],             
-                /* In - List of call identifiers */
-
-    const char  *ospvPreferredDestinations[],
-                /* In - List of preferred destinations for call */
-
-    unsigned    *ospvNumberOfDestinations,  
-                /* In\Out - Max number of destinations \
-                            Actual number of dests authorised */
-
-    unsigned    *ospvSizeOfDetailLog, 
-                /* In\Out - Max size of detail log \
-                           Actual size of detail log */
-
-    void        *ospvDetailLog)   /* In\Out - Location of detail log storage */
+    unsigned    ospvNumberOfCallIds,        /* In - Number of call identifiers */
+    OSPTCALLID  *ospvCallIds[],             /* In - List of call identifiers */
+    const char  *ospvPreferredDestinations[],   /* In - List of preferred destinations for call */
+    unsigned    *ospvNumberOfDestinations,  /* In\Out - Max number of destinations Actual number of dests authorised */
+    unsigned    *ospvSizeOfDetailLog,       /* In\Out - Max size of detail log Actual size of detail log */
+    void        *ospvDetailLog)             /* In\Out - Location of detail log storage */
 {
     int         errorcode       = OSPC_ERR_NO_ERROR,
                 numbytesrandom  = 0,
@@ -2118,12 +2096,10 @@ OSPPTransactionRequestNew(
            */
             OSPPAuthReqSetSourceNumber(ospvTrans->AuthReq, ospvCallingNumber);
 
-            if(ospvSourceDevice != OSPC_OSNULL && strlen(ospvSourceDevice) > 0)
+            if(ospvSourceDevice != OSPC_OSNULL && OSPM_STRLEN(ospvSourceDevice) > 0)
             {
                 OSPPListNew((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqDeviceInfo));
-                altinfo = OSPPAltInfoNew(strlen(ospvSourceDevice),
-                                     (const unsigned char *)ospvSourceDevice,
-                                      OSPC_ATYPE_TRANSPORT);
+                altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ATYPE_TRANSPORT);
 
                 if(OSPC_OSNULL != altinfo)
                 {
@@ -2149,9 +2125,7 @@ OSPPTransactionRequestNew(
                 if(ospvTrans->SrcNetworkId != OSPC_OSNULL)
                 {
 
-                    altinfo = OSPPAltInfoNew(strlen(ospvTrans->SrcNetworkId), 
-                        (const unsigned char *)ospvTrans->SrcNetworkId,
-                        OSPC_ATYPE_NETWORK);
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvTrans->SrcNetworkId), ospvTrans->SrcNetworkId, OSPC_ATYPE_NETWORK);
 
                     if(altinfo != OSPC_OSNULL)
                     {
@@ -2167,9 +2141,7 @@ OSPPTransactionRequestNew(
                 if(ospvSource != OSPC_OSNULL)
                 {
 
-                    altinfo = OSPPAltInfoNew(strlen(ospvSource), 
-                        (const unsigned char *)ospvSource,
-                        OSPC_ATYPE_TRANSPORT);
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ATYPE_TRANSPORT);
 
                     if(altinfo != OSPC_OSNULL)
                     {
@@ -2185,9 +2157,7 @@ OSPPTransactionRequestNew(
                 if(ospvUser != OSPC_OSNULL)
                 {
 
-                    altinfo = OSPPAltInfoNew(strlen(ospvUser),
-                        (const unsigned char *)ospvUser,
-                        OSPC_ATYPE_SUBSCRIBER);
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvUser), ospvUser, OSPC_ATYPE_SUBSCRIBER);
 
                     if (altinfo != OSPC_OSNULL)
                     {
@@ -2232,10 +2202,7 @@ OSPPTransactionRequestNew(
 
                     if(*(ospvPreferredDestinations[i]) != '\0')
                     {
-                        altinfo = OSPPAltInfoNew(strlen(ospvPreferredDestinations[i]), 
-                            (const unsigned char *)ospvPreferredDestinations[i],
-                            OSPC_ATYPE_TRANSPORT);
-
+                        altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvPreferredDestinations[i]), ospvPreferredDestinations[i], OSPC_ATYPE_TRANSPORT);
 
                         if(altinfo != OSPC_OSNULL)
                         {
@@ -2290,7 +2257,7 @@ OSPPTransactionRequestNew(
             numbytescounter = OSPM_SPRINTF(counter, "%d", OSPPTransactionGetCounter(ospvTrans));
 
             OSPM_MALLOC((ospvTrans->AuthReq)->ospmAuthReqComponentId, 
-                        unsigned char, 
+                        char, 
                         numbytesrandom + numbytescounter +1);
             OSPM_MEMSET((ospvTrans->AuthReq)->ospmAuthReqComponentId, 
                         0, 
@@ -2309,18 +2276,10 @@ OSPPTransactionRequestNew(
             numbytesrandom = OSPPUtilGetRandom(random, 0);
             numbytescounter = OSPM_SPRINTF(counter, "%d", OSPPTransactionGetCounter(ospvTrans));
 
-            OSPM_MALLOC((ospvTrans->AuthReq)->ospmAuthReqMessageId, 
-                        unsigned char, 
-                        numbytesrandom + numbytescounter +1);
-            OSPM_MEMSET((ospvTrans->AuthReq)->ospmAuthReqMessageId, 
-                        0, 
-                        numbytesrandom + numbytescounter +1);
-            OSPM_MEMCPY((ospvTrans->AuthReq)->ospmAuthReqMessageId, 
-                        random, 
-                        numbytesrandom);
-            OSPM_MEMCPY(((ospvTrans->AuthReq)->ospmAuthReqMessageId + numbytesrandom), 
-                        counter, 
-                        numbytescounter);
+            OSPM_MALLOC((ospvTrans->AuthReq)->ospmAuthReqMessageId, char, numbytesrandom + numbytescounter +1);
+            OSPM_MEMSET((ospvTrans->AuthReq)->ospmAuthReqMessageId, 0, numbytesrandom + numbytescounter +1);
+            OSPM_MEMCPY((ospvTrans->AuthReq)->ospmAuthReqMessageId, random, numbytesrandom);
+            OSPM_MEMCPY(((ospvTrans->AuthReq)->ospmAuthReqMessageId + numbytesrandom), counter, numbytescounter);
 
             /* Update the ComponentId Unique counter again to 
              * keep the MessageId and ComponentId values unique. 
@@ -2406,8 +2365,7 @@ OSPPTransactionResponseBuild(OSPTTRANS    *ospvTrans,
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
 
-        token = OSPPTokenNew(ospvSizeOfToken, 
-            (const unsigned char *)ospvToken);
+        token = OSPPTokenNew(ospvSizeOfToken, (const unsigned char *)ospvToken);
 
         if(token != (OSPTTOKEN *)OSPC_OSNULL)
         {
@@ -2422,9 +2380,7 @@ OSPPTransactionResponseBuild(OSPTTRANS    *ospvTrans,
 
     if(errorcode == OSPC_ERR_NO_ERROR)
     {
-        OSPPDestSetCallId(dest, 
-                          (const unsigned char *)ospvCallId,
-                          ospvSizeOfCallId);
+        OSPPDestSetCallId(dest, (const unsigned char *)ospvCallId, ospvSizeOfCallId);
 
         OSPPDestSetAddr(dest, ospvDestination);
         OSPPDestSetSrcNumber(dest, ospvCallingNumber);
@@ -2582,7 +2538,7 @@ OSPPTransactionValidateTokenCert(
             svcpt = (OSPTSVCPT *)OSPPListNext((OSPTLIST *)&svcptlist, svcpt))
         {
                 fprintf(stderr, "CN:%s\nHN:%s\n", (char *)commonname, (char *)svcpt->HostName);
-            if((strstr((const char *)commonname, (const char *)svcpt->HostName)) != OSPC_OSNULL)
+            if((OSPM_STRSTR((const char *)commonname, (const char *)svcpt->HostName)) != OSPC_OSNULL)
             {
                 found = OSPC_TRUE;
                 break;

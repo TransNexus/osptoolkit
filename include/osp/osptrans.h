@@ -96,8 +96,8 @@ typedef struct _OSPTTRANS {
     OSPTBOOL WasLookAheadInfoGivenToApp;
     OSPTBOOL TokenInfoIsLookAheadInfoPresent;
     OSPTTOKENLOOKAHEADINFO TokenLookAheadInfo;
-    OSPE_NUMBERING_FORMAT CallingNumberFormat;
-    OSPE_NUMBERING_FORMAT CalledNumberFormat;
+    OSPE_NUMBER_FORMAT CallingNumberFormat;
+    OSPE_NUMBER_FORMAT CalledNumberFormat;
     OSPTBOOL IsServiceInfoPresent;
     OSPE_SERVICE_TYPE ServiceType;
     OSPTBOOL IsPricingInfoPresent;

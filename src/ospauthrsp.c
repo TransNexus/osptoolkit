@@ -263,7 +263,7 @@ unsigned OSPPAuthRspGetNumDests(
  * OSPPAuthRspHasComponentId() - is the component id set ?
  *-----------------------------------------------------------------------*
  */
-int OSPPAuthRspHasComponentId(
+OSPTBOOL OSPPAuthRspHasComponentId(
     OSPTAUTHRSP* ospvAuthRsp)
 {
   return (ospvAuthRsp->ospmAuthRspComponentId != OSPC_OSNULL);
@@ -277,16 +277,16 @@ int OSPPAuthRspHasComponentId(
  */
 void OSPPAuthRspSetComponentId(
     OSPTAUTHRSP* ospvAuthRsp,       /* In - pointer to Usage Indication struct */
-    unsigned char* ospvComponentId) /* In - pointer to component id string */
+    const char* ospvComponentId) /* In - pointer to component id string */
 {
-    int len = OSPM_STRLEN((const char*)ospvComponentId);
+    int len = OSPM_STRLEN(ospvComponentId);
 
     if(ospvAuthRsp != OSPC_OSNULL) {
         if(ospvAuthRsp->ospmAuthRspComponentId != OSPC_OSNULL) {
             OSPM_FREE(ospvAuthRsp->ospmAuthRspComponentId);    
         }
 
-        OSPM_MALLOC(ospvAuthRsp->ospmAuthRspComponentId, unsigned char, len + 1);
+        OSPM_MALLOC(ospvAuthRsp->ospmAuthRspComponentId, char, len + 1);
         OSPM_MEMSET(ospvAuthRsp->ospmAuthRspComponentId, 0, len + 1);
         OSPM_MEMCPY(ospvAuthRsp->ospmAuthRspComponentId, ospvComponentId, len);
     }
@@ -439,9 +439,9 @@ unsigned OSPPAuthRspFromElement(
     int len = 0;
     unsigned long delaylimit = 0L;
     unsigned long delaypref = 0L;
-    unsigned char* compid = OSPC_OSNULL;
+    const char* messageId = OSPC_OSNULL;
+    const char* compid = OSPC_OSNULL;
     OSPT_XML_ELEM* ospvParent = OSPC_OSNULL;
-    unsigned char* messageId = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -593,7 +593,7 @@ int OSPPAuthRspHasCSAudit(
  * OSPPAuthRspHasMessageId() - is the message id set ?
  *-----------------------------------------------------------------------*
  */
-int OSPPAuthRspHasMessageId(
+OSPTBOOL OSPPAuthRspHasMessageId(
     OSPTAUTHRSP* ospvAuthRsp)
 {
     return (ospvAuthRsp->ospmAuthRspMessageId != OSPC_OSNULL);
@@ -606,16 +606,16 @@ int OSPPAuthRspHasMessageId(
  */
 void OSPPAuthRspSetMessageId(     
     OSPTAUTHRSP* ospvAuthRsp,       /* In - pointer to Usage Indication struct */
-    unsigned char* ospvMessageId)   /* In - pointer to message id string */
+    const char* ospvMessageId)   /* In - pointer to message id string */
 {
-    int len = OSPM_STRLEN((const char*)ospvMessageId);
+    unsigned len = OSPM_STRLEN(ospvMessageId);
 
     if(ospvAuthRsp != OSPC_OSNULL) {
         if(ospvAuthRsp->ospmAuthRspMessageId != OSPC_OSNULL) {
             OSPM_FREE(ospvAuthRsp->ospmAuthRspMessageId);    
         }
 
-        OSPM_MALLOC(ospvAuthRsp->ospmAuthRspMessageId, unsigned char, len + 1);
+        OSPM_MALLOC(ospvAuthRsp->ospmAuthRspMessageId, char, len + 1);
         OSPM_MEMSET(ospvAuthRsp->ospmAuthRspMessageId, 0, len + 1);
         OSPM_MEMCPY(ospvAuthRsp->ospmAuthRspMessageId, ospvMessageId, len);
     }
@@ -628,7 +628,7 @@ void OSPPAuthRspSetMessageId(
  */
 void OSPPAuthRspMessageIdFromElement(
     OSPT_XML_ELEM* ospvElemIn, 
-    unsigned char** ospvMessageId)
+    const char** ospvMessageId)
 {
     OSPT_XML_ATTR* attr = (OSPT_XML_ATTR*)OSPC_OSNULL;
 
@@ -639,7 +639,7 @@ void OSPPAuthRspMessageIdFromElement(
     {
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_MESSAGEID) {
             /* we found the message attribute. Get the value */
-            *ospvMessageId = (unsigned char*)OSPPXMLAttrGetValue(attr);
+            *ospvMessageId = OSPPXMLAttrGetValue(attr);
             break;
         }
     }
@@ -652,7 +652,7 @@ void OSPPAuthRspMessageIdFromElement(
  */
 void OSPPAuthRspComponentIdFromElement(
     OSPT_XML_ELEM* ospvElemIn, 
-    unsigned char** ospvComponentId)
+    const char** ospvComponentId)
 {
     OSPT_XML_ATTR* attr = (OSPT_XML_ATTR*)OSPC_OSNULL;
 
@@ -664,7 +664,7 @@ void OSPPAuthRspComponentIdFromElement(
 
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_COMPONENTID) {
             /* we found the component attribute. Get the value */
-            *ospvComponentId = (unsigned char*)OSPPXMLAttrGetValue(attr);
+            *ospvComponentId = OSPPXMLAttrGetValue(attr);
             break;
         }
     }

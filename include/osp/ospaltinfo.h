@@ -45,6 +45,7 @@ typedef enum {
     OSPC_ATYPE_E164PREFIX,
     OSPC_ATYPE_SIP,
     OSPC_ATYPE_XMPP,
+    OSPC_ATYPE_Q850,
     OSPC_ATYPE_DEVICEID,
     OSPC_ATYPE_ASSERTEDID,
     /* Number of element attributes */
@@ -63,7 +64,7 @@ typedef struct {
     OSPTLISTLINK ospmAltInfoLink;
     unsigned ospmAltInfoLen;
     OSPE_ALTINFO_TYPE ospmAltInfoType;
-    unsigned char *ospmAltInfoVal;
+    char *ospmAltInfoVal;
 } OSPT_ALTINFO;
 
 /* Function Prototypes */
@@ -72,11 +73,11 @@ typedef struct {
 extern "C" {
 #endif
 
-    OSPT_ALTINFO *OSPPAltInfoNew(unsigned, const unsigned char *, OSPE_ALTINFO_TYPE);
+    OSPT_ALTINFO *OSPPAltInfoNew(unsigned, const char *, OSPE_ALTINFO_TYPE);
     void OSPPAltInfoDelete(OSPT_ALTINFO **);
     unsigned OSPPAltInfoGetSize(OSPT_ALTINFO *);
     OSPE_ALTINFO_TYPE OSPPAltInfoGetType(OSPT_ALTINFO *);
-    const unsigned char *OSPPAltInfoGetValue(OSPT_ALTINFO *);
+    const char *OSPPAltInfoGetValue(OSPT_ALTINFO *);
     unsigned OSPPAltInfoToElement(OSPT_ALTINFO *, OSPT_XML_ELEM **, OSPE_MSG_ELEM);
     const char *OSPPAltInfoTypeGetName(OSPE_ALTINFO_TYPE);
 

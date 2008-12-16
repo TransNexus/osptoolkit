@@ -151,7 +151,7 @@ unsigned OSPPXMLDocSkipPast(            /* returns error code */
      * needs to be. (Hint: It should be the same size as the match string.)
      */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        for (cnt = 0, len = OSPM_STRLEN((const char *) ospvString);
+        for (cnt = 0, len = OSPM_STRLEN((const char *)ospvString);
             ((cnt < len) && (ospvErrCode == OSPC_ERR_NO_ERROR)); cnt++) 
         {
             ospvErrCode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &ospvScratch[cnt]);
@@ -166,7 +166,7 @@ unsigned OSPPXMLDocSkipPast(            /* returns error code */
      */
 
     while (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        if (OSPM_MEMCMP((const char *) ospvScratch, (const char *) ospvString, len) == 0) {
+        if (OSPM_MEMCMP((const char *)ospvScratch, (const char *)ospvString, len) == 0) {
             /* we've found the match, so we're done */
             break;
         }

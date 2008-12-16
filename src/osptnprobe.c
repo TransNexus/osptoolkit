@@ -613,7 +613,7 @@ OSPPTNProbePruneList(
                 dest = (OSPTDEST *)OSPPListNext(ospvDests, dest))
             {
 
-                (void)OSPPCommParseSvcPt((const char *)OSPPDestGetAddr(dest), &svcpt, 0);
+                OSPPCommParseSvcPt(OSPPDestGetAddr(dest), &svcpt, 0);
 
                 if (svcpt != (OSPTSVCPT *)OSPC_OSNULL)
                 {
@@ -708,7 +708,7 @@ OSPPTNProbeArrangeList(
             dest = (OSPTDEST *)OSPPListNext(ospvDests, dest))
         {
 
-            (void)OSPPCommParseSvcPt((const char *)OSPPDestGetAddr(dest), &svcpt, 0);
+            OSPPCommParseSvcPt(OSPPDestGetAddr(dest), &svcpt, 0);
             if (svcpt != (OSPTSVCPT *)OSPC_OSNULL)
             {
                 if(svcpt->IpAddr == ospvProbes[probecnt].ospmipaddr)

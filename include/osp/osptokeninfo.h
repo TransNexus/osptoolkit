@@ -29,7 +29,7 @@
 #include "osp/osptoken.h"
 
 typedef struct {
-    unsigned char lookAheadDest[OSPC_SIZE_SIGNALADDR];
+    char lookAheadDest[OSPC_SIZE_SIGNALADDR];
     OSPE_DEST_PROT lookAheadDestProt;
     OSPE_DEST_OSPENABLED lookAheadDestOSPStatus;
 } OSPTTOKENLOOKAHEADINFO;
@@ -59,15 +59,15 @@ extern "C" {
     void OSPPTokenInfoDelete(OSPTTOKENINFO **);
     unsigned OSPPTokenInfoFromElement(OSPT_XML_ELEM *, OSPTTOKENINFO **);
     void OSPPTokenInfoSetSourceNumber(OSPTTOKENINFO *, const char *);
-    char *OSPPTokenInfoGetSourceNumber(OSPTTOKENINFO *);
+    const char *OSPPTokenInfoGetSourceNumber(OSPTTOKENINFO *);
     void OSPPTokenInfoSetDestNumber(OSPTTOKENINFO *, const char *);
-    char *OSPPTokenInfoGetDestNumber(OSPTTOKENINFO *);
-    unsigned OSPPTokenInfoHasCallId(OSPTTOKENINFO *);
+    const char *OSPPTokenInfoGetDestNumber(OSPTTOKENINFO *);
+    OSPTBOOL OSPPTokenInfoHasCallId(OSPTTOKENINFO *);
     void OSPPTokenInfoSetCallId(OSPTTOKENINFO *, OSPTCALLID *);
     OSPTCALLID *OSPPTokenInfoGetCallId(OSPTTOKENINFO *);
     unsigned char *OSPPTokenInfoGetCallIdValue(OSPTTOKENINFO *);
     unsigned OSPPTokenInfoGetCallIdSize(OSPTTOKENINFO *);
-    unsigned OSPPTokenInfoHasValidAfter(OSPTTOKENINFO *);
+    OSPTBOOL OSPPTokenInfoHasValidAfter(OSPTTOKENINFO *);
     void OSPPTokenInfoSetValidAfter(OSPTTOKENINFO *, OSPTTIME);
     OSPTTIME OSPPTokenInfoGetValidAfter(OSPTTOKENINFO *);
     void OSPPTokenInfoSetValidUntil(OSPTTOKENINFO *, OSPTTIME);
@@ -76,13 +76,13 @@ extern "C" {
     OSPTTRXID OSPPTokenInfoGetTrxId(OSPTTOKENINFO *);
     void OSPPTokenInfoSetDuration(OSPTTOKENINFO *, int);
     int OSPPTokenInfoGetDuration(OSPTTOKENINFO *);
-    void OSPPTokenInfoSetLookAheadDestAlt(OSPTTOKENLOOKAHEADINFO *, const unsigned char *);
-    unsigned char *OSPPTokenInfoGetLookAheadDestAlt(OSPTTOKENLOOKAHEADINFO *);
+    void OSPPTokenInfoSetLookAheadDestAlt(OSPTTOKENLOOKAHEADINFO *, const char *);
+    const char *OSPPTokenInfoGetLookAheadDestAlt(OSPTTOKENLOOKAHEADINFO *);
     void OSPPTokenInfoSetLookAheadDestProtocol(OSPTTOKENLOOKAHEADINFO *, const char *);
     OSPE_DEST_PROT OSPPTokenInfoGetLookAheadDestProtocol(OSPTTOKENLOOKAHEADINFO *);
     void OSPPTokenInfoSetLookAheadOSPVersion(OSPTTOKENLOOKAHEADINFO *, const char *);
     OSPE_DEST_OSPENABLED OSPPTokenInfoGetLookAheadOSPVersion(OSPTTOKENLOOKAHEADINFO *);
-    unsigned char *OSPPTokenInfoGetDstNetworkId(OSPTTOKENINFO *);
+    const char *OSPPTokenInfoGetDstNetworkId(OSPTTOKENINFO *);
     unsigned OSPPParseTokenInfoFromASCIIToken(unsigned char *, unsigned, OSPTTOKENINFO **);
 
 #ifdef __cplusplus

@@ -165,13 +165,11 @@ OSPPASN1ElementEncode(
             &newData, &newLength);
         if (errorcode == OSPC_ERR_NO_ERROR)
         {
-            OSPM_REALLOC(contentData,contentData,unsigned char,
-                (contentLength+newLength));
+            OSPM_REALLOC(contentData,contentData,unsigned char, contentLength + newLength);
             if (contentData == OSPC_OSNULL)
             {
                 errorcode = OSPC_ERR_ASN1_UNABLE_TO_ALLOCATE_SPACE;
-                OSPM_DBGERRORLOG(errorcode, 
-                    "Unable to realloc element data store");
+                OSPM_DBGERRORLOG(errorcode, "Unable to realloc element data store");
             }
         }
         if (errorcode == OSPC_ERR_NO_ERROR)

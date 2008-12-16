@@ -34,9 +34,9 @@ typedef struct _NBAUTHREQ {
     const char *ospvSource;                     /* In - Source of call      */
     const char *ospvSourceDevice;               /* In - SourceDevice of call */
     const char *ospvCallingNumber;              /* In - Calling number      */
-    int ospvCallingNumberFormat;                /* In - Calling number      Format */
+    OSPE_NUMBER_FORMAT ospvCallingNumberFormat; /* In - Calling number Format */
     const char *ospvCalledNumber;               /* In - Called number       */
-    int ospvCalledNumberFormat;                 /* In - Called number  Format */
+    OSPE_NUMBER_FORMAT ospvCalledNumberFormat;  /* In - Called number Format */
     const char *ospvUser;                       /* In - End user (optional) */
     unsigned ospvNumberOfCallIds;               /* In - Number of call identifiers */
     OSPTCALLID **ospvCallIds;                   /* In - List of call identifiers */
@@ -82,9 +82,9 @@ typedef struct _NBVALIDATEAUTH {
     const char *ospvSourceDevice;       /* In - SourceDevice of call */
     const char *ospvDestinationDevice;  /* In - DestDevice of call      */
     const char *ospvCallingNumber;      /* In - Calling number      */
-    int ospvCallingNumberFormat;        /* In - Calling number      Format */
+    OSPE_NUMBER_FORMAT ospvCallingNumberFormat;        /* In - Calling number Format */
     const char *ospvCalledNumber;       /* In - Called number       */
-    int ospvCalledNumberFormat;         /* In - Called number  Format */
+    OSPE_NUMBER_FORMAT ospvCalledNumberFormat;         /* In - Called number Format */
     unsigned ospvSizeOfCallId;          /* In - Size of call id value */
     const void *ospvCallId;             /* In - Call Id for this call */
     unsigned ospvSizeOfToken;           /* In - Size of authorization token */
@@ -393,9 +393,9 @@ OSPTTHREADRETURN WorkThread(void *arg)
                         transaction->Message.AuthReq.ospvSource,
                         transaction->Message.AuthReq.ospvSourceDevice,
                         transaction->Message.AuthReq.ospvCallingNumber,
-                        (OSPE_NUMBERING_FORMAT)transaction->Message.AuthReq.ospvCallingNumberFormat,
+                        transaction->Message.AuthReq.ospvCallingNumberFormat,
                         transaction->Message.AuthReq.ospvCalledNumber,
-                        (OSPE_NUMBERING_FORMAT)transaction->Message.AuthReq.ospvCalledNumberFormat,
+                        transaction->Message.AuthReq.ospvCalledNumberFormat,
                         transaction->Message.AuthReq.ospvUser,
                         transaction->Message.AuthReq.ospvNumberOfCallIds,
                         transaction->Message.AuthReq.ospvCallIds,
@@ -449,9 +449,9 @@ OSPTTHREADRETURN WorkThread(void *arg)
                         transaction->Message.ValidateAuth.ospvSourceDevice,
                         transaction->Message.ValidateAuth.ospvDestinationDevice,
                         transaction->Message.ValidateAuth.ospvCallingNumber,
-                        (OSPE_NUMBERING_FORMAT)transaction->Message.ValidateAuth.ospvCallingNumberFormat,
+                        transaction->Message.ValidateAuth.ospvCallingNumberFormat,
                         transaction->Message.ValidateAuth.ospvCalledNumber,
-                        (OSPE_NUMBERING_FORMAT)transaction->Message.ValidateAuth.ospvCalledNumberFormat,
+                        transaction->Message.ValidateAuth.ospvCalledNumberFormat,
                         transaction->Message.ValidateAuth.ospvSizeOfCallId,
                         transaction->Message.ValidateAuth.ospvCallId,
                         transaction->Message.ValidateAuth.ospvSizeOfToken,
@@ -535,9 +535,9 @@ int OSPPTransactionValidateAuthorisation_nb(NBMONITOR *nbMonitor,   /* In - NBMo
     const char *ospvSourceDevice,                                   /* In - SourceDevice of call */
     const char *ospvDestinationDevice,                              /* In - DestinationDevice for call */
     const char *ospvCallingNumber,                                  /* In - Calling number string */
-    int ospvCallingNumberFormat,                                    /* In - Calling number Format */
+    OSPE_NUMBER_FORMAT ospvCallingNumberFormat,                     /* In - Calling number Format */
     const char *ospvCalledNumber,                                   /* In - Called number string */
-    int ospvCalledNumberFormat,                                     /* In - Calling number Format */
+    OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                      /* In - Calling number Format */
     unsigned ospvSizeOfCallId,                                      /* In - Size of call id value */
     const void *ospvCallId,                                         /* In - Call Id for this call */
     unsigned ospvSizeOfToken,                                       /* In - Size of authorization token */
@@ -636,9 +636,9 @@ int OSPPTransactionRequestAuthorisation_nb(NBMONITOR *nbMonitor,    /* In - NBMo
     const char *ospvSource,                                         /* In - Source of call      */
     const char *ospvSourceDevice,                                   /* In - SourceDevice of call */
     const char *ospvCallingNumber,                                  /* In - Calling number      */
-    int ospvCallingNumberFormat,                                    /* In - Calling number Format */
+    OSPE_NUMBER_FORMAT ospvCallingNumberFormat,                     /* In - Calling number Format */
     const char *ospvCalledNumber,                                   /* In - Called number       */
-    int ospvCalledNumberFormat,                                     /* In - Called number Format */
+    OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                      /* In - Called number Format */
     const char *ospvUser,                                           /* In - End user (optional) */
     unsigned ospvNumberOfCallIds,                                   /* In - Number of call identifiers */
     OSPTCALLID *ospvCallIds[],                                      /* In - List of call identifiers */

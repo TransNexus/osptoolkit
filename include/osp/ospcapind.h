@@ -30,8 +30,8 @@
 
 typedef struct {
     OSPTTIME ospmTimestamp;
-    unsigned char *ospmMessageId;
-    unsigned char *ospmComponentId;
+    char *ospmMessageId;
+    char *ospmComponentId;
     OSPTLIST ospmDeviceInfo;
     unsigned ospmAlmostOutOfResources;
     OSPTLIST ospmSrcAlternate;
@@ -43,7 +43,7 @@ typedef struct {
 extern "C" {
 #endif
 
-    unsigned OSPPGenerateUniqueId(OSPTTRANS *, unsigned char **);
+    unsigned OSPPGenerateUniqueId(OSPTTRANS *, char **);
     unsigned OSPPCapIndNew(OSPTCAPIND **, OSPTTRANS *, const char *, const char *, const char *, unsigned);
     void OSPPCapIndDelete(OSPTCAPIND **);
     int OSPPCapIndToElement(OSPTCAPIND *, OSPT_XML_ELEM **);

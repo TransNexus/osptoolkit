@@ -26,7 +26,7 @@
 
 typedef struct {
     unsigned ospmAuditState;
-    unsigned char *ospmAuditURL;
+    char *ospmAuditURL;
     unsigned ospmAuditTimeLimit;
     unsigned ospmAuditMaxMessages;
 } OSPTTNAUDIT;
@@ -42,16 +42,16 @@ extern "C" {
     unsigned OSPPTNAuditGetMaxMessages(OSPTTNAUDIT *);
     OSPE_AUDIT_STATE OSPPTNAuditGetState(OSPTTNAUDIT *);
     unsigned OSPPTNAuditGetTimeLimit(OSPTTNAUDIT *);
-    unsigned char *OSPPTNAuditGetURL(OSPTTNAUDIT *);
+    const char *OSPPTNAuditGetURL(OSPTTNAUDIT *);
     unsigned OSPPTNAuditHasMaxMessages(OSPTTNAUDIT *);
     unsigned OSPPTNAuditHasState(OSPTTNAUDIT *);
     unsigned OSPPTNAuditHasTimeLimit(OSPTTNAUDIT *);
-    unsigned OSPPTNAuditHasURL(OSPTTNAUDIT *);
+    OSPTBOOL OSPPTNAuditHasURL(OSPTTNAUDIT *);
     OSPTTNAUDIT *OSPPTNAuditNew(void);
     void OSPPTNAuditSetMaxMessages(OSPTTNAUDIT *, unsigned);
     void OSPPTNAuditSetState(OSPTTNAUDIT *, OSPE_AUDIT_STATE);
     void OSPPTNAuditSetTimeLimit(OSPTTNAUDIT *, unsigned);
-    void OSPPTNAuditSetURL(OSPTTNAUDIT *, unsigned char *);
+    void OSPPTNAuditSetURL(OSPTTNAUDIT *, const char *);
 
 #ifdef __cplusplus
 }

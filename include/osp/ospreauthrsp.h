@@ -33,8 +33,8 @@
 
 typedef struct {
     OSPTTIME ospmReauthRspTimestamp;
-    unsigned char *ospmReauthRspMessageId;
-    unsigned char *ospmReauthRspComponentId;
+    char *ospmReauthRspMessageId;
+    char *ospmReauthRspComponentId;
     OSPTSTATUS *ospmReauthRspStatus;
     OSPTTRXID ospmReauthRspTrxId;
     OSPTDEST *ospmReauthRspDest;
@@ -50,11 +50,11 @@ extern "C" {
     OSPTREAUTHRSP *OSPPReauthRspNew(void);
     void OSPPReauthRspDelete(OSPTREAUTHRSP **);
     int OSPPReauthRspFromElement(OSPT_XML_ELEM *, OSPTREAUTHRSP **);
-    void OSPPReauthRspSetComponentId(OSPTREAUTHRSP *, unsigned char *);
-    unsigned OSPPReauthRspHasMessageId(OSPTREAUTHRSP *);
-    void OSPPReauthRspSetMessageId(OSPTREAUTHRSP *, unsigned char *);
-    void OSPPReauthRspMessageIdFromElement(OSPT_XML_ELEM *, unsigned char **);
-    void OSPPReauthRspComponentIdFromElement(OSPT_XML_ELEM *, unsigned char **);
+    void OSPPReauthRspSetComponentId(OSPTREAUTHRSP *, const char *);
+    OSPTBOOL OSPPReauthRspHasMessageId(OSPTREAUTHRSP *);
+    void OSPPReauthRspSetMessageId(OSPTREAUTHRSP *, const char *);
+    void OSPPReauthRspMessageIdFromElement(OSPT_XML_ELEM *, const char **);
+    void OSPPReauthRspComponentIdFromElement(OSPT_XML_ELEM *, const char **);
     void OSPPReauthRspSetTimestamp(OSPTREAUTHRSP *, OSPTTIME);
     unsigned OSPPReauthRspHasComponentId(OSPTREAUTHRSP *);
     unsigned OSPPReauthRspHasStatus(OSPTREAUTHRSP *ospvReauthRsp);

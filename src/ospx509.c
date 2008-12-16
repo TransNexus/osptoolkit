@@ -112,7 +112,7 @@ OSPPX509CertGetCustDeviceId(
 
             /* Found a [, is it followed by the domain name? */
             cptr++;
-            if (strncmp(cptr, domainName, domainNameLength))
+            if (OSPM_STRNCMP(cptr, domainName, domainNameLength))
             {
                 /* Nope */
                 continue;
@@ -139,14 +139,14 @@ OSPPX509CertGetCustDeviceId(
                 }
 
                 /* We have a parameter and a value - which one? */
-                if (!strncmp(pname, "GWID", 4))
+                if (!OSPM_STRNCMP(pname, "GWID", 4))
                 {
                     /* Found a gateway id */
                     *ospvDeviceId = atol(value);
                     continue;
                 }
 
-                if (!strncmp(pname, "CSID", 4))
+                if (!OSPM_STRNCMP(pname, "CSID", 4))
                 {
                     /* Found a customer id */
                     *ospvCustomerId = atol(value);
@@ -349,9 +349,9 @@ OSPPX509CertCheckCertificateData(
             will eliminate the problem since centurey is explicit in date. */
 
             if ((OSPM_MEMCMP(currentDate,notBeforeString,
-                strlen(currentDate))<0) ||
+                OSPM_STRLEN(currentDate))<0) ||
                 (OSPM_MEMCMP(currentDate,notAfterString,
-                strlen(currentDate))>0)) 
+                OSPM_STRLEN(currentDate))>0)) 
             {
                 errorcode = OSPC_ERR_X509_CERTIFICATE_EXPIRED;
 #ifdef IGNOREOUTOFDATEERR

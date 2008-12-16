@@ -34,8 +34,8 @@
 
 typedef struct {
     OSPTTIME ospmAuthRspTimestamp;
-    unsigned char *ospmAuthRspMessageId;
-    unsigned char *ospmAuthRspComponentId;
+    char *ospmAuthRspMessageId;
+    char *ospmAuthRspComponentId;
     OSPTSTATUS *ospmAuthRspStatus;
     OSPTTNAUDIT *ospmAuthRspTNAudit;
     OSPTTRXID ospmAuthRspTrxId;
@@ -90,13 +90,13 @@ extern "C" {
     OSPTDEST *OSPPAuthRspAddDest(OSPTAUTHRSP *, OSPTDEST *);
     OSPTDEST *OSPPAuthRspFirstDest(OSPTAUTHRSP *);
     OSPTDEST *OSPPAuthRspNextDest(OSPTAUTHRSP *, OSPTDEST *);
-    int OSPPAuthRspHasComponentId(OSPTAUTHRSP *);
-    void OSPPAuthRspSetComponentId(OSPTAUTHRSP *, unsigned char *);
-    void OSPPAuthRspComponentIdFromElement(OSPT_XML_ELEM *, unsigned char **);
-    int OSPPAuthRspHasMessageId(OSPTAUTHRSP *);
-    void OSPPAuthRspSetMessageId(OSPTAUTHRSP *, unsigned char *);
-    void OSPPAuthRspMessageIdFromElement(OSPT_XML_ELEM *, unsigned char **);
-    unsigned char *OSPPAuthRspGetMessageId(OSPTAUTHRSP *);
+    OSPTBOOL OSPPAuthRspHasComponentId(OSPTAUTHRSP *);
+    void OSPPAuthRspSetComponentId(OSPTAUTHRSP *, const char *);
+    void OSPPAuthRspComponentIdFromElement(OSPT_XML_ELEM *, const char **);
+    OSPTBOOL OSPPAuthRspHasMessageId(OSPTAUTHRSP *);
+    void OSPPAuthRspSetMessageId(OSPTAUTHRSP *, const char *);
+    void OSPPAuthRspMessageIdFromElement(OSPT_XML_ELEM *, const char **);
+    const char *OSPPAuthRspGetMessageId(OSPTAUTHRSP *);
     void OSPPAuthRspSetTimestamp(OSPTAUTHRSP *, OSPTTIME);
     int OSPPAuthRspHasStatus(OSPTAUTHRSP *);
     OSPTSTATUS *OSPPAuthRspGetStatus(OSPTAUTHRSP *);
