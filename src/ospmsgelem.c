@@ -29,9 +29,14 @@
 
 /* Array that associates elements and names */
 const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = { 
-    { OSPC_MELEM_UNKNOWN,              "" },
     { OSPC_MELEM_ALMOSTOUTOFRESOURCES, "AlmostOutOfResources" },
+    { OSPC_MELEM_ALERTTIME,            "AlertTime" },
     { OSPC_MELEM_AMOUNT,               "Amount" },
+    { OSPC_MELEM_AUDIT,                "Audit" },
+    { OSPC_MELEM_AUDITMAXMESSAGES,     "AuditMaxMessages" },
+    { OSPC_MELEM_AUDITSTATE,           "AuditState" },
+    { OSPC_MELEM_AUDITTIMELIMIT,       "AuditTimeLimit" },
+    { OSPC_MELEM_AUDITURL,             "AuditURL" },
     { OSPC_MELEM_AUTHCNF,              "AuthorizationConfirmation" },
     { OSPC_MELEM_AUTHIND,              "AuthorizationIndication" },
     { OSPC_MELEM_AUTHREQ,              "AuthorizationRequest" },
@@ -41,29 +46,57 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_CALLID,               "CallId" },
     { OSPC_MELEM_CAPIND,               "CapabilitiesIndication" },
     { OSPC_MELEM_CODE,                 "Code" },
+    { OSPC_MELEM_CODEC,                "Codec" },
+    { OSPC_MELEM_CONNECTTIME,          "ConnectTime" },
+    { OSPC_MELEM_CSAUDITTRIGGER,       "cisco.com:AuditSignal" },
     { OSPC_MELEM_CURRENCY,             "Currency" },
+    { OSPC_MELEM_CUSTID,               "CustomerId" },
+    { OSPC_MELEM_DELAYLIMIT,           "DelayLimit" },
+    { OSPC_MELEM_DELAYPREF,            "DelayPreference" },
     { OSPC_MELEM_DESC,                 "Description" },
     { OSPC_MELEM_DEST,                 "Destination" },
     { OSPC_MELEM_DESTALT,              "DestinationAlternate" },
     { OSPC_MELEM_DESTINFO,             "DestinationInfo" },
+    { OSPC_MELEM_DESTOSPVERSION,       "OSPVersion" },
+    { OSPC_MELEM_DESTPROTOCOL,         "DestinationProtocol" },
     { OSPC_MELEM_DESTSIGADDR,          "DestinationSignalAddress" },
+    { OSPC_MELEM_DEVICEID,             "DeviceId" },
     { OSPC_MELEM_DEVICEINFO,           "DeviceInfo" },
     { OSPC_MELEM_ENDPOINT,             "EndPoint" },
+    { OSPC_MELEM_ENDTIME,              "EndTime" },
+    { OSPC_MELEM_FAILREASON,           "TermiantionCause" },
+    { OSPC_MELEM_FRACTION,             "Fraction" },
+    { OSPC_MELEM_GROUP,                "Group" },
+    { OSPC_MELEM_GROUPID,              "GroupId" },
     { OSPC_MELEM_INCREMENT,            "Increment" },
+    { OSPC_MELEM_LOSSRCVD,             "LossReceived" },
+    { OSPC_MELEM_LOSSSENT,             "LossSent" },
     { OSPC_MELEM_MAXDEST,              "MaximumDestinations" },
+    { OSPC_MELEM_MEAN,                 "Mean" },
     { OSPC_MELEM_MESSAGE,              "Message" },
+    { OSPC_MELEM_MINIMUM,              "Minimum" },
+    { OSPC_MELEM_ONEWAYDELAY,          "OneWayDelay" },
+    { OSPC_MELEM_PACKETS,              "Packets" },
+    { OSPC_MELEM_POSTDIALDELAY,        "PostDialDelay" },
     { OSPC_MELEM_PRICINGCNF,           "PricingConfirmation" },
     { OSPC_MELEM_PRICINGIND,           "PricingIndication" },
     { OSPC_MELEM_REAUTHREQ,            "ReauthorizationRequest" },
     { OSPC_MELEM_REAUTHRSP,            "ReauthorizationResponse" },
+    { OSPC_MELEM_RELEASESOURCE,        "ReleaseSource" },
     { OSPC_MELEM_RESOURCES,            "Resources" },
     { OSPC_MELEM_ROLE,                 "Role" },
+    { OSPC_MELEM_ROUNDTRIPDELAY,       "RoundTripDelay" },
+    { OSPC_MELEM_SAMPLES,              "Samples" },
     { OSPC_MELEM_SERVICE,              "Service" },
+    { OSPC_MELEM_SERVICETYPE,          "ServiceType" },
+    { OSPC_MELEM_SESSION,              "Session" },
     { OSPC_MELEM_SRCALT,               "SourceAlternate" },
     { OSPC_MELEM_SRCINFO,              "SourceInfo" },
     { OSPC_MELEM_SRCSIGADDR,           "SourceSignalAddress" },
     { OSPC_MELEM_STARTTIME,            "StartTime" },
+    { OSPC_MELEM_STATISTICS,           "Statistics" },
     { OSPC_MELEM_STATUS,               "Status" },
+    { OSPC_MELEM_TCCODE,               "TCCode" },
     { OSPC_MELEM_TIMESTAMP,            "Timestamp" },
     { OSPC_MELEM_TOKEN,                "Token" },
     { OSPC_MELEM_TOKENINFO,            "TokenInfo" },
@@ -74,39 +107,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_USAGEIND,             "UsageIndication" },
     { OSPC_MELEM_VALIDAFTER,           "ValidAfter" },
     { OSPC_MELEM_VALIDUNTIL,           "ValidUntil" },
-    { OSPC_MELEM_CUSTID,               "CustomerId" },
-    { OSPC_MELEM_DELAYLIMIT,           "DelayLimit" },
-    { OSPC_MELEM_DELAYPREF,            "DelayPreference" },
-    { OSPC_MELEM_DEVICEID,             "DeviceId" },
-    { OSPC_MELEM_FAILREASON,           "TermiantionCause" },
-    { OSPC_MELEM_TCCODE,               "TCCode" },
-    { OSPC_MELEM_FRACTION,             "Fraction" },
-    { OSPC_MELEM_LOSSRCVD,             "LossReceived" },
-    { OSPC_MELEM_LOSSSENT,             "LossSent" },
-    { OSPC_MELEM_MEAN,                 "Mean" },
-    { OSPC_MELEM_MINIMUM,              "Minimum" },
-    { OSPC_MELEM_ONEWAYDELAY,          "OneWayDelay" },
-    { OSPC_MELEM_PACKETS,              "Packets" },
-    { OSPC_MELEM_ROUNDTRIPDELAY,       "RoundTripDelay" },
-    { OSPC_MELEM_SAMPLES,              "Samples" },
-    { OSPC_MELEM_STATISTICS,           "Statistics" },
     { OSPC_MELEM_VARIANCE,             "Variance" },
-    { OSPC_MELEM_AUDIT,                "Audit" },
-    { OSPC_MELEM_AUDITURL,             "AuditURL" },
-    { OSPC_MELEM_AUDITSTATE,           "AuditState" },
-    { OSPC_MELEM_AUDITTIMELIMIT,       "AuditTimeLimit" },
-    { OSPC_MELEM_AUDITMAXMESSAGES,     "AuditMaxMessages" },
-    { OSPC_MELEM_CSAUDITTRIGGER,       "cisco.com:AuditSignal" },
-    { OSPC_MELEM_DESTPROTOCOL,         "DestinationProtocol" },
-    { OSPC_MELEM_DESTOSPVERSION,       "OSPVersion" },
-    { OSPC_MELEM_ENDTIME,              "EndTime" },
-    { OSPC_MELEM_ALERTTIME,            "AlertTime" },
-    { OSPC_MELEM_POSTDIALDELAY,        "PostDialDelay" },
-    { OSPC_MELEM_CONNECTTIME,          "ConnectTime" },
-    { OSPC_MELEM_RELEASESOURCE,        "ReleaseSource" },
-    { OSPC_MELEM_SERVICETYPE,          "ServiceType" },
-    { OSPC_MELEM_GROUP,                "Group" },
-    { OSPC_MELEM_GROUPID,              "GroupId" }
 };
 
 /*
@@ -117,11 +118,11 @@ const char *OSPPMsgElemGetName(     /* returns pointer to the name */
 {
     const char *ospvName = OSPC_OSNULL;
 
-    if (ospvPart != OSPC_MELEM_UNKNOWN) {
+    if ((ospvPart >= OSPC_MELEM_START) && (ospvPart < OSPC_MELEM_NUMBER)) {
         ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_MELEM_DESCS, OSPC_MELEM_NUMBER);
     }
 
-    return (ospvName);
+    return ospvName;
 }
 
 /*
@@ -136,5 +137,5 @@ OSPE_MSG_ELEM OSPPMsgElemGetPart(   /* returns part */
         ospvPart = (OSPE_MSG_ELEM)OSPPMsgDescGetPart(ospvName, OSPV_MELEM_DESCS, OSPC_MELEM_NUMBER);
     }
 
-    return (ospvPart);
+    return ospvPart;
 }

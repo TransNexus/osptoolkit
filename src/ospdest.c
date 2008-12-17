@@ -33,6 +33,15 @@
 #include "osp/ospusage.h"
 #include "osp/ospaltinfo.h"
 
+/* Array that associates protocols and names */
+const OSPT_MSG_DESC OSPV_DPROT_DESCS[OSPC_DPROT_NUMBER] = { 
+    { OSPC_DPROT_SIP,   "sip" },
+    { OSPC_DPROT_LRQ,   "h323-LRQ" },
+    { OSPC_DPROT_Q931,  "h323-Q931" },
+    { OSPC_DPROT_IAX,   "iax" },
+    { OSPC_DPROT_XMPP,  "xmpp" }
+};
+
 /*
  * OSPPDestSetOSPVersion() - set the OSP Version for a destination
  */
@@ -40,15 +49,17 @@ void OSPPDestSetOSPVersion(     /* nothing returned */
     OSPTDEST *ospvDest,         /* destination to set */
     const char *ospvVersion)    /* Version (as string) */
 {
-    if (!(OSPM_STRCMP(ospvVersion, DEST_OSP_DIABLED))) {
-        ospvDest->ospmDestOSPVersion = OSPC_DOSP_FALSE;
-    } else {
-        if (!(OSPM_STRCMP(ospvVersion, DEST_OSP_UNKNOWN))) {
-            ospvDest->ospmDestOSPVersion = OSPC_DOSP_UNKNOWN;
+	if (ospvDest != OSPC_OSNULL) {
+        if (!(OSPM_STRCMP(ospvVersion, DEST_OSP_DIABLED))) {
+            ospvDest->ospmDestOSPVersion = OSPC_DOSP_FALSE;
         } else {
-            ospvDest->ospmDestOSPVersion = OSPC_DOSP_TRUE;
+            if (!(OSPM_STRCMP(ospvVersion, DEST_OSP_UNKNOWN))) {
+                ospvDest->ospmDestOSPVersion = OSPC_DOSP_UNKNOWN;
+            } else {
+                ospvDest->ospmDestOSPVersion = OSPC_DOSP_TRUE;
+            }
         }
-    }
+	}
 }
 
 /*
@@ -58,19 +69,9 @@ void OSPPDestSetProtocol(   /* nothing returned */
     OSPTDEST *ospvDest,     /* destination to set */
     const char *ospvProt)   /* Protocol (as string) */
 {
-    if (!(OSPM_STRCMP(ospvProt, OSPC_DPDESC_SIP))) {
-        ospvDest->ospmDestProtocol = OSPC_DPROT_SIP;
-    } else if (!(OSPM_STRCMP(ospvProt, OSPC_DPDESC_LRQ))) {
-        ospvDest->ospmDestProtocol = OSPC_DPROT_LRQ;
-    } else if (!(OSPM_STRCMP(ospvProt, OSPC_DPDESC_Q931))) {
-        ospvDest->ospmDestProtocol = OSPC_DPROT_Q931;
-    } else if (!(OSPM_STRCMP(ospvProt, OSPC_DPDESC_IAX))) {
-        ospvDest->ospmDestProtocol = OSPC_DPROT_IAX;
-    } else if (!(OSPM_STRCMP(ospvProt, OSPC_DPDESC_XMPP))) {
-        ospvDest->ospmDestProtocol = OSPC_DPROT_XMPP;
-    } else {
-        ospvDest->ospmDestProtocol = OSPC_DPROT_UNKNOWN;
-    }
+	if (ospvDest != OSPC_OSNULL) {
+	    ospvDest->ospmDestProtocol = OSPPDestProtocolGetPart(ospvProt);
+	}
 }
 
 /*
@@ -110,9 +111,6 @@ void OSPPDestSetSrcNumber(  /* nothing returned */
     OSPTDEST *ospvDest,     /* destination to set */
     const char *ospvNum)    /* calling number (as string) */
 {
-    size_t len = 0;
-
-    len = 0;
     if (ospvDest != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
             OSPM_MEMCPY(ospvDest->ospmSrcNumber, ospvNum, tr_min(OSPC_SIZE_E164NUM, OSPM_STRLEN(ospvNum) + 1));
@@ -233,6 +231,7 @@ OSPTBOOL OSPPDestHasNetworkAddr(    /* returns non-zero if exists */
     if (ospvDest != OSPC_OSNULL) {
         ospvHasAddr = (ospvDest->ospmDestNetworkId[0] != '\0');
     }
+    
     return ospvHasAddr;
 }
 
@@ -700,84 +699,85 @@ unsigned OSPPDestFromElement(   /* returns error code */
             elem = (OSPT_XML_ELEM *) OSPPXMLElemNextChild(ospvElem, elem)) 
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
-                case OSPC_MELEM_DESTPROTOCOL:
-                    OSPPDestSetProtocol(dest, OSPPXMLElemGetValue(elem));
-                    break;
-                case OSPC_MELEM_DESTOSPVERSION:
-                    OSPPDestSetOSPVersion(dest, OSPPXMLElemGetValue(elem));
-                    break;
-                case OSPC_MELEM_SRCINFO:
-                    OSPPDestSetSrcNumber(dest, OSPPXMLElemGetValue(elem));
-                    break;
-                case OSPC_MELEM_DESTINFO:
-                    OSPPDestSetNumber(dest, OSPPXMLElemGetValue(elem));
-                    break;
-                case OSPC_MELEM_DESTALT:
-                    /* OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem)); */
-                    OSPPDestSetNetworkAddr(dest, OSPPXMLElemGetValue(elem));
-                    break;
-                case OSPC_MELEM_DESTSIGADDR:
-                    /* OSPPDestDevSetAddr(dest, OSPPXMLElemGetValue(elem)); */
-                    OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem));
-                    break;
-                case OSPC_MELEM_TOKEN:
-                    ospvErrCode = OSPPTokenFromElement(elem, &token);
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                        OSPPDestAddToken(dest, token);
-                    }
-                    break;
-                case OSPC_MELEM_VALIDAFTER:
-                    t = 0;
-                    if (*(OSPPXMLElemGetValue(elem)) != 0) {
-                        ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
-                    } else {
-                        t = OSPC_TIMEMIN;
-                    }
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                        OSPPDestSetValidAfter(dest, t);
-                    }
-                    break;
-                case OSPC_MELEM_VALIDUNTIL:
-                    t = 0;
-                    if (*(OSPPXMLElemGetValue(elem)) != 0) {
-                        ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
-                    } else {
-                        t = OSPC_TIMEMAX;
-                    }
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                        OSPPDestSetValidUntil(dest, t);
-                    }
-                    break;
-                case OSPC_MELEM_USAGEDETAIL:
-                    ospvErrCode = OSPPUsageFromElement(elem, &limit);
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                        OSPPDestSetLimit(dest, limit);
-                    }
-                    break;
-                case OSPC_MELEM_AUTHURL:
-                    OSPPDestSetAuthority(dest, OSPPXMLElemGetValue(elem));
-                    break;
-                case OSPC_MELEM_CALLID:
-                    ospvErrCode = OSPPCallIdFromElement(elem, &callId);
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                        OSPPDestSetCallId(dest, callId->ospmCallIdVal, callId->ospmCallIdLen);
-                        OSPPCallIdDelete(&callId);
-                    }
-                    break;
-                case OSPC_MELEM_FAILREASON:
-                    ospvErrCode = OSPPMsgNumFromElement(elem, &failure);
-                    OSPPDestSetFailReason(dest, (unsigned)failure);
-                    break;
-                default:
-                    /*
-                     * This is an element we don't understand. If it's
-                     * critical, then we have to report an error.
-                     * Otherwise we can ignore it.
-                     */
-                    if (OSPPMsgElemIsCritical(elem)) {
-                        ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
-                    }
-                    break;
+            case OSPC_MELEM_DESTPROTOCOL:
+                OSPPDestSetProtocol(dest, OSPPXMLElemGetValue(elem));
+                break;
+            case OSPC_MELEM_DESTOSPVERSION:
+                OSPPDestSetOSPVersion(dest, OSPPXMLElemGetValue(elem));
+                break;
+            case OSPC_MELEM_SRCINFO:
+                OSPPDestSetSrcNumber(dest, OSPPXMLElemGetValue(elem));
+                break;
+            case OSPC_MELEM_DESTINFO:
+                OSPPDestSetNumber(dest, OSPPXMLElemGetValue(elem));
+                break;
+            case OSPC_MELEM_DESTALT:
+                /* OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem)); */
+                OSPPDestSetNetworkAddr(dest, OSPPXMLElemGetValue(elem));
+                break;
+            case OSPC_MELEM_DESTSIGADDR:
+                /* OSPPDestDevSetAddr(dest, OSPPXMLElemGetValue(elem)); */
+                OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem));
+                break;
+            case OSPC_MELEM_TOKEN:
+                ospvErrCode = OSPPTokenFromElement(elem, &token);
+                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    OSPPDestAddToken(dest, token);
+                }
+                break;
+            case OSPC_MELEM_VALIDAFTER:
+                t = 0;
+                if (*(OSPPXMLElemGetValue(elem)) != 0) {
+                    ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
+                } else {
+                    t = OSPC_TIMEMIN;
+                }
+                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    OSPPDestSetValidAfter(dest, t);
+                }
+                break;
+            case OSPC_MELEM_VALIDUNTIL:
+                t = 0;
+                if (*(OSPPXMLElemGetValue(elem)) != 0) {
+                    ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
+                } else {
+                    t = OSPC_TIMEMAX;
+                }
+                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    OSPPDestSetValidUntil(dest, t);
+                }
+                break;
+            case OSPC_MELEM_USAGEDETAIL:
+                ospvErrCode = OSPPUsageFromElement(elem, &limit);
+                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    OSPPDestSetLimit(dest, limit);
+                }
+                break;
+            case OSPC_MELEM_AUTHURL:
+                OSPPDestSetAuthority(dest, OSPPXMLElemGetValue(elem));
+                break;
+            case OSPC_MELEM_CALLID:
+                ospvErrCode = OSPPCallIdFromElement(elem, &callId);
+                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    OSPPDestSetCallId(dest, callId->ospmCallIdVal, callId->ospmCallIdLen);
+                    OSPPCallIdDelete(&callId);
+                }
+                break;
+// SDS TODO                
+            case OSPC_MELEM_FAILREASON:
+                ospvErrCode = OSPPMsgNumFromElement(elem, &failure);
+                OSPPDestSetFailReason(dest, (unsigned)failure);
+                break;
+            default:
+                /*
+                 * This is an element we don't understand. If it's
+                 * critical, then we have to report an error.
+                 * Otherwise we can ignore it.
+                 */
+                if (OSPPMsgElemIsCritical(elem)) {
+                    ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
+                }
+                break;
             }
         }
 
@@ -825,4 +825,28 @@ unsigned OSPPDestGetDestinationCount(OSPTDEST *ospvDest)
     }
 
     return ospvTheValue;
+}
+
+OSPE_DEST_PROT OSPPDestProtocolGetPart(
+    const char *ospvName)
+{
+    OSPE_DEST_PROT ospvPart = OSPC_DPROT_UNKNOWN;
+
+    if (ospvName != OSPC_OSNULL) {
+        ospvPart = (OSPE_DEST_PROT)OSPPMsgDescGetPart(ospvName, OSPV_DPROT_DESCS, OSPC_DPROT_NUMBER);
+    }
+
+    return ospvPart;	
+}
+
+const char *OSPPDestProtocolGetName(
+    OSPE_DEST_PROT ospvPart)
+{
+    const char *ospvName = OSPC_OSNULL;
+
+    if ((ospvPart >= OSPC_DPROT_START) && (ospvPart < OSPC_DPROT_NUMBER)) {
+        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_DPROT_DESCS, OSPC_DPROT_NUMBER);
+    }
+
+    return ospvName;	
 }

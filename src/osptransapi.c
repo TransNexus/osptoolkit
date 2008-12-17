@@ -1748,7 +1748,7 @@ int OSPPTransactionBuildUsageFromScratch(
      * point to it.
      */
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        if ((ospvRole == OSPC_MROLE_SOURCE) || (ospvRole == OSPC_MROLE_RADSRCSTART) || (ospvRole == OSPC_MROLE_RADSRCSTOP)) {
+        if ((ospvRole == OSPC_RTYPE_SOURCE) || (ospvRole == OSPC_RTYPE_RADSRCSTART) || (ospvRole == OSPC_RTYPE_RADSRCSTOP)) {
             if (trans->AuthReq != (OSPTAUTHREQ*)OSPC_OSNULL) {
                 /*
                  * This is the 2nd time that the API is being called.
@@ -1823,7 +1823,7 @@ int OSPPTransactionBuildUsageFromScratch(
                    OSPPAuthRspSetRole(trans->AuthRsp,ospvRole);
                 }
             }
-        } else if ((ospvRole == OSPC_MROLE_DESTINATION) || (ospvRole == OSPC_MROLE_RADDSTSTART) || (ospvRole == OSPC_MROLE_RADDSTSTOP)) {
+        } else if ((ospvRole == OSPC_RTYPE_DESTINATION) || (ospvRole == OSPC_RTYPE_RADDESTSTART) || (ospvRole == OSPC_RTYPE_RADDESTSTOP)) {
             if (trans->AuthInd != OSPC_OSNULL) {
                 errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
                 OSPM_DBGERRORLOG(errorcode, "Transaction already initialized");
@@ -2217,7 +2217,7 @@ int OSPPTransactionInitializeAtDevice(
     if ((errorcode == OSPC_ERR_NO_ERROR) &&
         (*ospvAuthorised == OSPC_TRAN_AUTHORISED))
     {
-        if (ospvRole == OSPC_MROLE_SOURCE) {
+        if (ospvRole == OSPC_RTYPE_SOURCE) {
             if (trans->AuthReq != (OSPTAUTHREQ*)OSPC_OSNULL) {
                 errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
                 OSPM_DBGERRORLOG(errorcode, "Transaction already initialized");
@@ -2258,7 +2258,7 @@ int OSPPTransactionInitializeAtDevice(
 
             /* Set correct role */
             OSPPAuthIndSetRole(trans->AuthInd,ospvRole);
-        } else if (ospvRole == OSPC_MROLE_DESTINATION) {
+        } else if (ospvRole == OSPC_RTYPE_DESTINATION) {
             /* authind  already built by validate, just make sure role is correct */
             OSPPAuthIndSetRole(trans->AuthInd,ospvRole);
         } else {
@@ -2554,7 +2554,7 @@ int OSPPTransactionReinitializeAtDevice(
             (*ospvAuthorised == OSPC_TRAN_AUTHORISED))
         {
             /* should only be called by OGW */
-            if (ospvRole == OSPC_MROLE_SOURCE) {
+            if (ospvRole == OSPC_RTYPE_SOURCE) {
                 /* we are only adding a destination */
                 /* first set failure code in authrsp->currentdest */
                 OSPPDestSetFailReason(trans->CurrentDest, ospvFailureReason);
@@ -2742,7 +2742,7 @@ int OSPPTransactionReportUsage(
                         OSPPUsageIndSetDestinationCount(usage, OSPPDestGetDestinationCount(dest));
 
                         /* set FailureReason */
-                        OSPPUsageIndSetFailReason(usage, OSPPDestGetFailReason(dest));
+                        OSPPUsageIndSetFailReason(usage, OSPC_TCAUSE_Q850, OSPPDestGetFailReason(dest), OSPC_OSNULL);
                         OSPPListAppend(&(trans->UsageInd), usage);
                         usage = OSPC_OSNULL;
                     }
@@ -2759,9 +2759,8 @@ int OSPPTransactionReportUsage(
                         if (errorcode == OSPC_ERR_NO_ERROR) {
                             destHasFailReason = OSPPDestHasFailReason(dest);
                             if (destHasFailReason) {
-
                                 /* Set failure reason */
-                                OSPPUsageIndSetFailReason(usage, OSPPDestGetFailReason(dest));
+                                OSPPUsageIndSetFailReason(usage, OSPC_TCAUSE_Q850, OSPPDestGetFailReason(dest), OSPC_OSNULL);
                             }
 
                             OSPPUsageIndSetDestinationCount(usage, OSPPDestGetDestinationCount(dest));
@@ -2812,7 +2811,7 @@ int OSPPTransactionReportUsage(
                 destHasFailReason = OSPPDestHasFailReason(trans->CurrentDest);
                 if (destHasFailReason) {
                     /* Set failure reason */
-                    OSPPUsageIndSetFailReason(usage, OSPPDestGetFailReason(trans->CurrentDest));
+                    OSPPUsageIndSetFailReason(usage, OSPC_TCAUSE_Q850, OSPPDestGetFailReason(trans->CurrentDest), OSPC_OSNULL);
                 }
             }
 
@@ -3731,7 +3730,7 @@ int OSPPTransactionValidateAuthorisation(
 
 
                 if (errorcode == OSPC_ERR_NO_ERROR) {
-                    OSPPAuthIndSetRole(authind,OSPC_MROLE_DESTINATION);
+                    OSPPAuthIndSetRole(authind,OSPC_RTYPE_DESTINATION);
                     OSPPAuthIndSetSourceNumber(authind, ospvCallingNumber);
                     trans->CallingNumberFormat = ospvCallingNumberFormat;
 

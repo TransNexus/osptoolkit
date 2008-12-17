@@ -845,6 +845,9 @@ int testOSPPTransactionGetDestProtocol()
         case OSPC_DPROT_UNKNOWN:
             printf("Destination Protocol is Unknown \n");
             break;
+        default:
+            printf("Wrong Destination Protocol \n");
+            break;
         }
     }
     return errorcode;
@@ -1238,7 +1241,7 @@ int testOSPPTransactionRecordFailure()
 int testOSPPTransactionReinitializeAtDevice()
 {
     int errorcode = 0;
-    unsigned IsSource = OSPC_MROLE_SOURCE,
+    unsigned IsSource = OSPC_RTYPE_SOURCE,
         detaillogsize = 0,
         authorised = OSPC_TRAN_NOT_AUTHORISED, timelimit = 0;
     unsigned char token2[TOKEN_SZ];
@@ -1541,6 +1544,9 @@ int testOSPPTransactionGetLookAheadInfoIfPresent()
             case OSPC_DPROT_UNKNOWN:
                 printf("Destination Protocol is Unknown \n");
                 break;
+            default:
+                printf("Wrong Destination Protocol \n");
+                break;            	
             }
 
             switch (DestOSPStatus) {
@@ -1886,10 +1892,10 @@ int testAPI(int apinumber)
         OSPM_SLEEP(2);
         break;
     case 33:
-        errorcode = testOSPPTransactionInitializeAtDevice(OSPC_MROLE_SOURCE);
+        errorcode = testOSPPTransactionInitializeAtDevice(OSPC_RTYPE_SOURCE);
         break;
     case 34:
-        errorcode = testOSPPTransactionInitializeAtDevice(OSPC_MROLE_DESTINATION);
+        errorcode = testOSPPTransactionInitializeAtDevice(OSPC_RTYPE_DESTINATION);
         break;
     case 35:
         errorcode = testOSPPTransactionSetNetworkId();
@@ -1919,14 +1925,14 @@ int testAPI(int apinumber)
         printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
         scanf("%d", &build_new_trans);
         getchar();
-        errorcode = testBuildUsageFromScratch(OSPC_MROLE_SOURCE, build_new_trans);
+        errorcode = testBuildUsageFromScratch(OSPC_RTYPE_SOURCE, build_new_trans);
         break;
     case 44:
         printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
         scanf("%d", &build_new_trans);
         getchar();
         errorcode =
-            testBuildUsageFromScratch(OSPC_MROLE_DESTINATION, build_new_trans);
+            testBuildUsageFromScratch(OSPC_RTYPE_DESTINATION, build_new_trans);
         break;
     case 45:
         errorcode = testOSPPTransactionGetLookAheadInfoIfPresent();

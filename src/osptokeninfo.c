@@ -65,23 +65,11 @@ const char *OSPPTokenInfoGetLookAheadDestAlt(
  */
 void OSPPTokenInfoSetLookAheadDestProtocol(             /* nothing returned */
     OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo,     /* token info to set */
-    const char *ospvLookAheadDestProt)
+    const char *ospvDestProtocol)
 {
-    if (ospvTokenLookAheadInfo != OSPC_OSNULL) {
-        if (!(OSPM_STRCMP(ospvLookAheadDestProt, OSPC_DPDESC_SIP))) {
-            ospvTokenLookAheadInfo->lookAheadDestProt = OSPC_DPROT_SIP;
-        } else if (!(OSPM_STRCMP(ospvLookAheadDestProt, OSPC_DPDESC_LRQ))) {
-            ospvTokenLookAheadInfo->lookAheadDestProt = OSPC_DPROT_LRQ;
-        } else if (!(OSPM_STRCMP(ospvLookAheadDestProt, OSPC_DPDESC_Q931))) {
-            ospvTokenLookAheadInfo->lookAheadDestProt = OSPC_DPROT_Q931;
-        } else if (!(OSPM_STRCMP(ospvLookAheadDestProt, OSPC_DPDESC_IAX))) {
-            ospvTokenLookAheadInfo->lookAheadDestProt = OSPC_DPROT_IAX;
-        } else if (!(OSPM_STRCMP(ospvLookAheadDestProt, OSPC_DPDESC_XMPP))) {
-            ospvTokenLookAheadInfo->lookAheadDestProt = OSPC_DPROT_XMPP;
-        } else {
-            ospvTokenLookAheadInfo->lookAheadDestProt = OSPC_DPROT_UNKNOWN;
-        }
-    }
+	if (ospvTokenLookAheadInfo != OSPC_OSNULL) {
+		ospvTokenLookAheadInfo->lookAheadDestProt = OSPPDestProtocolGetPart(ospvDestProtocol);
+	}
 }
 
 /*

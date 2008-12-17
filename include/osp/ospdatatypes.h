@@ -193,11 +193,14 @@ typedef enum {
 } OSPE_SERVICE_TYPE;
 
 typedef enum {
-	OSPC_TCTYPE_Q850 = 0,
-	OSPC_TCTYPE_H323,
-	OSPC_TCTYPE_SIP,
-	OSPC_TCTYPE_XMPP
-} OSPE_TERMCAUSE_TYPE;
+	OSPC_TCAUSE_START = 0,
+	OSPC_TCAUSE_Q850 = OSPC_TCAUSE_START,
+	OSPC_TCAUSE_H323,
+	OSPC_TCAUSE_SIP,
+	OSPC_TCAUSE_XMPP,
+	/* Number of termination cause types */
+	OSPC_TCAUSE_NUMBER
+} OSPE_TERM_CAUSE;
 
 typedef struct {
     float amount;

@@ -832,7 +832,10 @@ OSPPReauthReqToElement(
 
     /* add role  */
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasRole(ospvReauthReq)) {
-        ospvErrCode = OSPPMsgRoleToElement(OSPPReauthReqGetRole(ospvReauthReq), OSPPMsgElemGetName(OSPC_MELEM_ROLE), &elem);
+        ospvErrCode = OSPPStringToElement(OSPC_MELEM_ROLE, 
+            OSPPRoleGetName(OSPPReauthReqGetRole(ospvReauthReq)), 
+            0, OSPC_OSNULL, OSPC_OSNULL, 
+            &elem);
         if (ospvErrCode == OSPC_ERR_NO_ERROR)
         {
             OSPPXMLElemAddChild(reauthelem, elem);
@@ -1054,16 +1057,16 @@ OSPPReauthReqHasRole(
 /*-----------------------------------------------------------------------*
  * OSPPReauthReqGetRole() - returns role for an reauth request
  *-----------------------------------------------------------------------*/
-OSPE_MSG_ROLE                         /* returns the role (OGW/TGW) */
+OSPE_ROLE_TYPE                         /* returns the role (OGW/TGW) */
     OSPPReauthReqGetRole(
     OSPTREAUTHREQ *ospvReauthReq             /* reauth request */
     )
 {
-    OSPE_MSG_ROLE ospvRole = OSPC_MROLE_UNDEFINED;
+    OSPE_ROLE_TYPE ospvRole = OSPC_RTYPE_UNDEFINED;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
-        ospvRole = (OSPE_MSG_ROLE)ospvReauthReq->ospmReauthReqRole;
+        ospvRole = (OSPE_ROLE_TYPE)ospvReauthReq->ospmReauthReqRole;
     }
     return(ospvRole);
 }
@@ -1076,7 +1079,7 @@ OSPE_MSG_ROLE                         /* returns the role (OGW/TGW) */
 void                              
 OSPPReauthReqSetRole(
     OSPTREAUTHREQ       *ospvReauthReq,
-    OSPE_MSG_ROLE  ospvRole)
+    OSPE_ROLE_TYPE  ospvRole)
 {
 
     if (ospvReauthReq != OSPC_OSNULL)

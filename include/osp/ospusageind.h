@@ -42,7 +42,7 @@ typedef struct {
     char ospmUsageIndConferenceId[OSPC_CONFIDSIZE];    /* This is in chararcters */
     char *ospmUsageIndMessageId;
     char *ospmUsageIndComponentId;
-    OSPE_MSG_ROLE ospmUsageIndRole;
+    OSPE_ROLE_TYPE ospmUsageIndRole;
     OSPTBOOL ospmUsageIndHasRole;
     OSPTTRXID ospmUsageIndTransactionId;
     OSPTCALLID *ospmUsageIndCallId;
@@ -54,14 +54,19 @@ typedef struct {
     OSPTLIST ospmUsageIndDestinationAlternate;
     unsigned long ospmUsageIndCustId;
     unsigned long ospmUsageIndDeviceId;
-    unsigned ospmUsageIndFailReason;
-    OSPTBOOL ospmUsageIndHasFailReason;
+    OSPT_FAILREASON ospmUsageIndFailReason;
     OSPT_STATISTICS *ospmUsageIndStatistics;
     OSPTBOOL ospmUsageIndIsPricingInfoPresent;
     OSPT_PRICING_INFO osmpUsageIndPricingInfo;
     OSPTBOOL osmpUsageIndIsServiceInfoPresent;
     OSPE_SERVICE_TYPE osmpUsageIndServiceType;
     OSPT_ALTINFO *ospmUsageIndDestinationCount;
+    char ospmUsageIndAssertedId[OSPC_SIZE_NORID];
+    OSPE_DEST_PROT ospmUsageIndDestProtocol;
+    char ospmUsageIndForwardCodec[OSPC_SIZE_CODEC];
+    char ospmUsageIndReverseCodec[OSPC_SIZE_CODEC];
+    OSPTCALLID *ospmUsageIndInCallId;
+    OSPTCALLID *ospmUsageIndOutCallId;
 } OSPT_USAGEIND;
 
 /* Function Prototypes */
@@ -89,8 +94,8 @@ extern "C" {
     OSPTBOOL OSPPUsageIndHasComponentId(OSPT_USAGEIND *);
     const char *OSPPUsageIndGetComponentId(OSPT_USAGEIND *);
     OSPTBOOL OSPPUsageIndHasRole(OSPT_USAGEIND *);
-    OSPE_MSG_ROLE OSPPUsageIndGetRole(OSPT_USAGEIND *);
-    void OSPPUsageIndSetRole(OSPT_USAGEIND *, OSPE_MSG_ROLE);
+    OSPE_ROLE_TYPE OSPPUsageIndGetRole(OSPT_USAGEIND *);
+    void OSPPUsageIndSetRole(OSPT_USAGEIND *, OSPE_ROLE_TYPE);
     OSPTBOOL OSPPUsageIndHasTransactionId(OSPT_USAGEIND *);
     void OSPPUsageIndSetTransactionId(OSPT_USAGEIND *, OSPTTRXID ospvTransactionId);
     OSPTTRXID OSPPUsageIndGetTransactionId(OSPT_USAGEIND *);
@@ -101,7 +106,7 @@ extern "C" {
     void OSPPUsageIndSetCurrency(OSPT_USAGEIND *, const char *);
     const char *OSPPUsageIndGetCurrency(OSPT_USAGEIND *);
     void OSPPUsageIndSetDestNumber(OSPT_USAGEIND *, const char *);
-    char *OSPPUsageIndGetDestNumber(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetDestNumber(OSPT_USAGEIND *);
     OSPTBOOL OSPPUsageIndHasSourceAlt(OSPT_USAGEIND *);
     OSPT_ALTINFO *OSPPUsageIndFirstSourceAlt(OSPT_USAGEIND *);
     OSPT_ALTINFO *OSPPUsageIndNextSourceAlt(OSPT_USAGEIND *, OSPT_ALTINFO *);
@@ -118,9 +123,10 @@ extern "C" {
     OSPTBOOL OSPPUsageIndHasDeviceId(OSPT_USAGEIND *ospvUsageInd);
     void OSPPUsageIndSetDeviceId(OSPT_USAGEIND *, unsigned long);
     unsigned long OSPPUsageIndGetDeviceId(OSPT_USAGEIND *);
-    OSPTBOOL OSPPUsageIndHasFailReason(OSPT_USAGEIND *ospvUsageInd);
-    void OSPPUsageIndSetFailReason(OSPT_USAGEIND *, unsigned);
-    unsigned OSPPUsageIndGetFailReason(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasFailReason(OSPT_USAGEIND *ospvUsageInd, OSPE_TERM_CAUSE);
+    void OSPPUsageIndSetFailReason(OSPT_USAGEIND *, OSPE_TERM_CAUSE, unsigned, const char *);
+    unsigned OSPPUsageIndGetTCCode(OSPT_USAGEIND *, OSPE_TERM_CAUSE);
+    const char *OSPPUsageIndGetTCDesc(OSPT_USAGEIND *, OSPE_TERM_CAUSE);
     OSPTBOOL OSPPUsageIndHasStatistics(OSPT_USAGEIND *);
     void OSPPUsageIndSetStatistics(OSPT_USAGEIND *, OSPT_STATISTICS *);
     void OSPPUsageIndAddDestinationAlt(OSPT_USAGEIND *ospvUsageInd, OSPT_ALTINFO *ospvAltInfo);
@@ -139,10 +145,28 @@ extern "C" {
     void OSPPUsageIndSetReleaseSource(OSPT_USAGEIND *, unsigned ospvReleaseSource);
     unsigned OSPPUsageIndGetReleaseSource(OSPT_USAGEIND *);
     void OSPPUsageIndSetConferenceId(OSPT_USAGEIND *, const char *);
-    char *OSPPUsageIndGetConferenceId(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetConferenceId(OSPT_USAGEIND *);
     void OSPPUsageIndSetDestinationCount(OSPT_USAGEIND *, unsigned ospvDestinationCount);
     OSPT_ALTINFO *OSPPUsageIndGetDestinationCount(OSPT_USAGEIND *);
-
+    OSPTBOOL OSPPUsageIndHasAssertedId(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetAssertedId(OSPT_USAGEIND *);
+    void OSPPUsageIndSetAssertedId(OSPT_USAGEIND *, const char *);
+    OSPTBOOL OSPPUsageIndHasDestProtocol(OSPT_USAGEIND *);
+    OSPE_DEST_PROT OSPPUsageIndGetDestProtocol(OSPT_USAGEIND *);
+    void OSPPUsageIndSetDestProtocol(OSPT_USAGEIND *, const char *);
+    OSPTBOOL OSPPUsageIndHasForwardCodec(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetForwardCodec(OSPT_USAGEIND *);
+    void OSPPUsageIndSetForwardCodec(OSPT_USAGEIND *, const char *);
+    OSPTBOOL OSPPUsageIndHasReverseCodec(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetReverseCodec(OSPT_USAGEIND *);
+    void OSPPUsageIndSetReverseCodec(OSPT_USAGEIND *, const char *);
+    OSPTBOOL OSPPUsageIndHasInCallId(OSPT_USAGEIND *);
+    OSPTCALLID *OSPPUsageIndGetInCallId(OSPT_USAGEIND *);
+    void OSPPUsageIndSetInCallId(OSPT_USAGEIND *, OSPTCALLID *);
+    OSPTBOOL OSPPUsageIndHasOutCallId(OSPT_USAGEIND *);
+    OSPTCALLID *OSPPUsageIndGetOutCallId(OSPT_USAGEIND *);
+    void OSPPUsageIndSetOutCallId(OSPT_USAGEIND *, OSPTCALLID *);
+    
 #ifdef __cplusplus
 }
 #endif

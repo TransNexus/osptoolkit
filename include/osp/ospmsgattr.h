@@ -25,17 +25,20 @@
 #include "osp/ospmsgdesc.h"
 #include "osp/ospmsgpart.h"
 
-/* attributes defined by the Open Settlement Protocol */
-
+/* Attributes defined by the Open Settlement Protocol */
 typedef enum {
-    OSPC_MATTR_UNKNOWN = OSPC_MPART_UNKNOWN,
+    OSPC_MATTR_UNKNOWN = OSPC_MPART_UNKNOWN,    
+    OSPC_MATTR_UNDEFINED,
+    /* Message attribute start */
+    OSPC_MATTR_START = OSPC_MPART_START,
+    OSPC_MATTR_MESSAGEID = OSPC_MATTR_START,
     OSPC_MATTR_COMPONENTID,
+    OSPC_MATTR_RANDOM,
     OSPC_MATTR_CRITICAL,
     OSPC_MATTR_ENCODING,
-    OSPC_MATTR_MESSAGEID,
     OSPC_MATTR_TYPE,
     OSPC_MATTR_VERSION,
-    OSPC_MATTR_RANDOM,
+    OSPC_MATTR_DIRECTION,
     /* Number of message attribtes */
     OSPC_MATTR_NUMBER
 } OSPE_MSG_ATTR;
@@ -43,11 +46,9 @@ typedef enum {
 /*
  * externally declared global variables
  */
-
 extern const OSPT_MSG_DESC OSPV_MATTR_DESCS[];
 
 /* Function Prototypes */
-
 OSPE_MSG_ATTR OSPPMsgAttrGetPart(const char *);
 const char *OSPPMsgAttrGetName(OSPE_MSG_ATTR);
 

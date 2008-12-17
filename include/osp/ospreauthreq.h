@@ -58,9 +58,9 @@ extern "C" {
     OSPTREAUTHREQ *OSPPReauthReqNew(void);
     void OSPPReauthReqDelete(OSPTREAUTHREQ **);
     int OSPPReauthReqToElement(OSPTREAUTHREQ *, OSPT_XML_ELEM **, void *);
-    void OSPPReauthReqSetRole(OSPTREAUTHREQ *, OSPE_MSG_ROLE);
+    void OSPPReauthReqSetRole(OSPTREAUTHREQ *, OSPE_ROLE_TYPE);
     OSPTBOOL OSPPReauthReqHasRole(OSPTREAUTHREQ *);
-    OSPE_MSG_ROLE OSPPReauthReqGetRole(OSPTREAUTHREQ *);
+    OSPE_ROLE_TYPE OSPPReauthReqGetRole(OSPTREAUTHREQ *);
     void OSPPReauthReqAddSourceAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
     void OSPPReauthReqAddDestinationAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
     void OSPPReauthReqSetCallId(OSPTREAUTHREQ *, OSPTCALLID *);

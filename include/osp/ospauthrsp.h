@@ -25,6 +25,7 @@
 #include "osp/osp.h"
 #include "osp/ospxmlelem.h"
 #include "osp/ospmsg.h"
+#include "osp/ospmsgattr.h"
 #include "osp/ospcallid.h"
 #include "osp/osptoken.h"
 #include "osp/ospdest.h"
@@ -44,7 +45,7 @@ typedef struct {
     unsigned ospmAuthRspDelayPref;
     unsigned ospmNumDests;
     OSPTCSAUDIT *ospmAuthRspCSAudit;
-    OSPE_MSG_ROLE ospmAuthRspRole;
+    OSPE_ROLE_TYPE ospmAuthRspRole;
     OSPTBOOL ospmAuthRspHasRole;
 } OSPTAUTHRSP;
 
@@ -113,8 +114,8 @@ extern "C" {
     int OSPPAuthRspHasCSAudit(OSPTAUTHRSP *);
     OSPTCSAUDIT *OSPPAuthRspGetCSAudit(OSPTAUTHRSP *);
     int OSPPAuthRspHasRole(OSPTAUTHRSP *);
-    void OSPPAuthRspSetRole(OSPTAUTHRSP *, OSPE_MSG_ROLE);
-    OSPE_MSG_ROLE OSPPAuthRspGetRole(OSPTAUTHRSP *);
+    void OSPPAuthRspSetRole(OSPTAUTHRSP *, OSPE_ROLE_TYPE);
+    OSPE_ROLE_TYPE OSPPAuthRspGetRole(OSPTAUTHRSP *);
 
 #ifdef __cplusplus
 }

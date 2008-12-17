@@ -25,10 +25,14 @@
 #include "osp/osp.h"
 #include "osp/ospostime.h"
 #include "osp/osplist.h"
+#include "osp/ospmsgpart.h"
 
 typedef enum {
-    OSPC_MSG_UNKNOWN = 0,
-    OSPC_MSG_AREQ,
+    OSPC_MSG_UNKNOWN = OSPC_MPART_UNKNOWN,
+    OSPC_MSG_UNDEFINED,
+    /* Message type start */
+    OSPC_MSG_START = 0,
+    OSPC_MSG_AREQ = OSPC_MSG_START,
     OSPC_MSG_ARESP,
     OSPC_MSG_AREZP,
     OSPC_MSG_AIND,
@@ -45,22 +49,35 @@ typedef enum {
 } OSPE_MSG_TYPE;
 
 typedef enum {
-    OSPC_MROLE_UNDEFINED = 0,    /* Not a known role */
-    OSPC_MROLE_DESTINATION,
-    OSPC_MROLE_SOURCE,
-    OSPC_MROLE_OTHER,
-    OSPC_MROLE_RADSRCSTART,
-    OSPC_MROLE_RADDSTSTART,
-    OSPC_MROLE_RADSRCSTOP,
-    OSPC_MROLE_RADDSTSTOP
-} OSPE_MSG_ROLE;
+    OSPC_RTYPE_UNKNOWN = OSPC_MPART_UNKNOWN,    /* Not a known role */
+    OSPC_RTYPE_UNDEFINED,
+    /* Role type start */
+    OSPC_RTYPE_START = 0,
+    OSPC_RTYPE_DESTINATION = OSPC_RTYPE_START,
+    OSPC_RTYPE_SOURCE,
+    OSPC_RTYPE_OTHER,
+    OSPC_RTYPE_RADSRCSTART,
+    OSPC_RTYPE_RADDESTSTART,
+    OSPC_RTYPE_RADSRCSTOP,
+    OSPC_RTYPE_RADDESTSTOP,
+    /* Number of role types */
+    OSPC_RTYPE_NUMBER
+} OSPE_ROLE_TYPE;
+
+/*
+ * externally declared global variables
+ */
+extern const OSPT_MSG_DESC OSPV_RTYPE_DESCS[];
 
 /* general constants */
 
-#define OSPC_SIZE_E164NUM    132    /* max digits in E.164 number */
-#define OSPC_SIZE_SIGNALADDR 262    /* max characters in [name]:port */
-#define OSPC_SIZE_URL        512    /* max characters in URL */
-#define OSPC_SIZE_ROLESTR    16     /* max characters in role string */
+#define OSPC_SIZE_E164NUM       132 /* max digits in E.164 number */
+#define OSPC_SIZE_SIGNALADDR    262 /* max characters in [name]:port */
+#define OSPC_SIZE_URL           512 /* max characters in URL */
+#define OSPC_SIZE_ROLESTR       16  /* max characters in role string */
+#define OSPC_SIZE_NORSTR        128 /* max characters in normal string */
+#define OSPC_SIZE_NORID         128 /* max characters in normal ID */
+#define OSPC_SIZE_CODEC         8   /* max characters in codec */
 
 /* Function Prototypes */
 
@@ -80,12 +97,12 @@ extern "C" {
     unsigned OSPPMsgTXFromElement(OSPT_XML_ELEM *, OSPTTRXID *);
     unsigned OSPPMsgTimeToElement(OSPTTIME, const char *, OSPT_XML_ELEM **);
     unsigned OSPPMsgElemIsCritical(OSPT_XML_ELEM *);
-    unsigned OSPPMsgRoleToElement(unsigned, const char *, OSPT_XML_ELEM **);
-    int OSPPOSRoleValToString(unsigned, char *ospvRolestr);
     int OSPPBase64DecodeWrap(const unsigned char *, unsigned *, unsigned char *);
     unsigned OSPPMsgTimeFromElement(OSPT_XML_ELEM *, OSPTTIME *);
     unsigned OSPPMsgBinFromASCIIElement(unsigned char *, unsigned *, unsigned char **);
-
+    OSPE_ROLE_TYPE OSPPRoleGetPart(const char *);
+    const char *OSPPRoleGetName(OSPE_ROLE_TYPE);
+    
 #ifdef __cplusplus
 }
 #endif

@@ -29,14 +29,25 @@
 
 /* Array that associates attribute and names */
 const OSPT_MSG_DESC OSPV_MATTR_DESCS[OSPC_MATTR_NUMBER] = {
-    { OSPC_MATTR_UNKNOWN,       "" },
+    { OSPC_MATTR_MESSAGEID,     "messageId" },
     { OSPC_MATTR_COMPONENTID,   "componentId" },
+    { OSPC_MATTR_RANDOM,        "random" },
     { OSPC_MATTR_CRITICAL,      "critical" },
     { OSPC_MATTR_ENCODING,      "encoding" },
-    { OSPC_MATTR_MESSAGEID,     "messageId" },
     { OSPC_MATTR_TYPE,          "type" },
     { OSPC_MATTR_VERSION,       "version" },
-    { OSPC_MATTR_RANDOM,        "random" }
+    { OSPC_MATTR_DIRECTION,     "direction" }
+};
+
+/* Array that associates role and names */
+const OSPT_MSG_DESC OSPV_RTYPE_DESCS[OSPC_RTYPE_NUMBER] = {
+    { OSPC_RTYPE_DESTINATION,   "destination" },
+    { OSPC_RTYPE_SOURCE,        "source" },
+    { OSPC_RTYPE_OTHER,         "other" },
+    { OSPC_RTYPE_RADSRCSTART,   "radsrcstart" },
+    { OSPC_RTYPE_RADDESTSTART,  "raddeststart" },
+    { OSPC_RTYPE_RADSRCSTOP,    "radsrcstop" },
+    { OSPC_RTYPE_RADDESTSTOP,   "raddeststop" }
 };
 
 /*
@@ -47,11 +58,11 @@ const char *OSPPMsgAttrGetName(     /* returns pointer to the name */
 {
     const char *ospvName = OSPC_OSNULL;
 
-    if (ospvPart != OSPC_MATTR_UNKNOWN) {
+    if ((ospvPart >= OSPC_MATTR_START) && (ospvPart < OSPC_MATTR_NUMBER)) {
         ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_MATTR_DESCS, OSPC_MATTR_NUMBER);
     }
 
-    return (ospvName);
+    return ospvName;
 }
 
 /*
@@ -66,5 +77,6 @@ OSPE_MSG_ATTR OSPPMsgAttrGetPart(   /* returns part */
         ospvPart = (OSPE_MSG_ATTR)OSPPMsgDescGetPart(ospvName, OSPV_MATTR_DESCS, OSPC_MATTR_NUMBER);
     }
 
-    return (ospvPart);
+    return ospvPart;
 }
+

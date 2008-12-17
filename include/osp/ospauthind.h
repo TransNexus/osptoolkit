@@ -25,6 +25,7 @@
 #include "osp/osp.h"
 #include "osp/ospxmlelem.h"
 #include "osp/ospmsg.h"
+#include "osp/ospmsgattr.h"
 #include "osp/ospcallid.h"
 #include "osp/osptoken.h"
 #include "osp/ospaltinfo.h"
@@ -32,7 +33,7 @@
 
 typedef struct {
     OSPTTIME ospmAuthIndTimestamp;
-    OSPE_MSG_ROLE ospmAuthIndRole;
+    OSPE_ROLE_TYPE ospmAuthIndRole;
     OSPTBOOL ospmAuthIndHasRole;
     OSPTCALLID *ospmAuthIndCallId;
     char ospmAuthIndSourceNumber[OSPC_SIZE_E164NUM];
@@ -61,8 +62,8 @@ extern "C" {
     void OSPPAuthIndSetCallId(OSPTAUTHIND *, OSPTCALLID *);
     void OSPPAuthIndSetTimestamp(OSPTAUTHIND *, OSPTTIME);
     OSPTBOOL OSPPAuthIndHasRole(OSPTAUTHIND *);
-    void OSPPAuthIndSetRole(OSPTAUTHIND *, OSPE_MSG_ROLE);
-    OSPE_MSG_ROLE OSPPAuthIndGetRole(OSPTAUTHIND *);
+    void OSPPAuthIndSetRole(OSPTAUTHIND *, OSPE_ROLE_TYPE);
+    OSPE_ROLE_TYPE OSPPAuthIndGetRole(OSPTAUTHIND *);
     OSPTBOOL OSPPAuthIndHasCallId(OSPTAUTHIND *);
     OSPTCALLID *OSPPAuthIndGetCallId(OSPTAUTHIND *);
     unsigned OSPPAuthIndGetCallIdSize(OSPTAUTHIND *);

@@ -79,7 +79,7 @@ OSPPTransactionBuildReauthRequest(
         timestamp = time(NULL);
         OSPPReauthReqSetTimestamp(ospvTrans->ReauthReq, timestamp);
 
-        OSPPReauthReqSetRole(ospvTrans->ReauthReq, OSPC_MROLE_SOURCE);
+        OSPPReauthReqSetRole(ospvTrans->ReauthReq, OSPC_RTYPE_SOURCE);
 
         /* Get Callid from trans->currdest->callid */
         if(ospvTrans->CurrentDest != OSPC_OSNULL)
@@ -186,7 +186,7 @@ OSPPTransactionBuildReauthRequest(
                     altinfo = (OSPT_ALTINFO *)OSPPListNext( &(ospvTrans->AuthReq->ospmAuthReqDeviceInfo), altinfo))
                 {
 
-                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), OSPPAltInfoGetValue(altinfo), OSPPAltInfoGetType(altinfo));
+                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), OSPPAltInfoGetValue(altinfo), OSPPAltInfoTypeGetPart(altinfo));
                     if(altinfo2 != OSPC_OSNULL)
                     {
                         OSPPListAppend(&(ospvTrans->ReauthReq->ospmReauthReqDevInfo), altinfo2);
@@ -207,7 +207,7 @@ OSPPTransactionBuildReauthRequest(
                     altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextSourceAlt(ospvTrans->AuthReq, altinfo))
                 {
 
-                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), OSPPAltInfoGetValue(altinfo), OSPPAltInfoGetType(altinfo));
+                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), OSPPAltInfoGetValue(altinfo), OSPPAltInfoTypeGetPart(altinfo));
 
                     if(altinfo2 != OSPC_OSNULL)
                     {
@@ -229,7 +229,7 @@ OSPPTransactionBuildReauthRequest(
                     altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextDestinationAlt(ospvTrans->AuthReq, altinfo))
                 {
 
-                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), OSPPAltInfoGetValue(altinfo), OSPPAltInfoGetType(altinfo));
+                    altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo), OSPPAltInfoGetValue(altinfo), OSPPAltInfoTypeGetPart(altinfo));
 
                     if(altinfo2 != OSPC_OSNULL)
                     {
@@ -276,7 +276,7 @@ OSPPTransactionBuildUsage(
     int errorcode = OSPC_ERR_NO_ERROR;
     const char* dest = OSPC_OSNULL;
     OSPT_ALTINFO* altinfo = OSPC_OSNULL;
-    OSPE_MSG_ROLE role;
+    OSPE_ROLE_TYPE role;
 
     *ospvUsage = OSPPUsageIndNew();
 
@@ -288,7 +288,7 @@ OSPPTransactionBuildUsage(
             {
                 OSPPUsageIndSetRole(*ospvUsage, OSPPAuthRspGetRole(ospvTrans->AuthRsp));
             } else {
-                OSPPUsageIndSetRole(*ospvUsage, OSPC_MROLE_SOURCE);
+                OSPPUsageIndSetRole(*ospvUsage, OSPC_RTYPE_SOURCE);
             }
 
             /* Get CallId */
@@ -407,13 +407,13 @@ OSPPTransactionBuildUsage(
             /* Terminating */
             if ((ospvTrans->AuthInd != (OSPTAUTHIND*)OSPC_OSNULL) &&
                 (OSPPAuthIndHasRole(ospvTrans->AuthInd)) &&
-                ((role = OSPPAuthIndGetRole(ospvTrans->AuthInd)) != OSPC_MROLE_DESTINATION))
+                ((role = OSPPAuthIndGetRole(ospvTrans->AuthInd)) != OSPC_RTYPE_DESTINATION))
             {
                 OSPPUsageIndSetRole(*ospvUsage, role);
             } else if (ospvTrans->WasLookAheadInfoGivenToApp == OSPC_TRUE) {
-                OSPPUsageIndSetRole(*ospvUsage, OSPC_MROLE_OTHER);
+                OSPPUsageIndSetRole(*ospvUsage, OSPC_RTYPE_OTHER);
             } else {
-                OSPPUsageIndSetRole(*ospvUsage, OSPC_MROLE_DESTINATION);
+                OSPPUsageIndSetRole(*ospvUsage, OSPC_RTYPE_DESTINATION);
             }
 
             /* Get CallId */
@@ -529,7 +529,7 @@ OSPPTransactionBuildUsage(
         /* set Device Id */
         OSPPUsageIndSetDeviceId(*ospvUsage, OSPPProviderGetDeviceId(ospvTrans->Provider));
         /* set Fail Reason */
-        OSPPUsageIndSetFailReason(*ospvUsage, OSPPDestGetFailReason(ospvTrans->CurrentDest));
+        OSPPUsageIndSetFailReason(*ospvUsage, OSPC_TCAUSE_Q850, OSPPDestGetFailReason(ospvTrans->CurrentDest), OSPC_OSNULL);
     } else {
         /* Some error occurred. Get rid of this usage */
         if(ospvUsage != OSPC_OSNULL) {

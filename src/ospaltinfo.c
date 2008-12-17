@@ -28,23 +28,31 @@
 #include "osp/ospaltinfo.h"
 
 const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ATYPE_NUMBER] = {
-    { OSPC_ATYPE_UNKNOWN,       "" },
-    { OSPC_ATYPE_E164,          "e164" },
-    { OSPC_ATYPE_H323,          "h323" },
-    { OSPC_ATYPE_URL,           "url" },
-    { OSPC_ATYPE_EMAIL,         "email" },
-    { OSPC_ATYPE_TRANSPORT,     "transport" },
-    { OSPC_ATYPE_INTERNATIONAL, "international" },
-    { OSPC_ATYPE_NATIONAL,      "national" },
-    { OSPC_ATYPE_NETWORK,       "network" },
-    { OSPC_ATYPE_SUBSCRIBER,    "subscriber" },
-    { OSPC_ATYPE_ABBREVIATED,   "abbreviated" },
-    { OSPC_ATYPE_E164PREFIX,    "e164prefix" },
-    { OSPC_ATYPE_SIP,           "sip" },
-    { OSPC_ATYPE_XMPP,          "xmpp" },
-    { OSPC_ATYPE_Q850,          "q850" },
-    { OSPC_ATYPE_DEVICEID,      "deviceId" },
-    { OSPC_ATYPE_DEVICEID,      "assertedId" }
+	/* For Alt/Info attributes */
+    { OSPC_ATYPE_E164,              "e164" },
+    { OSPC_ATYPE_H323,              "h323" },
+    { OSPC_ATYPE_URL,               "url" },
+    { OSPC_ATYPE_EMAIL,             "email" },
+    { OSPC_ATYPE_TRANSPORT,         "transport" },
+    { OSPC_ATYPE_INTERNATIONAL,     "international" },
+    { OSPC_ATYPE_NATIONAL,          "national" },
+    { OSPC_ATYPE_NETWORK,           "network" },
+    { OSPC_ATYPE_SUBSCRIBER,        "subscriber" },
+    { OSPC_ATYPE_ABBREVIATED,       "abbreviated" },
+    { OSPC_ATYPE_E164PREFIX,        "e164prefix" },
+    { OSPC_ATYPE_SIP,               "sip" },
+    { OSPC_ATYPE_XMPP,              "xmpp" },
+    { OSPC_ATYPE_Q850,              "q850" },
+    { OSPC_ATYPE_DEVICEID,          "deviceId" },
+    { OSPC_ATYPE_ASSERTEDID,        "assertedId" },
+    /* For other attributes */
+    { OSPC_ATYPE_BASE64,            "base64" },
+    { OSPC_ATYPE_CDATA,             "cdata" },
+    { OSPC_ATYPE_FORWARD,           "forward" },
+    { OSPC_ATYPE_REVERSE,           "reverse" },
+    { OSPC_ATYPE_GENERAL,           "general" },
+    { OSPC_ATYPE_INBOUND,           "inbound" },
+    { OSPC_ATYPE_OUTBOUND,          "outbound" }
 };
 
 /*
@@ -115,7 +123,7 @@ OSPT_ALTINFO *OSPPAltInfoNew(       /* returns ptr to altinfo or null */
         }
     }
 
-    return (ospvAltInfo);
+    return ospvAltInfo;
 }
 
 /*
@@ -142,13 +150,13 @@ unsigned OSPPAltInfoGetSize(
         ospvSize = ospvAltInfo->ospmAltInfoLen;
     }
 
-    return (ospvSize);
+    return ospvSize;
 }
 
 /*
- * OSPPAltInfoGetType() - returns altinfo type
+ * OSPPAltInfoTypeGetPart() - returns altinfo type
  */
-OSPE_ALTINFO_TYPE OSPPAltInfoGetType(
+OSPE_ALTINFO_TYPE OSPPAltInfoTypeGetPart(
     OSPT_ALTINFO *ospvAltInfo)
 {
     OSPE_ALTINFO_TYPE ospvType = OSPC_ATYPE_UNKNOWN;
@@ -157,7 +165,7 @@ OSPE_ALTINFO_TYPE OSPPAltInfoGetType(
         ospvType = (OSPE_ALTINFO_TYPE)ospvAltInfo->ospmAltInfoType;
     }
 
-    return (ospvType);
+    return ospvType;
 }
 
 /*
@@ -172,7 +180,7 @@ const char *OSPPAltInfoGetValue(
         ospvVal = ospvAltInfo->ospmAltInfoVal;
     }
 
-    return (ospvVal);
+    return ospvVal;
 }
 
 /*
@@ -210,7 +218,7 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -221,9 +229,9 @@ const char *OSPPAltInfoTypeGetName( /* Returns a pointer to the name */
 {
     const char *ospvName = OSPC_OSNULL;
 
-    if (ospvPart != OSPC_ATYPE_UNKNOWN) {
+    if ((ospvPart >= OSPC_ATYPE_START) && (ospvPart < OSPC_ATYPE_NUMBER)) {
         ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_ATYPE_DESCS, OSPC_ATYPE_NUMBER);
     }
 
-    return (ospvName);
+    return ospvName;
 }

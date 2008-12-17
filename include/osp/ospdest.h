@@ -27,34 +27,37 @@
 #include "osp/ospmsg.h"
 #include "osp/ospcallid.h"
 #include "osp/osptoken.h"
+#include "osp/ospmsgdesc.h"
 
 /*
  * Destination Protocol Data Type
  */
 typedef enum {
-    OSPC_DPROT_UNDEFINED = 0,   /* Not Configured at Server */
-    OSPC_DPROT_SIP,             /* Destination Protocol - SIP */
-    OSPC_DPROT_LRQ,             /* Destination Protocol - H323, Send LRQ to GK to Complete Call */
-    OSPC_DPROT_Q931,            /* Destination Protocol - H323, Send Setup to Complete Call */
-    OSPC_DPROT_IAX,             /* Destination Protocol - IAX */
-    OSPC_DPROT_XMPP,            /* Destination Protocol - XMPP */
-    OSPC_DPROT_UNKNOWN          /* Could not be understood by the Client as Sent by the Server */
+    OSPC_DPROT_UNKNOWN = OSPC_MPART_UNKNOWN,    /* Could not be understood by the Client as Sent by the Server */
+    OSPC_DPROT_UNDEFINED,                       /* Not Configured at Server */
+    OSPC_DPROT_START = 0,                       /* Destination Protocol start */
+    OSPC_DPROT_SIP = OSPC_DPROT_START,          /* Destination Protocol - SIP */
+    OSPC_DPROT_LRQ,                             /* Destination Protocol - H323, Send LRQ to GK to Complete Call */
+    OSPC_DPROT_Q931,                            /* Destination Protocol - H323, Send Setup to Complete Call */
+    OSPC_DPROT_IAX,                             /* Destination Protocol - IAX */
+    OSPC_DPROT_XMPP,                            /* Destination Protocol - XMPP */
+    /* Number of destiantion protocol types */
+    OSPC_DPROT_NUMBER
 } OSPE_DEST_PROT;
 
-#define OSPC_DPDESC_SIP     "sip"
-#define OSPC_DPDESC_LRQ     "h323-LRQ"
-#define OSPC_DPDESC_Q931    "h323-Q931"
-#define OSPC_DPDESC_IAX     "iax"
-#define OSPC_DPDESC_XMPP    "xmpp"
+/*
+ * externally declared global variables
+ */
+extern const OSPT_MSG_DESC OSPV_DPROT_DESCS[];
 
-/*-----------------------------------------------------------------------*
+/*
  * Destination OSP Enabled Data Type
- *-----------------------------------------------------------------------*/
+ */
 typedef enum {
-    OSPC_DOSP_UNDEFINED = 0,    /* Not Configured at Server */
-    OSPC_DOSP_TRUE,             /* Destination is OSP Enabled */
-    OSPC_DOSP_FALSE,            /* Destination os Not OSP Enabled */
-    OSPC_DOSP_UNKNOWN           /* Could not be understood by the Client as Sent by the Server */
+    OSPC_DOSP_UNKNOWN = 0,   /* Could not be understood by the Client as Sent by the Server */
+    OSPC_DOSP_UNDEFINED,     /* Not Configured at Server */
+    OSPC_DOSP_TRUE,          /* Destination is OSP Enabled */
+    OSPC_DOSP_FALSE          /* Destination is Not OSP Enabled */
 } OSPE_DEST_OSPENABLED;
 
 #define DEST_OSP_DIABLED                "0.0.0"
@@ -136,6 +139,8 @@ extern "C" {
     unsigned OSPPDestGetFailReason(OSPTDEST *);
     void OSPPDestSetDestinationCount(OSPTDEST *, unsigned);
     unsigned OSPPDestGetDestinationCount(OSPTDEST *);
+    OSPE_DEST_PROT OSPPDestProtocolGetPart(const char *);
+    const char *OSPPDestProtocolGetName(OSPE_DEST_PROT);
 
 #ifdef __cplusplus
 }

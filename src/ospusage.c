@@ -79,6 +79,9 @@ unsigned OSPPUsageFromElement(  /* returns error code */
                         ospvErrCode = OSPC_ERR_BAD_SERVICE;
                     }
                     break;
+                case OSPC_MELEM_FAILREASON:
+// SDS TODO
+                    break;
                 default:
                     /*
                      * This is an element we don't understand. If it's
@@ -413,15 +416,17 @@ unsigned OSPPCallPartyNumToElement(
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_URL));
             		break;
             	default:
-            		attr = OSPC_OSNULL;
+            		ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
             		break;
             	}
-                if (attr == OSPC_OSNULL) {
-                	OSPPXMLElemDelete(ospvElem);
-                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-                } else {
-                    OSPPXMLElemAddAttr(*ospvElem, attr);
-                }
+            	if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    if (attr == OSPC_OSNULL) {
+                	    OSPPXMLElemDelete(ospvElem);
+                        ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                    } else {
+                        OSPPXMLElemAddAttr(*ospvElem, attr);
+                    }
+            	}
             }        	
         	break;
         default:
@@ -437,7 +442,7 @@ unsigned OSPPCallPartyNumToElement(
  * OSPPTermCauseToElement() - adds termiantion cause to an xml element
  */
 unsigned OSPPTermCauseToElement(
-    OSPE_TERMCAUSE_TYPE TCType,     /* Termination cause type */
+    OSPE_TERM_CAUSE TCType,     /* Termination cause type */
     unsigned TCCode,                /* Termination cause */
     const char *TCDesc,             /* Termination cause description */
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
@@ -457,27 +462,29 @@ unsigned OSPPTermCauseToElement(
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
         	switch (TCType) {
-        	case OSPC_TCTYPE_Q850:
-        	     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_Q850));
-        	     break;
-        	case OSPC_TCTYPE_H323:
-        	     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_H323));
-        	     break;
-        	case OSPC_TCTYPE_SIP:
-        	     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_SIP));
-        	     break;
-        	case OSPC_TCTYPE_XMPP:        		
-        	     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_XMPP));
-        	     break;
+        	case OSPC_TCAUSE_Q850:
+        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_Q850));
+        	    break;
+        	case OSPC_TCAUSE_H323:
+        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_H323));
+        	    break;
+        	case OSPC_TCAUSE_SIP:
+        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_SIP));
+        	    break;
+        	case OSPC_TCAUSE_XMPP:        		
+        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_XMPP));
+        	    break;
         	default:
-        		attr = OSPC_OSNULL;
+        		ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
         		break;
         	}
-            if (attr != OSPC_OSNULL) {
-                OSPPXMLElemAddAttr(*ospvElem, attr);
-            } else {
-                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-            }   
+        	if (ospvErrCode == OSPC_ERR_NO_ERROR) { 
+                if (attr == OSPC_OSNULL) {
+                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(*ospvElem, attr);
+                }
+        	}
         }
     }
         
@@ -502,6 +509,56 @@ unsigned OSPPTermCauseToElement(
     /* if for any reason we found an error - destroy any elements created */
     if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
         OSPPXMLElemDelete(ospvElem);
+    }
+
+    return ospvErrCode;
+}
+
+/*
+ * OSPPStringToElement() - adds normal string to an xml element
+ */
+unsigned OSPPStringToElement(
+    OSPE_MSG_ELEM ElemType,         /* Element type */
+    const char *ElemValue,          /* Element value */
+    unsigned AttrNum,               /* Number of attributes */
+    OSPE_MSG_ATTR AttrType[],       /* Attribute type */
+    OSPE_ALTINFO_TYPE AttrValue[],  /* Attribute value */
+    OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
+{
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
+    unsigned cnt;
+
+    if (ospvElem == OSPC_OSNULL) {
+        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+    } else {
+    	if ((ElemType < OSPC_MELEM_START) || (ElemType > OSPC_MELEM_NUMBER)) {
+    		ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+    	} else {
+            *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ElemType), ElemValue);
+            if (*ospvElem == OSPC_OSNULL) {
+                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            } else {
+                for (cnt = 0; cnt < AttrNum; cnt++) {
+                    if (((AttrType[cnt] < OSPC_MATTR_START) || (AttrType[cnt] > OSPC_MATTR_NUMBER)) || 
+                        ((AttrValue[cnt] < OSPC_ATYPE_START) || (AttrValue[cnt] > OSPC_ATYPE_NUMBER))) 
+                    {
+                    	OSPPXMLElemDelete(ospvElem);
+                        ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+                        break;
+                    } else {
+                        attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(AttrType[cnt]), OSPPAltInfoTypeGetName(AttrValue[cnt]));
+                        if (attr == OSPC_OSNULL) {
+                        	OSPPXMLElemDelete(ospvElem);
+                            ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                            break;
+                        } else {
+                           OSPPXMLElemAddAttr(*ospvElem, attr);
+                        }
+                    }
+                }
+            }
+    	}
     }
 
     return ospvErrCode;

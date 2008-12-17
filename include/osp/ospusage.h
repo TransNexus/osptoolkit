@@ -24,6 +24,7 @@
 
 #include "osp/osp.h"
 #include "osp/ospxmlelem.h"
+#include "osp/ospmsgattr.h"
 #include "osp/ospaltinfo.h"
 
 /* Function Prototypes */
@@ -35,6 +36,7 @@ unsigned OSPPAddServiceTypeToUsageElement(OSPE_SERVICE_TYPE, OSPT_XML_ELEM **);
 unsigned OSPPAddPricingInfoToUsageElement(OSPT_PRICING_INFO, OSPT_XML_ELEM **);
 
 unsigned OSPPCallPartyNumToElement(OSPE_MSG_ELEM, const char *, OSPE_NUMBER_FORMAT, OSPT_XML_ELEM **);
-unsigned OSPPTermCauseToElement(OSPE_TERMCAUSE_TYPE, unsigned, const char *, OSPT_XML_ELEM **);
+unsigned OSPPTermCauseToElement(OSPE_TERM_CAUSE, unsigned, const char *, OSPT_XML_ELEM **);
+unsigned OSPPStringToElement(OSPE_MSG_ELEM, const char *, unsigned, OSPE_MSG_ATTR *, OSPE_ALTINFO_TYPE *, OSPT_XML_ELEM **);
 
 #endif /* _OSPUSAGE_H */

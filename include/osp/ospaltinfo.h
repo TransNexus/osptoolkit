@@ -32,7 +32,10 @@
 
 typedef enum {
     OSPC_ATYPE_UNKNOWN = OSPC_MPART_UNKNOWN,
-    OSPC_ATYPE_E164,
+    OSPC_ATYPE_UNDEFINED,
+    /* Attribute type start, for Alt/Info attributes */
+    OSPC_ATYPE_START = OSPC_MPART_START,
+    OSPC_ATYPE_E164 = OSPC_ATYPE_START,
     OSPC_ATYPE_H323,
     OSPC_ATYPE_URL,
     OSPC_ATYPE_EMAIL,
@@ -48,6 +51,14 @@ typedef enum {
     OSPC_ATYPE_Q850,
     OSPC_ATYPE_DEVICEID,
     OSPC_ATYPE_ASSERTEDID,
+    /* For other attributes */
+    OSPC_ATYPE_BASE64,
+    OSPC_ATYPE_CDATA,
+    OSPC_ATYPE_FORWARD,
+    OSPC_ATYPE_REVERSE,
+    OSPC_ATYPE_GENERAL,
+    OSPC_ATYPE_INBOUND,
+    OSPC_ATYPE_OUTBOUND,
     /* Number of element attributes */
     OSPC_ATYPE_NUMBER
 } OSPE_ALTINFO_TYPE;
@@ -55,11 +66,9 @@ typedef enum {
 /*
  * externally declared global variables
  */
-
 extern const OSPT_MSG_DESC OSPV_ATYPE_DESCS[];
 
 /* the basic altinfo structure */
-
 typedef struct {
     OSPTLISTLINK ospmAltInfoLink;
     unsigned ospmAltInfoLen;
@@ -76,9 +85,9 @@ extern "C" {
     OSPT_ALTINFO *OSPPAltInfoNew(unsigned, const char *, OSPE_ALTINFO_TYPE);
     void OSPPAltInfoDelete(OSPT_ALTINFO **);
     unsigned OSPPAltInfoGetSize(OSPT_ALTINFO *);
-    OSPE_ALTINFO_TYPE OSPPAltInfoGetType(OSPT_ALTINFO *);
     const char *OSPPAltInfoGetValue(OSPT_ALTINFO *);
     unsigned OSPPAltInfoToElement(OSPT_ALTINFO *, OSPT_XML_ELEM **, OSPE_MSG_ELEM);
+    OSPE_ALTINFO_TYPE OSPPAltInfoTypeGetPart(OSPT_ALTINFO *);
     const char *OSPPAltInfoTypeGetName(OSPE_ALTINFO_TYPE);
 
 #ifdef __cplusplus

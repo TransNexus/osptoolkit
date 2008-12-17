@@ -695,7 +695,7 @@ int OSPPAuthRspHasRole(
  */
 void OSPPAuthRspSetRole(
     OSPTAUTHRSP* ospvAuthRsp,
-    OSPE_MSG_ROLE ospvRole)
+    OSPE_ROLE_TYPE ospvRole)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
         ospvAuthRsp->ospmAuthRspRole = ospvRole;
@@ -709,13 +709,13 @@ void OSPPAuthRspSetRole(
  * OSPPAuthRspGetRole() - returns role for an AuthResponse
  *-----------------------------------------------------------------------*
  */
-OSPE_MSG_ROLE OSPPAuthRspGetRole(
+OSPE_ROLE_TYPE OSPPAuthRspGetRole(
     OSPTAUTHRSP* ospvAuthRsp)
 {
-    OSPE_MSG_ROLE ospvRole = OSPC_MROLE_UNDEFINED;
+    OSPE_ROLE_TYPE ospvRole = OSPC_RTYPE_UNDEFINED;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvRole = (OSPE_MSG_ROLE)ospvAuthRsp->ospmAuthRspRole;
+        ospvRole = (OSPE_ROLE_TYPE)ospvAuthRsp->ospmAuthRspRole;
     }
     return ospvRole;
 }

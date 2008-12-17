@@ -70,7 +70,7 @@ OSPTBOOL OSPPAuthIndHasRole(
  */
 void OSPPAuthIndSetRole(
     OSPTAUTHIND* ospvAuthInd,
-    OSPE_MSG_ROLE ospvRole)
+    OSPE_ROLE_TYPE ospvRole)
 {
     if (ospvAuthInd != OSPC_OSNULL) {
         ospvAuthInd->ospmAuthIndRole = ospvRole;
@@ -84,13 +84,13 @@ void OSPPAuthIndSetRole(
  * OSPPAuthIndGetRole() - returns role for an AuthIndication
  *-----------------------------------------------------------------------*
  */
-OSPE_MSG_ROLE OSPPAuthIndGetRole(
+OSPE_ROLE_TYPE OSPPAuthIndGetRole(
     OSPTAUTHIND* ospvAuthInd)
 {
-    OSPE_MSG_ROLE ospvRole = OSPC_MROLE_UNDEFINED;
+    OSPE_ROLE_TYPE ospvRole = OSPC_RTYPE_UNDEFINED;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvRole = (OSPE_MSG_ROLE)ospvAuthInd->ospmAuthIndRole;
+        ospvRole = (OSPE_ROLE_TYPE)ospvAuthInd->ospmAuthIndRole;
     }
     return ospvRole;
 }
