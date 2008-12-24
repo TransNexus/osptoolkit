@@ -33,10 +33,10 @@ extern "C" {
 #endif
 
     int OSPPXMLElementProcess(OSPT_XML_ELEM *, unsigned char **, unsigned *);
-    int OSPPXMLGetDataType(OSPT_XML_ELEM *, OSPE_MSG_TYPE *);
-    int OSPPXMLMessageCreate(OSPE_MSG_TYPE, unsigned char **, unsigned *, void *, OSPTTRANS *);
-    int OSPPXMLMessageParse(unsigned char *, unsigned, void **, OSPE_MSG_TYPE *);
-    int OSPPXMLMessageProcess(OSPT_XML_ELEM *, void **, OSPE_MSG_TYPE);
+    int OSPPXMLGetDataType(OSPT_XML_ELEM *, OSPE_MESSAGE *);
+    int OSPPXMLMessageCreate(OSPE_MESSAGE, unsigned char **, unsigned *, void *, OSPTTRANS *);
+    int OSPPXMLMessageParse(unsigned char *, unsigned, void **, OSPE_MESSAGE *);
+    int OSPPXMLMessageProcess(OSPT_XML_ELEM *, void **, OSPE_MESSAGE);
 
 #ifdef __cplusplus
 }

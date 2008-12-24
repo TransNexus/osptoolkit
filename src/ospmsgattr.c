@@ -40,14 +40,14 @@ const OSPT_MSG_DESC OSPV_MATTR_DESCS[OSPC_MATTR_NUMBER] = {
 };
 
 /* Array that associates role and names */
-const OSPT_MSG_DESC OSPV_RTYPE_DESCS[OSPC_RTYPE_NUMBER] = {
-    { OSPC_RTYPE_DESTINATION,   "destination" },
-    { OSPC_RTYPE_SOURCE,        "source" },
-    { OSPC_RTYPE_OTHER,         "other" },
-    { OSPC_RTYPE_RADSRCSTART,   "radsrcstart" },
-    { OSPC_RTYPE_RADDESTSTART,  "raddeststart" },
-    { OSPC_RTYPE_RADSRCSTOP,    "radsrcstop" },
-    { OSPC_RTYPE_RADDESTSTOP,   "raddeststop" }
+const OSPT_MSG_DESC OSPV_RTYPE_DESCS[OSPC_ROLE_NUMBER] = {
+    { OSPC_ROLE_DESTINATION,   "destination" },
+    { OSPC_ROLE_SOURCE,        "source" },
+    { OSPC_ROLE_OTHER,         "other" },
+    { OSPC_ROLE_RADSRCSTART,   "radsrcstart" },
+    { OSPC_ROLE_RADDESTSTART,  "raddeststart" },
+    { OSPC_ROLE_RADSRCSTOP,    "radsrcstop" },
+    { OSPC_ROLE_RADDESTSTOP,   "raddeststop" }
 };
 
 /*

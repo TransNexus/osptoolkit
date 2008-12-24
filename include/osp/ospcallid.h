@@ -26,6 +26,7 @@
 #include "osp/osplist.h"
 #include "osp/ospxmlelem.h"
 #include "osp/ospaltinfo.h"
+#include "osp/ospmsgattr.h"
 
 /* max size of a call ID (bytes) */
 
@@ -52,7 +53,7 @@ extern "C" {
     unsigned OSPPCallIdGetSize(OSPTCALLID *);
     unsigned char *OSPPCallIdGetValue(OSPTCALLID *);
     unsigned OSPPCallIdFromASCIIElement(unsigned char *, OSPTCALLID **);
-    unsigned OSPPSessionIdToElement(OSPTCALLID *, OSPE_ALTINFO_TYPE, OSPTBOOL, OSPT_XML_ELEM **);
+    unsigned OSPPSessionIdToElement(OSPTCALLID *, OSPE_DIRECTION, OSPTBOOL, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

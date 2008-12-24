@@ -1057,16 +1057,16 @@ OSPPReauthReqHasRole(
 /*-----------------------------------------------------------------------*
  * OSPPReauthReqGetRole() - returns role for an reauth request
  *-----------------------------------------------------------------------*/
-OSPE_ROLE_TYPE                         /* returns the role (OGW/TGW) */
+OSPE_ROLE                         /* returns the role (OGW/TGW) */
     OSPPReauthReqGetRole(
     OSPTREAUTHREQ *ospvReauthReq             /* reauth request */
     )
 {
-    OSPE_ROLE_TYPE ospvRole = OSPC_RTYPE_UNDEFINED;
+    OSPE_ROLE ospvRole = OSPC_ROLE_UNDEFINED;
 
     if (ospvReauthReq != OSPC_OSNULL)
     {
-        ospvRole = (OSPE_ROLE_TYPE)ospvReauthReq->ospmReauthReqRole;
+        ospvRole = (OSPE_ROLE)ospvReauthReq->ospmReauthReqRole;
     }
     return(ospvRole);
 }
@@ -1079,7 +1079,7 @@ OSPE_ROLE_TYPE                         /* returns the role (OGW/TGW) */
 void                              
 OSPPReauthReqSetRole(
     OSPTREAUTHREQ       *ospvReauthReq,
-    OSPE_ROLE_TYPE  ospvRole)
+    OSPE_ROLE  ospvRole)
 {
 
     if (ospvReauthReq != OSPC_OSNULL)

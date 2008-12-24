@@ -182,7 +182,7 @@ OSPPCapIndNew(
             /* Initialize the list */
             OSPPListNew(&(capInd->ospmSrcAlternate));
 
-            altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ATYPE_TRANSPORT);
+            altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ALTINFO_TRANSPORT);
 
             if(OSPC_OSNULL != altinfo)
             {
@@ -195,7 +195,7 @@ OSPPCapIndNew(
          if (OSPC_OSNULL != ospvSourceDevice && OSPM_STRLEN(ospvSourceDevice) > 0)
         {
             OSPPListNew(&(capInd->ospmDeviceInfo));
-            altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ATYPE_TRANSPORT);
+            altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ALTINFO_TRANSPORT);
 
             if(OSPC_OSNULL != altinfo)
             {
@@ -213,7 +213,7 @@ OSPPCapIndNew(
                 OSPPListNew(&(capInd->ospmSrcAlternate));
             }
 
-            altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceNetworkId), ospvSourceNetworkId, OSPC_ATYPE_NETWORK);
+            altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceNetworkId), ospvSourceNetworkId, OSPC_ALTINFO_NETWORK);
 
             if(OSPC_OSNULL != altinfo)
             {

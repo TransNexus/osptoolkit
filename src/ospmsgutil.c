@@ -99,11 +99,11 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
         {
             if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_ENCODING) {
                 /* we found an encoding attribute - is it base64 */
-                if (OSPM_STRCMP(OSPPXMLAttrGetValue(attr), OSPPAltInfoTypeGetName(OSPC_ATYPE_BASE64)) == 0) {
+                if (OSPM_STRCMP(OSPPXMLAttrGetValue(attr), OSPPAltInfoTypeGetName(OSPC_ALTINFO_BASE64)) == 0) {
                     /* yes, it's base64 instead of CDATA */
                     isBase64 = OSPC_TRUE;
                     /* don't stop now, in case a later version supercedes */
-                } else if (OSPM_STRCMP(OSPPXMLAttrGetValue(attr), OSPPAltInfoTypeGetName(OSPC_ATYPE_CDATA)) == 0) {
+                } else if (OSPM_STRCMP(OSPPXMLAttrGetValue(attr), OSPPAltInfoTypeGetName(OSPC_ALTINFO_CDATA)) == 0) {
                     /* this says CDATA instead of base64 */
                     isBase64 = OSPC_FALSE;
                     /* again, keep looking in case a later version is there */
@@ -205,7 +205,7 @@ unsigned OSPPMsgBinToElement(   /* returns error code */
     unsigned ospvDataLen,       /* size of binary data */
     unsigned char *ospvData,    /* pointer to binary data */
     const char *ospvName,       /* name of element */
-    OSPT_XML_ELEM ** ospvElem,  /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem,   /* where to put XML element pointer */
     OSPTBOOL ospvUseBase64)     /* base64 (1) or CDATA (0) encoding */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -334,7 +334,7 @@ unsigned OSPPMsgBinToElement(   /* returns error code */
             } else {
                 if (ospvUseBase64 == OSPC_TRUE) {
                     OSPT_XML_ATTR *attr = OSPC_OSNULL;
-                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_ENCODING), OSPPAltInfoTypeGetName(OSPC_ATYPE_BASE64));
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_ENCODING), OSPPAltInfoTypeGetName(OSPC_ALTINFO_BASE64));
                     if (attr != OSPC_OSNULL) {
                         OSPPXMLElemAddAttr(*ospvElem, attr);
                         attr = OSPC_OSNULL;
@@ -358,7 +358,7 @@ unsigned OSPPMsgBinToElement(   /* returns error code */
  * OSPPMsgNumFromElement() - extract number value from an element
  */
 unsigned OSPPMsgNumFromElement( /* returns error code */
-    OSPT_XML_ELEM * ospvElem,   /* input is XML element */
+    OSPT_XML_ELEM *ospvElem,    /* input is XML element */
     unsigned long *ospvNumber)  /* where to put number */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -467,7 +467,7 @@ int OSPPMsgFloatToElement(      /* returns error code */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
-    char val[41];                /* 39 digits will accomodate 2^128 *//*!!!PS added 1 */
+    char val[41];               /* 39 digits will accomodate 2^128 *//*!!!PS added 1 */
 
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -627,8 +627,8 @@ unsigned OSPPMsgTXToElement(    /* returns error code */
  * OSPPMsgTimeFromElement() - extract time value from an element
  */
 unsigned OSPPMsgTimeFromElement(/* returns error code */
-    OSPT_XML_ELEM * ospvElem,   /* input is XML element */
-    OSPTTIME * ospvTime)        /* where to put time */
+    OSPT_XML_ELEM *ospvElem,    /* input is XML element */
+    OSPTTIME *ospvTime)         /* where to put time */
 {                                
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
 
@@ -699,7 +699,7 @@ unsigned OSPPMsgElemIsCritical( /* returns non-zero if critical */
         {
             if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_CRITICAL) {
                 /* we found an critical attribute - is it false? */
-                if (OSPM_STRCASECMP(OSPPXMLAttrGetValue(attr), "False") == 0) {
+                if (OSPM_STRCASECMP(OSPPXMLAttrGetValue(attr), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE)) == 0) {
                     /* yes, change our return value */
                     ospvIsCritical = OSPC_FALSE;
                     /* don't stop now, in case a later version supercedes */
@@ -715,12 +715,12 @@ unsigned OSPPMsgElemIsCritical( /* returns non-zero if critical */
  * OSPPRoleGetName() - get an role name from a part value
  */
 const char *OSPPRoleGetName(    /* returns pointer to the name */                  
-    OSPE_ROLE_TYPE ospvPart)
+    OSPE_ROLE ospvPart)
 {
     const char *ospvName = OSPC_OSNULL;
 
-    if ((ospvPart >= OSPC_RTYPE_START) && (ospvPart < OSPC_RTYPE_NUMBER)) {
-        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_RTYPE_DESCS, OSPC_RTYPE_NUMBER);
+    if ((ospvPart >= OSPC_ROLE_START) && (ospvPart < OSPC_ROLE_NUMBER)) {
+        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_RTYPE_DESCS, OSPC_ROLE_NUMBER);
     }
 
     return ospvName;
@@ -729,13 +729,13 @@ const char *OSPPRoleGetName(    /* returns pointer to the name */
 /*
  * OSPPRoleGetPart() - get a role value part ID from its name
  */
-OSPE_ROLE_TYPE OSPPRoleGetPart(   /* returns part */
+OSPE_ROLE OSPPRoleGetPart(   /* returns part */
     const char *ospvName)
 {
-    OSPE_ROLE_TYPE ospvPart = OSPC_RTYPE_UNKNOWN;
+    OSPE_ROLE ospvPart = OSPC_ROLE_UNKNOWN;
 
     if (ospvName != OSPC_OSNULL) {
-        ospvPart = (OSPE_ROLE_TYPE)OSPPMsgDescGetPart(ospvName, OSPV_RTYPE_DESCS, OSPC_RTYPE_NUMBER);
+        ospvPart = (OSPE_ROLE)OSPPMsgDescGetPart(ospvName, OSPV_RTYPE_DESCS, OSPC_ROLE_NUMBER);
     }
 
     return ospvPart;

@@ -67,18 +67,18 @@ void OSPPTokenInfoSetLookAheadDestProtocol(             /* nothing returned */
     OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo,     /* token info to set */
     const char *ospvDestProtocol)
 {
-	if (ospvTokenLookAheadInfo != OSPC_OSNULL) {
-		ospvTokenLookAheadInfo->lookAheadDestProt = OSPPDestProtocolGetPart(ospvDestProtocol);
-	}
+    if (ospvTokenLookAheadInfo != OSPC_OSNULL) {
+        ospvTokenLookAheadInfo->lookAheadDestProt = OSPPDestProtocolGetPart(ospvDestProtocol);
+    }
 }
 
 /*
  * OSPPTokenInfoGetLookAheadDestProtocol() - returns the destination Protocol for the look ahead route. 
  */
-OSPE_DEST_PROT OSPPTokenInfoGetLookAheadDestProtocol(
+OSPE_DEST_PROTOCOL OSPPTokenInfoGetLookAheadDestProtocol(
     OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo)     /* token info */
 {
-    OSPE_DEST_PROT ospvLookAheadDestOSPProt = OSPC_DPROT_UNDEFINED;
+    OSPE_DEST_PROTOCOL ospvLookAheadDestOSPProt = OSPC_DPROT_UNDEFINED;
 
     if (ospvTokenLookAheadInfo != OSPC_OSNULL) {
         ospvLookAheadDestOSPProt = ospvTokenLookAheadInfo->lookAheadDestProt;

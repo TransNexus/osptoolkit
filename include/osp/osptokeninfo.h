@@ -30,7 +30,7 @@
 
 typedef struct {
     char lookAheadDest[OSPC_SIZE_SIGNALADDR];
-    OSPE_DEST_PROT lookAheadDestProt;
+    OSPE_DEST_PROTOCOL lookAheadDestProt;
     OSPE_DEST_OSPENABLED lookAheadDestOSPStatus;
 } OSPTTOKENLOOKAHEADINFO;
 
@@ -79,7 +79,7 @@ extern "C" {
     void OSPPTokenInfoSetLookAheadDestAlt(OSPTTOKENLOOKAHEADINFO *, const char *);
     const char *OSPPTokenInfoGetLookAheadDestAlt(OSPTTOKENLOOKAHEADINFO *);
     void OSPPTokenInfoSetLookAheadDestProtocol(OSPTTOKENLOOKAHEADINFO *, const char *);
-    OSPE_DEST_PROT OSPPTokenInfoGetLookAheadDestProtocol(OSPTTOKENLOOKAHEADINFO *);
+    OSPE_DEST_PROTOCOL OSPPTokenInfoGetLookAheadDestProtocol(OSPTTOKENLOOKAHEADINFO *);
     void OSPPTokenInfoSetLookAheadOSPVersion(OSPTTOKENLOOKAHEADINFO *, const char *);
     OSPE_DEST_OSPENABLED OSPPTokenInfoGetLookAheadOSPVersion(OSPTTOKENLOOKAHEADINFO *);
     const char *OSPPTokenInfoGetDstNetworkId(OSPTTOKENINFO *);

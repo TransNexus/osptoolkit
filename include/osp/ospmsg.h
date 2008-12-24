@@ -46,23 +46,23 @@ typedef enum {
     OSPC_MSG_CAPCNF,
     /* Number of message types */
     OSPC_MSG_NUMBER
-} OSPE_MSG_TYPE;
+} OSPE_MESSAGE;
 
 typedef enum {
-    OSPC_RTYPE_UNKNOWN = OSPC_MPART_UNKNOWN,    /* Not a known role */
-    OSPC_RTYPE_UNDEFINED,
+    OSPC_ROLE_UNKNOWN = OSPC_MPART_UNKNOWN,    /* Not a known role */
+    OSPC_ROLE_UNDEFINED,
     /* Role type start */
-    OSPC_RTYPE_START = 0,
-    OSPC_RTYPE_DESTINATION = OSPC_RTYPE_START,
-    OSPC_RTYPE_SOURCE,
-    OSPC_RTYPE_OTHER,
-    OSPC_RTYPE_RADSRCSTART,
-    OSPC_RTYPE_RADDESTSTART,
-    OSPC_RTYPE_RADSRCSTOP,
-    OSPC_RTYPE_RADDESTSTOP,
+    OSPC_ROLE_START = 0,
+    OSPC_ROLE_DESTINATION = OSPC_ROLE_START,
+    OSPC_ROLE_SOURCE,
+    OSPC_ROLE_OTHER,
+    OSPC_ROLE_RADSRCSTART,
+    OSPC_ROLE_RADDESTSTART,
+    OSPC_ROLE_RADSRCSTOP,
+    OSPC_ROLE_RADDESTSTOP,
     /* Number of role types */
-    OSPC_RTYPE_NUMBER
-} OSPE_ROLE_TYPE;
+    OSPC_ROLE_NUMBER
+} OSPE_ROLE;
 
 /*
  * externally declared global variables
@@ -100,8 +100,8 @@ extern "C" {
     int OSPPBase64DecodeWrap(const unsigned char *, unsigned *, unsigned char *);
     unsigned OSPPMsgTimeFromElement(OSPT_XML_ELEM *, OSPTTIME *);
     unsigned OSPPMsgBinFromASCIIElement(unsigned char *, unsigned *, unsigned char **);
-    OSPE_ROLE_TYPE OSPPRoleGetPart(const char *);
-    const char *OSPPRoleGetName(OSPE_ROLE_TYPE);
+    OSPE_ROLE OSPPRoleGetPart(const char *);
+    const char *OSPPRoleGetName(OSPE_ROLE);
     
 #ifdef __cplusplus
 }

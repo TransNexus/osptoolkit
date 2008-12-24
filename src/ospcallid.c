@@ -258,14 +258,15 @@ unsigned char *OSPPCallIdGetValue(
 /*
  * OSPPSessionIdToElement() - create an XML element from a call id
  */
-unsigned OSPPSessionIdToElement(   /* returns error code */
-    OSPTCALLID *ospvSessionId,  /* Session ID */
-    OSPE_ALTINFO_TYPE ospvType, /* Direction */
-    OSPTBOOL ospvIsBase64,      /* indicates base64 or cdata */
-    OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
+unsigned OSPPSessionIdToElement(    /* returns error code */
+    OSPTCALLID *ospvSessionId,      /* Session ID */
+    OSPE_DIRECTION ospvType,        /* Direction */
+    OSPTBOOL ospvIsBase64,          /* indicates base64 or cdata */
+    OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
+    OSPE_ALTINFO type;
 
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -274,17 +275,33 @@ unsigned OSPPSessionIdToElement(   /* returns error code */
     } else {
         ospvErrCode = OSPPMsgBinToElement(OSPPCallIdGetSize(ospvSessionId),
             OSPPCallIdGetValue(ospvSessionId),
-            OSPPMsgElemGetName(OSPC_MELEM_CALLID),
+            OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
             ospvElem,
             ospvIsBase64);
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(ospvType));
-            if (attr != OSPC_OSNULL) {
-                OSPPXMLElemAddAttr(*ospvElem, attr);
-            } else {
-                OSPPXMLElemDelete(ospvElem);
-                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-            }
+        	switch (ospvType) {
+        	case OSPC_DIR_INBOUND:
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(OSPC_ALTINFO_INBOUND));
+                if (attr != OSPC_OSNULL) {
+                    OSPPXMLElemAddAttr(*ospvElem, attr);
+                } else {
+                    OSPPXMLElemDelete(ospvElem);
+                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                }
+        	    break;
+        	case OSPC_DIR_OUTBOUND:
+        	    type = OSPC_ALTINFO_OUTBOUND;
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(OSPC_ALTINFO_OUTBOUND));
+                if (attr != OSPC_OSNULL) {
+                    OSPPXMLElemAddAttr(*ospvElem, attr);
+                } else {
+                    OSPPXMLElemDelete(ospvElem);
+                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                }
+        	    break;
+        	default:
+        	    break;
+        	}
         }
     }
 

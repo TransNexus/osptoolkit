@@ -43,7 +43,7 @@ typedef enum {
     OSPC_DPROT_XMPP,                            /* Destination Protocol - XMPP */
     /* Number of destiantion protocol types */
     OSPC_DPROT_NUMBER
-} OSPE_DEST_PROT;
+} OSPE_DEST_PROTOCOL;
 
 /*
  * externally declared global variables
@@ -82,9 +82,8 @@ typedef struct {
     unsigned ospmDestHasLimit;
     unsigned ospmDestLimit;
     OSPTCALLID *ospmDestCallId;
-    unsigned ospmDestFailReason;
-    OSPTBOOL ospmDestHasFailReason;
-    OSPE_DEST_PROT ospmDestProtocol;
+    OSPT_TERMCAUSE ospmDestTermCause;
+    OSPE_DEST_PROTOCOL ospmDestProtocol;
     OSPE_DEST_OSPENABLED ospmDestOSPVersion;
     char ospmDestNetworkId[OSPC_NETWORKIDSIZE];
     unsigned ospmDestDestinationCount;
@@ -134,13 +133,14 @@ extern "C" {
     OSPTBOOL OSPPDestHasLimit(OSPTDEST *);
     unsigned OSPPDestGetLimit(OSPTDEST *);
     void OSPPDestSetLimit(OSPTDEST *, unsigned);
-    OSPTBOOL OSPPDestHasFailReason(OSPTDEST *);
-    void OSPPDestSetFailReason(OSPTDEST *, unsigned);
-    unsigned OSPPDestGetFailReason(OSPTDEST *);
+    OSPTBOOL OSPPDestHasTermCause(OSPTDEST *, OSPE_TERM_CAUSE);
+    void OSPPDestSetTermCause(OSPTDEST *, OSPE_TERM_CAUSE, unsigned, const char *);
+    unsigned OSPPDestGetTCCode(OSPTDEST *, OSPE_TERM_CAUSE);
+    const char *OSPPDestGetTCDesc(OSPTDEST *, OSPE_TERM_CAUSE);
     void OSPPDestSetDestinationCount(OSPTDEST *, unsigned);
     unsigned OSPPDestGetDestinationCount(OSPTDEST *);
-    OSPE_DEST_PROT OSPPDestProtocolGetPart(const char *);
-    const char *OSPPDestProtocolGetName(OSPE_DEST_PROT);
+    OSPE_DEST_PROTOCOL OSPPDestProtocolGetPart(const char *);
+    const char *OSPPDestProtocolGetName(OSPE_DEST_PROTOCOL);
 
 #ifdef __cplusplus
 }

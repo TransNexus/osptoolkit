@@ -36,7 +36,7 @@
 extern "C" {
 #endif
 
-    int OSPPTransactionGetDestProtocol(OSPTTRANHANDLE, OSPE_DEST_PROT *);
+    int OSPPTransactionGetDestProtocol(OSPTTRANHANDLE, OSPE_DEST_PROTOCOL *);
     int OSPPTransactionIsDestOSPEnabled(OSPTTRANHANDLE, OSPE_DEST_OSPENABLED *);
     int OSPPTransactionSetNetworkIds(OSPTTRANHANDLE, const char *, const char *);
     int OSPPTransactionAccumulateOneWayDelay(OSPTTRANHANDLE, unsigned, unsigned, unsigned, float);
@@ -71,9 +71,9 @@ extern "C" {
             const char *ospvSourceDevice,                                       /* In - SourceDevice */
             const char *ospvDestinationDevice,                                  /* In - DestinationDevice */
             const char *ospvCallingNumber,                                      /* In - Calling number */
-            OSPE_NUMBER_FORMAT ospvCallingNumberFormat,                      /* In - Calling number formaat : sip/e.164/url */
+            OSPE_NUMBER_FORMAT ospvCallingNumberFormat,                         /* In - Calling number formaat : sip/e.164/url */
             const char *ospvCalledNumber,                                       /* In - Called number */
-            OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                       /* In - Called number formaat : sip/e.164/url */
+            OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                          /* In - Called number formaat : sip/e.164/url */
             unsigned ospvSizeOfCallId,                                          /* In - Size of Callid */
             const void *ospvCallId,                                             /* In - Call identifier */
             enum OSPEFAILREASON ospvFailureReason, 
@@ -84,8 +84,8 @@ extern "C" {
     int OSPPTransactionGetLookAheadInfoIfPresent(OSPTTRANHANDLE ospvTransaction,/* In - Transaction handle */
             OSPTBOOL *ospvIsLookAheadInfoPresent,                               /* Out */
             char *ospvLookAheadDestination,                                     /* Out */
-            OSPE_DEST_PROT *ospvLookAheadDestProt,                              /* Out */
-            OSPE_DEST_OSPENABLED *ospvLookAheadDestOSPStatus);                 /* Out */
+            OSPE_DEST_PROTOCOL *ospvLookAheadDestProt,                          /* Out */
+            OSPE_DEST_OSPENABLED *ospvLookAheadDestOSPStatus);                  /* Out */
     int OSPPTransactionModifyDeviceIdentifiers(OSPTTRANHANDLE ospvTransaction,  /* In - Transaction handle */
             const char *ospvSource,                                             /* In - optional */
             const char *ospvSourceDevice,                                       /* In - optional */
@@ -94,7 +94,7 @@ extern "C" {
     int OSPPTransactionGetDestNetworkId(OSPTTRANHANDLE ospvTransaction,         /* In - Transaction handle */
             char *ospvNetworkId);
     int OSPPTransactionSetServiceAndPricingInfo(OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-            OSPE_SERVICE_TYPE ospvServiceType,                                  /* In- type of service, 0-voice, 1-data */
+            OSPE_SERVICE ospvServiceType,                                       /* In- type of service, 0-voice, 1-data */
             OSPT_PRICING_INFO *ospvPricingInfo[]);                              /* In- Pricing Info */
 
 #ifdef __cplusplus

@@ -45,7 +45,7 @@ typedef struct {
     unsigned ospmAuthRspDelayPref;
     unsigned ospmNumDests;
     OSPTCSAUDIT *ospmAuthRspCSAudit;
-    OSPE_ROLE_TYPE ospmAuthRspRole;
+    OSPE_ROLE ospmAuthRspRole;
     OSPTBOOL ospmAuthRspHasRole;
 } OSPTAUTHRSP;
 
@@ -114,8 +114,8 @@ extern "C" {
     int OSPPAuthRspHasCSAudit(OSPTAUTHRSP *);
     OSPTCSAUDIT *OSPPAuthRspGetCSAudit(OSPTAUTHRSP *);
     int OSPPAuthRspHasRole(OSPTAUTHRSP *);
-    void OSPPAuthRspSetRole(OSPTAUTHRSP *, OSPE_ROLE_TYPE);
-    OSPE_ROLE_TYPE OSPPAuthRspGetRole(OSPTAUTHRSP *);
+    void OSPPAuthRspSetRole(OSPTAUTHRSP *, OSPE_ROLE);
+    OSPE_ROLE OSPPAuthRspGetRole(OSPTAUTHRSP *);
 
 #ifdef __cplusplus
 }

@@ -83,7 +83,7 @@ extern "C" {
 #endif
 
     int OSPPAuditAddMessageToBuffer(OSPTAUDIT *ospvAudit, unsigned char *ospvAuditData, unsigned ospvAuditDataSz);
-    void OSPPAuditCheck(OSPTAUDIT *, void *, OSPE_MSG_TYPE);
+    void OSPPAuditCheck(OSPTAUDIT *, void *, OSPE_MESSAGE);
     OSPTCOMPONENTID *OSPPAuditComponentIdNew(const char *ospvComponentId, unsigned ospvComponentIdLen);
     void OSPPAuditComponentIdDelete(OSPTAUDIT *ospvAudit);
     int OSPPAuditDelete(OSPTAUDIT **ospvAudit);

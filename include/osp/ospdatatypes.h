@@ -120,18 +120,6 @@ typedef struct _OSPTTXID {
 } OSPTTXID;
 
 /*
- * call delay typedef
- */
-typedef struct _OSPTDELAY {
-    unsigned HasValue;
-    unsigned NumberOfSamples;
-    unsigned Minimum;
-    unsigned Mean;
-    float Variance;
-    double SumOfSampSquares;
-} OSPTDELAY;
-
-/*
  * collection index typedef
  */
 typedef struct _OSPTCOLLECTIONINDEX {
@@ -188,9 +176,9 @@ typedef enum {
 } OSPE_NUMBER_FORMAT;
 
 typedef enum {
-    OSPC_STYPE_VOICE = 0,
-    OSPC_STYPE_DATA
-} OSPE_SERVICE_TYPE;
+    OSPC_SERVICE_VOICE = 0,
+    OSPC_SERVICE_DATA
+} OSPE_SERVICE;
 
 typedef enum {
 	OSPC_TCAUSE_START = 0,

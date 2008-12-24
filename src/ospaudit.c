@@ -149,7 +149,7 @@ void
 OSPPAuditCheck(
     OSPTAUDIT           *ospvAudit,
     void                *ospvResponse, 
-    OSPE_MSG_TYPE  ospvMsgType
+    OSPE_MESSAGE  ospvMsgType
 )
 {
     OSPTTNAUDIT     *tnaudit    = OSPC_OSNULL;
@@ -984,7 +984,7 @@ OSPPAuditProcessReturn(
     unsigned        sizeofmsg           = 0;
     unsigned        sizeofsig           = 0;
     void            *resultrsp          = OSPC_OSNULL;
-    OSPE_MSG_TYPE msgtype          = OSPC_MSG_UNKNOWN;
+    OSPE_MESSAGE msgtype          = OSPC_MSG_UNKNOWN;
     OSPTUSAGECNF    *usagecnf           = (OSPTUSAGECNF *)OSPC_OSNULL;
     
     if(ospvMsgInfo != OSPC_OSNULL)

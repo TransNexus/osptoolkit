@@ -705,7 +705,7 @@ int testOSPPTransactionSetServiceAndPricingInfo()
     ospvPricingInfo[1] = &PricingInfo2;
     ospvPricingInfo[2] = NULL;
 
-    errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_STYPE_VOICE,    /* voice */
+    errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_SERVICE_VOICE,    /* voice */
         ospvPricingInfo);
 
     return errorcode;
@@ -817,7 +817,7 @@ int testOSPPTransactionAccumulateRoundTripDelay()
 
 int testOSPPTransactionGetDestProtocol()
 {
-    OSPE_DEST_PROT dest_prot;
+    OSPE_DEST_PROTOCOL dest_prot;
     int errorcode = OSPC_ERR_NO_ERROR;
 
     errorcode =
@@ -929,8 +929,7 @@ int testOSPPTransactionGetNextDestination()
     callidsize = CALL_ID_SZ;
 
     errorcode = OSPPTransactionGetNextDestination(OSPVTransactionHandle,
-        (enum OSPEFAILREASON)
-        TCcode, TIMESTAMP_SZ,
+        (enum OSPEFAILREASON)TCcode, TIMESTAMP_SZ,
         validafter, validuntil,
         &timelimit, &callidsize,
         callid, CALLED_NUM_SZ,
@@ -1029,7 +1028,7 @@ int testBuildUsageFromScratch(int IsSource, int BuildNew)
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR && BuildNew) {
-        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_STYPE_VOICE,    /* voice */
+        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_SERVICE_VOICE,    /* voice */
             ospvPricingInfo);
     }
 
@@ -1045,8 +1044,7 @@ int testBuildUsageFromScratch(int IsSource, int BuildNew)
             callednumber,
             CalledNumFormat,
             callidsize, callid,
-            (enum OSPEFAILREASON)
-            TCcode,
+            (enum OSPEFAILREASON)TCcode,
             &detaillogsize,
             NULL);
     }
@@ -1176,7 +1174,7 @@ int testOSPPTransactionInitializeAtDevice(int IsSource)
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_STYPE_VOICE,    /* voice */
+        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_SERVICE_VOICE,    /* voice */
             ospvPricingInfo);
     }
 
@@ -1226,7 +1224,7 @@ int testOSPPTransactionRecordFailure()
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    errorcode = OSPPTransactionRecordFailure(OSPVTransactionHandle, (enum OSPEFAILREASON) TCcode);
+    errorcode = OSPPTransactionRecordFailure(OSPVTransactionHandle, (enum OSPEFAILREASON)TCcode);
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         printf("OSPPTransactionRecordFailure Successful\n");
@@ -1241,7 +1239,7 @@ int testOSPPTransactionRecordFailure()
 int testOSPPTransactionReinitializeAtDevice()
 {
     int errorcode = 0;
-    unsigned IsSource = OSPC_RTYPE_SOURCE,
+    unsigned IsSource = OSPC_ROLE_SOURCE,
         detaillogsize = 0,
         authorised = OSPC_TRAN_NOT_AUTHORISED, timelimit = 0;
     unsigned char token2[TOKEN_SZ];
@@ -1257,8 +1255,7 @@ int testOSPPTransactionReinitializeAtDevice()
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPTransactionReinitializeAtDevice(tranhandle2,
-            (enum OSPEFAILREASON)
-            TCcode, IsSource,
+            (enum OSPEFAILREASON)TCcode, IsSource,
             SourceIP, DstIP,
             SourceDevIP,
             OSPC_OSNULL,
@@ -1508,7 +1505,7 @@ int testOSPPTransactionModifyDeviceIdentifiers()
 int testOSPPTransactionGetLookAheadInfoIfPresent()
 {
     int errorcode = 0;
-    OSPE_DEST_PROT DestProt = OSPC_DPROT_UNDEFINED;
+    OSPE_DEST_PROTOCOL DestProt = OSPC_DPROT_UNDEFINED;
     OSPE_DEST_OSPENABLED DestOSPStatus = OSPC_DOSP_UNDEFINED;
     char LookAheadDest[DESTINATION_SZ] = { "" };
     OSPTBOOL IsLookAheadInfoPresent = OSPC_FALSE;
@@ -1892,10 +1889,10 @@ int testAPI(int apinumber)
         OSPM_SLEEP(2);
         break;
     case 33:
-        errorcode = testOSPPTransactionInitializeAtDevice(OSPC_RTYPE_SOURCE);
+        errorcode = testOSPPTransactionInitializeAtDevice(OSPC_ROLE_SOURCE);
         break;
     case 34:
-        errorcode = testOSPPTransactionInitializeAtDevice(OSPC_RTYPE_DESTINATION);
+        errorcode = testOSPPTransactionInitializeAtDevice(OSPC_ROLE_DESTINATION);
         break;
     case 35:
         errorcode = testOSPPTransactionSetNetworkId();
@@ -1925,14 +1922,14 @@ int testAPI(int apinumber)
         printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
         scanf("%d", &build_new_trans);
         getchar();
-        errorcode = testBuildUsageFromScratch(OSPC_RTYPE_SOURCE, build_new_trans);
+        errorcode = testBuildUsageFromScratch(OSPC_ROLE_SOURCE, build_new_trans);
         break;
     case 44:
         printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
         scanf("%d", &build_new_trans);
         getchar();
         errorcode =
-            testBuildUsageFromScratch(OSPC_RTYPE_DESTINATION, build_new_trans);
+            testBuildUsageFromScratch(OSPC_ROLE_DESTINATION, build_new_trans);
         break;
     case 45:
         errorcode = testOSPPTransactionGetLookAheadInfoIfPresent();

@@ -77,7 +77,7 @@ $(OSPLIB): $(OSPOBJS)
 
 install: build
 	install -d $(INSTALL_PATH)/include/osp
-	cp $(INCDIR)/osp/* $(INSTALL_PATH)/include/osp/
+	cp $(INCDIR)/osp/*.h $(INSTALL_PATH)/include/osp/
 	install -d $(INSTALL_PATH)/lib
 	cp $(OSPLIB) $(INSTALL_PATH)/lib/
 

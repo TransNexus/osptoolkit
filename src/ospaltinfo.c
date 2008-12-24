@@ -27,41 +27,43 @@
 #include "osp/ospmsgattr.h"
 #include "osp/ospaltinfo.h"
 
-const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ATYPE_NUMBER] = {
-	/* For Alt/Info attributes */
-    { OSPC_ATYPE_E164,              "e164" },
-    { OSPC_ATYPE_H323,              "h323" },
-    { OSPC_ATYPE_URL,               "url" },
-    { OSPC_ATYPE_EMAIL,             "email" },
-    { OSPC_ATYPE_TRANSPORT,         "transport" },
-    { OSPC_ATYPE_INTERNATIONAL,     "international" },
-    { OSPC_ATYPE_NATIONAL,          "national" },
-    { OSPC_ATYPE_NETWORK,           "network" },
-    { OSPC_ATYPE_SUBSCRIBER,        "subscriber" },
-    { OSPC_ATYPE_ABBREVIATED,       "abbreviated" },
-    { OSPC_ATYPE_E164PREFIX,        "e164prefix" },
-    { OSPC_ATYPE_SIP,               "sip" },
-    { OSPC_ATYPE_XMPP,              "xmpp" },
-    { OSPC_ATYPE_Q850,              "q850" },
-    { OSPC_ATYPE_DEVICEID,          "deviceId" },
-    { OSPC_ATYPE_ASSERTEDID,        "assertedId" },
+const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
+    /* For Alt/Info attributes */
+    { OSPC_ALTINFO_E164,              "e164" },
+    { OSPC_ALTINFO_H323,              "h323" },
+    { OSPC_ALTINFO_URL,               "url" },
+    { OSPC_ALTINFO_EMAIL,             "email" },
+    { OSPC_ALTINFO_TRANSPORT,         "transport" },
+    { OSPC_ALTINFO_INTERNATIONAL,     "international" },
+    { OSPC_ALTINFO_NATIONAL,          "national" },
+    { OSPC_ALTINFO_NETWORK,           "network" },
+    { OSPC_ALTINFO_SUBSCRIBER,        "subscriber" },
+    { OSPC_ALTINFO_ABBREVIATED,       "abbreviated" },
+    { OSPC_ALTINFO_E164PREFIX,        "e164prefix" },
+    { OSPC_ALTINFO_SIP,               "sip" },
+    { OSPC_ALTINFO_XMPP,              "xmpp" },
+    { OSPC_ALTINFO_Q850,              "q850" },
+    { OSPC_ALTINFO_DEVICEID,          "deviceid" },
+    { OSPC_ALTINFO_ASSERTEDID,        "assertedid" },
+    { OSPC_ALTINFO_ROUTINGNUM,        "routingnumber" },
     /* For other attributes */
-    { OSPC_ATYPE_BASE64,            "base64" },
-    { OSPC_ATYPE_CDATA,             "cdata" },
-    { OSPC_ATYPE_FORWARD,           "forward" },
-    { OSPC_ATYPE_REVERSE,           "reverse" },
-    { OSPC_ATYPE_GENERAL,           "general" },
-    { OSPC_ATYPE_INBOUND,           "inbound" },
-    { OSPC_ATYPE_OUTBOUND,          "outbound" }
+    { OSPC_ALTINFO_FALSE,             "flase" },
+    { OSPC_ALTINFO_BASE64,            "base64" },
+    { OSPC_ALTINFO_CDATA,             "cdata" },
+    { OSPC_ALTINFO_FORWARD,           "forward" },
+    { OSPC_ALTINFO_REVERSE,           "reverse" },
+    { OSPC_ALTINFO_GENERAL,           "general" },
+    { OSPC_ALTINFO_INBOUND,           "inbound" },
+    { OSPC_ALTINFO_OUTBOUND,          "outbound" }
 };
 
 /*
  * OSPPAltInfoNew() - create a new altinfo object
  */
-OSPT_ALTINFO *OSPPAltInfoNew(       /* returns ptr to altinfo or null */
-    unsigned ospvLen,               /* size of altinfo */
-    const char *ospvValue, /* altinfo value */
-    OSPE_ALTINFO_TYPE ospvType)
+OSPT_ALTINFO *OSPPAltInfoNew(   /* returns ptr to altinfo or null */
+    unsigned ospvLen,           /* size of altinfo */
+    const char *ospvValue,      /* altinfo value */
+    OSPE_ALTINFO ospvType)
 {
     OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
     char *valptr;
@@ -156,13 +158,13 @@ unsigned OSPPAltInfoGetSize(
 /*
  * OSPPAltInfoTypeGetPart() - returns altinfo type
  */
-OSPE_ALTINFO_TYPE OSPPAltInfoTypeGetPart(
+OSPE_ALTINFO OSPPAltInfoTypeGetPart(
     OSPT_ALTINFO *ospvAltInfo)
 {
-    OSPE_ALTINFO_TYPE ospvType = OSPC_ATYPE_UNKNOWN;
+    OSPE_ALTINFO ospvType = OSPC_ALTINFO_UNKNOWN;
 
     if (ospvAltInfo != OSPC_OSNULL) {
-        ospvType = (OSPE_ALTINFO_TYPE)ospvAltInfo->ospmAltInfoType;
+        ospvType = (OSPE_ALTINFO)ospvAltInfo->ospmAltInfoType;
     }
 
     return ospvType;
@@ -225,12 +227,12 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
  * OSPPAltInfoTypeGetName() - get type name from an altinfo
  */
 const char *OSPPAltInfoTypeGetName( /* Returns a pointer to the name */
-    OSPE_ALTINFO_TYPE ospvPart)
+    OSPE_ALTINFO ospvPart)
 {
     const char *ospvName = OSPC_OSNULL;
 
-    if ((ospvPart >= OSPC_ATYPE_START) && (ospvPart < OSPC_ATYPE_NUMBER)) {
-        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_ATYPE_DESCS, OSPC_ATYPE_NUMBER);
+    if ((ospvPart >= OSPC_ALTINFO_START) && (ospvPart < OSPC_ALTINFO_NUMBER)) {
+        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_ATYPE_DESCS, OSPC_ALTINFO_NUMBER);
     }
 
     return ospvName;

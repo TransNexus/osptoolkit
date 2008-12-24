@@ -33,7 +33,7 @@
 
 typedef struct {
     OSPTTIME ospmAuthIndTimestamp;
-    OSPE_ROLE_TYPE ospmAuthIndRole;
+    OSPE_ROLE ospmAuthIndRole;
     OSPTBOOL ospmAuthIndHasRole;
     OSPTCALLID *ospmAuthIndCallId;
     char ospmAuthIndSourceNumber[OSPC_SIZE_E164NUM];
@@ -62,8 +62,8 @@ extern "C" {
     void OSPPAuthIndSetCallId(OSPTAUTHIND *, OSPTCALLID *);
     void OSPPAuthIndSetTimestamp(OSPTAUTHIND *, OSPTTIME);
     OSPTBOOL OSPPAuthIndHasRole(OSPTAUTHIND *);
-    void OSPPAuthIndSetRole(OSPTAUTHIND *, OSPE_ROLE_TYPE);
-    OSPE_ROLE_TYPE OSPPAuthIndGetRole(OSPTAUTHIND *);
+    void OSPPAuthIndSetRole(OSPTAUTHIND *, OSPE_ROLE);
+    OSPE_ROLE OSPPAuthIndGetRole(OSPTAUTHIND *);
     OSPTBOOL OSPPAuthIndHasCallId(OSPTAUTHIND *);
     OSPTCALLID *OSPPAuthIndGetCallId(OSPTAUTHIND *);
     unsigned OSPPAuthIndGetCallIdSize(OSPTAUTHIND *);

@@ -32,14 +32,11 @@
 #include "osp/ospstatus.h"
 #include "osp/osputils.h"
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspSetTimestamp() - sets the timestamp for an AuthResponse
- *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspSetTimestamp(
-    OSPTAUTHRSP* ospvAuthRsp,
+    OSPTAUTHRSP *ospvAuthRsp,
     OSPTTIME ospvTime)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
@@ -47,182 +44,157 @@ void OSPPAuthRspSetTimestamp(
     }
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspHasStatus() - does the AuthResponse have a status?
- *-----------------------------------------------------------------------*
  */
 int OSPPAuthRspHasStatus(
-    OSPTAUTHRSP* ospvAuthRsp)   /* authorisation response effected */
+    OSPTAUTHRSP *ospvAuthRsp)   /* authorisation response effected */
 {
     int ospvHasStatus = OSPC_FALSE;
 
     if(ospvAuthRsp != OSPC_OSNULL) {
         ospvHasStatus = (ospvAuthRsp->ospmAuthRspStatus != OSPC_OSNULL);
     }
+
     return ospvHasStatus;
 }
 
-/**/
 /*
- *----------------------------------------------------------------------*
  * OSPPAuthRspGetStatus() - returns the status for an AuthResponse 
- *-----------------------------------------------------------------------*
  */
 OSPTSTATUS* OSPPAuthRspGetStatus(
-    OSPTAUTHRSP* ospvAuthRsp)   /* authorisation response */
+    OSPTAUTHRSP *ospvAuthRsp)   /* authorisation response */
 {
-    OSPTSTATUS* ospvStatus = OSPC_OSNULL;
+    OSPTSTATUS *ospvStatus = OSPC_OSNULL;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
         ospvStatus = ospvAuthRsp->ospmAuthRspStatus;
     }
+
     return ospvStatus;
 }
 
-/**/
 /*
- *----------------------------------------------------------------------*
  * OSPPAuthRspSetTrxId() - sets the transaction ID for an authorisation
- *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspSetTrxId(
-    OSPTAUTHRSP* ospvAuthRsp,   /* authorisation response */
+    OSPTAUTHRSP *ospvAuthRsp,   /* authorisation response */
     OSPTTRXID ospvTrxId)        /* transaction ID to set */
 {
     if(ospvAuthRsp != OSPC_OSNULL) {
-        (ospvAuthRsp)->ospmAuthRspTrxId = ospvTrxId;
+        ospvAuthRsp->ospmAuthRspTrxId = ospvTrxId;
     }
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspHasDest() - does the AuthResponse have a destination?
- *-----------------------------------------------------------------------*
  */
 int OSPPAuthRspHasDest(
-    OSPTAUTHRSP* ospvAuthRsp)   /* authorisation response effected */
+    OSPTAUTHRSP *ospvAuthRsp)   /* authorisation response effected */
 {
     int ospvHasDest = OSPC_FALSE;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
         ospvHasDest = (ospvAuthRsp->ospmAuthRspDest != OSPC_OSNULL);
     }
+
     return ospvHasDest;
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspFirstDest() - returns the first destination for an AuthResponse 
- *-----------------------------------------------------------------------*
  */
 OSPTDEST* OSPPAuthRspFirstDest(
-    OSPTAUTHRSP* ospvAuthRsp)   /* authorisation response */
+    OSPTAUTHRSP *ospvAuthRsp)   /* authorisation response */
 {
     OSPTDEST* dest = OSPC_OSNULL;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
         dest = (OSPTDEST*)OSPPListFirst(&(ospvAuthRsp->ospmAuthRspDest));
     }
+
     return dest;
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspNextDest() - returns the next destination for an AuthResponse
- *-----------------------------------------------------------------------*
  */
 OSPTDEST* OSPPAuthRspNextDest(
-    OSPTAUTHRSP* ospvAuthRsp,   /* authorisation response */
-    OSPTDEST* ospvDest)
+    OSPTAUTHRSP *ospvAuthRsp,   /* authorisation response */
+    OSPTDEST *ospvDest)
 {
     OSPTDEST* dest = (OSPTDEST*)OSPC_OSNULL;
 
     if (ospvAuthRsp != (OSPTAUTHRSP*)OSPC_OSNULL) {
         dest = (OSPTDEST*)OSPPListNext(&(ospvAuthRsp->ospmAuthRspDest), ospvDest);
     }
+
     return dest;
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspHasDelayLimit() - does an AuthResponse have delay limit?
- *-----------------------------------------------------------------------*
  */
 int OSPPAuthRspHasDelayLimit(
-    OSPTAUTHRSP* ospvAuthRsp)   /* authorisation response */
+    OSPTAUTHRSP *ospvAuthRsp)   /* authorisation response */
 {
     int ospvHasDelayLimit = OSPC_FALSE;
 
     if(ospvAuthRsp != OSPC_OSNULL) {
         ospvHasDelayLimit = (ospvAuthRsp->ospmAuthRspDelayLimit > 0);
     }
+
     return ospvHasDelayLimit;
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspSetDelayLimit() - sets the delay limit for an authorisation
- *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspSetDelayLimit(
-    OSPTAUTHRSP* ospvAuthRsp,   /* authorisation response */
-    unsigned ospvDelayLimit)  /* delay limit to set */
+    OSPTAUTHRSP *ospvAuthRsp,   /* authorisation response */
+    unsigned ospvDelayLimit)    /* delay limit to set */
 {
     if(ospvAuthRsp != OSPC_OSNULL) {
         ospvAuthRsp->ospmAuthRspDelayLimit = ospvDelayLimit;
     }
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspGetDelayLimit() - gets the delay limit for an AuthResponse
- *-----------------------------------------------------------------------*
  */
 unsigned OSPPAuthRspGetDelayLimit(
-    OSPTAUTHRSP* ospvAuthRsp)   /* authorisation response */
+    OSPTAUTHRSP *ospvAuthRsp)   /* authorisation response */
 {
     unsigned ospvDelayLimit = 0;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvDelayLimit = (ospvAuthRsp->ospmAuthRspDelayLimit);
+        ospvDelayLimit = ospvAuthRsp->ospmAuthRspDelayLimit;
     }
+
     return ospvDelayLimit;
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspHasDelayPref() - does an AuthResponse have delay pref?
- *-----------------------------------------------------------------------*
  */
 int OSPPAuthRspHasDelayPref(
-    OSPTAUTHRSP* ospvAuthRsp)   /* authorisation response */
+    OSPTAUTHRSP *ospvAuthRsp)   /* authorisation response */
 {
     int ospvHasDelayPref = OSPC_FALSE;
 
     if(ospvAuthRsp != OSPC_OSNULL) {
         ospvHasDelayPref = (ospvAuthRsp->ospmAuthRspDelayPref > 0);
     }
+
     return ospvHasDelayPref;
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspSetDelayPref() - sets the delay pref for an authorisation
- *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspSetDelayPref(
-    OSPTAUTHRSP* ospvAuthRsp,   /* authorisation response */
-    unsigned ospvDelayPref)   /* delay pref to set */
+    OSPTAUTHRSP *ospvAuthRsp,   /* authorisation response */
+    unsigned ospvDelayPref)     /* delay pref to set */
 {
     if(ospvAuthRsp != OSPC_OSNULL) {
         ospvAuthRsp->ospmAuthRspDelayPref = ospvDelayPref;
@@ -230,7 +202,7 @@ void OSPPAuthRspSetDelayPref(
 }
 
 unsigned OSPPAuthRspHasNumDests(
-    OSPTAUTHRSP* ospvAuthRsp)
+    OSPTAUTHRSP *ospvAuthRsp)
 {
     if(ospvAuthRsp != OSPC_OSNULL) {
         return ospvAuthRsp->ospmNumDests;
@@ -240,7 +212,7 @@ unsigned OSPPAuthRspHasNumDests(
 }
 
 void OSPPAuthRspIncNumDests(
-    OSPTAUTHRSP* ospvAuthRsp)
+    OSPTAUTHRSP *ospvAuthRsp)
 {
     if(ospvAuthRsp != OSPC_OSNULL) {
         ospvAuthRsp->ospmNumDests++;
@@ -248,7 +220,7 @@ void OSPPAuthRspIncNumDests(
 }
 
 unsigned OSPPAuthRspGetNumDests(
-    OSPTAUTHRSP* ospvAuthRsp)
+    OSPTAUTHRSP *ospvAuthRsp)
 {
     if(ospvAuthRsp != OSPC_OSNULL) {
         return ospvAuthRsp->ospmNumDests;
@@ -257,27 +229,21 @@ unsigned OSPPAuthRspGetNumDests(
     }
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspHasComponentId() - is the component id set ?
- *-----------------------------------------------------------------------*
  */
 OSPTBOOL OSPPAuthRspHasComponentId(
-    OSPTAUTHRSP* ospvAuthRsp)
+    OSPTAUTHRSP *ospvAuthRsp)
 {
   return (ospvAuthRsp->ospmAuthRspComponentId != OSPC_OSNULL);
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspSetComponentId() - creates space and copies in the string.
- *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspSetComponentId(
-    OSPTAUTHRSP* ospvAuthRsp,       /* In - pointer to Usage Indication struct */
-    const char* ospvComponentId) /* In - pointer to component id string */
+    OSPTAUTHRSP *ospvAuthRsp,       /* In - pointer to Usage Indication struct */
+    const char *ospvComponentId)    /* In - pointer to component id string */
 {
     int len = OSPM_STRLEN(ospvComponentId);
 
@@ -293,7 +259,7 @@ void OSPPAuthRspSetComponentId(
 }
 
 OSPTTNAUDIT* OSPPAuthRspGetTNAudit(
-    OSPTAUTHRSP* ospvAuthRsp)
+    OSPTAUTHRSP *ospvAuthRsp)
 {
     if(ospvAuthRsp != OSPC_OSNULL) {
         return ospvAuthRsp->ospmAuthRspTNAudit;
@@ -302,15 +268,12 @@ OSPTTNAUDIT* OSPPAuthRspGetTNAudit(
     }
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspNew() - creates a new (empty) authorisation response
- *-----------------------------------------------------------------------*
  */
 OSPTAUTHRSP* OSPPAuthRspNew(void)
 {
-    OSPTAUTHRSP* ospvAuthRsp;
+    OSPTAUTHRSP *ospvAuthRsp;
 
     OSPM_MALLOC(ospvAuthRsp, OSPTAUTHRSP,sizeof(OSPTAUTHRSP));
     if (ospvAuthRsp != OSPC_OSNULL) {
@@ -327,12 +290,10 @@ OSPTAUTHRSP* OSPPAuthRspNew(void)
 }
 
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspDelete() - deletes an authorisation response structure
- *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspDelete(
-    OSPTAUTHRSP** ospvAuthRsp)
+    OSPTAUTHRSP **ospvAuthRsp)
 {
     OSPTDEST* dest = OSPC_OSNULL;
 
@@ -379,20 +340,17 @@ void OSPPAuthRspDelete(
     }
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspAddDest() - add a destination to authrsp. If ospvDest is NULL,
  * adds a new, empty destination.
  * Returns: pointer to added dest for manipulation
- *-----------------------------------------------------------------------*
  */
 OSPTDEST* OSPPAuthRspAddDest(
-    OSPTAUTHRSP* ospvAuthRsp,
-    OSPTDEST* ospvDest)
+    OSPTAUTHRSP *ospvAuthRsp,
+    OSPTDEST *ospvDest)
 {
 
-    OSPTDEST* ospvAddedDest = OSPC_OSNULL;
+    OSPTDEST *ospvAddedDest = OSPC_OSNULL;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
         /* if this is called with a null destination, create a new
@@ -420,15 +378,12 @@ OSPTDEST* OSPPAuthRspAddDest(
     return ospvAddedDest;
 }
 
-/**/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspFromElement() - get authorisation response from an XML element
- *-----------------------------------------------------------------------*
  */
 unsigned OSPPAuthRspFromElement(
-    OSPT_XML_ELEM* ospvElem,      /* input is XML element */
-    OSPTAUTHRSP** ospvAuthRsp)  /* where to put authorisation response pointer */
+    OSPT_XML_ELEM *ospvElem,      /* input is XML element */
+    OSPTAUTHRSP **ospvAuthRsp)    /* where to put authorisation response pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM* elem = OSPC_OSNULL;
@@ -441,7 +396,7 @@ unsigned OSPPAuthRspFromElement(
     unsigned long delaypref = 0L;
     const char* messageId = OSPC_OSNULL;
     const char* compid = OSPC_OSNULL;
-    OSPT_XML_ELEM* ospvParent = OSPC_OSNULL;
+    OSPT_XML_ELEM *ospvParent = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -572,7 +527,7 @@ unsigned OSPPAuthRspFromElement(
 }
 
 OSPTCSAUDIT* OSPPAuthRspGetCSAudit(
-    OSPTAUTHRSP* ospvAuthRsp)
+    OSPTAUTHRSP *ospvAuthRsp)
 {
     if(ospvAuthRsp != OSPC_OSNULL) {
         if(ospvAuthRsp->ospmAuthRspCSAudit != OSPC_OSNULL) {
@@ -583,30 +538,26 @@ OSPTCSAUDIT* OSPPAuthRspGetCSAudit(
 }
 
 int OSPPAuthRspHasCSAudit(
-    OSPTAUTHRSP* ospvAuthRsp)
+    OSPTAUTHRSP *ospvAuthRsp)
 {
     return ospvAuthRsp->ospmAuthRspCSAudit != (OSPTCSAUDIT*)OSPC_OSNULL;
 }
 
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspHasMessageId() - is the message id set ?
- *-----------------------------------------------------------------------*
  */
 OSPTBOOL OSPPAuthRspHasMessageId(
-    OSPTAUTHRSP* ospvAuthRsp)
+    OSPTAUTHRSP *ospvAuthRsp)
 {
     return (ospvAuthRsp->ospmAuthRspMessageId != OSPC_OSNULL);
 }
 
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspSetMessageId() - creates space and copies in the string.
- *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspSetMessageId(     
-    OSPTAUTHRSP* ospvAuthRsp,       /* In - pointer to Usage Indication struct */
-    const char* ospvMessageId)   /* In - pointer to message id string */
+    OSPTAUTHRSP *ospvAuthRsp,   /* In - pointer to Usage Indication struct */
+    const char *ospvMessageId)  /* In - pointer to message id string */
 {
     unsigned len = OSPM_STRLEN(ospvMessageId);
 
@@ -622,13 +573,11 @@ void OSPPAuthRspSetMessageId(
 }
 
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspMessageIdFromElement() - Get message id attribute from element.
- *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspMessageIdFromElement(
-    OSPT_XML_ELEM* ospvElemIn, 
-    const char** ospvMessageId)
+    OSPT_XML_ELEM *ospvElemIn, 
+    const char **ospvMessageId)
 {
     OSPT_XML_ATTR* attr = (OSPT_XML_ATTR*)OSPC_OSNULL;
 
@@ -646,13 +595,11 @@ void OSPPAuthRspMessageIdFromElement(
 }
 
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspComponentIdFromElement() - Get component id attribute from element.
- *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspComponentIdFromElement(
-    OSPT_XML_ELEM* ospvElemIn, 
-    const char** ospvComponentId)
+    OSPT_XML_ELEM *ospvElemIn, 
+    const char **ospvComponentId)
 {
     OSPT_XML_ATTR* attr = (OSPT_XML_ATTR*)OSPC_OSNULL;
 
@@ -670,32 +617,27 @@ void OSPPAuthRspComponentIdFromElement(
     }
 }
 
-/*^L*/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspHasRole() - Does AuthResponse have role set?
- *-----------------------------------------------------------------------*
  */
 int OSPPAuthRspHasRole(
-    OSPTAUTHRSP* ospvAuthRsp)
+    OSPTAUTHRSP *ospvAuthRsp)
 {
     int ospvHasRole = OSPC_FALSE;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
         ospvHasRole = (ospvAuthRsp->ospmAuthRspHasRole != OSPC_FALSE);
     }
+
     return ospvHasRole;
 }
 
-/*^L*/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspSetRole() - sets value for role in AuthResponse
- *-----------------------------------------------------------------------*
  */
 void OSPPAuthRspSetRole(
-    OSPTAUTHRSP* ospvAuthRsp,
-    OSPE_ROLE_TYPE ospvRole)
+    OSPTAUTHRSP *ospvAuthRsp,
+    OSPE_ROLE ospvRole)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
         ospvAuthRsp->ospmAuthRspRole = ospvRole;
@@ -703,20 +645,18 @@ void OSPPAuthRspSetRole(
     }
 }
 
-/*^L*/
 /*
- *-----------------------------------------------------------------------*
  * OSPPAuthRspGetRole() - returns role for an AuthResponse
- *-----------------------------------------------------------------------*
  */
-OSPE_ROLE_TYPE OSPPAuthRspGetRole(
-    OSPTAUTHRSP* ospvAuthRsp)
+OSPE_ROLE OSPPAuthRspGetRole(
+    OSPTAUTHRSP *ospvAuthRsp)
 {
-    OSPE_ROLE_TYPE ospvRole = OSPC_RTYPE_UNDEFINED;
+    OSPE_ROLE ospvRole = OSPC_ROLE_UNDEFINED;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvRole = (OSPE_ROLE_TYPE)ospvAuthRsp->ospmAuthRspRole;
+        ospvRole = (OSPE_ROLE)ospvAuthRsp->ospmAuthRspRole;
     }
+
     return ospvRole;
 }
 

@@ -107,7 +107,7 @@ int OSPPXMLElementProcess(
 }
 
 int OSPPXMLMessageCreate(
-    OSPE_MSG_TYPE ospvDataType,     /* In - what data type (AREQ, ARESP...) */
+    OSPE_MESSAGE ospvDataType,     /* In - what data type (AREQ, ARESP...) */
     unsigned char **ospvMessage,    /* Out - actual xml message */
     unsigned *ospvSizeOfMessage,    /* Out - size of xml message */
     void *ospvInfo,                 /* In - structure holding data */
@@ -165,7 +165,7 @@ int OSPPXMLMessageCreate(
 
 int OSPPXMLGetDataType(
     OSPT_XML_ELEM * ospvXMLElem,    /* In - xml element */
-    OSPE_MSG_TYPE * ospvDataType)   /* Out - datatype for this element */
+    OSPE_MESSAGE * ospvDataType)   /* Out - datatype for this element */
 {                               
     OSPT_XML_ELEM *parent = OSPC_OSNULL;
     char *name = OSPC_OSNULL;
@@ -238,7 +238,7 @@ int OSPPXMLMessageParse(
     unsigned char *ospvXMLMessage,  /* In - xml message */
     unsigned ospvSizeOfMessage,     /* In - size of message */
     void **ospvData,                /* Out - pointer to struct w/data from message */
-    OSPE_MSG_TYPE * ospvDataType)   /* Out - what type struct void pointer is pointing to */
+    OSPE_MESSAGE * ospvDataType)   /* Out - what type struct void pointer is pointing to */
 {                               
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *xmlelem = OSPC_OSNULL;
@@ -320,7 +320,7 @@ int OSPPXMLMessageParse(
 int OSPPXMLMessageProcess(
     OSPT_XML_ELEM * ospvElem,       /* In - xml element for this datatype */
     void **ospvStruct,              /* Out- pointer to struct to be filled in */
-    OSPE_MSG_TYPE ospvDataType)     /* In - datatype for this struct */
+    OSPE_MESSAGE ospvDataType)     /* In - datatype for this struct */
 {                         
     int errorcode = OSPC_ERR_NO_ERROR;
 

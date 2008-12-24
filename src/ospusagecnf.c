@@ -80,8 +80,7 @@ void OSPPUsageCnfSetTimestamp(      /* nothing returned */
 }
 
 /*
- * OSPPUsageCnfHasStatus() - does the usage confirmation have
- * a status?
+ * OSPPUsageCnfHasStatus() - does the usage confirmation have a status?
  */
 OSPTBOOL OSPPUsageCnfHasStatus( /* returns non-zero if number exists */
     OSPTUSAGECNF *ospvUsageCnf) /* usage confirmation effected */
@@ -95,8 +94,7 @@ OSPTBOOL OSPPUsageCnfHasStatus( /* returns non-zero if number exists */
 }
 
 /*
- * OSPPUsageCnfGetStatus() - returns the status for an 
- * usage confirmation
+ * OSPPUsageCnfGetStatus() - returns the status for an usage confirmation
  */
 OSPTSTATUS *OSPPUsageCnfGetStatus(  /* returns pointer to dest */
     OSPTUSAGECNF *ospvUsageCnf)     /* usage confirmation */
@@ -205,7 +203,7 @@ OSPTTNAUDIT *OSPPUsageCnfGetTNAudit(
  * OSPPUsageCnfComponentIdFromElement() - Get component id attribute from element.
  */
 void OSPPUsageCnfComponentIdFromElement(
-    OSPT_XML_ELEM * ospvElem,
+    OSPT_XML_ELEM *ospvElem,
     const char **ospvComponentId)
 {
     OSPT_XML_ATTR *attr = (OSPT_XML_ATTR *)OSPC_OSNULL;
@@ -409,7 +407,7 @@ void OSPPUsageCnfSetMessageId(
  * OSPPUsageCnfMessageIdFromElement() - Get message id attribute from element.
  */
 void OSPPUsageCnfMessageIdFromElement(
-    OSPT_XML_ELEM * ospvElemIn,
+    OSPT_XML_ELEM *ospvElemIn,
     const char **ospvMessageId)
 {
     OSPT_XML_ATTR *attr = (OSPT_XML_ATTR *) OSPC_OSNULL;

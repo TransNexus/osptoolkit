@@ -102,15 +102,20 @@ enum OSPEFAILREASON {
 };
 
 typedef struct {
-    OSPTBOOL ospmHasFailReason[OSPC_TCAUSE_NUMBER];
-    unsigned ospmTCCode[OSPC_TCAUSE_NUMBER];
-    char ospmTCDesc[OSPC_TCAUSE_NUMBER][OSPC_SIZE_NORSTR];
-} OSPT_FAILREASON;
+    OSPTBOOL hastermcause[OSPC_TCAUSE_NUMBER];
+    unsigned tccode[OSPC_TCAUSE_NUMBER];
+    char tcdesc[OSPC_TCAUSE_NUMBER][OSPC_SIZE_NORSTR];
+} OSPT_TERMCAUSE;
 
 /*
  * Will return success as long as ospvFailureReason is between
  * OSPC_FAIL_NONE (0) and OSPC_FAIL_GENERAL (999)
  */
 int OSPPFailReasonFind(enum OSPEFAILREASON ospvFailureReason);
+
+OSPTBOOL OSPPHasTermCause(OSPT_TERMCAUSE *, OSPE_TERM_CAUSE);
+void OSPPSetTermCause(OSPT_TERMCAUSE *, OSPE_TERM_CAUSE, unsigned, const char *);
+unsigned OSPPGetTCCode(OSPT_TERMCAUSE *, OSPE_TERM_CAUSE);    
+const char *OSPPGetTCDesc(OSPT_TERMCAUSE *, OSPE_TERM_CAUSE);    
 
 #endif /* _OSPFAIL_H */

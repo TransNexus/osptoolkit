@@ -43,6 +43,15 @@ typedef enum {
     OSPC_MATTR_NUMBER
 } OSPE_MSG_ATTR;
 
+/* Direction types */
+typedef enum {
+    OSPC_DIR_GENERAL = -1,
+    OSPC_DIR_INBOUND = 0,
+    OSPC_DIR_OUTBOUND,
+    /* Number of direction types */
+    OSPC_DIR_NUMBER
+} OSPE_DIRECTION;
+
 /*
  * externally declared global variables
  */

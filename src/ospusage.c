@@ -79,7 +79,7 @@ unsigned OSPPUsageFromElement(  /* returns error code */
                         ospvErrCode = OSPC_ERR_BAD_SERVICE;
                     }
                     break;
-                case OSPC_MELEM_FAILREASON:
+                case OSPC_MELEM_TERMCAUSE:
 // SDS TODO
                     break;
                 default:
@@ -111,7 +111,7 @@ unsigned OSPPUsageFromElement(  /* returns error code */
  * OSPPAddServiceTypeToUsageElement() - adds service info to an xml element
  */
 unsigned OSPPAddServiceTypeToUsageElement(
-    OSPE_SERVICE_TYPE ServiceType, 
+    OSPE_SERVICE ServiceType, 
     OSPT_XML_ELEM **ospvElem)               /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -129,7 +129,7 @@ unsigned OSPPAddServiceTypeToUsageElement(
         }
     }
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        if (ServiceType == OSPC_STYPE_VOICE) {
+        if (ServiceType == OSPC_SERVICE_VOICE) {
             elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICETYPE), "voice");
         } else {
             elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICETYPE), "data");
@@ -174,7 +174,6 @@ unsigned OSPPAddPricingInfoToUsageElement(
 
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         ospvErrCode = OSPPMsgFloatToElement(PricingInfo.amount, OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
-
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(*ospvElem, elem);
         }
@@ -183,7 +182,6 @@ unsigned OSPPAddPricingInfoToUsageElement(
     /* now add the increment */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         ospvErrCode = OSPPMsgNumToElement(PricingInfo.increment, OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
-
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(*ospvElem, elem);
         }
@@ -384,7 +382,7 @@ unsigned OSPPUsageToElement(        /* returns error code */
 }
 
 /*
- * OSPPCallPartyNumToElement() - adds termiantion cause to an xml element
+ * OSPPCallPartyNumToElement() - adds call party number to an xml element
  */
 unsigned OSPPCallPartyNumToElement(
     OSPE_MSG_ELEM ElemType,             /* Source/destination info */ 
@@ -407,13 +405,13 @@ unsigned OSPPCallPartyNumToElement(
             } else {
             	switch (CallPartyFormat) {
             	case OSPC_NFORMAT_E164:
-                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_E164));
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_E164));
             		break;
             	case OSPC_NFORMAT_SIP:
-                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_SIP));
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_SIP));
             		break;
             	case OSPC_NFORMAT_URL:
-                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_URL));
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_URL));
             		break;
             	default:
             		ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
@@ -457,22 +455,22 @@ unsigned OSPPTermCauseToElement(
 
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* create the parent element */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_FAILREASON), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TERMCAUSE), "");
         if (*ospvElem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
         	switch (TCType) {
         	case OSPC_TCAUSE_Q850:
-        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_Q850));
+        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_Q850));
         	    break;
         	case OSPC_TCAUSE_H323:
-        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_H323));
+        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_H323));
         	    break;
         	case OSPC_TCAUSE_SIP:
-        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_SIP));
+        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_SIP));
         	    break;
         	case OSPC_TCAUSE_XMPP:        		
-        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ATYPE_XMPP));
+        	    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_XMPP));
         	    break;
         	default:
         		ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
@@ -522,7 +520,7 @@ unsigned OSPPStringToElement(
     const char *ElemValue,          /* Element value */
     unsigned AttrNum,               /* Number of attributes */
     OSPE_MSG_ATTR AttrType[],       /* Attribute type */
-    OSPE_ALTINFO_TYPE AttrValue[],  /* Attribute value */
+    OSPE_ALTINFO AttrValue[],  /* Attribute value */
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -541,7 +539,7 @@ unsigned OSPPStringToElement(
             } else {
                 for (cnt = 0; cnt < AttrNum; cnt++) {
                     if (((AttrType[cnt] < OSPC_MATTR_START) || (AttrType[cnt] > OSPC_MATTR_NUMBER)) || 
-                        ((AttrValue[cnt] < OSPC_ATYPE_START) || (AttrValue[cnt] > OSPC_ATYPE_NUMBER))) 
+                        ((AttrValue[cnt] < OSPC_ALTINFO_START) || (AttrValue[cnt] > OSPC_ALTINFO_NUMBER))) 
                     {
                     	OSPPXMLElemDelete(ospvElem);
                         ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
