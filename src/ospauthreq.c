@@ -583,7 +583,7 @@ unsigned OSPPAuthReqAddPricingInfo(
 
     /* now we need to add units */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_UNIT), (const char *) PricingInfo.unit);
+        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_UNIT), (const char *)PricingInfo.unit);
         if (elem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         }
@@ -595,7 +595,7 @@ unsigned OSPPAuthReqAddPricingInfo(
 
     /* add currency */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CURRENCY), (const char *) PricingInfo.currency);
+        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CURRENCY), (const char *)PricingInfo.currency);
         if (elem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         }
@@ -727,7 +727,7 @@ int OSPPAuthReqToElement(       /* returns error code */
              * Create/Add DeviceInfo elements
              */
             for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvAuthReq->ospmAuthReqDeviceInfo));
-                altinfo != (OSPT_ALTINFO *)OSPC_OSNULL; 
+                altinfo != OSPC_OSNULL; 
                 altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvAuthReq->ospmAuthReqDeviceInfo), altinfo))
             {
                 OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
@@ -739,7 +739,7 @@ int OSPPAuthReqToElement(       /* returns error code */
         /* add the source alternates */
         if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasSourceAlt(ospvAuthReq)) {
             for (altinfo = (OSPT_ALTINFO *)OSPPAuthReqFirstSourceAlt(ospvAuthReq);
-                ((altinfo != (OSPT_ALTINFO *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
+                ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
                 altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextSourceAlt(ospvAuthReq, altinfo)) 
             {
                 ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
@@ -759,8 +759,6 @@ int OSPPAuthReqToElement(       /* returns error code */
             }
         }
 
-// SDS
-OSPPAuthReqSetRoutingNumber(ospvAuthReq, "RoutingNumber");
         /* add the routing number */
         if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasRoutingNumber(ospvAuthReq)) {
             ospvErrCode = OSPPRoutingNumToElement(OSPPAuthReqGetRoutingNumber(ospvAuthReq), &elem);
@@ -774,7 +772,7 @@ OSPPAuthReqSetRoutingNumber(ospvAuthReq, "RoutingNumber");
         if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasDestinationAlt(ospvAuthReq)) {
             altinfo = OSPC_OSNULL;
             for (altinfo = (OSPT_ALTINFO *)OSPPAuthReqFirstDestinationAlt(ospvAuthReq);
-                ((altinfo != (OSPT_ALTINFO *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
+                ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
                 altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextDestinationAlt(ospvAuthReq, altinfo)) 
             {
                 ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DESTALT);

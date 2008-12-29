@@ -82,7 +82,7 @@ typedef struct {
     unsigned ospmDestHasLimit;
     unsigned ospmDestLimit;
     OSPTCALLID *ospmDestCallId;
-    OSPT_TERMCAUSE ospmDestTermCause;
+    OSPT_TERM_CAUSE ospmDestTermCause;
     OSPE_DEST_PROTOCOL ospmDestProtocol;
     OSPE_DEST_OSPENABLED ospmDestOSPVersion;
     char ospmDestNetworkId[OSPC_NETWORKIDSIZE];
@@ -134,7 +134,9 @@ extern "C" {
     unsigned OSPPDestGetLimit(OSPTDEST *);
     void OSPPDestSetLimit(OSPTDEST *, unsigned);
     OSPTBOOL OSPPDestHasTermCause(OSPTDEST *, OSPE_TERM_CAUSE);
+    OSPTBOOL OSPPDestHasTermCauseAny(OSPTDEST *);
     void OSPPDestSetTermCause(OSPTDEST *, OSPE_TERM_CAUSE, unsigned, const char *);
+    OSPT_TERM_CAUSE *OSPPDestGetTermCause(OSPTDEST *);
     unsigned OSPPDestGetTCCode(OSPTDEST *, OSPE_TERM_CAUSE);
     const char *OSPPDestGetTCDesc(OSPTDEST *, OSPE_TERM_CAUSE);
     void OSPPDestSetDestinationCount(OSPTDEST *, unsigned);

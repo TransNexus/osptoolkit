@@ -188,7 +188,6 @@ typedef struct _OSPTIDINDEX {
     OSPEASN1ID Id;
     unsigned char *Value;
     unsigned ValueLength;
-
 } OSPTIDINDEX;
 
 /* 

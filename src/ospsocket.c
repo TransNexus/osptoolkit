@@ -148,7 +148,7 @@ OSPPSockConnectAuditURL(
     unsigned        socktimeout = 0;
 
     OSPM_DBGENTER(("ENTER: OSPPSockConnectAuditURL()\n"));
-    if (ospvHttp == (OSPTHTTP *)OSPC_OSNULL)
+    if (ospvHttp == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_HTTP_INVALID_ARG;
     }
@@ -266,7 +266,7 @@ OSPPSockConnectServicePoint(
     OSPTCOMM        *comm       = OSPC_OSNULL;
 
     OSPM_DBGENTER(("ENTER: OSPPSockConnectServicePoint()\n"));
-    if (ospvHttp == (OSPTHTTP *)OSPC_OSNULL)
+    if (ospvHttp == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_HTTP_INVALID_ARG;
     }
@@ -327,7 +327,7 @@ OSPPSockConnectServicePoint(
                      * first service point in the list
                      */
                     if (ospvHttp->ServicePoint == 
-                        (OSPTSVCPT *)OSPC_OSNULL)
+                        OSPC_OSNULL)
                     {
                         ospvHttp->ServicePoint  = 
                             (OSPTSVCPT *)OSPPListFirst(
@@ -346,7 +346,7 @@ OSPPSockConnectServicePoint(
                          * to the beginning
                          */
                         if (ospvHttp->ServicePoint == 
-                            (OSPTSVCPT *)OSPC_OSNULL)
+                            OSPC_OSNULL)
                         {
                             ospvHttp->ServicePoint = 
                                 (OSPTSVCPT *)OSPPListFirst(
@@ -361,7 +361,7 @@ OSPPSockConnectServicePoint(
                      */
                     if ((svcptitem = (OSPTSVCPT *)OSPPListNext(
                         (OSPTLIST *)&svcptlist,
-                        ospvHttp->ServicePoint)) == (OSPTSVCPT *)OSPC_OSNULL)
+                        ospvHttp->ServicePoint)) == OSPC_OSNULL)
                     {
                         *ospvRollover = OSPC_TRUE;
                     }
@@ -524,7 +524,7 @@ OSPPSockProcessRequest(
     *ospvResponseBufferSz = 0; 
     *ospvError = OSPC_ERR_NO_ERROR;
 
-    if (ospvHttp == (OSPTHTTP *)OSPC_OSNULL)
+    if (ospvHttp == OSPC_OSNULL)
     {
         *ospvError = OSPC_ERR_HTTP_INVALID_ARG;
     }
@@ -888,8 +888,8 @@ OSPPSockWaitTillReady(
          */
         if (ospvWaitForRead)
         {
-            OSPM_SELECT(ospvSockFd +1, &fdlist, (fd_set *)OSPC_OSNULL, 
-                (fd_set *)OSPC_OSNULL, ospvTimeout, fdready);
+            OSPM_SELECT(ospvSockFd +1, &fdlist, OSPC_OSNULL, 
+                OSPC_OSNULL, ospvTimeout, fdready);
         }
         else
         {
@@ -897,8 +897,8 @@ OSPPSockWaitTillReady(
              * make sure there is data available to write
              */
 
-            OSPM_SELECT(ospvSockFd +1, (fd_set *)OSPC_OSNULL, &fdlist, 
-                (fd_set *)OSPC_OSNULL, ospvTimeout, fdready);
+            OSPM_SELECT(ospvSockFd +1, OSPC_OSNULL, &fdlist, 
+                OSPC_OSNULL, ospvTimeout, fdready);
         }
 
         if (fdready != 1)

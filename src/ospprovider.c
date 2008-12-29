@@ -147,18 +147,15 @@ OSPPProviderGetNewTransactionAllowed(
  *
  * returns OSPC_ERR_NO_ERROR if successful, otherwise errorcode.
  */
-int
-OSPPProviderGetTransactionCollection(
-    OSPTPROVIDER        *ospvProvider,   /* In - Provider pointer */
-    OSPTTRANCOLLECTION  **ospvTranColl)  /* Out - Transaction collection ptr */
+int OSPPProviderGetTransactionCollection(
+    OSPTPROVIDER *ospvProvider,         /* In - Provider pointer */
+    OSPTTRANCOLLECTION **ospvTranColl)  /* Out - Transaction collection ptr */
 {
     int errcode = OSPC_ERR_NO_ERROR;
 
     *ospvTranColl = ospvProvider->TransCollection;
 
-    if (*ospvTranColl == (OSPTTRANCOLLECTION *)OSPC_OSNULL)
-    {
-
+    if (*ospvTranColl == OSPC_OSNULL) {
         errcode = OSPC_ERR_PROV_TRANSCOLLECTION_NOT_FOUND;
         OSPM_DBGERRORLOG(errcode, "transaction collection OSPC_OSNULL");
     }
@@ -198,7 +195,7 @@ OSPPProviderGetTransIdSentinel(
     }
     else
     {
-        return (OSPTTRANSID *)OSPC_OSNULL;
+        return OSPC_OSNULL;
     }
 }
 
@@ -251,32 +248,25 @@ OSPPProviderSetNewTransactionAllowed(
  *
  * returns void.
  */
-void
-OSPPProviderTransactionCollectionDelete(
-    OSPTTRANCOLLECTION    **ospvTranColl)  /* In  - Transaction Collection ptr */
+void OSPPProviderTransactionCollectionDelete(
+    OSPTTRANCOLLECTION **ospvTranColl)  /* In  - Transaction Collection ptr */
 {
-    int                 count = 0;
+    int count = 0;
     OSPTCOLLECTIONINDEX tranidx;
 
-    if ((*ospvTranColl)->NumberOfTrans > 0)
-    {
-        for (count = 0; count < OSPC_MAX_TRANS; count++)
-        {
-            if ((*ospvTranColl)->Trans[count] != OSPC_OSNULL)
-            {
-
+    if ((*ospvTranColl)->NumberOfTrans > 0) {
+        for (count = 0; count < OSPC_MAX_TRANS; count++) {
+            if ((*ospvTranColl)->Trans[count] != OSPC_OSNULL) {
                 tranidx.Index = count;
                 OSPPTransactionCollectionRemoveItem(*ospvTranColl, tranidx); 
             }
         }
     }
 
-    if (*ospvTranColl != (OSPTTRANCOLLECTION *)OSPC_OSNULL) 
-    {
+    if (*ospvTranColl != OSPC_OSNULL) {
         OSPM_FREE(*ospvTranColl);
         *ospvTranColl = OSPC_OSNULL;
     }
-    return;
 }
 
 /*
@@ -291,7 +281,7 @@ OSPPProviderTransactionCollectionNew(
     int errcode = OSPC_ERR_NO_ERROR;
 
     OSPM_MALLOC(*ospvTransColl, OSPTTRANCOLLECTION, sizeof(OSPTTRANCOLLECTION));
-    if (*ospvTransColl == (OSPTTRANCOLLECTION *)OSPC_OSNULL)
+    if (*ospvTransColl == OSPC_OSNULL)
     {
         errcode = OSPC_ERR_TRAN_MALLOC_FAILED;
         OSPM_DBGERRORLOG(errcode, "malloc failed for init trans collection");
@@ -322,7 +312,7 @@ OSPPProviderInitializeStorage(
 {
     int errcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvProvider == (OSPTPROVIDER *)OSPC_OSNULL)
+    if (ospvProvider == OSPC_OSNULL)
     {
         errcode = OSPC_ERR_PROV_NULL_POINTER;
         OSPM_DBGERRORLOG(errcode, "provider is NULL");

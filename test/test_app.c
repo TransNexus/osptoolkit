@@ -929,7 +929,7 @@ int testOSPPTransactionGetNextDestination()
     callidsize = CALL_ID_SZ;
 
     errorcode = OSPPTransactionGetNextDestination(OSPVTransactionHandle,
-        (enum OSPEFAILREASON)TCcode, TIMESTAMP_SZ,
+        (OSPEFAILREASON)TCcode, TIMESTAMP_SZ,
         validafter, validuntil,
         &timelimit, &callidsize,
         callid, CALLED_NUM_SZ,
@@ -1044,7 +1044,7 @@ int testBuildUsageFromScratch(int IsSource, int BuildNew)
             callednumber,
             CalledNumFormat,
             callidsize, callid,
-            (enum OSPEFAILREASON)TCcode,
+            (OSPEFAILREASON)TCcode,
             &detaillogsize,
             NULL);
     }
@@ -1224,8 +1224,15 @@ int testOSPPTransactionRecordFailure()
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    errorcode = OSPPTransactionRecordFailure(OSPVTransactionHandle, (enum OSPEFAILREASON)TCcode);
-
+// SDS
+#if 0
+    errorcode = OSPPTransactionRecordFailure(OSPVTransactionHandle, (OSPEFAILREASON)TCcode);
+#else
+errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_Q850, 1, "tc_q850");
+errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_H323, 2, "tc_h323");
+errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_SIP, 3, "tc_sip");
+errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_XMPP, 4, "tc_xmpp");
+#endif
     if (errorcode == OSPC_ERR_NO_ERROR) {
         printf("OSPPTransactionRecordFailure Successful\n");
     } else {
@@ -1255,7 +1262,7 @@ int testOSPPTransactionReinitializeAtDevice()
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPTransactionReinitializeAtDevice(tranhandle2,
-            (enum OSPEFAILREASON)TCcode, IsSource,
+            (OSPEFAILREASON)TCcode, IsSource,
             SourceIP, DstIP,
             SourceDevIP,
             OSPC_OSNULL,
@@ -1300,7 +1307,6 @@ int testOSPPTransactionRequestSuggestedAuthorisation()
     errorcode = testInitializeCallIds();
 
     numdestinations = NUM_CALL_IDS;
-
     if (errorcode == OSPC_ERR_NO_ERROR)
         errorcode = OSPPTransactionRequestAuthorisation(OSPVTransactionHandle, 
             SourceIP, 
@@ -1311,11 +1317,10 @@ int testOSPPTransactionRequestSuggestedAuthorisation()
             CalledNumFormat,
             "919404556#4444",
             NUM_CALL_IDS, callids,
-            (const char **)
-            preferredDest,
+            (const char **)preferredDest,
             &numdestinations,
             &detaillogsize,
-            (void *) NULL);
+            (void *)NULL);
 
     if (errorcode == 0 && !quietmode) {
         printf("num dest = %u\n", numdestinations);
@@ -1325,7 +1330,6 @@ int testOSPPTransactionRequestSuggestedAuthorisation()
     return errorcode;
 }
 
-
 int testOSPPTransactionRequestAuthorisation()
 {
     int errorcode = 0;
@@ -1334,6 +1338,11 @@ int testOSPPTransactionRequestAuthorisation()
     errorcode = testInitializeCallIds();
 
     numdestinations = NUM_CALL_IDS;
+
+// SDS
+#if 0
+OSPPTransactionSetRoutingNumber(OSPVTransactionHandle, "RoutingNumber");
+#endif
 
     if (errorcode == OSPC_ERR_NO_ERROR)
         errorcode = OSPPTransactionRequestAuthorisation(OSPVTransactionHandle,
@@ -1619,6 +1628,27 @@ int testOSPPTransactionReportUsage()
 
     if (OSPVTransactionHandle != OSPC_TRAN_HANDLE_INVALID) {
 
+// SDS
+#if 0
+OSPPTransactionSetAssertedId(OSPVTransactionHandle, "AssertedId");
+OSPPTransactionSetDestProtocol(OSPVTransactionHandle, OSPPDestProtocolGetPart("h323-LRQ"));
+OSPPTransactionSetForwardCodec(OSPVTransactionHandle, "g729");
+OSPPTransactionSetReverseCodec(OSPVTransactionHandle, "g723");
+OSPTCALLID *callid;
+callid = OSPPCallIdNew(8, (const unsigned char *)"incallid");
+errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_DIR_INBOUND, callid);
+OSPPCallIdDelete(&callid);
+callid = OSPPCallIdNew(9, (const unsigned char *)"outcallid");
+errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, callid);
+OSPPCallIdDelete(&callid);
+OSPPTransactionSetDelayMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 1);
+OSPPTransactionSetDelayMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 2);
+OSPPTransactionSetJitterMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 3);
+OSPPTransactionSetJitterMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 4);
+OSPPTransactionSetPackLossMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 5);
+OSPPTransactionSetPackLossMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 6);
+#endif
+	
         if (!quietmode)
             printf("Reporting Usage for OSPVTransactionHandle %d\n", (int)OSPVTransactionHandle);
 

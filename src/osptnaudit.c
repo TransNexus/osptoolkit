@@ -81,7 +81,7 @@ int OSPPTNAuditFromElement(
          * the information we need. 
          */
         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
-             (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (errorcode == OSPC_ERR_NO_ERROR);
+             (elem != OSPC_OSNULL) && (errorcode == OSPC_ERR_NO_ERROR);
              elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) 
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {

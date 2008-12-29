@@ -200,7 +200,7 @@ OSPPCommNew(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (*ospvComm != (OSPTCOMM *)OSPC_OSNULL)
+    if (*ospvComm != OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is not NULL");
@@ -211,7 +211,7 @@ OSPPCommNew(
          * create a new communication manager
          */
         OSPM_MALLOC(*ospvComm, OSPTCOMM, sizeof(OSPTCOMM));
-        if (*ospvComm == (OSPTCOMM *)OSPC_OSNULL) 
+        if (*ospvComm == OSPC_OSNULL) 
         {
             errorcode = OSPC_ERR_COMM_NO_MEMORY;
             OSPM_DBGERRORLOG(errorcode, "ospvComm malloc failed");
@@ -287,7 +287,7 @@ OSPPCommGetPersistence(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL)
+    if (ospvComm == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -305,7 +305,7 @@ OSPPCommGetRetryDelay(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL)
+    if (ospvComm == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -323,7 +323,7 @@ OSPPCommGetRetryLimit(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL) 
+    if (ospvComm == OSPC_OSNULL) 
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -341,7 +341,7 @@ OSPPCommGetTimeout(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL) 
+    if (ospvComm == OSPC_OSNULL) 
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -359,7 +359,7 @@ OSPPCommSetPersistence(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL) 
+    if (ospvComm == OSPC_OSNULL) 
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -377,7 +377,7 @@ OSPPCommSetRetryDelay(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL) 
+    if (ospvComm == OSPC_OSNULL) 
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -395,7 +395,7 @@ OSPPCommSetRetryLimit(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL)
+    if (ospvComm == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -413,7 +413,7 @@ OSPPCommSetConnSelectionTimeout(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL)
+    if (ospvComm == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -431,7 +431,7 @@ OSPPCommSetTimeout(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL)
+    if (ospvComm == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -449,7 +449,7 @@ OSPPCommGetMaxConnections(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL)
+    if (ospvComm == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -467,7 +467,7 @@ OSPPCommSetMaxConnections(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL) 
+    if (ospvComm == OSPC_OSNULL) 
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -484,7 +484,7 @@ OSPPCommIncrementHttpConnCount(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL) 
+    if (ospvComm == OSPC_OSNULL) 
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -501,7 +501,7 @@ OSPPCommDecrementHttpConnCount(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL) 
+    if (ospvComm == OSPC_OSNULL) 
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -519,7 +519,7 @@ OSPPCommGetHttpConnCount(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL) 
+    if (ospvComm == OSPC_OSNULL) 
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -542,7 +542,7 @@ OSPPCommSetShutdown(
 
     OSPM_CONDVAR_SIGNAL(OSPPMsgQueueGetCondVar((*ospvComm)->MsgQueue), errorcode);
 
-    while (*ospvComm != (OSPTCOMM *)OSPC_OSNULL)
+    while (*ospvComm != OSPC_OSNULL)
         OSPM_SLEEP(1);
 
     return;
@@ -555,7 +555,7 @@ OSPPCommSignalAllConnections(
     OSPTHTTP *httpconn = OSPC_OSNULL;
     int      errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm != (OSPTCOMM *)OSPC_OSNULL)
+    if (ospvComm != OSPC_OSNULL)
     {
         /*
          * Lock COMM object while iterating though the list
@@ -565,7 +565,7 @@ OSPPCommSignalAllConnections(
         httpconn = (OSPTHTTP *)OSPPListFirst(
             (OSPTLIST *)&(ospvComm->HttpConnList));
     }
-    if (httpconn != (OSPTHTTP *)OSPC_OSNULL)
+    if (httpconn != OSPC_OSNULL)
     {
         do
         {
@@ -581,10 +581,10 @@ OSPPCommSignalAllConnections(
             {
                 httpconn = OSPC_OSNULL;
             }
-        } while (httpconn != (OSPTHTTP *)OSPC_OSNULL);
+        } while (httpconn != OSPC_OSNULL);
     }
 
-    if (ospvComm != (OSPTCOMM *)OSPC_OSNULL)
+    if (ospvComm != OSPC_OSNULL)
     {
         /*
          * Finished iterating, unlocking...
@@ -665,7 +665,7 @@ OSPPCommGetNumberOfServicePoints(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL)
+    if (ospvComm == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -718,7 +718,7 @@ OSPPCommGetServicePoints(
     OSPTSVCPT *svcpt    = OSPC_OSNULL;
     int       errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvComm == (OSPTCOMM *)OSPC_OSNULL)
+    if (ospvComm == OSPC_OSNULL)
     {
         errorcode = OSPC_ERR_COMM_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
@@ -734,7 +734,7 @@ OSPPCommGetServicePoints(
             svcpt = (OSPTSVCPT *)OSPPListNext(
             (OSPTLIST *)&(ospvComm->ServicePointList), (void *)svcpt)) 
         {
-            if (svcpt == (OSPTSVCPT *)OSPC_OSNULL)
+            if (svcpt == OSPC_OSNULL)
                 break;
 
             if ((OSPM_STRLEN(svcpt->HostName) + OSPM_STRLEN(svcpt->URI) 
@@ -772,7 +772,7 @@ osppCommDeleteServicePointList(
     for (count = 0; count < ospvNumberOfServicePoints; count++) 
     {
         deletesvcpt = (OSPTSVCPT *)OSPPListRemove((OSPTLIST *)svcpt);
-        if (deletesvcpt != (OSPTSVCPT *)OSPC_OSNULL)
+        if (deletesvcpt != OSPC_OSNULL)
         {
             if (deletesvcpt->HostName)
                 OSPM_FREE(deletesvcpt->HostName);
@@ -812,14 +812,14 @@ OSPPCommParseSvcPt(
     unsigned int   length     = 0;
     char  ErrStr[100];
 
-    if (ospvURL == (char *)OSPC_OSNULL)
+    if (ospvURL == OSPC_OSNULL)
     {
         OSPM_DBGERRORLOG(OSPC_ERR_COMM_PARSER, "URL is NULL");
         return OSPC_ERR_COMM_PARSER;
     }
 
     OSPM_MALLOC(svcpt, OSPTSVCPT, sizeof(OSPTSVCPT));
-    if (svcpt == (OSPTSVCPT *)OSPC_OSNULL)
+    if (svcpt == OSPC_OSNULL)
         return OSPC_ERR_COMM_NO_MEMORY;
 
     OSPM_MEMSET(svcpt, 0, sizeof(OSPTSVCPT));
@@ -976,7 +976,7 @@ OSPPCommParseSvcPt(
      * -- START --
      */
     OSPM_MALLOC(svcpt->URI, char, OSPM_STRLEN(curr) + 1);
-    if (svcpt->URI == (char *)OSPC_OSNULL)
+    if (svcpt->URI == OSPC_OSNULL)
     {
         OSPM_FREE(svcpt->HostName);
         OSPM_FREE(svcpt);
@@ -1219,7 +1219,7 @@ OSPPCommDelete(
      * destroy the comm object
      */
     OSPM_FREE(*ospvComm);
-    *ospvComm = (OSPTCOMM *)OSPC_OSNULL;
+    *ospvComm = OSPC_OSNULL;
 
     return; 
 }
@@ -1242,7 +1242,7 @@ int OSPPCommValidateSvcPts(unsigned ospvNumberOfServicePoints, const char **ospv
         /*
          * Now free the Svc point
         */
-        if (svcpt != (OSPTSVCPT *)OSPC_OSNULL)
+        if (svcpt != OSPC_OSNULL)
         {
             if (svcpt->HostName)
                 OSPM_FREE(svcpt->HostName);

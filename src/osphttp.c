@@ -46,7 +46,7 @@ OSPPHttpNew(
      * create space for the new HTTP connection object
      */
     OSPM_MALLOC(*ospvHttp, OSPTHTTP, sizeof(OSPTHTTP));
-    if (*ospvHttp != (OSPTHTTP *)OSPC_OSNULL) 
+    if (*ospvHttp != OSPC_OSNULL) 
     {
 
         /*
@@ -144,7 +144,7 @@ osppHttpDeleteServicePointList(
     for (count = 0; count < ospvNumberOfServicePoints; count++)
     {
         deletesvcpt = (OSPTSVCPT *)OSPPListRemove((OSPTLIST *)svcpt);
-        if (deletesvcpt != (OSPTSVCPT *)OSPC_OSNULL)
+        if (deletesvcpt != OSPC_OSNULL)
         {
             if (deletesvcpt->HostName)
                 OSPM_FREE(deletesvcpt->HostName);
@@ -255,7 +255,7 @@ osppHttpRemoveConnection(
      * the http connection data exclusively
      */
 
-    if (comm != (OSPTCOMM *)OSPC_OSNULL)
+    if (comm != OSPC_OSNULL)
     {
         OSPM_MUTEX_LOCK(comm->Mutex, errorcode);
         assert(errorcode == OSPC_ERR_NO_ERROR);
@@ -364,7 +364,7 @@ osppHttpSetupAndMonitor(
     {
         OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() monitor start\n"));
 
-        msginfo = (OSPT_MSG_INFO *)OSPC_OSNULL;
+        msginfo = OSPC_OSNULL;
         comm    = (OSPTCOMM *)httpconn->Comm;
 
         /*
@@ -382,7 +382,7 @@ osppHttpSetupAndMonitor(
                 errorcode != OSPC_ERR_OS_CONDVAR_TIMEOUT &&
                 (comm && !(comm->Flags & OSPC_COMM_HTTPSHUTDOWN_BIT)))
             {
-                if (comm != (OSPTCOMM *)OSPC_OSNULL)
+                if (comm != OSPC_OSNULL)
                     (void)OSPPCommGetPersistence(comm, &persistancetimeout);
 
                 OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() before timed wait. %d seconds\n",  
@@ -403,10 +403,10 @@ osppHttpSetupAndMonitor(
              */
             if ((httpconn->NumberOfTransactions == 0 &&
                 errorcode == OSPC_ERR_OS_CONDVAR_TIMEOUT) ||
-                (comm == (OSPTCOMM *)OSPC_OSNULL || 
+                (comm == OSPC_OSNULL || 
                 (comm->Flags & OSPC_COMM_HTTPSHUTDOWN_BIT) == OSPC_COMM_HTTPSHUTDOWN_BIT))
             {
-                if ( (comm == (OSPTCOMM *)OSPC_OSNULL) ||
+                if ( (comm == OSPC_OSNULL) ||
                      (comm->Flags & OSPC_COMM_HTTPSHUTDOWN_BIT) == OSPC_COMM_HTTPSHUTDOWN_BIT )
                 {
                     /*
@@ -458,7 +458,7 @@ osppHttpSetupAndMonitor(
             msginfo = (OSPT_MSG_INFO *)OSPPListFirst(
                 (OSPTLIST *)&(httpconn->MsgInfoList));
 
-            if (msginfo == (OSPT_MSG_INFO *)OSPC_OSNULL)
+            if (msginfo == OSPC_OSNULL)
             {
                 errorcode = OSPC_ERR_HTTP_BAD_QUEUE;
                 OSPM_DBGERRORLOG(errorcode, "http msg queue corrupted");
@@ -576,7 +576,7 @@ osppHttpSetupAndMonitor(
                 msginfo = (OSPT_MSG_INFO *)OSPPListRemove(
                     (OSPTLIST *)&(httpconn->MsgInfoList));
 
-                if (msginfo == (OSPT_MSG_INFO *)OSPC_OSNULL)
+                if (msginfo == OSPC_OSNULL)
                 {
                     errorcode = OSPC_ERR_HTTP_BAD_QUEUE;
                     OSPM_DBGERRORLOG(errorcode, "http msg queue corrupted");
@@ -636,7 +636,7 @@ osppHttpSetupAndMonitor(
              * now signal the application thread that
              * we've got a response for it.
              */
-            if (msginfo != (OSPT_MSG_INFO *)OSPC_OSNULL)
+            if (msginfo != OSPC_OSNULL)
             {
                 errorcode = OSPPMsgInfoProcessResponse(msginfo);
                 assert(errorcode == OSPC_ERR_NO_ERROR);
@@ -686,7 +686,7 @@ OSPPHttpDecrementConnectionCount(
 {
     int errorcode=0;
 
-    if (comm != (OSPTCOMM *)OSPC_OSNULL)
+    if (comm != OSPC_OSNULL)
     {
         OSPM_MUTEX_LOCK(comm->Mutex, errorcode);
         assert(errorcode == OSPC_ERR_NO_ERROR);
@@ -728,35 +728,35 @@ OSPPHttpVerifyResponse(
 	*/
 
 
-	if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_200_OK) != (char *)OSPC_OSNULL)
+	if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_200_OK) != OSPC_OSNULL)
 	{
 	    *ospvResponseType = 200;
 	}
-        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_400_BAD_REQUEST) != (char *)OSPC_OSNULL)
+        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_400_BAD_REQUEST) != OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_HTTP_BAD_REQUEST;
             sprintf(ErrStr,"HTTP Status: 400 Bad Request, IP Address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
 	    OSPM_DBGERRORLOG(errorcode, ErrStr);
         }
-        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_401_UNAUTHORIZED) != (char *)OSPC_OSNULL)
+        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_401_UNAUTHORIZED) != OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_HTTP_UNAUTHORIZED;
             sprintf(ErrStr,"HTTP Status: 401 Unauthorized, IP Address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
 	    OSPM_DBGERRORLOG(errorcode, ErrStr);
         }
-        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_404_NOT_FOUND) != (char *)OSPC_OSNULL)
+        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_404_NOT_FOUND) != OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_HTTP_NOT_FOUND;
             sprintf(ErrStr,"HTTP Status: 404 Not Found, IP Address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
 	    OSPM_DBGERRORLOG(errorcode, ErrStr);
         }
-        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_503_SERV_UNAVAIL) != (char *)OSPC_OSNULL)
+        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_503_SERV_UNAVAIL) != OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_HTTP_SERVICE_UNAVAILABLE;
             sprintf(ErrStr,"HTTP Status: 503 Service Unavailable, IP Address: %s",OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
 	    OSPM_DBGERRORLOG(errorcode, ErrStr);
         }
-        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_100_CONTINUE) != (char *)OSPC_OSNULL)
+        else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_100_CONTINUE) != OSPC_OSNULL)
         {
 	    *ospvResponseType = 100;
 	}
@@ -861,7 +861,7 @@ osppHttpSelectConnection(
     /*
      * see if we can add a new one
      */
-    *ospvHttp = (OSPTHTTP *)OSPC_OSNULL;
+    *ospvHttp = OSPC_OSNULL;
 
     (void)OSPPCommGetHttpConnCount(ospvComm, &httpcount);
     (void)OSPPCommGetMaxConnections(ospvComm, &maxcount);
@@ -1227,7 +1227,7 @@ OSPPHttpRequestHandoff(
         */
        msginfo = (OSPT_MSG_INFO *)OSPPListFirst(
         (OSPTLIST *)&(ospvMsgQueue->MsgInfoList));
-       if (msginfo == (OSPT_MSG_INFO *)OSPC_OSNULL)
+       if (msginfo == OSPC_OSNULL)
        {
         /*
          * release the mutex lock
@@ -1246,7 +1246,7 @@ OSPPHttpRequestHandoff(
          */
         msginfo = (OSPT_MSG_INFO *)OSPPListRemove(
             (OSPTLIST *)&(ospvMsgQueue->MsgInfoList));
-        if (msginfo == (OSPT_MSG_INFO *)OSPC_OSNULL)
+        if (msginfo == OSPC_OSNULL)
         {
             errorcode = OSPC_ERR_HTTP_MALLOC_FAILED;
             OSPM_DBGERRORLOG(errorcode, "msg queue item delete failed");
@@ -1380,7 +1380,7 @@ OSPPHttpParseHeader(
             else
             {
                 OSPM_MALLOC(*ospvOutBuffer, unsigned char, *ospvLength + 1);
-                if (*ospvOutBuffer == (unsigned char *)OSPC_OSNULL)
+                if (*ospvOutBuffer == OSPC_OSNULL)
                 {
                     *ospvError = OSPC_ERR_HTTP_MALLOC_FAILED;
                     OSPM_DBGERRORLOG(*ospvError, "bad http header");
@@ -1409,7 +1409,7 @@ OSPPHttpParseHeader(
             {
                 *ospvLength = endptr - begptr;
                 OSPM_MALLOC(*ospvOutBuffer, unsigned char, *ospvLength+1);
-                if (*ospvOutBuffer != (unsigned char *)OSPC_OSNULL)
+                if (*ospvOutBuffer != OSPC_OSNULL)
                 {
                     OSPM_MEMSET(*ospvOutBuffer, 0, *ospvLength+1);
                     OSPM_MEMCPY(*ospvOutBuffer, begptr, *ospvLength);
@@ -1452,7 +1452,7 @@ OSPPHttpParseHeader(
             {
                 *ospvLength = endptr - begptr;
                 OSPM_MALLOC(*ospvOutBuffer, unsigned char, *ospvLength+1);
-                if (*ospvOutBuffer != (unsigned char *)OSPC_OSNULL)
+                if (*ospvOutBuffer != OSPC_OSNULL)
                 {
                     OSPM_MEMSET(*ospvOutBuffer, 0, *ospvLength+1);
                     OSPM_MEMCPY(*ospvOutBuffer, begptr, *ospvLength);

@@ -24,7 +24,7 @@
 
 #include "osp/osp.h"
 
-enum OSPEFAILREASON {
+typedef enum {
     /* no failure (call successful) 1 */
     OSPC_FAIL_NONE = 0,
 
@@ -99,23 +99,24 @@ enum OSPEFAILREASON {
 
     /* generic failure */
     OSPC_FAIL_GENERAL = 999
-};
+} OSPEFAILREASON;
 
 typedef struct {
     OSPTBOOL hastermcause[OSPC_TCAUSE_NUMBER];
     unsigned tccode[OSPC_TCAUSE_NUMBER];
     char tcdesc[OSPC_TCAUSE_NUMBER][OSPC_SIZE_NORSTR];
-} OSPT_TERMCAUSE;
+} OSPT_TERM_CAUSE;
 
 /*
  * Will return success as long as ospvFailureReason is between
  * OSPC_FAIL_NONE (0) and OSPC_FAIL_GENERAL (999)
  */
-int OSPPFailReasonFind(enum OSPEFAILREASON ospvFailureReason);
+int OSPPFailReasonFind(OSPEFAILREASON ospvFailureReason);
 
-OSPTBOOL OSPPHasTermCause(OSPT_TERMCAUSE *, OSPE_TERM_CAUSE);
-void OSPPSetTermCause(OSPT_TERMCAUSE *, OSPE_TERM_CAUSE, unsigned, const char *);
-unsigned OSPPGetTCCode(OSPT_TERMCAUSE *, OSPE_TERM_CAUSE);    
-const char *OSPPGetTCDesc(OSPT_TERMCAUSE *, OSPE_TERM_CAUSE);    
+OSPTBOOL OSPPHasTermCause(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);
+OSPTBOOL OSPPHasTermCauseAny(OSPT_TERM_CAUSE *);
+void OSPPSetTermCause(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE, unsigned, const char *);
+unsigned OSPPGetTCCode(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);    
+const char *OSPPGetTCDesc(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);    
 
 #endif /* _OSPFAIL_H */

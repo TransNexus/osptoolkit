@@ -631,9 +631,7 @@ OSPPASN1ElementParse(
             else if (parseRule->HasDefault)
             {
                 /* Parse Results Added */
-                errorcode = PTPAddParseResults(parseRule,
-                    (OSPTASN1ELEMENTINFO *)OSPC_OSNULL,
-                    ospvParseResult, ospvDataRef);
+                errorcode = PTPAddParseResults(parseRule, OSPC_OSNULL, ospvParseResult, ospvDataRef);
                 if (errorcode == OSPC_ERR_NO_ERROR)
                 {
                     /* We are done with this element */

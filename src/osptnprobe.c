@@ -615,7 +615,7 @@ OSPPTNProbePruneList(
 
                 OSPPCommParseSvcPt(OSPPDestGetAddr(dest), &svcpt, 0);
 
-                if (svcpt != (OSPTSVCPT *)OSPC_OSNULL)
+                if (svcpt != OSPC_OSNULL)
                 {
 
                     if(svcpt->IpAddr == tmpprobelist->ospmipaddr)
@@ -709,7 +709,7 @@ OSPPTNProbeArrangeList(
         {
 
             OSPPCommParseSvcPt(OSPPDestGetAddr(dest), &svcpt, 0);
-            if (svcpt != (OSPTSVCPT *)OSPC_OSNULL)
+            if (svcpt != OSPC_OSNULL)
             {
                 if(svcpt->IpAddr == ospvProbes[probecnt].ospmipaddr)
                 {

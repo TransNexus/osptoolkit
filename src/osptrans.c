@@ -105,7 +105,7 @@ OSPPTransactionBuildReauthRequest(
 
                     /* add any tokens */
                     for (token = (OSPTTOKEN *)OSPPDestFirstToken(ospvTrans->CurrentDest);
-                        (token != (OSPTTOKEN *)OSPC_OSNULL);
+                        (token != OSPC_OSNULL);
                         token = (OSPTTOKEN *)OSPPDestNextToken(ospvTrans->CurrentDest, token))
                     {
 
@@ -182,7 +182,7 @@ OSPPTransactionBuildReauthRequest(
             if(ospvTrans->AuthReq->ospmAuthReqDeviceInfo != NULL)
             {
                 for(altinfo = (OSPT_ALTINFO *)OSPPListFirst( &(ospvTrans->AuthReq->ospmAuthReqDeviceInfo));
-                    altinfo!= (OSPT_ALTINFO *)OSPC_OSNULL;
+                    altinfo!= OSPC_OSNULL;
                     altinfo = (OSPT_ALTINFO *)OSPPListNext( &(ospvTrans->AuthReq->ospmAuthReqDeviceInfo), altinfo))
                 {
 
@@ -203,7 +203,7 @@ OSPPTransactionBuildReauthRequest(
             if(OSPPAuthReqHasSourceAlt(ospvTrans->AuthReq))
             {
                 for (altinfo = (OSPT_ALTINFO *)OSPPAuthReqFirstSourceAlt(ospvTrans->AuthReq);
-                    altinfo != (OSPT_ALTINFO *)OSPC_OSNULL;
+                    altinfo != OSPC_OSNULL;
                     altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextSourceAlt(ospvTrans->AuthReq, altinfo))
                 {
 
@@ -225,7 +225,7 @@ OSPPTransactionBuildReauthRequest(
             if(OSPPAuthReqHasDestinationAlt(ospvTrans->AuthReq))
             {
                 for (altinfo = (OSPT_ALTINFO *)OSPPAuthReqFirstDestinationAlt(ospvTrans->AuthReq);
-                    altinfo != (OSPT_ALTINFO *)OSPC_OSNULL;
+                    altinfo != OSPC_OSNULL;
                     altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextDestinationAlt(ospvTrans->AuthReq, altinfo))
                 {
 
@@ -271,7 +271,7 @@ OSPPTransactionBuildUsage(
     OSPTTRANS* ospvTrans,       /* In - Pointer to transaction context */
     OSPT_USAGEIND** ospvUsage,  /* In - Pointer to usage to be initialized*/
     OSPTDEST* ospvDest,         /* In - Pointer to dest associated w/usage*/
-    OSPE_MESSAGE ospvType)/* In - Indicates what usage to build */
+    OSPE_MESSAGE ospvType)      /* In - Indicates what usage to build */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     const char* dest = OSPC_OSNULL;
@@ -283,7 +283,7 @@ OSPPTransactionBuildUsage(
     if(*ospvUsage != OSPC_OSNULL) {
         if(ospvType == OSPC_MSG_ARESP) {
             /* Originating */
-            if ((ospvTrans->AuthRsp != (OSPTAUTHRSP*)OSPC_OSNULL) &&
+            if ((ospvTrans->AuthRsp != OSPC_OSNULL) &&
                 OSPPAuthRspHasRole(ospvTrans->AuthRsp))
             {
                 OSPPUsageIndSetRole(*ospvUsage, OSPPAuthRspGetRole(ospvTrans->AuthRsp));
@@ -405,7 +405,7 @@ OSPPTransactionBuildUsage(
             }
         } else if(ospvType == OSPC_MSG_AIND) {
             /* Terminating */
-            if ((ospvTrans->AuthInd != (OSPTAUTHIND*)OSPC_OSNULL) &&
+            if ((ospvTrans->AuthInd != OSPC_OSNULL) &&
                 (OSPPAuthIndHasRole(ospvTrans->AuthInd)) &&
                 ((role = OSPPAuthIndGetRole(ospvTrans->AuthInd)) != OSPC_ROLE_DESTINATION))
             {
@@ -529,10 +529,7 @@ OSPPTransactionBuildUsage(
         /* set Device Id */
         OSPPUsageIndSetDeviceId(*ospvUsage, OSPPProviderGetDeviceId(ospvTrans->Provider));
         /* set Fail Reason */
-        OSPPUsageIndSetTermCause(*ospvUsage, 
-            OSPC_TCAUSE_Q850, 
-            OSPPDestGetTCCode(ospvTrans->CurrentDest, OSPC_TCAUSE_Q850), 
-            OSPPDestGetTCDesc(ospvTrans->CurrentDest, OSPC_TCAUSE_Q850));
+        OSPPUsageIndCopyTermCause(*ospvUsage, OSPPDestGetTermCause(ospvDest));
     } else {
         /* Some error occurred. Get rid of this usage */
         if(ospvUsage != OSPC_OSNULL) {
@@ -555,7 +552,7 @@ OSPTTRANS *
 {
     OSPTTRANS   *tmptrans = OSPC_OSNULL;
 
-    if (ospvTranColl->Trans[tranindex.Index] != (OSPTTRANS *)OSPC_OSNULL)
+    if (ospvTranColl->Trans[tranindex.Index] != OSPC_OSNULL)
         tmptrans = ospvTranColl->Trans[tranindex.Index];
 
     return tmptrans;
@@ -583,7 +580,7 @@ OSPTTRANHANDLE
 
     for (count = 0; count < OSPC_MAX_TRANS; count++) 
     {
-        if (ospvTranColl->Trans[count] == (OSPTTRANS *)OSPC_OSNULL)
+        if (ospvTranColl->Trans[count] == OSPC_OSNULL)
             break;
     }
 
@@ -597,7 +594,7 @@ OSPTTRANHANDLE
     {
         OSPM_MALLOC(ospvTranColl->Trans[count], OSPTTRANS, sizeof(OSPTTRANS));
 
-        if (ospvTranColl->Trans[count] != (OSPTTRANS *)OSPC_OSNULL) 
+        if (ospvTranColl->Trans[count] != OSPC_OSNULL) 
         {
             OSPM_MEMSET(ospvTranColl->Trans[count], 0, sizeof(OSPTTRANS));
 
@@ -639,7 +636,7 @@ OSPPTransactionDeleteAuthCnf(
     OSPTTRANS       *ospvTrans) /* In - Pointer to transaction */
 {
     OSPPAuthCnfDelete(&(ospvTrans)->AuthCnf);
-    ospvTrans->AuthCnf = (OSPTAUTHCNF *)OSPC_OSNULL; 
+    ospvTrans->AuthCnf = OSPC_OSNULL; 
     return;
 }
 
@@ -652,7 +649,7 @@ OSPPTransactionDeleteAuthInd(
     OSPTTRANS       *ospvTrans) /* In - Pointer to transaction */
 {
     OSPPAuthIndDelete(&(ospvTrans)->AuthInd);
-    ospvTrans->AuthInd = (OSPTAUTHIND *)OSPC_OSNULL; 
+    ospvTrans->AuthInd = OSPC_OSNULL; 
     return;
 }
 
@@ -665,7 +662,7 @@ OSPPTransactionDeleteReauthReq(
     OSPTTRANS       *ospvTrans) /* In - Pointer to transaction */
 {
     OSPPReauthReqDelete(&(ospvTrans)->ReauthReq);
-    ospvTrans->ReauthReq = (OSPTREAUTHREQ *)OSPC_OSNULL; 
+    ospvTrans->ReauthReq = OSPC_OSNULL; 
     return;
 }
 
@@ -678,7 +675,7 @@ OSPPTransactionDeleteReauthRsp(
     OSPTTRANS       *ospvTrans) /* In - Pointer to transaction */
 {
     OSPPReauthRspDelete(&(ospvTrans)->ReauthRsp);
-    ospvTrans->ReauthRsp = (OSPTREAUTHRSP *)OSPC_OSNULL; 
+    ospvTrans->ReauthRsp = OSPC_OSNULL; 
     return;
 }
 
@@ -691,7 +688,7 @@ OSPPTransactionDeleteRequest(
     OSPTTRANS       *ospvTrans) /* In - Pointer to transaction */
 {
     OSPPAuthReqDelete(&(ospvTrans)->AuthReq);
-    ospvTrans->AuthReq = (OSPTAUTHREQ *)OSPC_OSNULL; 
+    ospvTrans->AuthReq = OSPC_OSNULL; 
     return;
 }
 
@@ -714,13 +711,11 @@ OSPPTransactionDeleteResponse(
  *
  * returns void.
  */
-void
-OSPPTransactionDeleteStatistics(
-    OSPTTRANS   *ospvTrans) /* In - Pointer to transaction */
+void OSPPTransactionDeleteStatistics(
+    OSPTTRANS *ospvTrans)   /* In - Pointer to transaction */
 {
     OSPPStatsDelete(&ospvTrans->Statistics);
     ospvTrans->Statistics = OSPC_OSNULL;
-    return;
 }
 
 /* delete usagecnf structure and all associated structures and pointers.
@@ -732,7 +727,7 @@ OSPPTransactionDeleteUsageCnf(
     OSPTTRANS       *ospvTrans) /* In - Pointer to transaction */
 {
     OSPPUsageCnfDelete(&(ospvTrans)->UsageCnf);
-    ospvTrans->UsageCnf = (OSPTUSAGECNF *)OSPC_OSNULL; 
+    ospvTrans->UsageCnf = OSPC_OSNULL; 
     return;
 }
 
@@ -900,7 +895,7 @@ OSPTTRANS *
             transctxt = OSPPTransactionCollectionGetItem(trancoll, tranindex);
         }
 
-        if (transctxt == (OSPTTRANS *)OSPC_OSNULL) 
+        if (transctxt == OSPC_OSNULL) 
         {
             *ospvError = OSPC_ERR_TRAN_TRANSACTION_NOT_FOUND;
             OSPM_DBGERRORLOG(*ospvError, "transaction not found.");
@@ -1056,7 +1051,7 @@ OSPPTransactionGetDestination(
     OSPTTRANS            *ospvTrans,             
                         /* In  - Transaction pointer */
 
-    enum OSPEFAILREASON  ospvFailureReason,      
+    OSPEFAILREASON  ospvFailureReason,      
                         /* In  - Failure Reason for prev dest req */
 
     unsigned             ospvSizeOfTimestamp,    
@@ -1169,7 +1164,7 @@ OSPPTransactionGetDestination(
         else
         {
             status = OSPPAuthRspGetStatus(ospvTrans->AuthRsp);
-            if(status != (OSPTSTATUS *)OSPC_OSNULL)
+            if(status != OSPC_OSNULL)
             {
                 if (!OSPM_STATUSCODE_SUCCESSFUL(status->ospmStatusCode))
                 { 
@@ -1231,7 +1226,7 @@ OSPPTransactionGetDestination(
     /*
      * if no errors have occurred, get the destination information
      */
-    if ((dest == (OSPTDEST *)OSPC_OSNULL) &&
+    if ((dest == OSPC_OSNULL) &&
         (errorcode == OSPC_ERR_NO_ERROR))
     {
 
@@ -1468,7 +1463,7 @@ OSPPTransactionGetDestination(
             else
             {
                 token =(OSPTTOKEN *)OSPPDestFirstToken(dest);
-                if (token == (OSPTTOKEN *)OSPC_OSNULL)
+                if (token == OSPC_OSNULL)
                 {
                     errorcode = OSPC_ERR_TRAN_TOKEN_INVALID;
                     OSPM_DBGERRORLOG(errorcode, 
@@ -1517,7 +1512,7 @@ OSPPTransactionGetNewContext(
 
     prov = OSPPProviderGetContext(ospvProvider, &errorcode);
 
-    if (prov != (OSPTPROVIDER *)OSPC_OSNULL) 
+    if (prov != OSPC_OSNULL) 
     {
         OSPPProviderGetNewTransactionAllowed(prov, &transallowed);
 
@@ -1600,7 +1595,7 @@ OSPPTransactionGetState(
     OSPE_TRANS_STATE        *ospvState      /* Out - State pointer */
     )
 {
-    if (ospvTrans != (OSPTTRANS *)OSPC_OSNULL)
+    if (ospvTrans != OSPC_OSNULL)
     {
 
         *ospvState =  ospvTrans->State;
@@ -1609,40 +1604,27 @@ OSPPTransactionGetState(
     return;
 }
 
-/* Get copy of stats from transaction. 
- */
-void
-OSPPTransactionGetStatistics(
-    OSPTTRANS           *ospvTrans,     /* In- pointer to transaction */
-    OSPT_STATS      *ospvStats      /* In - pointer to stats struct */
+/* Get copy of stats from transaction. */
+void OSPPTransactionGetStatistics(
+    OSPTTRANS *ospvTrans,       /* In- pointer to transaction */
+    OSPT_STATS *ospvStats       /* In - pointer to stats struct */
 )
 {
-    if((ospvTrans != OSPC_OSNULL) && (ospvStats != OSPC_OSNULL))
-    {
-        if(OSPPTransactionHasStatistics(ospvTrans))
-        {
-            OSPM_MEMCPY(ospvStats, 
-                ospvTrans->Statistics, 
-                sizeof(OSPT_STATS));
+    if((ospvTrans != OSPC_OSNULL) && (ospvStats != OSPC_OSNULL)) {
+        if(OSPPTransactionHasStatistics(ospvTrans)) {
+            OSPM_MEMCPY(ospvStats, ospvTrans->Statistics, sizeof(OSPT_STATS));
         }
     }
-
-    return;
 }
 
-
 /* Does transaction have statistics? */
-OSPTBOOL
-    OSPPTransactionHasStatistics(
-    OSPTTRANS *ospvTrans
-    )
+OSPTBOOL OSPPTransactionHasStatistics(
+    OSPTTRANS *ospvTrans)
 {
-    OSPTBOOL    hasstats = OSPC_FALSE;
+    OSPTBOOL hasstats = OSPC_FALSE;
 
-    if(ospvTrans != OSPC_OSNULL)
-    {
-        if(ospvTrans->Statistics != OSPC_OSNULL)
-        {
+    if(ospvTrans != OSPC_OSNULL) {
+        if(ospvTrans->Statistics != OSPC_OSNULL) {
             hasstats = OSPC_TRUE;   
         }
     }
@@ -1718,7 +1700,7 @@ OSPPTransactionPrepareAndQueMessage(
 
         if(errorcode == OSPC_ERR_NO_ERROR)
         {
-            if (*ospvMsgInfo != (OSPT_MSG_INFO *)OSPC_OSNULL)
+            if (*ospvMsgInfo != OSPC_OSNULL)
             {
 
                 /* set the content type depending on the presence 
@@ -1799,7 +1781,7 @@ OSPPTransactionPrepareAndQueMessage(
         }
 
     }
-    if (signature != (unsigned char *)OSPC_OSNULL)
+    if (signature != OSPC_OSNULL)
     {
         OSPM_FREE(signature);
         signature = OSPC_OSNULL;
@@ -1837,8 +1819,8 @@ OSPPTransactionProcessReturn(
     OSPTSEC             *security           = OSPC_OSNULL;
 #endif
 
-    if((ospvTrans == (OSPTTRANS *)OSPC_OSNULL) ||
-        (ospvMsgInfo == (OSPT_MSG_INFO *)OSPC_OSNULL))
+    if((ospvTrans == OSPC_OSNULL) ||
+        (ospvMsgInfo == OSPC_OSNULL))
     {
 
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -1987,13 +1969,13 @@ OSPPTransactionProcessReturn(
         OSPPUsageCnfDelete(&usagecnf);
     }
 
-    if (incomingmsg != (unsigned char *)OSPC_OSNULL)
+    if (incomingmsg != OSPC_OSNULL)
     {
         OSPM_FREE(incomingmsg);
         incomingmsg = OSPC_OSNULL;
     }
 
-    if (incomingsignature != (unsigned char *)OSPC_OSNULL)
+    if (incomingsignature != OSPC_OSNULL)
     {
         OSPM_FREE(incomingsignature);
         incomingsignature = OSPC_OSNULL;
@@ -2049,17 +2031,12 @@ OSPPTransactionRequestNew(
      */
     ospvTrans->AuthReq = OSPPAuthReqNew();
 
-    if (ospvTrans->AuthReq == OSPC_OSNULL)
-    {
+    if (ospvTrans->AuthReq == OSPC_OSNULL) {
         errorcode = OSPC_ERR_DATA_NO_AUTHREQ;
         OSPM_DBGERRORLOG(errorcode, "AuthReq struct not created.");
 
-    }
-    else
-    {
-
-        if (errorcode == OSPC_ERR_NO_ERROR)
-        {
+    } else {
+        if (errorcode == OSPC_ERR_NO_ERROR) {
             /*
              * Fill in the AuthReq structure
              */
@@ -2116,65 +2093,34 @@ OSPPTransactionRequestNew(
              * ospmAuthReqSourceAlternate (SourceAlternate)
              * --------------------------------------
              */
-
-            if((ospvSource != OSPC_OSNULL) ||
-                (ospvTrans->SrcNetworkId !=OSPC_OSNULL) ||
-                (ospvUser != OSPC_OSNULL))
-            {
-
+            if((ospvSource != OSPC_OSNULL) || (ospvTrans->SrcNetworkId !=OSPC_OSNULL) || (ospvUser != OSPC_OSNULL)) {
                 /* source alternates - create a linked list */
                 OSPPListNew((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqSourceAlternate));
 
-                if(ospvTrans->SrcNetworkId != OSPC_OSNULL)
-                {
-
+                if(ospvTrans->SrcNetworkId != OSPC_OSNULL) {
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvTrans->SrcNetworkId), ospvTrans->SrcNetworkId, OSPC_ALTINFO_NETWORK);
-
-                    if(altinfo != OSPC_OSNULL)
-                    {
-
-                        OSPPListAppend(
-                            (OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqSourceAlternate),
-                            (void *)altinfo);
+                    if(altinfo != OSPC_OSNULL) {
+                        OSPPListAppend((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqSourceAlternate), (void *)altinfo);
                     }
                 }
-
                 altinfo = OSPC_OSNULL;
 
-                if(ospvSource != OSPC_OSNULL)
-                {
-
+                if(ospvSource != OSPC_OSNULL) {
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ALTINFO_TRANSPORT);
-
-                    if(altinfo != OSPC_OSNULL)
-                    {
-
-                        OSPPListAppend(
-                            (OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqSourceAlternate),
-                            (void *)altinfo);
+                    if(altinfo != OSPC_OSNULL) {
+                        OSPPListAppend((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqSourceAlternate), (void *)altinfo);
                     }
                 }
-
                 altinfo = OSPC_OSNULL;
 
-                if(ospvUser != OSPC_OSNULL)
-                {
-
+                if(ospvUser != OSPC_OSNULL) {
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvUser), ospvUser, OSPC_ALTINFO_SUBSCRIBER);
-
-                    if (altinfo != OSPC_OSNULL)
-                    {
-
-                        OSPPListAppend(
-                            (OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqSourceAlternate),
-                            (void *)altinfo);
+                    if (altinfo != OSPC_OSNULL) {
+                        OSPPListAppend((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqSourceAlternate), (void *)altinfo);
                     }
                 }
-
                 altinfo = OSPC_OSNULL;
-            }
-            else
-            {
+            } else {
                 errorcode = OSPC_ERR_TRAN_SOURCE_INVALID;
             }
 
@@ -2183,6 +2129,10 @@ OSPPTransactionRequestNew(
              * ----------------------------------------
              */
             OSPPAuthReqSetDestNumber(ospvTrans->AuthReq, ospvCalledNumber);
+            
+            if (ospvTrans->RoutingNumber != OSPC_OSNULL) {
+            	OSPPAuthReqSetRoutingNumber(ospvTrans->AuthReq, ospvTrans->RoutingNumber);
+            }
 
             /* -------------------------------------------
              * ospmAuthReqDestAlt (DestinationAlternative)
@@ -2192,30 +2142,19 @@ OSPPTransactionRequestNew(
 
             altinfo = OSPC_OSNULL;
 
-            if(ospvPreferredDestinations != OSPC_OSNULL)
-            {
-
+            if(ospvPreferredDestinations != OSPC_OSNULL) {
                 /* destination alternates - create a linked list */
                 OSPPListNew((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqDestinationAlternate));
 
                 i = 0;
 
-                while(ospvPreferredDestinations[i] != OSPC_OSNULL)
-                {
-
-                    if(*(ospvPreferredDestinations[i]) != '\0')
-                    {
+                while(ospvPreferredDestinations[i] != OSPC_OSNULL) {
+                    if(*(ospvPreferredDestinations[i]) != '\0') {
                         altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvPreferredDestinations[i]), ospvPreferredDestinations[i], OSPC_ALTINFO_TRANSPORT);
-
-                        if(altinfo != OSPC_OSNULL)
-                        {
-                            OSPPListAppend(
-                                (OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqDestinationAlternate),
-                                (void *)altinfo);
+                        if(altinfo != OSPC_OSNULL) {
+                            OSPPListAppend((OSPTLIST *)&(ospvTrans->AuthReq->ospmAuthReqDestinationAlternate), (void *)altinfo);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         /* we're done */
                         break;
                     }
@@ -2332,11 +2271,11 @@ OSPPTransactionResponseBuild(OSPTTRANS    *ospvTrans,
 {
     int         errorcode   = OSPC_ERR_NO_ERROR;
     OSPTTIME    t           = time(0);
-    OSPTDEST    *dest       = (OSPTDEST *)OSPC_OSNULL;
-    OSPTTOKEN   *token      = (OSPTTOKEN *)OSPC_OSNULL;
+    OSPTDEST    *dest       = OSPC_OSNULL;
+    OSPTTOKEN   *token      = OSPC_OSNULL;
 
     /* check for new one */
-    if(ospvTrans->AuthRsp == (OSPTAUTHRSP *)OSPC_OSNULL)
+    if(ospvTrans->AuthRsp == OSPC_OSNULL)
     {
 
         /* create the authorisation response object */
@@ -2357,7 +2296,7 @@ OSPPTransactionResponseBuild(OSPTTRANS    *ospvTrans,
     {
         /* create the destination object */
         dest = OSPPDestNew(); 
-        /* dest = OSPPAuthRspAddDest(ospvTrans->AuthRsp,(OSPTDEST *)OSPC_OSNULL); */
+        /* dest = OSPPAuthRspAddDest(ospvTrans->AuthRsp,OSPC_OSNULL); */
 
         if (dest == OSPC_OSNULL)
         {
@@ -2370,7 +2309,7 @@ OSPPTransactionResponseBuild(OSPTTRANS    *ospvTrans,
 
         token = OSPPTokenNew(ospvSizeOfToken, (const unsigned char *)ospvToken);
 
-        if(token != (OSPTTOKEN *)OSPC_OSNULL)
+        if(token != OSPC_OSNULL)
         {
             OSPPDestAddToken(dest, token);
             token = OSPC_OSNULL;
@@ -2421,7 +2360,7 @@ OSPPTransactionSetState(
     OSPTTRANS               *ospvTrans,      /* In - Transaction pointer */
     OSPE_TRANS_STATE        ospvState)       /* In - Transaction state */
 {
-    if (ospvTrans != (OSPTTRANS *)OSPC_OSNULL)
+    if (ospvTrans != OSPC_OSNULL)
     {
         /* Once there is a successful usage report, do not change the state */
         if(ospvTrans->State != OSPC_REPORT_USAGE_SUCCESS)

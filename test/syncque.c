@@ -70,7 +70,7 @@ int SyncQueueNew(SYNCQUEUE **syncQueue)
 
     OSPM_MALLOC(*syncQueue, SYNCQUEUE, sizeof(SYNCQUEUE));
 
-    if (*syncQueue != (SYNCQUEUE *) OSPC_OSNULL) {
+    if (*syncQueue != OSPC_OSNULL) {
         OSPM_MEMSET(*syncQueue, 0, sizeof(SYNCQUEUE));
 
         (*syncQueue)->NumberOfTransactions = 0;
@@ -96,9 +96,9 @@ int SyncQueueNew(SYNCQUEUE **syncQueue)
 
 void SyncQueueDelete(SYNCQUEUE **syncQueue)
 {
-    if (*syncQueue != (SYNCQUEUE *) OSPC_OSNULL) {
+    if (*syncQueue != OSPC_OSNULL) {
         OSPM_FREE(*syncQueue);
-        *syncQueue = (SYNCQUEUE *) OSPC_OSNULL;
+        *syncQueue = OSPC_OSNULL;
     }
 }
 

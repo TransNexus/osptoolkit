@@ -187,7 +187,7 @@ OSPPStatusFromElement(
          * the values that we expect to find.
          */
         for ( elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
-            (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {

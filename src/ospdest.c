@@ -540,7 +540,7 @@ unsigned OSPPDestGetLimit(  /* returns usage limit */
 }
 
 /*
- * OSPPDestHasTermCause() - Does dest have a Fail Reason
+ * OSPPDestHasTermCause() - Does dest have the Fail Reason
  */
 OSPTBOOL OSPPDestHasTermCause(      /* returns non-zero if time */
     OSPTDEST *ospvDest,             /* dest in question */
@@ -550,6 +550,21 @@ OSPTBOOL OSPPDestHasTermCause(      /* returns non-zero if time */
 
     if (ospvDest != OSPC_OSNULL) {
         ospvHasTermCause = OSPPHasTermCause(&ospvDest->ospmDestTermCause, ospvType);
+    }
+
+    return ospvHasTermCause;
+}
+
+/*
+ * OSPPDestHasTermCauseAny() - Does dest have a Fail Reason
+ */
+OSPTBOOL OSPPDestHasTermCauseAny(      /* returns non-zero if time */
+    OSPTDEST *ospvDest)             /* dest in question */
+{
+    OSPTBOOL ospvHasTermCause = OSPC_FALSE;
+
+    if (ospvDest != OSPC_OSNULL) {
+        ospvHasTermCause = OSPPHasTermCauseAny(&ospvDest->ospmDestTermCause);
     }
 
     return ospvHasTermCause;
@@ -570,10 +585,25 @@ void OSPPDestSetTermCause( /* nothing returned */
 }
 
 /*
- * OSPPDestGetTCCode() - returns Fail Reason value for an usage request
+ * OSPPDestGetTermCause() - returns Fail Reason structure for an destination
+ */
+OSPT_TERM_CAUSE *OSPPDestGetTermCause(
+    OSPTDEST *ospvDest)         /* destination */
+{
+    OSPT_TERM_CAUSE *ospvTermCause = OSPC_OSNULL;
+    
+    if (ospvDest != OSPC_OSNULL) {
+        ospvTermCause = &ospvDest->ospmDestTermCause;
+    }
+    
+    return ospvTermCause;
+}
+
+/*
+ * OSPPDestGetTCCode() - returns Fail Reason value for an destination
  */
 unsigned OSPPDestGetTCCode(
-    OSPTDEST *ospvDest,         /* usage request */
+    OSPTDEST *ospvDest,         /* destination */
     OSPE_TERM_CAUSE ospvType)   /* fail reasion type */    
 {
     unsigned ospvTCCode = 0;
@@ -586,10 +616,10 @@ unsigned OSPPDestGetTCCode(
 }
 
 /*
- * OSPPDestGetTCDesc() - returns Fail Reason description for an usage request
+ * OSPPDestGetTCDesc() - returns Fail Reason description for an destination
  */
 const char *OSPPDestGetTCDesc(
-    OSPTDEST *ospvDest,         /* usage request */
+    OSPTDEST *ospvDest,         /* destination */
     OSPE_TERM_CAUSE ospvType)   /* fail reasion type */    
 {
     const char *ospvTCDesc = OSPC_OSNULL;
@@ -646,7 +676,7 @@ void OSPPDestDelete(
 
         while (!OSPPListEmpty((OSPTLIST *) & ((*ospvDest)->ospmDestTokens))) {
             tmptoken = (OSPTTOKEN *)OSPPListRemove((OSPTLIST *)&((*ospvDest)->ospmDestTokens));
-            if (tmptoken != (OSPTTOKEN *) OSPC_OSNULL) {
+            if (tmptoken != OSPC_OSNULL) {
                 OSPPTokenDelete(&tmptoken);
             }
         }
@@ -654,7 +684,7 @@ void OSPPDestDelete(
 
         while (!OSPPListEmpty((OSPTLIST *) & ((*ospvDest)->ospmUpdatedSourceAddr))) {
             altinfo = (OSPT_ALTINFO *)OSPPListRemove((OSPTLIST *)&((*ospvDest)->ospmUpdatedSourceAddr));
-            if (altinfo != (OSPT_ALTINFO *) OSPC_OSNULL) {
+            if (altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
             }
@@ -663,7 +693,7 @@ void OSPPDestDelete(
 
         while (!OSPPListEmpty((OSPTLIST *)&((*ospvDest)->ospmUpdatedDeviceInfo))) {
             altinfo = (OSPT_ALTINFO *)OSPPListRemove((OSPTLIST *)&((*ospvDest)->ospmUpdatedDeviceInfo));
-            if (altinfo != (OSPT_ALTINFO *) OSPC_OSNULL) {
+            if (altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
             }
@@ -713,7 +743,7 @@ unsigned OSPPDestFromElement(   /* returns error code */
          */
 
         for (elem = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvElem);
-            (elem != (OSPT_XML_ELEM *) OSPC_OSNULL) &&
+            (elem != OSPC_OSNULL) &&
             (ospvErrCode == OSPC_ERR_NO_ERROR);
             elem = (OSPT_XML_ELEM *) OSPPXMLElemNextChild(ospvElem, elem)) 
         {

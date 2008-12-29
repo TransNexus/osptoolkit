@@ -147,7 +147,7 @@ int newNBDATA(NBDATA **nbData, int MessageType)
 
     OSPM_MALLOC((*nbData), NBDATA, sizeof(NBDATA));
 
-    if ((*nbData) != (NBDATA *) OSPC_OSNULL) {
+    if ((*nbData) != OSPC_OSNULL) {
         OSPM_MEMSET((*nbData), 0, sizeof(NBDATA));
 
         (*nbData)->MessageType = MessageType;
@@ -201,7 +201,7 @@ int NonBlockingQueueMonitorNew(NBMONITOR **nbMonitor,
     if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPM_MALLOC(*nbMonitor, NBMONITOR, sizeof(NBMONITOR));
 
-        if (*nbMonitor != (NBMONITOR *) OSPC_OSNULL) {
+        if (*nbMonitor != OSPC_OSNULL) {
             //  Zero out newly allocated space
             OSPM_MEMSET(*nbMonitor, 0, sizeof(NBMONITOR));
 

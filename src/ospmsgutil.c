@@ -94,7 +94,7 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
 
         /* look for a type attribute that will identify the encoding */
         for (attr = (OSPT_XML_ATTR *) OSPPXMLElemFirstAttr(ospvElem);
-            (attr != (OSPT_XML_ATTR *) OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            (attr != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             attr = (OSPT_XML_ATTR *) OSPPXMLElemNextAttr(ospvElem, attr)) 
         {
             if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_ENCODING) {
@@ -694,7 +694,7 @@ unsigned OSPPMsgElemIsCritical( /* returns non-zero if critical */
     if (ospvElem != OSPC_OSNULL) {
         /* look for a critical attribute */
         for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElem);
-            attr != (OSPT_XML_ATTR *)OSPC_OSNULL;
+            attr != OSPC_OSNULL;
             attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
         {
             if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_CRITICAL) {

@@ -82,7 +82,6 @@ extern "C" {
     OSPTBOOL OSPPAuthReqHasDeviceId(OSPTAUTHREQ *ospvAuthReq);
     void OSPPAuthReqSetDeviceId(OSPTAUTHREQ *, unsigned long);
     unsigned long OSPPAuthReqGetDeviceId(OSPTAUTHREQ *);
-// SDS
     OSPTBOOL OSPPAuthReqHasRoutingNumber(OSPTAUTHREQ *);
     void OSPPAuthReqSetRoutingNumber(OSPTAUTHREQ *, const char *);
     const char *OSPPAuthReqGetRoutingNumber(OSPTAUTHREQ *);

@@ -123,7 +123,7 @@ OSPPX509CertGetCustDeviceId(
             while(pname)
             {
                 /* Get the next parameter name */
-                pname = OSPM_STRTOK((char *)OSPC_OSNULL, " :]", &lcptr);
+                pname = OSPM_STRTOK(OSPC_OSNULL, " :]", &lcptr);
                 if (pname == OSPC_OSNULL)
                 {
                     /* Parameter was not found, done */
@@ -131,7 +131,7 @@ OSPPX509CertGetCustDeviceId(
                 }
 
                 /* Have a parameter name, get the value */
-                value = OSPM_STRTOK((char *)OSPC_OSNULL, " :]", &lcptr);
+                value = OSPM_STRTOK(OSPC_OSNULL, " :]", &lcptr);
                 if (value == OSPC_OSNULL)
                 {
                     /* Badly formed paramter value pair, done */
@@ -255,7 +255,7 @@ OSPPX509CertCheckCertificateData(
 
         /* Get the current time - don't need milliseconds */
         errorcode = OSPPOSTimeGetTime(&currentTime, 
-            (unsigned int *)OSPC_OSNULL);
+            OSPC_OSNULL);
 
         if (errorcode == OSPC_ERR_NO_ERROR)
         {

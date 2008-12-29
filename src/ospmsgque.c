@@ -57,7 +57,7 @@ OSPPMsgQueueNew(
     int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_MALLOC(*ospvMsgQueue, OSPTMSGQUEUE, sizeof(OSPTMSGQUEUE));
-    if (*ospvMsgQueue != (OSPTMSGQUEUE *)OSPC_OSNULL) 
+    if (*ospvMsgQueue != OSPC_OSNULL) 
     {
 
         OSPM_MEMSET(*ospvMsgQueue, 0, sizeof(OSPTMSGQUEUE));
@@ -93,13 +93,13 @@ OSPPMsgQueueDelete(
 {
 		int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (*ospvMsgQueue != (OSPTMSGQUEUE *)OSPC_OSNULL)
+    if (*ospvMsgQueue != OSPC_OSNULL)
     {
 				OSPM_MUTEX_DESTROY((*ospvMsgQueue)->Mutex, errorcode);
 			  OSPM_CONDVAR_DESTROY((*ospvMsgQueue)->CondVar, errorcode);
 
         OSPM_FREE(*ospvMsgQueue);
-        *ospvMsgQueue = (OSPTMSGQUEUE *)OSPC_OSNULL;
+        *ospvMsgQueue = OSPC_OSNULL;
     }
 
     return;

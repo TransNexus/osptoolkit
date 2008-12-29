@@ -62,8 +62,8 @@ extern "C" {
 
 #ifdef TN_TRANSDBG
     void tnPrintTree(OSPTTRANSID *pTrans);
-    void tnTransById(struct _OSPTPROVIDER *);       /* print by transaction ID */
-    void tnTransByTime(struct _OSPTPROVIDER *);     /* print by expiration time */
+    void tnTransById(OSPTPROVIDER *);   /* print by transaction ID */
+    void tnTransByTime(OSPTPROVIDER *); /* print by expiration time */
 #endif
 
 #ifdef __cplusplus

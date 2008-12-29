@@ -386,7 +386,7 @@ OSPPCapIndToElement(
      * 
      */
     for(altinfo = (OSPT_ALTINFO *)OSPPListFirst( &(ospvCapInd->ospmDeviceInfo) );
-        altinfo!= (OSPT_ALTINFO *)OSPC_OSNULL;
+        altinfo!= OSPC_OSNULL;
         altinfo = (OSPT_ALTINFO *)OSPPListNext( &(ospvCapInd->ospmDeviceInfo),altinfo))
     {
         OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
@@ -398,9 +398,9 @@ OSPPCapIndToElement(
      * Create/Add SrcAltTransport elements
      * 
      */
-    for(altinfo = (OSPT_ALTINFO *)OSPPListFirst( &(ospvCapInd->ospmSrcAlternate) );
-        altinfo!= (OSPT_ALTINFO *)OSPC_OSNULL;
-        altinfo = (OSPT_ALTINFO *)OSPPListNext( &(ospvCapInd->ospmSrcAlternate),altinfo))
+    for(altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvCapInd->ospmSrcAlternate));
+        altinfo!= OSPC_OSNULL;
+        altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvCapInd->ospmSrcAlternate),altinfo))
     {
         OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
         OSPPXMLElemAddChild(capindelem, elem);

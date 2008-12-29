@@ -125,7 +125,7 @@ OSPPCapCnfFromElement(
          * the information we need.
          */
         for (elem  = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(capCnfElem);
-            (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
              elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(capCnfElem,elem))
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))

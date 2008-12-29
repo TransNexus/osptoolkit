@@ -1277,7 +1277,7 @@ int OSPPProviderSetSPMessageCount(
 
      if (ospvMessageCount != NULL)
      {
-        while (svcptitem!= (OSPTSVCPT *)OSPC_OSNULL)
+        while (svcptitem!= OSPC_OSNULL)
         {
            svcptitem->MaxMsgAllowed = ospvMessageCount[i++];
            svcptitem  = (OSPTSVCPT *)OSPPListNext(
@@ -1287,7 +1287,7 @@ int OSPPProviderSetSPMessageCount(
      }
      else
      {
-        while (svcptitem!= (OSPTSVCPT *)OSPC_OSNULL)
+        while (svcptitem!= OSPC_OSNULL)
         {
            svcptitem->MaxMsgAllowed = 0;
            svcptitem  = (OSPTSVCPT *)OSPPListNext(

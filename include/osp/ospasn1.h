@@ -296,7 +296,6 @@ typedef enum _OSPEASN1DATAREFID {
     OSPEDRID_LAST_DRID
 } OSPEASN1DATAREFID;
 
-
 typedef struct _OSPTASN1ELEMENTINFO {
     unsigned char Tag;              /* ASN1 Data Type Tag Number */
     unsigned char *Element;         /* Pointer to beginning of encoded data for this element. */

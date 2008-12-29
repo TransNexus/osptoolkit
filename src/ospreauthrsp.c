@@ -280,7 +280,7 @@ OSPPReauthRspFromElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR)
     {
         for ( elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
-            (elem != (OSPT_XML_ELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)))
@@ -447,11 +447,11 @@ OSPPReauthRspMessageIdFromElement(
     const char **ospvMessageId
 )
 {
-    OSPT_XML_ATTR *attr = (OSPT_XML_ATTR *)OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
     /* look for the message id attribute */
     for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElemIn);
-        (attr != (OSPT_XML_ATTR *)OSPC_OSNULL);
+        (attr != OSPC_OSNULL);
         attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
 
@@ -474,11 +474,11 @@ OSPPReauthRspComponentIdFromElement(
     const char **ospvComponentId
 )
 {
-    OSPT_XML_ATTR *attr = (OSPT_XML_ATTR *)OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
     /* look for the component id attribute */
     for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElemIn);
-        (attr != (OSPT_XML_ATTR *)OSPC_OSNULL);
+        (attr != OSPC_OSNULL);
         attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
 

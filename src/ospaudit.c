@@ -34,11 +34,10 @@
 #include "osp/osputils.h"
 
 /* copy message data into audit buffer */
-int
-OSPPAuditAddMessageToBuffer(
-    OSPTAUDIT       *ospvAudit, 
-    unsigned char   *ospvAuditData,
-    unsigned        ospvAuditDataSz)
+int OSPPAuditAddMessageToBuffer(
+    OSPTAUDIT *ospvAudit, 
+    unsigned char *ospvAuditData,
+    unsigned ospvAuditDataSz)
 {
     int             errorcode       = OSPC_ERR_NO_ERROR;
     unsigned        numbyteswritten = 0;
@@ -957,14 +956,12 @@ OSPPAuditPrepareAndSend(
         } /* end if security and storage != OSPC_OSNULL */
     } /* end if ospvAudit != OSPC_OSNULL */
 
-    if (signature != (unsigned char *)OSPC_OSNULL)
-    {
+    if (signature != OSPC_OSNULL) {
         OSPM_FREE(signature);
         signature = OSPC_OSNULL;
     }
 
-    if(msginfo != OSPC_OSNULL)
-    {
+    if(msginfo != OSPC_OSNULL) {
         OSPPMsgInfoDelete(&msginfo);
     }
 
@@ -984,8 +981,8 @@ OSPPAuditProcessReturn(
     unsigned        sizeofmsg           = 0;
     unsigned        sizeofsig           = 0;
     void            *resultrsp          = OSPC_OSNULL;
-    OSPE_MESSAGE msgtype          = OSPC_MSG_UNKNOWN;
-    OSPTUSAGECNF    *usagecnf           = (OSPTUSAGECNF *)OSPC_OSNULL;
+    OSPE_MESSAGE    msgtype             = OSPC_MSG_UNKNOWN;
+    OSPTUSAGECNF    *usagecnf           = OSPC_OSNULL;
     
     if(ospvMsgInfo != OSPC_OSNULL)
     {
@@ -1092,14 +1089,12 @@ OSPPAuditProcessReturn(
         }
     }
 
-    if (incomingmsg != (unsigned char *)OSPC_OSNULL)
-    {
+    if (incomingmsg != OSPC_OSNULL) {
         OSPM_FREE(incomingmsg);
         incomingmsg = OSPC_OSNULL;
     }
 
-    if (incomingsignature != (unsigned char *)OSPC_OSNULL)
-    {
+    if (incomingsignature != OSPC_OSNULL) {
         OSPM_FREE(incomingsignature);
         incomingsignature = OSPC_OSNULL;
     }
@@ -1111,10 +1106,9 @@ OSPPAuditProcessReturn(
  */
 void OSPPAuditRemoveComponentIdFromList(
     const char *ospvCompid,
-    OSPTAUDIT *ospvAudit
-)
+    OSPTAUDIT *ospvAudit)
 {
-    OSPTCOMPONENTID *compid     = (OSPTCOMPONENTID *)OSPC_OSNULL;
+    OSPTCOMPONENTID *compid = OSPC_OSNULL;
     
     for(compid = (OSPTCOMPONENTID *)OSPPListFirst(&(ospvAudit->ospmAuditComponentIdList));
         (compid != OSPC_OSNULL);

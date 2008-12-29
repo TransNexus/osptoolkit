@@ -420,7 +420,7 @@ OSPTTOKENINFO *OSPPTokenInfoNew(void)   /* returns pointer or NULL */
     if (ospvTokenInfo != OSPC_OSNULL) {
         ospvTokenInfo->ospmTokenInfoSourceNumber[0] = '\0';
         ospvTokenInfo->ospmTokenInfoDestNumber[0] = '\0';
-        ospvTokenInfo->ospmTokenInfoCallId = (OSPTCALLID *) OSPC_OSNULL;
+        ospvTokenInfo->ospmTokenInfoCallId = OSPC_OSNULL;
         ospvTokenInfo->ospmTokenInfoValidAfter = OSPC_TIMEMIN;
         ospvTokenInfo->ospmTokenInfoValidUntil = OSPC_TIMEMAX;
         ospvTokenInfo->ospmTokenInfoTrxId = 0;
@@ -488,7 +488,7 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
      */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         for (elem = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvElem);
-             (elem != (OSPT_XML_ELEM *) OSPC_OSNULL) &&
+             (elem != OSPC_OSNULL) &&
              (ospvErrCode == OSPC_ERR_NO_ERROR);
              elem = (OSPT_XML_ELEM *) OSPPXMLElemNextChild(ospvElem, elem)) {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {

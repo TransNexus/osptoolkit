@@ -123,9 +123,9 @@ OSPTDEST* OSPPAuthRspNextDest(
     OSPTAUTHRSP *ospvAuthRsp,   /* authorisation response */
     OSPTDEST *ospvDest)
 {
-    OSPTDEST* dest = (OSPTDEST*)OSPC_OSNULL;
+    OSPTDEST* dest = OSPC_OSNULL;
 
-    if (ospvAuthRsp != (OSPTAUTHRSP*)OSPC_OSNULL) {
+    if (ospvAuthRsp != OSPC_OSNULL) {
         dest = (OSPTDEST*)OSPPListNext(&(ospvAuthRsp->ospmAuthRspDest), ospvDest);
     }
 
@@ -282,7 +282,7 @@ OSPTAUTHRSP* OSPPAuthRspNew(void)
         ospvAuthRsp->ospmAuthRspTimestamp = OSPC_TIMEMIN;
         ospvAuthRsp->ospmAuthRspStatus = OSPC_OSNULL;
         ospvAuthRsp->ospmAuthRspTrxId = 0;
-        ospvAuthRsp->ospmAuthRspCSAudit = (OSPTCSAUDIT*)OSPC_OSNULL;
+        ospvAuthRsp->ospmAuthRspCSAudit = OSPC_OSNULL;
         OSPPListNew(&(ospvAuthRsp->ospmAuthRspDest));
     }
 
@@ -438,7 +438,7 @@ unsigned OSPPAuthRspFromElement(
          */
 
         for (elem = (OSPT_XML_ELEM*)OSPPXMLElemFirstChild(ospvElem);
-            (elem != (OSPT_XML_ELEM*)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
             elem = (OSPT_XML_ELEM*)OSPPXMLElemNextChild(ospvElem, elem))
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
@@ -534,13 +534,13 @@ OSPTCSAUDIT* OSPPAuthRspGetCSAudit(
             return ospvAuthRsp->ospmAuthRspCSAudit;
         }
     }
-    return (OSPTCSAUDIT*)OSPC_OSNULL;
+    return OSPC_OSNULL;
 }
 
 int OSPPAuthRspHasCSAudit(
     OSPTAUTHRSP *ospvAuthRsp)
 {
-    return ospvAuthRsp->ospmAuthRspCSAudit != (OSPTCSAUDIT*)OSPC_OSNULL;
+    return ospvAuthRsp->ospmAuthRspCSAudit != OSPC_OSNULL;
 }
 
 /*
@@ -579,11 +579,11 @@ void OSPPAuthRspMessageIdFromElement(
     OSPT_XML_ELEM *ospvElemIn, 
     const char **ospvMessageId)
 {
-    OSPT_XML_ATTR* attr = (OSPT_XML_ATTR*)OSPC_OSNULL;
+    OSPT_XML_ATTR* attr = OSPC_OSNULL;
 
     /* look for the message id attribute */
     for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElemIn);
-        (attr != (OSPT_XML_ATTR*)OSPC_OSNULL);
+        (attr != OSPC_OSNULL);
         attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_MESSAGEID) {
@@ -601,11 +601,11 @@ void OSPPAuthRspComponentIdFromElement(
     OSPT_XML_ELEM *ospvElemIn, 
     const char **ospvComponentId)
 {
-    OSPT_XML_ATTR* attr = (OSPT_XML_ATTR*)OSPC_OSNULL;
+    OSPT_XML_ATTR* attr = OSPC_OSNULL;
 
     /* look for the component id attribute */
     for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElemIn);
-        (attr != (OSPT_XML_ATTR*)OSPC_OSNULL);
+        (attr != OSPC_OSNULL);
         attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElemIn, attr))
     {
 

@@ -104,6 +104,12 @@ typedef struct _OSPTTRANS {
     unsigned NumOfPricingInfoElements;
     unsigned CurrentPricingInfoElement;
     OSPT_PRICING_INFO PricingInfo[MAX_PRICING_INFO_ALLOWED];
+    char *RoutingNumber;
+    char AssertedId[OSPC_SIZE_NORID];
+    OSPE_DEST_PROTOCOL DestProtocol;
+    char ForwardCodec[OSPC_SIZE_CODEC];
+    char ReverseCodec[OSPC_SIZE_CODEC];
+    OSPTCALLID *SessionId[OSPC_DIR_NUMBER];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000
@@ -159,7 +165,7 @@ extern "C" {
     void OSPPTransactionGetDeleteAllowed(OSPTTRANS *, OSPTBOOL *);
     void OSPPTransactionGetIsModifyDeviceIdAllowed(OSPTTRANS *, OSPTBOOL *);
     int OSPPTransactionGetDestAllowed(OSPTTRANS *);
-    int OSPPTransactionGetDestination(OSPTTRANS *, enum OSPEFAILREASON, unsigned, char *, char *, unsigned *, unsigned *,
+    int OSPPTransactionGetDestination(OSPTTRANS *, OSPEFAILREASON, unsigned, char *, char *, unsigned *, unsigned *,
             void *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned *, void *);
     int OSPPTransactionGetNewContext(OSPTPROVHANDLE, OSPTTRANHANDLE *);
     int OSPPTransactionGetProvider(OSPTTRANS *, struct _OSPTPROVIDER **);

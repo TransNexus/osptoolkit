@@ -959,7 +959,7 @@ OSPPReauthReqToElement(
     {
         /* add any tokens */
         for (token = (OSPTTOKEN *)OSPPReauthReqFirstToken(ospvReauthReq);
-            ((token != (OSPTTOKEN *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
+            ((token != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
             token = (OSPTTOKEN *)OSPPReauthReqNextToken(ospvReauthReq, token))
         {
             ospvErrCode = OSPPTokenToElement(token, &elem);

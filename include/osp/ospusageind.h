@@ -54,7 +54,7 @@ typedef struct {
     OSPTLIST ospmUsageIndDestinationAlt;
     unsigned long ospmUsageIndCustId;
     unsigned long ospmUsageIndDeviceId;
-    OSPT_TERMCAUSE ospmUsageIndTermCause;
+    OSPT_TERM_CAUSE ospmUsageIndTermCause;
     OSPT_STATS *ospmUsageIndStats;
     OSPTBOOL ospmUsageIndHasPricingInfo;
     OSPT_PRICING_INFO osmpUsageIndPricingInfo;
@@ -67,7 +67,6 @@ typedef struct {
     char ospmUsageIndReverseCodec[OSPC_SIZE_CODEC];
     OSPTCALLID *ospmUsageIndSessionId[OSPC_DIR_NUMBER];
 } OSPT_USAGEIND;
-
 
 /* Function Prototypes */
 
@@ -102,7 +101,7 @@ extern "C" {
     OSPTCALLID *OSPPUsageIndGetCallId(OSPT_USAGEIND *);
     void OSPPUsageIndSetCallId(OSPT_USAGEIND *, OSPTCALLID *);
     void OSPPUsageIndSetSourceNumber(OSPT_USAGEIND *, const char *);
-    char *OSPPUsageIndGetSourceNumber(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetSourceNumber(OSPT_USAGEIND *);
     void OSPPUsageIndSetCurrency(OSPT_USAGEIND *, const char *);
     const char *OSPPUsageIndGetCurrency(OSPT_USAGEIND *);
     void OSPPUsageIndSetDestNumber(OSPT_USAGEIND *, const char *);
@@ -125,6 +124,7 @@ extern "C" {
     unsigned long OSPPUsageIndGetDeviceId(OSPT_USAGEIND *);
     OSPTBOOL OSPPUsageIndHasTermCause(OSPT_USAGEIND *ospvUsageInd, OSPE_TERM_CAUSE);
     void OSPPUsageIndSetTermCause(OSPT_USAGEIND *, OSPE_TERM_CAUSE, unsigned, const char *);
+    void OSPPUsageIndCopyTermCause(OSPT_USAGEIND *, OSPT_TERM_CAUSE *);
     unsigned OSPPUsageIndGetTCCode(OSPT_USAGEIND *, OSPE_TERM_CAUSE);
     const char *OSPPUsageIndGetTCDesc(OSPT_USAGEIND *, OSPE_TERM_CAUSE);
     OSPTBOOL OSPPUsageIndHasStatistics(OSPT_USAGEIND *);
@@ -152,7 +152,7 @@ extern "C" {
     void OSPPUsageIndSetAssertedId(OSPT_USAGEIND *, const char *);
     OSPTBOOL OSPPUsageIndHasDestProtocol(OSPT_USAGEIND *);
     OSPE_DEST_PROTOCOL OSPPUsageIndGetDestProtocol(OSPT_USAGEIND *);
-    void OSPPUsageIndSetDestProtocol(OSPT_USAGEIND *, const char *);
+    void OSPPUsageIndSetDestProtocol(OSPT_USAGEIND *, OSPE_DEST_PROTOCOL);
     OSPTBOOL OSPPUsageIndHasForwardCodec(OSPT_USAGEIND *);
     const char *OSPPUsageIndGetForwardCodec(OSPT_USAGEIND *);
     void OSPPUsageIndSetForwardCodec(OSPT_USAGEIND *, const char *);

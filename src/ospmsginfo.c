@@ -58,7 +58,7 @@ OSPPMsgInfoNew(
 
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoNew()\n"));
     OSPM_MALLOC(*ospvMsgInfo, OSPT_MSG_INFO, sizeof(OSPT_MSG_INFO));
-    if (*ospvMsgInfo != (OSPT_MSG_INFO *)OSPC_OSNULL)
+    if (*ospvMsgInfo != OSPC_OSNULL)
     {
         OSPM_MEMSET(*ospvMsgInfo, 0, sizeof(OSPT_MSG_INFO));
 
@@ -66,7 +66,7 @@ OSPPMsgInfoNew(
         if (errorcode != OSPC_ERR_NO_ERROR)
         {
             OSPM_FREE(*ospvMsgInfo);
-            *ospvMsgInfo = (OSPT_MSG_INFO *)OSPC_OSNULL;
+            *ospvMsgInfo = OSPC_OSNULL;
         }
     }
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoNew()\n"));
@@ -82,13 +82,13 @@ OSPPMsgInfoDelete(
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoDelete()\n"));
     if (*ospvMsgInfo)
     {
-        if ((*ospvMsgInfo)->ResponseMsg != (unsigned char *)OSPC_OSNULL)
+        if ((*ospvMsgInfo)->ResponseMsg != OSPC_OSNULL)
             OSPM_FREE((*ospvMsgInfo)->ResponseMsg);
 
-        if ((*ospvMsgInfo)->RequestMsg != (unsigned char *)OSPC_OSNULL)
+        if ((*ospvMsgInfo)->RequestMsg != OSPC_OSNULL)
             OSPM_FREE((*ospvMsgInfo)->RequestMsg);
 
-        if ((*ospvMsgInfo)->ContentType != (unsigned char *)OSPC_OSNULL)
+        if ((*ospvMsgInfo)->ContentType != OSPC_OSNULL)
             OSPM_FREE((*ospvMsgInfo)->ContentType);
 
 
@@ -97,7 +97,7 @@ OSPPMsgInfoDelete(
         OSPM_CONDVAR_DESTROY((*ospvMsgInfo)->CondVar, errorcode);
 
         OSPM_FREE(*ospvMsgInfo);
-        *ospvMsgInfo = (OSPT_MSG_INFO *)OSPC_OSNULL;
+        *ospvMsgInfo = OSPC_OSNULL;
     }
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoDelete()\n"));
     return;
@@ -110,7 +110,7 @@ OSPPMsgInfoAssignRequestMsg(
     unsigned      ospvRequestSz)
 {
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoAssignRequestMsg()\n"));
-    if (ospvMsgInfo != (OSPT_MSG_INFO *)OSPC_OSNULL) 
+    if (ospvMsgInfo != OSPC_OSNULL) 
     {
 
         ospvMsgInfo->RequestMsg = ospvRequestMsg;
