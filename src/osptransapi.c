@@ -1653,8 +1653,8 @@ int OSPPTransactionBuildUsageFromScratch(
     if (((ospvDestination == OSPC_OSNULL) &&
          (ospvDestinationDevice == OSPC_OSNULL)) ||
         (ospvSizeOfCallId == 0) ||
-        ((ospvCallingNumberFormat <= OSPC_NFORMAT_UNDEFINED) || (ospvCallingNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
-        ((ospvCalledNumberFormat <= OSPC_NFORMAT_UNDEFINED) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvCallingNumberFormat < OSPC_NFORMAT_START) || (ospvCallingNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvCalledNumberFormat < OSPC_NFORMAT_START) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
         (ospvCallId == OSPC_OSNULL)) {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
         OSPM_DBGERRORLOG(errorcode, "invalid input for Initialize");
@@ -2073,8 +2073,8 @@ int OSPPTransactionInitializeAtDevice(
         (ospvSizeOfCallId == 0) ||
         (ospvCallId == OSPC_OSNULL) ||
         (ospvSizeOfToken == 0) ||
-        ((ospvCallingNumberFormat <= OSPC_NFORMAT_UNDEFINED) || (ospvCallingNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
-        ((ospvCalledNumberFormat <= OSPC_NFORMAT_UNDEFINED) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvCallingNumberFormat < OSPC_NFORMAT_START) || (ospvCallingNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvCalledNumberFormat < OSPC_NFORMAT_START) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
         (ospvToken == OSPC_OSNULL)) {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
         OSPM_DBGERRORLOG(errorcode, "invalid input for Initialize");
@@ -2897,8 +2897,8 @@ int OSPPTransactionRequestAuthorisation(
     if ((ospvCallingNumber == OSPC_OSNULL) ||
         (ospvCalledNumber == OSPC_OSNULL) ||
         ((ospvNumberOfCallIds != 0) && ((ospvCallIds == OSPC_OSNULL) || (ospvCallIds[0] == OSPC_OSNULL))) ||
-        ((ospvCallingNumberFormat <= OSPC_NFORMAT_UNDEFINED) || (ospvCallingNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
-        ((ospvCalledNumberFormat <= OSPC_NFORMAT_UNDEFINED) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) || (ospvNumberOfDestinations == 0)) {
+        ((ospvCallingNumberFormat < OSPC_NFORMAT_START) || (ospvCallingNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvCalledNumberFormat < OSPC_NFORMAT_START) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) || (ospvNumberOfDestinations == 0)) {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
         OSPM_DBGERRORLOG(errorcode, "Invalid input for RequestAuthorisation");
     }
@@ -3426,8 +3426,8 @@ int OSPPTransactionValidateAuthorisation(
         (ospvCalledNumber == OSPC_OSNULL) ||
         (ospvSizeOfToken == 0) ||
         (ospvToken == OSPC_OSNULL) ||
-        ((ospvCallingNumberFormat <= OSPC_NFORMAT_UNDEFINED) || (ospvCallingNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
-        ((ospvCalledNumberFormat <= OSPC_NFORMAT_UNDEFINED) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvCallingNumberFormat < OSPC_NFORMAT_START) || (ospvCallingNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvCalledNumberFormat < OSPC_NFORMAT_START) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
         ((tokenAlgo < TOKEN_ALGO_SIGNED) || (tokenAlgo > TOKEN_ALGO_BOTH))) {
 
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;

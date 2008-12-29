@@ -167,8 +167,8 @@ typedef enum {
 #define OSPC_UNITSIZE       20
 
 typedef enum {
-    OSPC_NFORMAT_UNDEFINED = 0,
-	OSPC_NFORMAT_E164,
+	OSPC_NFORMAT_START = 0,
+	OSPC_NFORMAT_E164 = OSPC_NFORMAT_START,
     OSPC_NFORMAT_SIP,
     OSPC_NFORMAT_URL,
     /* Number of call party formats */
