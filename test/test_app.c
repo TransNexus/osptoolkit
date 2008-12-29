@@ -1224,15 +1224,7 @@ int testOSPPTransactionRecordFailure()
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-// SDS
-#if 0
     errorcode = OSPPTransactionRecordFailure(OSPVTransactionHandle, (OSPEFAILREASON)TCcode);
-#else
-errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_Q850, 1, "tc_q850");
-errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_H323, 2, "tc_h323");
-errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_SIP, 3, "tc_sip");
-errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_XMPP, 4, "tc_xmpp");
-#endif
     if (errorcode == OSPC_ERR_NO_ERROR) {
         printf("OSPPTransactionRecordFailure Successful\n");
     } else {
@@ -1338,11 +1330,6 @@ int testOSPPTransactionRequestAuthorisation()
     errorcode = testInitializeCallIds();
 
     numdestinations = NUM_CALL_IDS;
-
-// SDS
-#if 0
-OSPPTransactionSetRoutingNumber(OSPVTransactionHandle, "RoutingNumber");
-#endif
 
     if (errorcode == OSPC_ERR_NO_ERROR)
         errorcode = OSPPTransactionRequestAuthorisation(OSPVTransactionHandle,
@@ -1628,27 +1615,6 @@ int testOSPPTransactionReportUsage()
 
     if (OSPVTransactionHandle != OSPC_TRAN_HANDLE_INVALID) {
 
-// SDS
-#if 0
-OSPPTransactionSetAssertedId(OSPVTransactionHandle, "AssertedId");
-OSPPTransactionSetDestProtocol(OSPVTransactionHandle, OSPPDestProtocolGetPart("h323-LRQ"));
-OSPPTransactionSetForwardCodec(OSPVTransactionHandle, "g729");
-OSPPTransactionSetReverseCodec(OSPVTransactionHandle, "g723");
-OSPTCALLID *callid;
-callid = OSPPCallIdNew(8, (const unsigned char *)"incallid");
-errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_DIR_INBOUND, callid);
-OSPPCallIdDelete(&callid);
-callid = OSPPCallIdNew(9, (const unsigned char *)"outcallid");
-errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, callid);
-OSPPCallIdDelete(&callid);
-OSPPTransactionSetDelayMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 1);
-OSPPTransactionSetDelayMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 2);
-OSPPTransactionSetJitterMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 3);
-OSPPTransactionSetJitterMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 4);
-OSPPTransactionSetPackLossMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 5);
-OSPPTransactionSetPackLossMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 6);
-#endif
-	
         if (!quietmode)
             printf("Reporting Usage for OSPVTransactionHandle %d\n", (int)OSPVTransactionHandle);
 
@@ -1807,6 +1773,100 @@ int testOSPToolkitVersion()
         OSP_CLIENT_TOOLKIT_VERSION_BUGFIX);
 
     return 0;
+}
+
+int test201()
+{
+    int errorcode = 0;
+    
+    errorcode = OSPPTransactionSetRoutingNumber(OSPVTransactionHandle, "RoutingNumber");
+
+    return errorcode;
+}
+
+int test202()
+{
+    int errorcode = 0;
+    
+    errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_Q850, 1, "tc_q850");
+    errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_H323, 2, "tc_h323");
+    errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_SIP, 3, "tc_sip");
+    errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_XMPP, 4, "tc_xmpp");
+    
+    return errorcode;
+}
+
+int test203()
+{
+    int errorcode = 0;
+	
+    OSPPTransactionSetAssertedId(OSPVTransactionHandle, "AssertedId");
+	
+    return errorcode;
+}
+
+int test204()
+{
+    int errorcode = 0;
+    
+    OSPPTransactionSetDestProtocol(OSPVTransactionHandle, OSPPDestProtocolGetPart("h323-LRQ"));
+
+    return errorcode;
+}
+
+int test205()
+{
+    int errorcode = 0;
+    
+    OSPPTransactionSetForwardCodec(OSPVTransactionHandle, "g729");
+    OSPPTransactionSetReverseCodec(OSPVTransactionHandle, "g723");
+    
+    return errorcode;
+}
+
+int test206()
+{
+    int errorcode = 0;
+    
+    OSPTCALLID *callid;
+    callid = OSPPCallIdNew(8, (const unsigned char *)"incallid");
+    errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_DIR_INBOUND, callid);
+    OSPPCallIdDelete(&callid);
+    callid = OSPPCallIdNew(9, (const unsigned char *)"outcallid");
+    errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, callid);
+    OSPPCallIdDelete(&callid);
+    
+    return errorcode;
+}
+
+int test207()
+{
+    int errorcode = 0;
+    
+    OSPPTransactionSetDelayMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 1);
+    OSPPTransactionSetDelayMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 2);
+    
+    return errorcode;
+}
+
+int test208()
+{
+    int errorcode = 0;
+    
+    OSPPTransactionSetJitterMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 3);
+    OSPPTransactionSetJitterMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 4);
+    
+    return errorcode;
+}
+
+int test209()
+{
+    int errorcode = 0;
+    
+    OSPPTransactionSetPackLossMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 5);
+    OSPPTransactionSetPackLossMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 6);
+
+    return errorcode;
 }
 
 int testAPI(int apinumber)
@@ -2050,6 +2110,33 @@ int testAPI(int apinumber)
     case 101:
         errorcode = testNonBlockingPerformanceTestForCapabilities();
         break;
+    case 201:
+    	errorcode = test201();
+    	break;
+    case 202:
+    	errorcode = test202();
+    	break;
+    case 203:
+    	errorcode = test203();
+    	break;
+    case 204:
+    	errorcode = test204();
+    	break;
+    case 205:
+    	errorcode = test205();
+    	break;
+    case 206:
+    	errorcode = test206();
+    	break;
+    case 207:
+    	errorcode = test207();
+    	break;
+    case 208:
+    	errorcode = test208();
+    	break;
+    case 209:
+    	errorcode = test209();
+    	break;
     default:
         errorcode = -1;
     }

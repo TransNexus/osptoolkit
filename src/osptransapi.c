@@ -2213,6 +2213,7 @@ int OSPPTransactionNew(
         trans->SrcNetworkId = OSPC_OSNULL;
         trans->DstNetworkId = OSPC_OSNULL;
         trans->RoutingNumber = OSPC_OSNULL;
+        trans->DestProtocol = OSPC_DPROT_UNKNOWN;
         for (cnt = 0; cnt < OSPC_DIR_NUMBER; cnt++) {
         	trans->SessionId[cnt] = OSPC_OSNULL;
         }
