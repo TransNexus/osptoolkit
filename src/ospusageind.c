@@ -392,7 +392,7 @@ void OSPPUsageIndSetIsPDDInfoPresent(   /* nothing returned */
 /*
  * OSPPUsageIndHasPDD() - gets the HasPDD variable.
  */
-int OSPPUsageIndHasPDD(
+OSPTBOOL OSPPUsageIndHasPDD(
     OSPT_USAGEIND *ospvUsageInd)    /* usage ind */
 {
     OSPTBOOL ospvIsPDDInfoPresent = 0;

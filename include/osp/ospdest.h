@@ -79,7 +79,7 @@ typedef struct {
     OSPTTIME ospmDestValidUntil;
     OSPTLIST ospmDestTokens;
     char ospmDestAuthority[OSPC_SIZE_URL];
-    unsigned ospmDestHasLimit;
+    OSPTBOOL ospmDestHasLimit;
     unsigned ospmDestLimit;
     OSPTCALLID *ospmDestCallId;
     OSPT_TERM_CAUSE ospmDestTermCause;

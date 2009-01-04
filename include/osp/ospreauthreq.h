@@ -35,7 +35,7 @@ typedef struct {
     char *ospmReauthReqMessageId;
     char *ospmReauthReqComponentId;
     unsigned ospmReauthReqRole;
-    unsigned ospmReauthReqHasRole;
+    OSPTBOOL ospmReauthReqHasRole;
     OSPTCALLID *ospmReauthReqCallId;
     char ospmReauthReqSourceNumber[OSPC_SIZE_E164NUM];
     char ospmReauthReqDestNumber[OSPC_SIZE_E164NUM];

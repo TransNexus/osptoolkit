@@ -29,9 +29,8 @@
 #include "osp/ospsecurity.h"
 #include "osp/ospssl.h"
 
-OSPTBOOL
-    OSPPSecSSLLifetimeHasExpired(
-    OSPTSEC          *ospvSecurity,
+OSPTBOOL OSPPSecSSLLifetimeHasExpired(
+    OSPTSEC *ospvSecurity,
     OSPTSSLSESSIONID *ospvSessionId)
 {
     OSPTBOOL          hasexpired   = OSPC_FALSE;

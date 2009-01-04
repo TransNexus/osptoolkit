@@ -113,27 +113,19 @@ OSPPCSAuditGetTrigger(
     }
 }
 
-unsigned       
-OSPPCSAuditHasTrigger(
-    OSPTCSAUDIT *ospvCSAudit
-)
+OSPTBOOL OSPPCSAuditHasTrigger(
+    OSPTCSAUDIT *ospvCSAudit)
 {
-    if(ospvCSAudit != OSPC_OSNULL)
-    {
+    if(ospvCSAudit != OSPC_OSNULL) {
         return(ospvCSAudit->ospmAuditTrigger != OSPC_OSNULL);
-    }
-    else
-    {
-        return 0;
+    } else {
+        return OSPC_FALSE;
     }
 }
 
-OSPTCSAUDIT    *
-OSPPCSAuditNew(
-    void
-)
+OSPTCSAUDIT *OSPPCSAuditNew(void)
 {
-    OSPTCSAUDIT    *ospvCSAudit = OSPC_OSNULL;
+    OSPTCSAUDIT *ospvCSAudit = OSPC_OSNULL;
 
     /* try to allocate the memory for the entire object */
     OSPM_MALLOC(ospvCSAudit, OSPTCSAUDIT, sizeof(OSPTCSAUDIT));

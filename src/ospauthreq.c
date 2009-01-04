@@ -130,6 +130,7 @@ OSPTBOOL OSPPAuthReqHasSourceNumber(/* returns non-zero if number exists */
     if (ospvAuthReq != OSPC_OSNULL) {
         ospvHasNumber = (ospvAuthReq->ospmAuthReqSourceNumber[0] != '\0');
     }
+    
     return ospvHasNumber;
 }
 
@@ -417,7 +418,11 @@ unsigned long OSPPAuthReqGetDeviceId(   /* returns the time value */
 OSPTBOOL OSPPAuthReqHasComponentId( /* returns non-zero if component id is set */
     OSPTAUTHREQ *ospvAuthReq)
 {
-    return (ospvAuthReq->ospmAuthReqComponentId != OSPC_OSNULL);
+    if (ospvAuthReq != OSPC_OSNULL) {
+        return (ospvAuthReq->ospmAuthReqComponentId != OSPC_OSNULL);
+    } else {
+        return OSPC_FALSE;
+    }
 }
 
 /*
@@ -903,7 +908,11 @@ int OSPPAuthReqToElement(       /* returns error code */
 OSPTBOOL OSPPAuthReqHasMessageId(   /* returns non-zero if message id is set */
     OSPTAUTHREQ *ospvAuthReq)
 {
-    return (ospvAuthReq->ospmAuthReqMessageId != OSPC_OSNULL);
+    if (ospvAuthReq != OSPC_OSNULL) {
+        return (ospvAuthReq->ospmAuthReqMessageId != OSPC_OSNULL);
+    } else {
+        return OSPC_FALSE;
+    }
 }
 
 /*

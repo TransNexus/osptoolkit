@@ -41,7 +41,7 @@ extern "C" {
 #endif
 
     void OSPPAuthCnfDelete(OSPTAUTHCNF **);
-    unsigned OSPPAuthCnfHasStatus(OSPTAUTHCNF *ospvAuthCnf);
+    OSPTBOOL OSPPAuthCnfHasStatus(OSPTAUTHCNF *ospvAuthCnf);
 
 #ifdef __cplusplus
 }

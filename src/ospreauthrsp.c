@@ -56,23 +56,19 @@ OSPPReauthRspSetTimestamp(
     }
 }
 
-/**/
-/*-----------------------------------------------------------------------*
- * OSPPReauthRspHasStatus() - does the reauthorisation response have
- * a status?
- *-----------------------------------------------------------------------*/
-unsigned                            /* returns non-zero if number exists */
-OSPPReauthRspHasStatus(
-    OSPTREAUTHRSP *ospvReauthRsp        /* reauthorisation response effected */
-)
+/*
+ * OSPPReauthRspHasStatus() - does the reauthorisation response have a status?
+ */
+OSPTBOOL OSPPReauthRspHasStatus(    /* returns non-zero if number exists */
+    OSPTREAUTHRSP *ospvReauthRsp)   /* reauthorisation response effected */
 {
-    unsigned ospvHasStatus = OSPC_FALSE;
+	OSPTBOOL ospvHasStatus = OSPC_FALSE;
 
-    if (ospvReauthRsp != OSPC_OSNULL)
-    {
+    if (ospvReauthRsp != OSPC_OSNULL) {
         ospvHasStatus = (ospvReauthRsp->ospmReauthRspStatus != OSPC_OSNULL);
     }
-    return(ospvHasStatus);
+    
+    return ospvHasStatus;
 }
 
 /**/
@@ -110,23 +106,19 @@ OSPPReauthRspSetTrxId(
     }
 }
 
-/**/
-/*-----------------------------------------------------------------------*
- * OSPPReauthRspHasDest() - does the reauthorisation response have
- * a destination?
- *-----------------------------------------------------------------------*/
-unsigned                            /* returns non-zero if number exists */
-OSPPReauthRspHasDest(
-    OSPTREAUTHRSP *ospvReauthRsp        /* reauthorisation response effected */
-)
+/*
+ * OSPPReauthRspHasDest() - does the reauthorisation response have a destination?
+ */
+OSPTBOOL OSPPReauthRspHasDest(      /* returns non-zero if number exists */
+    OSPTREAUTHRSP *ospvReauthRsp)   /* reauthorisation response effected */
 {
-    unsigned ospvHasDest = OSPC_FALSE;
+	OSPTBOOL ospvHasDest = OSPC_FALSE;
 
-    if (ospvReauthRsp != OSPC_OSNULL)
-    {
+    if (ospvReauthRsp != OSPC_OSNULL) {
         ospvHasDest = (ospvReauthRsp->ospmReauthRspDest != OSPC_OSNULL);
     }
-    return(ospvHasDest);
+    
+    return ospvHasDest;
 }
 
 /**/
@@ -150,23 +142,21 @@ OSPPReauthRspSetDest(
     return;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthRspHasComponentId() - is the component id set ?
- *-----------------------------------------------------------------------*/
-OSPTBOOL                    /* returns non-zero if component id is set */
-OSPPReauthRspHasComponentId(
-    OSPTREAUTHRSP *ospvReauthRsp
-)
+ */
+OSPTBOOL OSPPReauthRspHasComponentId(   /* returns non-zero if component id is set */
+    OSPTREAUTHRSP *ospvReauthRsp)
 {
-  return (ospvReauthRsp->ospmReauthRspComponentId != OSPC_OSNULL);
+    if (ospvReauthRsp != OSPC_OSNULL) {
+        return (ospvReauthRsp->ospmReauthRspComponentId != OSPC_OSNULL);
+    } else {
+        return OSPC_FALSE;	
+    }
 }
 
-
-OSPTTNAUDIT *
-OSPPReauthRspGetTNAudit(
-    OSPTREAUTHRSP *ospvReauthRsp
-)
+OSPTTNAUDIT *OSPPReauthRspGetTNAudit(
+    OSPTREAUTHRSP *ospvReauthRsp)
 {
     if(ospvReauthRsp != OSPC_OSNULL)
     {
@@ -401,15 +391,17 @@ void OSPPReauthRspDelete(
 }
 
 
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthRspHasMessageId() - is the message id set ?
- *-----------------------------------------------------------------------*/
-OSPTBOOL                   /* returns non-zero if message id is set */
-OSPPReauthRspHasMessageId(
-    OSPTREAUTHRSP *ospvReauthRsp
-)
+ */
+OSPTBOOL OSPPReauthRspHasMessageId( /* returns non-zero if message id is set */
+    OSPTREAUTHRSP *ospvReauthRsp)
 {
-  return (ospvReauthRsp->ospmReauthRspMessageId != OSPC_OSNULL);
+    if (ospvReauthRsp != OSPC_OSNULL) {
+        return (ospvReauthRsp->ospmReauthRspMessageId != OSPC_OSNULL);
+    } else {
+        return OSPC_FALSE;
+    }
 }
 
 /*-----------------------------------------------------------------------*

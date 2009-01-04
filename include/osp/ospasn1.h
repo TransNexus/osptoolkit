@@ -357,7 +357,7 @@ typedef struct _OSPTASN1PARSERULE {
      * Indicates that the value can have a default value.  The default value must be assigned by
      * using app. 
      */
-    int HasDefault;
+    OSPTBOOL HasDefault;
     /* 
      * Tag number used with explicit and implicit tagging.  Used in body rules, not in the id
      * rule (index 0). Passed to Parser to modify tag within new rule table. 

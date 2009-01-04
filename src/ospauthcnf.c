@@ -58,24 +58,19 @@ OSPPAuthCnfDelete(
     }
 }
 
-/**/
-/*-----------------------------------------------------------------------*
- * OSPPAuthCnfHasStatus() - does the authorisation confirmation have
- * a status?
- *-----------------------------------------------------------------------*/
-
-unsigned                            /* returns non-zero if number exists */
-OSPPAuthCnfHasStatus(
-    OSPTAUTHCNF *ospvAuthCnf       /* authorisation confirmation effected */
-)
+/*
+ * OSPPAuthCnfHasStatus() - does the authorisation confirmation have a status?
+ */
+OSPTBOOL OSPPAuthCnfHasStatus(      /* returns non-zero if number exists */
+    OSPTAUTHCNF *ospvAuthCnf)       /* authorisation confirmation effected */
 {
-    unsigned ospvHasStatus = OSPC_FALSE;
+    OSPTBOOL ospvHasStatus = OSPC_FALSE;
 
-    if(ospvAuthCnf != OSPC_OSNULL)
-    {
-        ospvHasStatus = ((ospvAuthCnf)->ospmAuthCnfStatus != OSPC_OSNULL);
+    if(ospvAuthCnf != OSPC_OSNULL) {
+        ospvHasStatus = (ospvAuthCnf->ospmAuthCnfStatus != OSPC_OSNULL);
     }
-    return(ospvHasStatus);
+    
+    return ospvHasStatus;
 }
 
 

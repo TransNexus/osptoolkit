@@ -80,7 +80,7 @@ extern "C" {
     OSPT_ALTINFO *OSPPAuthIndFirstSourceAlt(OSPTAUTHIND *);
     OSPT_ALTINFO *OSPPAuthIndNextSourceAlt(OSPTAUTHIND *, OSPT_ALTINFO *);
     const char *OSPPAuthIndGetSourceAltValue(OSPT_ALTINFO *);
-    int OSPPAuthIndHasDestinationAlt(OSPTAUTHIND *);
+    OSPTBOOL OSPPAuthIndHasDestinationAlt(OSPTAUTHIND *);
     unsigned OSPPAuthIndGetDestinationAltSize(OSPT_ALTINFO *);
     OSPT_ALTINFO *OSPPAuthIndFirstDestinationAlt(OSPTAUTHIND *);
     OSPT_ALTINFO *OSPPAuthIndNextDestinationAlt(OSPTAUTHIND *, OSPT_ALTINFO *);

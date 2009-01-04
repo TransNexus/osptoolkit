@@ -43,9 +43,9 @@ extern "C" {
     OSPE_AUDIT_STATE OSPPTNAuditGetState(OSPTTNAUDIT *);
     unsigned OSPPTNAuditGetTimeLimit(OSPTTNAUDIT *);
     const char *OSPPTNAuditGetURL(OSPTTNAUDIT *);
-    unsigned OSPPTNAuditHasMaxMessages(OSPTTNAUDIT *);
-    unsigned OSPPTNAuditHasState(OSPTTNAUDIT *);
-    unsigned OSPPTNAuditHasTimeLimit(OSPTTNAUDIT *);
+    OSPTBOOL OSPPTNAuditHasMaxMessages(OSPTTNAUDIT *);
+    OSPTBOOL OSPPTNAuditHasState(OSPTTNAUDIT *);
+    OSPTBOOL OSPPTNAuditHasTimeLimit(OSPTTNAUDIT *);
     OSPTBOOL OSPPTNAuditHasURL(OSPTTNAUDIT *);
     OSPTTNAUDIT *OSPPTNAuditNew(void);
     void OSPPTNAuditSetMaxMessages(OSPTTNAUDIT *, unsigned);

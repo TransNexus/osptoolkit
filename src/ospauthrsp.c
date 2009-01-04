@@ -47,10 +47,10 @@ void OSPPAuthRspSetTimestamp(
 /*
  * OSPPAuthRspHasStatus() - does the AuthResponse have a status?
  */
-int OSPPAuthRspHasStatus(
+OSPTBOOL OSPPAuthRspHasStatus(
     OSPTAUTHRSP *ospvAuthRsp)   /* authorisation response effected */
 {
-    int ospvHasStatus = OSPC_FALSE;
+    OSPTBOOL ospvHasStatus = OSPC_FALSE;
 
     if(ospvAuthRsp != OSPC_OSNULL) {
         ospvHasStatus = (ospvAuthRsp->ospmAuthRspStatus != OSPC_OSNULL);
@@ -89,10 +89,10 @@ void OSPPAuthRspSetTrxId(
 /*
  * OSPPAuthRspHasDest() - does the AuthResponse have a destination?
  */
-int OSPPAuthRspHasDest(
+OSPTBOOL OSPPAuthRspHasDest(
     OSPTAUTHRSP *ospvAuthRsp)   /* authorisation response effected */
 {
-    int ospvHasDest = OSPC_FALSE;
+    OSPTBOOL ospvHasDest = OSPC_FALSE;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
         ospvHasDest = (ospvAuthRsp->ospmAuthRspDest != OSPC_OSNULL);
@@ -135,10 +135,10 @@ OSPTDEST* OSPPAuthRspNextDest(
 /*
  * OSPPAuthRspHasDelayLimit() - does an AuthResponse have delay limit?
  */
-int OSPPAuthRspHasDelayLimit(
+OSPTBOOL OSPPAuthRspHasDelayLimit(
     OSPTAUTHRSP *ospvAuthRsp)   /* authorisation response */
 {
-    int ospvHasDelayLimit = OSPC_FALSE;
+    OSPTBOOL ospvHasDelayLimit = OSPC_FALSE;
 
     if(ospvAuthRsp != OSPC_OSNULL) {
         ospvHasDelayLimit = (ospvAuthRsp->ospmAuthRspDelayLimit > 0);
@@ -177,10 +177,10 @@ unsigned OSPPAuthRspGetDelayLimit(
 /*
  * OSPPAuthRspHasDelayPref() - does an AuthResponse have delay pref?
  */
-int OSPPAuthRspHasDelayPref(
+OSPTBOOL OSPPAuthRspHasDelayPref(
     OSPTAUTHRSP *ospvAuthRsp)   /* authorisation response */
 {
-    int ospvHasDelayPref = OSPC_FALSE;
+    OSPTBOOL ospvHasDelayPref = OSPC_FALSE;
 
     if(ospvAuthRsp != OSPC_OSNULL) {
         ospvHasDelayPref = (ospvAuthRsp->ospmAuthRspDelayPref > 0);
@@ -201,13 +201,13 @@ void OSPPAuthRspSetDelayPref(
     }
 }
 
-unsigned OSPPAuthRspHasNumDests(
+OSPTBOOL OSPPAuthRspHasNumDests(
     OSPTAUTHRSP *ospvAuthRsp)
 {
     if(ospvAuthRsp != OSPC_OSNULL) {
         return ospvAuthRsp->ospmNumDests;
     } else {
-        return 0;
+        return OSPC_FALSE;
     }
 }
 
@@ -235,7 +235,11 @@ unsigned OSPPAuthRspGetNumDests(
 OSPTBOOL OSPPAuthRspHasComponentId(
     OSPTAUTHRSP *ospvAuthRsp)
 {
-  return (ospvAuthRsp->ospmAuthRspComponentId != OSPC_OSNULL);
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        return (ospvAuthRsp->ospmAuthRspComponentId != OSPC_OSNULL);
+    } else {
+        return OSPC_FALSE;
+    }
 }
 
 /*
@@ -537,10 +541,14 @@ OSPTCSAUDIT* OSPPAuthRspGetCSAudit(
     return OSPC_OSNULL;
 }
 
-int OSPPAuthRspHasCSAudit(
+OSPTBOOL OSPPAuthRspHasCSAudit(
     OSPTAUTHRSP *ospvAuthRsp)
 {
-    return ospvAuthRsp->ospmAuthRspCSAudit != OSPC_OSNULL;
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        return ospvAuthRsp->ospmAuthRspCSAudit != OSPC_OSNULL;
+    } else {
+        return OSPC_FALSE;
+    }
 }
 
 /*
@@ -549,7 +557,11 @@ int OSPPAuthRspHasCSAudit(
 OSPTBOOL OSPPAuthRspHasMessageId(
     OSPTAUTHRSP *ospvAuthRsp)
 {
-    return (ospvAuthRsp->ospmAuthRspMessageId != OSPC_OSNULL);
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        return (ospvAuthRsp->ospmAuthRspMessageId != OSPC_OSNULL);
+    } else {
+        return OSPC_FALSE;
+    }
 }
 
 /*
@@ -620,10 +632,10 @@ void OSPPAuthRspComponentIdFromElement(
 /*
  * OSPPAuthRspHasRole() - Does AuthResponse have role set?
  */
-int OSPPAuthRspHasRole(
+OSPTBOOL OSPPAuthRspHasRole(
     OSPTAUTHRSP *ospvAuthRsp)
 {
-    int ospvHasRole = OSPC_FALSE;
+    OSPTBOOL ospvHasRole = OSPC_FALSE;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
         ospvHasRole = (ospvAuthRsp->ospmAuthRspHasRole != OSPC_FALSE);

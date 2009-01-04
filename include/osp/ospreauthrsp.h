@@ -56,11 +56,11 @@ extern "C" {
     void OSPPReauthRspMessageIdFromElement(OSPT_XML_ELEM *, const char **);
     void OSPPReauthRspComponentIdFromElement(OSPT_XML_ELEM *, const char **);
     void OSPPReauthRspSetTimestamp(OSPTREAUTHRSP *, OSPTTIME);
-    unsigned OSPPReauthRspHasComponentId(OSPTREAUTHRSP *);
-    unsigned OSPPReauthRspHasStatus(OSPTREAUTHRSP *ospvReauthRsp);
+    OSPTBOOL OSPPReauthRspHasComponentId(OSPTREAUTHRSP *);
+    OSPTBOOL OSPPReauthRspHasStatus(OSPTREAUTHRSP *ospvReauthRsp);
     OSPTSTATUS *OSPPReauthRspGetStatus(OSPTREAUTHRSP *);
     void OSPPReauthRspSetTrxId(OSPTREAUTHRSP *, OSPTTRXID);
-    unsigned OSPPReauthRspHasDest(OSPTREAUTHRSP *ospvReauthRsp);
+    OSPTBOOL OSPPReauthRspHasDest(OSPTREAUTHRSP *ospvReauthRsp);
     void OSPPReauthRspSetDest(OSPTREAUTHRSP *, OSPTDEST *);
     OSPTTNAUDIT *OSPPReauthRspGetTNAudit(OSPTREAUTHRSP *);
 

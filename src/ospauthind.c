@@ -156,8 +156,7 @@ OSPTBOOL OSPPAuthIndHasSourceNumber(
     OSPTBOOL ospvHasSourceNumber = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvHasSourceNumber =
-            (ospvAuthInd->ospmAuthIndSourceNumber[0] != '\0');
+        ospvHasSourceNumber = (ospvAuthInd->ospmAuthIndSourceNumber[0] != '\0');
     }
 
     return ospvHasSourceNumber;
@@ -301,10 +300,10 @@ const char *OSPPAuthIndGetSourceAltValue(
 /*
  * OSPPAuthIndHasDestinationAlt() - does an authorisation indication have a Destination Alternate? 
  */
-int OSPPAuthIndHasDestinationAlt(
+OSPTBOOL OSPPAuthIndHasDestinationAlt(
     OSPTAUTHIND *ospvAuthInd)   /* authorisation indication */
 {                            
-    int ospvHasDestinationAlt = OSPC_FALSE;
+    OSPTBOOL ospvHasDestinationAlt = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
         ospvHasDestinationAlt = (OSPPAuthIndFirstDestinationAlt(ospvAuthInd) != OSPC_OSNULL);

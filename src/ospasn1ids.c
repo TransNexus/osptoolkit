@@ -15,73 +15,55 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospasn1ids.c - ASN1 defined ID's definitions and functions.
  */
 
-#define OSPC_OSPASN1ID_INCLUDE_STATIC 1 /* Forces inclusion of static */
+#define OSPC_OSPASN1ID_INCLUDE_STATIC 1    /* Forces inclusion of static */
 /* data defined in ospasn1id.h */
 #include "osp/osp.h"
 #include "osp/ospasn1.h"
-#include "osp/ospasn1ids.h"         
-
+#include "osp/ospasn1ids.h"
 
 /* FUNCTION PROTOTYPES */
 
-/* ---------------------------------------------------------*/
-/* Member functions                                         */
-/* ---------------------------------------------------------*/
+/*
+ * Member functions
+ */
 
-int
-OSPPASN1IdGetValue(
-    OSPEASN1ID      ospvId,
-    unsigned char   **ospvIdValue,
-    unsigned        *ospvIdLength)
+int OSPPASN1IdGetValue(
+    OSPEASN1ID ospvId, 
+    unsigned char **ospvIdValue, 
+    unsigned *ospvIdLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTIDINDEX *idxRec = OSPC_OSNULL;
 
-    if ((ospvId < 0) || (ospvId > OSPEID_LISTEND))
-    {
-        errorcode = OSPC_ERR_ASN1_OBJECTID_NOT_FOUND;   
+    if ((ospvId < 0) || (ospvId > OSPEID_LISTEND)) {
+        errorcode = OSPC_ERR_ASN1_OBJECTID_NOT_FOUND;
         OSPM_DBGERRORLOG(errorcode, "Object Id enum out of range");
-    } 
-    else if (ospvIdValue == OSPC_OSNULL)
-    {
+    } else if (ospvIdValue == OSPC_OSNULL) {
         errorcode = OSPC_ERR_ASN1_NULL_POINTER;
-        OSPM_DBGERRORLOG(errorcode, 
-            "Invalid Null Pointer provided for object Id return");
+        OSPM_DBGERRORLOG(errorcode, "Invalid Null Pointer provided for object Id return");
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         idxRec = &(ospgASN1IDIndex[ospvId]);
-        if (idxRec->Id != ospvId)
-        {
+        if (idxRec->Id != ospvId) {
             errorcode = OSPC_ERR_ASN1_OBJECTID_MISMATCH;
-            OSPM_DBGERRORLOG(errorcode,
-                "ID definitions and reference enums are out-of-sync");
+            OSPM_DBGERRORLOG(errorcode, "ID definitions and reference enums are out-of-sync");
         }
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvIdValue = idxRec->Value;
         *ospvIdLength = idxRec->ValueLength;
     }
 
-    if (errorcode != OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode != OSPC_ERR_NO_ERROR) {
         *ospvIdValue = OSPC_OSNULL;
         *ospvIdLength = 0;
     }
 
     return errorcode;
 }
-

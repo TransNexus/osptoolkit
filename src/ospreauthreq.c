@@ -44,22 +44,19 @@
 #include "osp/osputils.h"
 #include "osp/osptrans.h"
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqHasTimestamp() - Does authorisation request have a valid timestamp?
- *-----------------------------------------------------------------------*/
-unsigned                                   /* returns non-zero if time */
-OSPPReauthReqHasTimestamp(
-    OSPTREAUTHREQ *ospvReauthReq               /* authorisation request in question */
-)
+ */
+OSPTBOOL OSPPReauthReqHasTimestamp( /* returns non-zero if time */
+    OSPTREAUTHREQ *ospvReauthReq)   /* authorisation request in question */
 {
-    unsigned ospvHasTime = OSPC_FALSE;
+    OSPTBOOL ospvHasTime = OSPC_FALSE;
 
-    if (ospvReauthReq != OSPC_OSNULL)
-    {
+    if (ospvReauthReq != OSPC_OSNULL) {
         ospvHasTime = (ospvReauthReq->ospmReauthReqTimestamp != OSPC_TIMEMIN);
     }
-    return(ospvHasTime);
+    
+    return ospvHasTime;
 }
 
 /**/
@@ -96,22 +93,19 @@ OSPTTIME                                   /* returns the time value */
     return(ospvTime);
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqHasCallId() - does an authorisation request have a Call ID?
- *-----------------------------------------------------------------------*/
-unsigned                                   /* returns non-zero if exists */
-OSPPReauthReqHasCallId(
-    OSPTREAUTHREQ *ospvReauthReq                  /* authorisation request */
-)
+ */
+OSPTBOOL OSPPReauthReqHasCallId(    /* returns non-zero if exists */
+    OSPTREAUTHREQ *ospvReauthReq)   /* authorisation request */
 {
-    unsigned ospvHasId = OSPC_FALSE;
+    OSPTBOOL ospvHasId = OSPC_FALSE;
 
-    if (ospvReauthReq != OSPC_OSNULL)
-    {
+    if (ospvReauthReq != OSPC_OSNULL) {
         ospvHasId = (ospvReauthReq->ospmReauthReqCallId != OSPC_OSNULL);
     }
-    return(ospvHasId);
+    
+    return ospvHasId;
 }
 
 /**/
@@ -217,22 +211,19 @@ OSPPReauthReqGetDestNumber(
     return ospvNum;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqHasTrxId() - does an authorisation request have a Transaction ID?
- *-----------------------------------------------------------------------*/
-unsigned                                   /* returns non-zero if exists */
-OSPPReauthReqHasTrxId(
-    OSPTREAUTHREQ *ospvReauthReq                  /* authorisation request */
-)
+ */
+OSPTBOOL OSPPReauthReqHasTrxId(     /* returns non-zero if exists */
+    OSPTREAUTHREQ *ospvReauthReq)   /* authorisation request */
 {
-    unsigned ospvHasId = OSPC_FALSE;
+    OSPTBOOL ospvHasId = OSPC_FALSE;
 
-    if (ospvReauthReq != OSPC_OSNULL)
-    {
+    if (ospvReauthReq != OSPC_OSNULL) {
         ospvHasId = (ospvReauthReq->ospmReauthReqTrxId != 0);
     }
-    return(ospvHasId);
+    
+    return ospvHasId;
 }
 
 /**/
@@ -270,21 +261,18 @@ OSPTTRXID                                /* returns transaction ID pointer */
     return(ospvTrxId);
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqHasDuration() - is the duration set ?
- *-----------------------------------------------------------------------*/
-unsigned                            /* returns non-zero if number exists */
-OSPPReauthReqHasDuration(
-    OSPTREAUTHREQ *ospvReauthReq              /* Usage Indication effected */
-)
+ */
+OSPTBOOL OSPPReauthReqHasDuration(  /* returns non-zero if number exists */
+    OSPTREAUTHREQ *ospvReauthReq)   /* Usage Indication effected */
 {
-    unsigned ospvHasDuration = OSPC_FALSE;
+    OSPTBOOL ospvHasDuration = OSPC_FALSE;
 
-    if (ospvReauthReq != OSPC_OSNULL)
-    {
+    if (ospvReauthReq != OSPC_OSNULL) {
         ospvHasDuration = (ospvReauthReq->ospmReauthReqDuration >= 0);
     }
+    
     return ospvHasDuration;
 }
 
@@ -382,16 +370,17 @@ OSPTTOKEN *                                /* returns NULL if no more */
     return(ospvNextToken);
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqHasComponentId() - is the component id set ?
- *-----------------------------------------------------------------------*/
-OSPTBOOL                    /* returns non-zero if component id is set */
-OSPPReauthReqHasComponentId(
-    OSPTREAUTHREQ *ospvReauthReq
-)
+ */
+OSPTBOOL OSPPReauthReqHasComponentId(   /* returns non-zero if component id is set */
+    OSPTREAUTHREQ *ospvReauthReq)
 {
-  return (ospvReauthReq->ospmReauthReqComponentId != OSPC_OSNULL);
+    if (ospvReauthReq != OSPC_OSNULL) {
+        return (ospvReauthReq->ospmReauthReqComponentId != OSPC_OSNULL);
+    } else {
+        return OSPC_FALSE;
+    }
 }
 
 /**/
@@ -464,18 +453,16 @@ OSPPReauthReqAddSourceAlt(
  * OSPPReauthReqHasSourceAlt() - does an authorisation request have a 
  * Source Alternate?
  *-----------------------------------------------------------------------*/
-unsigned                                   /* returns non-zero if exists */
-OSPPReauthReqHasSourceAlt(
-    OSPTREAUTHREQ *ospvReauthReq                  /* authorisation request */
-)
+OSPTBOOL OSPPReauthReqHasSourceAlt( /* returns non-zero if exists */
+    OSPTREAUTHREQ *ospvReauthReq)   /* authorisation request */
 {
-    unsigned ospvHasSourceAlt = OSPC_FALSE;
+    OSPTBOOL ospvHasSourceAlt = OSPC_FALSE;
 
-    if (ospvReauthReq != OSPC_OSNULL)
-    {
+    if (ospvReauthReq != OSPC_OSNULL) {
         ospvHasSourceAlt = (OSPPReauthReqFirstSourceAlt(ospvReauthReq) != OSPC_OSNULL);
     }
-    return(ospvHasSourceAlt);
+    
+    return ospvHasSourceAlt;
 }
 
 /**/
@@ -541,23 +528,20 @@ OSPPReauthReqAddDestinationAlt(
     return;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqHasDestinationAlt() - does an authorisation request have a 
  * Destination Alternate?
- *-----------------------------------------------------------------------*/
-unsigned                                   /* returns non-zero if exists */
-OSPPReauthReqHasDestinationAlt(
-    OSPTREAUTHREQ *ospvReauthReq                  /* authorisation request */
-)
+ */
+OSPTBOOL OSPPReauthReqHasDestinationAlt(    /* returns non-zero if exists */
+    OSPTREAUTHREQ *ospvReauthReq)           /* authorisation request */
 {
-    unsigned ospvHasDestinationAlt = OSPC_FALSE;
+    OSPTBOOL ospvHasDestinationAlt = OSPC_FALSE;
 
-    if (ospvReauthReq != OSPC_OSNULL)
-    {
+    if (ospvReauthReq != OSPC_OSNULL) {
         ospvHasDestinationAlt = (OSPPReauthReqFirstDestinationAlt(ospvReauthReq) != OSPC_OSNULL);
     }
-    return(ospvHasDestinationAlt);
+    
+    return ospvHasDestinationAlt;
 }
 
 /**/
@@ -1036,21 +1020,19 @@ OSPPReauthReqToElement(
     return(ospvErrCode);
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqHasRole() - Does reauthrequest have role set?
- *-----------------------------------------------------------------------*/
-unsigned                                   /* returns non-zero if time */
-OSPPReauthReqHasRole(
-    OSPTREAUTHREQ *ospvReauthReq             /* reauth request in question */
-)
+ */
+OSPTBOOL OSPPReauthReqHasRole(      /* returns non-zero if time */
+    OSPTREAUTHREQ *ospvReauthReq)   /* reauth request in question */
 {
-    unsigned ospvHasRole = OSPC_FALSE;
-    if (ospvReauthReq != OSPC_OSNULL)
-    {
-        ospvHasRole = ((ospvReauthReq)->ospmReauthReqHasRole != OSPC_FALSE);
+    OSPTBOOL ospvHasRole = OSPC_FALSE;
+    
+    if (ospvReauthReq != OSPC_OSNULL) {
+        ospvHasRole = (ospvReauthReq->ospmReauthReqHasRole != OSPC_FALSE);
     }
-    return(ospvHasRole);
+    
+    return ospvHasRole;
 }
 
 /**/
@@ -1090,21 +1072,18 @@ OSPPReauthReqSetRole(
     return;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqHasCustId() - Does reauthreq have a Customer Id?
- *-----------------------------------------------------------------------*/
-OSPTBOOL                                   /* returns non-zero if true */
-OSPPReauthReqHasCustId(
-    OSPTREAUTHREQ *ospvReauthReq           /* reauthreq in question */
-)
+ */
+OSPTBOOL OSPPReauthReqHasCustId(    /* returns non-zero if true */
+    OSPTREAUTHREQ *ospvReauthReq)   /* reauthreq in question */
 {
     OSPTBOOL ospvHasCustId = OSPC_FALSE;
 
-    if (ospvReauthReq != OSPC_OSNULL)
-    {
+    if (ospvReauthReq != OSPC_OSNULL) {
         ospvHasCustId = (ospvReauthReq->ospmReauthReqCustId != 0L);
     }
+    
     return ospvHasCustId;
 }
 
@@ -1142,67 +1121,59 @@ unsigned long                              /* returns the cust id */
     return ospvCustId;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqHasDeviceId() - Does request have a Device Id?
- *-----------------------------------------------------------------------*/
-OSPTBOOL                                   /* returns non-zero if true */
-OSPPReauthReqHasDeviceId(
-    OSPTREAUTHREQ *ospvReauthReq           /* reauthrequest in question */
-)
+ */
+OSPTBOOL OSPPReauthReqHasDeviceId(  /* returns non-zero if true */
+    OSPTREAUTHREQ *ospvReauthReq)   /* reauthrequest in question */
 {
     OSPTBOOL ospvHasDeviceId = OSPC_FALSE;
 
-    if (ospvReauthReq != OSPC_OSNULL)
-    {
+    if (ospvReauthReq != OSPC_OSNULL) {
         ospvHasDeviceId = (ospvReauthReq->ospmReauthReqDeviceId != 0L);
     }
+    
     return ospvHasDeviceId;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqSetTNDeviceId() - Set Device Id
- *-----------------------------------------------------------------------*/
-void                                       /* nothing returned */
-OSPPReauthReqSetDeviceId(
-    OSPTREAUTHREQ    *ospvReauthReq,
-    unsigned long  ospvDeviceId
-)
+ */
+void OSPPReauthReqSetDeviceId(      /* nothing returned */
+    OSPTREAUTHREQ *ospvReauthReq,
+    unsigned long ospvDeviceId)
 {
-    if (ospvReauthReq != OSPC_OSNULL)
-    {
+    if (ospvReauthReq != OSPC_OSNULL) {
         ospvReauthReq->ospmReauthReqDeviceId = ospvDeviceId;
     }
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqGetDeviceId() - returns Device Id for an reauth request
- *-----------------------------------------------------------------------*/
-unsigned long                              /* returns the device id */
-    OSPPReauthReqGetDeviceId(
-    OSPTREAUTHREQ *ospvReauthReq           /* reauth request */
-    )
+ */
+unsigned long OSPPReauthReqGetDeviceId( /* returns the device id */
+    OSPTREAUTHREQ *ospvReauthReq)       /* reauth request */
 {
     unsigned long ospvDeviceId = 0L;
 
-    if (ospvReauthReq != OSPC_OSNULL)
-    {
+    if (ospvReauthReq != OSPC_OSNULL) {
         ospvDeviceId = (ospvReauthReq)->ospmReauthReqDeviceId;
     }
+    
     return ospvDeviceId;
 }
 
-/*-----------------------------------------------------------------------*
+/*
  * OSPPReauthReqHasMessageId() - is the message id set ?
- *-----------------------------------------------------------------------*/
-unsigned                   /* returns non-zero if message id is set */
-OSPPReauthReqHasMessageId(
-    OSPTREAUTHREQ *ospvReauthReq
-)
+ */
+OSPTBOOL OSPPReauthReqHasMessageId( /* returns non-zero if message id is set */
+    OSPTREAUTHREQ *ospvReauthReq)
 {
-  return (ospvReauthReq->ospmReauthReqMessageId != OSPC_OSNULL);
+    if (ospvReauthReq != OSPC_OSNULL) {
+        return (ospvReauthReq->ospmReauthReqMessageId != OSPC_OSNULL);
+    } else {
+        return OSPC_FALSE;
+    }
 }
 
 

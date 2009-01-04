@@ -47,7 +47,7 @@ typedef struct {
      * in that case, OSPPMsgInfoProcessResponse function would delete the structure. 
      */
     int IsNonBlocking;
-    int HasBeenProcessed;
+    OSPTBOOL HasBeenProcessed;
 } OSPT_MSG_INFO;
 
 #define OSPC_MINFO_AUDITTYPE 0x01    /* bit 1 - Message type flag */

@@ -56,7 +56,7 @@ extern "C" {
      * SSL Session Member functions
      */
     OSPTSSLSESSION *OSPPSSLSessionAlloc(void);
-    unsigned OSPPSSLSessionHasSessionId(OSPTSSLSESSION *);
+    OSPTBOOL OSPPSSLSessionHasSessionId(OSPTSSLSESSION *);
 
     /* these member functions are called by OSPPSSLSessionNew() */
     int OSPPSSLSessionInitialize(OSPTHTTP *, OSPTSEC *);

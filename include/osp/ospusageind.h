@@ -140,7 +140,7 @@ extern "C" {
     OSPTTIME OSPPUsageIndGetAlertTime(OSPT_USAGEIND *);
     void OSPPUsageIndSetPostDialDelay(OSPT_USAGEIND *, int ospvPostDialDelay);
     int OSPPUsageIndGetPostDialDelay(OSPT_USAGEIND *);
-    int OSPPUsageIndHasPDD(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasPDD(OSPT_USAGEIND *);
     void OSPPUsageIndSetReleaseSource(OSPT_USAGEIND *, unsigned ospvReleaseSource);
     unsigned OSPPUsageIndGetReleaseSource(OSPT_USAGEIND *);
     void OSPPUsageIndSetConferenceId(OSPT_USAGEIND *, const char *);

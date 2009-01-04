@@ -36,11 +36,10 @@
 #include <poll.h>
 #endif
 
-int
-OSPPSockClose(
+int OSPPSockClose(
     OSPTBOOL ospvGracefulSSLShutdown,
-    OSPTSOCKET      *ospvSockFd,
-    OSPTSSLSESSION  **SSLSession)
+    OSPTSOCKET *ospvSockFd,
+    OSPTSSLSESSION **SSLSession)
 {
     int  tmperror  = OSPC_ERR_NO_ERROR;
 
@@ -68,14 +67,13 @@ const char* OSPM_INET_NTOA(
     return(inet_ntop(AF_INET, &sin, buffer, length));
 }
 
-int
-OSPPSockConnect(
-    OSPTSOCKET          *ospvSockFd,
-    OSPTBOOL            ospvBlocking,
-    OSPTIPADDR          ospvIpAddr,
-    unsigned short      ospvPort,
-    struct timeval      *ospvTimeout,
-    OSPTSSLSESSION      **ospvSSLSession)
+int OSPPSockConnect(
+    OSPTSOCKET *ospvSockFd,
+    OSPTBOOL ospvBlocking,
+    OSPTIPADDR ospvIpAddr,
+    unsigned short ospvPort,
+    struct timeval *ospvTimeout,
+    OSPTSSLSESSION **ospvSSLSession)
 {
     int  errorcode = OSPC_ERR_NO_ERROR;
     char ErrStr[200];

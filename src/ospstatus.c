@@ -104,21 +104,18 @@ void OSPPStatusSetDesc(         /* no return */
     } 
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPStatusHasCode() - is the status code populated
- *-----------------------------------------------------------------------*/
-unsigned                              /* return 1 or 0 */
-OSPPStatusHasCode(
-    OSPTSTATUS *ospvStatus            /* Status to check */
-)
+ */
+OSPTBOOL OSPPStatusHasCode( /* return 1 or 0 */
+    OSPTSTATUS *ospvStatus) /* Status to check */
 {
-    unsigned hascode = OSPC_FALSE;
+    OSPTBOOL hascode = OSPC_FALSE;
 
-    if (ospvStatus != OSPC_OSNULL) 
-    {
+    if (ospvStatus != OSPC_OSNULL) {
         hascode=ospvStatus->ospmHasCode;
     }
+    
     return hascode; 
 }
 

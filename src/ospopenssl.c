@@ -120,8 +120,8 @@ OSPPSSLWrapInit(void *ospvRef)
     return errorcode;
 }
 
-void
-OSPPOpenSSLInit(OSPTBOOL hw_enabled)
+void OSPPOpenSSLInit(
+    OSPTBOOL hw_enabled)
 {
     SSL_library_init();
     OpenSSL_add_all_algorithms();
@@ -767,7 +767,8 @@ int rand_init()
 **  iterate through all supported engines and set
 **  the first available one for all crypto operations
 */
-int cha_engine_init(OSPTBOOL hw_enabled)
+int cha_engine_init(
+    OSPTBOOL hw_enabled)
 {
   int  errorcode = OSPC_ERR_NO_ERROR;
   ENGINE *e = OSPC_OSNULL;

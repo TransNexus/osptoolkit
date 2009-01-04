@@ -314,33 +314,35 @@ OSPPSSLSessionWrite(
     return errorcode;
 }
 
-OSPTSSLSESSION *
-    OSPPSSLSessionAlloc()
+OSPTSSLSESSION *OSPPSSLSessionAlloc(void)
 {
     OSPTSSLSESSION *sslsess = OSPC_OSNULL;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLSessionAlloc()\n"));
+    
     OSPM_MALLOC(sslsess, OSPTSSLSESSION, sizeof(OSPTSSLSESSION));
-    if (sslsess != OSPC_OSNULL)
-    {
+    if (sslsess != OSPC_OSNULL) {
         OSPM_MEMSET(sslsess, 0, sizeof(OSPTSSLSESSION));
     }
+    
     OSPM_DBGEXIT(("EXIT : OSPPSSLSessionAlloc() (%lx)\n", (unsigned long)sslsess));
+    
     return sslsess;
 }
 
-unsigned
-OSPPSSLSessionHasSessionId(
+OSPTBOOL OSPPSSLSessionHasSessionId(
     OSPTSSLSESSION *ospvSSLSession)
 {
-    unsigned hassessionid = 0;
+	OSPTBOOL hassessionid = OSPC_FALSE;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLSessionHasSessionId()\n"));
-    if (ospvSSLSession != OSPC_OSNULL)
-    {
+    
+    if (ospvSSLSession != OSPC_OSNULL) {
         hassessionid = (ospvSSLSession->SessionId != OSPC_OSNULL);
     }
+    
     OSPM_DBGEXIT(("EXIT : OSPPSSLSessionHasSessionId() (%d)\n", hassessionid));
+    
     return hassessionid;
 }
 

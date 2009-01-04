@@ -42,8 +42,8 @@ char *OSPVDeleteAllowed;
  *
  * returns OSPC_ERR_NO_ERROR if successful, OSPC_ERR_XXX otherwise.
  */
-int
-OSPPInit(OSPTBOOL hw_enabled)
+int OSPPInit(
+    OSPTBOOL hw_enabled)
 {
     int         providerindex = 0;
     int         errorcode     = OSPC_ERR_NO_ERROR,

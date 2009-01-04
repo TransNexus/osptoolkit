@@ -36,7 +36,7 @@ extern "C" {
     void OSPPCSAuditDelete(OSPTCSAUDIT **ospvCSAudit);
     int OSPPCSAuditFromElement(OSPT_XML_ELEM *, OSPTCSAUDIT **);
     unsigned char *OSPPCSAuditGetTrigger(OSPTCSAUDIT *);
-    unsigned OSPPCSAuditHasTrigger(OSPTCSAUDIT *);
+    OSPTBOOL OSPPCSAuditHasTrigger(OSPTCSAUDIT *);
     OSPTCSAUDIT *OSPPCSAuditNew(void);
     void OSPPCSAuditSetTrigger(OSPTCSAUDIT *, unsigned char *);
     int OSPPCSAuditToElement(OSPTCSAUDIT *, OSPT_XML_ELEM **);
