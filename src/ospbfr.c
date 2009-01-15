@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospbfr.c - TransNexus message buffer functions. Provided mainly as
  *            as a convenience, as they are expected to be replaced by
@@ -42,24 +36,20 @@
 #include "osp/osp.h"
 #include "osp/ospbfr.h"
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPBfrNew() - allocate a new message buffer
- *-----------------------------------------------------------------------*/
+ */
 
-OSPTBFR *                           /* returns allocated buffer or NULL */
-    OSPPBfrNew(
-    unsigned ospvSize               /* size in bytes of buffer */
-    )
+OSPTBFR *OSPPBfrNew(    /* returns allocated buffer or NULL */
+    unsigned ospvSize)  /* size in bytes of buffer */
 {
     OSPTBFR *ospvBfr = OSPC_OSNULL;
 
     /* try to get enough memory to hold the buffer and its header */
-    OSPM_MALLOC(ospvBfr, OSPTBFR,sizeof(OSPTBFR) + ospvSize +1);
+    OSPM_MALLOC(ospvBfr, OSPTBFR, sizeof(OSPTBFR) + ospvSize + 1);
 
     /* if malloc succeeded, set up the message header */
-    if (ospvBfr != OSPC_OSNULL)
-    {
+    if (ospvBfr != OSPC_OSNULL) {
         /*
          * Since many of these functions take, as input, pointers to
          * pointers to buffers, it's worthwhile to take some extra
@@ -73,69 +63,54 @@ OSPTBFR *                           /* returns allocated buffer or NULL */
          */
 
         ospvBfr->ospmBfrGuard = OSPC_OSNULL;
-        ospvBfr->ospmBfrRead  = ((unsigned char *)ospvBfr) + sizeof(OSPTBFR);
+        ospvBfr->ospmBfrRead = ((unsigned char *)ospvBfr) + sizeof(OSPTBFR);
         ospvBfr->ospmBfrWrite = ospvBfr->ospmBfrRead;
-        ospvBfr->ospmBfrEnd   = ospvBfr->ospmBfrRead + ospvSize;
+        ospvBfr->ospmBfrEnd = ospvBfr->ospmBfrRead + ospvSize;
         *(ospvBfr->ospmBfrRead) = 0;
     }
 
-    return(ospvBfr);
+    return ospvBfr;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPBfrClear() - reset buffer
- *-----------------------------------------------------------------------*/
-void       
-OSPPBfrClear(
-    OSPTBFR  *ospvBfr
-)
+ */
+void OSPPBfrClear(
+    OSPTBFR *ospvBfr)
 {
-    if(ospvBfr != OSPC_OSNULL)
-    {
+    if (ospvBfr != OSPC_OSNULL) {
         ospvBfr->ospmBfrGuard = OSPC_OSNULL;
-        ospvBfr->ospmBfrRead  = ((unsigned char *)ospvBfr) + sizeof(OSPTBFR);
+        ospvBfr->ospmBfrRead = ((unsigned char *)ospvBfr) + sizeof(OSPTBFR);
         ospvBfr->ospmBfrWrite = ospvBfr->ospmBfrRead;
         *(ospvBfr->ospmBfrRead) = 0;
         OSPM_MEMSET(ospvBfr->ospmBfrWrite, 0, ospvBfr->ospmBfrEnd - ospvBfr->ospmBfrRead);
     }
-
-    return;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPBfrWriteBlock() - add data to a message buffer
- *-----------------------------------------------------------------------*/
-
-unsigned                           /* returns number of bytes written */
-OSPPBfrWriteBlock(
-    OSPTBFR   **ospvBfrAddr,       /* address of pointer to buffer */
-    const void *ospvData,          /* pointer to data to add */
-    unsigned    ospvCnt            /* number of bytes to add */
-)
+ */
+unsigned OSPPBfrWriteBlock( /* returns number of bytes written */
+    OSPTBFR **ospvBfrAddr,  /* address of pointer to buffer */
+    const void *ospvData,   /* pointer to data to add */
+    unsigned ospvCnt)       /* number of bytes to add */
 {
-    OSPTBFR  *oldBfr;              /* used for current message buffer */
-    OSPTBFR  *newBfr;              /* new message buffer, if needed */
-    unsigned  ospvWritten=0;         /* count of bytes written */
+    OSPTBFR *oldBfr;            /* used for current message buffer */
+    OSPTBFR *newBfr;            /* new message buffer, if needed */
+    unsigned ospvWritten = 0;   /* count of bytes written */
 
-    if (ospvBfrAddr != OSPC_OSNULL)
-    {
-        if (*ospvBfrAddr != OSPC_OSNULL) /* guard will catch bad indirection */
-        {
+    if (ospvBfrAddr != OSPC_OSNULL) {
+        if (*ospvBfrAddr != OSPC_OSNULL) {    /* guard will catch bad indirection */
             oldBfr = *ospvBfrAddr;
             ospvWritten = 0;
 
             /* will the data fit in the current buffer? */
-            if ( (oldBfr->ospmBfrWrite + ospvCnt) <= oldBfr->ospmBfrEnd )
-            {
+            if ((oldBfr->ospmBfrWrite + ospvCnt) <= oldBfr->ospmBfrEnd) {
                 /* yes, it fits */
                 OSPM_MEMCPY(oldBfr->ospmBfrWrite, ospvData, ospvCnt);
                 oldBfr->ospmBfrWrite += ospvCnt;
                 ospvWritten = ospvCnt;
-            }
-            else
-            {
+            } else {
                 /*
                  * data won't fit in current buffer, get a new one
                  * possible optimizations include trying realloc first, and
@@ -143,15 +118,14 @@ OSPPBfrWriteBlock(
                  */
 
                 newBfr = OSPPBfrNew(OSPPBfrSize(oldBfr) + ospvCnt);
-                if (newBfr != OSPC_OSNULL)
-                {
+                if (newBfr != OSPC_OSNULL) {
                     /* copy existing data */
                     OSPPBfrWriteBlock(&newBfr, OSPPBfrLinearPtr(oldBfr), OSPPBfrSize(oldBfr));
-                    /*            assert(OSPPBfrSize(newBfr) == OSPPBfrSize(oldBfr)); */
+                    /* assert(OSPPBfrSize(newBfr) == OSPPBfrSize(oldBfr)); */
 
                     /* add new data */
                     OSPPBfrWriteBlock(&newBfr, ospvData, ospvCnt);
-                    /*            assert((unsigned)OSPPBfrSize(newBfr) == (OSPPBfrSize(oldBfr) + ospvCnt)); */
+                    /* assert((unsigned)OSPPBfrSize(newBfr) == (OSPPBfrSize(oldBfr) + ospvCnt)); */
 
                     /* replace the old buffer with the new */
                     *ospvBfrAddr = newBfr;
@@ -164,50 +138,42 @@ OSPPBfrWriteBlock(
             }
         }
     }
-    return(ospvWritten);
+
+    return ospvWritten;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPBfrWriteByte() - add a single byte to a message buffer
- *-----------------------------------------------------------------------*/
-
-unsigned                           /* returns number of bytes written */
-OSPPBfrWriteByte(
-    OSPTBFR     **ospvBfrAddr,     /* address of pointer to buffer */
-    unsigned char ospvChar         /* pointer to data to add */
-)
+ */
+unsigned OSPPBfrWriteByte(  /* returns number of bytes written */
+    OSPTBFR **ospvBfrAddr,  /* address of pointer to buffer */
+    unsigned char ospvChar  /* pointer to data to add */
+    )
 {
-    OSPTBFR  *oldBfr;            /* used for current message buffer */
-    OSPTBFR  *newBfr;            /* new message buffer, if needed */
-    unsigned  ospvWritten=0;     /* count of bytes written */
-    unsigned  addSize;           /* if new buffer needed, how much to grow */
+    OSPTBFR *oldBfr;            /* used for current message buffer */
+    OSPTBFR *newBfr;            /* new message buffer, if needed */
+    unsigned ospvWritten = 0;   /* count of bytes written */
+    unsigned addSize;           /* if new buffer needed, how much to grow */
 
-    if (ospvBfrAddr != OSPC_OSNULL)
-    {
-        if (*ospvBfrAddr != OSPC_OSNULL)  /* guard will catch bad indirection */
-        {
+    if (ospvBfrAddr != OSPC_OSNULL) {
+        if (*ospvBfrAddr != OSPC_OSNULL) {    /* guard will catch bad indirection */
             oldBfr = *ospvBfrAddr;
             ospvWritten = 0;
 
             /* will the data fit in the current buffer? */
-            if (oldBfr->ospmBfrWrite < oldBfr->ospmBfrEnd)
-            {
+            if (oldBfr->ospmBfrWrite < oldBfr->ospmBfrEnd) {
                 /* yes, it fits */
                 *((oldBfr)->ospmBfrWrite)++ = ospvChar;
                 ospvWritten = 1;
-            }
-            else
-            {
+            } else {
                 /*
                  * data won't fit in current buffer, get a new one
                  * possible optimizations include trying realloc first
                  */
 
-                addSize = 1 + OSPPBfrSize(oldBfr)/10;    /* try adding 10% */
+                addSize = 1 + OSPPBfrSize(oldBfr) / 10;    /* try adding 10% */
                 newBfr = OSPPBfrNew(OSPPBfrSize(oldBfr) + addSize);
-                if (newBfr != OSPC_OSNULL)
-                {
+                if (newBfr != OSPC_OSNULL) {
                     /*
                      * we only check for errors here via asserts because
                      * errors technically can't happen
@@ -215,11 +181,11 @@ OSPPBfrWriteByte(
 
                     /* copy existing data */
                     OSPPBfrWriteBlock(&newBfr, OSPPBfrLinearPtr(oldBfr), OSPPBfrSize(oldBfr));
-                    /*            assert(OSPPBfrSize(newBfr) == OSPPBfrSize(oldBfr)); */
+                    /* assert(OSPPBfrSize(newBfr) == OSPPBfrSize(oldBfr)); */
 
                     /* add new data */
                     *((newBfr)->ospmBfrWrite)++ = ospvChar;
-                    /*            assert(OSPPBfrSize(newBfr) == (OSPPBfrSize(oldBfr) + 1)); */
+                    /* assert(OSPPBfrSize(newBfr) == (OSPPBfrSize(oldBfr) + 1)); */
 
                     /* replace the old buffer with the new */
                     *ospvBfrAddr = newBfr;
@@ -232,72 +198,58 @@ OSPPBfrWriteByte(
             }
         }
     }
-    return(ospvWritten);
+
+    return ospvWritten;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPBfrReadBlock() - read data from a message buffer
- *-----------------------------------------------------------------------*/
-
-unsigned                            /* returns number of bytes read */
-OSPPBfrReadBlock(
-    OSPTBFR **ospvBfrAddr,          /* address of pointer to buffer */
-    void     *ospvPtr,              /* place to put data */
-    unsigned  ospvCnt               /* max bytes to read */
-)
+ */
+unsigned OSPPBfrReadBlock(  /* returns number of bytes read */
+    OSPTBFR **ospvBfrAddr,  /* address of pointer to buffer */
+    void *ospvPtr,          /* place to put data */
+    unsigned ospvCnt)       /* max bytes to read */
 {
-    OSPTBFR  *bfr;
-    unsigned  ospvRead=0;
+    OSPTBFR *bfr;
+    unsigned ospvRead = 0;
 
-    if (ospvBfrAddr != OSPC_OSNULL)
-    {
-        if (*ospvBfrAddr != OSPC_OSNULL)  /* guard will catch bad indirection */
-        {
+    if (ospvBfrAddr != OSPC_OSNULL) {
+        if (*ospvBfrAddr != OSPC_OSNULL) {  /* guard will catch bad indirection */
             bfr = *ospvBfrAddr;
-            ospvRead = OSPPBfrSize(bfr);             /* how many bytes to read */
-            if (ospvRead > ospvCnt)
-            {
+            ospvRead = OSPPBfrSize(bfr);    /* how many bytes to read */
+            if (ospvRead > ospvCnt) {
                 ospvRead = ospvCnt;
             }
 
             OSPM_MEMCPY(ospvPtr, OSPPBfrLinearPtr(bfr), ospvRead);
-            bfr->ospmBfrRead += ospvRead;                    /* update header */
+            bfr->ospmBfrRead += ospvRead;    /* update header */
         }
     }
-    return(ospvRead);
+
+    return ospvRead;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPBfrDelete() - free an allocated buffer
- *-----------------------------------------------------------------------*/
-
-void                                    /* no return value */
-OSPPBfrDelete(
-    OSPTBFR **ospvBfr                    /* buffer to free */
-)
+ */
+void OSPPBfrDelete(     /* no return value */
+    OSPTBFR **ospvBfr)  /* buffer to free */
 {
-    if (*ospvBfr != OSPC_OSNULL)
-    {
+    if (*ospvBfr != OSPC_OSNULL) {
         OSPM_FREE(*ospvBfr);
         *ospvBfr = OSPC_OSNULL;
     }
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPBfrLinearPtr() - returns a pointer to linear buffer contents
- *-----------------------------------------------------------------------*/
-void *
-OSPPBfrLinearPtr(
-    OSPTBFR *ospvBfr
-)
+ */
+void *OSPPBfrLinearPtr(
+    OSPTBFR *ospvBfr)
 {
     void *ospvPtr = OSPC_OSNULL;
 
-    if (ospvBfr != OSPC_OSNULL)
-    {
+    if (ospvBfr != OSPC_OSNULL) {
 
         /*
          * This function returns a linear pointer to the contents of a buffer.
@@ -317,60 +269,48 @@ OSPPBfrLinearPtr(
         ospvPtr = ospvBfr->ospmBfrRead;
     }
 
-    return(ospvPtr);
+    return ospvPtr;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPBfrSize() - get the number of bytes currently in buffer
- *-----------------------------------------------------------------------*/
-unsigned                             /* returns the size */
-OSPPBfrSize(
-    OSPTBFR *ospvBfr                 /* buffer in question */
-)
+ */
+unsigned OSPPBfrSize(   /* returns the size */
+    OSPTBFR *ospvBfr)   /* buffer in question */
 {
     unsigned ospvSize = 0;
 
-    if (ospvBfr != OSPC_OSNULL)
-    {
+    if (ospvBfr != OSPC_OSNULL) {
         ospvSize = ospvBfr->ospmBfrWrite - ospvBfr->ospmBfrRead;
     }
-    return(ospvSize);
+
+    return ospvSize;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPBfrReadByte() - read the next byte in the buffer (or -1 if empty)
- *-----------------------------------------------------------------------*/
-int                                   /* returns -1 if empty */
-OSPPBfrReadByte(
-    OSPTBFR *ospvBfr                  /* buffer in question */
-)
+ */
+int OSPPBfrReadByte(    /* returns -1 if empty */
+    OSPTBFR *ospvBfr)   /* buffer in question */
 {
     int ospvByte = -1;
 
-    if (ospvBfr != OSPC_OSNULL)
-    {
-        if (OSPPBfrSize(ospvBfr) > 0)
-        {
+    if (ospvBfr != OSPC_OSNULL) {
+        if (OSPPBfrSize(ospvBfr) > 0) {
             ospvByte = (int) *(ospvBfr->ospmBfrRead)++;
-        }
-        else
-        {
+        } else {
             ospvByte = -1;
         }
     }
-    return(ospvByte);
+
+    return ospvByte;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPBfrPeekByte() - look at the next byte in the buffer (-1 if empty)
- *-----------------------------------------------------------------------*/
-int                                   /* returns -1 if empty */
-OSPPBfrPeekByte(
-    OSPTBFR *ospvBfr                  /* buffer in question */
-)
+ */
+int OSPPBfrPeekByte(    /* returns -1 if empty */
+    OSPTBFR *ospvBfr)   /* buffer in question */
 {
     int ospvByte = -1;
 
@@ -379,42 +319,33 @@ OSPPBfrPeekByte(
      * assert to validate input parameters; that way the validation
      * checks can be optimized out of production systems.
      */
-    if (ospvBfr != OSPC_OSNULL)
-    {
-        if (OSPPBfrSize(ospvBfr) > 0)
-        {
+    if (ospvBfr != OSPC_OSNULL) {
+        if (OSPPBfrSize(ospvBfr) > 0) {
             ospvByte = (int) *(ospvBfr->ospmBfrRead);
-        }
-        else
-        {
+        } else {
             ospvByte = -1;
         }
     }
-    return(ospvByte);
+
+    return ospvByte;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPBfrPeekByteN() - look at the Nth byte in the buffer
- *-----------------------------------------------------------------------*/
-int                                   /* returns -1 if < N bytes */
-OSPPBfrPeekByteN(
-    OSPTBFR *ospvBfr,                 /* buffer in question */
-    unsigned ospvCnt                  /* which byte to look at */
-)
+ */
+int OSPPBfrPeekByteN(   /* returns -1 if < N bytes */
+    OSPTBFR *ospvBfr,   /* buffer in question */
+    unsigned ospvCnt)   /* which byte to look at */
 {
     int ospvByte = -1;
 
-    if (ospvBfr != OSPC_OSNULL)
-    {
-        if (OSPPBfrSize(ospvBfr) > ospvCnt)
-        {
-            ospvByte = (int) *((ospvBfr->ospmBfrRead)+ospvCnt);
-        }
-        else
-        {
+    if (ospvBfr != OSPC_OSNULL) {
+        if (OSPPBfrSize(ospvBfr) > ospvCnt) {
+            ospvByte = (int) *((ospvBfr->ospmBfrRead) + ospvCnt);
+        } else {
             ospvByte = -1;
         }
     }
-    return(ospvByte);
+
+    return ospvByte;
 }

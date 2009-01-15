@@ -35,7 +35,7 @@ typedef struct {
     OSPTLIST ospmDeviceInfo;
     unsigned ospmAlmostOutOfResources;
     OSPTLIST ospmSrcAlternate;
-} OSPTCAPIND;
+} OSPT_CAP_IND;
 
 /* Function Prototypes */
 
@@ -44,9 +44,9 @@ extern "C" {
 #endif
 
     unsigned OSPPGenerateUniqueId(OSPTTRANS *, char **);
-    unsigned OSPPCapIndNew(OSPTCAPIND **, OSPTTRANS *, const char *, const char *, const char *, unsigned);
-    void OSPPCapIndDelete(OSPTCAPIND **);
-    int OSPPCapIndToElement(OSPTCAPIND *, OSPT_XML_ELEM **);
+    unsigned OSPPCapIndNew(OSPT_CAP_IND **, OSPTTRANS *, const char *, const char *, const char *, unsigned);
+    void OSPPCapIndDelete(OSPT_CAP_IND **);
+    int OSPPCapIndToElement(OSPT_CAP_IND *, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

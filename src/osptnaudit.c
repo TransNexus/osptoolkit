@@ -65,7 +65,7 @@ int OSPPTNAuditFromElement(
         /* If the elem has no children, we are probably dealing with
          * an AuditConfirm. Make sure it gets processed properly.
          */
-        if ((elem = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvElem)) == OSPC_OSNULL) {
+        if ((elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem)) == OSPC_OSNULL) {
             if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_AUDITSTATE) {
                 errorcode = OSPPMsgNumFromElement(ospvElem, &temp);
                 if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -172,7 +172,7 @@ OSPTBOOL OSPPTNAuditHasMaxMessages(
     OSPTTNAUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return (ospvTNAudit->ospmAuditMaxMessages > 0);
+        return(ospvTNAudit->ospmAuditMaxMessages > 0);
     } else {
         return OSPC_FALSE;
     }
@@ -182,7 +182,7 @@ OSPTBOOL OSPPTNAuditHasState(
     OSPTTNAUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return (ospvTNAudit->ospmAuditState > 0);
+        return(ospvTNAudit->ospmAuditState > 0);
     } else {
         return OSPC_FALSE;
     }
@@ -192,18 +192,17 @@ OSPTBOOL OSPPTNAuditHasTimeLimit(
     OSPTTNAUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return (ospvTNAudit->ospmAuditTimeLimit > 0);
+        return(ospvTNAudit->ospmAuditTimeLimit > 0);
     } else {
         return OSPC_FALSE;
     }
-
 }
 
 OSPTBOOL OSPPTNAuditHasURL(
     OSPTTNAUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return (ospvTNAudit->ospmAuditURL != OSPC_OSNULL);
+        return(ospvTNAudit->ospmAuditURL != OSPC_OSNULL);
     } else {
         return OSPC_FALSE;
     }

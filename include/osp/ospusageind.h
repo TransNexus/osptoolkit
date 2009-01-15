@@ -45,7 +45,7 @@ typedef struct {
     OSPE_ROLE ospmUsageIndRole;
     OSPTBOOL ospmUsageIndHasRole;
     OSPTTRXID ospmUsageIndTransactionId;
-    OSPTCALLID *ospmUsageIndCallId;
+    OSPT_CALL_ID *ospmUsageIndCallId;
     int ospmUsageIndDuration;
     char ospmUsageIndSourceNumber[OSPC_SIZE_E164NUM];
     char ospmUsageIndDestNumber[OSPC_SIZE_E164NUM];
@@ -65,7 +65,7 @@ typedef struct {
     OSPE_DEST_PROTOCOL ospmUsageIndDestProtocol;
     char ospmUsageIndForwardCodec[OSPC_SIZE_CODEC];
     char ospmUsageIndReverseCodec[OSPC_SIZE_CODEC];
-    OSPTCALLID *ospmUsageIndSessionId[OSPC_DIR_NUMBER];
+    OSPT_CALL_ID *ospmUsageIndSessionId[OSPC_DIR_NUMBER];
 } OSPT_USAGEIND;
 
 /* Function Prototypes */
@@ -98,8 +98,8 @@ extern "C" {
     void OSPPUsageIndSetTransactionId(OSPT_USAGEIND *, OSPTTRXID ospvTransactionId);
     OSPTTRXID OSPPUsageIndGetTransactionId(OSPT_USAGEIND *);
     OSPTBOOL OSPPUsageIndHasCallId(OSPT_USAGEIND *);
-    OSPTCALLID *OSPPUsageIndGetCallId(OSPT_USAGEIND *);
-    void OSPPUsageIndSetCallId(OSPT_USAGEIND *, OSPTCALLID *);
+    OSPT_CALL_ID *OSPPUsageIndGetCallId(OSPT_USAGEIND *);
+    void OSPPUsageIndSetCallId(OSPT_USAGEIND *, OSPT_CALL_ID *);
     void OSPPUsageIndSetSourceNumber(OSPT_USAGEIND *, const char *);
     const char *OSPPUsageIndGetSourceNumber(OSPT_USAGEIND *);
     void OSPPUsageIndSetCurrency(OSPT_USAGEIND *, const char *);
@@ -160,8 +160,8 @@ extern "C" {
     const char *OSPPUsageIndGetReverseCodec(OSPT_USAGEIND *);
     void OSPPUsageIndSetReverseCodec(OSPT_USAGEIND *, const char *);
     OSPTBOOL OSPPUsageIndHasSessionId(OSPT_USAGEIND *, OSPE_DIRECTION);
-    OSPTCALLID *OSPPUsageIndGetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION);
-    void OSPPUsageIndSetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION, OSPTCALLID *);
+    OSPT_CALL_ID *OSPPUsageIndGetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION);
+    void OSPPUsageIndSetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION, OSPT_CALL_ID *);
     
 #ifdef __cplusplus
 }

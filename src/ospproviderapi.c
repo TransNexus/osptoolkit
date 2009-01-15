@@ -15,13 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * ospproviderapi.cpp - API functions for provider.
  */
@@ -57,45 +50,40 @@
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int 
-OSPPProviderDelete(
-    OSPTPROVHANDLE  ospvProvider,  /* In - Provider object     */
-    int             ospvTimeLimit) /* In - Maximum delete time */
+int OSPPProviderDelete(
+    OSPTPROVHANDLE ospvProvider,    /* In - Provider object     */
+    int ospvTimeLimit)              /* In - Maximum delete time */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
 
         OSPPProviderSetNewTransactionAllowed(provider, OSPC_FALSE);
 
-        if (errorcode == OSPC_ERR_NO_ERROR) 
-        {
-            
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+
             OSPPAuditDelete(&(provider->Audit));
 
             /*
              * shutdown the communication thread and destroy all
              * communication resources and message queues
              */
-            OSPPCommSetShutdown(&(provider->Comm), ospvTimeLimit); 
+            OSPPCommSetShutdown(&(provider->Comm), ospvTimeLimit);
             OSPPCommSetShutdown(&(provider->CommForCapabilities), ospvTimeLimit);
-            OSPPSSLSessionCleanup((void *)provider->Security);
+            OSPPSSLSessionCleanup((void *) provider->Security);
 
             OSPPSecDelete(&provider->Security);
 
-            OSPPProviderTransactionCollectionDelete(
-                &provider->TransCollection);
+            OSPPProviderTransactionCollectionDelete(&provider->TransCollection);
 
             OSPPTransIDTreeDelete(provider);
 
             errorcode = OSPPProviderInitializeStorage(provider);
         }
     }
+
     return errorcode;
 }
 
@@ -118,23 +106,18 @@ OSPPProviderDelete(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderGetAuthorityCertificates(
-    OSPTPROVHANDLE  ospvProvider,                       /* In     - Provider handle          */
-    unsigned        ospvSizeOfCertificate,              /* In     - Max cert size            */
-    unsigned        *ospvNumberOfAuthorityCertificates, /* In/Out - max to return/actual cnt */
-    void            *ospvAuthorityCertificates[])       /* Out    - Ptr to auth cert bufs    */
+int OSPPProviderGetAuthorityCertificates(
+    OSPTPROVHANDLE ospvProvider,                    /* In     - Provider handle          */
+    unsigned ospvSizeOfCertificate,                 /* In     - Max cert size            */
+    unsigned *ospvNumberOfAuthorityCertificates,    /* In/Out - max to return/actual cnt */
+    void *ospvAuthorityCertificates[])              /* Out    - Ptr to auth cert bufs    */
 {
-
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
-        errorcode = OSPPSecCopyAuthorityCertificates(provider->Security, 
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPSecCopyAuthorityCertificates(provider->Security,
             ospvSizeOfCertificate,
             (unsigned char **)ospvAuthorityCertificates, 
             ospvNumberOfAuthorityCertificates);
@@ -142,7 +125,6 @@ OSPPProviderGetAuthorityCertificates(
 
     return errorcode;
 }
-
 
 /* 
  * OSPPProviderGetHTTPMaxConnections()
@@ -156,27 +138,22 @@ OSPPProviderGetAuthorityCertificates(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderGetHTTPMaxConnections(
-    OSPTPROVHANDLE  ospvProvider,               /* In - Provider handle      */
-    unsigned        *ospvHTTPMaxConnections)    /* Out - Ptr to result store */
+int OSPPProviderGetHTTPMaxConnections(
+    OSPTPROVHANDLE ospvProvider,        /* In - Provider handle      */
+    unsigned *ospvHTTPMaxConnections)   /* Out - Ptr to result store */
 {
-
     OSPTPROVIDER *provider = OSPC_OSNULL;
 
     int errorcode = OSPC_ERR_NO_ERROR;
 
-
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
-        * get the maximum number of connections from
-        * the Communication Manager module.
-        */
-        errorcode = OSPPCommGetMaxConnections(provider->Comm,
-        ospvHTTPMaxConnections);
+         * get the maximum number of connections from
+         * the Communication Manager module.
+         */
+        errorcode = OSPPCommGetMaxConnections(provider->Comm, ospvHTTPMaxConnections);
+    }
 
     return errorcode;
 }
@@ -194,22 +171,17 @@ OSPPProviderGetHTTPMaxConnections(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderGetHTTPPersistence(
-    OSPTPROVHANDLE  ospvProvider,          /* In  - Provider handle     */
-    unsigned        *ospvHTTPPersistence)  /* Out - Ptr to result store */
+int OSPPProviderGetHTTPPersistence(
+    OSPTPROVHANDLE ospvProvider,    /* In  - Provider handle     */
+    unsigned *ospvHTTPPersistence)  /* Out - Ptr to result store */
 {
-
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR)
-
-        errorcode = OSPPCommGetPersistence(provider->Comm,
-        ospvHTTPPersistence);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommGetPersistence(provider->Comm, ospvHTTPPersistence);
+    }
 
     return errorcode;
 }
@@ -226,21 +198,17 @@ OSPPProviderGetHTTPPersistence(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderGetHTTPRetryDelay(
-    OSPTPROVHANDLE  ospvProvider,         /* In  - Provider handle     */
-    unsigned        *ospvHTTPRetryDelay)  /* Out - Ptr to result store */
+int OSPPProviderGetHTTPRetryDelay(
+    OSPTPROVHANDLE ospvProvider,    /* In  - Provider handle     */
+    unsigned *ospvHTTPRetryDelay)   /* Out - Ptr to result store */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-
-        errorcode = OSPPCommGetRetryDelay(provider->Comm,
-        ospvHTTPRetryDelay);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommGetRetryDelay(provider->Comm, ospvHTTPRetryDelay);
+    }
 
     return errorcode;
 }
@@ -257,21 +225,17 @@ OSPPProviderGetHTTPRetryDelay(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderGetHTTPRetryLimit(
-    OSPTPROVHANDLE  ospvProvider,        /* In  - Provider handle     */
-    unsigned        *ospvHTTPRetryLimit) /* Out - Ptr to result store */
+int OSPPProviderGetHTTPRetryLimit(
+    OSPTPROVHANDLE ospvProvider,    /* In  - Provider handle     */
+    unsigned *ospvHTTPRetryLimit)   /* Out - Ptr to result store */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-
-        errorcode = OSPPCommGetRetryLimit(provider->Comm, 
-        ospvHTTPRetryLimit);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommGetRetryLimit(provider->Comm, ospvHTTPRetryLimit);
+    }
 
     return errorcode;
 }
@@ -289,19 +253,17 @@ OSPPProviderGetHTTPRetryLimit(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderGetHTTPTimeout(
-    OSPTPROVHANDLE ospvProvider,      /* In  - Provider handle     */
-    unsigned       *ospvHTTPTimeout)  /* Out - Ptr to result store */
+int OSPPProviderGetHTTPTimeout(
+    OSPTPROVHANDLE ospvProvider,    /* In  - Provider handle     */
+    unsigned *ospvHTTPTimeout)      /* Out - Ptr to result store */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPCommGetTimeout(provider->Comm, ospvHTTPTimeout);
+    }
 
     return errorcode;
 }
@@ -322,40 +284,31 @@ OSPPProviderGetHTTPTimeout(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderGetLocalKeys(
-    OSPTPROVHANDLE  ospvProvider,           /* In  - Provider handle      */
-    OSPTPRIVATEKEY  *ospvLocalPrivateKey,   /* Out - Ptr to storage       */
-    unsigned        ospvSizeOfCertificate,  /* In  - Length of cert space */
-    void            *ospvLocalCertificate)  /* Out - Ptr to cert store    */
+int OSPPProviderGetLocalKeys(
+    OSPTPROVHANDLE ospvProvider,            /* In  - Provider handle      */
+    OSPTPRIVATEKEY *ospvLocalPrivateKey,    /* Out - Ptr to storage       */
+    unsigned ospvSizeOfCertificate,         /* In  - Length of cert space */
+    void *ospvLocalCertificate)             /* Out - Ptr to cert store    */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
-        * Copy the private key from the Security module
-        */
-        errorcode = OSPPSecCopyPrivateKey(  provider->Security,
-            (OSPTPRIVATEKEY *)ospvLocalPrivateKey);
+         * Copy the private key from the Security module
+         */
+        errorcode = OSPPSecCopyPrivateKey(provider->Security, (OSPTPRIVATEKEY *)ospvLocalPrivateKey);
     }
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
          * Copy the local certificate from the Security module 
          */
-        errorcode = OSPPSecCopyLocalCertificate(provider->Security, 
-            &ospvSizeOfCertificate,
-            (unsigned char *)ospvLocalCertificate);
+        errorcode = OSPPSecCopyLocalCertificate(provider->Security, &ospvSizeOfCertificate, (unsigned char *)ospvLocalCertificate);
     }
+
     return errorcode;
 }
-
-
 
 /* 
  * OSPPProviderGetLocalValidation()
@@ -370,22 +323,18 @@ OSPPProviderGetLocalKeys(
  *
  *  returns OSPC_ERR_NO_ERROR if successful, OSPC_ERR_XXX otherwise.
  */
-
-int
-OSPPProviderGetLocalValidation(
-    OSPTPROVHANDLE  ospvProvider,         /* In - Provider handle             */
-    unsigned        *ospvLocalValidation) /* Out - Local validation indicator */
+int OSPPProviderGetLocalValidation(
+    OSPTPROVHANDLE ospvProvider,    /* In - Provider handle             */
+    unsigned *ospvLocalValidation)  /* Out - Local validation indicator */
 {
-
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
 
-    if (errorcode == OSPC_ERR_NO_ERROR) 
+    if (errorcode == OSPC_ERR_NO_ERROR)
 
-        errorcode = OSPPSecGetLocalValidation(provider->Security, 
-        ospvLocalValidation);
+        errorcode = OSPPSecGetLocalValidation(provider->Security, ospvLocalValidation);
 
     return errorcode;
 }
@@ -402,21 +351,16 @@ OSPPProviderGetLocalValidation(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderGetNumberOfAuthorityCertificates(
-    OSPTPROVHANDLE ospvProvider,                        /* In  - Provider handle     */
-    unsigned       *ospvNumberOfAuthorityCertificates) /* Out - Ptr to result store */
+int OSPPProviderGetNumberOfAuthorityCertificates(
+    OSPTPROVHANDLE ospvProvider,                    /* In  - Provider handle     */
+    unsigned *ospvNumberOfAuthorityCertificates)    /* Out - Ptr to result store */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-    {
-        errorcode = OSPPSecGetNumberOfAuthorityCertificates(provider->Security,
-            ospvNumberOfAuthorityCertificates);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPSecGetNumberOfAuthorityCertificates(provider->Security, ospvNumberOfAuthorityCertificates);
     }
 
     return errorcode;
@@ -433,19 +377,17 @@ OSPPProviderGetNumberOfAuthorityCertificates(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderGetNumberOfServicePoints(
-    OSPTPROVHANDLE ospvProvider,               /* In  - Provider handle     */
-    unsigned       *ospvNumberOfServicePoints) /* Out - Ptr to result store */
+int OSPPProviderGetNumberOfServicePoints(
+    OSPTPROVHANDLE ospvProvider,            /* In  - Provider handle     */
+    unsigned *ospvNumberOfServicePoints)    /* Out - Ptr to result store */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPCommGetNumberOfServicePoints(provider->Comm, ospvNumberOfServicePoints);
+    }
 
     return errorcode;
 }
@@ -473,28 +415,21 @@ OSPPProviderGetNumberOfServicePoints(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderGetServicePoints(
-    OSPTPROVHANDLE  ospvProvider,              /* In  - Provider handle       */
-    unsigned        ospvNumberOfServicePoints, /* In  - Number of items       */
-    unsigned        ospvSizeOfServicePoint,    /* In  - Max size of each item */
-    char            *ospvServicePoints[])      /* Out - Ptr to result store   */
+int OSPPProviderGetServicePoints(
+    OSPTPROVHANDLE ospvProvider,        /* In  - Provider handle       */
+    unsigned ospvNumberOfServicePoints, /* In  - Number of items       */
+    unsigned ospvSizeOfServicePoint,    /* In  - Max size of each item */
+    char *ospvServicePoints[])          /* Out - Ptr to result store   */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
          * get the service points from the Communication Manager module.
          */
-        errorcode = OSPPCommGetServicePoints(provider->Comm, 
-            ospvNumberOfServicePoints,
-            ospvSizeOfServicePoint,
-            ospvServicePoints);
+        errorcode = OSPPCommGetServicePoints(provider->Comm, ospvNumberOfServicePoints, ospvSizeOfServicePoint, ospvServicePoints);
     }
 
     return errorcode;
@@ -512,19 +447,17 @@ OSPPProviderGetServicePoints(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderGetSSLLifetime(
-    OSPTPROVHANDLE ospvProvider,     /* In - Provider handle      */
-    unsigned       *ospvSSLLifetime) /* Out - Ptr to result store */
+int OSPPProviderGetSSLLifetime(
+    OSPTPROVHANDLE ospvProvider,    /* In - Provider handle      */
+    unsigned *ospvSSLLifetime)      /* Out - Ptr to result store */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvSSLLifetime = OSPPSecGetSSLLifetime(provider->Security);
+    }
 
     return errorcode;
 }
@@ -628,42 +561,36 @@ OSPPProviderGetSSLLifetime(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderNew(
-    unsigned             ospvNumberOfServicePoints, /* In  - Svc ptr count           */
-    const char           *ospvServicePoints[],       /* In  - Svc pts strings         */
-    unsigned long         ospvMessageCount[],         /* Array of Integers that tell the 
+int OSPPProviderNew(
+    unsigned ospvNumberOfServicePoints,             /* In  - Svc ptr count           */
+    const char *ospvServicePoints[],                /* In  - Svc pts strings         */
+    unsigned long ospvMessageCount[],               /* Array of Integers that tell the 
                                                        toolkit about the maximum messages
                                                        that can be sent to each SP on a connection */
-    const char           *ospvAuditURL,             /* In  - Audit URL string         */
-    const OSPTPRIVATEKEY *ospvLocalPrivateKey,       /* In  - Private key obj ptr     */
-    const OSPTCERT       *ospvLocalCertificate,     /* In  - Local cert ptr          */
-    unsigned             ospvNumberOfAuthorityCertificates, /* In  - Auth cert nt            */
-    const OSPTCERT       *ospvAuthorityCertificates[],       /* In  - Auth certs              */
-    unsigned             ospvLocalValidation,       /* In  - Local validation or not */
-    unsigned             ospvSSLLifetime,           /* In  - SSL lifetime            */
-    unsigned             ospvHTTPMaxConnections,     /* In  - Max connections         */
-    unsigned             ospvHTTPPersistence,       /* In  - Connection persistence  */
-    unsigned             ospvHTTPRetryDelay,         /* In  - Retry delay             */
-    unsigned             ospvHTTPRetryLimit,         /* In  - Retry limit             */
-    unsigned             ospvHTTPTimeout,           /* In  - Timeout                 */
-    const char           *ospvCustomerId,           /* In - Customer Id              */
-    const char           *ospvDeviceId,             /* In - Device Id                */
-    OSPTPROVHANDLE       *ospvProvider)             /* Out - Handle to new provider  */
+    const char *ospvAuditURL,                       /* In  - Audit URL string         */
+    const OSPTPRIVATEKEY *ospvLocalPrivateKey,      /* In  - Private key obj ptr     */
+    const OSPT_CERT *ospvLocalCertificate,          /* In  - Local cert ptr          */
+    unsigned ospvNumberOfAuthorityCertificates,     /* In  - Auth cert nt            */
+    const OSPT_CERT *ospvAuthorityCertificates[],   /* In  - Auth certs              */
+    unsigned ospvLocalValidation,                   /* In  - Local validation or not */
+    unsigned ospvSSLLifetime,                       /* In  - SSL lifetime            */
+    unsigned ospvHTTPMaxConnections,                /* In  - Max connections         */
+    unsigned ospvHTTPPersistence,                   /* In  - Connection persistence  */
+    unsigned ospvHTTPRetryDelay,                    /* In  - Retry delay             */
+    unsigned ospvHTTPRetryLimit,                    /* In  - Retry limit             */
+    unsigned ospvHTTPTimeout,                       /* In  - Timeout                 */
+    const char *ospvCustomerId,                     /* In - Customer Id              */
+    const char *ospvDeviceId,                       /* In - Device Id                */
+    OSPTPROVHANDLE *ospvProvider)                   /* Out - Handle to new provider  */
 {
-    OSPTPROVIDER    *provider   = OSPC_OSNULL;
-    int             errorcode   = OSPC_ERR_NO_ERROR;
-    unsigned long   custid      = 0L, 
-                    deviceid    = 0L;
+    OSPTPROVIDER *provider = OSPC_OSNULL;
+    int errorcode = OSPC_ERR_NO_ERROR;
+    unsigned long custid = 0L, deviceid = 0L;
     unsigned i;
 
-    if (ospvMessageCount != NULL) 
-    {
-        for (i=0;i<ospvNumberOfServicePoints;i++)
-        {
-            if (ospvMessageCount[i]<0)
-            {
+    if (ospvMessageCount != NULL) {
+        for (i = 0; i < ospvNumberOfServicePoints; i++) {
+            if (ospvMessageCount[i] < 0) {
                 errorcode = OSPC_ERR_PROV_INVALID_VALUE;
                 OSPM_DBGERRORLOG(errorcode, "Invalid input value for Message count");
                 break;
@@ -675,135 +602,109 @@ OSPPProviderNew(
      * check incoming values and reset to defaults if necessary
      */
 
-    if((errorcode == OSPC_ERR_NO_ERROR) && ((ospvNumberOfServicePoints <= 0)         ||
-       (ospvServicePoints == OSPC_OSNULL)       ||
-       (OSPPCommValidateSvcPts(ospvNumberOfServicePoints,ospvServicePoints) != OSPC_ERR_NO_ERROR) ||
-       (ospvLocalPrivateKey == OSPC_OSNULL)     ||
-       (ospvLocalCertificate == OSPC_OSNULL)    ||
-       (ospvNumberOfAuthorityCertificates <= 0) ||
-       (ospvAuthorityCertificates == OSPC_OSNULL)   ||
-       (ospvSSLLifetime < 0)        ||
-       (ospvHTTPMaxConnections < 0) ||
-       (ospvHTTPPersistence < 0)    ||
-       (ospvHTTPRetryDelay < 0)     ||
-       (ospvAuditURL == OSPC_OSNULL)    ||
-       (ospvHTTPRetryLimit < 0)     ||
-       (ospvHTTPTimeout < 0)))
+    if ((errorcode == OSPC_ERR_NO_ERROR) && 
+        ((ospvNumberOfServicePoints <= 0) || (ospvServicePoints == OSPC_OSNULL) ||
+        (OSPPCommValidateSvcPts(ospvNumberOfServicePoints, ospvServicePoints) != OSPC_ERR_NO_ERROR) ||
+        (ospvLocalPrivateKey == OSPC_OSNULL) || (ospvLocalCertificate == OSPC_OSNULL) ||
+        (ospvNumberOfAuthorityCertificates <= 0) || (ospvAuthorityCertificates == OSPC_OSNULL) ||
+        (ospvSSLLifetime < 0) || (ospvHTTPMaxConnections < 0) || (ospvHTTPPersistence < 0) ||
+        (ospvHTTPRetryDelay < 0) || (ospvAuditURL == OSPC_OSNULL) || (ospvHTTPRetryLimit < 0) || (ospvHTTPTimeout < 0))) 
     {
         errorcode = OSPC_ERR_PROV_INVALID_VALUE;
         OSPM_DBGERRORLOG(errorcode, "Invalid input value");
-    }
-    else
-    {
+    } else {
         /* if proper values are not set, set them to defaults */
-        if(ospvSSLLifetime == 0)
-        {
+        if (ospvSSLLifetime == 0) {
             ospvSSLLifetime = OSPC_DEFAULT_SSLLIFETIME;
         }
 
-        if(ospvHTTPMaxConnections == 0)
-        {
+        if (ospvHTTPMaxConnections == 0) {
             ospvHTTPMaxConnections = OSPC_DEFAULT_HTTPMAXCONNECTIONS;
         }
 
-        if(ospvHTTPPersistence == 0)
-        {
+        if (ospvHTTPPersistence == 0) {
             ospvHTTPPersistence = OSPC_DEFAULT_HTTPPERSISTENCE;
         }
 
-        if(ospvHTTPRetryDelay == 0)
-        {
+        if (ospvHTTPRetryDelay == 0) {
             ospvHTTPRetryDelay = OSPC_DEFAULT_HTTPRETRYDELAY;
         }
 
-        if(ospvHTTPTimeout < 1000)
-        {
+        if (ospvHTTPTimeout < 1000) {
             ospvHTTPTimeout = OSPC_DEFAULT_HTTPTIMEOUT;
         }
-     
+
         /*
          * get a new Provider handle
          */
         errorcode = OSPPProviderGetNewCollectionItem(ospvProvider);
 
-        if (errorcode == OSPC_ERR_NO_ERROR) 
-        {
+        if (errorcode == OSPC_ERR_NO_ERROR) {
             /*
              * get the new Provider handle context
              */
             provider = OSPPProviderGetContext(*ospvProvider, &errorcode);
 
-            if (errorcode == OSPC_ERR_NO_ERROR) 
-            {          
+            if (errorcode == OSPC_ERR_NO_ERROR) {
 
-                if(errorcode == OSPC_ERR_NO_ERROR)
-                {
+                if (errorcode == OSPC_ERR_NO_ERROR) {
                     /*
                      * initialize the area which holds the transactions 
                      */
-                    errorcode = OSPPProviderTransactionCollectionNew(
-                        &(provider->TransCollection));
+                    errorcode = OSPPProviderTransactionCollectionNew(&(provider->TransCollection));
                 }
 
-                if(errorcode == OSPC_ERR_NO_ERROR)
-                {
+                if (errorcode == OSPC_ERR_NO_ERROR) {
                     /*
                      * initialize security area
                      */
                     errorcode = OSPPSecNew(&(provider->Security));
                 }
 
-                if (errorcode == OSPC_ERR_NO_ERROR)
-                {
+                if (errorcode == OSPC_ERR_NO_ERROR) {
                     /*
                      * initialize the Comm object
                      */
                     errorcode = OSPPCommNew(&(provider->Comm));
                 }
-                
-                if (errorcode == OSPC_ERR_NO_ERROR)
-                {
+
+                if (errorcode == OSPC_ERR_NO_ERROR) {
                     /*
                      * initialize the CommForCapabilities object
                      */
                     errorcode = OSPPCommNew(&(provider->CommForCapabilities));
                 }
 
-                if (errorcode == OSPC_ERR_NO_ERROR)
-                {
+                if (errorcode == OSPC_ERR_NO_ERROR) {
                     /*
                      * set security for the Comm object
                      */
                     OSPPCommSetSecurity(provider->Comm, provider->Security);
                 }
 
-                if (errorcode == OSPC_ERR_NO_ERROR)
-                {
+                if (errorcode == OSPC_ERR_NO_ERROR) {
                     /*
                      * set security for the Comm object
                      */
                     OSPPCommSetSecurity(provider->CommForCapabilities, provider->Security);
                 }
-                
-                if (errorcode == OSPC_ERR_NO_ERROR)
-                {
+
+                if (errorcode == OSPC_ERR_NO_ERROR) {
                     /*
                      * set the connection SSL Session Lifetime
                      */
-                    errorcode = OSPPProviderSetSSLLifetime(*ospvProvider, 
-                        ospvSSLLifetime);       
+                    errorcode = OSPPProviderSetSSLLifetime(*ospvProvider, ospvSSLLifetime);
                 }
 
-                if (errorcode == OSPC_ERR_NO_ERROR)
-                {
+                if (errorcode == OSPC_ERR_NO_ERROR) {
                     /*
                      * Perform any global SSL initialisation routines
                      */
-                    errorcode = OSPPSSLSessionInit((void *)provider->Security);
+                    errorcode = OSPPSSLSessionInit((void *) provider->Security);
                 }
             }
 
-            if (errorcode == OSPC_ERR_NO_ERROR) 
+            if (errorcode == OSPC_ERR_NO_ERROR)
 
                 /*
                  * allow new transactions to be processed
@@ -813,55 +714,38 @@ OSPPProviderNew(
             /*
              * set the service points configured
              */
-            errorcode = OSPPProviderSetServicePoints(
-                *ospvProvider,  
-                ospvNumberOfServicePoints, 
-                ospvMessageCount,
-                ospvServicePoints);
+            errorcode = OSPPProviderSetServicePoints(*ospvProvider, ospvNumberOfServicePoints, ospvMessageCount, ospvServicePoints);
 
-            if (errorcode == OSPC_ERR_NO_ERROR)
-            {
+            if (errorcode == OSPC_ERR_NO_ERROR) {
                 /*
                  * set the capabilities URLs configured
                  * use the same set of service points as for the main manager
                  */
-                errorcode = OSPPProviderSetCapabilitiesURLs(
-                    *ospvProvider,  
-                    ospvNumberOfServicePoints, 
-                    ospvMessageCount,
-                    ospvServicePoints);
+                errorcode = OSPPProviderSetCapabilitiesURLs(*ospvProvider, ospvNumberOfServicePoints, ospvMessageCount, ospvServicePoints);
             }
-               
+
             if (errorcode == OSPC_ERR_NO_ERROR)
 
                 /*
                  * set the CA certs
                  */
-                errorcode = OSPPProviderSetAuthorityCertificates(
-                *ospvProvider, 
-                ospvNumberOfAuthorityCertificates,
-                ospvAuthorityCertificates);
+                errorcode = OSPPProviderSetAuthorityCertificates(*ospvProvider, ospvNumberOfAuthorityCertificates, ospvAuthorityCertificates);
 
             if (errorcode == OSPC_ERR_NO_ERROR)
 
                 /*
                  * set the connection HTTP Persistence
                  */
-                errorcode = OSPPProviderSetHTTPPersistence(
-                *ospvProvider, 
-                ospvHTTPPersistence);
+                errorcode = OSPPProviderSetHTTPPersistence(*ospvProvider, ospvHTTPPersistence);
 
-            if (errorcode == OSPC_ERR_NO_ERROR) 
+            if (errorcode == OSPC_ERR_NO_ERROR)
 
                 /*
                  * set the maximum number of HTTP connections 
                  */
-                errorcode = OSPPProviderSetHTTPMaxConnections(
-                *ospvProvider, 
-                ospvHTTPMaxConnections);                
+                errorcode = OSPPProviderSetHTTPMaxConnections(*ospvProvider, ospvHTTPMaxConnections);
 
-            if (errorcode == OSPC_ERR_NO_ERROR)
-            {
+            if (errorcode == OSPC_ERR_NO_ERROR) {
                 /* set Customer Id */
                 custid = atol(ospvCustomerId);
                 OSPPProviderSetCustId(provider, custid);
@@ -871,54 +755,40 @@ OSPPProviderNew(
                 /*
                  * set the private key. 
                  */
-                errorcode = OSPPProviderSetLocalKeys(
-                    *ospvProvider, 
-                    ospvLocalPrivateKey, 
-                    ospvLocalCertificate->CertData);
+                errorcode = OSPPProviderSetLocalKeys(*ospvProvider, ospvLocalPrivateKey, ospvLocalCertificate->CertData);
             }
 
             if (errorcode == OSPC_ERR_NO_ERROR)
-
                 /*
                  * set the HTTP retry delay
                  */
-                errorcode = OSPPProviderSetHTTPRetryDelay(
-                *ospvProvider, 
-                ospvHTTPRetryDelay);
+                errorcode = OSPPProviderSetHTTPRetryDelay(*ospvProvider, ospvHTTPRetryDelay);
 
             if (errorcode == OSPC_ERR_NO_ERROR)
-
                 /*
                  * set the HTTP retry limit
                  */
-                errorcode = OSPPProviderSetHTTPRetryLimit(
-                *ospvProvider, 
-                ospvHTTPRetryLimit);
+                errorcode = OSPPProviderSetHTTPRetryLimit(*ospvProvider, ospvHTTPRetryLimit);
 
             if (errorcode == OSPC_ERR_NO_ERROR)
-
                 /*
                  * set the HTTP timeout
                  */
-                errorcode = OSPPProviderSetHTTPTimeout(
-                *ospvProvider, 
-                ospvHTTPTimeout);
+                errorcode = OSPPProviderSetHTTPTimeout(*ospvProvider, ospvHTTPTimeout);
 
             if (errorcode == OSPC_ERR_NO_ERROR)
                 /*
                  * set local validation
                  */
                 if (ospvLocalValidation)
-                    errorcode = errorcode; /* not implemented */
+                    errorcode = errorcode;    /* not implemented */
 
             /* 
              * set audit info 
              */
-            if(errorcode == OSPC_ERR_NO_ERROR)
-            {
+            if (errorcode == OSPC_ERR_NO_ERROR) {
                 provider->Audit = OSPPAuditNew(ospvAuditURL);
-                if(provider->Audit != OSPC_OSNULL)
-                {
+                if (provider->Audit != OSPC_OSNULL) {
                     OSPPAuditSetSecurity(provider->Audit, provider->Security);
                     OSPPAuditSetComm(provider->Audit, provider->Comm);
                     OSPPCommSetAuditURL(provider->Comm, ospvAuditURL);
@@ -927,14 +797,13 @@ OSPPProviderNew(
                 /* setup transactionid tree */
                 OSPPTransIdInit(provider);
             }
+        } else {
+            /*
+             ** Failed to create a new provider handle
+             */
         }
-        else
-        {
-          /*
-          ** Failed to create a new provider handle
-          */
-        }
-    } /* end of valid values */
+    }   /* end of valid values */
+    
     return errorcode;
 }
 
@@ -954,22 +823,18 @@ OSPPProviderNew(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderSetAuthorityCertificates(
-    OSPTPROVHANDLE  ospvProvider,                       /* In - Provider handle       */
-    unsigned        ospvNumberOfAuthorityCertificates,   /* In - Number of auth certs  */
-    const OSPTCERT  *ospvAuthorityCertificates[])       /* In - Ptr to auth cert bufs */
+int OSPPProviderSetAuthorityCertificates(
+    OSPTPROVHANDLE ospvProvider,                    /* In - Provider handle       */
+    unsigned ospvNumberOfAuthorityCertificates,     /* In - Number of auth certs  */
+    const OSPT_CERT *ospvAuthorityCertificates[])   /* In - Ptr to auth cert bufs */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR)
-        errorcode = OSPPSecSetAuthorityCertificates( provider->Security, 
-                                                     ospvNumberOfAuthorityCertificates, 
-                                                     ospvAuthorityCertificates);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPSecSetAuthorityCertificates(provider->Security, ospvNumberOfAuthorityCertificates, ospvAuthorityCertificates);
+    }
 
     return errorcode;
 }
@@ -991,26 +856,23 @@ OSPPProviderSetAuthorityCertificates(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderSetHTTPMaxConnections(
-    OSPTPROVHANDLE ospvProvider,           /* In - Provider handle       */
-    unsigned       ospvHTTPMaxConnections) /* In - New HTTP Max Connects */
+int OSPPProviderSetHTTPMaxConnections(
+    OSPTPROVHANDLE ospvProvider,    /* In - Provider handle       */
+    unsigned ospvHTTPMaxConnections)/* In - New HTTP Max Connects */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR)
-        errorcode = OSPPCommSetMaxConnections(provider->Comm,
-                                              ospvHTTPMaxConnections);
-    if (errorcode == OSPC_ERR_NO_ERROR)
-        errorcode = OSPPCommSetMaxConnections(provider->CommForCapabilities,ospvHTTPMaxConnections);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommSetMaxConnections(provider->Comm, ospvHTTPMaxConnections);
+    }
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommSetMaxConnections(provider->CommForCapabilities, ospvHTTPMaxConnections);
+    }
 
     return errorcode;
 }
-
 
 /* 
  * OSPPProviderSetHTTPPersistence()
@@ -1028,22 +890,21 @@ OSPPProviderSetHTTPMaxConnections(
  * 
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderSetHTTPPersistence(
-    OSPTPROVHANDLE ospvProvider,        /* In - Provider handle      */
-    unsigned       ospvHTTPPersistence) /* In - New HTTP Persistence */
+int OSPPProviderSetHTTPPersistence(
+    OSPTPROVHANDLE ospvProvider,    /* In - Provider handle      */
+    unsigned ospvHTTPPersistence)   /* In - New HTTP Persistence */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommSetPersistence(provider->Comm, ospvHTTPPersistence);
+    }
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommSetPersistence(provider->CommForCapabilities, ospvHTTPPersistence);
+    }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-        errorcode = OSPPCommSetPersistence(provider->Comm,ospvHTTPPersistence);
-
-    if (errorcode == OSPC_ERR_NO_ERROR)
-        errorcode = OSPPCommSetPersistence(provider->CommForCapabilities,ospvHTTPPersistence);
     return errorcode;
 }
 
@@ -1061,22 +922,20 @@ OSPPProviderSetHTTPPersistence(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int 
-OSPPProviderSetHTTPRetryDelay(
-    OSPTPROVHANDLE ospvProvider,       /* In - Provider handle      */
-    unsigned       ospvHTTPRetryDelay) /* In - New HTTP retry delay */
+int OSPPProviderSetHTTPRetryDelay(
+    OSPTPROVHANDLE ospvProvider,    /* In - Provider handle      */
+    unsigned ospvHTTPRetryDelay)    /* In - New HTTP retry delay */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-        errorcode = OSPPCommSetRetryDelay(provider->Comm,ospvHTTPRetryDelay);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-        errorcode = OSPPCommSetRetryDelay(provider->CommForCapabilities,ospvHTTPRetryDelay);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommSetRetryDelay(provider->Comm, ospvHTTPRetryDelay);
+    }
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommSetRetryDelay(provider->CommForCapabilities, ospvHTTPRetryDelay);
+    }
 
     return errorcode;
 }
@@ -1096,22 +955,20 @@ OSPPProviderSetHTTPRetryDelay(
  * 
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-int 
-OSPPProviderSetHTTPRetryLimit(
-    OSPTPROVHANDLE ospvProvider,       /* In - Provider handle      */
-    unsigned       ospvHTTPRetryLimit) /* In - New HTTP retry limit */
+int OSPPProviderSetHTTPRetryLimit(
+    OSPTPROVHANDLE ospvProvider,    /* In - Provider handle      */
+    unsigned ospvHTTPRetryLimit)    /* In - New HTTP retry limit */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR)
-        errorcode = OSPPCommSetRetryLimit(provider->Comm,ospvHTTPRetryLimit);
-
-    if (errorcode == OSPC_ERR_NO_ERROR)
-       errorcode = OSPPCommSetRetryLimit(provider->CommForCapabilities,ospvHTTPRetryLimit);
-
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommSetRetryLimit(provider->Comm, ospvHTTPRetryLimit);
+    }
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommSetRetryLimit(provider->CommForCapabilities, ospvHTTPRetryLimit);
+    }
 
     return errorcode;
 }
@@ -1131,34 +988,29 @@ OSPPProviderSetHTTPRetryLimit(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int 
-OSPPProviderSetHTTPTimeout(
+int OSPPProviderSetHTTPTimeout(
     OSPTPROVHANDLE ospvProvider,    /* In - Provider handle  */
-    unsigned       ospvHTTPTimeout) /* In - New HTTP Timeout */
+    unsigned ospvHTTPTimeout)       /* In - New HTTP Timeout */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPCommSetTimeout(provider->Comm, ospvHTTPTimeout);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR) 
+    if (errorcode == OSPC_ERR_NO_ERROR)
         errorcode = OSPPCommSetTimeout(provider->CommForCapabilities, ospvHTTPTimeout);
 
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPCommSetConnSelectionTimeout(provider->Comm, ospvHTTPTimeout);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPCommSetConnSelectionTimeout(provider->CommForCapabilities, ospvHTTPTimeout);
     }
+
     return errorcode;
 }
 
@@ -1178,40 +1030,27 @@ OSPPProviderSetHTTPTimeout(
  * 
  * Returns: OSPC_ERR_NO_ERROR if successful, OSP_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderSetLocalKeys(
-    OSPTPROVHANDLE          ospvProvider,          /* In - Provider handle       */
-    const OSPTPRIVATEKEY    *ospvLocalPrivateKey,  /* In - New Local Private Key */
-    const void              *ospvLocalCertificate) /* In - New Local Certificate */
+int OSPPProviderSetLocalKeys(
+    OSPTPROVHANDLE ospvProvider,                /* In - Provider handle       */
+    const OSPTPRIVATEKEY *ospvLocalPrivateKey,  /* In - New Local Private Key */
+    const void *ospvLocalCertificate)           /* In - New Local Certificate */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
     unsigned long custId = 0;
     unsigned long devId = 0;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-    {
-        errorcode = OSPPSecSetPrivateKey(provider->Security,
-                                        (OSPTPRIVATEKEY *)ospvLocalPrivateKey);
-
-        if (errorcode == OSPC_ERR_NO_ERROR) 
-        {
-            errorcode = OSPPSecSetLocalCertificate(provider->Security, 
-                                                  (unsigned char *)ospvLocalCertificate, 
-                                                  &custId, 
-                                                  &devId);
-
-            if((errorcode==OSPC_ERR_NO_ERROR)&&(custId!=0)&&(devId!=0))
-            {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPSecSetPrivateKey(provider->Security, (OSPTPRIVATEKEY *)ospvLocalPrivateKey);
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            errorcode = OSPPSecSetLocalCertificate(provider->Security, (unsigned char *)ospvLocalCertificate, &custId, &devId);
+            if ((errorcode == OSPC_ERR_NO_ERROR) && (custId != 0) && (devId != 0)) {
                 /* set Customer Id */
                 OSPPProviderSetCustId(provider, custId);
 
                 /* set Device Id */
                 OSPPProviderSetDeviceId(provider, devId);
-
             }
         }
     }
@@ -1232,21 +1071,16 @@ OSPPProviderSetLocalKeys(
  *
  * returns OSPC_ERR_NO_ERROR if successful, error code otherwise.
  */
-
-int
-OSPPProviderSetLocalValidation(
-    OSPTPROVHANDLE      ospvProvider,         /* In - Provider handle             */
-    unsigned            ospvLocalValidation)  /* In - Local validation indicator  */
+int OSPPProviderSetLocalValidation(
+    OSPTPROVHANDLE ospvProvider,    /* In - Provider handle             */
+    unsigned ospvLocalValidation)   /* In - Local validation indicator  */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-    {
-        errorcode = OSPPSecSetLocalValidation(  provider->Security, 
-                                              ospvLocalValidation);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPSecSetLocalValidation(provider->Security, ospvLocalValidation);
     }
 
     return errorcode;
@@ -1257,49 +1091,34 @@ OSPPProviderSetLocalValidation(
  * Sets the maximum message count for each SP configured
  */
 int OSPPProviderSetSPMessageCount(
-    void        *ospvcomm,              /* In - Comm Manager handle    */
-    unsigned long       ospvMessageCount[]         /* In - Message count for each SP*/
-)
+    void *ospvcomm,                     /* In - Comm Manager handle    */
+    unsigned long ospvMessageCount[])   /* In - Message count for each SP */
 {
-    OSPTSVCPT       *svcptlist  = OSPC_OSNULL,
-                    *svcptitem  = OSPC_OSNULL;
-    int         i=0,errorcode = OSPC_ERR_NO_ERROR;
-    OSPTCOMM    *comm = (OSPTCOMM *)ospvcomm;
+    OSPTSVCPT *svcptlist = OSPC_OSNULL, *svcptitem = OSPC_OSNULL;
+    int i = 0, errorcode = OSPC_ERR_NO_ERROR;
+    OSPTCOMM *comm = (OSPTCOMM *)ospvcomm;
 
     /*
      * get a pointer to the service point list
      */
-     OSPPCommGetServicePointList(comm,&svcptlist);
+    OSPPCommGetServicePointList(comm, &svcptlist);
 
-     svcptitem  =
-                  (OSPTSVCPT *)OSPPListFirst(
-                  (OSPTLIST *)&svcptlist);
+    svcptitem = (OSPTSVCPT *)OSPPListFirst((OSPTLIST *) & svcptlist);
 
-     if (ospvMessageCount != NULL)
-     {
-        while (svcptitem!= OSPC_OSNULL)
-        {
-           svcptitem->MaxMsgAllowed = ospvMessageCount[i++];
-           svcptitem  = (OSPTSVCPT *)OSPPListNext(
-                            (OSPTLIST *)&svcptlist,
-                            svcptitem);
+    if (ospvMessageCount != NULL) {
+        while (svcptitem != OSPC_OSNULL) {
+            svcptitem->MaxMsgAllowed = ospvMessageCount[i++];
+            svcptitem = (OSPTSVCPT *)OSPPListNext((OSPTLIST *) & svcptlist, svcptitem);
         }
-     }
-     else
-     {
-        while (svcptitem!= OSPC_OSNULL)
-        {
-           svcptitem->MaxMsgAllowed = 0;
-           svcptitem  = (OSPTSVCPT *)OSPPListNext(
-                            (OSPTLIST *)&svcptlist,
-                            svcptitem);
+    } else {
+        while (svcptitem != OSPC_OSNULL) {
+            svcptitem->MaxMsgAllowed = 0;
+            svcptitem = (OSPTSVCPT *)OSPPListNext((OSPTLIST *) & svcptlist, svcptitem);
         }
-     }
+    }
 
     return errorcode;
 }
-
-
 
 /* 
  * OSPPProviderSetServicePoints()
@@ -1348,42 +1167,32 @@ int OSPPProviderSetSPMessageCount(
  *      Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  *
  */
-int
-OSPPProviderSetServicePoints(
-    OSPTPROVHANDLE  ospvProvider,              /* In - Provider handle    */
-    unsigned        ospvNumberOfServicePoints, /* In - New svc pt cnt     */
-    unsigned long   ospvMessageCount[],          /* In - Message cnt     */
-    const char      *ospvServicePoints[])      /* In - New svc pt strings */
+int OSPPProviderSetServicePoints(
+    OSPTPROVHANDLE ospvProvider,        /* In - Provider handle    */
+    unsigned ospvNumberOfServicePoints, /* In - New svc pt cnt     */
+    unsigned long ospvMessageCount[],   /* In - Message cnt     */
+    const char *ospvServicePoints[])    /* In - New svc pt strings */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (OSPC_ERR_NO_ERROR == errorcode)
-    {
+    if (OSPC_ERR_NO_ERROR == errorcode) {
         provider = OSPPProviderGetContext(ospvProvider, &errorcode);
     }
 
-
-    if (OSPC_ERR_NO_ERROR == errorcode)
-    {
-        errorcode = OSPPCommUpdateURLs( provider->Comm,
-                                        ospvNumberOfServicePoints,
-                                        ospvServicePoints);
+    if (OSPC_ERR_NO_ERROR == errorcode) {
+        errorcode = OSPPCommUpdateURLs(provider->Comm, ospvNumberOfServicePoints, ospvServicePoints);
     }
 
     /*
      * set message counts for all SP
      */
-     if (errorcode == OSPC_ERR_NO_ERROR)
-     {
-         errorcode = OSPPProviderSetSPMessageCount((void *)provider->Comm,
-                                                    ospvMessageCount);
-     }
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPProviderSetSPMessageCount((void *) provider->Comm, ospvMessageCount);
+    }
 
     return errorcode;
-
 }
-
 
 /*
  * 
@@ -1391,43 +1200,32 @@ OSPPProviderSetServicePoints(
  * for exchanging capabilities messages.
  *
  */
-int
-OSPPProviderSetCapabilitiesURLs(
-    OSPTPROVHANDLE  ospvProvider,              /* In - Provider handle     */
-    unsigned        ospvNumberOfURLs,          /* In - New svc url cnt     */
-    unsigned long   ospvMessageCount[],          /* In - Msg count for URL */
-    const char      *ospvCapabilitiesURLs[])   /* In - New svc url strings */
+int OSPPProviderSetCapabilitiesURLs(
+    OSPTPROVHANDLE ospvProvider,         /* In - Provider handle     */
+    unsigned ospvNumberOfURLs,           /* In - New svc url cnt     */
+    unsigned long ospvMessageCount[],    /* In - Msg count for URL */
+    const char *ospvCapabilitiesURLs[])  /* In - New svc url strings */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (OSPC_ERR_NO_ERROR == errorcode)
-    {
+    if (OSPC_ERR_NO_ERROR == errorcode) {
         provider = OSPPProviderGetContext(ospvProvider, &errorcode);
     }
 
-
-    if (OSPC_ERR_NO_ERROR == errorcode)
-    {
-        errorcode = OSPPCommUpdateURLs( provider->CommForCapabilities,
-                                        ospvNumberOfURLs,
-                                        ospvCapabilitiesURLs);
+    if (OSPC_ERR_NO_ERROR == errorcode) {
+        errorcode = OSPPCommUpdateURLs(provider->CommForCapabilities, ospvNumberOfURLs, ospvCapabilitiesURLs);
     }
-
 
     /*
      * set message counts for all Comm SP
      */
-     if (errorcode == OSPC_ERR_NO_ERROR)
-     {
-         errorcode = OSPPProviderSetSPMessageCount((void *)provider->CommForCapabilities,
-                                                    ospvMessageCount);
-     }
-
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPProviderSetSPMessageCount((void *) provider->CommForCapabilities, ospvMessageCount);
+    }
 
     return errorcode;
 }
-
 
 /* 
  * OSPPProviderSetSSLLifetime()
@@ -1446,20 +1244,17 @@ OSPPProviderSetCapabilitiesURLs(
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
-
-int
-OSPPProviderSetSSLLifetime(
-    OSPTPROVHANDLE ospvProvider,    /* In - Provider handle  */
-    unsigned       ospvSSLLifetime) /* In - New SSL Lifetime */
+int OSPPProviderSetSSLLifetime(
+    OSPTPROVHANDLE ospvProvider,/* In - Provider handle  */
+    unsigned ospvSSLLifetime)   /* In - New SSL Lifetime */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
-    int          errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     provider = OSPPProviderGetContext(ospvProvider, &errorcode);
-
-    if (errorcode == OSPC_ERR_NO_ERROR) 
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPPSecSetSSLLifetime(provider->Security, ospvSSLLifetime);
+    }
 
     return errorcode;
 }
-

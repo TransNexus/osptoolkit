@@ -29,32 +29,32 @@
 
 const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     /* For Alt/Info attributes */
-    { OSPC_ALTINFO_E164,              "e164" },
-    { OSPC_ALTINFO_H323,              "h323" },
-    { OSPC_ALTINFO_URL,               "url" },
-    { OSPC_ALTINFO_EMAIL,             "email" },
-    { OSPC_ALTINFO_TRANSPORT,         "transport" },
-    { OSPC_ALTINFO_INTERNATIONAL,     "international" },
-    { OSPC_ALTINFO_NATIONAL,          "national" },
-    { OSPC_ALTINFO_NETWORK,           "network" },
-    { OSPC_ALTINFO_SUBSCRIBER,        "subscriber" },
-    { OSPC_ALTINFO_ABBREVIATED,       "abbreviated" },
-    { OSPC_ALTINFO_E164PREFIX,        "e164prefix" },
-    { OSPC_ALTINFO_SIP,               "sip" },
-    { OSPC_ALTINFO_XMPP,              "xmpp" },
-    { OSPC_ALTINFO_Q850,              "q850" },
-    { OSPC_ALTINFO_DEVICEID,          "deviceid" },
-    { OSPC_ALTINFO_ASSERTEDID,        "assertedid" },
-    { OSPC_ALTINFO_ROUTINGNUM,        "routingnumber" },
+    { OSPC_ALTINFO_E164,            "e164" },
+    { OSPC_ALTINFO_H323,            "h323" },
+    { OSPC_ALTINFO_URL,             "url" },
+    { OSPC_ALTINFO_EMAIL,           "email" },
+    { OSPC_ALTINFO_TRANSPORT,       "transport" },
+    { OSPC_ALTINFO_INTERNATIONAL,   "international" },
+    { OSPC_ALTINFO_NATIONAL,        "national" },
+    { OSPC_ALTINFO_NETWORK,         "network" },
+    { OSPC_ALTINFO_SUBSCRIBER,      "subscriber" },
+    { OSPC_ALTINFO_ABBREVIATED,     "abbreviated" },
+    { OSPC_ALTINFO_E164PREFIX,      "e164prefix" },
+    { OSPC_ALTINFO_SIP,             "sip" },
+    { OSPC_ALTINFO_XMPP,            "xmpp" },
+    { OSPC_ALTINFO_Q850,            "q850" },
+    { OSPC_ALTINFO_DEVICEID,        "deviceid" },
+    { OSPC_ALTINFO_ASSERTEDID,      "assertedid" },
+    { OSPC_ALTINFO_ROUTINGNUM,      "routingnumber" },
     /* For other attributes */
-    { OSPC_ALTINFO_FALSE,             "flase" },
-    { OSPC_ALTINFO_BASE64,            "base64" },
-    { OSPC_ALTINFO_CDATA,             "cdata" },
-    { OSPC_ALTINFO_FORWARD,           "forward" },
-    { OSPC_ALTINFO_REVERSE,           "reverse" },
-    { OSPC_ALTINFO_GENERAL,           "general" },
-    { OSPC_ALTINFO_INBOUND,           "inbound" },
-    { OSPC_ALTINFO_OUTBOUND,          "outbound" }
+    { OSPC_ALTINFO_FALSE,           "flase" },
+    { OSPC_ALTINFO_BASE64,          "base64" },
+    { OSPC_ALTINFO_CDATA,           "cdata" },
+    { OSPC_ALTINFO_FORWARD,         "forward" },
+    { OSPC_ALTINFO_REVERSE,         "reverse" },
+    { OSPC_ALTINFO_GENERAL,         "general" },
+    { OSPC_ALTINFO_INBOUND,         "inbound" },
+    { OSPC_ALTINFO_OUTBOUND,        "outbound" }
 };
 
 /*
@@ -103,10 +103,8 @@ OSPT_ALTINFO *OSPPAltInfoNew(   /* returns ptr to altinfo or null */
 
     if (ospvLen > 0) {
         if (ospvValue != OSPC_OSNULL) {
-
             /* try to allocate the memory for the entire object */
             OSPM_MALLOC(ospvAltInfo, OSPT_ALTINFO, sizeof(OSPT_ALTINFO) + ospvLen + 1);
-
             /* make sure the allocation succeeded before proceeding */
             if (ospvAltInfo != OSPC_OSNULL) {
                 /* calculate where the "hidden" values will go */
@@ -189,8 +187,8 @@ const char *OSPPAltInfoGetValue(
  * OSPPAltInfoToElement() - create an XML element from a altinfo
  */
 unsigned OSPPAltInfoToElement(      /* returns error code */
-    OSPT_ALTINFO * ospvAltInfo,     /* In - altinfo */
-    OSPT_XML_ELEM ** ospvElem,      /* Out - XML element pointer */
+    OSPT_ALTINFO *ospvAltInfo,      /* In - altinfo */
+    OSPT_XML_ELEM **ospvElem,       /* Out - XML element pointer */
     OSPE_MSG_ELEM ospvPart)         /* In -source or dest alternate */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -206,10 +204,8 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
 
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ospvPart), OSPPAltInfoGetValue(ospvAltInfo));
-
         if (ospvElem != OSPC_OSNULL) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->ospmAltInfoType));       
-
             if (attr == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ATTR;
             }

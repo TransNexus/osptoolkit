@@ -80,7 +80,7 @@ extern "C" {
             unsigned *ospvCertificateCount);
     int OSPPSecDelete(OSPTSEC **ospvSecurity);
     int OSPPSecVerifyRootAuthorityCertificate(OSPTSEC *ospvSecurity, void *ospvRootCACert, int ospvRootCACertLen);
-    int OSPPSecSetAuthorityCertificates(OSPTSEC *ospvSecurity, unsigned ospvNumberOfAuthorityCertificates, const OSPTCERT *ospvAuthorityCertificates[]);
+    int OSPPSecSetAuthorityCertificates(OSPTSEC *ospvSecurity, unsigned ospvNumberOfAuthorityCertificates, const OSPT_CERT *ospvAuthorityCertificates[]);
     int OSPPSecSignatureCreate(OSPTSEC *ospvSecurity, unsigned char *ospvContent, unsigned ospvContentLength, unsigned char **ospvSignature,
             unsigned *ospvSignatureLength, int ospvSignatureOnly);
     int OSPPSecSignatureVerify(OSPTSEC *ospvSecurity, unsigned char **ospvContent, unsigned *ospvContentLength, unsigned char *ospvSignature,

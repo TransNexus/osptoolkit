@@ -98,7 +98,7 @@ OSPT_XML_ATTR *OSPPXMLAttrNew(  /* returns the new attribute (or NULL) */
         }
     }
 
-    return (ospvAttr);
+    return ospvAttr;
 }
 
 /*
@@ -127,7 +127,7 @@ const char *OSPPXMLAttrGetName(
         ospvName = ospvAttr->ospmXMLAttrName;
     }
 
-    return (ospvName);
+    return ospvName;
 }
 
 /*
@@ -143,5 +143,5 @@ const char *OSPPXMLAttrGetValue(
         ospvValue = ospvAttr->ospmXMLAttrValue;
     }
 
-    return (ospvValue);
+    return ospvValue;
 }

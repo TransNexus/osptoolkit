@@ -39,7 +39,7 @@ typedef struct _NBAUTHREQ {
     OSPE_NUMBER_FORMAT ospvCalledNumberFormat;  /* In - Called number Format */
     const char *ospvUser;                       /* In - End user (optional) */
     unsigned ospvNumberOfCallIds;               /* In - Number of call identifiers */
-    OSPTCALLID **ospvCallIds;                   /* In - List of call identifiers */
+    OSPT_CALL_ID **ospvCallIds;                   /* In - List of call identifiers */
     const char **ospvPreferredDestinations;     /* In - List of preferred destinations for call */
     unsigned *ospvNumberOfDestinations;         /* In\Out - Max number of destinations \ Actual number of dests authorised */
     unsigned *ospvSizeOfDetailLog;              /* In\Out - Max size of detail log \ Actual size of detail log */
@@ -161,7 +161,7 @@ int newNBDATA(NBDATA **nbData, int MessageType)
         errorcode = OSPC_ERR_MSGQ_NO_MEMORY;
     }
 
-    return (errorcode);
+    return errorcode;
 }
 
 /*
@@ -181,7 +181,7 @@ int deleteNBDATA(NBDATA * nbData)
         OSPM_FREE(nbData);
     }
 
-    return (errorcode);
+    return errorcode;
 }
 
 int NonBlockingQueueMonitorNew(NBMONITOR **nbMonitor,
@@ -365,7 +365,7 @@ OSPTTHREADRETURN WorkThread(void *arg)
         /*
          * block waiting for a message to process
          */
-        if (OSPC_ERR_NO_ERROR == SyncQueueRemoveTransaction(nbMonitor->SyncQue, (void **) &transaction)) {
+        if (OSPC_ERR_NO_ERROR == SyncQueueRemoveTransaction(nbMonitor->SyncQue, (void **)&transaction)) {
             NonBlockingQueueMonitorIncrementActiveWorkThreadCounter(nbMonitor);
 
             // Time stamp OUT QUEUE
@@ -641,7 +641,7 @@ int OSPPTransactionRequestAuthorisation_nb(NBMONITOR *nbMonitor,    /* In - NBMo
     OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                      /* In - Called number Format */
     const char *ospvUser,                                           /* In - End user (optional) */
     unsigned ospvNumberOfCallIds,                                   /* In - Number of call identifiers */
-    OSPTCALLID *ospvCallIds[],                                      /* In - List of call identifiers */
+    OSPT_CALL_ID *ospvCallIds[],                                      /* In - List of call identifiers */
     const char *ospvPreferredDestinations[],                        /* In - List of preferred destinations for call */
     unsigned *ospvNumberOfDestinations,                             /* In\Out - Max number of destinations \ Actual number of dests authorised */
     unsigned *ospvSizeOfDetailLog,                                  /* In\Out - Max size of detail log \ Actual size of detail log */
@@ -898,5 +898,5 @@ int OSPPTransactionIndicateCapabilities_nb(NBMONITOR *nbMonitor,    /* In - NBMo
 OSPTUINT64 GetDeltaMS(OSPTTIME FromTimeSec, unsigned int FromTimeMS,
     OSPTTIME ToTimeSec, unsigned int ToTimeMS)
 {
-    return (1000 * (ToTimeSec - FromTimeSec) + (ToTimeMS - FromTimeMS));
+    return(1000 * (ToTimeSec - FromTimeSec) + (ToTimeMS - FromTimeMS));
 }

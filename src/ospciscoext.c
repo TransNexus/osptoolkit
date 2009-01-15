@@ -15,13 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * ospciscoext.c - Functions for Cisco audit element.
  */
@@ -31,15 +24,11 @@
 #include "osp/ospmsg.h"
 #include "osp/ospmsgattr.h"
 
-void           
-OSPPCSAuditDelete(
-    OSPTCSAUDIT **ospvCSAudit
-)
+void OSPPCSAuditDelete(
+    OSPTCSAUDIT **ospvCSAudit)
 {
-    if (*ospvCSAudit != OSPC_OSNULL)
-    {
-        if ((*ospvCSAudit)->ospmAuditTrigger != OSPC_OSNULL ) 
-        {
+    if (*ospvCSAudit != OSPC_OSNULL) {
+        if ((*ospvCSAudit)->ospmAuditTrigger != OSPC_OSNULL) {
             OSPM_FREE((*ospvCSAudit)->ospmAuditTrigger);
             (*ospvCSAudit)->ospmAuditTrigger = OSPC_OSNULL;
         }
@@ -47,50 +36,38 @@ OSPPCSAuditDelete(
         OSPM_FREE(*ospvCSAudit);
         *ospvCSAudit = OSPC_OSNULL;
     }
-
-    return;
 }
 
-int       
-OSPPCSAuditFromElement(
+int OSPPCSAuditFromElement(
     OSPT_XML_ELEM *ospvElem, 
-    OSPTCSAUDIT **ospvCSAudit
-)
+    OSPTCSAUDIT **ospvCSAudit)
 {
-    int             errorcode   = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvElem  == OSPC_OSNULL) 
-    {
+    if (ospvElem == OSPC_OSNULL) {
         errorcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvCSAudit == OSPC_OSNULL) 
-    {
+    if (ospvCSAudit == OSPC_OSNULL) {
         errorcode = OSPC_ERR_DATA_NO_STATUS;
     }
 
     /* create the CSAudit structure */
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvCSAudit = OSPPCSAuditNew();
-        if (*ospvCSAudit == OSPC_OSNULL)
-        {
+        if (*ospvCSAudit == OSPC_OSNULL) {
             errorcode = OSPC_ERR_AUDIT_MALLOC_FAILED;
         }
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
          * The CSAudit element should consist of one element.
          *  
          */
-        if(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_CSAUDITTRIGGER)
-        {
+        if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_CSAUDITTRIGGER) {
             OSPPCSAuditSetTrigger(*ospvCSAudit, (unsigned char *)OSPPXMLElemGetValue(ospvElem));
-        }
-        else if (OSPPMsgElemIsCritical(ospvElem))
-        {
+        } else if (OSPPMsgElemIsCritical(ospvElem)) {
             errorcode = OSPC_ERR_XML_BAD_ELEMENT;
         }
     }
@@ -98,17 +75,12 @@ OSPPCSAuditFromElement(
     return errorcode;
 }
 
-unsigned char  *
-OSPPCSAuditGetTrigger(
-   OSPTCSAUDIT *ospvCSAudit
-)
+unsigned char *OSPPCSAuditGetTrigger(
+    OSPTCSAUDIT *ospvCSAudit)
 {
-    if(ospvCSAudit != OSPC_OSNULL)
-    {
+    if (ospvCSAudit != OSPC_OSNULL) {
         return ospvCSAudit->ospmAuditTrigger;
-    }
-    else
-    {
+    } else {
         return OSPC_OSNULL;
     }
 }
@@ -116,7 +88,7 @@ OSPPCSAuditGetTrigger(
 OSPTBOOL OSPPCSAuditHasTrigger(
     OSPTCSAUDIT *ospvCSAudit)
 {
-    if(ospvCSAudit != OSPC_OSNULL) {
+    if (ospvCSAudit != OSPC_OSNULL) {
         return(ospvCSAudit->ospmAuditTrigger != OSPC_OSNULL);
     } else {
         return OSPC_FALSE;
@@ -129,35 +101,31 @@ OSPTCSAUDIT *OSPPCSAuditNew(void)
 
     /* try to allocate the memory for the entire object */
     OSPM_MALLOC(ospvCSAudit, OSPTCSAUDIT, sizeof(OSPTCSAUDIT));
-    if(ospvCSAudit != OSPC_OSNULL)
-    {
+    if (ospvCSAudit != OSPC_OSNULL) {
         /* Initialize it */
         OSPM_MEMSET(ospvCSAudit, 0, sizeof(OSPTCSAUDIT));
         ospvCSAudit->ospmAuditTrigger = OSPC_OSNULL;
     }
 
-    return(ospvCSAudit);
+    return ospvCSAudit;
 }
 
-void           
-OSPPCSAuditSetTrigger(
+void OSPPCSAuditSetTrigger(
     OSPTCSAUDIT *ospvCSAudit, 
-    unsigned char *ospvAuditTrigger
-)
+    unsigned char *ospvAuditTrigger)
 {
     if (ospvCSAudit != OSPC_OSNULL) {
-        if(ospvAuditTrigger != OSPC_OSNULL) {
+        if (ospvAuditTrigger != OSPC_OSNULL) {
             if (ospvCSAudit->ospmAuditTrigger != OSPC_OSNULL) {
                 OSPM_FREE(ospvCSAudit->ospmAuditTrigger);
                 ospvCSAudit->ospmAuditTrigger = OSPC_OSNULL;
             }
 
-            OSPM_MALLOC(ospvCSAudit->ospmAuditTrigger, unsigned char, OSPM_STRLEN((const char *)ospvAuditTrigger)+1);
+            OSPM_MALLOC(ospvCSAudit->ospmAuditTrigger, unsigned char, OSPM_STRLEN((const char *)ospvAuditTrigger) + 1);
 
             if (ospvCSAudit->ospmAuditTrigger != OSPC_OSNULL) {
-                OSPM_MEMCPY(ospvCSAudit->ospmAuditTrigger, (const char *)ospvAuditTrigger, OSPM_STRLEN((const char *)ospvAuditTrigger)+1);
+                OSPM_MEMCPY(ospvCSAudit->ospmAuditTrigger, (const char *)ospvAuditTrigger, OSPM_STRLEN((const char *)ospvAuditTrigger) + 1);
             }
         }
     }
 }
-

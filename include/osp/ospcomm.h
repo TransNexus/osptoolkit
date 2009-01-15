@@ -50,7 +50,7 @@
 /*
  * service point typedef
  */
-typedef struct _OSPTSVCPT {
+typedef struct {
     OSPTLISTLINK Link;
     OSPTIPADDR IpAddr;      /* network byte order */
     time_t DegradedTime;
@@ -67,7 +67,7 @@ typedef struct _OSPTSVCPT {
 /*
  * communication manager typedef
  */
-typedef struct _OSPTCOMM {
+typedef struct {
     OSPTMUTEX Mutex;
     OSPTTHREADID ThreadId;
     /* bit 1: 0 - run       1 - commshutdown */

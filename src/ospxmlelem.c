@@ -100,7 +100,7 @@ OSPT_XML_ELEM *OSPPXMLElemNew(  /* returns the new element (or NULL) */
         }
     }
 
-    return (ospvElem);
+    return ospvElem;
 }
 
 /*
@@ -143,7 +143,7 @@ const char *OSPPXMLElemGetName( /* returns pointer to name */
         ospvName = ospvElem->ospmXMLElemName;
     }                  
 
-    return (ospvName);
+    return ospvName;
 }
 
 /*
@@ -159,7 +159,7 @@ const char *OSPPXMLElemGetValue(    /* returns pointer to character value */
         ospvValue = ospvElem->ospmXMLElemValue;
     }
 
-    return (ospvValue);
+    return ospvValue;
 }
 
 /*
@@ -190,7 +190,7 @@ OSPT_XML_ELEM *OSPPXMLElemFirstChild( /* returns pointer to child or NULL */
         ospvChild = (OSPT_XML_ELEM *)OSPPListFirst(&(ospvElem->ospmXMLElemChild));
     }
 
-    return (ospvChild);
+    return ospvChild;
 }
 
 /*
@@ -205,11 +205,11 @@ OSPT_XML_ELEM *OSPPXMLElemNextChild(  /* returns pointer to child or NULL */
 
     if (ospvElem != OSPC_OSNULL) {
         if (ospvChild != OSPC_OSNULL) {
-            ospvNext = (OSPT_XML_ELEM *) OSPPListNext(&(ospvElem->ospmXMLElemChild), ospvChild);
+            ospvNext = (OSPT_XML_ELEM *)OSPPListNext(&(ospvElem->ospmXMLElemChild), ospvChild);
         }
     }
 
-    return (ospvNext);
+    return ospvNext;
 }
 
 /*
@@ -239,7 +239,7 @@ OSPT_XML_ATTR *OSPPXMLElemFirstAttr(  /* returns pointer to attribute or NULL */
     if (ospvElem != OSPC_OSNULL) {
         ospvAttr = (OSPT_XML_ATTR *)OSPPListFirst(&(ospvElem->ospmXMLElemAttrs));
     }
-    return (ospvAttr);
+    return ospvAttr;
 }
 
 /*
@@ -258,5 +258,5 @@ OSPT_XML_ATTR *OSPPXMLElemNextAttr(   /* returns pointer to attribute or NULL */
         }
     }
 
-    return (ospvNext);
+    return ospvNext;
 }

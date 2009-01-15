@@ -42,7 +42,7 @@ extern "C" {
     int OSPPUtilBuildString(OSPTUINT64, int, char **);
     void OSPPUtilStringToLowercase(char **);
     int OSPPUtilLoadPEMPrivateKey(unsigned char *fileName, OSPTPRIVATEKEY *key);
-    int OSPPUtilLoadPEMCert(unsigned char *fileName, OSPTCERT *cert);
+    int OSPPUtilLoadPEMCert(unsigned char *fileName, OSPT_CERT *cert);
 
 #ifdef __cplusplus
 }

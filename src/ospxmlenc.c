@@ -75,7 +75,7 @@ int OSPPXMLDocCreate(         /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -135,9 +135,9 @@ int OSPPXMLDocAddElem(        /* returns error code */
     /**** STEP 3: add the attributes */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* the "for" loop steps through each attribute */
-        for (attr = (OSPT_XML_ATTR *) OSPPXMLElemFirstAttr(ospvElem);
+        for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElem);
             ((attr != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
-            attr = (OSPT_XML_ATTR *) OSPPXMLElemNextAttr(ospvElem, attr))
+            attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
         {
             /*
              * Attributes are separated by spaces, and we add a space
@@ -161,7 +161,7 @@ int OSPPXMLDocAddElem(        /* returns error code */
          * can, however, include attributes (so make sure the step
          * followes adding attributes
          */
-        child = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvElem);
+        child = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
         if ((child == OSPC_OSNULL) && (vallen == 0)) {
             /* if the element is empty, go ahead and add the trailer */
             ospvErrCode = OSPPXMLDocAddChar(ospvBfrAddr, OSPC_XMLDOC_TRAILER);
@@ -178,9 +178,9 @@ int OSPPXMLDocAddElem(        /* returns error code */
     /**** STEP 6: add the child elements */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* the "for" loop walks through all child elements */
-        for (child = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvElem);
+        for (child = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
             ((child != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
-            child = (OSPT_XML_ELEM *) OSPPXMLElemNextChild(ospvElem, child))
+            child = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, child))
         {
             /*
              * Call ourselves recursively. Since OSP documents aren't
@@ -210,7 +210,7 @@ int OSPPXMLDocAddElem(        /* returns error code */
          * can, however, include attributes (so we don't bother to
          * check for attributes or not).
          */
-        child = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvElem);
+        child = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
         if ((child != OSPC_OSNULL) || (vallen != 0)) {
             /* first is the opening bracket */
             ospvErrCode = OSPPXMLDocAddChar(ospvBfrAddr, OSPC_XMLDOC_OPEN);
@@ -234,7 +234,7 @@ int OSPPXMLDocAddElem(        /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -276,7 +276,7 @@ int OSPPXMLDocAddElemName(    /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -341,7 +341,7 @@ int OSPPXMLDocAddAttr(        /* returns error code */
         ospvErrCode = OSPPXMLDocAddChar(ospvBfrAddr, OSPC_XMLDOC_QUOTE);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -389,7 +389,7 @@ int OSPPXMLDocAddAttrName(    /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -425,5 +425,5 @@ int OSPPXMLDocAddChar(        /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }

@@ -35,7 +35,7 @@ typedef struct {
     OSPTTIME ospmAuthIndTimestamp;
     OSPE_ROLE ospmAuthIndRole;
     OSPTBOOL ospmAuthIndHasRole;
-    OSPTCALLID *ospmAuthIndCallId;
+    OSPT_CALL_ID *ospmAuthIndCallId;
     char ospmAuthIndSourceNumber[OSPC_SIZE_E164NUM];
     char ospmAuthIndDestNumber[OSPC_SIZE_E164NUM];
     OSPTLIST ospmAuthIndSourceAlternate;
@@ -44,9 +44,9 @@ typedef struct {
     OSPTLIST ospmAuthIndTokens;
     OSPTBOOL ospmAuthIndHasTimeLimit;
     unsigned ospmAuthIndTimeLimit;
-    OSPTDEST *ospmAuthIndDest;
+    OSPT_DEST *ospmAuthIndDest;
     OSPTBOOL ospmAuthIndHasDestNetworkIdInToken;
-} OSPTAUTHIND;
+} OSPT_AUTH_IND;
 
 #define OSPPAuthIndTokenGetSize(ospvToken) OSPPTokenGetSize(ospvToken);
 #define OSPPAuthIndTokenGetValue(ospvToken) OSPPTokenGetValue(ospvToken);
@@ -57,35 +57,35 @@ typedef struct {
 extern "C" {
 #endif
 
-    void OSPPAuthIndDelete(OSPTAUTHIND **);
-    OSPTAUTHIND *OSPPAuthIndNew(void);
-    void OSPPAuthIndSetCallId(OSPTAUTHIND *, OSPTCALLID *);
-    void OSPPAuthIndSetTimestamp(OSPTAUTHIND *, OSPTTIME);
-    OSPTBOOL OSPPAuthIndHasRole(OSPTAUTHIND *);
-    void OSPPAuthIndSetRole(OSPTAUTHIND *, OSPE_ROLE);
-    OSPE_ROLE OSPPAuthIndGetRole(OSPTAUTHIND *);
-    OSPTBOOL OSPPAuthIndHasCallId(OSPTAUTHIND *);
-    OSPTCALLID *OSPPAuthIndGetCallId(OSPTAUTHIND *);
-    unsigned OSPPAuthIndGetCallIdSize(OSPTAUTHIND *);
-    unsigned char *OSPPAuthIndGetCallIdValue(OSPTAUTHIND *);
-    OSPTBOOL OSPPAuthIndHasSourceNumber(OSPTAUTHIND *ospvAuthInd);
-    void OSPPAuthIndSetSourceNumber(OSPTAUTHIND *, const char *);
-    const char *OSPPAuthIndGetSourceNumber(OSPTAUTHIND *);
-    OSPTBOOL OSPPAuthIndHasDestNumber(OSPTAUTHIND *ospvAuthInd);
-    void OSPPAuthIndSetDestNumber(OSPTAUTHIND *, const char *);
-    const char *OSPPAuthIndGetDestNumber(OSPTAUTHIND *);
-    void OSPPAuthIndSetDest(OSPTAUTHIND *, OSPTDEST *);
-    OSPTBOOL OSPPAuthIndHasDest(OSPTAUTHIND *);
-    OSPTBOOL OSPPAuthIndHasSourceAlt(OSPTAUTHIND *);
-    OSPT_ALTINFO *OSPPAuthIndFirstSourceAlt(OSPTAUTHIND *);
-    OSPT_ALTINFO *OSPPAuthIndNextSourceAlt(OSPTAUTHIND *, OSPT_ALTINFO *);
+    void OSPPAuthIndDelete(OSPT_AUTH_IND **);
+    OSPT_AUTH_IND *OSPPAuthIndNew(void);
+    void OSPPAuthIndSetCallId(OSPT_AUTH_IND *, OSPT_CALL_ID *);
+    void OSPPAuthIndSetTimestamp(OSPT_AUTH_IND *, OSPTTIME);
+    OSPTBOOL OSPPAuthIndHasRole(OSPT_AUTH_IND *);
+    void OSPPAuthIndSetRole(OSPT_AUTH_IND *, OSPE_ROLE);
+    OSPE_ROLE OSPPAuthIndGetRole(OSPT_AUTH_IND *);
+    OSPTBOOL OSPPAuthIndHasCallId(OSPT_AUTH_IND *);
+    OSPT_CALL_ID *OSPPAuthIndGetCallId(OSPT_AUTH_IND *);
+    unsigned OSPPAuthIndGetCallIdSize(OSPT_AUTH_IND *);
+    unsigned char *OSPPAuthIndGetCallIdValue(OSPT_AUTH_IND *);
+    OSPTBOOL OSPPAuthIndHasSourceNumber(OSPT_AUTH_IND *ospvAuthInd);
+    void OSPPAuthIndSetSourceNumber(OSPT_AUTH_IND *, const char *);
+    const char *OSPPAuthIndGetSourceNumber(OSPT_AUTH_IND *);
+    OSPTBOOL OSPPAuthIndHasDestNumber(OSPT_AUTH_IND *ospvAuthInd);
+    void OSPPAuthIndSetDestNumber(OSPT_AUTH_IND *, const char *);
+    const char *OSPPAuthIndGetDestNumber(OSPT_AUTH_IND *);
+    void OSPPAuthIndSetDest(OSPT_AUTH_IND *, OSPT_DEST *);
+    OSPTBOOL OSPPAuthIndHasDest(OSPT_AUTH_IND *);
+    OSPTBOOL OSPPAuthIndHasSourceAlt(OSPT_AUTH_IND *);
+    OSPT_ALTINFO *OSPPAuthIndFirstSourceAlt(OSPT_AUTH_IND *);
+    OSPT_ALTINFO *OSPPAuthIndNextSourceAlt(OSPT_AUTH_IND *, OSPT_ALTINFO *);
     const char *OSPPAuthIndGetSourceAltValue(OSPT_ALTINFO *);
-    OSPTBOOL OSPPAuthIndHasDestinationAlt(OSPTAUTHIND *);
+    OSPTBOOL OSPPAuthIndHasDestinationAlt(OSPT_AUTH_IND *);
     unsigned OSPPAuthIndGetDestinationAltSize(OSPT_ALTINFO *);
-    OSPT_ALTINFO *OSPPAuthIndFirstDestinationAlt(OSPTAUTHIND *);
-    OSPT_ALTINFO *OSPPAuthIndNextDestinationAlt(OSPTAUTHIND *, OSPT_ALTINFO *);
+    OSPT_ALTINFO *OSPPAuthIndFirstDestinationAlt(OSPT_AUTH_IND *);
+    OSPT_ALTINFO *OSPPAuthIndNextDestinationAlt(OSPT_AUTH_IND *, OSPT_ALTINFO *);
     const char *OSPPAuthIndGetDestinationAltValue(OSPT_ALTINFO *);
-    void OSPPAuthIndSetTimeLimit(OSPTAUTHIND *, unsigned);
+    void OSPPAuthIndSetTimeLimit(OSPT_AUTH_IND *, unsigned);
 
 #ifdef __cplusplus
 }

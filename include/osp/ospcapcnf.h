@@ -30,7 +30,7 @@
 
 typedef struct {
     OSPTSTATUS *ospmStatus;
-} OSPTCAPCNF;
+} OSPT_CAP_CNF;
 
 /* Function Prototypes */
 
@@ -38,9 +38,9 @@ typedef struct {
 extern "C" {
 #endif
 
-    unsigned OSPPCapCnfNew(OSPTCAPCNF **);
-    void OSPPCapCnfDelete(OSPTCAPCNF **);
-    unsigned OSPPCapCnfFromElement(OSPT_XML_ELEM *, OSPTCAPCNF **);
+    unsigned OSPPCapCnfNew(OSPT_CAP_CNF **);
+    void OSPPCapCnfDelete(OSPT_CAP_CNF **);
+    unsigned OSPPCapCnfFromElement(OSPT_XML_ELEM *, OSPT_CAP_CNF **);
 
 #ifdef __cplusplus
 }

@@ -72,14 +72,14 @@ typedef enum {
  */
 typedef struct _OSPTTRANS {
     struct _OSPTPROVIDER *Provider;
-    OSPTAUTHREQ *AuthReq;
-    OSPTAUTHRSP *AuthRsp;
-    OSPTDEST *CurrentDest;
-    OSPTAUTHIND *AuthInd;
-    OSPTAUTHCNF *AuthCnf;
-    OSPTLIST UsageInd;            /* list of OSPT_USAGEIND */
+    OSPT_AUTH_REQ *AuthReq;
+    OSPT_AUTH_RSP *AuthRsp;
+    OSPT_DEST *CurrentDest;
+    OSPT_AUTH_IND *AuthInd;
+    OSPT_AUTH_CNF *AuthCnf;
+    OSPTLIST UsageInd;          /* list of OSPT_USAGEIND */
     OSPTUSAGECNF *UsageCnf;
-    OSPTCAPCNF *CapCnf;
+    OSPT_CAP_CNF *CapCnf;
     OSPE_TRANS_STATE State;
     OSPTUINT64 TransactionID;
     OSPTBOOL HasTransactionID;
@@ -109,7 +109,7 @@ typedef struct _OSPTTRANS {
     OSPE_DEST_PROTOCOL DestProtocol;
     char ForwardCodec[OSPC_SIZE_CODEC];
     char ReverseCodec[OSPC_SIZE_CODEC];
-    OSPTCALLID *SessionId[OSPC_DIR_NUMBER];
+    OSPT_CALL_ID *SessionId[OSPC_DIR_NUMBER];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000
@@ -145,7 +145,7 @@ extern "C" {
 #endif
 
     int OSPPTransactionBuildReauthRequest(OSPTTRANS *, unsigned);
-    int OSPPTransactionBuildUsage(OSPTTRANS *, OSPT_USAGEIND **, OSPTDEST *, OSPE_MESSAGE);
+    int OSPPTransactionBuildUsage(OSPTTRANS *, OSPT_USAGEIND **, OSPT_DEST *, OSPE_MESSAGE);
     OSPTTRANS *OSPPTransactionCollectionGetItem(OSPTTRANCOLLECTION *, OSPTCOLLECTIONINDEX);
     OSPTTRANHANDLE OSPPTransactionCollectionGetNewItem(OSPTPROVHANDLE, OSPTTRANCOLLECTION *, int *);
     void OSPPTransactionCollectionRemoveItem(OSPTTRANCOLLECTION *, OSPTCOLLECTIONINDEX);
@@ -176,13 +176,13 @@ extern "C" {
     int OSPPTransactionPrepareAndQueMessage(OSPTTRANS *, unsigned char *, unsigned, OSPT_MSG_INFO **);
     int OSPPTransactionProcessReturn(OSPTTRANS *, OSPT_MSG_INFO *);
     int OSPPTransactionRequestNew(OSPTTRANS *, const char *, const char *, const char *, const char *, const char *, unsigned,
-            OSPTCALLID *[], const char *[], unsigned *, unsigned *, void *);
+            OSPT_CALL_ID *[], const char *[], unsigned *, unsigned *, void *);
     int OSPPTransactionResponseBuild(OSPTTRANS *, const char *, const char *, unsigned, const void *, unsigned, const void *);
     int OSPPTransactionSetProvider(OSPTTRANS *, struct _OSPTPROVIDER *);
     void OSPPTransactionSetState(OSPTTRANS *, OSPE_TRANS_STATE);
     void OSPPTransactionUpdateCounter(OSPTTRANS *);
     int OSPPTransactionValidateTokenCert(OSPTTRANS *, unsigned char *, unsigned);
-    int OSPPTransactionVerifyAuthCnf(OSPTAUTHCNF *);
+    int OSPPTransactionVerifyAuthCnf(OSPT_AUTH_CNF *);
     int OSPPTransactionVerifyUsageCnf(OSPTUSAGECNF *);
 
 #ifdef __cplusplus

@@ -118,7 +118,7 @@ unsigned SyncQueueGetNumberOfTransactions(SYNCQUEUE *syncQueue)
         assert(errorcode == OSPC_ERR_NO_ERROR);
     }
 
-    return (RetVal);
+    return RetVal;
 }
 
 int SyncQueueAddTransaction(SYNCQUEUE *syncQueue, void *transaction)

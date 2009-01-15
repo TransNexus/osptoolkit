@@ -93,9 +93,9 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
         isBase64 = OSPC_FALSE;
 
         /* look for a type attribute that will identify the encoding */
-        for (attr = (OSPT_XML_ATTR *) OSPPXMLElemFirstAttr(ospvElem);
+        for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElem);
             (attr != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-            attr = (OSPT_XML_ATTR *) OSPPXMLElemNextAttr(ospvElem, attr)) 
+            attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElem, attr)) 
         {
             if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_ENCODING) {
                 /* we found an encoding attribute - is it base64 */
@@ -145,7 +145,7 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
                  * references in the data.
                  */
 
-                ospvErrCode = OSPPXMLDereference((const unsigned char *) OSPPXMLElemGetValue(ospvElem), ospvDataLen, OSPC_OSNULL);
+                ospvErrCode = OSPPXMLDereference((const unsigned char *)OSPPXMLElemGetValue(ospvElem), ospvDataLen, OSPC_OSNULL);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                     /* Now that we know the size of the data, allocate memory for the data */
                     OSPM_MALLOC(*ospvData, unsigned char, *ospvDataLen + 1);
@@ -192,7 +192,6 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
                 }
             }
         }
-
     }
 
     return ospvErrCode;
@@ -249,7 +248,7 @@ unsigned OSPPMsgBinToElement(   /* returns error code */
 
             /* start with the CDATA header */
             if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                if (OSPPBfrWriteBlock(&bfr, (void *) OSPC_XMLDOC_CDATABEG, OSPC_XMLDOC_CDATABEGLEN) != OSPC_XMLDOC_CDATABEGLEN) {
+                if (OSPPBfrWriteBlock(&bfr, (void *)OSPC_XMLDOC_CDATABEG, OSPC_XMLDOC_CDATABEGLEN) != OSPC_XMLDOC_CDATABEGLEN) {
                     ospvErrCode = OSPC_ERR_BUF_EMPTY;
                 }
             }
@@ -261,7 +260,7 @@ unsigned OSPPMsgBinToElement(   /* returns error code */
 
             /* add the CDATA trailer */
             if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                if (OSPPBfrWriteBlock(&bfr, (void *) OSPC_XMLDOC_CDATAEND, OSPC_XMLDOC_CDATAENDLEN) != OSPC_XMLDOC_CDATAENDLEN) {
+                if (OSPPBfrWriteBlock(&bfr, (void *)OSPC_XMLDOC_CDATAEND, OSPC_XMLDOC_CDATAENDLEN) != OSPC_XMLDOC_CDATAENDLEN) {
                     ospvErrCode = OSPC_ERR_BUF_EMPTY;
                 }
             }
@@ -557,7 +556,7 @@ unsigned OSPPMsgTXFromElement(  /* returns error code */
 
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* check for errors */
-        if ((cptr = (char *) OSPPXMLElemGetValue(ospvElem)) == OSPC_OSNULL) {
+        if ((cptr = (char *)OSPPXMLElemGetValue(ospvElem)) == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_DATA_BAD_NUMBER;
         }
     }
@@ -568,7 +567,6 @@ unsigned OSPPMsgTXFromElement(  /* returns error code */
             *ospvTX *= 10;
             *ospvTX += cptr[pos] - '0';
         }
-
     }
 
     return ospvErrCode;

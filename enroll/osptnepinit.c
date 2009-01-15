@@ -334,8 +334,8 @@ int OSPPInitSSLCommMgrParams(OSPTENROLLPARAMS *ospvEnrollParamsIn,
 {
     int retVal = OSPC_ERR_NO_ERROR;
 
-    OSPTCERT caCert;
-    const OSPTCERT *caCerts[1];
+    OSPT_CERT caCert;
+    const OSPT_CERT *caCerts[1];
 
     caCerts[0] = &caCert;
 
@@ -1177,7 +1177,7 @@ int OSPPHexToBinary(unsigned char *ospvHexStr,
      *  o set an error code and complain.
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
-        if (OSPM_STRLEN((char *)ospvHexStr) < (size_t) ospvHexStrLen) {
+        if (OSPM_STRLEN((char *)ospvHexStr) < (size_t)ospvHexStrLen) {
             retVal = OSPC_ERR_ENROLL_INVALID_ARG;
             OSPM_DBGERRORLOG(retVal, "The requested length of the hex string to be translated is longer than the string itself.\n");
         }

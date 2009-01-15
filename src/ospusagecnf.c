@@ -114,7 +114,7 @@ OSPTSTATUS *OSPPUsageCnfGetStatus(  /* returns pointer to dest */
 OSPTBOOL OSPPUsageCnfHasComponentId(    /* returns non-zero if component id is set */
     OSPTUSAGECNF *ospvUsageCnf)
 {
-    return (ospvUsageCnf->ospmUsageCnfComponentId != OSPC_OSNULL);
+    return(ospvUsageCnf->ospmUsageCnfComponentId != OSPC_OSNULL);
 }
 
 /*
@@ -260,9 +260,9 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
                 ospvElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvParent);
             }
 
-            for (elem1 = (OSPT_XML_ELEM *) OSPPListFirst((OSPTLIST *) ospvElem);
+            for (elem1 = (OSPT_XML_ELEM *)OSPPListFirst((OSPTLIST *)ospvElem);
                  (elem1 != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-                 elem1 = (OSPT_XML_ELEM *) OSPPListNext((OSPTLIST *) ospvElem, elem1)) 
+                 elem1 = (OSPT_XML_ELEM *)OSPPListNext((OSPTLIST *)ospvElem, elem1)) 
             {
                 /* create the usage confirmation object */
                 usagecnf = OSPPUsageCnfNew();
@@ -292,7 +292,7 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
 
                         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(elem1);
                             (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-                             elem = (OSPT_XML_ELEM *) OSPPXMLElemNextChild(elem1, elem)) 
+                             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(elem1, elem)) 
                         {
                             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
                                 case OSPC_MELEM_MESSAGE:
@@ -348,7 +348,6 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
                         }
                     }
                 }
-
             }
         }
     }
@@ -357,7 +356,7 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
     if (ospvErrCode != OSPC_ERR_NO_ERROR) {
         if (ospvUsageCnf != OSPC_OSNULL) {
             while (!OSPPListEmpty(ospvUsageCnf)) {
-                usagecnf = (OSPTUSAGECNF *) OSPPListRemove(ospvUsageCnf);
+                usagecnf = (OSPTUSAGECNF *)OSPPListRemove(ospvUsageCnf);
                 if (usagecnf != OSPC_OSNULL) {
                     OSPPUsageCnfDelete(&(usagecnf));
                 }
@@ -380,7 +379,7 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
 OSPTBOOL OSPPUsageCnfHasMessageId(  /* returns non-zero if message id is set */
     OSPTUSAGECNF *ospvUsageCnf)
 {
-    return (ospvUsageCnf->ospmUsageCnfMessageId != OSPC_OSNULL);
+    return(ospvUsageCnf->ospmUsageCnfMessageId != OSPC_OSNULL);
 }
 
 /*

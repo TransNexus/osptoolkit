@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospmsgque.cpp - MsgQueue object funcions.
  */
@@ -30,35 +24,29 @@
 #include "osp/ospmsginfo.h"
 #include "osp/osplist.h"
 
-static
-int
-osppMsgQueueInitSync(
+static int osppMsgQueueInitSync(
     OSPTMSGQUEUE *ospvMsgQueue)
 {
-    int errorcode = OSPC_ERR_NO_ERROR,
-        tmperror  = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
 
     OSPM_MUTEX_INIT(ospvMsgQueue->Mutex, OSPC_OSNULL, errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPM_CONDVAR_INIT(ospvMsgQueue->CondVar, OSPC_OSNULL, errorcode);
-        if (errorcode != OSPC_ERR_NO_ERROR)
-        {
+        if (errorcode != OSPC_ERR_NO_ERROR) {
             OSPM_MUTEX_DESTROY(ospvMsgQueue->Mutex, tmperror);
         }
-    }        
+    }
+
     return errorcode;
 }
 
-int
-OSPPMsgQueueNew(
+int OSPPMsgQueueNew(
     OSPTMSGQUEUE **ospvMsgQueue)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_MALLOC(*ospvMsgQueue, OSPTMSGQUEUE, sizeof(OSPTMSGQUEUE));
-    if (*ospvMsgQueue != OSPC_OSNULL) 
-    {
+    if (*ospvMsgQueue != OSPC_OSNULL) {
 
         OSPM_MEMSET(*ospvMsgQueue, 0, sizeof(OSPTMSGQUEUE));
 
@@ -72,14 +60,13 @@ OSPPMsgQueueNew(
          * initialize the list used to hold message info
          * structures (items)
          */
-        OSPPListNew((OSPTLIST *)&((*ospvMsgQueue)->MsgInfoList));
+        OSPPListNew((OSPTLIST *) & ((*ospvMsgQueue)->MsgInfoList));
 
         if (errorcode != OSPC_ERR_NO_ERROR)
             OSPM_FREE(*ospvMsgQueue);
     }
 
-    if (errorcode != OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode != OSPC_ERR_NO_ERROR) {
         errorcode = OSPC_ERR_MSGQ_NO_MEMORY;
         OSPM_DBGERRORLOG(errorcode, "ospvMsgQueue malloc failed");
     }
@@ -87,73 +74,58 @@ OSPPMsgQueueNew(
     return errorcode;
 }
 
-void
-OSPPMsgQueueDelete(
+void OSPPMsgQueueDelete(
     OSPTMSGQUEUE **ospvMsgQueue)
 {
-		int errorcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (*ospvMsgQueue != OSPC_OSNULL)
-    {
-				OSPM_MUTEX_DESTROY((*ospvMsgQueue)->Mutex, errorcode);
-			  OSPM_CONDVAR_DESTROY((*ospvMsgQueue)->CondVar, errorcode);
+    if (*ospvMsgQueue != OSPC_OSNULL) {
+        OSPM_MUTEX_DESTROY((*ospvMsgQueue)->Mutex, errorcode);
+        OSPM_CONDVAR_DESTROY((*ospvMsgQueue)->CondVar, errorcode);
 
         OSPM_FREE(*ospvMsgQueue);
         *ospvMsgQueue = OSPC_OSNULL;
     }
-
-    return;
 }
 
-void
-OSPPMsgQueueIncrementNumberOfTransactions(
+void OSPPMsgQueueIncrementNumberOfTransactions(
     OSPTMSGQUEUE *ospvMsgQueue)
 {
-    if (ospvMsgQueue != OSPC_OSNULL)
-    {
+    if (ospvMsgQueue != OSPC_OSNULL) {
         ospvMsgQueue->NumberOfTransactions++;
     }
-    return;
 }
 
-void
-OSPPMsgQueueDecrementNumberOfTransactions(
+void OSPPMsgQueueDecrementNumberOfTransactions(
     OSPTMSGQUEUE *ospvMsgQueue)
 {
-    if (ospvMsgQueue != OSPC_OSNULL)
-    {
+    if (ospvMsgQueue != OSPC_OSNULL) {
         ospvMsgQueue->NumberOfTransactions--;
     }
-    return;
 }
 
-int
-OSPPMsgQueueAddTransaction(
-    OSPTMSGQUEUE *ospvMsgQueue,
-    OSPT_MSG_INFO  *ospvMsgInfo)
+int OSPPMsgQueueAddTransaction(
+    OSPTMSGQUEUE *ospvMsgQueue, 
+    OSPT_MSG_INFO *ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTBOOL IsNonBlocking = OSPC_FALSE;
 
-    if (ospvMsgQueue == OSPC_OSNULL)
-    {
+    if (ospvMsgQueue == OSPC_OSNULL) {
         errorcode = OSPC_ERR_UTIL_INVALID_ARG;
     }
-    if (ospvMsgInfo == OSPC_OSNULL)
-    {
+    if (ospvMsgInfo == OSPC_OSNULL) {
         errorcode = OSPC_ERR_UTIL_INVALID_ARG;
     }
 
     /*
      * acquire message queue mutex
      */
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPM_MUTEX_LOCK(ospvMsgQueue->Mutex, errorcode);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
          * Save the value becuase, if non blocking, the
          * structure maybe released before we get to
@@ -164,8 +136,7 @@ OSPPMsgQueueAddTransaction(
         /*
          * add the item to the message queue list
          */
-        OSPPListAppend((OSPTLIST *)&(ospvMsgQueue->MsgInfoList), 
-            (void *)ospvMsgInfo);
+        OSPPListAppend((OSPTLIST *) & (ospvMsgQueue->MsgInfoList), (void *)ospvMsgInfo);
 
         /*
          * increment number of transactions in the queue
@@ -187,45 +158,38 @@ OSPPMsgQueueAddTransaction(
          * wait for transaction response from the
          * the communication manager
          */
-        if (OSPC_FALSE == IsNonBlocking)
-        {
-           errorcode = OSPPMsgInfoWaitForMsg(ospvMsgInfo);
+        if (OSPC_FALSE == IsNonBlocking) {
+            errorcode = OSPPMsgInfoWaitForMsg(ospvMsgInfo);
         }
     }
     return errorcode;
 }
 
-int
-OSPPMsgQueueGetNumberOfTransactions(
-    OSPTMSGQUEUE *ospvMsgQueue,
-    unsigned     *ospvMsgCount)
+int OSPPMsgQueueGetNumberOfTransactions(
+    OSPTMSGQUEUE *ospvMsgQueue, 
+    unsigned *ospvMsgCount)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvMsgQueue == OSPC_OSNULL)
-    {
+    if (ospvMsgQueue == OSPC_OSNULL) {
         errorcode = OSPC_ERR_UTIL_INVALID_ARG;
     }
 
     /*
      * acquire message queue mutex
      */
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPM_MUTEX_LOCK(ospvMsgQueue->Mutex, errorcode);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvMsgCount = ospvMsgQueue->NumberOfTransactions;
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /* release msg queue mutex lock */
         OSPM_MUTEX_UNLOCK(ospvMsgQueue->Mutex, errorcode);
     }
 
     return errorcode;
 }
-

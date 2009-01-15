@@ -46,7 +46,7 @@ const OSPT_MSG_DESC OSPV_DPROT_DESCS[OSPC_DPROT_NUMBER] = {
  * OSPPDestSetOSPVersion() - set the OSP Version for a destination
  */
 void OSPPDestSetOSPVersion(     /* nothing returned */
-    OSPTDEST *ospvDest,         /* destination to set */
+    OSPT_DEST *ospvDest,        /* destination to set */
     const char *ospvVersion)    /* Version (as string) */
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -66,7 +66,7 @@ void OSPPDestSetOSPVersion(     /* nothing returned */
  * OSPPDestSetProtocol() - set the Protocol for a destination
  */
 void OSPPDestSetProtocol(   /* nothing returned */
-    OSPTDEST *ospvDest,     /* destination to set */
+    OSPT_DEST *ospvDest,    /* destination to set */
     const char *ospvProt)   /* Protocol (as string) */
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -78,7 +78,7 @@ void OSPPDestSetProtocol(   /* nothing returned */
  * OSPPDestHasNumber() - does the destination include a called number?
  */
 OSPTBOOL OSPPDestHasNumber(/* returns non-zero if number exists */
-    OSPTDEST *ospvDest)    /* destination effected */
+    OSPT_DEST *ospvDest)   /* destination effected */
 {
     OSPTBOOL ospvHasNumber = OSPC_FALSE;
 
@@ -93,7 +93,7 @@ OSPTBOOL OSPPDestHasNumber(/* returns non-zero if number exists */
  * OSPPDestHasSrcNumber() - does the destination include a calling number?
  */
 OSPTBOOL OSPPDestHasSrcNumber(  /* returns non-zero if number exists */
-    OSPTDEST *ospvDest)         /* destination effected */
+    OSPT_DEST *ospvDest)        /* destination effected */
 {
     OSPTBOOL ospvHasSrcNumber = OSPC_FALSE;
 
@@ -108,7 +108,7 @@ OSPTBOOL OSPPDestHasSrcNumber(  /* returns non-zero if number exists */
  * OSPPDestSetSrcNumber() - set the calling number for a destination
  */
 void OSPPDestSetSrcNumber(  /* nothing returned */
-    OSPTDEST *ospvDest,     /* destination to set */
+    OSPT_DEST *ospvDest,    /* destination to set */
     const char *ospvNum)    /* calling number (as string) */
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -122,7 +122,7 @@ void OSPPDestSetSrcNumber(  /* nothing returned */
  * OSPPDestGetSrcNumber() - returns the calling number for a destination
  */
 const char *OSPPDestGetSrcNumber(   /* returns number as string */
-    OSPTDEST *ospvDest)             /* destination */
+    OSPT_DEST *ospvDest)            /* destination */
 {
     const char *ospvNum = OSPC_OSNULL;
 
@@ -137,7 +137,7 @@ const char *OSPPDestGetSrcNumber(   /* returns number as string */
  * OSPPDestSetNumber() - set the called number for a destination
  */
 void OSPPDestSetNumber(     /* nothing returned */
-    OSPTDEST *ospvDest,     /* destination to set */
+    OSPT_DEST *ospvDest,    /* destination to set */
     const char *ospvNum)    /* called number (as string) */
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -151,7 +151,7 @@ void OSPPDestSetNumber(     /* nothing returned */
  * OSPPDestGetNumber() - returns the called number for a destination
  */
 const char *OSPPDestGetNumber(  /* returns number as string */
-    OSPTDEST *ospvDest)         /* destination */
+    OSPT_DEST *ospvDest)        /* destination */
 {
     const char *ospvNum = OSPC_OSNULL;
 
@@ -166,7 +166,7 @@ const char *OSPPDestGetNumber(  /* returns number as string */
  * OSPPDestHasAddr() - does a destination have a Addr?
  */
 OSPTBOOL OSPPDestHasAddr(   /* returns non-zero if exists */
-    OSPTDEST *ospvDest)     /* destination in question */
+    OSPT_DEST *ospvDest)    /* destination in question */
 {
     OSPTBOOL ospvHasAddr = OSPC_FALSE;
 
@@ -181,7 +181,7 @@ OSPTBOOL OSPPDestHasAddr(   /* returns non-zero if exists */
  * OSPPDestSetAddr() - sets the signalling address for a destination
  */
 void OSPPDestSetAddr(       /* nothing returned */
-    OSPTDEST *ospvDest,     /* destination */
+    OSPT_DEST *ospvDest,    /* destination */
     const char *ospvAddr)   /* signal address as string */
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -195,7 +195,7 @@ void OSPPDestSetAddr(       /* nothing returned */
  * OSPPDestGetAddr() - returns the signalling address for a destination
  */
 const char *OSPPDestGetAddr(    /* returns address as string */
-    OSPTDEST *ospvDest)         /* destination in question */
+    OSPT_DEST *ospvDest)        /* destination in question */
 {
     const char *ospvAddr = OSPC_OSNULL;
 
@@ -210,7 +210,7 @@ const char *OSPPDestGetAddr(    /* returns address as string */
  * OSPPDestDevHasAddr() - does a destination have a Dev Addr?
  */
 OSPTBOOL OSPPDestDevHasAddr(    /* returns non-zero if exists */
-    OSPTDEST *ospvDest)         /* destination in question */
+    OSPT_DEST *ospvDest)        /* destination in question */
 {
     OSPTBOOL ospvHasAddr = OSPC_FALSE;
 
@@ -224,7 +224,7 @@ OSPTBOOL OSPPDestDevHasAddr(    /* returns non-zero if exists */
  * OSPPDestHasNetworkAddr() - does a destination have a Network Addr?
  */
 OSPTBOOL OSPPDestHasNetworkAddr(    /* returns non-zero if exists */
-    OSPTDEST *ospvDest)             /* destination in question */
+    OSPT_DEST *ospvDest)            /* destination in question */
 {
     OSPTBOOL ospvHasAddr = OSPC_FALSE;
 
@@ -240,7 +240,7 @@ OSPTBOOL OSPPDestHasNetworkAddr(    /* returns non-zero if exists */
  *  device
  */
 void OSPPDestSetNetworkAddr(    /* nothing returned */
-    OSPTDEST *ospvDest,         /* destination */
+    OSPT_DEST *ospvDest,        /* destination */
     const char *ospvAddr)       /* network address as string */
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -254,7 +254,7 @@ void OSPPDestSetNetworkAddr(    /* nothing returned */
  * OSPPDestGetNetworkAddr() - returns the network address for a destination device
  */
 const char *OSPPDestGetNetworkAddr( /* returns address as string */
-    OSPTDEST *ospvDest)             /* destination in question */
+    OSPT_DEST *ospvDest)            /* destination in question */
 {
     const char *ospvAddr = OSPC_OSNULL;
 
@@ -269,7 +269,7 @@ const char *OSPPDestGetNetworkAddr( /* returns address as string */
  * OSPPDestDevSetAddr() - sets the signalling address for a destination device
  */
 void OSPPDestDevSetAddr(    /* nothing returned */
-    OSPTDEST *ospvDest,     /* destination */
+    OSPT_DEST *ospvDest,    /* destination */
     const char *ospvAddr)   /* signal address as string */
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -283,7 +283,7 @@ void OSPPDestDevSetAddr(    /* nothing returned */
  * OSPPDestDevGetAddr() - returns the signalling address for a destination device
  */
 const char *OSPPDestDevGetAddr( /* returns address as string */
-    OSPTDEST *ospvDest)         /* destination in question */
+    OSPT_DEST *ospvDest)        /* destination in question */
 {
     const char *ospvAddr = OSPC_OSNULL;
 
@@ -298,7 +298,7 @@ const char *OSPPDestDevGetAddr( /* returns address as string */
  * OSPPDestHasValidAfter() - Does a destination have a valid after time?
  */
 OSPTBOOL OSPPDestHasValidAfter( /* returns non-zero if time */
-    OSPTDEST *ospvDest)         /* destination in question */
+    OSPT_DEST *ospvDest)        /* destination in question */
 {
     OSPTBOOL ospvHasTime = OSPC_FALSE;
 
@@ -313,7 +313,7 @@ OSPTBOOL OSPPDestHasValidAfter( /* returns non-zero if time */
  * OSPPDestSetValidAfter() - sets the valid after time for a destination
  */
 void OSPPDestSetValidAfter(     /* nothing returned */
-    OSPTDEST *ospvDest,
+    OSPT_DEST *ospvDest,
     OSPTTIME ospvTime)
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -325,7 +325,7 @@ void OSPPDestSetValidAfter(     /* nothing returned */
  * OSPPDestGetValidAfter() - returns valid after time for a destination
  */
 OSPTTIME OSPPDestGetValidAfter( /* returns the time value */
-    OSPTDEST *ospvDest)         /* destination in question */
+    OSPT_DEST *ospvDest)        /* destination in question */
 {
     OSPTTIME ospvTime = 0;
 
@@ -340,7 +340,7 @@ OSPTTIME OSPPDestGetValidAfter( /* returns the time value */
  * OSPPDestHasValidUntil() - does destination have a valid until time?
  */
 OSPTBOOL OSPPDestHasValidUntil( /* returns non-zero if time */
-    OSPTDEST *ospvDest)         /* destination in question */
+    OSPT_DEST *ospvDest)        /* destination in question */
 {
     OSPTBOOL ospvHasTime = OSPC_FALSE;
 
@@ -354,7 +354,7 @@ OSPTBOOL OSPPDestHasValidUntil( /* returns non-zero if time */
  * OSPPDestSetValidUntil() - sets valid until time for destination
  */
 void OSPPDestSetValidUntil( /* nothing returned */
-    OSPTDEST *ospvDest,     /* destination in question */
+    OSPT_DEST *ospvDest,    /* destination in question */
     OSPTTIME ospvTime)      /* time to set */
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -366,7 +366,7 @@ void OSPPDestSetValidUntil( /* nothing returned */
  * OSPPDestGetValidUntil() - returns valid until time for destination
  */
 OSPTTIME OSPPDestGetValidUntil( /* returns time */
-    OSPTDEST *ospvDest)         /* destination in question */
+    OSPT_DEST *ospvDest)        /* destination in question */
 {
     OSPTTIME ospvTime = 0;
 
@@ -380,7 +380,7 @@ OSPTTIME OSPPDestGetValidUntil( /* returns time */
  * OSPPDestHasAuthority() - does an authority URL exist for destination?
  */
 OSPTBOOL OSPPDestHasAuthority(  /* returns non-zero if exists */
-    OSPTDEST *ospvDest)         /* destination in question */
+    OSPT_DEST *ospvDest)        /* destination in question */
 {
     OSPTBOOL ospvHasAuth = OSPC_FALSE;
 
@@ -394,7 +394,7 @@ OSPTBOOL OSPPDestHasAuthority(  /* returns non-zero if exists */
  * OSPPDestSetAuthority() - sets authority URL for destination
  */
 void OSPPDestSetAuthority(  /* nothing returned */
-    OSPTDEST *ospvDest,     /* destination in question */
+    OSPT_DEST *ospvDest,    /* destination in question */
     const char *ospvAuth)   /* authority URL */
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -408,7 +408,7 @@ void OSPPDestSetAuthority(  /* nothing returned */
  * OSPPDestHasCallId() - does a destination have a Call ID?
  */
 OSPTBOOL OSPPDestHasCallId( /* returns non-zero if exists */
-    OSPTDEST *ospvDest      /* destination in question */
+    OSPT_DEST *ospvDest     /* destination in question */
     )
 {
     OSPTBOOL ospvHasId = OSPC_FALSE;
@@ -423,11 +423,11 @@ OSPTBOOL OSPPDestHasCallId( /* returns non-zero if exists */
 /*
  * OSPPDestGetCallId() - gets the call ID for a destination
  */
-OSPTCALLID *OSPPDestGetCallId(  /* returns call ID pointer */
-    OSPTDEST *ospvDest          /* destination in question */
+OSPT_CALL_ID *OSPPDestGetCallId(/* returns call ID pointer */
+    OSPT_DEST *ospvDest         /* destination in question */
     )
 {
-    OSPTCALLID *ospvCallId = OSPC_OSNULL;
+    OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) {
         ospvCallId = ospvDest->ospmDestCallId;
@@ -440,7 +440,7 @@ OSPTCALLID *OSPPDestGetCallId(  /* returns call ID pointer */
  * OSPPDestHasToken() - does a destination have a Token?
  */
 OSPTBOOL OSPPDestHasToken(  /* returns non-zero if exists */
-    OSPTDEST *ospvDest)     /* destination in question */
+    OSPT_DEST *ospvDest)    /* destination in question */
 {
     OSPTBOOL ospvHasToken = OSPC_FALSE;
 
@@ -455,7 +455,7 @@ OSPTBOOL OSPPDestHasToken(  /* returns non-zero if exists */
  * OSPPDestAddToken() - adds a token to a destination
  */
 void OSPPDestAddToken(      /* nothing returned */
-    OSPTDEST *ospvDest,     /* destination in question */
+    OSPT_DEST *ospvDest,    /* destination in question */
     OSPTTOKEN *ospvToken)   /* token to add */
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -467,7 +467,7 @@ void OSPPDestAddToken(      /* nothing returned */
  * OSPPDestFirstToken() - gets first token for destination
  */
 OSPTTOKEN *OSPPDestFirstToken(  /* returns null if none */
-    OSPTDEST *ospvDest)
+    OSPT_DEST *ospvDest)
 {
     OSPTTOKEN *ospvToken = OSPC_OSNULL;
 
@@ -482,7 +482,7 @@ OSPTTOKEN *OSPPDestFirstToken(  /* returns null if none */
  * OSPPDestNextToken() - gets next token (in list) for destination
  */
 OSPTTOKEN *OSPPDestNextToken(   /* returns NULL if no more */
-    OSPTDEST *ospvDest,         /* destination in question */
+    OSPT_DEST *ospvDest,        /* destination in question */
     OSPTTOKEN *ospvToken)       /* current token */
 {
     OSPTTOKEN *ospvNextToken = OSPC_OSNULL;
@@ -500,7 +500,7 @@ OSPTTOKEN *OSPPDestNextToken(   /* returns NULL if no more */
  * OSPPDestHasLimit() - does a destination have a usage limit?
  */
 OSPTBOOL OSPPDestHasLimit(  /* returns non-zero if limit */
-    OSPTDEST *ospvDest)     /* destination in question */
+    OSPT_DEST *ospvDest)    /* destination in question */
 {
     OSPTBOOL ospvHasLimit = OSPC_FALSE;
 
@@ -515,7 +515,7 @@ OSPTBOOL OSPPDestHasLimit(  /* returns non-zero if limit */
  * OSPPDestSetLimit() -  sets usage limit for a destination
  */
 void OSPPDestSetLimit(      /* nothing returned */
-    OSPTDEST *ospvDest,     /* destination in question */
+    OSPT_DEST *ospvDest,    /* destination in question */
     unsigned ospvLimit)     /* limit to set */
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -528,7 +528,7 @@ void OSPPDestSetLimit(      /* nothing returned */
  * OSPPDestGetLimit() - returns the usage limit for a destination
  */
 unsigned OSPPDestGetLimit(  /* returns usage limit */
-    OSPTDEST *ospvDest)     /* destination in question */
+    OSPT_DEST *ospvDest)    /* destination in question */
 {
     unsigned ospvLimit = 0;
 
@@ -543,7 +543,7 @@ unsigned OSPPDestGetLimit(  /* returns usage limit */
  * OSPPDestHasTermCause() - Does dest have the Fail Reason
  */
 OSPTBOOL OSPPDestHasTermCause(      /* returns non-zero if time */
-    OSPTDEST *ospvDest,             /* dest in question */
+    OSPT_DEST *ospvDest,            /* dest in question */
     OSPE_TERM_CAUSE ospvType)       /* Termiantion cause type */
 {
     OSPTBOOL ospvHasTermCause = OSPC_FALSE;
@@ -558,8 +558,8 @@ OSPTBOOL OSPPDestHasTermCause(      /* returns non-zero if time */
 /*
  * OSPPDestHasTermCauseAny() - Does dest have a Fail Reason
  */
-OSPTBOOL OSPPDestHasTermCauseAny(      /* returns non-zero if time */
-    OSPTDEST *ospvDest)             /* dest in question */
+OSPTBOOL OSPPDestHasTermCauseAny(   /* returns non-zero if time */
+    OSPT_DEST *ospvDest)            /* dest in question */
 {
     OSPTBOOL ospvHasTermCause = OSPC_FALSE;
 
@@ -574,7 +574,7 @@ OSPTBOOL OSPPDestHasTermCauseAny(      /* returns non-zero if time */
  * OSPPDestSetTermCause() - Set Fail Reason
  */
 void OSPPDestSetTermCause( /* nothing returned */
-    OSPTDEST *ospvDest,
+    OSPT_DEST *ospvDest,
     OSPE_TERM_CAUSE ospvType,
     unsigned ospvTCCode,
     const char *ospvTCDesc)
@@ -588,7 +588,7 @@ void OSPPDestSetTermCause( /* nothing returned */
  * OSPPDestGetTermCause() - returns Fail Reason structure for an destination
  */
 OSPT_TERM_CAUSE *OSPPDestGetTermCause(
-    OSPTDEST *ospvDest)         /* destination */
+    OSPT_DEST *ospvDest)        /* destination */
 {
     OSPT_TERM_CAUSE *ospvTermCause = OSPC_OSNULL;
     
@@ -603,7 +603,7 @@ OSPT_TERM_CAUSE *OSPPDestGetTermCause(
  * OSPPDestGetTCCode() - returns Fail Reason value for an destination
  */
 unsigned OSPPDestGetTCCode(
-    OSPTDEST *ospvDest,         /* destination */
+    OSPT_DEST *ospvDest,        /* destination */
     OSPE_TERM_CAUSE ospvType)   /* fail reasion type */    
 {
     unsigned ospvTCCode = 0;
@@ -619,7 +619,7 @@ unsigned OSPPDestGetTCCode(
  * OSPPDestGetTCDesc() - returns Fail Reason description for an destination
  */
 const char *OSPPDestGetTCDesc(
-    OSPTDEST *ospvDest,         /* destination */
+    OSPT_DEST *ospvDest,        /* destination */
     OSPE_TERM_CAUSE ospvType)   /* fail reasion type */    
 {
     const char *ospvTCDesc = OSPC_OSNULL;
@@ -634,15 +634,15 @@ const char *OSPPDestGetTCDesc(
 /*
  * OSPPDestNew() - creates a new (empty) destination
  */
-OSPTDEST *OSPPDestNew(void) /* returns pointer or NULL */
+OSPT_DEST *OSPPDestNew(void)    /* returns pointer or NULL */
 {
-    OSPTDEST *ospvDest = OSPC_OSNULL;
+    OSPT_DEST *ospvDest = OSPC_OSNULL;
 
-    OSPM_MALLOC(ospvDest, OSPTDEST, sizeof(OSPTDEST));
+    OSPM_MALLOC(ospvDest, OSPT_DEST, sizeof(OSPT_DEST));
 
     if (ospvDest != OSPC_OSNULL) {
         /* start with setting all to 0 */
-        OSPM_MEMSET(ospvDest, 0, sizeof(OSPTDEST));
+        OSPM_MEMSET(ospvDest, 0, sizeof(OSPT_DEST));
         OSPPListLinkNew(&(ospvDest->ospmDestLink));
         ospvDest->ospmDestValidAfter = OSPC_TIMEMIN;
         ospvDest->ospmDestValidUntil = OSPC_TIMEMAX;
@@ -662,7 +662,7 @@ OSPTDEST *OSPPDestNew(void) /* returns pointer or NULL */
  * OSPPDestDelete() - deletes a Destination structure
  */
 void OSPPDestDelete(
-    OSPTDEST **ospvDest)
+    OSPT_DEST **ospvDest)
 {
     /*   OSPTTOKEN *token, *otoken = OSPC_OSNULL; */
     OSPTTOKEN *tmptoken = OSPC_OSNULL;
@@ -674,7 +674,7 @@ void OSPPDestDelete(
             OSPPCallIdDelete(&((*ospvDest)->ospmDestCallId));
         }
 
-        while (!OSPPListEmpty((OSPTLIST *) & ((*ospvDest)->ospmDestTokens))) {
+        while (!OSPPListEmpty((OSPTLIST *)&((*ospvDest)->ospmDestTokens))) {
             tmptoken = (OSPTTOKEN *)OSPPListRemove((OSPTLIST *)&((*ospvDest)->ospmDestTokens));
             if (tmptoken != OSPC_OSNULL) {
                 OSPPTokenDelete(&tmptoken);
@@ -682,14 +682,14 @@ void OSPPDestDelete(
         }
         OSPPListDelete((OSPTLIST *)&((*ospvDest)->ospmDestTokens));
 
-        while (!OSPPListEmpty((OSPTLIST *) & ((*ospvDest)->ospmUpdatedSourceAddr))) {
+        while (!OSPPListEmpty((OSPTLIST *)&((*ospvDest)->ospmUpdatedSourceAddr))) {
             altinfo = (OSPT_ALTINFO *)OSPPListRemove((OSPTLIST *)&((*ospvDest)->ospmUpdatedSourceAddr));
             if (altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
             }
         }
-        OSPPListDelete((OSPTLIST *) & ((*ospvDest)->ospmUpdatedSourceAddr));
+        OSPPListDelete((OSPTLIST *)&((*ospvDest)->ospmUpdatedSourceAddr));
 
         while (!OSPPListEmpty((OSPTLIST *)&((*ospvDest)->ospmUpdatedDeviceInfo))) {
             altinfo = (OSPT_ALTINFO *)OSPPListRemove((OSPTLIST *)&((*ospvDest)->ospmUpdatedDeviceInfo));
@@ -710,13 +710,13 @@ void OSPPDestDelete(
  */
 unsigned OSPPDestFromElement(   /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* input is XML element */
-    OSPTDEST **ospvDest)        /* where to put destination pointer */
+    OSPT_DEST **ospvDest)       /* where to put destination pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
-    OSPTDEST *dest = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
     OSPTTOKEN *token = OSPC_OSNULL;
-    OSPTCALLID *callId = OSPC_OSNULL;
+    OSPT_CALL_ID *callId = OSPC_OSNULL;
     unsigned limit = 0;
     unsigned long failure = 0L;
     OSPTTIME t = 0L;
@@ -742,10 +742,10 @@ unsigned OSPPDestFromElement(   /* returns error code */
          * the information we need.
          */
 
-        for (elem = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvElem);
+        for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
             (elem != OSPC_OSNULL) &&
             (ospvErrCode == OSPC_ERR_NO_ERROR);
-            elem = (OSPT_XML_ELEM *) OSPPXMLElemNextChild(ospvElem, elem)) 
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) 
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_DESTPROTOCOL:
@@ -842,7 +842,7 @@ unsigned OSPPDestFromElement(   /* returns error code */
  * OSPPDestSetCallId() - sets the call ID for a destination
  */
 void OSPPDestSetCallId(             /* nothing returned */
-    OSPTDEST *ospvDest,             /* destination */
+    OSPT_DEST *ospvDest,            /* destination */
     const unsigned char *ospvValue, /* call ID value */
     unsigned ospvLen)
 {
@@ -857,7 +857,7 @@ void OSPPDestSetCallId(             /* nothing returned */
 }
 
 void OSPPDestSetDestinationCount(
-    OSPTDEST *ospvDest,
+    OSPT_DEST *ospvDest,
     unsigned ospvDestinationCount)
 {
     if (ospvDest != OSPC_OSNULL) {
@@ -865,7 +865,7 @@ void OSPPDestSetDestinationCount(
     }
 }
 
-unsigned OSPPDestGetDestinationCount(OSPTDEST *ospvDest)
+unsigned OSPPDestGetDestinationCount(OSPT_DEST *ospvDest)
 {
     unsigned ospvTheValue = 0;
 

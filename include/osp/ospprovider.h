@@ -39,7 +39,7 @@ typedef struct _OSPTPROVIDER {
     OSPTCOMM *Comm;
     OSPTCOMM *CommForCapabilities;
     struct _OSPTTRANCOLLECTION *TransCollection;
-    OSPTAUDIT *Audit;
+    OSPT_AUDIT *Audit;
     OSPTTXID *Id;
     OSPTMUTEX ProviderMutex;
     OSPTSEC *Security;

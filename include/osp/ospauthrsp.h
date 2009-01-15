@@ -47,7 +47,7 @@ typedef struct {
     OSPTCSAUDIT *ospmAuthRspCSAudit;
     OSPE_ROLE ospmAuthRspRole;
     OSPTBOOL ospmAuthRspHasRole;
-} OSPTAUTHRSP;
+} OSPT_AUTH_RSP;
 
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)
 #define OSPPAuthRspDestSetNumber(ospvDest,ospvNum) OSPPDestSetNumber(ospvDest,ospvNum)
@@ -84,38 +84,38 @@ typedef struct {
 extern "C" {
 #endif
 
-    OSPTAUTHRSP *OSPPAuthRspNew(void);
-    void OSPPAuthRspDelete(OSPTAUTHRSP **);
-    unsigned OSPPAuthRspFromElement(OSPT_XML_ELEM *, OSPTAUTHRSP **);
-    OSPTBOOL OSPPAuthRspHasDest(OSPTAUTHRSP *ospvAuthRsp);
-    OSPTDEST *OSPPAuthRspAddDest(OSPTAUTHRSP *, OSPTDEST *);
-    OSPTDEST *OSPPAuthRspFirstDest(OSPTAUTHRSP *);
-    OSPTDEST *OSPPAuthRspNextDest(OSPTAUTHRSP *, OSPTDEST *);
-    OSPTBOOL OSPPAuthRspHasComponentId(OSPTAUTHRSP *);
-    void OSPPAuthRspSetComponentId(OSPTAUTHRSP *, const char *);
+    OSPT_AUTH_RSP *OSPPAuthRspNew(void);
+    void OSPPAuthRspDelete(OSPT_AUTH_RSP **);
+    unsigned OSPPAuthRspFromElement(OSPT_XML_ELEM *, OSPT_AUTH_RSP **);
+    OSPTBOOL OSPPAuthRspHasDest(OSPT_AUTH_RSP *ospvAuthRsp);
+    OSPT_DEST *OSPPAuthRspAddDest(OSPT_AUTH_RSP *, OSPT_DEST *);
+    OSPT_DEST *OSPPAuthRspFirstDest(OSPT_AUTH_RSP *);
+    OSPT_DEST *OSPPAuthRspNextDest(OSPT_AUTH_RSP *, OSPT_DEST *);
+    OSPTBOOL OSPPAuthRspHasComponentId(OSPT_AUTH_RSP *);
+    void OSPPAuthRspSetComponentId(OSPT_AUTH_RSP *, const char *);
     void OSPPAuthRspComponentIdFromElement(OSPT_XML_ELEM *, const char **);
-    OSPTBOOL OSPPAuthRspHasMessageId(OSPTAUTHRSP *);
-    void OSPPAuthRspSetMessageId(OSPTAUTHRSP *, const char *);
+    OSPTBOOL OSPPAuthRspHasMessageId(OSPT_AUTH_RSP *);
+    void OSPPAuthRspSetMessageId(OSPT_AUTH_RSP *, const char *);
     void OSPPAuthRspMessageIdFromElement(OSPT_XML_ELEM *, const char **);
-    const char *OSPPAuthRspGetMessageId(OSPTAUTHRSP *);
-    void OSPPAuthRspSetTimestamp(OSPTAUTHRSP *, OSPTTIME);
-    OSPTBOOL OSPPAuthRspHasStatus(OSPTAUTHRSP *);
-    OSPTSTATUS *OSPPAuthRspGetStatus(OSPTAUTHRSP *);
-    void OSPPAuthRspSetTrxId(OSPTAUTHRSP *, OSPTTRXID);
-    OSPTBOOL OSPPAuthRspHasDelayLimit(OSPTAUTHRSP *);
-    void OSPPAuthRspSetDelayLimit(OSPTAUTHRSP *, unsigned);
-    unsigned OSPPAuthRspGetDelayLimit(OSPTAUTHRSP *);
-    OSPTBOOL OSPPAuthRspHasDelayPref(OSPTAUTHRSP *);
-    void OSPPAuthRspSetDelayPref(OSPTAUTHRSP *, unsigned);
-    OSPTBOOL OSPPAuthRspHasNumDests(OSPTAUTHRSP *);
-    void OSPPAuthRspIncNumDests(OSPTAUTHRSP *);
-    unsigned OSPPAuthRspGetNumDests(OSPTAUTHRSP *);
-    OSPTTNAUDIT *OSPPAuthRspGetTNAudit(OSPTAUTHRSP *);
-    OSPTBOOL OSPPAuthRspHasCSAudit(OSPTAUTHRSP *);
-    OSPTCSAUDIT *OSPPAuthRspGetCSAudit(OSPTAUTHRSP *);
-    OSPTBOOL OSPPAuthRspHasRole(OSPTAUTHRSP *);
-    void OSPPAuthRspSetRole(OSPTAUTHRSP *, OSPE_ROLE);
-    OSPE_ROLE OSPPAuthRspGetRole(OSPTAUTHRSP *);
+    const char *OSPPAuthRspGetMessageId(OSPT_AUTH_RSP *);
+    void OSPPAuthRspSetTimestamp(OSPT_AUTH_RSP *, OSPTTIME);
+    OSPTBOOL OSPPAuthRspHasStatus(OSPT_AUTH_RSP *);
+    OSPTSTATUS *OSPPAuthRspGetStatus(OSPT_AUTH_RSP *);
+    void OSPPAuthRspSetTrxId(OSPT_AUTH_RSP *, OSPTTRXID);
+    OSPTBOOL OSPPAuthRspHasDelayLimit(OSPT_AUTH_RSP *);
+    void OSPPAuthRspSetDelayLimit(OSPT_AUTH_RSP *, unsigned);
+    unsigned OSPPAuthRspGetDelayLimit(OSPT_AUTH_RSP *);
+    OSPTBOOL OSPPAuthRspHasDelayPref(OSPT_AUTH_RSP *);
+    void OSPPAuthRspSetDelayPref(OSPT_AUTH_RSP *, unsigned);
+    OSPTBOOL OSPPAuthRspHasNumDests(OSPT_AUTH_RSP *);
+    void OSPPAuthRspIncNumDests(OSPT_AUTH_RSP *);
+    unsigned OSPPAuthRspGetNumDests(OSPT_AUTH_RSP *);
+    OSPTTNAUDIT *OSPPAuthRspGetTNAudit(OSPT_AUTH_RSP *);
+    OSPTBOOL OSPPAuthRspHasCSAudit(OSPT_AUTH_RSP *);
+    OSPTCSAUDIT *OSPPAuthRspGetCSAudit(OSPT_AUTH_RSP *);
+    OSPTBOOL OSPPAuthRspHasRole(OSPT_AUTH_RSP *);
+    void OSPPAuthRspSetRole(OSPT_AUTH_RSP *, OSPE_ROLE);
+    OSPE_ROLE OSPPAuthRspGetRole(OSPT_AUTH_RSP *);
 
 #ifdef __cplusplus
 }

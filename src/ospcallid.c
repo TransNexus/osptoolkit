@@ -32,11 +32,11 @@
 /*
  * OSPPCallIdNew() - create a new call identifier object
  */
-OSPTCALLID *OSPPCallIdNew(          /* returns ptr to call ID or null */
+OSPT_CALL_ID *OSPPCallIdNew(        /* returns ptr to call ID or null */
     unsigned ospvLen,               /* size of call ID */
     const unsigned char *ospvValue) /* call ID value */
 {
-    OSPTCALLID *ospvCallId = OSPC_OSNULL;
+    OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
     unsigned char *valptr;
 
     if (ospvLen > 0) {
@@ -85,12 +85,12 @@ OSPTCALLID *OSPPCallIdNew(          /* returns ptr to call ID or null */
              */
 
             /* try to allocate the memory for the entire object */
-            OSPM_MALLOC(ospvCallId, OSPTCALLID, sizeof(OSPTCALLID) + ospvLen);
+            OSPM_MALLOC(ospvCallId, OSPT_CALL_ID, sizeof(OSPT_CALL_ID) + ospvLen);
 
             /* make sure the allocation succeeded before proceeding */
             if (ospvCallId != OSPC_OSNULL) {
                 /* calculate where the "hidden" values will go */
-                valptr = ((unsigned char *) ospvCallId) + sizeof(OSPTCALLID);
+                valptr = ((unsigned char *)ospvCallId) + sizeof(OSPT_CALL_ID);
 
                 /* copy the values into their hidden location */
                 OSPM_MEMCPY(valptr, ospvValue, ospvLen);
@@ -111,7 +111,7 @@ OSPTCALLID *OSPPCallIdNew(          /* returns ptr to call ID or null */
  */
 unsigned OSPPCallIdFromASCIIElement(    /* returns error code */
     unsigned char *ospvElem,            /* input is ASCII element */
-    OSPTCALLID **ospvCallId)            /* where to put CallID pointer */
+    OSPT_CALL_ID **ospvCallId)          /* where to put CallID pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     unsigned char *callIdValue = OSPC_OSNULL;
@@ -150,7 +150,7 @@ unsigned OSPPCallIdFromASCIIElement(    /* returns error code */
  */
 unsigned OSPPCallIdFromElement( /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* input is XML element */
-    OSPTCALLID **ospvCallId)    /* where to put CallID pointer */
+    OSPT_CALL_ID **ospvCallId)  /* where to put CallID pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     unsigned char *callIdValue = OSPC_OSNULL;
@@ -189,7 +189,7 @@ unsigned OSPPCallIdFromElement( /* returns error code */
  * OSPPCallIdDelete() - destroy a call identifier object
  */
 void OSPPCallIdDelete(          /* no return */
-    OSPTCALLID **ospvCallId)    /* CallId to destroy */
+    OSPT_CALL_ID **ospvCallId)  /* CallId to destroy */
 {
     /* We free the whole callid at once because of the way it is constructed. */
     if ((*ospvCallId != OSPC_OSNULL) && (ospvCallId != OSPC_OSNULL)) {
@@ -202,7 +202,7 @@ void OSPPCallIdDelete(          /* no return */
  * OSPPCallIdToElement() - create an XML element from a call id
  */
 unsigned OSPPCallIdToElement(   /* returns error code */
-    OSPTCALLID *ospvCallId,     /* Call ID */
+    OSPT_CALL_ID *ospvCallId,   /* Call ID */
     OSPT_XML_ELEM **ospvElem,   /* where to put XML element pointer */
     OSPTBOOL ospvIsBase64)      /* indicates base64 or cdata */
 {
@@ -229,7 +229,7 @@ unsigned OSPPCallIdToElement(   /* returns error code */
  * OSPPCallIdGetSize() - returns size of call ID value
  */
 unsigned OSPPCallIdGetSize(
-    OSPTCALLID *ospvCallId)
+    OSPT_CALL_ID *ospvCallId)
 {
     unsigned ospvSize = 0;
 
@@ -244,7 +244,7 @@ unsigned OSPPCallIdGetSize(
  * OSPPCallIdGetValue() - returns pointer to call ID value
  */
 unsigned char *OSPPCallIdGetValue(
-    OSPTCALLID *ospvCallId)
+    OSPT_CALL_ID *ospvCallId)
 {
     unsigned char *ospvVal = OSPC_OSNULL;
 
@@ -259,7 +259,7 @@ unsigned char *OSPPCallIdGetValue(
  * OSPPSessionIdToElement() - create an XML element from a call id
  */
 unsigned OSPPSessionIdToElement(    /* returns error code */
-    OSPTCALLID *ospvSessionId,      /* Session ID */
+    OSPT_CALL_ID *ospvSessionId,    /* Session ID */
     OSPE_DIRECTION ospvType,        /* Direction */
     OSPTBOOL ospvIsBase64,          /* indicates base64 or cdata */
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */

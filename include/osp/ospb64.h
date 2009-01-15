@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-    int OSPPBase64Encode(unsigned const char *in, unsigned inSize, unsigned char *out, unsigned *outSize);
+    int OSPPBase64Encode(const unsigned char *in, unsigned inSize, unsigned char *out, unsigned *outSize);
     int OSPPBase64Decode(const char *in, unsigned inSize, unsigned char *out, unsigned *outSize);
 
 #ifdef __cplusplus

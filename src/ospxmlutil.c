@@ -109,7 +109,7 @@ unsigned OSPPXMLDocIsMatch(             /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -183,7 +183,7 @@ unsigned OSPPXMLDocSkipPast(            /* returns error code */
         ospvErrCode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &ospvScratch[len - 1]);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -216,7 +216,7 @@ unsigned OSPPXMLDocSkipPastChar(    /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -296,7 +296,7 @@ unsigned OSPPXMLDocGetEncoding( /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -369,7 +369,7 @@ unsigned OSPPXMLDocTranslateEntity( /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -435,7 +435,7 @@ unsigned OSPPXMLDocReadChar(    /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -477,7 +477,7 @@ void OSPPXMLDocPeekCharN(
                 readChar = OSPPBfrPeekByteN(*ospvBfrAddr, (2 * ospvCnt + 1));
                 break;
             default:
-                *ospvErrCode = (unsigned) OSPC_ERR_OS_FAILURE;
+                *ospvErrCode = (unsigned)OSPC_ERR_OS_FAILURE;
                 break;
         }
     }
@@ -488,8 +488,6 @@ void OSPPXMLDocPeekCharN(
             *ospvChar = (unsigned char) readChar;
         }
     }
-
-    return;
 }
 
 /*
@@ -524,7 +522,7 @@ unsigned OSPPXMLDocSkipWhite(   /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -612,7 +610,7 @@ unsigned OSPPXMLAddReference(           /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -742,7 +740,7 @@ unsigned OSPPXMLDereference(            /* returns error code */
 
         /* make sure there's still room in the data area */
         if ((flag == OSPC_TRUE) && (dataCnt > *ospvDataSize)) {
-            ospvErrCode = (unsigned) OSPC_ERR_OS_FAILURE;
+            ospvErrCode = (unsigned)OSPC_ERR_OS_FAILURE;
             break;
         }
     }
@@ -753,5 +751,5 @@ unsigned OSPPXMLDereference(            /* returns error code */
         ospvRawData = start;
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }

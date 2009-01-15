@@ -227,7 +227,7 @@ OSPTBOOL OSPPTokenInfoHasCallId(    /* returns non-zero if number exists */
  */
 void OSPPTokenInfoSetCallId(        /* nothing returned */
     OSPTTOKENINFO *ospvTokenInfo,   /* token info to set */
-    OSPTCALLID *ospvCallId)         /* call id to set to */
+    OSPT_CALL_ID *ospvCallId)         /* call id to set to */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
         if ((ospvCallId) != OSPC_OSNULL) {
@@ -242,10 +242,10 @@ void OSPPTokenInfoSetCallId(        /* nothing returned */
 /*
  * OSPPTokenInfoGetCallId() - returns the call id for a token info
  */
-OSPTCALLID *OSPPTokenInfoGetCallId(
+OSPT_CALL_ID *OSPPTokenInfoGetCallId(
     OSPTTOKENINFO *ospvTokenInfo)   /* token info */
 {
-    OSPTCALLID *ospvCallId = OSPC_OSNULL;
+    OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
         ospvCallId = ospvTokenInfo->ospmTokenInfoCallId;
@@ -461,7 +461,7 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
     OSPTTOKENINFO *tokeninfo = OSPC_OSNULL;
-    OSPTCALLID *callId;
+    OSPT_CALL_ID *callId;
     OSPTTIME t;
     OSPTTRXID trxid;
     unsigned duration;
@@ -487,10 +487,10 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
      * the information we need.
      */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        for (elem = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvElem);
+        for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
              (elem != OSPC_OSNULL) &&
              (ospvErrCode == OSPC_ERR_NO_ERROR);
-             elem = (OSPT_XML_ELEM *) OSPPXMLElemNextChild(ospvElem, elem)) {
+             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_MESSAGE:
                 break;
@@ -592,7 +592,7 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
     unsigned char val[200];     /* Assume that there wont be any field more than 200 bytes in length */
     unsigned char *ptr = NULL;
     OSPTTOKENINFO *tokeninfo = OSPC_OSNULL;
-    OSPTCALLID *callId;
+    OSPT_CALL_ID *callId;
     OSPTTIME t;
     OSPTTRXID trxid;
     unsigned duration;
@@ -717,7 +717,6 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
             if (ptr[0] == '\n') {
                 ptr++;
             }
-
         } while ((ptr[0] != '\0') && (ospvErrCode == OSPC_ERR_NO_ERROR));
     }
 

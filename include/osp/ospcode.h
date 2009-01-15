@@ -22,14 +22,14 @@
 #ifndef _OSPCODE_H
 #define _OSPCODE_H
 
-typedef struct statuscode {
+typedef struct {
     unsigned ospmCode;
     char *ospmDesc;
-} OSPTSTATLIST;
+} OSPT_STATE;
 
-#define MAX_STATS   23
+#define OSPC_MAX_STATS   23
 
-OSPTSTATLIST statlist[MAX_STATS] = {
+OSPT_STATE statlist[OSPC_MAX_STATS] = {
     /* 2xx  =  operation successful */
     {200, "success"},
     {201, "information created"},

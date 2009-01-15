@@ -420,7 +420,7 @@ void OSPPASN1ElementDelete(
 
         *ospvElement = OSPC_OSNULL;
     }
-}                                /* OSPPASN1ElementDelete */
+}   /* OSPPASN1ElementDelete */
 
 int OSPPASN1ElementGet(
     OSPEASN1DATAREFID ospvDataReferenceId, 
@@ -646,7 +646,6 @@ int OSPPASN1ElementParse(
                     newResults = OSPC_OSNULL;
 
                     if (PTPRuleIsPrimitive(parseRule)) {
-
                         /* The element is primitive, save it on results */
                         if (errorcode == OSPC_ERR_NO_ERROR) {
                             /* Parse Results Added */
@@ -655,7 +654,6 @@ int OSPPASN1ElementParse(
                         }
                     } else {
                         errorcode = PTPRuleGetParseTableId(parseRule, &parseTableId);
-
                         if (errorcode == OSPC_ERR_NO_ERROR) {
                             /* Try to parse the element */
                             errorcode = OSPPASN1ElementParse(eInfoContent, parseTableId, parseRule, &newResults, parseRule->DataReference);
@@ -799,7 +797,6 @@ int OSPPASN1ElementDeparse(
     for (nextRule = 0; errorcode == OSPC_ERR_NO_ERROR;) {
         /* Get the next rule - done if it returns PARSE_COMPLETE */
         errorcode = PTPTableGetRule(ospvParseTableId, &parseRule, &nextRule);
-
         if (errorcode == OSPC_ERR_NO_ERROR) {
             OSPM_MEMCPY(dataReference, ospvDataReference, OSPC_ASN1_DATAREF_MAXLENGTH);
             dataRefsMatch = PTPDataReferencesMatch(ospvDataReference, parseResults->DataReference);
@@ -811,12 +808,10 @@ int OSPPASN1ElementDeparse(
                 /* Copy and update datareference with the value of the next
                    element, start with a fresh copy - these guys are brothers */
                 errorcode = PTPDataRefAddRef(dataReference, parseRule->DataReference);
-
                 if (errorcode == OSPC_ERR_NO_ERROR) {
                     /* Deparse this section of the element list */
                     errorcode = OSPPASN1ElementDeparse(&newElements, &parseResults, parseRule->ParseTableId, dataReference);
                 }
-
             } else if (PTPRuleIsPrimitive(parseRule)) {
                 /* Rule is a primitive or a DER format element (one that
                    would break down further if the parse rules called for
@@ -845,7 +840,6 @@ int OSPPASN1ElementDeparse(
                     /* Get the next element from the results list.  */
                     OSPM_MEMCPY(dataReference, ospvDataReference, OSPC_ASN1_DATAREF_MAXLENGTH);
                     errorcode = PTPDataRefAddRef(dataReference, parseRule->DataReference);
-
                     if (errorcode == OSPC_ERR_NO_ERROR) {
                         /* First parse result in the list (remainder of list
                            really) should have a matching dataReference */ ;
@@ -863,7 +857,6 @@ int OSPPASN1ElementDeparse(
                                        optional */
                                     foundElement = OSPC_OSNULL;
                                 }
-
                             } else {
                                 /* Rule is optional, Null thing out */
                                 foundElement = OSPC_OSNULL;
@@ -958,7 +951,7 @@ int OSPPASN1ElementDeparse(
                        parse rule, this element is constructed, so 
                        apply the constructed flags */
                     if (elementInfo->Tag == 0) {
-                        elementInfo->Tag = (unsigned char) OSPM_CONSTRUCTED_TAG(parseRule->Tag);
+                        elementInfo->Tag = (unsigned char)OSPM_CONSTRUCTED_TAG(parseRule->Tag);
                     }
                 }
 
@@ -1027,8 +1020,7 @@ int OSPPASN1ElementFormat(
     errorcode = OSPPASN1SmallInt2UnsignedChar(ospvDataLength, 256, &lengthBuffer, &lengthLength);
     dataBufferLength = ospvDataLength + ospvTagLength + lengthLength;
     if (ospvDataLength > 127) {
-        dataBufferLength++;        /* Add a byte for length mode 
-                                   indicator if length is >127 */
+        dataBufferLength++;        /* Add a byte for length mode indicator if length is >127 */
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -1037,7 +1029,6 @@ int OSPPASN1ElementFormat(
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPM_MALLOC(dataBuffer, unsigned char, dataBufferLength);
-
         if (dataBuffer == OSPC_OSNULL) {
             errorcode = OSPC_ERR_ASN1_UNABLE_TO_ALLOCATE_SPACE;
             OSPM_DBGERRORLOG(errorcode, "Error allocating encoded element buffer");

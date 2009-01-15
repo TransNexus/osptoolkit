@@ -37,7 +37,7 @@ typedef struct {
     char *ospmReauthRspComponentId;
     OSPTSTATUS *ospmReauthRspStatus;
     OSPTTRXID ospmReauthRspTrxId;
-    OSPTDEST *ospmReauthRspDest;
+    OSPT_DEST *ospmReauthRspDest;
     OSPTTNAUDIT *ospmReauthRspTNAudit;
 } OSPTREAUTHRSP;
 
@@ -61,7 +61,7 @@ extern "C" {
     OSPTSTATUS *OSPPReauthRspGetStatus(OSPTREAUTHRSP *);
     void OSPPReauthRspSetTrxId(OSPTREAUTHRSP *, OSPTTRXID);
     OSPTBOOL OSPPReauthRspHasDest(OSPTREAUTHRSP *ospvReauthRsp);
-    void OSPPReauthRspSetDest(OSPTREAUTHRSP *, OSPTDEST *);
+    void OSPPReauthRspSetDest(OSPTREAUTHRSP *, OSPT_DEST *);
     OSPTTNAUDIT *OSPPReauthRspGetTNAudit(OSPTREAUTHRSP *);
 
 #ifdef __cplusplus

@@ -38,7 +38,7 @@ typedef struct {
     OSPTLISTLINK ospmCallIdLink;
     unsigned ospmCallIdLen;
     unsigned char *ospmCallIdVal;
-} OSPTCALLID;
+} OSPT_CALL_ID;
 
 /* Function Prototypes */
 
@@ -46,14 +46,14 @@ typedef struct {
 extern "C" {
 #endif
 
-    OSPTCALLID *OSPPCallIdNew(unsigned, const unsigned char *);
-    void OSPPCallIdDelete(OSPTCALLID **);
-    unsigned OSPPCallIdFromElement(OSPT_XML_ELEM *, OSPTCALLID **);
-    unsigned OSPPCallIdToElement(OSPTCALLID *, OSPT_XML_ELEM **, OSPTBOOL);
-    unsigned OSPPCallIdGetSize(OSPTCALLID *);
-    unsigned char *OSPPCallIdGetValue(OSPTCALLID *);
-    unsigned OSPPCallIdFromASCIIElement(unsigned char *, OSPTCALLID **);
-    unsigned OSPPSessionIdToElement(OSPTCALLID *, OSPE_DIRECTION, OSPTBOOL, OSPT_XML_ELEM **);
+    OSPT_CALL_ID *OSPPCallIdNew(unsigned, const unsigned char *);
+    void OSPPCallIdDelete(OSPT_CALL_ID **);
+    unsigned OSPPCallIdFromElement(OSPT_XML_ELEM *, OSPT_CALL_ID **);
+    unsigned OSPPCallIdToElement(OSPT_CALL_ID *, OSPT_XML_ELEM **, OSPTBOOL);
+    unsigned OSPPCallIdGetSize(OSPT_CALL_ID *);
+    unsigned char *OSPPCallIdGetValue(OSPT_CALL_ID *);
+    unsigned OSPPCallIdFromASCIIElement(unsigned char *, OSPT_CALL_ID **);
+    unsigned OSPPSessionIdToElement(OSPT_CALL_ID *, OSPE_DIRECTION, OSPTBOOL, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

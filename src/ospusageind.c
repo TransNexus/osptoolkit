@@ -96,7 +96,7 @@ OSPTBOOL OSPPUsageIndHasRole(       /* returns non-zero if time */
 /*
  * OSPPUsageIndGetRole() - returns role for an usage indication
  */
-OSPE_ROLE OSPPUsageIndGetRole( /* returns the role (OGW/TGW) */
+OSPE_ROLE OSPPUsageIndGetRole(      /* returns the role (OGW/TGW) */
     OSPT_USAGEIND *ospvUsageInd)    /* usage indication */
 {
     OSPE_ROLE ospvRole = OSPC_ROLE_UNDEFINED;
@@ -127,7 +127,7 @@ void OSPPUsageIndSetRole(   /* nothing returned */
 OSPTBOOL OSPPUsageIndHasComponentId(    /* returns non-zero if component id is set */
     OSPT_USAGEIND *ospvUsageInd)
 {
-    return (ospvUsageInd->ospmUsageIndComponentId != OSPC_OSNULL);
+    return(ospvUsageInd->ospmUsageIndComponentId != OSPC_OSNULL);
 }
 
 /*
@@ -182,7 +182,7 @@ void OSPPUsageIndSetTransactionId(  /* nothing returned */
  * OSPPUsageIndGetTransactionId() - returns the trans id for a usage ind
  */
 OSPTTRXID OSPPUsageIndGetTransactionId(
-    OSPT_USAGEIND *ospvUsageInd)        /* usage ind */
+    OSPT_USAGEIND *ospvUsageInd)    /* usage ind */
 {
     OSPTTRXID ospvTransactionId = 0;
 
@@ -211,10 +211,10 @@ OSPTBOOL OSPPUsageIndHasCallId(     /* returns non-zero if exists */
 /*
  * OSPPUsageIndGetCallId() - gets the call ID for an usage indication
  */
-OSPTCALLID *OSPPUsageIndGetCallId(  /* returns call ID pointer */
-    OSPT_USAGEIND *ospvUsageInd)    /* usage indication */
+OSPT_CALL_ID *OSPPUsageIndGetCallId(    /* returns call ID pointer */
+    OSPT_USAGEIND *ospvUsageInd)        /* usage indication */
 {
-    OSPTCALLID *ospvCallId = OSPC_OSNULL;
+    OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
 
     if (ospvUsageInd != OSPC_OSNULL) {
         ospvCallId = ospvUsageInd->ospmUsageIndCallId;
@@ -322,7 +322,7 @@ void OSPPUsageIndSetDestNumber(     /* nothing returned */
  * OSPPUsageIndGetDestNumber() - returns the destination number for a usage ind
  */
 const char *OSPPUsageIndGetDestNumber(
-    OSPT_USAGEIND *ospvUsageInd)        /* usage ind */
+    OSPT_USAGEIND *ospvUsageInd)    /* usage ind */
 {
     const char *ospvDestNumber = OSPC_OSNULL;
 
@@ -535,8 +535,8 @@ void OSPPUsageIndSetDeviceId(   /* nothing returned */
 /*
  * OSPPUsageIndGetDeviceId() - returns Device Id for an usage request
  */
-unsigned long OSPPUsageIndGetDeviceId(      /* returns the time value */
-    OSPT_USAGEIND *ospvUsageInd)            /* usage request */
+unsigned long OSPPUsageIndGetDeviceId(  /* returns the time value */
+    OSPT_USAGEIND *ospvUsageInd)        /* usage request */
 {
     unsigned long ospvDeviceId = 0L;
 
@@ -550,9 +550,9 @@ unsigned long OSPPUsageIndGetDeviceId(      /* returns the time value */
 /*
  * OSPPUsageIndHasTermCause() - Does request have a Fail Reason
  */
-OSPTBOOL OSPPUsageIndHasTermCause(      /* returns non-zero if time */
-    OSPT_USAGEIND *ospvUsageInd,        /* usage request in question */
-    OSPE_TERM_CAUSE ospvType)           /* termination cause type */
+OSPTBOOL OSPPUsageIndHasTermCause(  /* returns non-zero if time */
+    OSPT_USAGEIND *ospvUsageInd,    /* usage request in question */
+    OSPE_TERM_CAUSE ospvType)       /* termination cause type */
 {
     OSPTBOOL ospvHasTermCause = OSPC_FALSE;
 
@@ -943,9 +943,9 @@ void OSPPUsageIndMergeSourceAlt(    /* nothing returned */
      * Copy the node from List 2.
      */
     if ((ospvUsageInd != OSPC_OSNULL) && (ospvList2 != OSPC_OSNULL)) {
-        for (altinfo1 = (OSPT_ALTINFO *) OSPPListFirst(ospvList2);
+        for (altinfo1 = (OSPT_ALTINFO *)OSPPListFirst(ospvList2);
             altinfo1 != OSPC_OSNULL;
-            altinfo1 = (OSPT_ALTINFO *) OSPPListNext(ospvList2, altinfo1)) 
+            altinfo1 = (OSPT_ALTINFO *)OSPPListNext(ospvList2, altinfo1)) 
         {
             altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1), OSPPAltInfoGetValue(altinfo1), OSPPAltInfoTypeGetPart(altinfo1));
             if (altinfo2 != OSPC_OSNULL) {
@@ -963,9 +963,9 @@ void OSPPUsageIndMergeSourceAlt(    /* nothing returned */
      * Now copy the nodes for Network/Subscriber Info
      */
     if ((ospvUsageInd != OSPC_OSNULL) && (ospvList1 != OSPC_OSNULL)) {
-        for (altinfo1 = (OSPT_ALTINFO *) OSPPListFirst(ospvList1);
+        for (altinfo1 = (OSPT_ALTINFO *)OSPPListFirst(ospvList1);
             altinfo1 != OSPC_OSNULL;
-            altinfo1 = (OSPT_ALTINFO *) OSPPListNext(ospvList1, altinfo1)) 
+            altinfo1 = (OSPT_ALTINFO *)OSPPListNext(ospvList1, altinfo1)) 
         {
             if (OSPPAltInfoTypeGetPart(altinfo1) != OSPC_ALTINFO_TRANSPORT) {
                 altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1), OSPPAltInfoGetValue(altinfo1), OSPPAltInfoTypeGetPart(altinfo1));
@@ -994,9 +994,9 @@ void OSPPUsageIndCopySourceAlt(     /* nothing returned */
     if ((ospvUsageInd != OSPC_OSNULL) && (ospvList != OSPC_OSNULL)) {
         OSPPListNew(&(ospvUsageInd->ospmUsageIndSourceAlt));
 
-        for (altinfo1 = (OSPT_ALTINFO *) OSPPListFirst(ospvList);
+        for (altinfo1 = (OSPT_ALTINFO *)OSPPListFirst(ospvList);
             altinfo1 != OSPC_OSNULL;
-            altinfo1 = (OSPT_ALTINFO *) OSPPListNext(ospvList, altinfo1)) 
+            altinfo1 = (OSPT_ALTINFO *)OSPPListNext(ospvList, altinfo1)) 
         {
             altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1), OSPPAltInfoGetValue(altinfo1), OSPPAltInfoTypeGetPart(altinfo1));
             if (altinfo2 != OSPC_OSNULL) {
@@ -1155,7 +1155,7 @@ void OSPPUsageIndDelete(
  */
 void OSPPUsageIndSetCallId(         /* nothing returned */
     OSPT_USAGEIND *ospvUsageInd,    /* usage indication */
-    OSPTCALLID *ospvCallId)         /* call ID */
+    OSPT_CALL_ID *ospvCallId)         /* call ID */
 {
     if (ospvUsageInd != OSPC_OSNULL) {
         if ((ospvCallId) != OSPC_OSNULL) {
@@ -1189,7 +1189,7 @@ OSPTBOOL OSPPUsageIndHasStatistics(
  */
 void OSPPUsageIndSetStatistics(
     OSPT_USAGEIND *ospvUsageInd,    /* In - ptr to usage ind */
-    OSPT_STATS *ospvStats)     /* In - ptr to completed stats struct */
+    OSPT_STATS *ospvStats)          /* In - ptr to completed stats struct */
 {
     if ((ospvUsageInd != OSPC_OSNULL) && (ospvStats != OSPC_OSNULL)) {
         ospvUsageInd->ospmUsageIndStats = OSPPStatsNew();
@@ -1265,10 +1265,10 @@ int OSPPUsageIndToElement(      /* returns error code */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
 
         /* Build multiple usage ind if there are more than one */
-        for (usage = (OSPT_USAGEIND *) OSPPListFirst(ospvUsageInd);
+        for (usage = (OSPT_USAGEIND *)OSPPListFirst(ospvUsageInd);
             (ospvErrCode == OSPC_ERR_NO_ERROR) &&
             (usage != OSPC_OSNULL);
-            usage = (OSPT_USAGEIND *) OSPPListNext(ospvUsageInd, usage)) 
+            usage = (OSPT_USAGEIND *)OSPPListNext(ospvUsageInd, usage)) 
         {
             /* create the usage element */
             usageindelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_USAGEIND), "");
@@ -1558,7 +1558,6 @@ int OSPPUsageIndToElement(      /* returns error code */
                         OSPPUsageIndGetReleaseSource(usage),
                         usagedetailelem);
                 }
-
             }
 
             /* Statistics */
@@ -1612,7 +1611,6 @@ int OSPPUsageIndToElement(      /* returns error code */
                             subelem = OSPC_OSNULL;
                         }
                     }
-
                 }
             }
 
@@ -1646,7 +1644,7 @@ int OSPPUsageIndToElement(      /* returns error code */
         OSPPXMLAttrDelete(&attr);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1668,7 +1666,7 @@ OSPTBOOL OSPPUsageIndHasMessageId(  /* returns non-zero if message id is set */
     OSPT_USAGEIND *ospvUsageInd)
 {
 	if (ospvUsageInd != OSPC_OSNULL) {
-        return (ospvUsageInd->ospmUsageIndMessageId != OSPC_OSNULL);
+        return(ospvUsageInd->ospmUsageIndMessageId != OSPC_OSNULL);
 	} else {
 		return OSPC_FALSE;
 	}
@@ -1877,11 +1875,11 @@ OSPTBOOL OSPPUsageIndHasSessionId(  /* returns non-zero if exists */
 /*
  * OSPPUsageIndGetSessionId() - gets session ID for an usage indication
  */
-OSPTCALLID *OSPPUsageIndGetSessionId(   /* returns session ID pointer */
+OSPT_CALL_ID *OSPPUsageIndGetSessionId( /* returns session ID pointer */
     OSPT_USAGEIND *ospvUsageInd,        /* usage indication */
     OSPE_DIRECTION ospvDirection)       /* direction */
 {
-    OSPTCALLID *ospvSessionId = OSPC_OSNULL;
+    OSPT_CALL_ID *ospvSessionId = OSPC_OSNULL;
 
     if (ospvUsageInd != OSPC_OSNULL) {
         if ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND)) {
@@ -1898,7 +1896,7 @@ OSPTCALLID *OSPPUsageIndGetSessionId(   /* returns session ID pointer */
 void OSPPUsageIndSetSessionId(      /* nothing returned */
     OSPT_USAGEIND *ospvUsageInd,    /* usage indication */
     OSPE_DIRECTION ospvDirection,   /* direction */
-    OSPTCALLID *ospvSessionId)      /* call ID */
+    OSPT_CALL_ID *ospvSessionId)    /* call ID */
 {
     if ((ospvUsageInd != OSPC_OSNULL) &&
         ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND)) && 

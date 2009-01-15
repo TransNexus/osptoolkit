@@ -47,7 +47,9 @@ const OSPT_MSG_DESC OSPV_RTYPE_DESCS[OSPC_ROLE_NUMBER] = {
     { OSPC_ROLE_RADSRCSTART,   "radsrcstart" },
     { OSPC_ROLE_RADDESTSTART,  "raddeststart" },
     { OSPC_ROLE_RADSRCSTOP,    "radsrcstop" },
-    { OSPC_ROLE_RADDESTSTOP,   "raddeststop" }
+    { OSPC_ROLE_RADDESTSTOP,   "raddeststop" },
+    { OSPC_ROLE_RADSRCINTERIM, "radsrcinterim" },
+    { OSPC_ROLE_RADDESTINTERIM,"raddestinterim" }
 };
 
 /*

@@ -35,7 +35,7 @@
  * OSPPAuthReqHasTimestamp() - Does authorisation request have a valid timestamp?
  */
 OSPTBOOL OSPPAuthReqHasTimestamp(   /* returns non-zero if time */
-    OSPTAUTHREQ *ospvAuthReq)       /* authorisation request in question */
+    OSPT_AUTH_REQ *ospvAuthReq)     /* authorisation request in question */
 {
     OSPTBOOL ospvHasTimestamp = OSPC_FALSE;
 
@@ -50,7 +50,7 @@ OSPTBOOL OSPPAuthReqHasTimestamp(   /* returns non-zero if time */
  * OSPPAuthReqSetTimestamp() - sets the timestamp for an authorisation request
  */
 void OSPPAuthReqSetTimestamp(   /* nothing returned */
-    OSPTAUTHREQ *ospvAuthReq, 
+    OSPT_AUTH_REQ *ospvAuthReq, 
     OSPTTIME ospvTime)
 {
     if (ospvAuthReq != OSPC_OSNULL) {
@@ -62,7 +62,7 @@ void OSPPAuthReqSetTimestamp(   /* nothing returned */
  * OSPPAuthReqGetTimestamp() - returns timestamp for an authorisation request
  */
 OSPTTIME OSPPAuthReqGetTimestamp(   /* returns the time value */
-    OSPTAUTHREQ *ospvAuthReq)       /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq)     /* authorisation request */
 {
     OSPTTIME ospvTimestamp = 0;
 
@@ -77,7 +77,7 @@ OSPTTIME OSPPAuthReqGetTimestamp(   /* returns the time value */
  * OSPPAuthReqHasCallId() - does an authorisation request have a Call ID?
  */
 OSPTBOOL OSPPAuthReqHasCallId(  /* returns non-zero if exists */
-    OSPTAUTHREQ *ospvAuthReq)   /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq) /* authorisation request */
 {
     OSPTBOOL ospvHasCallId = OSPC_FALSE;
 
@@ -91,13 +91,13 @@ OSPTBOOL OSPPAuthReqHasCallId(  /* returns non-zero if exists */
 /*
  * OSPPAuthReqFirstCallId() - gets the First call ID for an authorisation request
  */
-OSPTCALLID *OSPPAuthReqFirstCallId( /* returns call ID pointer */
-    OSPTAUTHREQ *ospvAuthReq)       /* authorisation request */
+OSPT_CALL_ID *OSPPAuthReqFirstCallId(   /* returns call ID pointer */
+    OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request */
 {
-    OSPTCALLID *ospvCallId = OSPC_OSNULL;
+    OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
 
     if (ospvAuthReq != OSPC_OSNULL) {
-        ospvCallId = (OSPTCALLID *)OSPPListFirst(&(ospvAuthReq->ospmAuthReqCallId));
+        ospvCallId = (OSPT_CALL_ID *)OSPPListFirst(&(ospvAuthReq->ospmAuthReqCallId));
     }
 
     return ospvCallId;
@@ -106,14 +106,14 @@ OSPTCALLID *OSPPAuthReqFirstCallId( /* returns call ID pointer */
 /*
  * OSPPAuthReqNextCallId() - gets the next call ID for an authorisation request
  */
-OSPTCALLID *OSPPAuthReqNextCallId(  /* returns call ID pointer */
-    OSPTAUTHREQ *ospvAuthReq,       /* authorisation request */
-    OSPTCALLID *ospvCallId)         /* current callid */
+OSPT_CALL_ID *OSPPAuthReqNextCallId(    /* returns call ID pointer */
+    OSPT_AUTH_REQ *ospvAuthReq,         /* authorisation request */
+    OSPT_CALL_ID *ospvCallId)           /* current callid */
 {
-    OSPTCALLID *nextcallid = OSPC_OSNULL;
+    OSPT_CALL_ID *nextcallid = OSPC_OSNULL;
 
     if (ospvAuthReq != OSPC_OSNULL) {
-        nextcallid = (OSPTCALLID *)OSPPListNext(&(ospvAuthReq->ospmAuthReqCallId), ospvCallId);
+        nextcallid = (OSPT_CALL_ID *)OSPPListNext(&(ospvAuthReq->ospmAuthReqCallId), ospvCallId);
     }
 
     return nextcallid;
@@ -123,7 +123,7 @@ OSPTCALLID *OSPPAuthReqNextCallId(  /* returns call ID pointer */
  * OSPPAuthReqHasSourceNumber() - does the authorisation request have a source number?
  */
 OSPTBOOL OSPPAuthReqHasSourceNumber(/* returns non-zero if number exists */
-    OSPTAUTHREQ *ospvAuthReq)       /* authorisation request effected */
+    OSPT_AUTH_REQ *ospvAuthReq)     /* authorisation request effected */
 {
     OSPTBOOL ospvHasNumber = OSPC_FALSE;
 
@@ -138,7 +138,7 @@ OSPTBOOL OSPPAuthReqHasSourceNumber(/* returns non-zero if number exists */
  * OSPPAuthReqSetSourceNumber() - set the source number for an authorisation request
  */
 void OSPPAuthReqSetSourceNumber(/* nothing returned */
-    OSPTAUTHREQ *ospvAuthReq,   /* authorisation request  to set */
+    OSPT_AUTH_REQ *ospvAuthReq, /* authorisation request  to set */
     const char *ospvNum)        /* source number (as string) */
 {
     if (ospvAuthReq != OSPC_OSNULL) {
@@ -151,8 +151,8 @@ void OSPPAuthReqSetSourceNumber(/* nothing returned */
 /*
  * OSPPAuthReqGetSourceNumber() - returns the source number for an authorisation request
  */
-const char *OSPPAuthReqGetSourceNumber(   /* returns number as string */
-    OSPTAUTHREQ *ospvAuthReq)       /* authorisation request */
+const char *OSPPAuthReqGetSourceNumber( /* returns number as string */
+    OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request */
 {
     const char *ospvNum = OSPC_OSNULL;
 
@@ -167,7 +167,7 @@ const char *OSPPAuthReqGetSourceNumber(   /* returns number as string */
  * OSPPAuthReqHasSourceAlt() - does an authorisation request have a Source Alternate?
  */
 OSPTBOOL OSPPAuthReqHasSourceAlt(   /* returns non-zero if exists */
-    OSPTAUTHREQ *ospvAuthReq)       /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq)     /* authorisation request */
 {
     OSPTBOOL ospvHasSourceAlt = OSPC_FALSE;
 
@@ -182,7 +182,7 @@ OSPTBOOL OSPPAuthReqHasSourceAlt(   /* returns non-zero if exists */
  * OSPPAuthReqFirstSourceAlt() - gets the First Source alternate for an authorisation request 
  */
 OSPT_ALTINFO *OSPPAuthReqFirstSourceAlt(/* returns alt info pointer */
-    OSPTAUTHREQ *ospvAuthReq)           /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request */
 {
     OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
 
@@ -197,7 +197,7 @@ OSPT_ALTINFO *OSPPAuthReqFirstSourceAlt(/* returns alt info pointer */
  * OSPPAuthReqNextSourceAlt() - gets the next source alternate for an authorisation request 
  */
 OSPT_ALTINFO *OSPPAuthReqNextSourceAlt( /* returns alt info pointer */
-    OSPTAUTHREQ *ospvAuthReq,           /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq,         /* authorisation request */
     OSPT_ALTINFO *ospvAltInfo)
 {
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
@@ -213,7 +213,7 @@ OSPT_ALTINFO *OSPPAuthReqNextSourceAlt( /* returns alt info pointer */
  * OSPPAuthReqHasDestinationAlt() - does an authorisation request have a Destination Alternate? 
  */
 OSPTBOOL OSPPAuthReqHasDestinationAlt(  /* returns non-zero if exists */
-    OSPTAUTHREQ *ospvAuthReq)           /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request */
 {
     OSPTBOOL ospvHasDestinationAlt = OSPC_FALSE;
 
@@ -228,7 +228,7 @@ OSPTBOOL OSPPAuthReqHasDestinationAlt(  /* returns non-zero if exists */
  * OSPPAuthReqFirstDestinationAlt() - gets the First Destination alternate for an authorisation request 
  */
 OSPT_ALTINFO *OSPPAuthReqFirstDestinationAlt(   /* returns alt info pointer */
-    OSPTAUTHREQ *ospvAuthReq)                   /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq)                 /* authorisation request */
 {
     OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
 
@@ -243,7 +243,7 @@ OSPT_ALTINFO *OSPPAuthReqFirstDestinationAlt(   /* returns alt info pointer */
  * OSPPAuthReqNextDestinationAlt() - gets the next Destination alternate for an authorisation request 
  */
 OSPT_ALTINFO *OSPPAuthReqNextDestinationAlt(    /* returns alt info pointer */
-    OSPTAUTHREQ *ospvAuthReq,                   /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq,                 /* authorisation request */
     OSPT_ALTINFO *ospvAltInfo)
 {
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
@@ -259,7 +259,7 @@ OSPT_ALTINFO *OSPPAuthReqNextDestinationAlt(    /* returns alt info pointer */
  * OSPPAuthReqHasDestNumber() - does the authorisation request include a dest number?
  */
 OSPTBOOL OSPPAuthReqHasDestNumber(  /* returns non-zero if number exists */
-    OSPTAUTHREQ *ospvAuthReq)       /* authorisation request effected */
+    OSPT_AUTH_REQ *ospvAuthReq)     /* authorisation request effected */
 {
     OSPTBOOL ospvHasNumber = OSPC_FALSE;
 
@@ -274,7 +274,7 @@ OSPTBOOL OSPPAuthReqHasDestNumber(  /* returns non-zero if number exists */
  * OSPPAuthReqSetDestNumber() - set the destination number for an authorisation request
  */
 void OSPPAuthReqSetDestNumber(  /* nothing returned */
-    OSPTAUTHREQ *ospvAuthReq,   /* authorisation request to set */
+    OSPT_AUTH_REQ *ospvAuthReq, /* authorisation request to set */
     const char *ospvNum)        /* destination number (as string) */
 {
     if (ospvAuthReq != OSPC_OSNULL) {
@@ -288,7 +288,7 @@ void OSPPAuthReqSetDestNumber(  /* nothing returned */
  * OSPPAuthReqGetDestNumber() - returns the destination number for an authorisation request
  */
 const char *OSPPAuthReqGetDestNumber(   /* returns number as string */
-    OSPTAUTHREQ *ospvAuthReq)           /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request */
 {
     const char *ospvDestNum = OSPC_OSNULL;
 
@@ -303,7 +303,7 @@ const char *OSPPAuthReqGetDestNumber(   /* returns number as string */
  * OSPPAuthReqSetMaxDest() - set the maximum destinations for an authorisation request
  */
 void OSPPAuthReqSetMaxDest(     /* nothing returned */
-    OSPTAUTHREQ *ospvAuthReq,   /* authorisation request to set */
+    OSPT_AUTH_REQ *ospvAuthReq, /* authorisation request to set */
     unsigned ospvNum)           /* maximum destinations */
 {
     if (ospvAuthReq != OSPC_OSNULL) {
@@ -317,7 +317,7 @@ void OSPPAuthReqSetMaxDest(     /* nothing returned */
  * OSPPAuthReqGetMaxDest() - returns the maximum destinations for an authorisation request
  */
 unsigned OSPPAuthReqGetMaxDest( /* returns maximum destionations */
-    OSPTAUTHREQ *ospvAuthReq)   /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq) /* authorisation request */
 {
     unsigned ospvNum = 0;
 
@@ -332,7 +332,7 @@ unsigned OSPPAuthReqGetMaxDest( /* returns maximum destionations */
  * OSPPAuthReqHasCustId() - Does request have a Customer Id?
  */
 OSPTBOOL OSPPAuthReqHasCustId(  /* returns non-zero if time */
-    OSPTAUTHREQ *ospvAuthReq)   /* authorisation request in question */
+    OSPT_AUTH_REQ *ospvAuthReq) /* authorisation request in question */
 {
     OSPTBOOL ospvHasCustId = OSPC_FALSE;
 
@@ -347,7 +347,7 @@ OSPTBOOL OSPPAuthReqHasCustId(  /* returns non-zero if time */
  * OSPPAuthReqSetCustId() - Set Customer Id
  */
 void OSPPAuthReqSetCustId(      /* nothing returned */
-    OSPTAUTHREQ *ospvAuthReq, 
+    OSPT_AUTH_REQ *ospvAuthReq, 
     unsigned long ospvCustId)
 {
     if (ospvAuthReq != OSPC_OSNULL) {
@@ -359,7 +359,7 @@ void OSPPAuthReqSetCustId(      /* nothing returned */
  * OSPPAuthReqGetCustId() - returns Customer Id for an auth request
  */
 unsigned long OSPPAuthReqGetCustId( /* returns the time value */
-    OSPTAUTHREQ *ospvAuthReq)       /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq)     /* authorisation request */
 {
     unsigned long ospvCustId = 0L;
 
@@ -374,7 +374,7 @@ unsigned long OSPPAuthReqGetCustId( /* returns the time value */
  * OSPPAuthReqHasDeviceId() - Does request have a Device Id?
  */
 OSPTBOOL OSPPAuthReqHasDeviceId(    /* returns non-zero if time */
-    OSPTAUTHREQ *ospvAuthReq)       /* authorisation request in question */
+    OSPT_AUTH_REQ *ospvAuthReq)     /* authorisation request in question */
 {
     OSPTBOOL ospvHasDeviceId = OSPC_FALSE;
 
@@ -389,7 +389,7 @@ OSPTBOOL OSPPAuthReqHasDeviceId(    /* returns non-zero if time */
  * OSPPAuthReqSetDeviceId() - Set Device Id
  */
 void OSPPAuthReqSetDeviceId(    /* nothing returned */
-    OSPTAUTHREQ *ospvAuthReq, 
+    OSPT_AUTH_REQ *ospvAuthReq, 
     unsigned long ospvDeviceId)
 {
     if (ospvAuthReq != OSPC_OSNULL) {
@@ -401,7 +401,7 @@ void OSPPAuthReqSetDeviceId(    /* nothing returned */
  * OSPPAuthReqGetDeviceId() - returns Device Id for an auth request
  */
 unsigned long OSPPAuthReqGetDeviceId(   /* returns the time value */
-    OSPTAUTHREQ *ospvAuthReq)           /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request */
 {
     unsigned long ospvDeviceId = 0L;
 
@@ -416,10 +416,10 @@ unsigned long OSPPAuthReqGetDeviceId(   /* returns the time value */
  * OSPPAuthReqHasComponentId() - is the component id set ?
  */
 OSPTBOOL OSPPAuthReqHasComponentId( /* returns non-zero if component id is set */
-    OSPTAUTHREQ *ospvAuthReq)
+    OSPT_AUTH_REQ *ospvAuthReq)
 {
     if (ospvAuthReq != OSPC_OSNULL) {
-        return (ospvAuthReq->ospmAuthReqComponentId != OSPC_OSNULL);
+        return(ospvAuthReq->ospmAuthReqComponentId != OSPC_OSNULL);
     } else {
         return OSPC_FALSE;
     }
@@ -428,13 +428,13 @@ OSPTBOOL OSPPAuthReqHasComponentId( /* returns non-zero if component id is set *
 /*
  * OSPPAuthReqNew() - creates a new (empty) authorisation request
  */
-OSPTAUTHREQ *OSPPAuthReqNew(void)   /* returns pointer or NULL */
+OSPT_AUTH_REQ *OSPPAuthReqNew(void) /* returns pointer or NULL */
 {
-    OSPTAUTHREQ *ospvAuthReq = OSPC_OSNULL;
+    OSPT_AUTH_REQ *ospvAuthReq = OSPC_OSNULL;
 
-    OSPM_MALLOC(ospvAuthReq, OSPTAUTHREQ, sizeof(OSPTAUTHREQ));
+    OSPM_MALLOC(ospvAuthReq, OSPT_AUTH_REQ, sizeof(OSPT_AUTH_REQ));
     if (ospvAuthReq != OSPC_OSNULL) {
-        OSPM_MEMSET(ospvAuthReq, 0, sizeof(OSPTAUTHREQ));
+        OSPM_MEMSET(ospvAuthReq, 0, sizeof(OSPT_AUTH_REQ));
         ospvAuthReq->ospmAuthReqTimestamp = OSPC_TIMEMIN;
     }
 
@@ -445,14 +445,14 @@ OSPTAUTHREQ *OSPPAuthReqNew(void)   /* returns pointer or NULL */
  * OSPPAuthReqDelete() - deletes an authorisation request structure
  */
 void OSPPAuthReqDelete(
-    OSPTAUTHREQ **ospvAuthReq)
+    OSPT_AUTH_REQ **ospvAuthReq)
 {
-    OSPTCALLID *callid = OSPC_OSNULL;
+    OSPT_CALL_ID *callid = OSPC_OSNULL;
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
     if (*ospvAuthReq) {
         while (!OSPPListEmpty(&((*ospvAuthReq)->ospmAuthReqCallId))) {
-            callid = (OSPTCALLID *)OSPPListRemove(&((*ospvAuthReq)->ospmAuthReqCallId));
+            callid = (OSPT_CALL_ID *)OSPPListRemove(&((*ospvAuthReq)->ospmAuthReqCallId));
 
             if (callid != OSPC_OSNULL) {
                 OSPM_FREE(callid);
@@ -463,7 +463,7 @@ void OSPPAuthReqDelete(
         OSPPListDelete(&((*ospvAuthReq)->ospmAuthReqCallId));
 
         while (!OSPPListEmpty(&((*ospvAuthReq)->ospmAuthReqDeviceInfo))) {
-            altinfo = (OSPT_ALTINFO *) OSPPListRemove(&((*ospvAuthReq)->ospmAuthReqDeviceInfo));
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvAuthReq)->ospmAuthReqDeviceInfo));
             if (altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
@@ -473,7 +473,7 @@ void OSPPAuthReqDelete(
         OSPPListDelete(&((*ospvAuthReq)->ospmAuthReqDeviceInfo));
 
         while (!OSPPListEmpty(&((*ospvAuthReq)->ospmAuthReqSourceAlternate))) {
-            altinfo = (OSPT_ALTINFO *) OSPPListRemove(&((*ospvAuthReq)->ospmAuthReqSourceAlternate));
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvAuthReq)->ospmAuthReqSourceAlternate));
             if (altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
@@ -483,7 +483,7 @@ void OSPPAuthReqDelete(
         OSPPListDelete(&((*ospvAuthReq)->ospmAuthReqSourceAlternate));
 
         while (!OSPPListEmpty(&((*ospvAuthReq)->ospmAuthReqDestinationAlternate))) {
-            altinfo = (OSPT_ALTINFO *) OSPPListRemove(&((*ospvAuthReq)->ospmAuthReqDestinationAlternate));
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvAuthReq)->ospmAuthReqDestinationAlternate));
             if (altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
@@ -510,7 +510,7 @@ void OSPPAuthReqDelete(
  * OSPPAuthReqAddServiceInfo() - Add service type to usage detail
  */
 unsigned OSPPAuthReqAddServiceInfo(
-    OSPT_XML_ELEM **ospvElem,    /* where to put XML element pointer */
+    OSPT_XML_ELEM **ospvElem,   /* where to put XML element pointer */
     OSPE_SERVICE ServiceType)
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -622,18 +622,18 @@ unsigned OSPPAuthReqAddPricingInfo(
  * OSPPAuthReqToElement() - create an XML element from an authorisation request
  */
 int OSPPAuthReqToElement(       /* returns error code */
-    OSPTAUTHREQ *ospvAuthReq,   /* authorisation request value */
+    OSPT_AUTH_REQ *ospvAuthReq, /* authorisation request value */
     OSPT_XML_ELEM **ospvElem,   /* where to put XML element pointer */
     void *ospvtrans)
 {
     int ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL, *authreqelem = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
-    OSPTCALLID *callid = OSPC_OSNULL;
+    OSPT_CALL_ID *callid = OSPC_OSNULL;
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
     char random[OSPC_MAX_RANDOM];
     OSPTBOOL isbase64 = OSPC_TRUE;
-    OSPTTRANS *trans = (OSPTTRANS *) ospvtrans;
+    OSPTTRANS *trans = (OSPTTRANS *)ospvtrans;
     int i;
 
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
@@ -906,10 +906,10 @@ int OSPPAuthReqToElement(       /* returns error code */
  * OSPPAuthReqHasMessageId() - is the message id set ?
  */
 OSPTBOOL OSPPAuthReqHasMessageId(   /* returns non-zero if message id is set */
-    OSPTAUTHREQ *ospvAuthReq)
+    OSPT_AUTH_REQ *ospvAuthReq)
 {
     if (ospvAuthReq != OSPC_OSNULL) {
-        return (ospvAuthReq->ospmAuthReqMessageId != OSPC_OSNULL);
+        return(ospvAuthReq->ospmAuthReqMessageId != OSPC_OSNULL);
     } else {
         return OSPC_FALSE;
     }
@@ -919,7 +919,7 @@ OSPTBOOL OSPPAuthReqHasMessageId(   /* returns non-zero if message id is set */
  * OSPPAuthReqHasRoutingNumber() - does the authorisation request have a routing number?
  */
 OSPTBOOL OSPPAuthReqHasRoutingNumber(   /* returns non-zero if number exists */
-    OSPTAUTHREQ *ospvAuthReq)           /* authorisation request effected */
+    OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request effected */
 {                            
     OSPTBOOL ospvHasNumber = OSPC_FALSE;
 
@@ -934,7 +934,7 @@ OSPTBOOL OSPPAuthReqHasRoutingNumber(   /* returns non-zero if number exists */
  * OSPPAuthReqSetRoutingNumber() - set the routing number for an authorisation request
  */
 void OSPPAuthReqSetRoutingNumber(   /* nothing returned */
-    OSPTAUTHREQ *ospvAuthReq,       /* authorisation request  to set */
+    OSPT_AUTH_REQ *ospvAuthReq,     /* authorisation request  to set */
     const char *ospvNum)            /* source number (as string) */
 {                       
     if (ospvAuthReq != OSPC_OSNULL) {
@@ -948,7 +948,7 @@ void OSPPAuthReqSetRoutingNumber(   /* nothing returned */
  * OSPPAuthReqGetRoutingNumber() - returns the routing number for an authorisation request
  */
 const char *OSPPAuthReqGetRoutingNumber(/* returns number as string */
-    OSPTAUTHREQ *ospvAuthReq)           /* authorisation request */
+    OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request */
 {
     const char *ospvNum = OSPC_OSNULL;
 

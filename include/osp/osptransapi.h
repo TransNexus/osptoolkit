@@ -57,7 +57,7 @@ extern "C" {
     int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned,
             const char *, unsigned, signed, unsigned, signed, unsigned *, void *);
     int OSPPTransactionRequestAuthorisation(OSPTTRANHANDLE, const char *, const char *, const char *, OSPE_NUMBER_FORMAT, const char *,
-            OSPE_NUMBER_FORMAT, const char *, unsigned, OSPTCALLID *[], const char *[], unsigned *, unsigned *, void *);
+            OSPE_NUMBER_FORMAT, const char *, unsigned, OSPT_CALL_ID *[], const char *[], unsigned *, unsigned *, void *);
     int OSPPTransactionIndicateCapabilities(OSPTTRANHANDLE, const char *, const char *, const char *, unsigned, unsigned *, void *);
     int OSPPTransactionRequestReauthorisation(OSPTTRANHANDLE, unsigned, unsigned *, void *, unsigned *, unsigned *, unsigned *, void *);
     int OSPPTransactionValidateAuthorisation(OSPTTRANHANDLE, const char *, const char *, const char *, const char *, const char *, OSPE_NUMBER_FORMAT,
@@ -102,7 +102,7 @@ extern "C" {
     int OSPPTransactionSetDestProtocol(OSPTTRANHANDLE, OSPE_DEST_PROTOCOL);
     int OSPPTransactionSetForwardCodec(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetReverseCodec(OSPTTRANHANDLE, const char *);
-    int OSPPTransactionSetSessionId(OSPTTRANHANDLE, OSPE_DIRECTION, OSPTCALLID *);
+    int OSPPTransactionSetSessionId(OSPTTRANHANDLE, OSPE_DIRECTION, OSPT_CALL_ID *);
     int OSPPTransactionSetDelayMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetJitterMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetPackLossMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);

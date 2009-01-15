@@ -111,7 +111,7 @@ extern "C" {
         OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                      /* In - Called number */
         const char *ospvUser,                                           /* In - End user (optional) */
         unsigned ospvNumberOfCallIds,                                   /* In - Number of call identifiers */
-        OSPTCALLID *ospvCallIds[],                                      /* In - List of call identifiers */
+        OSPT_CALL_ID *ospvCallIds[],                                      /* In - List of call identifiers */
         const char *ospvPreferredDestinations[],                        /* In - List of preferred destinations for call */
         unsigned *ospvNumberOfDestinations,                             /* In\Out - Max number of destinations \ Actual number of dests authorised */
         unsigned *ospvSizeOfDetailLog,                                  /* In\Out - Max size of detail log \ Actual size of detail log */

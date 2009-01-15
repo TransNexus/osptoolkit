@@ -42,7 +42,7 @@ OSPT_MSG_PART OSPPMsgDescGetPart(
         }
     }
 
-    return (ospvPart);
+    return ospvPart;
 }
 
 /*
@@ -63,5 +63,5 @@ const char *OSPPMsgDescGetName(     /* returns the name found or NULL */
         }
     }
 
-    return (ospvName);
+    return ospvName;
 }

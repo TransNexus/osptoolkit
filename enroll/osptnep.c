@@ -651,8 +651,6 @@ void OSPPPrintCertAndStatus(unsigned char *ospvCert, unsigned ospvCertLen, unsig
     }
 
     OSPM_DBGEXIT(("EXIT: OSPPPrintCertAndStatus\n"));
-
-    return;
 }
 
 /* 

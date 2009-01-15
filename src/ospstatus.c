@@ -15,13 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * ospstatus.c - OSP status functions
  */
@@ -37,42 +30,33 @@
 #include "osp/ospmsg.h"
 #include "osp/ospstatus.h"
 
-
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPStatusNew() - create a new status object
- *-----------------------------------------------------------------------*/
+ */
 
-OSPTSTATUS *                           /* returns ptr to status or null */
-    OSPPStatusNew(void)
+OSPTSTATUS *OSPPStatusNew(void)     /* returns ptr to status or null */
 {
-    OSPTSTATUS     *ospvStatus = OSPC_OSNULL;
+    OSPTSTATUS *ospvStatus = OSPC_OSNULL;
 
     /* try to allocate the memory for the entire object */
-    OSPM_MALLOC(ospvStatus, OSPTSTATUS,sizeof(*ospvStatus));
-    if(ospvStatus!=OSPC_OSNULL)
-    {
+    OSPM_MALLOC(ospvStatus, OSPTSTATUS, sizeof(*ospvStatus));
+    if (ospvStatus != OSPC_OSNULL) {
         /* !!!PS Initialize it */
         OSPM_MEMSET(ospvStatus, 0, sizeof(*ospvStatus));
-        ospvStatus->ospmStatusDesc=OSPC_OSNULL;
+        ospvStatus->ospmStatusDesc = OSPC_OSNULL;
     }
-    return(ospvStatus);
+
+    return ospvStatus;
 }
 
-
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPStatusDelete() - destroy a status object
- *-----------------------------------------------------------------------*/
-void                                  /* no return */
-OSPPStatusDelete(
-    OSPTSTATUS **ospvStatus            /* Status to destroy */
-)
+ */
+void OSPPStatusDelete(          /* no return */
+    OSPTSTATUS **ospvStatus)    /* Status to destroy */
 {
-    if (*ospvStatus != OSPC_OSNULL)
-    {
-        if ((*ospvStatus)->ospmStatusDesc != OSPC_OSNULL ) 
-        {
+    if (*ospvStatus != OSPC_OSNULL) {
+        if ((*ospvStatus)->ospmStatusDesc != OSPC_OSNULL) {
             OSPM_FREE((*ospvStatus)->ospmStatusDesc);
             (*ospvStatus)->ospmStatusDesc = OSPC_OSNULL;
         }
@@ -84,24 +68,21 @@ OSPPStatusDelete(
 /*
  * OSPPStatusSetDesc() - set the status description
  */
-void OSPPStatusSetDesc(         /* no return */
-    OSPTSTATUS *ospvStatus,     /* Status to set */
+void OSPPStatusSetDesc(     /* no return */
+    OSPTSTATUS *ospvStatus, /* Status to set */
     const char *ospvDesc)
 {
-    if (ospvStatus != OSPC_OSNULL) 
-    {
-        if (ospvStatus->ospmStatusDesc != OSPC_OSNULL)
-        {
+    if (ospvStatus != OSPC_OSNULL) {
+        if (ospvStatus->ospmStatusDesc != OSPC_OSNULL) {
             OSPM_FREE(ospvStatus->ospmStatusDesc);
             ospvStatus->ospmStatusDesc = OSPC_OSNULL;
         }
-        OSPM_MALLOC(ospvStatus->ospmStatusDesc, char, OSPM_STRLEN(ospvDesc)+1);
-        if (ospvStatus->ospmStatusDesc != OSPC_OSNULL)
-        {
+        OSPM_MALLOC(ospvStatus->ospmStatusDesc, char, OSPM_STRLEN(ospvDesc) + 1);
+        if (ospvStatus->ospmStatusDesc != OSPC_OSNULL) {
             OSPM_MEMCPY((ospvStatus->ospmStatusDesc), ospvDesc, OSPM_STRLEN(ospvDesc) + 1);
             ospvStatus->ospmHasDesc = OSPC_TRUE;
         }
-    } 
+    }
 }
 
 /*
@@ -113,80 +94,65 @@ OSPTBOOL OSPPStatusHasCode( /* return 1 or 0 */
     OSPTBOOL hascode = OSPC_FALSE;
 
     if (ospvStatus != OSPC_OSNULL) {
-        hascode=ospvStatus->ospmHasCode;
+        hascode = ospvStatus->ospmHasCode;
     }
-    
-    return hascode; 
+
+    return hascode;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPStatusGetCode() - get the status code
- *-----------------------------------------------------------------------*/
-unsigned                              /* return code */
-OSPPStatusGetCode(
-    OSPTSTATUS *ospvStatus            /* Status to get */
-)
+ */
+unsigned OSPPStatusGetCode( /* return code */
+    OSPTSTATUS *ospvStatus) /* Status to get */
 {
     unsigned statuscode = 0;
 
-    if((ospvStatus != OSPC_OSNULL)&&(ospvStatus->ospmHasCode))
-    {
+    if ((ospvStatus != OSPC_OSNULL) && (ospvStatus->ospmHasCode)) {
         statuscode = ospvStatus->ospmStatusCode;
     }
-    return statuscode; 
+
+    return statuscode;
 }
 
-
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPStatusFromElement() - create a status from an XML element
- *-----------------------------------------------------------------------*/
-unsigned                          /* returns error code */
-OSPPStatusFromElement(
-    OSPT_XML_ELEM *ospvElem,        /* input is XML element */
-    OSPTSTATUS  **ospvStatus      /* where to put status pointer */
-)
+ */
+unsigned OSPPStatusFromElement( /* returns error code */
+    OSPT_XML_ELEM *ospvElem,    /* input is XML element */
+    OSPTSTATUS **ospvStatus)    /* where to put status pointer */
 {
-    unsigned       ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPT_XML_ELEM   *elem = OSPC_OSNULL;
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
     unsigned long temp = 0;
 
-    if (ospvElem  == OSPC_OSNULL) 
-    {
+    if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvStatus == OSPC_OSNULL) 
-    {
+    if (ospvStatus == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_DATA_NO_STATUS;
     }
-
 #if 0
     assert(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_STATUS);
 #endif
 
     /* create the Status structure */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-    {
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         *ospvStatus = OSPPStatusNew();
-        if (*ospvStatus == OSPC_OSNULL)
-        {
+        if (*ospvStatus == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_DATA_NO_STATUS;
         }
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) 
-    {
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /*
          * The Status element should consist of several child
          * elements. We'll run through what's there and pick out
          * the information we need. First, though, let's zero out
          * the values that we expect to find.
          */
-        for ( elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
-            (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem) )
-        {
+        for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
+             (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR); elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_CODE:
                 ospvErrCode = OSPPMsgCodeFromElement(elem, &temp);
@@ -208,25 +174,19 @@ OSPPStatusFromElement(
             }
         }
     }
-    
+
     return ospvErrCode;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPStatusSetCode() - set the status code
- *-----------------------------------------------------------------------*/
-void                                  /* no return */
-OSPPStatusSetCode(
-    OSPTSTATUS *ospvStatus,           /* Status to set */
-    unsigned   ospvCode
-)
+ */
+void OSPPStatusSetCode(     /* no return */
+    OSPTSTATUS *ospvStatus, /* Status to set */
+    unsigned ospvCode)
 {
-    if (ospvStatus != OSPC_OSNULL) 
-    {
+    if (ospvStatus != OSPC_OSNULL) {
         ospvStatus->ospmStatusCode = ospvCode;
-        ospvStatus->ospmHasCode=1;
+        ospvStatus->ospmHasCode = 1;
     }
-    return; 
 }
-

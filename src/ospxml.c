@@ -125,7 +125,7 @@ int OSPPXMLMessageCreate(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         switch (ospvDataType) {
             case OSPC_MSG_AREQ:
-                errorcode = OSPPAuthReqToElement((OSPTAUTHREQ *)ospvInfo, &xmlelem, trans);
+                errorcode = OSPPAuthReqToElement((OSPT_AUTH_REQ *)ospvInfo, &xmlelem, trans);
                 break;
             case OSPC_MSG_UIND:
                 errorcode = OSPPUsageIndToElement((OSPTLIST *)ospvInfo, &xmlelem, trans);
@@ -134,7 +134,7 @@ int OSPPXMLMessageCreate(
                 errorcode = OSPPReauthReqToElement((OSPTREAUTHREQ *)ospvInfo, &xmlelem, trans);
                 break;
             case OSPC_MSG_CAPIND:
-                errorcode = OSPPCapIndToElement((OSPTCAPIND *)ospvInfo, &xmlelem);
+                errorcode = OSPPCapIndToElement((OSPT_CAP_IND *)ospvInfo, &xmlelem);
                 break;
 #ifndef OSP_SDK
             case OSPC_MSG_REARESP:
@@ -142,7 +142,7 @@ int OSPPXMLMessageCreate(
                 break;
             case OSPC_MSG_ARESP:
             case OSPC_MSG_AREZP:
-                errorcode = OSPPAuthRspToElement((OSPTAUTHRSP *)ospvInfo, &xmlelem, ospvDataType);
+                errorcode = OSPPAuthRspToElement((OSPT_AUTH_RSP *)ospvInfo, &xmlelem, ospvDataType);
                 break;
             case OSPC_MSG_UCNF:
                 errorcode = OSPPUsageCnfToElement((OSPTLIST *)ospvInfo, &xmlelem);
@@ -176,7 +176,7 @@ int OSPPXMLGetDataType(
         OSPM_DBGERRORLOG(errorcode, "ospvXMLElem is NULL");
     } else {
         if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvXMLElem)) == OSPC_MELEM_MESSAGE) {
-            parent = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(ospvXMLElem);
+            parent = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvXMLElem);
         } else {
             parent = ospvXMLElem;
         }
@@ -187,7 +187,7 @@ int OSPPXMLGetDataType(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         if (parent != OSPC_OSNULL) {
             /* get first element which should hold component name */
-            name = (char *) OSPPXMLElemGetName(parent);
+            name = (char *)OSPPXMLElemGetName(parent);
         } else {
             errorcode = OSPC_ERR_XML_PARENT_NOT_FOUND;
             OSPM_DBGERRORLOG(errorcode, "parent OSPTXMLELEM is NULL");
@@ -295,13 +295,13 @@ int OSPPXMLMessageParse(
             if ((*ospvDataType == OSPC_MSG_UIND) || (*ospvDataType == OSPC_MSG_UCNF)) {
                 if (OSPPMsgElemGetPart(OSPPXMLElemGetName(xmlelem)) ==
                     OSPC_MELEM_MESSAGE) {
-                    tempxmlelem = (OSPT_XML_ELEM *) OSPPXMLElemFirstChild(xmlelem);
+                    tempxmlelem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(xmlelem);
                     xmlelem->ospmXMLElemChild = OSPC_OSNULL;
                     OSPPXMLElemDelete(&xmlelem);
                     xmlelem = tempxmlelem;
                 }
 
-                while ((elem1 = (OSPT_XML_ELEM *) OSPPListRemove((OSPTLIST *) & xmlelem)) != OSPC_OSNULL) {
+                while ((elem1 = (OSPT_XML_ELEM *)OSPPListRemove((OSPTLIST *)&xmlelem)) != OSPC_OSNULL) {
                     OSPPXMLElemDelete(&elem1);
                     elem1 = OSPC_OSNULL;
                 }
@@ -327,7 +327,7 @@ int OSPPXMLMessageProcess(
     switch (ospvDataType) {
         case OSPC_MSG_ARESP:
     
-            errorcode = OSPPAuthRspFromElement(ospvElem, (OSPTAUTHRSP **)ospvStruct);
+            errorcode = OSPPAuthRspFromElement(ospvElem, (OSPT_AUTH_RSP **)ospvStruct);
             break;
         case OSPC_MSG_UCNF:
             errorcode = OSPPUsageCnfFromElement(ospvElem, (OSPTLIST *)ospvStruct);
@@ -339,11 +339,11 @@ int OSPPXMLMessageProcess(
             errorcode = OSPPReauthRspFromElement(ospvElem, (OSPTREAUTHRSP **)ospvStruct);
             break;
         case OSPC_MSG_CAPCNF:
-            errorcode = OSPPCapCnfFromElement(ospvElem, (OSPTCAPCNF **)ospvStruct);
+            errorcode = OSPPCapCnfFromElement(ospvElem, (OSPT_CAP_CNF **)ospvStruct);
             break;
 #ifndef OSP_SDK
         case OSPC_MSG_AREQ:
-            errorcode = OSPPAuthReqFromElement(ospvElem, (OSPTAUTHREQ **)ospvStruct);
+            errorcode = OSPPAuthReqFromElement(ospvElem, (OSPT_AUTH_REQ **)ospvStruct);
             break;
         case OSPC_MSG_UIND:
             errorcode = OSPPUsageIndFromElement(ospvElem, (OSPTLIST *)ospvStruct);

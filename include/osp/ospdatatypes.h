@@ -137,19 +137,19 @@ typedef struct _OSPTPRIVATEKEY {
 /*
  * Security - Cert
  */
-typedef struct _OSPTCERT {
+typedef struct {
     unsigned char *CertData;
     unsigned CertDataLength;
-} OSPTCERT;
+} OSPT_CERT;
 
 /*
  * Misc Lock Modes
  */
-typedef enum _OSPELOCKMODE {
-    OSPE_LOCK_WRITE,
-    OSPE_LOCK_READ,
-    OSPE_LOCK_TRY
-} OSPELOCKMODE;
+typedef enum {
+    OSPC_LOCK_WRITE,
+    OSPC_LOCK_READ,
+    OSPC_LOCK_TRY
+} OSPE_LOCK_MODE;
 
 /*
  * Enumerated Data Types for Auditing

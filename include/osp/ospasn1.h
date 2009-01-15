@@ -403,11 +403,11 @@ typedef struct _OSPTASN1INTEGER {
 } OSPTASN1INTEGER;
 
 
-typedef enum _OSPEALGORITHMID {
-    OSPE_ALGORITHMID_NONE,
-    OSPE_ALGORITHMID_RSA_ENCRYPTION,
-    OSPE_ALGORITHMID_MD5
-} OSPEALGORITHMID;
+typedef enum {
+    OSPC_ALGORITHM_NONE,
+    OSPC_ALGORITHM_RSA_ENCRYPTION,
+    OSPC_ALGORITHM_MD5
+} OSPE_ALGORITHM;
 
 /* Function Prototypes */
 
@@ -582,14 +582,14 @@ typedef enum {
     OSPC_OID_TAG_EXT_KEY_USAGE,
     OSPC_OID_TAG_EXT_SUBJECT_KEY_ID,
     OSPC_OID_TAG_NOT_FOUND
-} OSPEOIDTAG;
+} OSPE_OID_TAG;
 
 typedef struct {
-    OSPEOIDTAG tag;
+    OSPE_OID_TAG tag;
     OSPTOBJECTID oid;
     char *sname;
     char *lname;
-} OSPTOIDXREF;
+} OSPT_OID_XREF;
 
 #define OSPC_OID_XX     OSPC_OID_VALUE_TERMINATOR
 
@@ -603,7 +603,7 @@ typedef struct {
 
 typedef struct {
     OSPTOBJECTID oid;
-    OSPTPARAMETER *params[OSPC_ATV_MAX_PARAMS];    /* Dynamically allocated */
+    OSPTPARAMETER *params[OSPC_ATV_MAX_PARAMS];     /* Dynamically allocated */
 } OSPTATTRTYPEVAL;
 
 

@@ -34,11 +34,10 @@ typedef struct {
     OSPE_DEST_OSPENABLED lookAheadDestOSPStatus;
 } OSPTTOKENLOOKAHEADINFO;
 
-
 typedef struct {
     char ospmTokenInfoSourceNumber[OSPC_SIZE_E164NUM];
     char ospmTokenInfoDestNumber[OSPC_SIZE_E164NUM];
-    OSPTCALLID *ospmTokenInfoCallId;
+    OSPT_CALL_ID *ospmTokenInfoCallId;
     OSPTTIME ospmTokenInfoValidAfter;
     OSPTTIME ospmTokenInfoValidUntil;
     OSPTTRXID ospmTokenInfoTrxId;
@@ -63,8 +62,8 @@ extern "C" {
     void OSPPTokenInfoSetDestNumber(OSPTTOKENINFO *, const char *);
     const char *OSPPTokenInfoGetDestNumber(OSPTTOKENINFO *);
     OSPTBOOL OSPPTokenInfoHasCallId(OSPTTOKENINFO *);
-    void OSPPTokenInfoSetCallId(OSPTTOKENINFO *, OSPTCALLID *);
-    OSPTCALLID *OSPPTokenInfoGetCallId(OSPTTOKENINFO *);
+    void OSPPTokenInfoSetCallId(OSPTTOKENINFO *, OSPT_CALL_ID *);
+    OSPT_CALL_ID *OSPPTokenInfoGetCallId(OSPTTOKENINFO *);
     unsigned char *OSPPTokenInfoGetCallIdValue(OSPTTOKENINFO *);
     unsigned OSPPTokenInfoGetCallIdSize(OSPTTOKENINFO *);
     OSPTBOOL OSPPTokenInfoHasValidAfter(OSPTTOKENINFO *);

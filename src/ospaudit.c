@@ -29,7 +29,7 @@
 
 /* copy message data into audit buffer */
 int OSPPAuditAddMessageToBuffer(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     unsigned char *ospvAuditData,
     unsigned ospvAuditDataSz)
 {
@@ -38,7 +38,7 @@ int OSPPAuditAddMessageToBuffer(
     unsigned char *dataptr = ospvAuditData;
     unsigned char *endptr = OSPC_OSNULL;
     unsigned char *begptr = OSPC_OSNULL;
-    OSPTCOMPONENTID *compid = OSPC_OSNULL;
+    OSPT_COMPONENT_ID *compid = OSPC_OSNULL;
 
     if ((ospvAudit != OSPC_OSNULL) && (dataptr != OSPC_OSNULL) && (ospvAuditDataSz > 0)) {
         /* Clean buffer up */
@@ -52,12 +52,12 @@ int OSPPAuditAddMessageToBuffer(
             ospvAuditDataSz -= OSPC_AUDIT_MSG_HDR_LEN;
         }
 
-        if ((endptr = (unsigned char *) OSPM_STRSTR((const char *) dataptr, "<")) != OSPC_OSNULL) {
+        if ((endptr = (unsigned char *)OSPM_STRSTR((const char *)dataptr, "<")) != OSPC_OSNULL) {
             ospvAuditDataSz -= (endptr - dataptr);
             dataptr = endptr;
         }
 
-        if ((endptr = (unsigned char *) OSPM_STRSTR((const char *) dataptr, OSPC_AUDIT_BFR_END)) != OSPC_OSNULL) {
+        if ((endptr = (unsigned char *)OSPM_STRSTR((const char *)dataptr, OSPC_AUDIT_BFR_END)) != OSPC_OSNULL) {
             ospvAuditDataSz -= (OSPC_AUDIT_BFR_END_LEN + 1);
         }
 
@@ -65,10 +65,9 @@ int OSPPAuditAddMessageToBuffer(
         OSPM_MUTEX_LOCK(ospvAudit->ospmAuditAccessMutex, errorcode);
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-
-            if (((ospvAudit->ospmAuditUsedSpace + ospvAuditDataSz) <=
-                 ospvAudit->ospmAuditMaxSpace) && ((ospvAudit->ospmAuditNumMessages + 1) <= ospvAudit->ospmAuditMaxMessages)) {
-
+            if (((ospvAudit->ospmAuditUsedSpace + ospvAuditDataSz) <= ospvAudit->ospmAuditMaxSpace) && 
+                ((ospvAudit->ospmAuditNumMessages + 1) <= ospvAudit->ospmAuditMaxMessages)) 
+            {
                 if (errorcode == OSPC_ERR_NO_ERROR) {
                     /* add data to buffer */
                     numbyteswritten = OSPPBfrWriteBlock(&(ospvAudit->ospmAuditStorage), dataptr, ospvAuditDataSz);
@@ -79,13 +78,13 @@ int OSPPAuditAddMessageToBuffer(
                     ospvAudit->ospmAuditNumMessages++;
 
                     /* Find componentId and save it */
-                    if ((endptr = (unsigned char *) OSPM_STRSTR((const char *) dataptr, "componentId")) != OSPC_OSNULL) {
-                        if ((endptr = (unsigned char *) OSPM_STRSTR((const char *) endptr, "=")) != OSPC_OSNULL) {
+                    if ((endptr = (unsigned char *)OSPM_STRSTR((const char *)dataptr, "componentId")) != OSPC_OSNULL) {
+                        if ((endptr = (unsigned char *)OSPM_STRSTR((const char *)endptr, "=")) != OSPC_OSNULL) {
                             begptr = endptr + 1;
                             while (!isalnum(*begptr) && ispunct(*begptr))
                                 begptr++;
 
-                            if ((endptr = (unsigned char *) OSPM_STRSTR((const char *) begptr, "\"")) != OSPC_OSNULL) {
+                            if ((endptr = (unsigned char *)OSPM_STRSTR((const char *) begptr, "\"")) != OSPC_OSNULL) {
                                 compid = OSPPAuditComponentIdNew((const char *) begptr, (endptr - begptr));
                                 if (compid != OSPC_OSNULL) {
                                     OSPPListAppend(&(ospvAudit)->ospmAuditComponentIdList, compid);
@@ -121,7 +120,7 @@ int OSPPAuditAddMessageToBuffer(
  * produce some debug.
  */
 void OSPPAuditCheck(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     void *ospvResponse, 
     OSPE_MESSAGE ospvMsgType)
 {
@@ -134,28 +133,28 @@ void OSPPAuditCheck(
         /* set up audit structure pointer */
         switch (ospvMsgType) {
         case OSPC_MSG_ARESP:
-            if (((OSPTAUTHRSP *) ospvResponse)->ospmAuthRspTNAudit != OSPC_OSNULL) {
-                tnaudit = OSPPAuthRspGetTNAudit((OSPTAUTHRSP *) ospvResponse);
+            if (((OSPT_AUTH_RSP *)ospvResponse)->ospmAuthRspTNAudit != OSPC_OSNULL) {
+                tnaudit = OSPPAuthRspGetTNAudit((OSPT_AUTH_RSP *)ospvResponse);
             }
 
-            if (((OSPTAUTHRSP *) ospvResponse)->ospmAuthRspCSAudit != OSPC_OSNULL) {
-                csaudit = OSPPAuthRspGetCSAudit((OSPTAUTHRSP *) ospvResponse);
+            if (((OSPT_AUTH_RSP *)ospvResponse)->ospmAuthRspCSAudit != OSPC_OSNULL) {
+                csaudit = OSPPAuthRspGetCSAudit((OSPT_AUTH_RSP *)ospvResponse);
             }
             break;
 
         case OSPC_MSG_UCNF:
-            if (((OSPTUSAGECNF *) ospvResponse)->ospmUsageCnfTNAudit != OSPC_OSNULL) {
-                tnaudit = OSPPUsageCnfGetTNAudit((OSPTUSAGECNF *) ospvResponse);
+            if (((OSPTUSAGECNF *)ospvResponse)->ospmUsageCnfTNAudit != OSPC_OSNULL) {
+                tnaudit = OSPPUsageCnfGetTNAudit((OSPTUSAGECNF *)ospvResponse);
             }
 
-            if (((OSPTUSAGECNF *) ospvResponse)->ospmUsageCnfCSAudit != OSPC_OSNULL) {
-                csaudit = OSPPUsageCnfGetCSAudit((OSPTUSAGECNF *) ospvResponse);
+            if (((OSPTUSAGECNF *)ospvResponse)->ospmUsageCnfCSAudit != OSPC_OSNULL) {
+                csaudit = OSPPUsageCnfGetCSAudit((OSPTUSAGECNF *)ospvResponse);
             }
             break;
 
         case OSPC_MSG_REARESP:
-            if (((OSPTREAUTHRSP *) ospvResponse)->ospmReauthRspTNAudit != OSPC_OSNULL) {
-                tnaudit = OSPPReauthRspGetTNAudit((OSPTREAUTHRSP *) ospvResponse);
+            if (((OSPTREAUTHRSP *)ospvResponse)->ospmReauthRspTNAudit != OSPC_OSNULL) {
+                tnaudit = OSPPReauthRspGetTNAudit((OSPTREAUTHRSP *)ospvResponse);
             }
 
 /*               if(((OSPTREAUTHRSP *)ospvResponse)->ospmReauthRspCSAudit != OSPC_OSNULL)
@@ -253,14 +252,14 @@ void OSPPAuditCheck(
 
 /* Delete component id list */
 void OSPPAuditComponentIdDelete(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
-    OSPTCOMPONENTID *compid = OSPC_OSNULL;
+    OSPT_COMPONENT_ID *compid = OSPC_OSNULL;
 
     if (ospvAudit != OSPC_OSNULL) {
         if (ospvAudit->ospmAuditComponentIdList != OSPC_OSNULL) {
             while (!OSPPListEmpty(&(ospvAudit->ospmAuditComponentIdList))) {
-                compid = (OSPTCOMPONENTID *) OSPPListRemove(&(ospvAudit->ospmAuditComponentIdList));
+                compid = (OSPT_COMPONENT_ID *)OSPPListRemove(&(ospvAudit->ospmAuditComponentIdList));
                 if (compid->ospmComponentId != OSPC_OSNULL) {
                     OSPM_FREE(compid->ospmComponentId);
                 }
@@ -276,14 +275,14 @@ void OSPPAuditComponentIdDelete(
 }
 
 /* Create new component id item */
-OSPTCOMPONENTID *OSPPAuditComponentIdNew(
+OSPT_COMPONENT_ID *OSPPAuditComponentIdNew(
     const char *ospvComponentId, 
     unsigned ospvComponentIdLen)
 {
-    OSPTCOMPONENTID *compid = OSPC_OSNULL;
+    OSPT_COMPONENT_ID *compid = OSPC_OSNULL;
 
     if (ospvComponentId != OSPC_OSNULL) {
-        OSPM_MALLOC(compid, OSPTCOMPONENTID, sizeof(OSPTCOMPONENTID));
+        OSPM_MALLOC(compid, OSPT_COMPONENT_ID, sizeof(OSPT_COMPONENT_ID));
         if (compid != OSPC_OSNULL) {
             OSPPListLinkNew(&(compid->ospmComponentIdLink));
             OSPM_MALLOC(compid->ospmComponentId, char, ospvComponentIdLen + 1);
@@ -297,12 +296,11 @@ OSPTCOMPONENTID *OSPPAuditComponentIdNew(
 
 /* delete audit object and all space allocated within it */
 int OSPPAuditDelete(
-    OSPTAUDIT **ospvAudit)
+    OSPT_AUDIT **ospvAudit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
     if (*ospvAudit != OSPC_OSNULL) {
-
         if ((*ospvAudit)->ospmAuditStorage != OSPC_OSNULL) {
             OSPPBfrDelete(&((*ospvAudit)->ospmAuditStorage));
         }
@@ -339,7 +337,7 @@ int OSPPAuditDelete(
 
 /* Get buffer access conditional variable */
 OSPTCONDVAR OSPPAuditGetAccessCondVar(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     OSPTCONDVAR condvar;
     OSPM_MEMSET(&condvar, 0, sizeof(OSPTCONDVAR));
@@ -352,7 +350,7 @@ OSPTCONDVAR OSPPAuditGetAccessCondVar(
 }
 
 unsigned OSPPAuditGetMaxMessages(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     if (ospvAudit != OSPC_OSNULL) {
         return ospvAudit->ospmAuditMaxMessages;
@@ -362,7 +360,7 @@ unsigned OSPPAuditGetMaxMessages(
 }
 
 unsigned OSPPAuditGetMaxSpace(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     if (ospvAudit != OSPC_OSNULL) {
         return ospvAudit->ospmAuditMaxSpace;
@@ -372,7 +370,7 @@ unsigned OSPPAuditGetMaxSpace(
 }
 
 unsigned OSPPAuditGetMaxTime(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     if (ospvAudit != OSPC_OSNULL) {
         return ospvAudit->ospmAuditMaxTime;
@@ -383,7 +381,7 @@ unsigned OSPPAuditGetMaxTime(
 
 /* Get start time for auditing */
 unsigned long OSPPAuditGetStartTime(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     if (ospvAudit != OSPC_OSNULL) {
         return ospvAudit->ospmAuditStartTime;
@@ -394,7 +392,7 @@ unsigned long OSPPAuditGetStartTime(
 
 /* Get the URL for auditing */
 const char *OSPPAuditGetURL(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     if (ospvAudit != OSPC_OSNULL) {
         return ospvAudit->ospmAuditURL;
@@ -405,7 +403,7 @@ const char *OSPPAuditGetURL(
 
 /* Get worker conditional variable */
 OSPTCONDVAR OSPPAuditGetWorkerCondVar(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     OSPTCONDVAR condvar;
     OSPM_MEMSET(&condvar, 0, sizeof(OSPTCONDVAR));
@@ -419,7 +417,7 @@ OSPTCONDVAR OSPPAuditGetWorkerCondVar(
 
 /* Increment used space counter */
 void OSPPAuditIncrementUsedSpace(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     unsigned ospvIncrement)
 {
     if (ospvAudit != OSPC_OSNULL) {
@@ -429,7 +427,7 @@ void OSPPAuditIncrementUsedSpace(
 
 /* Begin collecting audit data */
 int OSPPAuditInit(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
@@ -452,7 +450,7 @@ int OSPPAuditInit(
 }
 
 void OSPPAuditInitializeBuffer(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     int numbyteswritten = 0;
     char random[OSPC_MAX_RANDOM];
@@ -516,10 +514,10 @@ static OSPTTHREADRETURN OSPPAuditMonitor(
     void *ospvArg)      /* Audit block cast to a void */
 {
     int errorcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
-    OSPTAUDIT *audit = OSPC_OSNULL;
+    OSPT_AUDIT *audit = OSPC_OSNULL;
     OSPTBOOL do_forever = OSPC_TRUE;
 
-    audit = (OSPTAUDIT *) ospvArg;
+    audit = (OSPT_AUDIT *)ospvArg;
 
     while (do_forever) {
         /*
@@ -532,14 +530,11 @@ static OSPTTHREADRETURN OSPPAuditMonitor(
              * wait for conditional variable on the flush flag
              */
             while ((errorcode != OSPC_ERR_OS_CONDVAR_TIMEOUT) && (audit->ospmAuditFlags & OSPC_AUDIT_FLUSH_BUFFER_NOW) == 0) {
-
                 OSPM_CONDVAR_TIMEDWAIT(audit->ospmAuditWorkerCondVar, audit->ospmAuditWorkerMutex, audit->ospmAuditMaxTime, errorcode);
-
             }
 
             if ((audit->ospmAuditFlags & OSPC_AUDIT_FLUSH_BUFFER_NOW) || (errorcode == OSPC_ERR_OS_CONDVAR_TIMEOUT)) {
                 OSPM_MUTEX_LOCK(audit->ospmAuditAccessMutex, errorcode);
-
                 if (errorcode == OSPC_ERR_NO_ERROR) {
                     /*
                      * prepare and send the data to the auditurl
@@ -577,15 +572,15 @@ static OSPTTHREADRETURN OSPPAuditMonitor(
 }
 
 /* Create new audit object */
-OSPTAUDIT *OSPPAuditNew(
+OSPT_AUDIT *OSPPAuditNew(
     const char *ospvAuditURL)
 {
-    OSPTAUDIT *audit = OSPC_OSNULL;
+    OSPT_AUDIT *audit = OSPC_OSNULL;
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    OSPM_MALLOC(audit, OSPTAUDIT, sizeof(OSPTAUDIT));
+    OSPM_MALLOC(audit, OSPT_AUDIT, sizeof(OSPT_AUDIT));
     if (audit != OSPC_OSNULL) {
-        OSPM_MEMSET(audit, 0, sizeof(OSPTAUDIT));
+        OSPM_MEMSET(audit, 0, sizeof(OSPT_AUDIT));
 
         /* set up the audit url */
         if (ospvAuditURL != OSPC_OSNULL) {
@@ -595,7 +590,6 @@ OSPTAUDIT *OSPPAuditNew(
              * initialize the audit worker mutex
              */
             OSPM_MUTEX_INIT(audit->ospmAuditWorkerMutex, 0, errorcode);
-
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 /*
                  * initialize the audit worker conditional variable
@@ -606,7 +600,7 @@ OSPTAUDIT *OSPPAuditNew(
 
             /* set up storage */
             if (errorcode == OSPC_ERR_NO_ERROR) {
-                audit->ospmAuditStorage = OSPPBfrNew((unsigned) OSPC_AUDIT_MAX_SPACE);
+                audit->ospmAuditStorage = OSPPBfrNew((unsigned)OSPC_AUDIT_MAX_SPACE);
                 if (audit->ospmAuditStorage == OSPC_OSNULL) {
                     errorcode = OSPC_ERR_AUDIT_MALLOC_FAILED;
                 }
@@ -657,7 +651,7 @@ OSPTAUDIT *OSPPAuditNew(
 
 /* Prepare audit message and send */
 int OSPPAuditPrepareAndSend(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     unsigned char *signature = OSPC_OSNULL;
@@ -671,14 +665,13 @@ int OSPPAuditPrepareAndSend(
 
     if (ospvAudit != OSPC_OSNULL) {
         if ((ospvAudit->ospmAuditSecurity != OSPC_OSNULL) && (ospvAudit->ospmAuditStorage != OSPC_OSNULL)) {
-
             /* Add ending "Message" tag */
             numbyteswritten = OSPPBfrWriteBlock(&(ospvAudit->ospmAuditStorage), OSPC_AUDIT_BFR_END, OSPC_AUDIT_BFR_END_LEN);
             /* increment used space */
             OSPPAuditIncrementUsedSpace(ospvAudit, numbyteswritten);
             numbyteswritten = 0;
 
-            auditbuffer = (unsigned char *) OSPPBfrLinearPtr(ospvAudit->ospmAuditStorage);
+            auditbuffer = (unsigned char *)OSPPBfrLinearPtr(ospvAudit->ospmAuditStorage);
             auditbuffersz = OSPPBfrSize(ospvAudit->ospmAuditStorage);
 
             if (auditbuffersz > 0) {
@@ -757,7 +750,7 @@ int OSPPAuditPrepareAndSend(
 }
 
 /* Process return from server */
-int OSPPAuditProcessReturn(OSPTAUDIT * ospvAudit, OSPT_MSG_INFO * ospvMsgInfo)
+int OSPPAuditProcessReturn(OSPT_AUDIT * ospvAudit, OSPT_MSG_INFO * ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     unsigned char *incomingmsg = OSPC_OSNULL;
@@ -812,19 +805,19 @@ int OSPPAuditProcessReturn(OSPTAUDIT * ospvAudit, OSPT_MSG_INFO * ospvMsgInfo)
                  */
 
             case OSPC_MSG_UCNF:
-                for ((usagecnf = (OSPTUSAGECNF *) OSPPListFirst((OSPTLIST *) & (resultrsp)));
-                     (usagecnf != OSPC_OSNULL); (usagecnf = (OSPTUSAGECNF *) OSPPListNext((OSPTLIST *) & (resultrsp), usagecnf))) {
+                for ((usagecnf = (OSPTUSAGECNF *)OSPPListFirst((OSPTLIST *)&(resultrsp)));
+                     (usagecnf != OSPC_OSNULL); (usagecnf = (OSPTUSAGECNF *)OSPPListNext((OSPTLIST *)&(resultrsp), usagecnf))) {
                     OSPPAuditVerifyUsageCnf(usagecnf, ospvAudit);
                 }
 
-                while (!OSPPListEmpty((OSPTLIST *) & resultrsp)) {
-                    usagecnf = (OSPTUSAGECNF *) OSPPListRemove((OSPTLIST *) & resultrsp);
+                while (!OSPPListEmpty((OSPTLIST *)&resultrsp)) {
+                    usagecnf = (OSPTUSAGECNF *)OSPPListRemove((OSPTLIST *)&resultrsp);
                     if (usagecnf != OSPC_OSNULL) {
                         OSPPUsageCnfDelete(&usagecnf);
                     }
                 }
 
-                OSPPListDelete((OSPTLIST *) & resultrsp);
+                OSPPListDelete((OSPTLIST *)&resultrsp);
 
                 break;
 
@@ -833,7 +826,6 @@ int OSPPAuditProcessReturn(OSPTAUDIT * ospvAudit, OSPT_MSG_INFO * ospvMsgInfo)
                  */
 
             case OSPC_MSG_ACNF:
-
                 break;
 
                 /*
@@ -869,12 +861,12 @@ int OSPPAuditProcessReturn(OSPTAUDIT * ospvAudit, OSPT_MSG_INFO * ospvMsgInfo)
 
 /* Subtract Usage Indications from the buffer according to the component ID
  */
-void OSPPAuditRemoveComponentIdFromList(const char *ospvCompid, OSPTAUDIT * ospvAudit)
+void OSPPAuditRemoveComponentIdFromList(const char *ospvCompid, OSPT_AUDIT * ospvAudit)
 {
-    OSPTCOMPONENTID *compid = OSPC_OSNULL;
+    OSPT_COMPONENT_ID *compid = OSPC_OSNULL;
 
-    for (compid = (OSPTCOMPONENTID *) OSPPListFirst(&(ospvAudit->ospmAuditComponentIdList));
-         (compid != OSPC_OSNULL); compid = (OSPTCOMPONENTID *) OSPPListNext(&(ospvAudit->ospmAuditComponentIdList), compid)) {
+    for (compid = (OSPT_COMPONENT_ID *)OSPPListFirst(&(ospvAudit->ospmAuditComponentIdList));
+         (compid != OSPC_OSNULL); compid = (OSPT_COMPONENT_ID *)OSPPListNext(&(ospvAudit->ospmAuditComponentIdList), compid)) {
         if (compid != OSPC_OSNULL) {
             if (compid->ospmComponentId != OSPC_OSNULL) {
                 if (OSPM_STRCMP(compid->ospmComponentId, ospvCompid) == 0) {
@@ -887,18 +879,16 @@ void OSPPAuditRemoveComponentIdFromList(const char *ospvCompid, OSPTAUDIT * ospv
 }
 
 /* Reset audit values to current defaults */
-int OSPPAuditResetDefaults(OSPTAUDIT * ospvAudit)
+int OSPPAuditResetDefaults(OSPT_AUDIT * ospvAudit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
     if (ospvAudit != OSPC_OSNULL) {
-/*        OSPM_MUTEX_LOCK(ospvAudit->ospmAuditAccessMutex, errorcode);
-*/
+        /* OSPM_MUTEX_LOCK(ospvAudit->ospmAuditAccessMutex, errorcode); */
         if (errorcode == OSPC_ERR_NO_ERROR) {
             OSPPBfrClear(ospvAudit->ospmAuditStorage);
             /* not sure if we want to worry about an error here MOC */
-/*            OSPM_MUTEX_UNLOCK(ospvAudit->ospmAuditAccessMutex, errorcode);
-*/
+            /* OSPM_MUTEX_UNLOCK(ospvAudit->ospmAuditAccessMutex, errorcode); */
         }
 
         OSPPAuditSetStartTime(ospvAudit, 0);
@@ -917,7 +907,7 @@ int OSPPAuditResetDefaults(OSPTAUDIT * ospvAudit)
 
 /* Set the audit comm pointer for sending data */
 void OSPPAuditSetComm(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     OSPTCOMM *ospvComm)
 {
     if (ospvAudit != OSPC_OSNULL) {
@@ -928,7 +918,7 @@ void OSPPAuditSetComm(
 }
 
 void OSPPAuditSetMaxMessages(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     unsigned ospvNumMessages)
 {
     if (ospvAudit != OSPC_OSNULL) {
@@ -937,7 +927,7 @@ void OSPPAuditSetMaxMessages(
 }
 
 void OSPPAuditSetMaxSpace(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     unsigned ospvMaxSpace)
 {
     if (ospvAudit != OSPC_OSNULL) {
@@ -946,7 +936,7 @@ void OSPPAuditSetMaxSpace(
 }
 
 void OSPPAuditSetMaxTime(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     unsigned ospvMaxTime)
 {
     if (ospvAudit != OSPC_OSNULL) {
@@ -955,7 +945,7 @@ void OSPPAuditSetMaxTime(
 }
 
 void OSPPAuditSetNumMessages(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     unsigned ospvNumMsgs)
 {
     if (ospvAudit != OSPC_OSNULL) {
@@ -965,7 +955,7 @@ void OSPPAuditSetNumMessages(
 
 /* Set the audit security pointer for signing */
 void OSPPAuditSetSecurity(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     OSPTSEC *ospvSecurity)
 {
     if (ospvAudit != OSPC_OSNULL) {
@@ -977,7 +967,7 @@ void OSPPAuditSetSecurity(
 
 /* Set the start time for collecting data */
 void OSPPAuditSetStartTime(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     unsigned long ospvTime)
 {
     if (ospvAudit != OSPC_OSNULL) {
@@ -987,7 +977,7 @@ void OSPPAuditSetStartTime(
 
 /* Set the URL for audit purposes */
 void OSPPAuditSetURL(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     const char *ospvAuditURL)
 {
     if (ospvAudit != OSPC_OSNULL) {
@@ -1006,7 +996,7 @@ void OSPPAuditSetURL(
 }
 
 void OSPPAuditSetUsedSpace(
-    OSPTAUDIT *ospvAudit, 
+    OSPT_AUDIT *ospvAudit, 
     unsigned ospvUsedSpace)
 {
     if (ospvAudit != OSPC_OSNULL) {
@@ -1016,7 +1006,7 @@ void OSPPAuditSetUsedSpace(
 
 /* Start the worker thread to wait for favorable conditions to send audit */
 int OSPPAuditStartWorker(
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTHRATTR thread_attr;
@@ -1048,7 +1038,7 @@ int OSPPAuditStartWorker(
 
 void OSPPAuditVerifyUsageCnf(
     OSPTUSAGECNF *ospvUsageCnf, 
-    OSPTAUDIT *ospvAudit)
+    OSPT_AUDIT *ospvAudit)
 {
     /* Get the component Id from the Usage Confirm,
      * remove the associated Usage Indication from the

@@ -43,7 +43,7 @@ typedef struct {
     unsigned long ospmAuthReqCustId;
     unsigned long ospmAuthReqDeviceId;
     OSPTLIST ospmAuthReqDeviceInfo;
-} OSPTAUTHREQ;
+} OSPT_AUTH_REQ;
 
 /* Function Prototypes */
 
@@ -51,40 +51,40 @@ typedef struct {
 extern "C" {
 #endif
 
-    OSPTAUTHREQ *OSPPAuthReqNew(void);
-    void OSPPAuthReqDelete(OSPTAUTHREQ **);
-    int OSPPAuthReqToElement(OSPTAUTHREQ *, OSPT_XML_ELEM **, void *);
-    OSPTBOOL OSPPAuthReqHasMessageId(OSPTAUTHREQ *);
-    OSPTBOOL OSPPAuthReqHasTimestamp(OSPTAUTHREQ *);
-    void OSPPAuthReqSetTimestamp(OSPTAUTHREQ *, OSPTTIME);
-    OSPTTIME OSPPAuthReqGetTimestamp(OSPTAUTHREQ *);
-    OSPTBOOL OSPPAuthReqHasComponentId(OSPTAUTHREQ *);
-    OSPTBOOL OSPPAuthReqHasCallId(OSPTAUTHREQ *);
-    OSPTCALLID *OSPPAuthReqFirstCallId(OSPTAUTHREQ *);
-    OSPTCALLID *OSPPAuthReqNextCallId(OSPTAUTHREQ *, OSPTCALLID *);
-    OSPTBOOL OSPPAuthReqHasSourceNumber(OSPTAUTHREQ *);
-    void OSPPAuthReqSetSourceNumber(OSPTAUTHREQ *, const char *);
-    const char *OSPPAuthReqGetSourceNumber(OSPTAUTHREQ *);
-    OSPTBOOL OSPPAuthReqHasSourceAlt(OSPTAUTHREQ *);
-    OSPT_ALTINFO *OSPPAuthReqFirstSourceAlt(OSPTAUTHREQ *);
-    OSPT_ALTINFO *OSPPAuthReqNextSourceAlt(OSPTAUTHREQ *, OSPT_ALTINFO *);
-    OSPTBOOL OSPPAuthReqHasDestNumber(OSPTAUTHREQ *);
-    void OSPPAuthReqSetDestNumber(OSPTAUTHREQ *, const char *);
-    const char *OSPPAuthReqGetDestNumber(OSPTAUTHREQ *);
-    OSPTBOOL OSPPAuthReqHasDestinationAlt(OSPTAUTHREQ *);
-    OSPT_ALTINFO *OSPPAuthReqFirstDestinationAlt(OSPTAUTHREQ *);
-    OSPT_ALTINFO *OSPPAuthReqNextDestinationAlt(OSPTAUTHREQ *, OSPT_ALTINFO *);
-    void OSPPAuthReqSetMaxDest(OSPTAUTHREQ *, unsigned);
-    unsigned OSPPAuthReqGetMaxDest(OSPTAUTHREQ *);
-    OSPTBOOL OSPPAuthReqHasCustId(OSPTAUTHREQ *);
-    void OSPPAuthReqSetCustId(OSPTAUTHREQ *, unsigned long);
-    unsigned long OSPPAuthReqGetCustId(OSPTAUTHREQ *);
-    OSPTBOOL OSPPAuthReqHasDeviceId(OSPTAUTHREQ *ospvAuthReq);
-    void OSPPAuthReqSetDeviceId(OSPTAUTHREQ *, unsigned long);
-    unsigned long OSPPAuthReqGetDeviceId(OSPTAUTHREQ *);
-    OSPTBOOL OSPPAuthReqHasRoutingNumber(OSPTAUTHREQ *);
-    void OSPPAuthReqSetRoutingNumber(OSPTAUTHREQ *, const char *);
-    const char *OSPPAuthReqGetRoutingNumber(OSPTAUTHREQ *);
+    OSPT_AUTH_REQ *OSPPAuthReqNew(void);
+    void OSPPAuthReqDelete(OSPT_AUTH_REQ **);
+    int OSPPAuthReqToElement(OSPT_AUTH_REQ *, OSPT_XML_ELEM **, void *);
+    OSPTBOOL OSPPAuthReqHasMessageId(OSPT_AUTH_REQ *);
+    OSPTBOOL OSPPAuthReqHasTimestamp(OSPT_AUTH_REQ *);
+    void OSPPAuthReqSetTimestamp(OSPT_AUTH_REQ *, OSPTTIME);
+    OSPTTIME OSPPAuthReqGetTimestamp(OSPT_AUTH_REQ *);
+    OSPTBOOL OSPPAuthReqHasComponentId(OSPT_AUTH_REQ *);
+    OSPTBOOL OSPPAuthReqHasCallId(OSPT_AUTH_REQ *);
+    OSPT_CALL_ID *OSPPAuthReqFirstCallId(OSPT_AUTH_REQ *);
+    OSPT_CALL_ID *OSPPAuthReqNextCallId(OSPT_AUTH_REQ *, OSPT_CALL_ID *);
+    OSPTBOOL OSPPAuthReqHasSourceNumber(OSPT_AUTH_REQ *);
+    void OSPPAuthReqSetSourceNumber(OSPT_AUTH_REQ *, const char *);
+    const char *OSPPAuthReqGetSourceNumber(OSPT_AUTH_REQ *);
+    OSPTBOOL OSPPAuthReqHasSourceAlt(OSPT_AUTH_REQ *);
+    OSPT_ALTINFO *OSPPAuthReqFirstSourceAlt(OSPT_AUTH_REQ *);
+    OSPT_ALTINFO *OSPPAuthReqNextSourceAlt(OSPT_AUTH_REQ *, OSPT_ALTINFO *);
+    OSPTBOOL OSPPAuthReqHasDestNumber(OSPT_AUTH_REQ *);
+    void OSPPAuthReqSetDestNumber(OSPT_AUTH_REQ *, const char *);
+    const char *OSPPAuthReqGetDestNumber(OSPT_AUTH_REQ *);
+    OSPTBOOL OSPPAuthReqHasDestinationAlt(OSPT_AUTH_REQ *);
+    OSPT_ALTINFO *OSPPAuthReqFirstDestinationAlt(OSPT_AUTH_REQ *);
+    OSPT_ALTINFO *OSPPAuthReqNextDestinationAlt(OSPT_AUTH_REQ *, OSPT_ALTINFO *);
+    void OSPPAuthReqSetMaxDest(OSPT_AUTH_REQ *, unsigned);
+    unsigned OSPPAuthReqGetMaxDest(OSPT_AUTH_REQ *);
+    OSPTBOOL OSPPAuthReqHasCustId(OSPT_AUTH_REQ *);
+    void OSPPAuthReqSetCustId(OSPT_AUTH_REQ *, unsigned long);
+    unsigned long OSPPAuthReqGetCustId(OSPT_AUTH_REQ *);
+    OSPTBOOL OSPPAuthReqHasDeviceId(OSPT_AUTH_REQ *ospvAuthReq);
+    void OSPPAuthReqSetDeviceId(OSPT_AUTH_REQ *, unsigned long);
+    unsigned long OSPPAuthReqGetDeviceId(OSPT_AUTH_REQ *);
+    OSPTBOOL OSPPAuthReqHasRoutingNumber(OSPT_AUTH_REQ *);
+    void OSPPAuthReqSetRoutingNumber(OSPT_AUTH_REQ *, const char *);
+    const char *OSPPAuthReqGetRoutingNumber(OSPT_AUTH_REQ *);
     unsigned OSPPRoutingNumToElement(const char *, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus

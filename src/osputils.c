@@ -15,13 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * osputils.h - Utility functions.
  */
@@ -32,20 +25,16 @@
 #include "openssl/pem.h"
 #include "openssl/evp.h"
 
-
-
 /* Build a string given a uint64 and an int.
  */
-int
-OSPPUtilBuildString(
-    OSPTUINT64  ospv64, 
-    int         ospvInt,
-    char        **ospvNumberString
-    )
+int OSPPUtilBuildString(
+    OSPTUINT64 ospv64, 
+    int ospvInt, 
+    char **ospvNumberString)
 {
-    char    returnstring[50];
-    char    *strptr         = OSPC_OSNULL;
-    int     errorcode       = OSPC_ERR_NO_ERROR;
+    char returnstring[50];
+    char *strptr = OSPC_OSNULL;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_MEMSET(returnstring, 0, sizeof(returnstring));
 
@@ -53,39 +42,32 @@ OSPPUtilBuildString(
      * So we don't have to worry about the size of unsigned longs on
      * the system, we work backwards.
      */
-    
-    /* First the integer */
-    strptr = &returnstring[sizeof(returnstring)-2];
-    do
-    {
-        *strptr-- = (char)('0' + (ospvInt%10));
-        ospvInt = ospvInt/10;
-    }
-    while ((ospvInt != 0) && (strptr >= &returnstring[0]));
 
-    if (ospvInt != 0)
-    {
+    /* First the integer */
+    strptr = &returnstring[sizeof(returnstring) - 2];
+    do {
+        *strptr-- = (char) ('0' + (ospvInt % 10));
+        ospvInt = ospvInt / 10;
+    } while ((ospvInt != 0) && (strptr >= &returnstring[0]));
+
+    if (ospvInt != 0) {
         /* error - we ran out of space before completing the number */
         errorcode = OSPC_ERR_DATA_BAD_NUMBER;
     }
 
     /* Now the uint64 */
-    do
-    {
-        *strptr-- = (char)('0' + (ospv64%10));
-        ospv64 = ospv64/10;
-    }
-    while ((ospv64 != 0) && (strptr >= &returnstring[0]));
+    do {
+        *strptr-- = (char) ('0' + (ospv64 % 10));
+        ospv64 = ospv64 / 10;
+    } while ((ospv64 != 0) && (strptr >= &returnstring[0]));
 
-    if (ospv64 != 0)
-    {
+    if (ospv64 != 0) {
         /* error - we ran out of space before completing the number */
         errorcode = OSPC_ERR_DATA_BAD_NUMBER;
     }
 
-    if(errorcode == OSPC_ERR_NO_ERROR)
-    {
-        strptr++; /*get back to beginning of string*/
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        strptr++;                /*get back to beginning of string */
         OSPM_MALLOC(*ospvNumberString, char, OSPM_STRLEN(strptr) + 1);
         OSPM_MEMSET(*ospvNumberString, 0, OSPM_STRLEN(strptr) + 1);
         OSPM_MEMCPY(*ospvNumberString, strptr, OSPM_STRLEN(strptr));
@@ -124,16 +106,13 @@ OSPC_ERR_TRAN_MAY_NOT_ORIGINATE             (11511)
 OSPC_ERR_TRAN_CALL_RATE_EXCEEDED            (11512)
 OSPC_ERR_TRAN_DESTINATION_INFO_INVALID      (11513)
 */
-int
-OSPPUtilGetErrorFromStatus(
+int OSPPUtilGetErrorFromStatus(
     unsigned ospvStatusCode)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if(ospvStatusCode != OSPC_ERR_NO_ERROR)
-    {
-        switch(ospvStatusCode)
-        {
+    if (ospvStatusCode != OSPC_ERR_NO_ERROR) {
+        switch (ospvStatusCode) {
         case 400:
             errorcode = OSPC_ERR_TRAN_BAD_REQUEST;
             break;
@@ -211,9 +190,9 @@ OSPPUtilGetErrorFromStatus(
             errorcode = OSPC_ERR_TRAN_GENERIC_FAILURE;
             break;
         default:
-            if((ospvStatusCode > 401) && (ospvStatusCode < 500))
+            if ((ospvStatusCode > 401) && (ospvStatusCode < 500))
                 errorcode = OSPC_ERR_TRAN_CLIENT_ERROR;
-            else if((ospvStatusCode > 501) && (ospvStatusCode < 600))
+            else if ((ospvStatusCode > 501) && (ospvStatusCode < 600))
                 errorcode = OSPC_ERR_TRAN_SERVER_ERROR;
             else
                 errorcode = OSPC_ERR_TRAN_GENERIC_FAILURE;
@@ -223,15 +202,13 @@ OSPPUtilGetErrorFromStatus(
     return errorcode;
 }
 
-OSPTBOOL
-    OSPPUtilIsDottedNumericIP(
+OSPTBOOL OSPPUtilIsDottedNumericIP(
     const char *szStr)
 {
 
     const char *pTmp = szStr;
 
-    while (*pTmp)
-    {
+    while (*pTmp) {
         if (*pTmp != '.' && (*pTmp < '0' || *pTmp > '9'))
             return OSPC_FALSE;
         pTmp++;
@@ -243,15 +220,13 @@ OSPTBOOL
  * ****NOTE****
  * Need to get a better way of obtaining a cryptographically strong random number
  */
-int
-OSPPUtilGetRandom(
-    char *ospvRandom,
-    int   ospvAddValue
-)
+int OSPPUtilGetRandom(
+    char *ospvRandom, 
+    int ospvAddValue)
 {
-    int             randnum     = 0;
-    int             numchars    = 0;
-    unsigned int    seed        = time(NULL) + ospvAddValue;
+    int randnum = 0;
+    int numchars = 0;
+    unsigned int seed = time(NULL) + ospvAddValue;
 
 #ifdef _WIN32
 
@@ -264,9 +239,8 @@ OSPPUtilGetRandom(
 
 #endif
 
-    if(randnum > 0)
-    {
-        numchars = sprintf(ospvRandom, "%u", (unsigned)randnum);
+    if (randnum > 0) {
+        numchars = sprintf(ospvRandom, "%u", (unsigned) randnum);
     }
 
     return numchars;
@@ -275,24 +249,24 @@ OSPPUtilGetRandom(
 /* 
  * Converts a string to all lowercase characters
  */
-void
-OSPPUtilStringToLowercase(
-    char** ospvString)
+void OSPPUtilStringToLowercase(
+    char **ospvString)
 {
     int ospvIndex = 0;
 
-    if(*ospvString != OSPC_OSNULL)
-    {
-        for(ospvIndex=0; ((unsigned int)ospvIndex) < OSPM_STRLEN((const char *)*ospvString); ospvIndex++)
-        {
-            *(*ospvString + ospvIndex) = (char)OSPM_TOLOWER((unsigned int)*(*ospvString + ospvIndex));
+    if (*ospvString != OSPC_OSNULL) {
+        for (ospvIndex = 0; ((unsigned int)ospvIndex) < OSPM_STRLEN((const char *)*ospvString); ospvIndex++) {
+            *(*ospvString + ospvIndex) = (char)OSPM_TOLOWER((unsigned int) *(*ospvString + ospvIndex));
         }
     }
 }
+
 /*
  * Loads the Private Key
  */
-int OSPPUtilLoadPEMPrivateKey(unsigned char *FileName, OSPTPRIVATEKEY *key)
+int OSPPUtilLoadPEMPrivateKey(
+    unsigned char *FileName, 
+    OSPTPRIVATEKEY *key)
 {
     BIO *bioIn = NULL;
     RSA *rsaKey = NULL;
@@ -301,96 +275,76 @@ int OSPPUtilLoadPEMPrivateKey(unsigned char *FileName, OSPTPRIVATEKEY *key)
     /* The i2d function will allocate memory */
     key->PrivateKeyData = NULL;
 
-    bioIn = BIO_new_file((const char*)FileName,"r");
+    bioIn = BIO_new_file((const char *)FileName, "r");
 
-    if (bioIn == NULL)
-    {
+    if (bioIn == NULL) {
         errorcode = OSPC_ERR_CRYPTO_FILE_OPEN_ERROR;
         OSPM_DBGERRORLOG(errorcode, "Failed to open PEM key file");
-    }
-    else
-    {
-        rsaKey = PEM_read_bio_RSAPrivateKey(bioIn,NULL,NULL,NULL);
-        if (rsaKey == NULL)
-        {
+    } else {
+        rsaKey = PEM_read_bio_RSAPrivateKey(bioIn, NULL, NULL, NULL);
+        if (rsaKey == NULL) {
             errorcode = OSPC_ERR_CRYPTO_FILE_LOAD_ERROR;
             OSPM_DBGERRORLOG(errorcode, "Failed to load PEM key from file");
-        }
-        else
-        {
-	    key->PrivateKeyLength = i2d_RSAPrivateKey(rsaKey,&(key->PrivateKeyData));
+        } else {
+            key->PrivateKeyLength = i2d_RSAPrivateKey(rsaKey, &(key->PrivateKeyData));
 
-            if (key->PrivateKeyLength == 0)
-            {
+            if (key->PrivateKeyLength == 0) {
                 errorcode = OSPC_ERR_CRYPTO_FILE_PARSE;
                 OSPM_DBGERRORLOG(errorcode, "Failed to parse PEM key from file");
             }
         }
     }
-    if (bioIn != NULL)
-    {
+    if (bioIn != NULL) {
         BIO_free(bioIn);
     }
 
-    if (rsaKey != NULL)
-    {
-       RSA_free(rsaKey);
+    if (rsaKey != NULL) {
+        RSA_free(rsaKey);
     }
 
-    return errorcode;    
+    return errorcode;
 }
-
-
-
-
 
 /*
  * Loads the Certificate
  */
-int OSPPUtilLoadPEMCert(unsigned char *FileName, OSPTCERT *cert)
+int OSPPUtilLoadPEMCert(
+    unsigned char *FileName, 
+    OSPT_CERT *cert)
 {
     BIO *bioIn = NULL;
-    X509 *x509cert=NULL;
+    X509 *x509cert = NULL;
     int errorcode = OSPC_ERR_NO_ERROR;
 
     /* The i2d function will allocate memory */
     cert->CertData = NULL;
 
-    bioIn = BIO_new_file((const char*)FileName,"r");
+    bioIn = BIO_new_file((const char *)FileName, "r");
 
-    if (bioIn == NULL)
-    {
+    if (bioIn == NULL) {
         errorcode = OSPC_ERR_CRYPTO_FILE_OPEN_ERROR;
-    }
-    else
-    {
-        x509cert = PEM_read_bio_X509(bioIn,NULL,NULL,NULL);
-        if (x509cert == NULL)
-        {
+    } else {
+        x509cert = PEM_read_bio_X509(bioIn, NULL, NULL, NULL);
+        if (x509cert == NULL) {
             errorcode = OSPC_ERR_CRYPTO_FILE_LOAD_ERROR;
             OSPM_DBGERRORLOG(errorcode, "Failed to load PEM Cert from file");
-        }
-        else
-        {
-            cert->CertDataLength = i2d_X509(x509cert,&(cert->CertData));
+        } else {
+            cert->CertDataLength = i2d_X509(x509cert, &(cert->CertData));
 
-            if (cert->CertDataLength == 0)
-            {
+            if (cert->CertDataLength == 0) {
                 errorcode = OSPC_ERR_CRYPTO_FILE_PARSE;
-       	        OSPM_DBGERRORLOG(errorcode, "Failed to parse PEM Certificate from file");
+                OSPM_DBGERRORLOG(errorcode, "Failed to parse PEM Certificate from file");
             }
         }
     }
 
-    if (bioIn != NULL)
-    {
+    if (bioIn != NULL) {
         BIO_free(bioIn);
     }
 
-    if (x509cert != NULL)
-    {
+    if (x509cert != NULL) {
         X509_free(x509cert);
     }
 
-    return errorcode;    
+    return errorcode;
 }

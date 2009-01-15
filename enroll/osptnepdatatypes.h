@@ -60,7 +60,7 @@ typedef struct _OSPTENROLLPARAMS {
  * The authority's certificates are included here for validating any
  * information ( e.g., certificates ) that come back.
  */
-typedef struct _OSPTCOMMPARAMS {
+typedef struct {
     unsigned SSLLifetime;
     unsigned HTTPMaxConnections;
     unsigned HTTPPersistence;

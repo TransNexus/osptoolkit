@@ -36,7 +36,7 @@ typedef struct {
     char *ospmReauthReqComponentId;
     unsigned ospmReauthReqRole;
     OSPTBOOL ospmReauthReqHasRole;
-    OSPTCALLID *ospmReauthReqCallId;
+    OSPT_CALL_ID *ospmReauthReqCallId;
     char ospmReauthReqSourceNumber[OSPC_SIZE_E164NUM];
     char ospmReauthReqDestNumber[OSPC_SIZE_E164NUM];
     OSPTLIST ospmReauthReqSourceAlternate;
@@ -63,7 +63,7 @@ extern "C" {
     OSPE_ROLE OSPPReauthReqGetRole(OSPTREAUTHREQ *);
     void OSPPReauthReqAddSourceAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
     void OSPPReauthReqAddDestinationAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
-    void OSPPReauthReqSetCallId(OSPTREAUTHREQ *, OSPTCALLID *);
+    void OSPPReauthReqSetCallId(OSPTREAUTHREQ *, OSPT_CALL_ID *);
     OSPTBOOL OSPPReauthReqHasMessageId(OSPTREAUTHREQ *);
     const char *OSPPReauthReqGetMessageId(OSPTREAUTHREQ *);
     OSPTBOOL OSPPReauthReqHasTimestamp(OSPTREAUTHREQ *);
@@ -72,7 +72,7 @@ extern "C" {
     OSPTBOOL OSPPReauthReqHasComponentId(OSPTREAUTHREQ *);
     const char *OSPPReauthReqGetComponentId(OSPTREAUTHREQ *);
     OSPTBOOL OSPPReauthReqHasCallId(OSPTREAUTHREQ *);
-    OSPTCALLID *OSPPReauthReqGetCallId(OSPTREAUTHREQ *);
+    OSPT_CALL_ID *OSPPReauthReqGetCallId(OSPTREAUTHREQ *);
     void OSPPReauthReqSetSourceNumber(OSPTREAUTHREQ *, const char *);
     const char *OSPPReauthReqGetSourceNumber(OSPTREAUTHREQ *);
     void OSPPReauthReqSetDestNumber(OSPTREAUTHREQ *, const char *);

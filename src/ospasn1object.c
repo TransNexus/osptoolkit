@@ -159,7 +159,6 @@ int OSPPASN1ObjectCopyElementObject(
     OSPM_MEMSET(&foundObject, 0, sizeof(OSPTASN1OBJECT));
 
     errorcode = OSPPASN1ObjectGetParseResults(ospvParentObject, &parseResults);
-
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = PTPResultsGetElement(ospvDataRefId, parseResults, &eInfo);
     }

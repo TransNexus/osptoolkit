@@ -32,7 +32,7 @@ typedef struct {
     OSPTSTATUS *ospmAuthCnfStatus;
     OSPTTIME ospmAuthCnfValidAfter;
     OSPTTIME ospmAuthCnfValidUntil;
-} OSPTAUTHCNF;
+} OSPT_AUTH_CNF;
 
 /* Function Prototypes */
 
@@ -40,8 +40,8 @@ typedef struct {
 extern "C" {
 #endif
 
-    void OSPPAuthCnfDelete(OSPTAUTHCNF **);
-    OSPTBOOL OSPPAuthCnfHasStatus(OSPTAUTHCNF *ospvAuthCnf);
+    void OSPPAuthCnfDelete(OSPT_AUTH_CNF **);
+    OSPTBOOL OSPPAuthCnfHasStatus(OSPT_AUTH_CNF *ospvAuthCnf);
 
 #ifdef __cplusplus
 }

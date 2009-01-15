@@ -36,7 +36,7 @@
  * OSPPAuthIndSetTimestamp() - sets the timestamp for an authorisation indication
  */
 void OSPPAuthIndSetTimestamp(
-    OSPTAUTHIND *ospvAuthInd, 
+    OSPT_AUTH_IND *ospvAuthInd, 
     OSPTTIME ospvTime)
 {
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -48,7 +48,7 @@ void OSPPAuthIndSetTimestamp(
  * OSPPAuthIndHasRole() - Does AuthIndication have role set?
  */
 OSPTBOOL OSPPAuthIndHasRole(
-    OSPTAUTHIND *ospvAuthInd)
+    OSPT_AUTH_IND *ospvAuthInd)
 {
     OSPTBOOL ospvHasRole = OSPC_FALSE;
 
@@ -63,7 +63,7 @@ OSPTBOOL OSPPAuthIndHasRole(
  * OSPPAuthIndSetRole() - sets value for role in AuthIndication
  */
 void OSPPAuthIndSetRole(
-    OSPTAUTHIND *ospvAuthInd, 
+    OSPT_AUTH_IND *ospvAuthInd, 
     OSPE_ROLE ospvRole)
 {
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -76,7 +76,7 @@ void OSPPAuthIndSetRole(
  * OSPPAuthIndGetRole() - returns role for an AuthIndication
  */
 OSPE_ROLE OSPPAuthIndGetRole(
-    OSPTAUTHIND *ospvAuthInd)
+    OSPT_AUTH_IND *ospvAuthInd)
 {
     OSPE_ROLE ospvRole = OSPC_ROLE_UNDEFINED;
 
@@ -91,7 +91,7 @@ OSPE_ROLE OSPPAuthIndGetRole(
  * OSPPAuthIndHasCallId() - does an authorisation indication have a Call ID?
  */
 OSPTBOOL OSPPAuthIndHasCallId(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication */
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                            
     OSPTBOOL ospvHasCallId = OSPC_FALSE;
 
@@ -105,10 +105,10 @@ OSPTBOOL OSPPAuthIndHasCallId(
 /*
  * OSPPAuthIndGetCallId() - gets the call ID for an authorisation indication
  */
-OSPTCALLID *OSPPAuthIndGetCallId(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication */
+OSPT_CALL_ID *OSPPAuthIndGetCallId(
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                             
-    OSPTCALLID *ospvCallId = OSPC_OSNULL;
+    OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
         ospvCallId = ospvAuthInd->ospmAuthIndCallId;
@@ -121,7 +121,7 @@ OSPTCALLID *OSPPAuthIndGetCallId(
  * OSPPAuthIndGetCallIdSize() - gets the call ID size for an authorisation indication
  */
 unsigned OSPPAuthIndGetCallIdSize(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication */
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                             
     unsigned ospvCallIdSize = 0;
 
@@ -136,7 +136,7 @@ unsigned OSPPAuthIndGetCallIdSize(
  * OSPPAuthIndGetCallIdValue() - gets the call ID value for an authorisation indication
  */
 unsigned char *OSPPAuthIndGetCallIdValue(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication */
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                            
     unsigned char *ospvCallIdValue = OSPC_OSNULL;
 
@@ -151,7 +151,7 @@ unsigned char *OSPPAuthIndGetCallIdValue(
  * OSPPAuthIndHasSourceNumber() - does the authorisation indication have a source number?
  */
 OSPTBOOL OSPPAuthIndHasSourceNumber(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication effected */
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication effected */
 {                            
     OSPTBOOL ospvHasSourceNumber = OSPC_FALSE;
 
@@ -166,7 +166,7 @@ OSPTBOOL OSPPAuthIndHasSourceNumber(
  * OSPPAuthIndSetSourceNumber() - set the source number for an authorisation indication
  */
 void OSPPAuthIndSetSourceNumber(
-    OSPTAUTHIND *ospvAuthInd,   /* authorisation indication  to set */
+    OSPT_AUTH_IND *ospvAuthInd, /* authorisation indication  to set */
     const char *ospvNum)        /* source number (as string) */
 {                       
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -180,7 +180,7 @@ void OSPPAuthIndSetSourceNumber(
  * OSPPAuthIndGetSourceNumber() - returns the source number for an  authorisation indication
  */
 const char *OSPPAuthIndGetSourceNumber(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication */
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                             
     const char *ospvSourceNumber = OSPC_OSNULL;
 
@@ -195,7 +195,7 @@ const char *OSPPAuthIndGetSourceNumber(
  * OSPPAuthIndHasDestNumber() - does the authorisation indication include a dest number?
  */
 OSPTBOOL OSPPAuthIndHasDestNumber(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication effected */
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication effected */
 {                            
     OSPTBOOL ospvHasDestNumber = OSPC_FALSE;
 
@@ -210,7 +210,7 @@ OSPTBOOL OSPPAuthIndHasDestNumber(
  * OSPPAuthIndSetDestNumber() - set the destination number for an authorisation indication
  */
 void OSPPAuthIndSetDestNumber(
-    OSPTAUTHIND *ospvAuthInd,   /* authorisation indication to set */
+    OSPT_AUTH_IND *ospvAuthInd, /* authorisation indication to set */
     const char *ospvNum)        /* destination number (as string) */
 {                       
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -224,7 +224,7 @@ void OSPPAuthIndSetDestNumber(
  * OSPPAuthIndGetDestNumber() - returns the destination number for an authorisation indication
  */
 const char *OSPPAuthIndGetDestNumber(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication */
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                            
     const char *ospvDestNumber = OSPC_OSNULL;
 
@@ -239,7 +239,7 @@ const char *OSPPAuthIndGetDestNumber(
  * OSPPAuthIndHasSourceAlt() - does an authorisation indication have a Source Alternate?
  */
 OSPTBOOL OSPPAuthIndHasSourceAlt(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication */
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                            
     OSPTBOOL ospvHasSourceAlt = OSPC_FALSE;
 
@@ -254,7 +254,7 @@ OSPTBOOL OSPPAuthIndHasSourceAlt(
  * OSPPAuthIndFirstSourceAlt() - gets the First Source alternate for an  authorisation indication
  */
 OSPT_ALTINFO *OSPPAuthIndFirstSourceAlt(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication */
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                             
     OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
 
@@ -270,7 +270,7 @@ OSPT_ALTINFO *OSPPAuthIndFirstSourceAlt(
  * OSPPAuthIndNextSourceAlt() - gets the next source alternate for an authorisation indication
  */
 OSPT_ALTINFO *OSPPAuthIndNextSourceAlt(
-    OSPTAUTHIND *ospvAuthInd,   /* authorisation indication */
+    OSPT_AUTH_IND *ospvAuthInd, /* authorisation indication */
     OSPT_ALTINFO *ospvAltInfo)
 {
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
@@ -301,7 +301,7 @@ const char *OSPPAuthIndGetSourceAltValue(
  * OSPPAuthIndHasDestinationAlt() - does an authorisation indication have a Destination Alternate? 
  */
 OSPTBOOL OSPPAuthIndHasDestinationAlt(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication */
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                            
     OSPTBOOL ospvHasDestinationAlt = OSPC_FALSE;
 
@@ -316,7 +316,7 @@ OSPTBOOL OSPPAuthIndHasDestinationAlt(
  * OSPPAuthIndFirstDestinationAlt() - gets the First Destination alternate for an authorisation indication 
  */
 OSPT_ALTINFO *OSPPAuthIndFirstDestinationAlt(
-    OSPTAUTHIND *ospvAuthInd)   /* authorisation indication */
+    OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                             
     OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
 
@@ -331,7 +331,7 @@ OSPT_ALTINFO *OSPPAuthIndFirstDestinationAlt(
  * OSPPAuthIndNextDestinationAlt() - gets the next Destination alternate for an authorisation indication 
  */
 OSPT_ALTINFO *OSPPAuthIndNextDestinationAlt(
-    OSPTAUTHIND *ospvAuthInd,   /* authorisation indication */
+    OSPT_AUTH_IND *ospvAuthInd, /* authorisation indication */
     OSPT_ALTINFO *ospvAltInfo)
 {
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
@@ -363,8 +363,8 @@ const char *OSPPAuthIndGetDestinationAltValue(
  * OSPPAuthIndSetDest() - sets the destination for an authorisation
  */
 void OSPPAuthIndSetDest(
-    OSPTAUTHIND *ospvAuthInd, 
-    OSPTDEST *ospvDest)
+    OSPT_AUTH_IND *ospvAuthInd, 
+    OSPT_DEST *ospvDest)
 {
     if (ospvAuthInd != OSPC_OSNULL) {
         if (ospvDest != OSPC_OSNULL) {
@@ -380,7 +380,7 @@ void OSPPAuthIndSetDest(
  * OSPPAuthIndHasDest() - does an authorisation indication have a Destination?
  */
 OSPTBOOL OSPPAuthIndHasDest(
-    OSPTAUTHIND *ospvAuthInd)
+    OSPT_AUTH_IND *ospvAuthInd)
 {
     if (ospvAuthInd->ospmAuthIndDest != OSPC_OSNULL) {
         return OSPC_TRUE;
@@ -393,7 +393,7 @@ OSPTBOOL OSPPAuthIndHasDest(
  * OSPPAuthIndSetTimeLimit() - sets the timelimit for an authorisation indication
  */
 void OSPPAuthIndSetTimeLimit(
-    OSPTAUTHIND *ospvAuthInd,
+    OSPT_AUTH_IND *ospvAuthInd,
     unsigned ospvTimeLimit)
 {
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -405,13 +405,13 @@ void OSPPAuthIndSetTimeLimit(
 /*
  * OSPPAuthIndNew() - creates a new (empty) authorisation indication
  */
-OSPTAUTHIND *OSPPAuthIndNew(void)
+OSPT_AUTH_IND *OSPPAuthIndNew(void)
 {
-    OSPTAUTHIND *ospvAuthInd = OSPC_OSNULL;
+    OSPT_AUTH_IND *ospvAuthInd = OSPC_OSNULL;
 
-    OSPM_MALLOC(ospvAuthInd, OSPTAUTHIND, sizeof(OSPTAUTHIND));
+    OSPM_MALLOC(ospvAuthInd, OSPT_AUTH_IND, sizeof(OSPT_AUTH_IND));
     if (ospvAuthInd != OSPC_OSNULL) {
-        OSPM_MEMSET(ospvAuthInd, 0, sizeof(OSPTAUTHIND));
+        OSPM_MEMSET(ospvAuthInd, 0, sizeof(OSPT_AUTH_IND));
 
         ospvAuthInd->ospmAuthIndTimestamp = OSPC_TIMEMIN;
         ospvAuthInd->ospmAuthIndRole = 0;
@@ -433,7 +433,7 @@ OSPTAUTHIND *OSPPAuthIndNew(void)
  * OSPPAuthIndDelete() - destroy specified AuthInd object
  */
 void OSPPAuthIndDelete(
-    OSPTAUTHIND **ospvAuthInd)
+    OSPT_AUTH_IND **ospvAuthInd)
 {
     OSPTTOKEN *token = OSPC_OSNULL;
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
@@ -495,8 +495,8 @@ void OSPPAuthIndDelete(
  * OSPPAuthIndSetCallId() - sets the call ID for an authorisation
  */
 void OSPPAuthIndSetCallId(
-    OSPTAUTHIND *ospvAuthInd,   /* authorisation indication */
-    OSPTCALLID *ospvCallId)     /* call ID */
+    OSPT_AUTH_IND *ospvAuthInd, /* authorisation indication */
+    OSPT_CALL_ID *ospvCallId)   /* call ID */
 {                          
     if (ospvAuthInd != OSPC_OSNULL) {
         if (ospvCallId != OSPC_OSNULL) {

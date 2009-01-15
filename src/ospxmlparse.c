@@ -81,7 +81,7 @@ unsigned OSPPXMLDocParse(       /* returns error code */
         ospvErrCode = OSPPXMLDocParseElem(ospvBfrAddr, encoding, ospvElemAddr);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -250,20 +250,20 @@ unsigned OSPPXMLDocParseElem( /* returns error code */
     }
 
     /* and delete any lists that are still hanging around */
-    for (elem = (OSPT_XML_ELEM *) OSPPListRemove(&childList);
+    for (elem = (OSPT_XML_ELEM *)OSPPListRemove(&childList);
          elem != OSPC_OSNULL;
-         elem = (OSPT_XML_ELEM *) OSPPListRemove(&childList)) 
+         elem = (OSPT_XML_ELEM *)OSPPListRemove(&childList)) 
     {
         OSPPXMLElemDelete(&elem);
     }
-    for (attr = (OSPT_XML_ATTR *) OSPPListRemove(&attrList);
+    for (attr = (OSPT_XML_ATTR *)OSPPListRemove(&attrList);
          attr != OSPC_OSNULL;
-         attr = (OSPT_XML_ATTR *) OSPPListRemove(&attrList)) 
+         attr = (OSPT_XML_ATTR *)OSPPListRemove(&attrList)) 
     {
         OSPPXMLAttrDelete(&attr);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -301,7 +301,7 @@ unsigned OSPPXMLDocGetAttrs(    /* returns error code */
 
         /* take a peek at the next character to see if it's a name */
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLDocPeekCharN(ospvBfrAddr, ospvEncoding, 0, &readChar, (int *) &ospvErrCode);
+            OSPPXMLDocPeekCharN(ospvBfrAddr, ospvEncoding, 0, &readChar, (int *)&ospvErrCode);
         }
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
             if (!OSPPXMLIsName1(readChar)) {
@@ -320,7 +320,7 @@ unsigned OSPPXMLDocGetAttrs(    /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -426,7 +426,7 @@ unsigned OSPPXMLDocGetAttr(     /* returns error code */
         OSPPBfrDelete(&valBfr);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -507,10 +507,10 @@ unsigned OSPPXMLDocGetContent(  /* returns error code */
 
         /* we need a look at the next two characters for several cases */
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLDocPeekCharN(ospvBfrAddr, ospvEncoding, 0, &char1, (int *) &ospvErrCode);
+            OSPPXMLDocPeekCharN(ospvBfrAddr, ospvEncoding, 0, &char1, (int *)&ospvErrCode);
         }
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLDocPeekCharN(ospvBfrAddr, ospvEncoding, 1, &char2, (int *) &ospvErrCode);
+            OSPPXMLDocPeekCharN(ospvBfrAddr, ospvEncoding, 1, &char2, (int *)&ospvErrCode);
         }
 
         /* might this be a child element ? */
@@ -554,7 +554,7 @@ unsigned OSPPXMLDocGetContent(  /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -615,7 +615,7 @@ unsigned OSPPXMLDocGetCdata(    /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -708,7 +708,7 @@ unsigned OSPPXMLDocGetName(     /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -758,7 +758,7 @@ unsigned OSPPXMLDocSkipProlog(  /* returns error code */
         ospvErrCode = OSPPXMLDocSkipAllMisc(ospvBfrAddr, ospvEncoding);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -822,7 +822,7 @@ unsigned OSPPXMLDocSkipAllMisc( /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -897,7 +897,7 @@ unsigned OSPPXMLDocSkipDTD(     /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1001,7 +1001,7 @@ unsigned OSPPXMLDocSkipMarkupDecl(  /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1046,7 +1046,7 @@ unsigned OSPPXMLDocSkipDecl(    /* returns error code */
         ospvErrCode = OSPPXMLDocSkipPast(ospvBfrAddr, ospvEncoding, tag, scratch);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1090,7 +1090,7 @@ unsigned OSPPXMLDocSkipComment( /* returns error code */
         ospvErrCode = OSPPXMLDocSkipPast(ospvBfrAddr, ospvEncoding, tag, scratch);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1134,7 +1134,7 @@ unsigned OSPPXMLDocSkipPI(      /* returns error code */
         ospvErrCode = OSPPXMLDocSkipPast(ospvBfrAddr, ospvEncoding, tag, scratch);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1178,7 +1178,7 @@ unsigned OSPPXMLDocSkipElementDecl( /* returns error code */
         ospvErrCode = OSPPXMLDocSkipPast(ospvBfrAddr, ospvEncoding, tag, scratch);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1222,7 +1222,7 @@ unsigned OSPPXMLDocSkipEntityDecl(  /* returns error code */
         ospvErrCode = OSPPXMLDocSkipPast(ospvBfrAddr, ospvEncoding, tag, scratch);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1266,7 +1266,7 @@ unsigned OSPPXMLDocSkipAttlist( /* returns error code */
         ospvErrCode = OSPPXMLDocSkipPast(ospvBfrAddr, ospvEncoding, tag, scratch);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1294,7 +1294,7 @@ unsigned OSPPXMLDocSkipPastCdataBeg(    /* returns error code */
         ospvErrCode = OSPPXMLDocSkipPast(ospvBfrAddr, ospvEncoding, tag, scratch);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1320,7 +1320,7 @@ unsigned OSPPXMLDocSkipPastCdataEnd(/* returns error code */
     }
     ospvErrCode = OSPPXMLDocSkipPast(ospvBfrAddr, ospvEncoding, tag, scratch);
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1370,7 +1370,7 @@ unsigned OSPPXMLDocIsDecl(      /* returns error code */
         }
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1404,7 +1404,7 @@ unsigned OSPPXMLDocIsComment(   /* returns error code */
         /* now look for the match of the comment beginning */
         ospvErrCode = OSPPXMLDocIsMatch(ospvBfrAddr, ospvEncoding, tag, OSPC_XMLDOC_COMMENTBEGLEN, scratch, ospvIsComment);
     }
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1441,7 +1441,7 @@ unsigned OSPPXMLDocIsPI(        /* returns error code */
         ospvErrCode = OSPPXMLDocIsMatch(ospvBfrAddr, ospvEncoding, tag, OSPC_XMLDOC_PIBEGLEN, scratch, ospvIsPI);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1478,7 +1478,7 @@ unsigned OSPPXMLDocIsDTD(       /* returns error code */
         ospvErrCode = OSPPXMLDocIsMatch(ospvBfrAddr, ospvEncoding, tag, OSPC_XMLDOC_DTDBEGLEN, scratch, ospvIsDTD);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1515,7 +1515,7 @@ unsigned OSPPXMLDocIsElementDecl(   /* returns error code */
         ospvErrCode = OSPPXMLDocIsMatch(ospvBfrAddr, ospvEncoding, tag, OSPC_XMLDOC_ELEMENTDECLBEGLEN, scratch, ospvIsElemDecl);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1552,7 +1552,7 @@ unsigned OSPPXMLDocIsAttlist(   /* returns error code */
         ospvErrCode = OSPPXMLDocIsMatch(ospvBfrAddr, ospvEncoding, tag, OSPC_XMLDOC_ATTLISTBEGLEN, scratch, ospvIsAttlist);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1589,7 +1589,7 @@ unsigned OSPPXMLDocIsEntityDecl(    /* returns error code */
         ospvErrCode = OSPPXMLDocIsMatch(ospvBfrAddr, ospvEncoding, tag, OSPC_XMLDOC_ENTITYDECLBEGLEN, scratch, ospvIsEntityDecl);
     }
                                        
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1626,7 +1626,7 @@ unsigned OSPPXMLDocIsCdata(     /* returns error code */
         ospvErrCode = OSPPXMLDocIsMatch(ospvBfrAddr, ospvEncoding, tag, OSPC_XMLDOC_CDATABEGLEN, scratch, ospvIsCdata);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }
 
 /*
@@ -1663,5 +1663,5 @@ unsigned OSPPXMLDocIsCdataEnd(  /* returns error code */
         ospvErrCode = OSPPXMLDocIsMatch(ospvBfrAddr, ospvEncoding, tag, OSPC_XMLDOC_CDATAENDLEN, scratch, ospvIsCdataEnd);
     }
 
-    return (ospvErrCode);
+    return ospvErrCode;
 }

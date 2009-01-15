@@ -104,7 +104,7 @@ void *token = NULL;
 
 const char *New_ServicePoint = { "http://osptestserver.transnexus.com:1080/osp" };
 
-static OSPTCALLID *callids[NUM_CALL_IDS];
+static OSPT_CALL_ID *callids[NUM_CALL_IDS];
 token_algo_t tokenalgo = TOKEN_ALGO_SIGNED;
 char *SourceIP = NULL, *SourceDevIP = NULL, *DstIP = NULL, *DstDevIP = NULL;
 char *ModifiedSourceIP = NULL, *ModifiedSourceDevIP = NULL, *ModifiedDstIP = NULL, *ModifiedDstDevIP = NULL;
@@ -204,7 +204,7 @@ OSPTTRANHANDLE tranhandle2 = OSPC_TRAN_HANDLE_INVALID;
 int testNotImplemented()
 {
     printf("not implemented\n");
-    return (0);
+    return 0;
 }
 
 int testOSPPSetServicePoints()
@@ -228,10 +228,10 @@ int testOSPPProviderNew(OSPTPROVHANDLE *ProvHandle)
     char customer_id[64];
     char device_id[64];
     char searchstr[20];
-    OSPTCERT localcert;
+    OSPT_CERT localcert;
     OSPTPRIVATEKEY privatekey;
-    OSPTCERT *authCerts[OSPC_SEC_MAX_AUTH_CERTS];
-    OSPTCERT TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
+    OSPT_CERT *authCerts[OSPC_SEC_MAX_AUTH_CERTS];
+    OSPT_CERT TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
 
     errorcode = OSPPUtilLoadPEMPrivateKey((unsigned char *) "pkey.pem", &privatekey);
     if (errorcode != OSPC_ERR_NO_ERROR) {
@@ -283,12 +283,12 @@ int testOSPPProviderNew(OSPTPROVHANDLE *ProvHandle)
         servpts,
         MsgCount,
         auditurl,
-        (const OSPTPRIVATEKEY *) &privatekey,
+        (const OSPTPRIVATEKEY *)&privatekey,
         /* Local certificate */
         &localcert,
         /* CA certificates */
         NUM_CA_CERTS,
-        (const OSPTCERT **) authCerts,
+        (const OSPT_CERT **)authCerts,
         /**/
         LOCAL_VALIDATION,
         DEF_SSL_LIFETIME,
@@ -378,8 +378,8 @@ int testOSPPProviderSetAuthorityCertificates()
     int length = 0;
     unsigned int i;
     char searchstr[20];
-    OSPTCERT *authCerts[OSPC_SEC_MAX_AUTH_CERTS];
-    OSPTCERT TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
+    OSPT_CERT *authCerts[OSPC_SEC_MAX_AUTH_CERTS];
+    OSPT_CERT TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
 
     i = 0;
     while (i < OSPC_SEC_MAX_AUTH_CERTS) {
@@ -413,7 +413,7 @@ int testOSPPProviderSetAuthorityCertificates()
     }
     NUM_CA_CERTS = i;
 
-    errorcode = OSPPProviderSetAuthorityCertificates(OSPVProviderHandle, NUM_CA_CERTS, (const OSPTCERT **)authCerts);
+    errorcode = OSPPProviderSetAuthorityCertificates(OSPVProviderHandle, NUM_CA_CERTS, (const OSPT_CERT **)authCerts);
 
     /* Free memory allocated while loading crypto information from PEM-encoded files */
     for (i = 0; i < NUM_CA_CERTS; i++) {
@@ -563,7 +563,7 @@ int testOSPPProviderGetLocalKeys()
 int testOSPPProviderSetLocalKeys()
 {
     int errorcode = 0;
-    OSPTCERT localcert;
+    OSPT_CERT localcert;
     OSPTPRIVATEKEY privatekey;
 
     errorcode = OSPPUtilLoadPEMPrivateKey((unsigned char *) "pkey.pem", &privatekey);
@@ -954,7 +954,6 @@ void testFreeCallIds()
     register int i = 0;
     for (i = 0; i < NUM_CALL_IDS; i++)
         OSPPCallIdDelete(&(callids[i]));
-    return;
 }
 
 int testInitializeCallIds()
@@ -1670,7 +1669,7 @@ int testOSPPSecSignatureVerify()
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        _Read(tokenfd, (unsigned char *) &signatureLength, 4);
+        _Read(tokenfd, (unsigned char *)&signatureLength, 4);
 
         OSPM_MALLOC(signature, unsigned char, signatureLength);
 
@@ -1828,7 +1827,7 @@ int test206()
 {
     int errorcode = 0;
     
-    OSPTCALLID *callid;
+    OSPT_CALL_ID *callid;
     callid = OSPPCallIdNew(8, (const unsigned char *)"incallid");
     errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_DIR_INBOUND, callid);
     OSPPCallIdDelete(&callid);
@@ -2097,7 +2096,7 @@ int testAPI(int apinumber)
                     OSPM_CREATE_THREAD(MultProviderThrId[i],
                         NULL,
                         testNonBlockingPerformanceTest,
-                        (void *) &trans_to_run, errorcode);
+                        (void *)&trans_to_run, errorcode);
 
                     printf("Created Thread [%d] with thread id: [%lu]\n", i, (unsigned long int)MultProviderThrId[i]);
                 }
@@ -2417,7 +2416,6 @@ void CleanupServicePoints()
         free(capURLs[i]);
     }
     free(auditurl);
-    return;
 }
 
 
@@ -2467,7 +2465,7 @@ int main(int argc, char *argv[])
     OSPPCleanup();
     CleanupServicePoints();
     printf("Program Over.\n");
-    return (0);
+    return 0;
 }
 
 
@@ -2532,7 +2530,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
     unsigned *NumOfDestinations = NULL;
     unsigned *authorised = NULL;
     unsigned *TokenSizes = NULL;
-    OSPTCALLID **CallIds = NULL;
+    OSPT_CALL_ID **CallIds = NULL;
     unsigned *CallIdsNum = NULL;
     unsigned *CallIdsLen = NULL;
     int i = 0;
@@ -2589,7 +2587,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
     NumOfDestinations = (unsigned *) malloc((sizeof(unsigned) * num_test_calls));
     authorised = (unsigned *) malloc((sizeof(unsigned) * num_test_calls));
     TokenSizes = (unsigned *) malloc((sizeof(unsigned) * num_test_calls));
-    CallIds = (OSPTCALLID **) malloc((sizeof(OSPTCALLID *) * num_test_calls));
+    CallIds = (OSPT_CALL_ID **) malloc((sizeof(OSPT_CALL_ID *) * num_test_calls));
     CallIdsNum = (unsigned *) malloc((sizeof(unsigned) * num_test_calls));
     CallIdsLen = (unsigned *) malloc((sizeof(unsigned) * num_test_calls));
 
