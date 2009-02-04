@@ -573,6 +573,7 @@ unsigned OSPPCustomerInfoToElement(
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
     char buffer[OSPC_SIZE_NORSTR];
+    OSPTBOOL isbase64 = OSPC_TRUE;
 
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -580,10 +581,12 @@ unsigned OSPPCustomerInfoToElement(
         if ((Index > OSPC_MAX_INDEX) || (CustomerInfo == OSPC_OSNULL) || (CustomerInfo[0] == '\0')) {
             ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
         } else {
-            *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO), CustomerInfo);
-            if (*ospvElem == OSPC_OSNULL) {
-                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-            } else {
+            ospvErrCode = OSPPMsgBinToElement(OSPM_STRLEN(CustomerInfo),
+                (unsigned char *)CustomerInfo, 
+                OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO), 
+                ospvElem, 
+                isbase64);
+            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                 snprintf(buffer, sizeof(buffer), "%d", Index);
                 attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_INDEX), buffer);
                 if (attr == OSPC_OSNULL) {
