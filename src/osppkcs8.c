@@ -105,6 +105,7 @@ int OSPPPKCS8KeyInfoCreate(
         default:
             errorcode = OSPC_ERR_PKCS7_ENCODING_ERROR;
             OSPM_DBGERRORLOG(errorcode, "Unknown case encountered encoding PKCS7 SignerInfo");
+            break;
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {

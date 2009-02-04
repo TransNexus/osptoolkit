@@ -157,8 +157,8 @@ void OSPPAuditCheck(
                 tnaudit = OSPPReauthRspGetTNAudit((OSPTREAUTHRSP *)ospvResponse);
             }
 
-/*               if(((OSPTREAUTHRSP *)ospvResponse)->ospmReauthRspCSAudit != OSPC_OSNULL)
-                {
+                /*               
+                if(((OSPTREAUTHRSP *)ospvResponse)->ospmReauthRspCSAudit != OSPC_OSNULL) {
                     csaudit = OSPPReauthRspGetCSAudit((OSPTREAUTHRSP *)ospvResponse);
                 }
                 */
@@ -204,11 +204,9 @@ void OSPPAuditCheck(
                         OSPM_CONDVAR_SIGNAL(ospvAudit->ospmAuditWorkerCondVar, errorcode);
                         OSPM_MUTEX_UNLOCK(ospvAudit->ospmAuditWorkerMutex, errorcode);
                     }
-
                     break;
 
                 default:
-
                     break;
                 }
             }
@@ -217,7 +215,7 @@ void OSPPAuditCheck(
         if (csaudit != OSPC_OSNULL) {
             if (OSPPCSAuditHasTrigger(csaudit)) {
                 trigger = OSPPCSAuditGetTrigger(csaudit);
-                if (OSPM_STRCMP((const char *) trigger, "stop") == 0) {
+                if (OSPM_STRCMP((const char *)trigger, "stop") == 0) {
                     /* Unset auditing flag */
                     OSPPCommSetAuditFlag(ospvAudit->ospmAuditComm, OSPC_COMM_AUDIT_OFF);
 

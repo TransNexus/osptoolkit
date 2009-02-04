@@ -46,15 +46,15 @@ OSPTBOOL OSPPHasTermCause(          /* returns non-zero if time */
     OSPT_TERM_CAUSE *ospvTermCause, /* usage request in question */
     OSPE_TERM_CAUSE ospvType)       /* termination cause type */
 {
-    OSPTBOOL ospvHasTermCause = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvTermCause != OSPC_OSNULL) {
         if ((ospvType >= OSPC_TCAUSE_START) && (ospvType < OSPC_TCAUSE_NUMBER)) {
-            ospvHasTermCause = ospvTermCause->hastermcause[ospvType];
+            ospvHas = ospvTermCause->hastermcause[ospvType];
         }
     }
 
-    return ospvHasTermCause;
+    return ospvHas;
 }
 
 /*
@@ -63,16 +63,16 @@ OSPTBOOL OSPPHasTermCause(          /* returns non-zero if time */
 OSPTBOOL OSPPHasTermCauseAny(       /* returns non-zero if time */
     OSPT_TERM_CAUSE *ospvTermCause) /* usage request in question */
 {
-    OSPTBOOL ospvHasTermCause = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
     OSPE_TERM_CAUSE ospvType;
 
     if (ospvTermCause != OSPC_OSNULL) {
         for (ospvType = OSPC_TCAUSE_START; ospvType < OSPC_TCAUSE_NUMBER; ospvType++) {
-            ospvHasTermCause |= ospvTermCause->hastermcause[ospvType];
+            ospvHas |= ospvTermCause->hastermcause[ospvType];
         }
     }
 
-    return ospvHasTermCause;
+    return ospvHas;
 }
 
 /*

@@ -279,8 +279,8 @@ unsigned OSPPSessionIdToElement(    /* returns error code */
             ospvElem,
             ospvIsBase64);
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        	switch (ospvType) {
-        	case OSPC_DIR_INBOUND:
+            switch (ospvType) {
+            case OSPC_DIR_INBOUND:
                 attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(OSPC_ALTINFO_INBOUND));
                 if (attr != OSPC_OSNULL) {
                     OSPPXMLElemAddAttr(*ospvElem, attr);
@@ -288,9 +288,9 @@ unsigned OSPPSessionIdToElement(    /* returns error code */
                     OSPPXMLElemDelete(ospvElem);
                     ospvErrCode = OSPC_ERR_XML_NO_ATTR;
                 }
-        	    break;
-        	case OSPC_DIR_OUTBOUND:
-        	    type = OSPC_ALTINFO_OUTBOUND;
+                break;
+            case OSPC_DIR_OUTBOUND:
+                type = OSPC_ALTINFO_OUTBOUND;
                 attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(OSPC_ALTINFO_OUTBOUND));
                 if (attr != OSPC_OSNULL) {
                     OSPPXMLElemAddAttr(*ospvElem, attr);
@@ -298,10 +298,10 @@ unsigned OSPPSessionIdToElement(    /* returns error code */
                     OSPPXMLElemDelete(ospvElem);
                     ospvErrCode = OSPC_ERR_XML_NO_ATTR;
                 }
-        	    break;
-        	default:
-        	    break;
-        	}
+                break;
+            default:
+                break;
+            }
         }
     }
 

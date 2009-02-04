@@ -94,13 +94,13 @@ typedef struct _OSPTTRANS {
     OSPTREAUTHREQ *ReauthReq;
     OSPTREAUTHRSP *ReauthRsp;
     OSPTBOOL WasLookAheadInfoGivenToApp;
-    OSPTBOOL TokenInfoIsLookAheadInfoPresent;
+    OSPTBOOL TokenInfoHasLookAheadInfo;
     OSPTTOKENLOOKAHEADINFO TokenLookAheadInfo;
     OSPE_NUMBER_FORMAT CallingNumberFormat;
     OSPE_NUMBER_FORMAT CalledNumberFormat;
-    OSPTBOOL IsServiceInfoPresent;
+    OSPTBOOL HasServiceInfo;
     OSPE_SERVICE ServiceType;
-    OSPTBOOL IsPricingInfoPresent;
+    OSPTBOOL HasPricingInfo;
     unsigned NumOfPricingInfoElements;
     unsigned CurrentPricingInfoElement;
     OSPT_PRICING_INFO PricingInfo[MAX_PRICING_INFO_ALLOWED];
@@ -110,6 +110,7 @@ typedef struct _OSPTTRANS {
     char ForwardCodec[OSPC_SIZE_CODEC];
     char ReverseCodec[OSPC_SIZE_CODEC];
     OSPT_CALL_ID *SessionId[OSPC_DIR_NUMBER];
+    char *CustomerInfo[OSPC_MAX_INDEX];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

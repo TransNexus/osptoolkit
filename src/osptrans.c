@@ -315,7 +315,7 @@ int OSPPTransactionBuildUsage(
             }
 
             /* Move pricing information to Usage Ind structure */
-            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->IsPricingInfoPresent)) {
+            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->HasPricingInfo)) {
                 (*ospvUsage)->osmpUsageIndPricingInfo.amount = ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].amount;
                 (*ospvUsage)->osmpUsageIndPricingInfo.increment = ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].increment;
                 OSPM_STRCPY((*ospvUsage)->osmpUsageIndPricingInfo.unit,
@@ -332,7 +332,7 @@ int OSPPTransactionBuildUsage(
             }
 
             /* Move Service Info to the usage structure */
-            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->IsServiceInfoPresent)) {
+            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->HasServiceInfo)) {
                 (*ospvUsage)->osmpUsageIndServiceType = ospvTrans->ServiceType;
                 (*ospvUsage)->osmpUsageIndHasServiceInfo = OSPC_TRUE;
             }
@@ -392,7 +392,7 @@ int OSPPTransactionBuildUsage(
             }
 
             /* Move pricing information to Usage Ind structure */
-            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->IsPricingInfoPresent)) {
+            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->HasPricingInfo)) {
                 (*ospvUsage)->osmpUsageIndPricingInfo.amount = ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].amount;
                 (*ospvUsage)->osmpUsageIndPricingInfo.increment = ospvTrans->PricingInfo[ospvTrans->CurrentPricingInfoElement].increment;
                 OSPM_STRCPY((char *) (*ospvUsage)->osmpUsageIndPricingInfo.unit,
@@ -409,7 +409,7 @@ int OSPPTransactionBuildUsage(
             }
 
             /* Move Service Info to the usage structure */
-            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->IsServiceInfoPresent)) {
+            if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvTrans->HasServiceInfo)) {
                 (*ospvUsage)->osmpUsageIndServiceType = ospvTrans->ServiceType;
                 (*ospvUsage)->osmpUsageIndHasServiceInfo = OSPC_TRUE;
             }
@@ -705,6 +705,7 @@ void OSPPTransactionGetAccumAllowed(
     default:
         /* unknown state */
         *ospvAccumAllowed = OSPC_FALSE;
+        break;
     }
 }
 
@@ -803,6 +804,7 @@ void OSPPTransactionGetIsModifyDeviceIdAllowed(
     default:
         /* For all other states, set it to FALSE */
         *ospvModifyAllowed = OSPC_FALSE;
+        break;
     }
 }
 
@@ -863,6 +865,7 @@ void OSPPTransactionGetDeleteAllowed(
     default:
         /* unknown state */
         *ospvDeleteAllowed = OSPC_FALSE;
+        break;
     }
 #else
     *ospvDeleteAllowed = OSPC_TRUE;
@@ -902,6 +905,7 @@ int OSPPTransactionGetDestAllowed(
     default:
         /* unknown state */
         errorcode = OSPC_ERR_TRAN_GET_DEST_NOT_ALLOWED;
+        break;
     }
 
     return errorcode;
@@ -1277,6 +1281,7 @@ void OSPPTransactionGetReportUsageAllowed(
     default:
         /* unknown state */
         *ospvReportUsageAllowed = OSPC_FALSE;
+        break;
     }
 }
 

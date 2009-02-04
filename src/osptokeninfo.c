@@ -213,13 +213,13 @@ const char *OSPPTokenInfoGetDstNetworkId(
 OSPTBOOL OSPPTokenInfoHasCallId(    /* returns non-zero if number exists */
     OSPTTOKENINFO *ospvTokenInfo)   /* Token Info effected */
 {
-    OSPTBOOL ospvHasCallId = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvHasCallId = (ospvTokenInfo->ospmTokenInfoCallId != OSPC_OSNULL);
+        ospvHas = (ospvTokenInfo->ospmTokenInfoCallId != OSPC_OSNULL);
     }
 
-    return ospvHasCallId;
+    return ospvHas;
 }
 
 /*
@@ -290,12 +290,13 @@ unsigned char *OSPPTokenInfoGetCallIdValue(
 OSPTBOOL OSPPTokenInfoHasValidAfter(/* returns non-zero if time */
     OSPTTOKENINFO *ospvTokenInfo)   /* TokenInfo in question */
 {
-    OSPTBOOL ospvHasValidAfter = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvHasValidAfter = (ospvTokenInfo->ospmTokenInfoValidAfter != OSPC_TIMEMIN);
+        ospvHas = (ospvTokenInfo->ospmTokenInfoValidAfter != OSPC_TIMEMIN);
     }
-    return ospvHasValidAfter;
+    
+    return ospvHas;
 }
 
 /*
@@ -425,11 +426,11 @@ OSPTTOKENINFO *OSPPTokenInfoNew(void)   /* returns pointer or NULL */
         ospvTokenInfo->ospmTokenInfoValidUntil = OSPC_TIMEMAX;
         ospvTokenInfo->ospmTokenInfoTrxId = 0;
         ospvTokenInfo->ospmTokenInfoDuration = -1;
-        ospvTokenInfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_FALSE;
+        ospvTokenInfo->ospmTokenInfoHasLookAheadInfo = OSPC_FALSE;
         ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDestProt = OSPC_DPROT_UNDEFINED;
         ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDestOSPStatus = OSPC_DOSP_UNDEFINED;
         ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDest[0] = '\0';
-        ospvTokenInfo->ospmTokenInfoIsDstNetworkIdPresent = OSPC_FALSE;
+        ospvTokenInfo->ospmTokenInfoHasDstNetworkId = OSPC_FALSE;
         ospvTokenInfo->dstNetworkId[0] = '\0';
     }
 
@@ -508,23 +509,23 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
                         /* 
                          * This is network information
                          */
-                        tokeninfo->ospmTokenInfoIsDstNetworkIdPresent = OSPC_TRUE;
+                        tokeninfo->ospmTokenInfoHasDstNetworkId = OSPC_TRUE;
                         OSPPTokenInfoSetDstNetworkId(tokeninfo, OSPPXMLElemGetValue(elem));
                     } else {
                         /*
                          * This must be the IP Address
                          */
-                        tokeninfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_TRUE;
+                        tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
                         OSPPTokenInfoSetLookAheadDestAlt(&(tokeninfo->ospmTokenLookAheadInfo), OSPPXMLElemGetValue(elem));
                     }
                 }
                 break;
             case OSPC_MELEM_DESTPROTOCOL:
-                tokeninfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_TRUE;
+                tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
                 OSPPTokenInfoSetLookAheadDestProtocol(&(tokeninfo->ospmTokenLookAheadInfo), OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_DESTOSPVERSION:
-                tokeninfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_TRUE;
+                tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
                 OSPPTokenInfoSetLookAheadOSPVersion(&(tokeninfo->ospmTokenLookAheadInfo), OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_SRCINFO:
@@ -680,25 +681,25 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
                 break;
             case 'd':
                 if (OSPM_STRLEN((const char *)val) > 2) {
-                    tokeninfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_TRUE;
+                    tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
                     OSPPTokenInfoSetLookAheadDestAlt(&(tokeninfo->ospmTokenLookAheadInfo), (const char *)(val + 2));
                 }
                 break;
             case 'D':
                 if (OSPM_STRLEN((const char *)val) > 2) {
-                    tokeninfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_TRUE;
+                    tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
                     OSPPTokenInfoSetLookAheadDestProtocol(&(tokeninfo->ospmTokenLookAheadInfo), (const char *)(val + 2));
                 }
                 break;
             case 'o':
                 if (OSPM_STRLEN((const char *)val) > 2) {
-                    tokeninfo->ospmTokenInfoIsLookAheadInfoPresent = OSPC_TRUE;
+                    tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
                     OSPPTokenInfoSetLookAheadOSPVersion(&(tokeninfo->ospmTokenLookAheadInfo), (const char *)(val + 2));
                 }
                 break;
             case 'e':
                 if (OSPM_STRLEN((const char *)val) > 2) {
-                    tokeninfo->ospmTokenInfoIsDstNetworkIdPresent = OSPC_TRUE;
+                    tokeninfo->ospmTokenInfoHasDstNetworkId = OSPC_TRUE;
                     OSPPTokenInfoSetDstNetworkId(tokeninfo, (const char *)(val + 2));
                 }
                 break;

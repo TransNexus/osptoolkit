@@ -51,11 +51,11 @@ void OSPPAuthCnfDelete(
 OSPTBOOL OSPPAuthCnfHasStatus(  /* returns non-zero if number exists */
     OSPT_AUTH_CNF *ospvAuthCnf) /* authorisation confirmation effected */
 {                            
-    OSPTBOOL ospvHasStatus = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthCnf != OSPC_OSNULL) {
-        ospvHasStatus = (ospvAuthCnf->ospmAuthCnfStatus != OSPC_OSNULL);
+        ospvHas = (ospvAuthCnf->ospmAuthCnfStatus != OSPC_OSNULL);
     }
 
-    return ospvHasStatus;
+    return ospvHas;
 }

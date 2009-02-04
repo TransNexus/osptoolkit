@@ -124,32 +124,33 @@ int OSPPXMLMessageCreate(
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         switch (ospvDataType) {
-            case OSPC_MSG_AREQ:
-                errorcode = OSPPAuthReqToElement((OSPT_AUTH_REQ *)ospvInfo, &xmlelem, trans);
-                break;
-            case OSPC_MSG_UIND:
-                errorcode = OSPPUsageIndToElement((OSPTLIST *)ospvInfo, &xmlelem, trans);
-                break;
-            case OSPC_MSG_REAREQ:
-                errorcode = OSPPReauthReqToElement((OSPTREAUTHREQ *)ospvInfo, &xmlelem, trans);
-                break;
-            case OSPC_MSG_CAPIND:
-                errorcode = OSPPCapIndToElement((OSPT_CAP_IND *)ospvInfo, &xmlelem);
-                break;
+        case OSPC_MSG_AREQ:
+            errorcode = OSPPAuthReqToElement((OSPT_AUTH_REQ *)ospvInfo, &xmlelem, trans);
+            break;
+        case OSPC_MSG_UIND:
+            errorcode = OSPPUsageIndToElement((OSPTLIST *)ospvInfo, &xmlelem, trans);
+            break;
+        case OSPC_MSG_REAREQ:
+            errorcode = OSPPReauthReqToElement((OSPTREAUTHREQ *)ospvInfo, &xmlelem, trans);
+            break;
+        case OSPC_MSG_CAPIND:
+            errorcode = OSPPCapIndToElement((OSPT_CAP_IND *)ospvInfo, &xmlelem);
+            break;
 #ifndef OSP_SDK
-            case OSPC_MSG_REARESP:
-                errorcode = OSPPReauthRspToElement((OSPTREAUTHRSP *)ospvInfo, &xmlelem);
-                break;
-            case OSPC_MSG_ARESP:
-            case OSPC_MSG_AREZP:
-                errorcode = OSPPAuthRspToElement((OSPT_AUTH_RSP *)ospvInfo, &xmlelem, ospvDataType);
-                break;
-            case OSPC_MSG_UCNF:
-                errorcode = OSPPUsageCnfToElement((OSPTLIST *)ospvInfo, &xmlelem);
-                break;
+        case OSPC_MSG_REARESP:
+            errorcode = OSPPReauthRspToElement((OSPTREAUTHRSP *)ospvInfo, &xmlelem);
+            break;
+        case OSPC_MSG_ARESP:
+        case OSPC_MSG_AREZP:
+            errorcode = OSPPAuthRspToElement((OSPT_AUTH_RSP *)ospvInfo, &xmlelem, ospvDataType);
+            break;
+        case OSPC_MSG_UCNF:
+            errorcode = OSPPUsageCnfToElement((OSPTLIST *)ospvInfo, &xmlelem);
+            break;
 #endif
-            default:
-                errorcode = OSPC_ERR_XML_INVALID_TYPE;
+        default:
+            errorcode = OSPC_ERR_XML_INVALID_TYPE;
+            break;
         }
     }
 
@@ -325,35 +326,34 @@ int OSPPXMLMessageProcess(
     int errorcode = OSPC_ERR_NO_ERROR;
 
     switch (ospvDataType) {
-        case OSPC_MSG_ARESP:
-    
-            errorcode = OSPPAuthRspFromElement(ospvElem, (OSPT_AUTH_RSP **)ospvStruct);
-            break;
-        case OSPC_MSG_UCNF:
-            errorcode = OSPPUsageCnfFromElement(ospvElem, (OSPTLIST *)ospvStruct);
-            break;
-        case OSPC_MSG_TOKINFO:
-            errorcode = OSPPTokenInfoFromElement(ospvElem, (OSPTTOKENINFO **)ospvStruct);
-            break;
-        case OSPC_MSG_REARESP:
-            errorcode = OSPPReauthRspFromElement(ospvElem, (OSPTREAUTHRSP **)ospvStruct);
-            break;
-        case OSPC_MSG_CAPCNF:
-            errorcode = OSPPCapCnfFromElement(ospvElem, (OSPT_CAP_CNF **)ospvStruct);
-            break;
+    case OSPC_MSG_ARESP:
+        errorcode = OSPPAuthRspFromElement(ospvElem, (OSPT_AUTH_RSP **)ospvStruct);
+        break;
+    case OSPC_MSG_UCNF:
+        errorcode = OSPPUsageCnfFromElement(ospvElem, (OSPTLIST *)ospvStruct);
+        break;
+    case OSPC_MSG_TOKINFO:
+        errorcode = OSPPTokenInfoFromElement(ospvElem, (OSPTTOKENINFO **)ospvStruct);
+        break;
+    case OSPC_MSG_REARESP:
+        errorcode = OSPPReauthRspFromElement(ospvElem, (OSPTREAUTHRSP **)ospvStruct);
+        break;
+    case OSPC_MSG_CAPCNF:
+        errorcode = OSPPCapCnfFromElement(ospvElem, (OSPT_CAP_CNF **)ospvStruct);
+        break;
 #ifndef OSP_SDK
-        case OSPC_MSG_AREQ:
-            errorcode = OSPPAuthReqFromElement(ospvElem, (OSPT_AUTH_REQ **)ospvStruct);
-            break;
-        case OSPC_MSG_UIND:
-            errorcode = OSPPUsageIndFromElement(ospvElem, (OSPTLIST *)ospvStruct);
-            break;
-        case OSPC_MSG_REAREQ:
-            errorcode = OSPPReauthReqFromElement(ospvElem, (OSPTREAUTHREQ **)ospvStruct);
-            break;
+    case OSPC_MSG_AREQ:
+        errorcode = OSPPAuthReqFromElement(ospvElem, (OSPT_AUTH_REQ **)ospvStruct);
+        break;
+    case OSPC_MSG_UIND:
+        errorcode = OSPPUsageIndFromElement(ospvElem, (OSPTLIST *)ospvStruct);
+        break;
+    case OSPC_MSG_REAREQ:
+        errorcode = OSPPReauthReqFromElement(ospvElem, (OSPTREAUTHREQ **)ospvStruct);
+        break;
 #endif
-        default:
-            errorcode = OSPC_ERR_DATA_INVALID_TYPE;
+    default:
+        errorcode = OSPC_ERR_DATA_INVALID_TYPE;
     }
 
     return errorcode;

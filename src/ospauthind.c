@@ -50,13 +50,13 @@ void OSPPAuthIndSetTimestamp(
 OSPTBOOL OSPPAuthIndHasRole(
     OSPT_AUTH_IND *ospvAuthInd)
 {
-    OSPTBOOL ospvHasRole = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvHasRole = ospvAuthInd->ospmAuthIndHasRole;
+        ospvHas = ospvAuthInd->ospmAuthIndHasRole;
     }
 
-    return ospvHasRole;
+    return ospvHas;
 }
 
 /*
@@ -93,13 +93,13 @@ OSPE_ROLE OSPPAuthIndGetRole(
 OSPTBOOL OSPPAuthIndHasCallId(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                            
-    OSPTBOOL ospvHasCallId = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvHasCallId = (ospvAuthInd->ospmAuthIndCallId != OSPC_OSNULL);
+        ospvHas = (ospvAuthInd->ospmAuthIndCallId != OSPC_OSNULL);
     }
 
-    return ospvHasCallId;
+    return ospvHas;
 }
 
 /*
@@ -153,13 +153,13 @@ unsigned char *OSPPAuthIndGetCallIdValue(
 OSPTBOOL OSPPAuthIndHasSourceNumber(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication effected */
 {                            
-    OSPTBOOL ospvHasSourceNumber = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvHasSourceNumber = (ospvAuthInd->ospmAuthIndSourceNumber[0] != '\0');
+        ospvHas = (ospvAuthInd->ospmAuthIndSourceNumber[0] != '\0');
     }
 
-    return ospvHasSourceNumber;
+    return ospvHas;
 }
 
 /*
@@ -197,13 +197,13 @@ const char *OSPPAuthIndGetSourceNumber(
 OSPTBOOL OSPPAuthIndHasDestNumber(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication effected */
 {                            
-    OSPTBOOL ospvHasDestNumber = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvHasDestNumber = (ospvAuthInd->ospmAuthIndDestNumber[0] != '\0');
+        ospvHas = (ospvAuthInd->ospmAuthIndDestNumber[0] != '\0');
     }
 
-    return ospvHasDestNumber;
+    return ospvHas;
 }
 
 /*
@@ -241,13 +241,13 @@ const char *OSPPAuthIndGetDestNumber(
 OSPTBOOL OSPPAuthIndHasSourceAlt(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                            
-    OSPTBOOL ospvHasSourceAlt = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvHasSourceAlt = (OSPPAuthIndFirstSourceAlt(ospvAuthInd) != OSPC_OSNULL);
+        ospvHas = (OSPPAuthIndFirstSourceAlt(ospvAuthInd) != OSPC_OSNULL);
     }
 
-    return ospvHasSourceAlt;
+    return ospvHas;
 }
 
 /*
@@ -303,13 +303,13 @@ const char *OSPPAuthIndGetSourceAltValue(
 OSPTBOOL OSPPAuthIndHasDestinationAlt(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
 {                            
-    OSPTBOOL ospvHasDestinationAlt = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvHasDestinationAlt = (OSPPAuthIndFirstDestinationAlt(ospvAuthInd) != OSPC_OSNULL);
+        ospvHas = (OSPPAuthIndFirstDestinationAlt(ospvAuthInd) != OSPC_OSNULL);
     }
 
-    return ospvHasDestinationAlt;
+    return ospvHas;
 }
 
 /*

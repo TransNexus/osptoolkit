@@ -82,7 +82,7 @@ extern "C" {
     int OSPPTransactionSetDestinationCount(OSPTTRANHANDLE ospvTransaction,  /*In - Transaction handle */
         unsigned ospvDestinationCount);                                     /*In - Optional Destination Count, 0 if n/a */
     int OSPPTransactionGetLookAheadInfoIfPresent(OSPTTRANHANDLE ospvTransaction,/* In - Transaction handle */
-        OSPTBOOL *ospvIsLookAheadInfoPresent,                                   /* Out */
+        OSPTBOOL *ospvHasLookAheadInfo,                                         /* Out */
         char *ospvLookAheadDestination,                                         /* Out */
         OSPE_DEST_PROTOCOL *ospvLookAheadDestProt,                              /* Out */
         OSPE_DEST_OSPENABLED *ospvLookAheadDestOSPStatus);                      /* Out */
@@ -103,6 +103,7 @@ extern "C" {
     int OSPPTransactionSetForwardCodec(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetReverseCodec(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetSessionId(OSPTTRANHANDLE, OSPE_DIRECTION, OSPT_CALL_ID *);
+    int OSPPTransactionSetCustomerInfo(OSPTTRANHANDLE, unsigned, const char *);    
     int OSPPTransactionSetDelayMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetJitterMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetPackLossMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);

@@ -42,9 +42,9 @@ typedef struct {
     OSPTTIME ospmTokenInfoValidUntil;
     OSPTTRXID ospmTokenInfoTrxId;
     int ospmTokenInfoDuration;
-    OSPTBOOL ospmTokenInfoIsLookAheadInfoPresent;
+    OSPTBOOL ospmTokenInfoHasLookAheadInfo;
     OSPTTOKENLOOKAHEADINFO ospmTokenLookAheadInfo;
-    OSPTBOOL ospmTokenInfoIsDstNetworkIdPresent;
+    OSPTBOOL ospmTokenInfoHasDstNetworkId;
     char dstNetworkId[OSPC_SIZE_E164NUM];
 } OSPTTOKENINFO;
 

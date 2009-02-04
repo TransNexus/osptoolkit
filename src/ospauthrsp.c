@@ -50,13 +50,13 @@ void OSPPAuthRspSetTimestamp(
 OSPTBOOL OSPPAuthRspHasStatus(
     OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response effected */
 {
-    OSPTBOOL ospvHasStatus = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
-    if(ospvAuthRsp != OSPC_OSNULL) {
-        ospvHasStatus = (ospvAuthRsp->ospmAuthRspStatus != OSPC_OSNULL);
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        ospvHas = (ospvAuthRsp->ospmAuthRspStatus != OSPC_OSNULL);
     }
 
-    return ospvHasStatus;
+    return ospvHas;
 }
 
 /*
@@ -81,7 +81,7 @@ void OSPPAuthRspSetTrxId(
     OSPT_AUTH_RSP *ospvAuthRsp, /* authorisation response */
     OSPTTRXID ospvTrxId)        /* transaction ID to set */
 {
-    if(ospvAuthRsp != OSPC_OSNULL) {
+    if (ospvAuthRsp != OSPC_OSNULL) {
         ospvAuthRsp->ospmAuthRspTrxId = ospvTrxId;
     }
 }
@@ -92,13 +92,13 @@ void OSPPAuthRspSetTrxId(
 OSPTBOOL OSPPAuthRspHasDest(
     OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response effected */
 {
-    OSPTBOOL ospvHasDest = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvHasDest = (ospvAuthRsp->ospmAuthRspDest != OSPC_OSNULL);
+        ospvHas = (ospvAuthRsp->ospmAuthRspDest != OSPC_OSNULL);
     }
 
-    return ospvHasDest;
+    return ospvHas;
 }
 
 /*
@@ -138,13 +138,13 @@ OSPT_DEST* OSPPAuthRspNextDest(
 OSPTBOOL OSPPAuthRspHasDelayLimit(
     OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response */
 {
-    OSPTBOOL ospvHasDelayLimit = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
-    if(ospvAuthRsp != OSPC_OSNULL) {
-        ospvHasDelayLimit = (ospvAuthRsp->ospmAuthRspDelayLimit > 0);
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        ospvHas = (ospvAuthRsp->ospmAuthRspDelayLimit > 0);
     }
 
-    return ospvHasDelayLimit;
+    return ospvHas;
 }
 
 /*
@@ -154,7 +154,7 @@ void OSPPAuthRspSetDelayLimit(
     OSPT_AUTH_RSP *ospvAuthRsp, /* authorisation response */
     unsigned ospvDelayLimit)    /* delay limit to set */
 {
-    if(ospvAuthRsp != OSPC_OSNULL) {
+    if (ospvAuthRsp != OSPC_OSNULL) {
         ospvAuthRsp->ospmAuthRspDelayLimit = ospvDelayLimit;
     }
 }
@@ -180,13 +180,13 @@ unsigned OSPPAuthRspGetDelayLimit(
 OSPTBOOL OSPPAuthRspHasDelayPref(
     OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response */
 {
-    OSPTBOOL ospvHasDelayPref = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
-    if(ospvAuthRsp != OSPC_OSNULL) {
-        ospvHasDelayPref = (ospvAuthRsp->ospmAuthRspDelayPref > 0);
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        ospvHas = (ospvAuthRsp->ospmAuthRspDelayPref > 0);
     }
 
-    return ospvHasDelayPref;
+    return ospvHas;
 }
 
 /*
@@ -196,7 +196,7 @@ void OSPPAuthRspSetDelayPref(
     OSPT_AUTH_RSP *ospvAuthRsp, /* authorisation response */
     unsigned ospvDelayPref)     /* delay pref to set */
 {
-    if(ospvAuthRsp != OSPC_OSNULL) {
+    if (ospvAuthRsp != OSPC_OSNULL) {
         ospvAuthRsp->ospmAuthRspDelayPref = ospvDelayPref;
     }
 }
@@ -204,7 +204,7 @@ void OSPPAuthRspSetDelayPref(
 OSPTBOOL OSPPAuthRspHasNumDests(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
-    if(ospvAuthRsp != OSPC_OSNULL) {
+    if (ospvAuthRsp != OSPC_OSNULL) {
         return ospvAuthRsp->ospmNumDests;
     } else {
         return OSPC_FALSE;
@@ -214,7 +214,7 @@ OSPTBOOL OSPPAuthRspHasNumDests(
 void OSPPAuthRspIncNumDests(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
-    if(ospvAuthRsp != OSPC_OSNULL) {
+    if (ospvAuthRsp != OSPC_OSNULL) {
         ospvAuthRsp->ospmNumDests++;
     }
 }
@@ -222,7 +222,7 @@ void OSPPAuthRspIncNumDests(
 unsigned OSPPAuthRspGetNumDests(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
-    if(ospvAuthRsp != OSPC_OSNULL) {
+    if (ospvAuthRsp != OSPC_OSNULL) {
         return ospvAuthRsp->ospmNumDests;
     } else {
         return 0;
@@ -251,8 +251,8 @@ void OSPPAuthRspSetComponentId(
 {
     int len = OSPM_STRLEN(ospvComponentId);
 
-    if(ospvAuthRsp != OSPC_OSNULL) {
-        if(ospvAuthRsp->ospmAuthRspComponentId != OSPC_OSNULL) {
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        if (ospvAuthRsp->ospmAuthRspComponentId != OSPC_OSNULL) {
             OSPM_FREE(ospvAuthRsp->ospmAuthRspComponentId);    
         }
 
@@ -265,7 +265,7 @@ void OSPPAuthRspSetComponentId(
 OSPTTNAUDIT* OSPPAuthRspGetTNAudit(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
-    if(ospvAuthRsp != OSPC_OSNULL) {
+    if (ospvAuthRsp != OSPC_OSNULL) {
         return ospvAuthRsp->ospmAuthRspTNAudit;
     } else {
         return OSPC_OSNULL;
@@ -318,13 +318,13 @@ void OSPPAuthRspDelete(
         }
 
         /* remove messageId */
-        if(OSPPAuthRspHasMessageId(*ospvAuthRsp)) {
+        if (OSPPAuthRspHasMessageId(*ospvAuthRsp)) {
             OSPM_FREE((*ospvAuthRsp)->ospmAuthRspMessageId);
             (*ospvAuthRsp)->ospmAuthRspMessageId = OSPC_OSNULL;
         }
 
         /* remove componentId */
-        if(OSPPAuthRspHasComponentId(*ospvAuthRsp)) {
+        if (OSPPAuthRspHasComponentId(*ospvAuthRsp)) {
             OSPM_FREE((*ospvAuthRsp)->ospmAuthRspComponentId);
             (*ospvAuthRsp)->ospmAuthRspComponentId = OSPC_OSNULL;
         }
@@ -416,7 +416,7 @@ unsigned OSPPAuthRspFromElement(
 
             if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem))==OSPC_MELEM_MESSAGE) {
                 OSPPAuthRspMessageIdFromElement(ospvElem, &messageId);
-                if(messageId != OSPC_OSNULL) {
+                if (messageId != OSPC_OSNULL) {
                     OSPPAuthRspSetMessageId(authrsp, messageId);
                 }
 
@@ -430,7 +430,7 @@ unsigned OSPPAuthRspFromElement(
             }
 
             OSPPAuthRspComponentIdFromElement(ospvElem, &compid);
-            if(compid != OSPC_OSNULL) {
+            if (compid != OSPC_OSNULL) {
                 OSPPAuthRspSetComponentId(authrsp, compid);
             }
         }
@@ -446,79 +446,74 @@ unsigned OSPPAuthRspFromElement(
             elem = (OSPT_XML_ELEM*)OSPPXMLElemNextChild(ospvElem, elem))
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
-                case OSPC_MELEM_MESSAGE:
-                    OSPPAuthRspMessageIdFromElement(elem, &messageId);
-                    if(messageId != OSPC_OSNULL) {
-                        OSPPAuthRspSetMessageId(authrsp, messageId);
-                    }
+            case OSPC_MELEM_MESSAGE:
+                OSPPAuthRspMessageIdFromElement(elem, &messageId);
+                if (messageId != OSPC_OSNULL) {
+                    OSPPAuthRspSetMessageId(authrsp, messageId);
+                }
                 break;
 
+            /*
+             * OSPC_MELEM_AUTHRZP -- OSP Stds spell Authorization not Authorisation
+             */
+            case OSPC_MELEM_AUTHRZP:
+            case OSPC_MELEM_AUTHRSP:
+                OSPPAuthRspComponentIdFromElement(elem, &compid);
+                if (compid != OSPC_OSNULL) {
+                    OSPPAuthRspSetComponentId(authrsp, compid);
+                }
+                break;
+            case OSPC_MELEM_TIMESTAMP:
+                ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
+                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    OSPPAuthRspSetTimestamp(authrsp,t);
+                }
+                break;
+            case OSPC_MELEM_STATUS:
+                if (authrsp->ospmAuthRspStatus != OSPC_OSNULL) {
+                    OSPPStatusDelete(&(authrsp->ospmAuthRspStatus));
+                }
+                ospvErrCode = OSPPStatusFromElement(elem, &(authrsp->ospmAuthRspStatus));
+                break;
+            case OSPC_MELEM_TRANSID:
+                len = sizeof(OSPTTRXID);
+                ospvErrCode = OSPPMsgTXFromElement(elem, &transid);
+                OSPPAuthRspSetTrxId(authrsp, transid);
+                break;
+            case OSPC_MELEM_DELAYLIMIT:
+                ospvErrCode = OSPPMsgNumFromElement(elem, &delaylimit);
+                OSPPAuthRspSetDelayLimit(authrsp, (unsigned)delaylimit);
+                break;
+            case OSPC_MELEM_AUDIT:
+                ospvErrCode = OSPPTNAuditFromElement(elem, &(authrsp->ospmAuthRspTNAudit));
+                break;
+            case OSPC_MELEM_CSAUDITTRIGGER:
+                ospvErrCode = OSPPCSAuditFromElement(elem, &(authrsp->ospmAuthRspCSAudit));
+                break;
+            case OSPC_MELEM_DELAYPREF:
+                ospvErrCode = OSPPMsgNumFromElement(elem, &delaypref);
+                OSPPAuthRspSetDelayPref(authrsp, (unsigned)delaypref);
+                break;
+            case OSPC_MELEM_DEST:
+                ospvErrCode = OSPPDestFromElement(elem, &dest);
+                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    if (dest != OSPC_OSNULL) {
+                        OSPPAuthRspAddDest(authrsp,dest);
+                        OSPPAuthRspIncNumDests(authrsp);
+                        dest = OSPC_OSNULL;
+                    }
+                }
+                break;
+            default:
                 /*
-                ** OSPC_MELEM_AUTHRZP -- OSP Stds spell Authorization not Authorisation
-                */
-                case OSPC_MELEM_AUTHRZP:
-                case OSPC_MELEM_AUTHRSP:
-                    OSPPAuthRspComponentIdFromElement(elem, &compid);
-                    if(compid != OSPC_OSNULL) {
-                        OSPPAuthRspSetComponentId(authrsp, compid);
-                    }
+                 * This is an element we don't understand. If it's
+                 * critical, then we have to report an error.
+                 * Otherwise we can ignore it.
+                 */
+                if (OSPPMsgElemIsCritical(elem)) {
+                    ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
+                }
                 break;
-                case OSPC_MELEM_TIMESTAMP:
-                    ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                        OSPPAuthRspSetTimestamp(authrsp,t);
-                    }
-                    break;
-                case OSPC_MELEM_STATUS:
-                    if (authrsp->ospmAuthRspStatus != OSPC_OSNULL) {
-                        OSPPStatusDelete(&(authrsp->ospmAuthRspStatus));
-                    }
-                    ospvErrCode = OSPPStatusFromElement(elem, &(authrsp->ospmAuthRspStatus));
-                    break;
-                case OSPC_MELEM_TRANSID:
-                    len = sizeof(OSPTTRXID);
-                    ospvErrCode = OSPPMsgTXFromElement(elem, &transid);
-                    OSPPAuthRspSetTrxId(authrsp, transid);
-                    break;
-
-                case OSPC_MELEM_DELAYLIMIT:
-                    ospvErrCode = OSPPMsgNumFromElement(elem, &delaylimit);
-                    OSPPAuthRspSetDelayLimit(authrsp, (unsigned)delaylimit);
-                break;
-
-                case OSPC_MELEM_AUDIT:
-                    ospvErrCode = OSPPTNAuditFromElement(elem, &(authrsp->ospmAuthRspTNAudit));
-                    break;
-
-                case OSPC_MELEM_CSAUDITTRIGGER:
-                    ospvErrCode = OSPPCSAuditFromElement(elem, &(authrsp->ospmAuthRspCSAudit));
-                    break;
-
-                case OSPC_MELEM_DELAYPREF:
-                    ospvErrCode = OSPPMsgNumFromElement(elem, &delaypref);
-                    OSPPAuthRspSetDelayPref(authrsp, (unsigned)delaypref);
-                    break;
-
-                case OSPC_MELEM_DEST:
-                    ospvErrCode = OSPPDestFromElement(elem, &dest);
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                        if(dest != OSPC_OSNULL) {
-                            OSPPAuthRspAddDest(authrsp,dest);
-                            OSPPAuthRspIncNumDests(authrsp);
-                            dest = OSPC_OSNULL;
-                        }
-                    }
-                    break;
-                default:
-                    /*
-                     * This is an element we don't understand. If it's
-                     * critical, then we have to report an error.
-                     * Otherwise we can ignore it.
-                     */
-                    if (OSPPMsgElemIsCritical(elem)) {
-                        ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
-                    }
-                    break;
             }
         }
 
@@ -533,8 +528,8 @@ unsigned OSPPAuthRspFromElement(
 OSPTCSAUDIT* OSPPAuthRspGetCSAudit(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
-    if(ospvAuthRsp != OSPC_OSNULL) {
-        if(ospvAuthRsp->ospmAuthRspCSAudit != OSPC_OSNULL) {
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        if (ospvAuthRsp->ospmAuthRspCSAudit != OSPC_OSNULL) {
             return ospvAuthRsp->ospmAuthRspCSAudit;
         }
     }
@@ -573,8 +568,8 @@ void OSPPAuthRspSetMessageId(
 {
     unsigned len = OSPM_STRLEN(ospvMessageId);
 
-    if(ospvAuthRsp != OSPC_OSNULL) {
-        if(ospvAuthRsp->ospmAuthRspMessageId != OSPC_OSNULL) {
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        if (ospvAuthRsp->ospmAuthRspMessageId != OSPC_OSNULL) {
             OSPM_FREE(ospvAuthRsp->ospmAuthRspMessageId);    
         }
 
@@ -635,13 +630,13 @@ void OSPPAuthRspComponentIdFromElement(
 OSPTBOOL OSPPAuthRspHasRole(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
-    OSPTBOOL ospvHasRole = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvHasRole = (ospvAuthRsp->ospmAuthRspHasRole != OSPC_FALSE);
+        ospvHas = (ospvAuthRsp->ospmAuthRspHasRole != OSPC_FALSE);
     }
 
-    return ospvHasRole;
+    return ospvHas;
 }
 
 /*

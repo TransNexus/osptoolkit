@@ -49,13 +49,13 @@ void OSPPReauthRspSetTimestamp( /* nothing returned */
 OSPTBOOL OSPPReauthRspHasStatus(    /* returns non-zero if number exists */
     OSPTREAUTHRSP *ospvReauthRsp)   /* reauthorisation response effected */
 {
-    OSPTBOOL ospvHasStatus = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvReauthRsp != OSPC_OSNULL) {
-        ospvHasStatus = (ospvReauthRsp->ospmReauthRspStatus != OSPC_OSNULL);
+        ospvHas = (ospvReauthRsp->ospmReauthRspStatus != OSPC_OSNULL);
     }
 
-    return ospvHasStatus;
+    return ospvHas;
 }
 
 /*
@@ -93,13 +93,13 @@ void OSPPReauthRspSetTrxId(         /* nothing returned */
 OSPTBOOL OSPPReauthRspHasDest(      /* returns non-zero if number exists */
     OSPTREAUTHRSP *ospvReauthRsp)   /* reauthorisation response effected */
 {
-    OSPTBOOL ospvHasDest = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvReauthRsp != OSPC_OSNULL) {
-        ospvHasDest = (ospvReauthRsp->ospmReauthRspDest != OSPC_OSNULL);
+        ospvHas = (ospvReauthRsp->ospmReauthRspDest != OSPC_OSNULL);
     }
 
-    return ospvHasDest;
+    return ospvHas;
 }
 
 /*

@@ -71,7 +71,7 @@ int OSPPTransactionSetServiceAndPricingInfo(
          * Set the service type information
          */
         if ((ospvServiceType == OSPC_SERVICE_VOICE) || (ospvServiceType == OSPC_SERVICE_DATA)) {
-            trans->IsServiceInfoPresent = OSPC_TRUE;
+            trans->HasServiceInfo = OSPC_TRUE;
             trans->ServiceType = ospvServiceType;
         } else {
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -85,7 +85,7 @@ int OSPPTransactionSetServiceAndPricingInfo(
             if ((errorcode == OSPC_ERR_NO_ERROR) && ospvPricingInfo[i] &&
                 ospvPricingInfo[i]->unit && ospvPricingInfo[i]->currency &&
                 (OSPM_STRLEN(ospvPricingInfo[i]->unit) < OSPC_UNITSIZE) && (OSPM_STRLEN(ospvPricingInfo[i]->currency) < OSPC_CURRENCYSIZE)) {
-                trans->IsPricingInfoPresent = OSPC_TRUE;
+                trans->HasPricingInfo = OSPC_TRUE;
                 trans->PricingInfo[i].amount = ospvPricingInfo[i]->amount;
                 trans->PricingInfo[i].increment = ospvPricingInfo[i]->increment;
                 OSPM_STRCPY(trans->PricingInfo[i].unit, (const char *)ospvPricingInfo[i]->unit);
@@ -408,13 +408,13 @@ int OSPPTransactionModifyDeviceIdentifiers(
  * This API should be called after calling ValidateAuthorization.
  * The API takes the transaction id as the input and returns the LookAhead
  * information if present in the token. If the LookAhead information is present
- * in the token, ospvIsLookAheadInfoPresent is set to TRUE and the
+ * in the token, ospvHasLookAheadInfo is set to TRUE and the
  * corresponding values are also set. If the information is not present,
- * ospvIsLookAheadInfoPresent is set to FALSE.
+ * ospvHasLookAheadInfo is set to FALSE.
  */
 int OSPPTransactionGetLookAheadInfoIfPresent(
     OSPTTRANHANDLE ospvTransaction,                     /* In - Transaction handle */
-    OSPTBOOL *ospvIsLookAheadInfoPresent,               /* Out */
+    OSPTBOOL *ospvHasLookAheadInfo,                     /* Out */
     char *ospvLookAheadDestination,                     /* Out */
     OSPE_DEST_PROTOCOL *ospvLookAheadDestProt,          /* Out */
     OSPE_DEST_OSPENABLED *ospvLookAheadDestOSPStatus)   /* Out */
@@ -429,9 +429,9 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        *ospvIsLookAheadInfoPresent = trans->TokenInfoIsLookAheadInfoPresent;
+        *ospvHasLookAheadInfo = trans->TokenInfoHasLookAheadInfo;
 
-        if (trans->TokenInfoIsLookAheadInfoPresent == OSPC_TRUE) {
+        if (trans->TokenInfoHasLookAheadInfo == OSPC_TRUE) {
             trans->WasLookAheadInfoGivenToApp = OSPC_TRUE;
 
             /*
@@ -1195,15 +1195,19 @@ int OSPPTransactionDelete(
             }
 
             for (cnt = 0; cnt < OSPC_DIR_NUMBER; cnt++) {
-            	if (trans->SessionId[cnt] != OSPC_OSNULL) {
+                if (trans->SessionId[cnt] != OSPC_OSNULL) {
                     OSPPCallIdDelete(&trans->SessionId[cnt]);
                 }
             }
             
-            if (trans != OSPC_OSNULL) {
-                OSPM_FREE(trans);
-                trans = NULL;
+            for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
+                if (trans->CustomerInfo[cnt] != OSPC_OSNULL) {
+                    OSPM_FREE(trans->CustomerInfo[cnt]);
+                }
             }
+            
+            OSPM_FREE(trans);
+            trans = NULL;
         } else {
             errorcode = OSPC_ERR_TRAN_DELETE_NOT_ALLOWED;
             OSPM_DBGERRORLOG(errorcode, "delete not allowed in this trans state");
@@ -2206,18 +2210,21 @@ int OSPPTransactionNew(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPPTransactionSetState(trans, OSPC_TRANSNEW);
         trans->HasGetDestSucceeded = OSPC_FALSE;
-        trans->IsServiceInfoPresent = OSPC_FALSE;
-        trans->IsPricingInfoPresent = OSPC_FALSE;
+        trans->HasServiceInfo = OSPC_FALSE;
+        trans->HasPricingInfo = OSPC_FALSE;
         trans->NumOfPricingInfoElements = 0;
         trans->CurrentPricingInfoElement = 0;
         trans->WasLookAheadInfoGivenToApp = OSPC_FALSE;
-        trans->TokenInfoIsLookAheadInfoPresent = OSPC_FALSE;
+        trans->TokenInfoHasLookAheadInfo = OSPC_FALSE;
         trans->SrcNetworkId = OSPC_OSNULL;
         trans->DstNetworkId = OSPC_OSNULL;
         trans->RoutingNumber = OSPC_OSNULL;
         trans->DestProtocol = OSPC_DPROT_UNKNOWN;
         for (cnt = 0; cnt < OSPC_DIR_NUMBER; cnt++) {
-        	trans->SessionId[cnt] = OSPC_OSNULL;
+            trans->SessionId[cnt] = OSPC_OSNULL;
+        }
+        for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
+            trans->CustomerInfo[cnt] = OSPC_OSNULL;
         }
     }
 
@@ -2514,7 +2521,7 @@ int OSPPTransactionReportUsage(
     OSPTTIME ospvEndTime,               /* In - Call end time */
     OSPTTIME ospvAlertTime,             /* In - Call alert time */
     OSPTTIME ospvConnectTime,           /* In - Call connect time */
-    unsigned ospvIsPDDInfoPresent,      /* In - Is PDD Info present */
+    OSPTBOOL ospvHasPDDInfo,            /* In - Is PDD Info present */
     unsigned ospvPostDialDelay,         /* In - Post Dial Delay */
     unsigned ospvReleaseSource,         /* In - EP that released the call */
     const char *ospvConferenceId,       /* In - conference Id. Max 100 char long */
@@ -2640,7 +2647,7 @@ int OSPPTransactionReportUsage(
                             OSPPUsageIndSetEndTime(usage, ospvEndTime);
                             OSPPUsageIndSetAlertTime(usage, ospvAlertTime);
                             OSPPUsageIndSetConnectTime(usage, ospvConnectTime);
-                            if (ospvIsPDDInfoPresent) {
+                            if (ospvHasPDDInfo) {
                                 OSPPUsageIndSetPostDialDelay(usage, (int)ospvPostDialDelay);
                             }
                             OSPPUsageIndSetReleaseSource(usage, ospvReleaseSource);
@@ -2658,24 +2665,30 @@ int OSPPTransactionReportUsage(
                             }
                             
                             if (trans->AssertedId[0] != '\0') {
-                            	OSPPUsageIndSetAssertedId(usage, trans->AssertedId);
+                                OSPPUsageIndSetAssertedId(usage, trans->AssertedId);
                             }
 
                             if ((trans->DestProtocol >= OSPC_DPROT_START) && (trans->DestProtocol < OSPC_DPROT_NUMBER)) {
-                            	OSPPUsageIndSetDestProtocol(usage, trans->DestProtocol);
+                                OSPPUsageIndSetDestProtocol(usage, trans->DestProtocol);
                             }
 
                             if (trans->ForwardCodec[0] != '\0') {
-                            	OSPPUsageIndSetForwardCodec(usage, trans->ForwardCodec);
+                                OSPPUsageIndSetForwardCodec(usage, trans->ForwardCodec);
                             }
 
                             if (trans->ReverseCodec[0] != '\0') {
-                            	OSPPUsageIndSetReverseCodec(usage, trans->ReverseCodec);
+                                OSPPUsageIndSetReverseCodec(usage, trans->ReverseCodec);
                             }
 
                             for (cnt = 0; cnt < OSPC_DIR_NUMBER; cnt++) {
                                 if (trans->SessionId[cnt] != OSPC_OSNULL) {
                                     OSPPUsageIndSetSessionId(usage, cnt, trans->SessionId[cnt]);
+                                }
+                            }
+                            
+                            for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
+                                if (trans->CustomerInfo[cnt] != OSPC_OSNULL) {
+                                    OSPPUsageIndSetCustomerInfo(usage, cnt, trans->CustomerInfo[cnt]);
                                 }
                             }
                         }
@@ -2711,7 +2724,7 @@ int OSPPTransactionReportUsage(
                 OSPPUsageIndSetEndTime(usage, ospvEndTime);
                 OSPPUsageIndSetAlertTime(usage, ospvAlertTime);
                 OSPPUsageIndSetConnectTime(usage, ospvConnectTime);
-                if (ospvIsPDDInfoPresent) {
+                if (ospvHasPDDInfo) {
                     OSPPUsageIndSetPostDialDelay(usage, (int)ospvPostDialDelay);
                 }
                 OSPPUsageIndSetReleaseSource(usage, ospvReleaseSource);
@@ -2875,7 +2888,7 @@ int OSPPTransactionRequestAuthorisation(
     OSPE_NUMBER_FORMAT ospvCalledNumberFormat,  /* In - Called number format : sip/e.164/url */
     const char *ospvUser,                       /* In - End user (optional) */
     unsigned ospvNumberOfCallIds,               /* In - Number of call identifiers */
-    OSPT_CALL_ID *ospvCallIds[],                  /* In - List of call identifiers */
+    OSPT_CALL_ID *ospvCallIds[],                /* In - List of call identifiers */
     const char *ospvPreferredDestinations[],    /* In - List of preferred destinations for call */
     unsigned *ospvNumberOfDestinations,         /* In/Out - Max number of destinations Actual number of dests authorised */
     unsigned *ospvSizeOfDetailLog,              /* In/Out - Max size of detail log Actual size of detail log */
@@ -3673,7 +3686,7 @@ int OSPPTransactionValidateAuthorisation(
                          * Thus, we are overwriting what had been Set using
                          * the SetNetworkIds API
                          */
-                        if ((trans->DstNetworkId != OSPC_OSNULL) && tokeninfo && (tokeninfo->ospmTokenInfoIsDstNetworkIdPresent == OSPC_FALSE)) {
+                        if ((trans->DstNetworkId != OSPC_OSNULL) && tokeninfo && (tokeninfo->ospmTokenInfoHasDstNetworkId == OSPC_FALSE)) {
 
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->DstNetworkId), trans->DstNetworkId, OSPC_ALTINFO_NETWORK);
 
@@ -3762,10 +3775,10 @@ int OSPPTransactionValidateAuthorisation(
          * Store it in the transaction object
          */
         if (tokeninfo != NULL) {
-            trans->TokenInfoIsLookAheadInfoPresent = tokeninfo->ospmTokenInfoIsLookAheadInfoPresent;
+            trans->TokenInfoHasLookAheadInfo = tokeninfo->ospmTokenInfoHasLookAheadInfo;
         }
 
-        if (trans->TokenInfoIsLookAheadInfoPresent) {
+        if (trans->TokenInfoHasLookAheadInfo) {
             /*
              * Set the destination
              */
@@ -3788,7 +3801,7 @@ int OSPPTransactionValidateAuthorisation(
          * If the token contains the Network Id
          * then add that to the list of destination Alternates
          */
-        if (tokeninfo && (tokeninfo->ospmTokenInfoIsDstNetworkIdPresent == OSPC_TRUE)) {
+        if (tokeninfo && (tokeninfo->ospmTokenInfoHasDstNetworkId == OSPC_TRUE)) {
             altinfo = NULL;
             altinfo = OSPPAltInfoNew(OSPM_STRLEN(OSPPTokenInfoGetDstNetworkId(tokeninfo)),
                                      OSPPTokenInfoGetDstNetworkId(tokeninfo), OSPC_ALTINFO_NETWORK);
@@ -4219,7 +4232,7 @@ int OSPPTransactionSetTermCause(
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
             dest = trans->CurrentDest;
             if (dest != OSPC_OSNULL) {
-            	OSPPDestSetTermCause(dest, ospvType, ospvCode, ospvDesc);	
+                OSPPDestSetTermCause(dest, ospvType, ospvCode, ospvDesc);
             }
         }
     }
@@ -4239,7 +4252,7 @@ int OSPPTransactionSetAssertedId(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-   	        OSPM_STRNCPY(trans->AssertedId, ospvAssertedId, sizeof(trans->AssertedId));
+               OSPM_STRNCPY(trans->AssertedId, ospvAssertedId, sizeof(trans->AssertedId));
         }
     }
 
@@ -4267,7 +4280,7 @@ int OSPPTransactionSetDestProtocol(
 
 int OSPPTransactionSetForwardCodec(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    const char *ospvForwardCodec)   /* Forward codec */
+    const char *ospvForwardCodec)   /* In - Forward codec */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -4286,7 +4299,7 @@ int OSPPTransactionSetForwardCodec(
 
 int OSPPTransactionSetReverseCodec(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    const char *ospvReverseCodec)   /* Reverse codec */
+    const char *ospvReverseCodec)   /* In - Reverse codec */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -4303,10 +4316,10 @@ int OSPPTransactionSetReverseCodec(
     return errorcode;
 }
 
-int OSPPTransactionSetSessionId(    /* nothing returned */
+int OSPPTransactionSetSessionId(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    OSPE_DIRECTION ospvDirection,   /* direction */
-    OSPT_CALL_ID *ospvSessionId)      /* call ID */
+    OSPE_DIRECTION ospvDirection,   /* In - Direction */
+    OSPT_CALL_ID *ospvSessionId)    /* In - Call ID */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -4320,6 +4333,35 @@ int OSPPTransactionSetSessionId(    /* nothing returned */
                 OSPPCallIdDelete(&(trans->SessionId[ospvDirection]));
             }
             trans->SessionId[ospvDirection] = OSPPCallIdNew(ospvSessionId->ospmCallIdLen, ospvSessionId->ospmCallIdVal);
+        }
+    }
+    
+    return errorcode;
+}
+
+int OSPPTransactionSetCustomerInfo(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvIndex,             /* In - Index */
+    const char *ospvInfo)           /* In - Customer Info */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    
+    if ((ospvIndex > OSPC_MAX_INDEX) || 
+        (ospvInfo == OSPC_OSNULL) || (ospvInfo[0] == '\0') || (OSPM_STRLEN(ospvInfo) >= OSPC_SIZE_CUSTINFO)) 
+    {
+        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+        	if (trans->CustomerInfo[ospvIndex] == OSPC_OSNULL) {
+                OSPM_MALLOC(trans->CustomerInfo[ospvIndex], char, OSPC_SIZE_CUSTINFO);
+        	}
+            if (trans->CustomerInfo[ospvIndex] != OSPC_OSNULL) {
+                OSPM_STRCPY(trans->CustomerInfo[ospvIndex], ospvInfo);
+            } else {
+                errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
+            }
         }
     }
     

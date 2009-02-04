@@ -39,9 +39,12 @@ typedef enum {
     OSPC_MATTR_TYPE,
     OSPC_MATTR_VERSION,
     OSPC_MATTR_DIRECTION,
+    OSPC_MATTR_INDEX,
     /* Number of message attribtes */
     OSPC_MATTR_NUMBER
 } OSPE_MSG_ATTR;
+
+#define OSPC_MAX_INDEX  32 
 
 /* Direction types */
 typedef enum {

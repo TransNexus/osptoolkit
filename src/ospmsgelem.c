@@ -51,6 +51,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_CSAUDITTRIGGER,       "cisco.com:AuditSignal" },
     { OSPC_MELEM_CURRENCY,             "Currency" },
     { OSPC_MELEM_CUSTID,               "CustomerId" },
+    { OSPC_MELEM_CUSTINFO,             "CustomerInfo" },
     { OSPC_MELEM_DELAY,                "Delay" },
     { OSPC_MELEM_DELAYLIMIT,           "DelayLimit" },
     { OSPC_MELEM_DELAYPREF,            "DelayPreference" },

@@ -850,8 +850,8 @@ int testOSPPTransactionGetDestProtocol()
             break;
         }
     }
+    
     return errorcode;
-
 }
 
 int testOSPPTransactionIsDestOSPEnabled()
@@ -876,6 +876,7 @@ int testOSPPTransactionIsDestOSPEnabled()
             break;
         }
     }
+    
     return errorcode;
 }
 
@@ -1503,16 +1504,16 @@ int testOSPPTransactionGetLookAheadInfoIfPresent()
     OSPE_DEST_PROTOCOL DestProt = OSPC_DPROT_UNDEFINED;
     OSPE_DEST_OSPENABLED DestOSPStatus = OSPC_DOSP_UNDEFINED;
     char LookAheadDest[DESTINATION_SZ] = { "" };
-    OSPTBOOL IsLookAheadInfoPresent = OSPC_FALSE;
+    OSPTBOOL HasLookAheadInfo = OSPC_FALSE;
 
     if (errorcode == 0) {
         if (errorcode == 0) {
             errorcode = OSPPTransactionGetLookAheadInfoIfPresent
-                (OSPVTransactionHandle, &IsLookAheadInfoPresent,
+                (OSPVTransactionHandle, &HasLookAheadInfo,
                 LookAheadDest, &DestProt, &DestOSPStatus);
         }
 
-        if (errorcode == 0 && IsLookAheadInfoPresent) {
+        if (errorcode == 0 && HasLookAheadInfo) {
             printf("Look Ahead Info Present .. \nLookAheadDest = %s\n", LookAheadDest);
             switch (DestProt) {
             case OSPC_DPROT_UNDEFINED:
@@ -1555,8 +1556,7 @@ int testOSPPTransactionGetLookAheadInfoIfPresent()
                 printf("Destination OSP Status is Unknown \n");
                 break;
             }
-
-        } else if (errorcode == 0 && (!IsLookAheadInfoPresent)) {
+        } else if (errorcode == 0 && (!HasLookAheadInfo)) {
             printf("Look Ahead Info Not Present\n");
         }
         printf("errorcode = %d\n", errorcode);
@@ -1868,6 +1868,16 @@ int test209()
     return errorcode;
 }
 
+int test210()
+{
+    int errorcode = 0;
+    
+    OSPPTransactionSetCustomerInfo(OSPVTransactionHandle, 0, "CustomerInfo0");
+    OSPPTransactionSetCustomerInfo(OSPVTransactionHandle, 3, "CustomerInfo3");
+
+    return errorcode;
+}
+
 int testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
@@ -2135,6 +2145,9 @@ int testAPI(int apinumber)
     	break;
     case 209:
     	errorcode = test209();
+    	break;
+    case 210:
+    	errorcode = test210();
     	break;
     default:
         errorcode = -1;

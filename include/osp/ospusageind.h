@@ -66,6 +66,7 @@ typedef struct {
     char ospmUsageIndForwardCodec[OSPC_SIZE_CODEC];
     char ospmUsageIndReverseCodec[OSPC_SIZE_CODEC];
     OSPT_CALL_ID *ospmUsageIndSessionId[OSPC_DIR_NUMBER];
+    char *ospmUsageIndCustomerInfo[OSPC_MAX_INDEX];
 } OSPT_USAGEIND;
 
 /* Function Prototypes */
@@ -162,6 +163,9 @@ extern "C" {
     OSPTBOOL OSPPUsageIndHasSessionId(OSPT_USAGEIND *, OSPE_DIRECTION);
     OSPT_CALL_ID *OSPPUsageIndGetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION);
     void OSPPUsageIndSetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION, OSPT_CALL_ID *);
+    OSPTBOOL OSPPUsageIndHasCustomerInfo(OSPT_USAGEIND *, unsigned);
+    const char *OSPPUsageIndGetCustomerInfo(OSPT_USAGEIND *, unsigned);
+    void OSPPUsageIndSetCustomerInfo(OSPT_USAGEIND *, unsigned, const char *);
     
 #ifdef __cplusplus
 }

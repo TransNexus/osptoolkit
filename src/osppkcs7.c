@@ -352,6 +352,7 @@ int OSPPPKCS7SignerInfoCreate(
         default:
             errorcode = OSPC_ERR_PKCS7_ENCODING_ERROR;
             OSPM_DBGERRORLOG(errorcode, "Unknown case encountered encoding PKCS7 SignerInfo");
+            break;
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -422,6 +423,7 @@ int OSPPPKCS7DigestAlgorithmsCreate(
         default:
             errorcode = OSPC_ERR_PKCS7_ENCODING_ERROR;
             OSPM_DBGERRORLOG(errorcode, "Unknown case encountered encoding PKCS7 DigestAlgorithms");
+            break;
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -485,6 +487,7 @@ int OSPPPKCS7CertificatesCreate(
         default:
             errorcode = OSPC_ERR_PKCS7_ENCODING_ERROR;
             OSPM_DBGERRORLOG(errorcode, "Unknown case encountered encoding PKCS7 Certificates");
+            break;
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -548,6 +551,7 @@ int OSPPPKCS7SignerInfosCreate(
         default:
             errorcode = OSPC_ERR_PKCS7_ENCODING_ERROR;
             OSPM_DBGERRORLOG(errorcode, "Unknown case encountered encoding PKCS7 SignerInfos");
+            break;
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -643,6 +647,7 @@ int OSPPPKCS7SignedDataCreate(
         default:
             errorcode = OSPC_ERR_PKCS7_ENCODING_ERROR;
             OSPM_DBGERRORLOG(errorcode, "Unknown case encountered encoding PKCS7 SignedData");
+            break;
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -740,6 +745,7 @@ int OSPPPKCS7ContentInfoCreate(
         default:
             errorcode = OSPC_ERR_PKCS7_ENCODING_ERROR;
             OSPM_DBGERRORLOG(errorcode, "Unknown case encountered encoding PKCS7 ContentInfo.");
+            break;
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {

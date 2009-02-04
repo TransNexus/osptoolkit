@@ -85,12 +85,13 @@ void OSPPUsageCnfSetTimestamp(      /* nothing returned */
 OSPTBOOL OSPPUsageCnfHasStatus( /* returns non-zero if number exists */
     OSPTUSAGECNF *ospvUsageCnf) /* usage confirmation effected */
 {
-    OSPTBOOL ospvHasStatus = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvUsageCnf != OSPC_OSNULL) {
-        ospvHasStatus = (ospvUsageCnf->ospmUsageCnfStatus != OSPC_OSNULL);
+        ospvHas = (ospvUsageCnf->ospmUsageCnfStatus != OSPC_OSNULL);
     }
-    return ospvHasStatus;
+    
+    return ospvHas;
 }
 
 /*
@@ -295,48 +296,48 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
                              elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(elem1, elem)) 
                         {
                             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
-                                case OSPC_MELEM_MESSAGE:
-                                    if (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)) == OSPC_MELEM_MESSAGE) {
-                                        OSPPUsageCnfMessageIdFromElement(elem, &messageId);
-                                        if (messageId != OSPC_OSNULL) {
-                                            OSPPUsageCnfSetMessageId(usagecnf, messageId);
-                                        }
+                            case OSPC_MELEM_MESSAGE:
+                                if (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)) == OSPC_MELEM_MESSAGE) {
+                                    OSPPUsageCnfMessageIdFromElement(elem, &messageId);
+                                    if (messageId != OSPC_OSNULL) {
+                                        OSPPUsageCnfSetMessageId(usagecnf, messageId);
                                     }
-                                    break;
-                                case OSPC_MELEM_USAGECNF:
-                                    OSPPUsageCnfComponentIdFromElement(elem, &compid);
-                                    if (compid != OSPC_OSNULL) {
-                                        OSPPUsageCnfSetComponentId(usagecnf, compid);
-                                    }
-                                    break;
-                                case OSPC_MELEM_TIMESTAMP:
-                                    ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
-                                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                                        OSPPUsageCnfSetTimestamp(usagecnf, t);
-                                    }
-                                    break;
-                                case OSPC_MELEM_STATUS:
-                                    if (usagecnf->ospmUsageCnfStatus == OSPC_OSNULL) {
-                                        /* usagecnf->ospmUsageCnfStatus = OSPPStatusNew(); */
-                                        ospvErrCode = OSPPStatusFromElement(elem, &(usagecnf->ospmUsageCnfStatus));
-                                    }
-                                    break;
-                                case OSPC_MELEM_AUDIT:
-                                    ospvErrCode = OSPPTNAuditFromElement(elem, &(usagecnf->ospmUsageCnfTNAudit));
-                                    break;
-                                case OSPC_MELEM_CSAUDITTRIGGER:
-                                    ospvErrCode = OSPPCSAuditFromElement(elem, &(usagecnf->ospmUsageCnfCSAudit));
-                                    break;
-                                default:
-                                    /*
-                                     * This is an element we don't understand. If it's
-                                     * critical, then we have to report an error.
-                                     * Otherwise we can ignore it.
-                                     */
-                                    if (OSPPMsgElemIsCritical(elem)) {
-                                        ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
-                                    }
-                                    break;
+                                }
+                                break;
+                            case OSPC_MELEM_USAGECNF:
+                                OSPPUsageCnfComponentIdFromElement(elem, &compid);
+                                if (compid != OSPC_OSNULL) {
+                                    OSPPUsageCnfSetComponentId(usagecnf, compid);
+                                }
+                                break;
+                            case OSPC_MELEM_TIMESTAMP:
+                                ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
+                                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                                    OSPPUsageCnfSetTimestamp(usagecnf, t);
+                                }
+                                break;
+                            case OSPC_MELEM_STATUS:
+                                if (usagecnf->ospmUsageCnfStatus == OSPC_OSNULL) {
+                                    /* usagecnf->ospmUsageCnfStatus = OSPPStatusNew(); */
+                                    ospvErrCode = OSPPStatusFromElement(elem, &(usagecnf->ospmUsageCnfStatus));
+                                }
+                                break;
+                            case OSPC_MELEM_AUDIT:
+                                ospvErrCode = OSPPTNAuditFromElement(elem, &(usagecnf->ospmUsageCnfTNAudit));
+                                break;
+                            case OSPC_MELEM_CSAUDITTRIGGER:
+                                ospvErrCode = OSPPCSAuditFromElement(elem, &(usagecnf->ospmUsageCnfCSAudit));
+                                break;
+                            default:
+                                /*
+                                 * This is an element we don't understand. If it's
+                                 * critical, then we have to report an error.
+                                 * Otherwise we can ignore it.
+                                 */
+                                if (OSPPMsgElemIsCritical(elem)) {
+                                    ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
+                                }
+                                break;
                             }
                         }
                     }

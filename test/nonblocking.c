@@ -53,7 +53,7 @@ typedef struct _NBUSEIND {
     OSPTTIME ospvEndTime;                               /* In - EndTime of call */
     OSPTTIME ospvAlertTime;                             /* In - AlertTime of call */
     OSPTTIME ospvConnectTime;                           /* In - ConnectTime of call */
-    unsigned ospvIsPDDInfoPresent;                      /* In - Is PDD info present */
+    OSPTBOOL ospvHasPDDInfo;                            /* In - Is PDD info present */
     unsigned ospvPostDialDelay;                         /* In - PDD */
     unsigned ospvReleaseSource;                         /* In - Rel Src */
     char ospvConferenceId[OSPC_CONFIDSIZE];             /* In - ConferenceId */
@@ -418,7 +418,7 @@ OSPTTHREADRETURN WorkThread(void *arg)
                     transaction->Message.UseInd.ospvEndTime,
                     transaction->Message.UseInd.ospvAlertTime,
                     transaction->Message.UseInd.ospvConnectTime,
-                    transaction->Message.UseInd.ospvIsPDDInfoPresent,
+                    transaction->Message.UseInd.ospvHasPDDInfo,
                     transaction->Message.UseInd.ospvPostDialDelay,
                     transaction->Message.UseInd.ospvReleaseSource,
                     transaction->Message.UseInd.ospvConferenceId,
@@ -732,7 +732,7 @@ int OSPPTransactionReportUsage_nb(NBMONITOR *nbMonitor,     /* In - NBMonitor Po
     OSPTTIME ospvEndTime,                                   /* In - EndTime of call */
     OSPTTIME ospvAlertTime,                                 /* In - AlertTime of call */
     OSPTTIME ospvConnectTime,                               /* In - ConnectTime of call */
-    unsigned ospvIsPDDInfoPresent,                          /* In - Is PDD info available */
+    OSPTBOOL ospvHasPDDInfo,                                /* In - Is PDD info available */
     unsigned ospvPostDialDelay,                             /* In - PDD */
     unsigned ospvReleaseSource,                             /* In - Release Src */
     const char *ospvConferenceId,                           /* In - ConferenceId */
@@ -763,7 +763,7 @@ int OSPPTransactionReportUsage_nb(NBMONITOR *nbMonitor,     /* In - NBMonitor Po
             nbData->Message.UseInd.ospvEndTime = ospvEndTime;
             nbData->Message.UseInd.ospvAlertTime = ospvAlertTime;
             nbData->Message.UseInd.ospvConnectTime = ospvConnectTime;
-            nbData->Message.UseInd.ospvIsPDDInfoPresent = ospvIsPDDInfoPresent;
+            nbData->Message.UseInd.ospvHasPDDInfo = ospvHasPDDInfo;
             nbData->Message.UseInd.ospvPostDialDelay = ospvPostDialDelay;
             nbData->Message.UseInd.ospvReleaseSource = ospvReleaseSource;
             if (ospvConferenceId) {

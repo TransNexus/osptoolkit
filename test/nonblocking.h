@@ -126,7 +126,7 @@ extern "C" {
         OSPTTIME ospvEndTime,                                           /* In - EndTime of call */
         OSPTTIME ospvAlertTime,                                         /* In - AlertTime of call */
         OSPTTIME ospvConnectTime,                                       /* In - ConnectTime of call */
-        unsigned ospvIsPDDInfoPresent,                                  /* In - Is PDD present */
+        OSPTBOOL ospvHasPDDInfo,                                        /* In - Is PDD present */
         unsigned ospvPostDialDelay,                                     /* In - PDD */
         unsigned ospvReleaseSource,                                     /* In - Rel Src */
         const char *ospvConferenceId,                                   /* In - Conference Id */

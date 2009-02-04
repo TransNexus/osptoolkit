@@ -167,8 +167,8 @@ typedef enum {
 #define OSPC_UNITSIZE       20
 
 typedef enum {
-	OSPC_NFORMAT_START = 0,
-	OSPC_NFORMAT_E164 = OSPC_NFORMAT_START,
+    OSPC_NFORMAT_START = 0,
+    OSPC_NFORMAT_E164 = OSPC_NFORMAT_START,
     OSPC_NFORMAT_SIP,
     OSPC_NFORMAT_URL,
     /* Number of call party formats */
@@ -181,13 +181,13 @@ typedef enum {
 } OSPE_SERVICE;
 
 typedef enum {
-	OSPC_TCAUSE_START = 0,
-	OSPC_TCAUSE_Q850 = OSPC_TCAUSE_START,
-	OSPC_TCAUSE_H323,
-	OSPC_TCAUSE_SIP,
-	OSPC_TCAUSE_XMPP,
-	/* Number of termination cause types */
-	OSPC_TCAUSE_NUMBER
+    OSPC_TCAUSE_START = 0,
+    OSPC_TCAUSE_Q850 = OSPC_TCAUSE_START,
+    OSPC_TCAUSE_H323,
+    OSPC_TCAUSE_SIP,
+    OSPC_TCAUSE_XMPP,
+    /* Number of termination cause types */
+    OSPC_TCAUSE_NUMBER
 } OSPE_TERM_CAUSE;
 
 typedef struct {

@@ -467,25 +467,25 @@ void OSPPXMLDocPeekCharN(
     if (*ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* handle each encoding separately */
         switch (ospvEncoding) {
-            case OSPC_XENC_UTF8:
-                readChar = OSPPBfrPeekByteN(*ospvBfrAddr, ospvCnt);
-                break;
-            case OSPC_XENC_UTF16L:
-                readChar = OSPPBfrPeekByteN(*ospvBfrAddr, 2 * ospvCnt);
-                break;
-            case OSPC_XENC_UTF16B:
-                readChar = OSPPBfrPeekByteN(*ospvBfrAddr, (2 * ospvCnt + 1));
-                break;
-            default:
-                *ospvErrCode = (unsigned)OSPC_ERR_OS_FAILURE;
-                break;
+        case OSPC_XENC_UTF8:
+            readChar = OSPPBfrPeekByteN(*ospvBfrAddr, ospvCnt);
+            break;
+        case OSPC_XENC_UTF16L:
+            readChar = OSPPBfrPeekByteN(*ospvBfrAddr, 2 * ospvCnt);
+            break;
+        case OSPC_XENC_UTF16B:
+            readChar = OSPPBfrPeekByteN(*ospvBfrAddr, (2 * ospvCnt + 1));
+            break;
+        default:
+            *ospvErrCode = (unsigned)OSPC_ERR_OS_FAILURE;
+            break;
         }
     }
     if (*ospvErrCode == OSPC_ERR_NO_ERROR) {
         if (readChar == -1) {
             *ospvErrCode = OSPC_ERR_BUF_INCOMPLETE;
         } else {
-            *ospvChar = (unsigned char) readChar;
+            *ospvChar = (unsigned char)readChar;
         }
     }
 }

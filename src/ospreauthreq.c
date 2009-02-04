@@ -44,13 +44,13 @@
 OSPTBOOL OSPPReauthReqHasTimestamp(     /* returns non-zero if time */
     OSPTREAUTHREQ *ospvReauthReq)       /* authorisation request in question */
 {
-    OSPTBOOL ospvHasTime = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHasTime = (ospvReauthReq->ospmReauthReqTimestamp != OSPC_TIMEMIN);
+        ospvHas = (ospvReauthReq->ospmReauthReqTimestamp != OSPC_TIMEMIN);
     }
 
-    return ospvHasTime;
+    return ospvHas;
 }
 
 /*
@@ -86,13 +86,13 @@ OSPTTIME OSPPReauthReqGetTimestamp( /* returns the time value */
 OSPTBOOL OSPPReauthReqHasCallId(    /* returns non-zero if exists */
     OSPTREAUTHREQ *ospvReauthReq)   /* authorisation request */
 {
-    OSPTBOOL ospvHasId = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHasId = (ospvReauthReq->ospmReauthReqCallId != OSPC_OSNULL);
+        ospvHas = (ospvReauthReq->ospmReauthReqCallId != OSPC_OSNULL);
     }
 
-    return ospvHasId;
+    return ospvHas;
 }
 
 /*
@@ -181,13 +181,13 @@ const char *OSPPReauthReqGetDestNumber( /* returns number as string */
 OSPTBOOL OSPPReauthReqHasTrxId(     /* returns non-zero if exists */
     OSPTREAUTHREQ *ospvReauthReq)   /* authorisation request */
 {
-    OSPTBOOL ospvHasId = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHasId = (ospvReauthReq->ospmReauthReqTrxId != 0);
+        ospvHas = (ospvReauthReq->ospmReauthReqTrxId != 0);
     }
 
-    return ospvHasId;
+    return ospvHas;
 }
 
 /*
@@ -223,13 +223,13 @@ OSPTTRXID OSPPReauthReqGetTrxId(    /* returns transaction ID pointer */
 OSPTBOOL OSPPReauthReqHasDuration(  /* returns non-zero if number exists */
     OSPTREAUTHREQ *ospvReauthReq)   /* Usage Indication effected */
 {
-    OSPTBOOL ospvHasDuration = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHasDuration = (ospvReauthReq->ospmReauthReqDuration >= 0);
+        ospvHas = (ospvReauthReq->ospmReauthReqDuration >= 0);
     }
 
-    return ospvHasDuration;
+    return ospvHas;
 }
 
 /*
@@ -374,13 +374,13 @@ void OSPPReauthReqAddSourceAlt(
 OSPTBOOL OSPPReauthReqHasSourceAlt(     /* returns non-zero if exists */
     OSPTREAUTHREQ *ospvReauthReq)       /* authorisation request */
 {
-    OSPTBOOL ospvHasSourceAlt = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHasSourceAlt = (OSPPReauthReqFirstSourceAlt(ospvReauthReq) != OSPC_OSNULL);
+        ospvHas = (OSPPReauthReqFirstSourceAlt(ospvReauthReq) != OSPC_OSNULL);
     }
 
-    return ospvHasSourceAlt;
+    return ospvHas;
 }
 
 /*
@@ -437,13 +437,13 @@ void OSPPReauthReqAddDestinationAlt(
 OSPTBOOL OSPPReauthReqHasDestinationAlt(/* returns non-zero if exists */
     OSPTREAUTHREQ *ospvReauthReq)       /* authorisation request */
 {
-    OSPTBOOL ospvHasDestinationAlt = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHasDestinationAlt = (OSPPReauthReqFirstDestinationAlt(ospvReauthReq) != OSPC_OSNULL);
+        ospvHas = (OSPPReauthReqFirstDestinationAlt(ospvReauthReq) != OSPC_OSNULL);
     }
 
-    return ospvHasDestinationAlt;
+    return ospvHas;
 }
 
 /*
@@ -849,13 +849,13 @@ int OSPPReauthReqToElement(         /* returns error code */
 OSPTBOOL OSPPReauthReqHasRole(      /* returns non-zero if time */
     OSPTREAUTHREQ *ospvReauthReq)   /* reauth request in question */
 {
-    OSPTBOOL ospvHasRole = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHasRole = (ospvReauthReq->ospmReauthReqHasRole != OSPC_FALSE);
+        ospvHas = (ospvReauthReq->ospmReauthReqHasRole != OSPC_FALSE);
     }
 
-    return ospvHasRole;
+    return ospvHas;
 }
 
 /*
@@ -890,13 +890,13 @@ void OSPPReauthReqSetRole(OSPTREAUTHREQ *ospvReauthReq, OSPE_ROLE ospvRole)
 OSPTBOOL OSPPReauthReqHasCustId(    /* returns non-zero if true */
     OSPTREAUTHREQ *ospvReauthReq)   /* reauthreq in question */
 {
-    OSPTBOOL ospvHasCustId = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHasCustId = (ospvReauthReq->ospmReauthReqCustId != 0L);
+        ospvHas = (ospvReauthReq->ospmReauthReqCustId != 0L);
     }
 
-    return ospvHasCustId;
+    return ospvHas;
 }
 
 /*
@@ -932,13 +932,13 @@ unsigned long OSPPReauthReqGetCustId(   /* returns the cust id */
 OSPTBOOL OSPPReauthReqHasDeviceId(      /* returns non-zero if true */
     OSPTREAUTHREQ *ospvReauthReq)       /* reauthrequest in question */
 {
-    OSPTBOOL ospvHasDeviceId = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHasDeviceId = (ospvReauthReq->ospmReauthReqDeviceId != 0L);
+        ospvHas = (ospvReauthReq->ospmReauthReqDeviceId != 0L);
     }
 
-    return ospvHasDeviceId;
+    return ospvHas;
 }
 
 /*

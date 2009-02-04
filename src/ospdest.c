@@ -80,13 +80,13 @@ void OSPPDestSetProtocol(   /* nothing returned */
 OSPTBOOL OSPPDestHasNumber(/* returns non-zero if number exists */
     OSPT_DEST *ospvDest)   /* destination effected */
 {
-    OSPTBOOL ospvHasNumber = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasNumber = (ospvDest->ospmDestNumber[0] != '\0');
+        ospvHas = (ospvDest->ospmDestNumber[0] != '\0');
     }
 
-    return ospvHasNumber;
+    return ospvHas;
 }
 
 /*
@@ -95,13 +95,13 @@ OSPTBOOL OSPPDestHasNumber(/* returns non-zero if number exists */
 OSPTBOOL OSPPDestHasSrcNumber(  /* returns non-zero if number exists */
     OSPT_DEST *ospvDest)        /* destination effected */
 {
-    OSPTBOOL ospvHasSrcNumber = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasSrcNumber = (ospvDest->ospmSrcNumber[0] != '\0');
+        ospvHas = (ospvDest->ospmSrcNumber[0] != '\0');
     }
 
-    return ospvHasSrcNumber;
+    return ospvHas;
 }
 
 /*
@@ -168,13 +168,13 @@ const char *OSPPDestGetNumber(  /* returns number as string */
 OSPTBOOL OSPPDestHasAddr(   /* returns non-zero if exists */
     OSPT_DEST *ospvDest)    /* destination in question */
 {
-    OSPTBOOL ospvHasAddr = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasAddr = (ospvDest->ospmDestAddr[0] != '\0');
+        ospvHas = (ospvDest->ospmDestAddr[0] != '\0');
     }
 
-    return ospvHasAddr;
+    return ospvHas;
 }
 
 /*
@@ -212,12 +212,13 @@ const char *OSPPDestGetAddr(    /* returns address as string */
 OSPTBOOL OSPPDestDevHasAddr(    /* returns non-zero if exists */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    OSPTBOOL ospvHasAddr = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasAddr = (ospvDest->ospmDestDevAddr[0] != '\0');
+        ospvHas = (ospvDest->ospmDestDevAddr[0] != '\0');
     }
-    return ospvHasAddr;
+    
+    return ospvHas;
 }
 
 /*
@@ -226,13 +227,13 @@ OSPTBOOL OSPPDestDevHasAddr(    /* returns non-zero if exists */
 OSPTBOOL OSPPDestHasNetworkAddr(    /* returns non-zero if exists */
     OSPT_DEST *ospvDest)            /* destination in question */
 {
-    OSPTBOOL ospvHasAddr = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasAddr = (ospvDest->ospmDestNetworkId[0] != '\0');
+        ospvHas = (ospvDest->ospmDestNetworkId[0] != '\0');
     }
     
-    return ospvHasAddr;
+    return ospvHas;
 }
 
 /*
@@ -300,13 +301,13 @@ const char *OSPPDestDevGetAddr( /* returns address as string */
 OSPTBOOL OSPPDestHasValidAfter( /* returns non-zero if time */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    OSPTBOOL ospvHasTime = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasTime = (ospvDest->ospmDestValidAfter != OSPC_TIMEMIN);
+        ospvHas = (ospvDest->ospmDestValidAfter != OSPC_TIMEMIN);
     }
 
-    return ospvHasTime;
+    return ospvHas;
 }
 
 /*
@@ -342,12 +343,13 @@ OSPTTIME OSPPDestGetValidAfter( /* returns the time value */
 OSPTBOOL OSPPDestHasValidUntil( /* returns non-zero if time */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    OSPTBOOL ospvHasTime = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasTime = (ospvDest->ospmDestValidUntil != OSPC_TIMEMAX);
+        ospvHas = (ospvDest->ospmDestValidUntil != OSPC_TIMEMAX);
     }
-    return ospvHasTime;
+    
+    return ospvHas;
 }
 
 /*
@@ -382,12 +384,13 @@ OSPTTIME OSPPDestGetValidUntil( /* returns time */
 OSPTBOOL OSPPDestHasAuthority(  /* returns non-zero if exists */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    OSPTBOOL ospvHasAuth = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasAuth = (ospvDest->ospmDestAuthority[0] != '\0');
+        ospvHas = (ospvDest->ospmDestAuthority[0] != '\0');
     }
-    return ospvHasAuth;
+    
+    return ospvHas;
 }
 
 /*
@@ -411,13 +414,13 @@ OSPTBOOL OSPPDestHasCallId( /* returns non-zero if exists */
     OSPT_DEST *ospvDest     /* destination in question */
     )
 {
-    OSPTBOOL ospvHasId = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasId = (ospvDest->ospmDestCallId != OSPC_OSNULL);
+        ospvHas = (ospvDest->ospmDestCallId != OSPC_OSNULL);
     }
 
-    return ospvHasId;
+    return ospvHas;
 }
 
 /*
@@ -442,13 +445,13 @@ OSPT_CALL_ID *OSPPDestGetCallId(/* returns call ID pointer */
 OSPTBOOL OSPPDestHasToken(  /* returns non-zero if exists */
     OSPT_DEST *ospvDest)    /* destination in question */
 {
-    OSPTBOOL ospvHasToken = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasToken = (OSPPListFirst(&(ospvDest->ospmDestTokens)) != OSPC_OSNULL);
+        ospvHas = (OSPPListFirst(&(ospvDest->ospmDestTokens)) != OSPC_OSNULL);
     }
 
-    return ospvHasToken;
+    return ospvHas;
 }
 
 /*
@@ -502,13 +505,13 @@ OSPTTOKEN *OSPPDestNextToken(   /* returns NULL if no more */
 OSPTBOOL OSPPDestHasLimit(  /* returns non-zero if limit */
     OSPT_DEST *ospvDest)    /* destination in question */
 {
-    OSPTBOOL ospvHasLimit = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasLimit = ospvDest->ospmDestHasLimit;
+        ospvHas = ospvDest->ospmDestHasLimit;
     }
 
-    return ospvHasLimit;
+    return ospvHas;
 }
 
 /*
@@ -546,13 +549,13 @@ OSPTBOOL OSPPDestHasTermCause(      /* returns non-zero if time */
     OSPT_DEST *ospvDest,            /* dest in question */
     OSPE_TERM_CAUSE ospvType)       /* Termiantion cause type */
 {
-    OSPTBOOL ospvHasTermCause = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasTermCause = OSPPHasTermCause(&ospvDest->ospmDestTermCause, ospvType);
+        ospvHas = OSPPHasTermCause(&ospvDest->ospmDestTermCause, ospvType);
     }
 
-    return ospvHasTermCause;
+    return ospvHas;
 }
 
 /*
@@ -561,13 +564,13 @@ OSPTBOOL OSPPDestHasTermCause(      /* returns non-zero if time */
 OSPTBOOL OSPPDestHasTermCauseAny(   /* returns non-zero if time */
     OSPT_DEST *ospvDest)            /* dest in question */
 {
-    OSPTBOOL ospvHasTermCause = OSPC_FALSE;
+    OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHasTermCause = OSPPHasTermCauseAny(&ospvDest->ospmDestTermCause);
+        ospvHas = OSPPHasTermCauseAny(&ospvDest->ospmDestTermCause);
     }
 
-    return ospvHasTermCause;
+    return ospvHas;
 }
 
 /*

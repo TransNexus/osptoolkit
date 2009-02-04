@@ -1243,6 +1243,7 @@ void OSPPHttpParseHeader(
     default:
         *ospvError = OSPC_ERR_HTTP_BAD_HEADER_200;
         OSPM_DBGERRORLOG(*ospvError, "bad http header");
+        break;
 
     }
     OSPM_DBGEXIT(("EXIT : OSPPHttpParseHeader\n"));

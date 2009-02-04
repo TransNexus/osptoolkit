@@ -190,12 +190,14 @@ int OSPPUtilGetErrorFromStatus(
             errorcode = OSPC_ERR_TRAN_GENERIC_FAILURE;
             break;
         default:
-            if ((ospvStatusCode > 401) && (ospvStatusCode < 500))
+            if ((ospvStatusCode > 401) && (ospvStatusCode < 500)) {
                 errorcode = OSPC_ERR_TRAN_CLIENT_ERROR;
-            else if ((ospvStatusCode > 501) && (ospvStatusCode < 600))
+            } else if ((ospvStatusCode > 501) && (ospvStatusCode < 600)) {
                 errorcode = OSPC_ERR_TRAN_SERVER_ERROR;
-            else
+            } else {
                 errorcode = OSPC_ERR_TRAN_GENERIC_FAILURE;
+            }
+            break;
         }
     }
 

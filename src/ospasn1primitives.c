@@ -47,54 +47,43 @@ int OSPPASN1PrimitiveDecode(
         sprintf(msg, "PrimitiveDecode - Tag=%0x", eInfo->Tag);  
 
         /* Decode the item and save the value */
-        switch(OSPM_BASE_TAG(eInfo->Tag)) {
-            case OSPC_TAG_TYPE_EOC:
+        switch (OSPM_BASE_TAG(eInfo->Tag)) {
+        case OSPC_TAG_TYPE_EOC:
             break;
 
-            case OSPC_TAG_TYPE_NULL:
+        case OSPC_TAG_TYPE_NULL:
             break;
 
-            case OSPC_TAG_TYPE_INTEGER:
-            errorcode = OSPPASN1IntegerDecode((OSPTASN1INTEGER**)&contentValue,
-                eInfo->Content, eInfo->ContentLength);
+        case OSPC_TAG_TYPE_INTEGER:
+            errorcode = OSPPASN1IntegerDecode((OSPTASN1INTEGER**)&contentValue, eInfo->Content, eInfo->ContentLength);
             break;
 
-            case OSPC_TAG_TYPE_OBJECT_IDENTIFIER:
-            errorcode = OSPPASN1ObjectIdentifierDecode(
-                (OSPTASN1BUFFER **)&contentValue,
-                eInfo->Content, eInfo->ContentLength);
+        case OSPC_TAG_TYPE_OBJECT_IDENTIFIER:
+            errorcode = OSPPASN1ObjectIdentifierDecode((OSPTASN1BUFFER **)&contentValue, eInfo->Content, eInfo->ContentLength);
             break;
 
-            case OSPC_TAG_TYPE_IA5STRING:
-            case OSPC_TAG_TYPE_T61STRING:
-            case OSPC_TAG_TYPE_PRINTABLESTRING:
-            case OSPC_TAG_TYPE_BMPSTRING:
-            errorcode = OSPPASN1PrintableStringDecode( 
-                (OSPTASN1BUFFER **)&contentValue,
-                eInfo->Content, eInfo->ContentLength);
+        case OSPC_TAG_TYPE_IA5STRING:
+        case OSPC_TAG_TYPE_T61STRING:
+        case OSPC_TAG_TYPE_PRINTABLESTRING:
+        case OSPC_TAG_TYPE_BMPSTRING:
+            errorcode = OSPPASN1PrintableStringDecode((OSPTASN1BUFFER **)&contentValue, eInfo->Content, eInfo->ContentLength);
             break;
 
-            case OSPC_TAG_TYPE_UTCTIME:
-            errorcode = OSPPASN1UTCTimeDecode(
-                (OSPTASN1BUFFER **)&contentValue,
-                eInfo->Content, eInfo->ContentLength);
+        case OSPC_TAG_TYPE_UTCTIME:
+            errorcode = OSPPASN1UTCTimeDecode((OSPTASN1BUFFER **)&contentValue, eInfo->Content, eInfo->ContentLength);
             break;
 
-            case OSPC_TAG_TYPE_BIT_STRING:
-            errorcode = OSPPASN1BitStringDecode(
-                OSPTASN1BITSTRING **)&contentValue,
-                eInfo->Content, eInfo->ContentLength);
+        case OSPC_TAG_TYPE_BIT_STRING:
+            errorcode = OSPPASN1BitStringDecode(OSPTASN1BITSTRING **)&contentValue, eInfo->Content, eInfo->ContentLength);
             break;
 
-            case OSPC_TAG_TYPE_OCTET_STRING:
-            errorcode = OSPPASN1OctetStringDecode(
-                (OSPTASN1BUFFER**)&contentValue,
-                eInfo->Content, eInfo->ContentLength);
+        case OSPC_TAG_TYPE_OCTET_STRING:
+            errorcode = OSPPASN1OctetStringDecode((OSPTASN1BUFFER**)&contentValue, eInfo->Content, eInfo->ContentLength);
             break;
 
-            case OSPC_TAG_TYPE_SEQUENCE:
-            case OSPC_TAG_TYPE_SET:
-            default:
+        case OSPC_TAG_TYPE_SEQUENCE:
+        case OSPC_TAG_TYPE_SET:
+        default:
             errorcode = OSPC_ERR_ASN1_INVALID_PRIMITIVE_TAG;
             sprintf(msg, "Invalid/Unsupported primitive tag %02x", eInfo->Tag);
             OSPM_DBGERRORLOG(errorcode, msg);
@@ -119,39 +108,38 @@ int OSPPASN1PrimitiveDelete(
 
         if (eInfo->ContentValue != OSPC_OSNULL) {
             /* Decode the item and save the value */
-            switch(OSPM_BASE_TAG(eInfo->Tag)) {
-                case OSPC_TAG_TYPE_EOC:
-                case OSPC_TAG_TYPE_NULL:
+            switch (OSPM_BASE_TAG(eInfo->Tag)) {
+            case OSPC_TAG_TYPE_EOC:
+            case OSPC_TAG_TYPE_NULL:
                 break;
 
-                case OSPC_TAG_TYPE_INTEGER:
+            case OSPC_TAG_TYPE_INTEGER:
                 OSPPASN1IntegerDelete((OSPTASN1INTEGER **)&contentValue);
                 break;
 
-                case OSPC_TAG_TYPE_OBJECT_IDENTIFIER:
-                OSPPASN1ObjectIdentifierDelete(
-                    (OSPTASN1OBJECTID **)&contentValue);
+            case OSPC_TAG_TYPE_OBJECT_IDENTIFIER:
+                OSPPASN1ObjectIdentifierDelete((OSPTASN1OBJECTID **)&contentValue);
                 break;
 
-                case OSPC_TAG_TYPE_PRINTABLESTRING:
+            case OSPC_TAG_TYPE_PRINTABLESTRING:
                 OSPPASN1BufferDelete((OSPTASN1BUFFER **)&contentValue));
                 break;
 
-                case OSPC_TAG_TYPE_UTCTIME:
+            case OSPC_TAG_TYPE_UTCTIME:
                 OSPPASN1BufferDelete((OSPTASN1BUFFER **)&contentValue);
                 break;
 
-                case OSPC_TAG_TYPE_BIT_STRING:
+            case OSPC_TAG_TYPE_BIT_STRING:
                 OSPPASN1BitStringDelete((OSPTASN1BITSTRING**)&contentValue));
                 break;
 
-                case OSPC_TAG_TYPE_OCTET_STRING:
+            case OSPC_TAG_TYPE_OCTET_STRING:
                 OSPPASN1BufferDelete((OSPTASN1BUFFER**)&contentValue)); 
                 break;
 
-                case OSPC_TAG_TYPE_SEQUENCE:
-                case OSPC_TAG_TYPE_SET:
-                default:
+            case OSPC_TAG_TYPE_SEQUENCE:
+            case OSPC_TAG_TYPE_SET:
+            default:
                 errorcode = OSPC_ERR_ASN1_INVALID_PRIMITIVE_TAG;
                 sprintf(msg, "Invalid/Unsupported primitive tag %02x", eInfo->Tag);
                 OSPM_DBGERRORLOG(errorcode, msg);
@@ -784,19 +772,17 @@ int OSPPASN1AlgorithmIdEncode(
 
     for (i = 0; errorcode == OSPC_ERR_NO_ERROR; i++) {
         switch (i) {
-        case 0:                /* Create Digest Algorithm OID */
+        case 0: /* Create Digest Algorithm OID */
             dataRefId = OSPEDRID_ALGID_OID;
             errorcode = OSPPASN1ObjectIdentifierEncode(&newObject, ospvAlgorithmId, dataRefId);
             break;
 
-        case 1:                /* Add Digest */
+        case 1: /* Add Digest */
             dataRefId = OSPEDRID_ALGID_ATTRIBUTES;
-            newObject = OSPC_OSNULL;    /* None required for 
-                                           supported algorithm
-                                           suite */
+            newObject = OSPC_OSNULL;    /* None required for supported algorithm suite */
             break;
 
-        case 2:                /* Add NULL */
+        case 2: /* Add NULL */
             if (newObject) {    /* !!! PS */
                 OSPM_FREE(newObject->ElementInfo->Element);
                 OSPM_FREE(newObject->ElementInfo);
