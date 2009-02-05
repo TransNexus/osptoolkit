@@ -563,11 +563,11 @@ unsigned OSPPStringToElement(
 }
 
 /*
- * OSPPCustomerInfoToElement() - adds customer info to an xml element
+ * OSPPCustomInfoToElement() - adds user-defined info to an xml element
  */
-unsigned OSPPCustomerInfoToElement(
+unsigned OSPPCustomInfoToElement(
     unsigned Index,             /* Index */
-    const char *CustomerInfo,   /* Customer info */
+    const char *CustomInfo,     /* User-defined info */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -578,11 +578,11 @@ unsigned OSPPCustomerInfoToElement(
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     } else {
-        if ((Index > OSPC_MAX_INDEX) || (CustomerInfo == OSPC_OSNULL) || (CustomerInfo[0] == '\0')) {
+        if ((Index > OSPC_MAX_INDEX) || (CustomInfo == OSPC_OSNULL) || (CustomInfo[0] == '\0')) {
             ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
         } else {
-            ospvErrCode = OSPPMsgBinToElement(OSPM_STRLEN(CustomerInfo),
-                (unsigned char *)CustomerInfo, 
+            ospvErrCode = OSPPMsgBinToElement(OSPM_STRLEN(CustomInfo),
+                (unsigned char *)CustomInfo, 
                 OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO), 
                 ospvElem, 
                 isbase64);

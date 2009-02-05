@@ -110,7 +110,7 @@ typedef struct _OSPTTRANS {
     char ForwardCodec[OSPC_SIZE_CODEC];
     char ReverseCodec[OSPC_SIZE_CODEC];
     OSPT_CALL_ID *SessionId[OSPC_DIR_NUMBER];
-    char *CustomerInfo[OSPC_MAX_INDEX];
+    char *CustomInfo[OSPC_MAX_INDEX];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

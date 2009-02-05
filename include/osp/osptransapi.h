@@ -103,7 +103,7 @@ extern "C" {
     int OSPPTransactionSetForwardCodec(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetReverseCodec(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetSessionId(OSPTTRANHANDLE, OSPE_DIRECTION, OSPT_CALL_ID *);
-    int OSPPTransactionSetCustomerInfo(OSPTTRANHANDLE, unsigned, const char *);    
+    int OSPPTransactionSetCustomInfo(OSPTTRANHANDLE, unsigned, const char *);    
     int OSPPTransactionSetDelayMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetJitterMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetPackLossMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);

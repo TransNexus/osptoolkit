@@ -1201,8 +1201,8 @@ int OSPPTransactionDelete(
             }
             
             for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
-                if (trans->CustomerInfo[cnt] != OSPC_OSNULL) {
-                    OSPM_FREE(trans->CustomerInfo[cnt]);
+                if (trans->CustomInfo[cnt] != OSPC_OSNULL) {
+                    OSPM_FREE(trans->CustomInfo[cnt]);
                 }
             }
             
@@ -2224,7 +2224,7 @@ int OSPPTransactionNew(
             trans->SessionId[cnt] = OSPC_OSNULL;
         }
         for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
-            trans->CustomerInfo[cnt] = OSPC_OSNULL;
+            trans->CustomInfo[cnt] = OSPC_OSNULL;
         }
     }
 
@@ -2687,8 +2687,8 @@ int OSPPTransactionReportUsage(
                             }
                             
                             for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
-                                if (trans->CustomerInfo[cnt] != OSPC_OSNULL) {
-                                    OSPPUsageIndSetCustomerInfo(usage, cnt, trans->CustomerInfo[cnt]);
+                                if (trans->CustomInfo[cnt] != OSPC_OSNULL) {
+                                    OSPPUsageIndSetCustomInfo(usage, cnt, trans->CustomInfo[cnt]);
                                 }
                             }
                         }
@@ -4339,10 +4339,10 @@ int OSPPTransactionSetSessionId(
     return errorcode;
 }
 
-int OSPPTransactionSetCustomerInfo(
+int OSPPTransactionSetCustomInfo(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     unsigned ospvIndex,             /* In - Index */
-    const char *ospvInfo)           /* In - Customer Info */
+    const char *ospvInfo)           /* In - User-defined info */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -4354,11 +4354,11 @@ int OSPPTransactionSetCustomerInfo(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-        	if (trans->CustomerInfo[ospvIndex] == OSPC_OSNULL) {
-                OSPM_MALLOC(trans->CustomerInfo[ospvIndex], char, OSPC_SIZE_CUSTINFO);
+        	if (trans->CustomInfo[ospvIndex] == OSPC_OSNULL) {
+                OSPM_MALLOC(trans->CustomInfo[ospvIndex], char, OSPC_SIZE_CUSTINFO);
         	}
-            if (trans->CustomerInfo[ospvIndex] != OSPC_OSNULL) {
-                OSPM_STRCPY(trans->CustomerInfo[ospvIndex], ospvInfo);
+            if (trans->CustomInfo[ospvIndex] != OSPC_OSNULL) {
+                OSPM_STRCPY(trans->CustomInfo[ospvIndex], ospvInfo);
             } else {
                 errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
             }

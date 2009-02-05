@@ -1075,7 +1075,7 @@ OSPT_USAGEIND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
             ospvUsageInd->ospmUsageIndSessionId[cnt] = OSPC_OSNULL;
         }
         for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
-            ospvUsageInd->ospmUsageIndCustomerInfo[cnt] = OSPC_OSNULL;
+            ospvUsageInd->ospmUsageIndCustomInfo[cnt] = OSPC_OSNULL;
         }
     }
 
@@ -1147,8 +1147,8 @@ void OSPPUsageIndDelete(
         }
 
         for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
-            if (OSPPUsageIndHasCustomerInfo(*ospvUsageInd, cnt)) {
-                OSPM_FREE((*ospvUsageInd)->ospmUsageIndCustomerInfo[cnt]);
+            if (OSPPUsageIndHasCustomInfo(*ospvUsageInd, cnt)) {
+                OSPM_FREE((*ospvUsageInd)->ospmUsageIndCustomInfo[cnt]);
             }
         }
 
@@ -1466,10 +1466,10 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
-            /* Add customer info */
+            /* Add user-defined info */
             for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
-                if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasCustomerInfo(usage, cnt)) {
-                    ospvErrCode = OSPPCustomerInfoToElement(cnt, OSPPUsageIndGetCustomerInfo(usage, cnt), &subelem);
+                if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasCustomInfo(usage, cnt)) {
+                    ospvErrCode = OSPPCustomInfoToElement(cnt, OSPPUsageIndGetCustomInfo(usage, cnt), &subelem);
                     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(usageindelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1929,9 +1929,9 @@ void OSPPUsageIndSetSessionId(      /* nothing returned */
 }
 
 /*
- * OSPPUsageIndHasCustomerinfo() - does an usage indication have customer info?
+ * OSPPUsageIndHasCustominfo() - does an usage indication have user-defined info?
  */
-OSPTBOOL OSPPUsageIndHasCustomerInfo(   /* returns non-zero if exists */
+OSPTBOOL OSPPUsageIndHasCustomInfo(   /* returns non-zero if exists */
     OSPT_USAGEIND *ospvUsageInd,        /* usage indication */
     unsigned ospvIndex)                 /* index */
 {
@@ -1939,7 +1939,7 @@ OSPTBOOL OSPPUsageIndHasCustomerInfo(   /* returns non-zero if exists */
 
     if (ospvUsageInd != OSPC_OSNULL) {
         if (ospvIndex < OSPC_MAX_INDEX) {
-            ospvHas = (ospvUsageInd->ospmUsageIndCustomerInfo[ospvIndex] != OSPC_OSNULL);
+            ospvHas = (ospvUsageInd->ospmUsageIndCustomInfo[ospvIndex] != OSPC_OSNULL);
         }
     }
 
@@ -1947,9 +1947,9 @@ OSPTBOOL OSPPUsageIndHasCustomerInfo(   /* returns non-zero if exists */
 }
 
 /*
- * OSPPUsageIndGetCustomerInfo() - gets customer info for an usage indication
+ * OSPPUsageIndGetCustomInfo() - gets user-defined info for an usage indication
  */
-const char *OSPPUsageIndGetCustomerInfo(    /* returns customer info */
+const char *OSPPUsageIndGetCustomInfo(    /* returns user-defined info */
     OSPT_USAGEIND *ospvUsageInd,            /* usage indication */
     unsigned ospvIndex)                     /* index */
 {
@@ -1957,7 +1957,7 @@ const char *OSPPUsageIndGetCustomerInfo(    /* returns customer info */
 
     if (ospvUsageInd != OSPC_OSNULL) {
         if (ospvIndex < OSPC_MAX_INDEX) {
-            ospvInfo = ospvUsageInd->ospmUsageIndCustomerInfo[ospvIndex];
+            ospvInfo = ospvUsageInd->ospmUsageIndCustomInfo[ospvIndex];
         }
     }
 
@@ -1965,12 +1965,12 @@ const char *OSPPUsageIndGetCustomerInfo(    /* returns customer info */
 }
 
 /*
- * OSPPUsageIndSetCustomerInfo() - sets customer info for an usage
+ * OSPPUsageIndSetCustomInfo() - sets user-defined info for an usage
  */
-void OSPPUsageIndSetCustomerInfo(   /* nothing returned */
+void OSPPUsageIndSetCustomInfo(     /* nothing returned */
     OSPT_USAGEIND *ospvUsageInd,    /* usage indication */
     unsigned ospvIndex,             /* index */
-    const char *ospvInfo)           /* customer info */
+    const char *ospvInfo)           /* user-defined info */
 {
     if ((ospvUsageInd != OSPC_OSNULL) &&
         (ospvIndex < OSPC_MAX_INDEX) && 
@@ -1978,11 +1978,11 @@ void OSPPUsageIndSetCustomerInfo(   /* nothing returned */
         (ospvInfo[0] != '\0') &&
         (OSPM_STRLEN(ospvInfo) < OSPC_SIZE_CUSTINFO)) 
     {
-    	if (ospvUsageInd->ospmUsageIndCustomerInfo[ospvIndex] == OSPC_OSNULL) {
-            OSPM_MALLOC(ospvUsageInd->ospmUsageIndCustomerInfo[ospvIndex], char, OSPC_SIZE_CUSTINFO);
+    	if (ospvUsageInd->ospmUsageIndCustomInfo[ospvIndex] == OSPC_OSNULL) {
+            OSPM_MALLOC(ospvUsageInd->ospmUsageIndCustomInfo[ospvIndex], char, OSPC_SIZE_CUSTINFO);
     	}
-        if (ospvUsageInd->ospmUsageIndCustomerInfo[ospvIndex] != OSPC_OSNULL) {
-            OSPM_STRCPY(ospvUsageInd->ospmUsageIndCustomerInfo[ospvIndex], ospvInfo);
+        if (ospvUsageInd->ospmUsageIndCustomInfo[ospvIndex] != OSPC_OSNULL) {
+            OSPM_STRCPY(ospvUsageInd->ospmUsageIndCustomInfo[ospvIndex], ospvInfo);
         }
     }
 }
