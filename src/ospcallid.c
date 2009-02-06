@@ -215,11 +215,10 @@ unsigned OSPPCallIdToElement(   /* returns error code */
         ospvErrCode = OSPC_ERR_DATA_NOCALLID;
     }
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgBinToElement(OSPPCallIdGetSize(ospvCallId),
-            OSPPCallIdGetValue(ospvCallId),
-            OSPPMsgElemGetName(OSPC_MELEM_CALLID), 
-            ospvElem, 
-            ospvIsBase64);
+        ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CALLID),
+            OSPPCallIdGetSize(ospvCallId), OSPPCallIdGetValue(ospvCallId),
+            OSPC_OSNULL, OSPC_OSNULL, ospvIsBase64,
+            ospvElem); 
     }
 
     return ospvErrCode;
@@ -265,47 +264,30 @@ unsigned OSPPSessionIdToElement(    /* returns error code */
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPT_XML_ATTR *attr = OSPC_OSNULL;
-    OSPE_ALTINFO type;
-
+ 
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     } else if (ospvSessionId == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_DATA_NOCALLID;
     } else {
-        ospvErrCode = OSPPMsgBinToElement(OSPPCallIdGetSize(ospvSessionId),
-            OSPPCallIdGetValue(ospvSessionId),
-            OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
-            ospvElem,
-            ospvIsBase64);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            switch (ospvType) {
-            case OSPC_DIR_INBOUND:
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(OSPC_ALTINFO_INBOUND));
-                if (attr != OSPC_OSNULL) {
-                    OSPPXMLElemAddAttr(*ospvElem, attr);
-                } else {
-                    OSPPXMLElemDelete(ospvElem);
-                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-                }
-                break;
-            case OSPC_DIR_OUTBOUND:
-                type = OSPC_ALTINFO_OUTBOUND;
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(OSPC_ALTINFO_OUTBOUND));
-                if (attr != OSPC_OSNULL) {
-                    OSPPXMLElemAddAttr(*ospvElem, attr);
-                } else {
-                    OSPPXMLElemDelete(ospvElem);
-                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-                }
-                break;
-            default:
-                break;
-            }
+        switch (ospvType) {
+        case OSPC_DIR_INBOUND:
+            ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
+                OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
+                OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(OSPC_ALTINFO_INBOUND), ospvIsBase64,
+                ospvElem);
+            break;
+        case OSPC_DIR_OUTBOUND:
+            ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
+                OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
+                OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(OSPC_ALTINFO_OUTBOUND), ospvIsBase64,
+                ospvElem);
+            break;
+        default:
+            ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+           break;
         }
     }
 
     return ospvErrCode;
 }
-
-

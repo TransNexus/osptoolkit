@@ -195,8 +195,10 @@ unsigned OSPPTokenToElement(    /* returns error code */
         ospvErrCode = OSPC_ERR_DATA_NO_TOKEN;
     }
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgBinToElement(OSPPTokenGetSize(ospvToken),
-            (unsigned char *)OSPPTokenGetValue(ospvToken), OSPPMsgElemGetName(OSPC_MELEM_TOKEN), ospvElem, OSPC_TRUE);
+        ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_TOKEN),
+            OSPPTokenGetSize(ospvToken), (unsigned char *)OSPPTokenGetValue(ospvToken),
+            OSPC_OSNULL, OSPC_OSNULL, OSPC_TRUE,
+            ospvElem);
     }
     return ospvErrCode;
 }

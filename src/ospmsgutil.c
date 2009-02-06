@@ -200,28 +200,28 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
 /*
  * OSPPMsgBinToElement() - create an XML element from binary data
  */
-unsigned OSPPMsgBinToElement(   /* returns error code */
-    unsigned ospvDataLen,       /* size of binary data */
-    unsigned char *ospvData,    /* pointer to binary data */
-    const char *ospvName,       /* name of element */
-    OSPT_XML_ELEM **ospvElem,   /* where to put XML element pointer */
-    OSPTBOOL ospvUseBase64)     /* base64 (1) or CDATA (0) encoding */
+unsigned OSPPMsgBinToElement(       /* returns error code */
+    const char *ospvName,           /* name of element */
+    unsigned ospvDataLen,           /* size of binary data */
+    unsigned char *ospvData,        /* pointer to binary data */
+    const char *ospvAttrType,       /* Attribute type */
+    const char *ospvAttrValue,      /* Attribute value */    
+    OSPTBOOL ospvUseBase64,         /* base64 (1) or CDATA (0) encoding */
+    OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPTBFR *bfr = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
-    if (ospvElem == OSPC_OSNULL) {
+    if ((ospvName == OSPC_OSNULL) ||
+        ((ospvDataLen == 0) || (ospvData == OSPC_OSNULL)) ||
+        (((ospvAttrType != OSPC_OSNULL) && (ospvAttrType[0] != '\0')) && ((ospvAttrValue == OSPC_OSNULL) || (ospvAttrValue[0] == '\0')))) 
+    {
+        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+    } else if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvData == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
-    }
-    if (ospvName == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
-    }
-    if (ospvDataLen == 0) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
-    }
+    
 #ifdef OSPC_USE_CDATA_ONLY
     ospvUseBase64 = OSPC_FALSE;
 #endif
@@ -331,16 +331,24 @@ unsigned OSPPMsgBinToElement(   /* returns error code */
             if (*ospvElem == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
             } else {
-                if (ospvUseBase64 == OSPC_TRUE) {
-                    OSPT_XML_ATTR *attr = OSPC_OSNULL;
-                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_ENCODING), OSPPAltInfoTypeGetName(OSPC_ALTINFO_BASE64));
-                    if (attr != OSPC_OSNULL) {
-                        OSPPXMLElemAddAttr(*ospvElem, attr);
-                        attr = OSPC_OSNULL;
-                    } else {
+            	if ((ospvAttrType != OSPC_OSNULL) && (ospvAttrType[0] != '\0')) {
+                    attr = OSPPXMLAttrNew(ospvAttrType, ospvAttrValue);
+                    if (attr == OSPC_OSNULL) {
+                        OSPPXMLElemDelete(ospvElem);
                         ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                    } else {
+                        OSPPXMLElemAddAttr(*ospvElem, attr);
                     }
-                }
+            	}
+                if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvUseBase64 == OSPC_TRUE)) {
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_ENCODING), OSPPAltInfoTypeGetName(OSPC_ALTINFO_BASE64));
+                    if (attr == OSPC_OSNULL) {
+                        OSPPXMLElemDelete(ospvElem);
+                        ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                    } else {
+                        OSPPXMLElemAddAttr(*ospvElem, attr);
+                   }
+                }            	
             }
         }
 

@@ -571,7 +571,6 @@ unsigned OSPPCustomInfoToElement(
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPT_XML_ATTR *attr = OSPC_OSNULL;
     char buffer[OSPC_SIZE_NORSTR];
     OSPTBOOL isbase64 = OSPC_TRUE;
 
@@ -581,21 +580,11 @@ unsigned OSPPCustomInfoToElement(
         if ((Index > OSPC_MAX_INDEX) || (CustomInfo == OSPC_OSNULL) || (CustomInfo[0] == '\0')) {
             ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
         } else {
-            ospvErrCode = OSPPMsgBinToElement(OSPM_STRLEN(CustomInfo),
-                (unsigned char *)CustomInfo, 
-                OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO), 
-                ospvElem, 
-                isbase64);
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                snprintf(buffer, sizeof(buffer), "%d", Index);
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_INDEX), buffer);
-                if (attr == OSPC_OSNULL) {
-                    OSPPXMLElemDelete(ospvElem);
-                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-                } else {
-                    OSPPXMLElemAddAttr(*ospvElem, attr);
-                }
-            }
+            snprintf(buffer, sizeof(buffer), "%d", Index);
+            ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO),
+                OSPM_STRLEN(CustomInfo), (unsigned char *)CustomInfo, 
+                OSPPMsgAttrGetName(OSPC_MATTR_INDEX), buffer, isbase64,
+                ospvElem); 
         }
     }
 

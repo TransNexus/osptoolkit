@@ -89,7 +89,7 @@ extern "C" {
 #endif
 
     unsigned OSPPMsgBinFromElement(OSPT_XML_ELEM *, unsigned *, unsigned char **);
-    unsigned OSPPMsgBinToElement(unsigned, unsigned char *, const char *, OSPT_XML_ELEM **, OSPTBOOL);
+    unsigned OSPPMsgBinToElement(const char *, unsigned, unsigned char *, const char *, const char *, OSPTBOOL, OSPT_XML_ELEM **);
     unsigned OSPPMsgNumFromElement(OSPT_XML_ELEM *, unsigned long *);
     unsigned OSPPMsgNumToElement(unsigned long, const char *, OSPT_XML_ELEM **);
     int OSPPMsgFloatFromElement(OSPT_XML_ELEM *, float *);
