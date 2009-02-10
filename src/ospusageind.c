@@ -1931,9 +1931,9 @@ void OSPPUsageIndSetSessionId(      /* nothing returned */
 /*
  * OSPPUsageIndHasCustominfo() - does an usage indication have user-defined info?
  */
-OSPTBOOL OSPPUsageIndHasCustomInfo(   /* returns non-zero if exists */
-    OSPT_USAGEIND *ospvUsageInd,        /* usage indication */
-    unsigned ospvIndex)                 /* index */
+OSPTBOOL OSPPUsageIndHasCustomInfo( /* returns non-zero if exists */
+    OSPT_USAGEIND *ospvUsageInd,    /* usage indication */
+    unsigned ospvIndex)             /* index from 0 */
 {
     OSPTBOOL ospvHas = OSPC_FALSE;
 
@@ -1949,9 +1949,9 @@ OSPTBOOL OSPPUsageIndHasCustomInfo(   /* returns non-zero if exists */
 /*
  * OSPPUsageIndGetCustomInfo() - gets user-defined info for an usage indication
  */
-const char *OSPPUsageIndGetCustomInfo(    /* returns user-defined info */
-    OSPT_USAGEIND *ospvUsageInd,            /* usage indication */
-    unsigned ospvIndex)                     /* index */
+const char *OSPPUsageIndGetCustomInfo(  /* returns user-defined info */
+    OSPT_USAGEIND *ospvUsageInd,        /* usage indication */
+    unsigned ospvIndex)                 /* index from 0 */
 {
     const char *ospvInfo = OSPC_OSNULL;
 
@@ -1969,7 +1969,7 @@ const char *OSPPUsageIndGetCustomInfo(    /* returns user-defined info */
  */
 void OSPPUsageIndSetCustomInfo(     /* nothing returned */
     OSPT_USAGEIND *ospvUsageInd,    /* usage indication */
-    unsigned ospvIndex,             /* index */
+    unsigned ospvIndex,             /* index from 0 */
     const char *ospvInfo)           /* user-defined info */
 {
     if ((ospvUsageInd != OSPC_OSNULL) &&

@@ -580,7 +580,7 @@ unsigned OSPPCustomInfoToElement(
         if ((Index > OSPC_MAX_INDEX) || (CustomInfo == OSPC_OSNULL) || (CustomInfo[0] == '\0')) {
             ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
         } else {
-            snprintf(buffer, sizeof(buffer), "%d", Index);
+            snprintf(buffer, sizeof(buffer), "%d", Index + 1);
             ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO),
                 OSPM_STRLEN(CustomInfo), (unsigned char *)CustomInfo, 
                 OSPPMsgAttrGetName(OSPC_MATTR_INDEX), buffer, isbase64,

@@ -1872,8 +1872,8 @@ int test210()
 {
     int errorcode = 0;
     
-    OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo0");
-    OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 3, "CustomInfo3");
+    OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
+    OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
 
     return errorcode;
 }

@@ -4341,7 +4341,7 @@ int OSPPTransactionSetSessionId(
 
 int OSPPTransactionSetCustomInfo(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    unsigned ospvIndex,             /* In - Index */
+    unsigned ospvIndex,             /* In - Index start from 0 */
     const char *ospvInfo)           /* In - User-defined info */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
