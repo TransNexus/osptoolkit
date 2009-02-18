@@ -26,13 +26,13 @@ void OSPPMimeBodyFree(
     int count = 0;
 
     OSPM_DBGENTER(("ENTER: OSPPMimeBodyFree()\n"));
-    if (ospvMimeBody != (OSPTMIMEBODY *) NULL) {
-        if (ospvMimeBody->Boundary != (OSPTMIMEPART *) NULL) {
+    if (ospvMimeBody != (OSPTMIMEBODY *)NULL) {
+        if (ospvMimeBody->Boundary != (OSPTMIMEPART *)NULL) {
             OSPPMimePartFree(ospvMimeBody->Boundary);
         }
 
         while (count < OSPC_MAX_BODYPARTS) {
-            if (ospvMimeBody->BodyParts[count] != (OSPTMIMEPART *) NULL) {
+            if (ospvMimeBody->BodyParts[count] != (OSPTMIMEPART *)NULL) {
                 OSPPMimePartFree(ospvMimeBody->BodyParts[count]);
             }
             count++;
@@ -133,7 +133,7 @@ int OSPPMimeBodyPartsParse(
 
             OSPM_MALLOC(ospvMimeBody->BodyParts[partsfound], OSPTMIMEPART, sizeof(OSPTMIMEPART));
 
-            if (ospvMimeBody->BodyParts[partsfound] != (OSPTMIMEPART *) NULL) {
+            if (ospvMimeBody->BodyParts[partsfound] != (OSPTMIMEPART *)NULL) {
 
 
                 OSPM_MEMSET(ospvMimeBody->BodyParts[partsfound], 0, sizeof(ospvMimeBody->BodyParts[partsfound]));
@@ -273,10 +273,10 @@ void OSPPMimeFieldFree(
     int count = 0;
 
     OSPM_DBGENTER(("ENTER: OSPPMimeFieldFree()\n"));
-    if (ospvField != (OSPTMIMEFIELD *) NULL) {
-        if (ospvField->Params != (OSPTMIMEPARAM **) NULL) {
+    if (ospvField != (OSPTMIMEFIELD *)NULL) {
+        if (ospvField->Params != (OSPTMIMEPARAM **)NULL) {
             for (count = 0; count < OSPC_MAX_PARAMS; count++) {
-                if (ospvField->Params[count] != (OSPTMIMEPARAM *) NULL) {
+                if (ospvField->Params[count] != (OSPTMIMEPARAM *)NULL) {
                     OSPPMimeParamFree(ospvField->Params[count]);
 
                     OSPM_FREE(ospvField->Params[count]);
@@ -317,7 +317,7 @@ int OSPPMimeMessageBuild(
 
     OSPM_MALLOC(*ospvMimeOut, unsigned char, *ospvSizeOfMimeOut);
 
-    if (*ospvMimeOut != (unsigned char *) NULL) {
+    if (*ospvMimeOut != (unsigned char *)NULL) {
 
         OSPM_MEMSET(*ospvMimeOut, 0, *ospvSizeOfMimeOut);
 
@@ -501,7 +501,7 @@ int OSPPMimeMessageInit(
     int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPMimeMessageInit()\n"));
-    if (ospvMessage != (OSPTMIMEMSG *) NULL) {
+    if (ospvMessage != (OSPTMIMEMSG *)NULL) {
         OSPM_MEMSET(ospvMessage, 0, sizeof(OSPTMIMEMSG));
     } else {
         errorcode = OSPC_ERR_MIME_VAR_NOT_FOUND;
@@ -511,7 +511,7 @@ int OSPPMimeMessageInit(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPM_MALLOC(ospvMessage->MsgPart, OSPTMIMEPART, sizeof(OSPTMIMEPART));
 
-        if (ospvMessage->MsgPart == (OSPTMIMEPART *) NULL) {
+        if (ospvMessage->MsgPart == (OSPTMIMEPART *)NULL) {
             errorcode = OSPC_ERR_MIME_MALLOC_FAILED;
             OSPM_DBGERRORLOG(errorcode, "can't malloc message part");
         } else {
@@ -521,7 +521,7 @@ int OSPPMimeMessageInit(
         if (errorcode == OSPC_ERR_NO_ERROR) {
             OSPM_MALLOC(ospvMessage->SigPart, OSPTMIMEPART, sizeof(OSPTMIMEPART));
 
-            if (ospvMessage->SigPart == (OSPTMIMEPART *) NULL) {
+            if (ospvMessage->SigPart == (OSPTMIMEPART *)NULL) {
                 errorcode = OSPC_ERR_MIME_MALLOC_FAILED;
                 OSPM_DBGERRORLOG(errorcode, "can't malloc signature part");
             } else {
@@ -609,7 +609,7 @@ int OSPPMimeMessageParse(
              */
             OSPM_MALLOC(mimebody.BodyParts[0], OSPTMIMEPART, sizeof(OSPTMIMEPART));
 
-            if (mimebody.BodyParts[0] != (OSPTMIMEPART *) NULL) {
+            if (mimebody.BodyParts[0] != (OSPTMIMEPART *)NULL) {
 
 
                 OSPM_MEMSET(mimebody.BodyParts[0], 0, sizeof(mimebody.BodyParts[0]));
@@ -679,7 +679,7 @@ int OSPPMimeMessageSetContentAndLength(
 
         OSPM_MALLOC(ospvMimePart->Content, unsigned char, ospvSizeOfMsgBuffer + 1);
 
-        if (ospvMimePart->Content != (unsigned char *) NULL) {
+        if (ospvMimePart->Content != (unsigned char *)NULL) {
 
             OSPM_MEMCPY(ospvMimePart->Content, ospvMsgBuffer, ospvSizeOfMsgBuffer);
 
@@ -702,7 +702,7 @@ void OSPPMimeParamFree(
     OSPTMIMEPARAM *ospvParam)
 {
     OSPM_DBGENTER(("ENTER: OSPPMimeParamFree()\n"));
-    if (ospvParam != (OSPTMIMEPARAM *) NULL) {
+    if (ospvParam != (OSPTMIMEPARAM *)NULL) {
         OSPPMimePartFree(ospvParam->ParamName);
         OSPPMimePartFree(ospvParam->ParamValue);
     }
@@ -721,7 +721,7 @@ int OSPPMimeParamsParse(
     unsigned len = 0;
 
     OSPM_DBGENTER(("ENTER: OSPPMimeParamsParse()\n"));
-    if (bufptr != (unsigned char *) NULL) {
+    if (bufptr != (unsigned char *)NULL) {
 
         /* Get past the type/subtype string */
         while ((bufptr[currpos] != ';') && (bufptr[currpos] != '\n') && (currpos < bufend)) {
@@ -763,14 +763,14 @@ int OSPPMimeParamsParse(
                 /* Create Param structure */
                 OSPM_MALLOC(ospvField->Params[count], OSPTMIMEPARAM, sizeof(OSPTMIMEPARAM));
 
-                if (ospvField->Params[count] != (OSPTMIMEPARAM *) NULL) {
+                if (ospvField->Params[count] != (OSPTMIMEPARAM *)NULL) {
 
                     OSPM_MEMSET(ospvField->Params[count], 0, sizeof(OSPTMIMEPARAM));
 
                     /* Create Param Name Structure */
                     OSPM_MALLOC(ospvField->Params[count]->ParamName, OSPTMIMEPART, sizeof(OSPTMIMEPART));
 
-                    if (ospvField->Params[count]->ParamName != (OSPTMIMEPART *) NULL) {
+                    if (ospvField->Params[count]->ParamName != (OSPTMIMEPART *)NULL) {
 
                         OSPM_MEMSET(ospvField->Params[count]->ParamName, 0, sizeof(OSPTMIMEPART));
 
@@ -844,7 +844,7 @@ int OSPPMimeParamsParse(
                     /* Create Param Value Structure */
                     OSPM_MALLOC(ospvField->Params[count]->ParamValue, OSPTMIMEPART, sizeof(OSPTMIMEPART));
 
-                    if (ospvField->Params[count]->ParamValue != (OSPTMIMEPART *) NULL) {
+                    if (ospvField->Params[count]->ParamValue != (OSPTMIMEPART *)NULL) {
 
                         OSPM_MEMSET(ospvField->Params[count]->ParamValue, 0, sizeof(OSPTMIMEPART));
 
@@ -880,12 +880,12 @@ void OSPPMimePartFree(
     OSPTMIMEPART *ospvPart)
 {
     OSPM_DBGENTER(("ENTER: OSPPMimePartFree()\n"));
-    if (ospvPart->Content != (unsigned char *) NULL) {
+    if (ospvPart->Content != (unsigned char *)NULL) {
         OSPM_FREE(ospvPart->Content);
         ospvPart->Content = OSPC_OSNULL;
     }
 
-    if (ospvPart != (OSPTMIMEPART *) NULL) {
+    if (ospvPart != (OSPTMIMEPART *)NULL) {
         OSPM_FREE(ospvPart);
         ospvPart = OSPC_OSNULL;
     }
@@ -997,7 +997,7 @@ int OSPPMimeVerifyParameters(
                 if (pfound) {
                     OSPM_MALLOC(ospvBoundary->Content, unsigned char, ospvContent->Params[pcount]->ParamValue->Length);
 
-                    if (ospvBoundary->Content != (unsigned char *) NULL) {
+                    if (ospvBoundary->Content != (unsigned char *)NULL) {
 
                         OSPM_MEMSET(ospvBoundary->Content, 0, ospvContent->Params[pcount]->ParamValue->Length);
 
@@ -1054,10 +1054,10 @@ int OSPPUtilMallocAndCopySubString(
     int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPUtilMallocAndCopySubString()\n"));
-    if (&ospvSrcString[ospvStartOfSubString] != (unsigned char *) NULL) {
+    if (&ospvSrcString[ospvStartOfSubString] != (unsigned char *)NULL) {
         OSPM_MALLOC(*ospvDestString, unsigned char, ospvSizeOfSubString + 1);
 
-        if (*ospvDestString != (unsigned char *) NULL) {
+        if (*ospvDestString != (unsigned char *)NULL) {
             OSPM_MEMSET(*ospvDestString, 0, ospvSizeOfSubString + 1);
 
             OSPM_MEMCPY(*ospvDestString, &ospvSrcString[ospvStartOfSubString], ospvSizeOfSubString);
@@ -1090,7 +1090,7 @@ int OSPPUtilMemCaseCmp(
     OSPM_DBGENTER(("ENTER: OSPPUtilMemCaseCmp()\n"));
     *ospvResult = 0;
 
-    if ((ospvMem1 != (unsigned char *) NULL) && (ospvMem2 != (char *) NULL)) {
+    if ((ospvMem1 != (unsigned char *)NULL) && (ospvMem2 != (char *)NULL)) {
 
         for (count = 0; count < len; ++count) {
             char1 = tolower(ospvMem1[count]);

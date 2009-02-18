@@ -763,8 +763,7 @@ int OSPPASN1AlgorithmIdEncode(
     OSPTASN1OBJECT *newObject = OSPC_OSNULL;
     OSPTASN1OBJECT *encodedObject = OSPC_OSNULL;
     OSPEASN1DATAREFID dataRefId = OSPEDRID_NOTDEFINED;
-
-    int i = 0;
+    int i;
 
     OSPM_ARGUSED(ospvDataRefId);
 

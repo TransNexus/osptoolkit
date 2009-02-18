@@ -1368,7 +1368,7 @@ int testOSPPTransactionIndicateCapabilities()
             "SrcNetworkId",
             almostOutOfResources,
             &detaillogsize,
-            (void *) NULL);
+            (void *)NULL);
 
     return errorcode;
 }
@@ -1407,7 +1407,7 @@ int testOSPPTransactionRequestReauthorisation()
             &tokensize, token,
             &authorised, &timelimit,
             &detaillogsize,
-            (void *) NULL);
+            (void *)NULL);
     }
 
     printf("Errorcode = %d. \nAuthorised = %u. \nTimelimit = %u. \nToken = %s.", errorcode, authorised, timelimit, (char *) token);
@@ -1625,7 +1625,7 @@ int testOSPPTransactionReportUsage()
             2,
             100,
             10,
-            &detaillogsize, (void *) NULL);
+            &detaillogsize, (void *)NULL);
     }
 
     if (tranhandle2 != OSPC_TRAN_HANDLE_INVALID) {
@@ -1640,7 +1640,7 @@ int testOSPPTransactionReportUsage()
             2,
             100,
             10,
-            &detaillogsize, (void *) NULL);
+            &detaillogsize, (void *)NULL);
     }
 
     if ((tranhandle2 == OSPC_TRAN_HANDLE_INVALID) &&
@@ -1873,6 +1873,14 @@ int test210()
     int errorcode = 0;
     
     OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
+
+    return errorcode;
+}
+
+int test211()
+{
+    int errorcode = 0;
+    
     OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
 
     return errorcode;
@@ -2149,6 +2157,9 @@ int testAPI(int apinumber)
     case 210:
     	errorcode = test210();
     	break;
+    case 211:
+    	errorcode = test211();
+    	break;
     default:
         errorcode = -1;
     }
@@ -2292,7 +2303,7 @@ int GetConfiguration()
     char tmp_addr[20];
     int spindex = 0, Capspindex = 0;
 
-    if ((fp = fopen(CONFIG_FILENAME, "r")) == (FILE *) NULL) {
+    if ((fp = fopen(CONFIG_FILENAME, "r")) == (FILE *)NULL) {
         fprintf(stderr, "Cannot open config file %s for reading. %s\n",
                 CONFIG_FILENAME, strerror(errno));
         errorcode = errno;
@@ -2697,7 +2708,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
             &NumOfDestinations
             [i],
             &detaillogsize,
-            (void *) NULL);
+            (void *)NULL);
 
         if (errorcode != OSPC_ERR_NO_ERROR) {
             printf("OSPPTransactionRequestAuthorisation_nb failed, aborting the test.\n");
@@ -2783,7 +2794,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
             &authorised[i],
             &Localtimelimit,
             &detaillogsize,
-            (void *) NULL,
+            (void *)NULL,
             tokenalgo);
 
         if (errorcode != OSPC_ERR_NO_ERROR) {
@@ -2827,7 +2838,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
             100,
             10,
             &detaillogsize,
-            (void *) NULL);
+            (void *)NULL);
         if (errorcode != OSPC_ERR_NO_ERROR) {
             printf("OSPPTransactionReportUsage_nb failed, aborting the test.\n");
             exit(0);
@@ -2844,7 +2855,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
             100,
             10,
             &detaillogsize,
-            (void *) NULL);
+            (void *)NULL);
         if (errorcode != OSPC_ERR_NO_ERROR) {
             printf("OSPPTransactionReportUsage_nb failed, aborting the test.\n");
             exit(0);
@@ -3028,7 +3039,7 @@ int testNonBlockingPerformanceTestForCapabilities()
             "SrcNetworkId",
             i % 2,
             &detaillogsize,
-            (void *) NULL);
+            (void *)NULL);
 
         if (errorcode != OSPC_ERR_NO_ERROR) {
             printf("OSPPTransactionIndicateCapabilities_nb failed, aborting the test.\n");

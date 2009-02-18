@@ -43,7 +43,7 @@ int OSPPXMLElementProcess(
     unsigned transferlen = 0;
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvElem == (OSPT_XML_ELEM *) NULL) {
+    if (ospvElem == (OSPT_XML_ELEM *)NULL) {
         errorcode = OSPC_ERR_XML_INVALID_ARGS;
         OSPM_DBGERRORLOG(errorcode, "ospvElem == NULL");
     }
@@ -80,7 +80,7 @@ int OSPPXMLElementProcess(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        if (*ospvMessage != (unsigned char *) NULL) {
+        if (*ospvMessage != (unsigned char *)NULL) {
             OSPM_MEMSET(*ospvMessage, 0, transferlen + 1);
             /* Read data from OSPTBFR to output message */
             if ((*ospvSizeOfMessage = OSPPBfrReadBlock(&outbuffer, *ospvMessage, transferlen)) != transferlen) {
@@ -97,7 +97,7 @@ int OSPPXMLElementProcess(
 
     if (errorcode != OSPC_ERR_NO_ERROR) {
         /* get rid of any malloced space */
-        if (*ospvMessage != (unsigned char *) NULL) {
+        if (*ospvMessage != (unsigned char *)NULL) {
             OSPM_FREE(*ospvMessage);
             *ospvMessage = NULL;
         }
@@ -107,11 +107,11 @@ int OSPPXMLElementProcess(
 }
 
 int OSPPXMLMessageCreate(
-    OSPE_MESSAGE ospvDataType,     /* In - what data type (AREQ, ARESP...) */
+    OSPE_MESSAGE ospvDataType,      /* In - what data type (AREQ, ARESP...) */
     unsigned char **ospvMessage,    /* Out - actual xml message */
     unsigned *ospvSizeOfMessage,    /* Out - size of xml message */
     void *ospvInfo,                 /* In - structure holding data */
-    OSPTTRANS * trans)              /* In - transaction handle */
+    OSPTTRANS *trans)               /* In - transaction handle */
 {                              
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *xmlelem = NULL;
@@ -249,7 +249,7 @@ int OSPPXMLMessageParse(
     OSPT_XML_ELEM *tempxmlelem = OSPC_OSNULL;
 
     /* check input */
-    if ((ospvXMLMessage == (unsigned char *) NULL) ||
+    if ((ospvXMLMessage == (unsigned char *)NULL) ||
         (ospvSizeOfMessage == 0)) {
         errorcode = OSPC_ERR_XML_INVALID_ARGS;
         OSPM_DBGERRORLOG(errorcode, "invalid arg in osppxmlmessageparse");

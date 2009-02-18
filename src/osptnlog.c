@@ -182,7 +182,7 @@ int tninitlog(
     int fl;
 
     /* Point to stderr for output if no logfile specification */
-    if ((filename == (char *) NULL) || (filename[0] == '\0')) {
+    if ((filename == (char *)NULL) || (filename[0] == '\0')) {
         OSPM_STRCPY(logfile, "/dev/stdout");
     } else {
         OSPM_STRCPY(logfile, filename);

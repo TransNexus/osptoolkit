@@ -634,7 +634,7 @@ int OSPPAuthReqToElement(       /* returns error code */
     char random[OSPC_MAX_RANDOM];
     OSPTBOOL isbase64 = OSPC_TRUE;
     OSPTTRANS *trans = (OSPTTRANS *)ospvtrans;
-    int i;
+    unsigned i;
 
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
 
@@ -788,9 +788,7 @@ int OSPPAuthReqToElement(       /* returns error code */
             }
         }
 
-        /*
-         * Add the pricing information
-         */
+        /* Add the pricing information */
         if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (trans->HasPricingInfo)) {
             for (i = 0; i < trans->NumOfPricingInfoElements; i++) {
                 ospvErrCode = OSPPAuthReqAddPricingInfo(&elem, trans->PricingInfo[i]);
@@ -872,6 +870,17 @@ int OSPPAuthReqToElement(       /* returns error code */
             }
         }
 
+        /* Add user-defined info */
+        for (i = 0; i < OSPC_MAX_INDEX; i++) {
+            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (trans->CustomInfo[i] != OSPC_OSNULL) && (trans->CustomInfo[i][0] != '\0')) {
+                ospvErrCode = OSPPCustomInfoToElement(i, trans->CustomInfo[i], &elem);
+                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(authreqelem, elem);
+                    elem = OSPC_OSNULL;
+                }
+            }
+        }
+        
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
             /* Now add the authreqelem to the main elem */
             OSPPXMLElemAddChild(*ospvElem, authreqelem);

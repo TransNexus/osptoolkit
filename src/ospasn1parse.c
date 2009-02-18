@@ -1442,7 +1442,7 @@ int PTPDataRefAddRef(
     unsigned char ospvNewReference)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
-    unsigned i = 0;
+    unsigned i;
 
     if (ospvNewReference > 0) {    /* Don't add zeros - primitive as top rule */
         /* Data reference must be an array of MAXLENGTH SIZE */
