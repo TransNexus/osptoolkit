@@ -38,7 +38,6 @@ typedef enum {
     OSPC_MATTR_ENCODING,
     OSPC_MATTR_TYPE,
     OSPC_MATTR_VERSION,
-    OSPC_MATTR_DIRECTION,
     OSPC_MATTR_INDEX,
     /* Number of message attribtes */
     OSPC_MATTR_NUMBER

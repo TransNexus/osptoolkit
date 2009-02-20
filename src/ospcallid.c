@@ -274,13 +274,13 @@ unsigned OSPPSessionIdToElement(    /* returns error code */
         case OSPC_DIR_INBOUND:
             ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
                 OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
-                OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(OSPC_ALTINFO_INBOUND), ospvIsBase64,
+                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_INBOUND), ospvIsBase64,
                 ospvElem);
             break;
         case OSPC_DIR_OUTBOUND:
             ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
                 OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
-                OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(OSPC_ALTINFO_OUTBOUND), ospvIsBase64,
+                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_OUTBOUND), ospvIsBase64,
                 ospvElem);
             break;
         default:

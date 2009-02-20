@@ -1300,7 +1300,7 @@ int OSPPStatsValueToElement(
         if (*ospvElem == OSPC_OSNULL) {
             error = OSPC_ERR_XML_NO_ELEMENT;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_DIRECTION), OSPPAltInfoTypeGetName(atype));
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(atype));
             if (attr != OSPC_OSNULL) {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;

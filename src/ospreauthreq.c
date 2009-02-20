@@ -608,6 +608,7 @@ int OSPPReauthReqToElement(         /* returns error code */
     char random[OSPC_MAX_RANDOM];
     OSPTBOOL isbase64 = OSPC_TRUE;
     OSPTTRANS *trans = (OSPTTRANS *)ospvtrans;
+    unsigned i;
 
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
 
@@ -815,6 +816,17 @@ int OSPPReauthReqToElement(         /* returns error code */
         }
     }
 
+    /* Add user-defined info */
+    for (i = 0; i < OSPC_MAX_INDEX; i++) {
+        if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (trans->CustomInfo[i] != OSPC_OSNULL) && (trans->CustomInfo[i][0] != '\0')) {
+            ospvErrCode = OSPPCustomInfoToElement(i, trans->CustomInfo[i], &elem);
+            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(reauthelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+    
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* Now add the reauthelem to the main elem */
         OSPPXMLElemAddChild(*ospvElem, reauthelem);
