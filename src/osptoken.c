@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * osptoken.c - OSP token functions
  */
@@ -36,19 +30,14 @@
 #include "osp/osptoken.h"
 #include "osp/ospmsg.h"
 
-
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPTokenNew() - create a new token object
- *-----------------------------------------------------------------------*/
-
-OSPTTOKEN *                           /* returns ptr to token or null */
-    OSPPTokenNew(
-    unsigned             ospvLen,      /* size of token */
-    const unsigned char *ospvValue     /* token value */
-    )
+ */
+OSPTTOKEN *OSPPTokenNew(            /* returns ptr to token or null */
+    unsigned ospvLen,               /* size of token */
+    const unsigned char *ospvValue) /* token value */
 {
-    OSPTTOKEN     *ospvToken = OSPC_OSNULL;
+    OSPTTOKEN *ospvToken = OSPC_OSNULL;
     unsigned char *valptr;
 
     /*
@@ -84,17 +73,14 @@ OSPTTOKEN *                           /* returns ptr to token or null */
      * (or, perhaps, if the pool was empty).
      */
 
-    if (ospvLen > 0)
-    {
-        if (ospvValue != OSPC_OSNULL)
-        {
+    if (ospvLen > 0) {
+        if (ospvValue != OSPC_OSNULL) {
 
             /* try to allocate the memory for the entire object */
-            OSPM_MALLOC(ospvToken, OSPTTOKEN,sizeof(OSPTTOKEN) + ospvLen + 1);
+            OSPM_MALLOC(ospvToken, OSPTTOKEN, sizeof(OSPTTOKEN) + ospvLen + 1);
 
             /* make sure the allocation succeeded before proceeding */
-            if (ospvToken != OSPC_OSNULL)
-            {
+            if (ospvToken != OSPC_OSNULL) {
                 /* calculate where the "hidden" values will go */
                 valptr = ((unsigned char *)ospvToken) + sizeof(OSPTTOKEN);
 
@@ -110,139 +96,109 @@ OSPTTOKEN *                           /* returns ptr to token or null */
         }
     }
 
-    return(ospvToken);
+    return ospvToken;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPTokenFromElement() - create a token from an XML element
- *-----------------------------------------------------------------------*/
-unsigned                          /* returns error code */
-OSPPTokenFromElement(
-    OSPTXMLELEM *ospvElem,        /* input is XML element */
-    OSPTTOKEN  **ospvToken        /* where to put token pointer */
-)
+ */
+unsigned OSPPTokenFromElement(  /* returns error code */
+    OSPT_XML_ELEM *ospvElem,    /* input is XML element */
+    OSPTTOKEN **ospvToken)      /* where to put token pointer */
 {
-    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     unsigned char *tokenValue = OSPC_OSNULL;
-    unsigned      tokenLen = 0;
+    unsigned tokenLen = 0;
 
     /* start by assuming we will fail */
     *ospvToken = OSPC_OSNULL;
 
-    if (ospvElem == OSPC_OSNULL)
-    {
+    if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvToken == OSPC_OSNULL)
-    {
+    if (ospvToken == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_DATA_NO_TOKEN;
     }
-    if (OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvElem)) !=
-        ospeElemToken) 
-    {
+    if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) != OSPC_MELEM_TOKEN) {
         ospvErrCode = OSPC_ERR_DATA_INVALID_TYPE;
     }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-    {
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         ospvErrCode = OSPPMsgBinFromElement(ospvElem, &tokenLen, &tokenValue);
     }
     /* create the Token structure */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-    {
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         *ospvToken = OSPPTokenNew(tokenLen, tokenValue);
-        if (*ospvToken == OSPC_OSNULL)
-        {
+        if (*ospvToken == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_DATA_NO_TOKEN;
         }
     }
 
-    if(tokenValue != OSPC_OSNULL)
-    {
+    if (tokenValue != OSPC_OSNULL) {
         OSPM_FREE(tokenValue);
     }
 
-
-    return(ospvErrCode);
+    return ospvErrCode;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPTokenDelete() - destroy a token object
- *-----------------------------------------------------------------------*/
-void                                  /* no return */
-OSPPTokenDelete(
-    OSPTTOKEN **ospvToken            /* Token to destroy */
-)
+ */
+void OSPPTokenDelete(       /* no return */
+    OSPTTOKEN **ospvToken)  /* Token to destroy */
 {
-    if (*ospvToken != OSPC_OSNULL)
-    {
+    if (*ospvToken != OSPC_OSNULL) {
         OSPM_FREE(*ospvToken);
         *ospvToken = OSPC_OSNULL;
     }
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPTokenGetSize() - returns size of token value
- *-----------------------------------------------------------------------*/
-unsigned
-OSPPTokenGetSize(
-    OSPTTOKEN *ospvToken
-)
+ */
+unsigned OSPPTokenGetSize(
+    OSPTTOKEN *ospvToken)
 {
     unsigned ospvSize = 0;
-    if (ospvToken != OSPC_OSNULL)
-    {
+    if (ospvToken != OSPC_OSNULL) {
         ospvSize = ospvToken->ospmTokenLen;
     }
-    return(ospvSize);
+
+    return ospvSize;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPTokenGetValue() - returns pointer to token value
- *-----------------------------------------------------------------------*/
-const unsigned char *
-OSPPTokenGetValue(
-    OSPTTOKEN *ospvToken
-)
+ */
+const unsigned char *OSPPTokenGetValue(
+    OSPTTOKEN *ospvToken)
 {
     const unsigned char *ospvVal = OSPC_OSNULL;
-    if (ospvToken != OSPC_OSNULL)
-    {
+    if (ospvToken != OSPC_OSNULL) {
         ospvVal = ospvToken->ospmTokenVal;
     }
-    return(ospvVal);
+    return ospvVal;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPTokenToElement() - create an XML element from a token
- *-----------------------------------------------------------------------*/
-unsigned                           /* returns error code */
-OSPPTokenToElement(
-    OSPTTOKEN    *ospvToken,       /* token */
-    OSPTXMLELEM **ospvElem         /* where to put XML element pointer */
-)
+ */
+unsigned OSPPTokenToElement(    /* returns error code */
+    OSPTTOKEN *ospvToken,       /* token */
+    OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
-    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
 
-    if (ospvElem == OSPC_OSNULL)
-    {
+    if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvToken == OSPC_OSNULL)
-    {
+    if (ospvToken == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_DATA_NO_TOKEN;
     }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-    {
-        ospvErrCode = OSPPMsgBinToElement(OSPPTokenGetSize(ospvToken),
-            (unsigned char *) OSPPTokenGetValue(ospvToken),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemToken),
-            ospvElem, OSPC_TRUE);
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_TOKEN),
+            OSPPTokenGetSize(ospvToken), (unsigned char *)OSPPTokenGetValue(ospvToken),
+            OSPC_OSNULL, OSPC_OSNULL, OSPC_TRUE,
+            ospvElem);
     }
-    return(ospvErrCode);
+    return ospvErrCode;
 }
-

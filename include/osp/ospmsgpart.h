@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospmsgpart.h - Structures and prototypes for generic OSP message parts
  */
@@ -32,16 +26,15 @@
  * An OSPMsgPart is a convenient way to represent attributes and
  * elements. It's defined as a type that can be used, for example,
  * directly in switch statements without having to use messy
- * strncmp() calls.
+ * OSPM_STRNCMP() calls.
  *
  * We define it as an int here, though actual attributes and
  * elements will likely use enumerated types.
  */
 
-typedef int OSPTMSGPART;
+typedef int     OSPT_MSG_PART;
 
-#define OSPC_MSGPARTUNKNOWN ((OSPTMSGPART)0)   /* rsv'd for unknown part */
+#define OSPC_MPART_UNKNOWN      ((OSPT_MSG_PART)-16)    /* rsv'd for unknown part */
+#define OSPC_MPART_START        ((OSPT_MSG_PART)0)      /* rsv'd for start part */
 
-
-#endif
-
+#endif /* _OSPMSGPART_H */

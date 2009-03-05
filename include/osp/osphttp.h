@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 #ifndef _OSPHTTP_H
 #define _OSPHTTP_H
 
@@ -44,48 +38,46 @@
 #define OSPC_SOCK_CONNECTED_BIT     0x01
 #define OSPC_HTTP_AUDIT_TYPE        0x02
 
-/*-------------------------------------------*/
-/* http connection typedef                   */
-/*-------------------------------------------*/ 
-typedef struct _OSPTHTTP
-{
-    OSPTLISTLINK        Link;
-    OSPTTHREADID        ThreadId;
-    OSPTMUTEX           Mutex;
-    OSPTCONDVAR         CondVar;
-    OSPTSVCPT           *ServicePoint;
-    void                *Comm;
-    unsigned            NumberOfTransactions;
-    time_t              LastTransactionTime;
-    OSPTSOCKET          SockFd;
-    OSPTSSLSESSION      *SSLSession;
-    OSPTSSIZE_T         ByteCount;
-    unsigned char       Flags;
-    OSPTMSGINFO         *MsgInfoList;
-    OSPTSVCPT           *ServicePointList;
-    unsigned long        CurrentMsgCount;
+/*
+ * http connection typedef
+ */
+typedef struct _OSPTHTTP {
+    OSPTLISTLINK Link;
+    OSPTTHREADID ThreadId;
+    OSPTMUTEX Mutex;
+    OSPTCONDVAR CondVar;
+    OSPTSVCPT *ServicePoint;
+    void *Comm;
+    unsigned NumberOfTransactions;
+    time_t LastTransactionTime;
+    OSPTSOCKET SockFd;
+    OSPTSSLSESSION *SSLSession;
+    OSPTSSIZE_T ByteCount;
+    unsigned char Flags;
+    OSPT_MSG_INFO *MsgInfoList;
+    OSPTSVCPT *ServicePointList;
+    unsigned long CurrentMsgCount;
 } OSPTHTTP;
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    int      OSPPHttpNew(OSPTCOMM *, OSPTHTTP **);
-    void     OSPPHttpDelete(OSPTHTTP **ospvHttp);
-    int      OSPPHttpRequestHandoff(OSPTCOMM *, OSPTMSGQUEUE *);
-    int      OSPPHttpVerifyResponse(char *, int *,OSPTHTTP *ospvHttp);
-    void     OSPPHttpParseHeader(unsigned char *, unsigned char **, unsigned *, int , int *);
+    int OSPPHttpNew(OSPTCOMM *, OSPTHTTP **);
+    void OSPPHttpDelete(OSPTHTTP **ospvHttp);
+    int OSPPHttpRequestHandoff(OSPTCOMM *, OSPTMSGQUEUE *);
+    int OSPPHttpVerifyResponse(char *, int *, OSPTHTTP *ospvHttp);
+    void OSPPHttpParseHeader(unsigned char *, unsigned char **, unsigned *, int, int *);
     OSPTSEC *OSPPHttpGetSecurity(OSPTHTTP *);
-    int osppHttpGetIdleHttpConn(OSPTHTTP **,OSPTHTTP **,unsigned,int,int);
-    void osppHttpCopySPList(OSPTCOMM *,OSPTHTTP **,int );
-    void osppHttpGetServicePointList(OSPTHTTP *,OSPTSVCPT **);
-    void osppHttpDeleteServicePointList(OSPTSVCPT **,int);
-
-
+    int osppHttpGetIdleHttpConn(OSPTHTTP **, OSPTHTTP **, unsigned, int, int);
+    void osppHttpCopySPList(OSPTCOMM *, OSPTHTTP **, int);
+    void osppHttpGetServicePointList(OSPTHTTP *, OSPTSVCPT **);
+    void osppHttpDeleteServicePointList(OSPTSVCPT **, int);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPHTTP_H */

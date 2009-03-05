@@ -15,13 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * ospnossl.c - SSL API bridge to NO SSL IMPLEMENTATION !!!
  */
@@ -32,144 +25,142 @@
 #include "osp/ospcomm.h"
 #include "osp/ospsecurity.h"
 
-int
-OSPPSSLWrapInit(
-    void    * ospvRef)
+int OSPPSSLWrapInit(
+    void *ospvRef)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
+
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapInit()\n"));
     OSPM_ARGUSED(ospvRef);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapInit()\n"));
+
     return errorcode;
 }
 
-void
-OSPPSSLWrapCleanup(
+void OSPPSSLWrapCleanup(
     void *ospvRef)
 {
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapCleanup()\n"));
     OSPM_ARGUSED(ospvRef);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapCleanup()\n"));
-    return;
 }
 
-int
-OSPPSSLWrapSessionContextNew(
-    void           *ospvConnection,
-    void           *ospvContextRef)
+int OSPPSSLWrapSessionContextNew(
+    void *ospvConnection, 
+    void *ospvContextRef)
 {
-    int                 errorcode      = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
+
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapSessionContextNew()\n"));
     OSPM_ARGUSED(ospvConnection);
     OSPM_ARGUSED(ospvContextRef);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapSessionContextNew() (%d)\n", errorcode));
+
     return errorcode;
 }
 
-int
-OSPPSSLWrapAttachConnection(
+int OSPPSSLWrapAttachConnection(
     OSPTSSLSESSION *ospvSSLSession, 
-    void           *ospvConnection)
+    void *ospvConnection)
 {
-    int         errorcode      = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapAttachConnection()\n"));
     OSPM_ARGUSED(ospvSSLSession);
     OSPM_ARGUSED(ospvConnection);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapAttachConnection() (%d)\n", errorcode));
+
     return errorcode;
 }
 
-int
-OSPPSSLWrapHandshake( 
+int OSPPSSLWrapHandshake(
     OSPTSSLSESSION *ospvSSLSession)
 {
-    int    errorcode      = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapHandshake()\n"));
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapHandshake() (%d)\n", errorcode));
     OSPM_ARGUSED(ospvSSLSession);
+
     return errorcode;
 }
 
-int
-OSPPSSLWrapSessionContextDelete(
+int OSPPSSLWrapSessionContextDelete(
     OSPTSSLSESSION *ospvSSLSession)
 {
-    int    errorcode      = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapSessionContextDelete()\n"));
     OSPM_ARGUSED(ospvSSLSession);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapSessionContextDelete() (%d)\n", errorcode));
+
     return errorcode;
 }
 
-int
-OSPPSSLWrapGetData(
-    void           *ospvBuffer, 
-    unsigned int   *ospvLength, 
+int OSPPSSLWrapGetData(
+    void *ospvBuffer, 
+    unsigned int *ospvLength, 
     OSPTSSLSESSION *ospvSSLSession)
 {
-    int               errorcode      = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapGetData()\n"));
     OSPM_ARGUSED(ospvBuffer);
     OSPM_ARGUSED(ospvLength);
     OSPM_ARGUSED(ospvSSLSession);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapGetData() (%d)\n", errorcode));
+
     return errorcode;
 }
 
-int
-OSPPSSLWrapSendData(
-    void           *ospvBuffer, 
-    unsigned int   *ospvLength, 
+int OSPPSSLWrapSendData(
+    void *ospvBuffer, 
+    unsigned int *ospvLength, 
     OSPTSSLSESSION *ospvSSLSession)
 {
-    int         errorcode      = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapSendData()\n"));
     OSPM_ARGUSED(ospvBuffer);
     OSPM_ARGUSED(ospvLength);
     OSPM_ARGUSED(ospvSSLSession);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapSendData() (%d)\n", errorcode));
+
     return errorcode;
 }
 
-void 
-OSPPSSLWrapFreeServerRootCACert(
+void OSPPSSLWrapFreeServerRootCACert(
     void **ospvRootCACert)
-{  
+{
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapFreeServerRootCACert()\n"));
     OSPM_ARGUSED(ospvRootCACert);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapFreeServerRootCACert()\n"));
-    return;
 }
 
-int
-OSPPSSLWrapGetServerRootCACert(
-    void           **ospvRootCACert,
-    int            *ospvRootCACertLen,
+int OSPPSSLWrapGetServerRootCACert(
+    void **ospvRootCACert, 
+    int *ospvRootCACertLen, 
     OSPTSSLSESSION *ospvSSLSession)
 {
-    int         errorcode      = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapGetServerRootCACert()\n"));
     OSPM_ARGUSED(ospvRootCACert);
     OSPM_ARGUSED(ospvRootCACertLen);
     OSPM_ARGUSED(ospvSSLSession);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapGetServerRootCACert() (%d)\n", errorcode));
+
     return errorcode;
 }
 
-int
-OSPPSSLWrapSessionGracefulShutdown(
+int OSPPSSLWrapSessionGracefulShutdown(
     OSPTSSLSESSION *ospvSSLSession)
 {
-    int         errorcode      = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapSessionGracefulShutdown()\n"));
     OSPM_ARGUSED(ospvSSLSession);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapSessionGracefulShutdown() (%d)\n", errorcode));
+
     return errorcode;
 }

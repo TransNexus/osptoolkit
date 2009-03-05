@@ -15,18 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
-
-
-
-
-
 /*
  * Copyright (c) 1993 Addison-Wesley Publishing Company.
  * All rights reserved.  This source code is provided
@@ -48,13 +36,13 @@
 #include <grp.h>
 #include <stdlib.h>
 
-
 #ifdef OSPTNLOGDEBUG
 static char buf[BUFSZ];
 static char tmpbuf[BUFSZ];
 static int logfd = -1;
 
-void get_log_time(char *timebuf)
+void get_log_time(
+    char *timebuf)
 {
     time_t t;
     char *tm;
@@ -66,9 +54,9 @@ void get_log_time(char *timebuf)
     timebuf[15] = '\0';
 }
 
-
-void
-tnlog(char *fmt, ...)
+void tnlog(
+    char *fmt, 
+    ...)
 {
     va_list ap;
 
@@ -83,10 +71,9 @@ tnlog(char *fmt, ...)
 
     strcat(buf, tmpbuf);
 
-    if (!isspace(tmpbuf[0])) 
-    {
-        sprintf( tmpbuf, "\n%s", buf);
-        strcpy(buf, tmpbuf);
+    if (!isspace(tmpbuf[0])) {
+        sprintf(tmpbuf, "\n%s", buf);
+        OSPM_STRCPY(buf, tmpbuf);
     }
 
     /*
@@ -97,18 +84,20 @@ tnlog(char *fmt, ...)
     /*
      * Write the log message.
      */
-    write(logfd, buf, strlen(buf));
+    write(logfd, buf, OSPM_STRLEN(buf));
 }
 
-int
-tnlogdump(unsigned char *data, int len, char *msg)
+int tnlogdump(
+    unsigned char *data, 
+    int len, 
+    char *msg)
 {
-    int i ;
-    int cnt=0;
+    int i;
+    int cnt = 0;
     unsigned char c;
 
-    int j=0;
-    char hexbuf[(DUMPLEN*3)+5];
+    int j = 0;
+    char hexbuf[(DUMPLEN * 3) + 5];
     char txtbuf[(DUMPLEN) + 5];
 
     /*
@@ -118,64 +107,56 @@ tnlogdump(unsigned char *data, int len, char *msg)
     memset(hexbuf, (char) 0, sizeof(hexbuf));
     memset(txtbuf, (char) 0, sizeof(hexbuf));
 
-    if (len) 
-    {
+    if (len) {
         /*
          * Change newline to space.  24 is location
          * of newline.  25 is end of string.  Then
          * copy the string to the buffer.
          */
-        get_log_time((char *)tmpbuf);
-        sprintf( buf, "\n%s", tmpbuf);
+        get_log_time((char *) tmpbuf);
+        sprintf(buf, "\n%s", tmpbuf);
 
         sprintf(tmpbuf, "LOGDUMP - %s\n", msg);
         strcat(buf, tmpbuf);
         sprintf(tmpbuf, "LENGTH = %6d =========================================================", len);
-        strcat(buf, tmpbuf);    
+        strcat(buf, tmpbuf);
         /*
          * Add a newline.
          */
         strcat(buf, "\n");
 
         /*
-        * Write the log message.
-        */
-        write(logfd, buf, strlen(buf));
-    } 
+         * Write the log message.
+         */
+        write(logfd, buf, OSPM_STRLEN(buf));
+    }
 
     /* 
      * Dump the available data
      */
-    for (i=0 ; ; i++, cnt++ ) 
-    {
-        if (i && !(i%DUMPLEN)) 
-        {
-            sprintf(buf, "%05d: %s   %s\n", (((i-1)/DUMPLEN)*DUMPLEN), hexbuf, txtbuf);
-            write(logfd, buf, strlen(buf));
-            strcpy(hexbuf, "");
-            j=0;
+    for (i = 0;; i++, cnt++) {
+        if (i && !(i % DUMPLEN)) {
+            sprintf(buf, "%05d: %s   %s\n", (((i - 1) / DUMPLEN) * DUMPLEN), hexbuf, txtbuf);
+            write(logfd, buf, OSPM_STRLEN(buf));
+            OSPM_STRCPY(hexbuf, "");
+            j = 0;
             txtbuf[j] = '\0';
-            if (i >= len) break;
+            if (i >= len)
+                break;
         }
 
-        c = (i < len)? data[i] : ' ';
-        if (isalnum(c) || (c == ' ') || ispunct(c)) 
-        {
+        c = (i < len) ? data[i] : ' ';
+        if (isalnum(c) || (c == ' ') || ispunct(c)) {
             txtbuf[j++] = c;
-        } 
-        else 
-        {
+        } else {
             txtbuf[j++] = '.';
         }
         txtbuf[j] = '\0';
 
-        if (i < len) 
-        {
-            sprintf( tmpbuf, "%02x ", (unsigned int) c );
-        } 
-        else 
-        {
-            sprintf( tmpbuf, "   ");
+        if (i < len) {
+            sprintf(tmpbuf, "%02x ", (unsigned int) c);
+        } else {
+            sprintf(tmpbuf, "   ");
         }
         strcat(hexbuf, tmpbuf);
     }
@@ -184,17 +165,16 @@ tnlogdump(unsigned char *data, int len, char *msg)
     sprintf(buf, "%s    %s\n", hexbuf, txtbuf);
     strcat(buf, "=========================================================================\n\n");
 
-    write(logfd, buf, strlen(buf));
-    strcpy(hexbuf, "");
-    j=0;
+    write(logfd, buf, OSPM_STRLEN(buf));
+    OSPM_STRCPY(hexbuf, "");
+    j = 0;
     txtbuf[j] = '\0';
 
-    return(cnt);
+    return cnt;
 }
 
-
-int
-tninitlog(char *filename)
+int tninitlog(
+    char *filename)
 {
     struct stat sbuf;
     struct group *gp;
@@ -202,13 +182,10 @@ tninitlog(char *filename)
     int fl;
 
     /* Point to stderr for output if no logfile specification */
-    if ((filename == (char *)NULL) || (filename[0] == '\0'))
-    {
-        strcpy(logfile, "/dev/stdout");
-    } 
-    else 
-    {
-        strcpy(logfile, filename);
+    if ((filename == (char *)NULL) || (filename[0] == '\0')) {
+        OSPM_STRCPY(logfile, "/dev/stdout");
+    } else {
+        OSPM_STRCPY(logfile, filename);
     }
 
     /*
@@ -216,17 +193,14 @@ tninitlog(char *filename)
      * present.
      */
 
-    logfd = open(logfile, O_WRONLY|O_APPEND|O_CREAT,
-        LOGPERM);
+    logfd = open(logfile, O_WRONLY | O_APPEND | O_CREAT, LOGPERM);
     if (logfd < 0)
-        return(-1);
-
+        return -1;
 
     /*
      * If the log file is too large, truncate it to 0.
      */
-    if (fstat(logfd, &sbuf) == 0) 
-    {
+    if (fstat(logfd, &sbuf) == 0) {
         if (sbuf.st_size > MAXLOGSZ)
             ftruncate(logfd, 0);
     }
@@ -235,70 +209,62 @@ tninitlog(char *filename)
      * Set the close-on-exec flag.
      */
     fl = fcntl(logfd, F_GETFD, 0);
-    if ((fl < 0) ||
-        (fcntl(logfd, F_SETFD, fl|FD_CLOEXEC) < 0)) 
-    {
+    if ((fl < 0) || (fcntl(logfd, F_SETFD, fl | FD_CLOEXEC) < 0)) {
         close(logfd);
         logfd = -1;
-        return(-1);
+        return -1;
     }
 
     /*
      * Get the group ID for group "daemon."
      */
     gp = getgrnam("daemon");
-    if (gp == NULL) 
-    {
+    if (gp == NULL) {
         close(logfd);
         logfd = -1;
         errno = EINVAL;
-        return(-1);
+        return -1;
     }
 
     /*
      * If the file isn't owned by the super-user or group
      * daemon, change the file's user and group IDs.
      */
-    if (fstat(logfd, &sbuf) < 0) 
-    {
+    if (fstat(logfd, &sbuf) < 0) {
         close(logfd);
         logfd = -1;
-        return(-1);
+        return -1;
     }
     if ((sbuf.st_uid != 0) || (sbuf.st_gid != gp->gr_gid))
         fchown(logfd, 0, gp->gr_gid);
-    return(0);
+    return 0;
 }
 
-
-void tnlogmemuse(char *string)
+void tnlogmemuse(
+    char *string)
 {
-    struct mallinfo sMallInfo; 
+    struct mallinfo sMallInfo;
     static struct mallinfo sOldMallInfo;
     int total;
     int oldtotal;
     static int gtotal = 0;
     static int testcount = 0;
 
-    sMallInfo = mallinfo(); 
+    sMallInfo = mallinfo();
 
-    if (!testcount) 
-    {
+    if (!testcount) {
         memset(&sOldMallInfo, 0, sizeof(sOldMallInfo));
-    }   
+    }
 
-    testcount ++;
+    testcount++;
     total = sMallInfo.usmblks + sMallInfo.uordblks;
     gtotal += total;
     oldtotal = sOldMallInfo.usmblks + sOldMallInfo.uordblks;
 
-    tnlog("MEMUSE: (avg: %d)(chg: %7d)(%7ld + %7d = %7d) %-30.30s" ,  
-        gtotal/testcount, total - oldtotal, 
-        sMallInfo.usmblks, sMallInfo.uordblks, total, string); 
+    tnlog("MEMUSE: (avg: %d)(chg: %7d)(%7ld + %7d = %7d) %-30.30s",
+          gtotal / testcount, total - oldtotal, sMallInfo.usmblks, sMallInfo.uordblks, total, string);
 
     sOldMallInfo = sMallInfo;
-
-    return;
 }
 #endif
 #endif /* WIN32 */

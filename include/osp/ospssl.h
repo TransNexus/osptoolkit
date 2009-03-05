@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospssl.h - common SSL object and function definitions along with
  *            wrapper prototypes
@@ -34,63 +28,57 @@
 #include "osp/ospsecurity.h"
 #include "osp/ospsslsess.h"
 
-#define OSPPSSLSessionHasContext(sslsess) \
-    ((sslsess)->Context != OSPC_OSNULL)
+#define OSPPSSLSessionHasContext(sslsess)   ((sslsess)->Context != OSPC_OSNULL)
+#define OSPPSSLSessionGetContext(sslsess)   ((sslsess)->Context)
 
-#define OSPPSSLSessionGetContext(sslsess) \
-    ((sslsess)->Context)
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
     /*
      * OSP SDK SSL Entry Point Macros
      */
     /* called only once for each provider */
-#define OSPPSSLSessionInit(secptr)     OSPPSSLWrapInit(secptr) 
-#define OSPPSSLSessionCleanup(secptr)  OSPPSSLWrapCleanup(secptr) 
+#define OSPPSSLSessionInit(secptr)     OSPPSSLWrapInit(secptr)
+#define OSPPSSLSessionCleanup(secptr)  OSPPSSLWrapCleanup(secptr)
 
     /*
      * OSP SDK SSL Entry Point Functions
      */
-    int  OSPPSSLSessionNew(OSPTHTTP *, OSPTSEC *);
-    int  OSPPSSLSessionRead(OSPTHTTP *, void *, unsigned int *, char *);
-    int  OSPPSSLSessionWrite(OSPTHTTP *, void *, unsigned int *);
+    int OSPPSSLSessionNew(OSPTHTTP *, OSPTSEC *);
+    int OSPPSSLSessionRead(OSPTHTTP *, void *, unsigned int *, char *);
+    int OSPPSSLSessionWrite(OSPTHTTP *, void *, unsigned int *);
     void OSPPSSLSessionDelete(OSPTBOOL, OSPTSSLSESSION **);
 
     /*
      * SSL Session Member functions
      */
-    OSPTSSLSESSION   *OSPPSSLSessionAlloc(void);
-    unsigned          OSPPSSLSessionHasSessionId(OSPTSSLSESSION *);
+    OSPTSSLSESSION *OSPPSSLSessionAlloc(void);
+    OSPTBOOL OSPPSSLSessionHasSessionId(OSPTSSLSESSION *);
 
     /* these member functions are called by OSPPSSLSessionNew() */
-    int               OSPPSSLSessionInitialize(OSPTHTTP *, OSPTSEC *); 
-    int               OSPPSSLSessionNegotiate(OSPTHTTP *);
-
+    int OSPPSSLSessionInitialize(OSPTHTTP *, OSPTSEC *);
+    int OSPPSSLSessionNegotiate(OSPTHTTP *);
 
     /*
      * SSL implementation wrapper functions 
      */
-    int             OSPPSSLWrapInit(void *);
-    void            OSPPSSLWrapCleanup(void *);
-    int             OSPPSSLWrapSessionContextNew(void *, void *);
-    int             OSPPSSLWrapSessionContextDelete(OSPTSSLSESSION *);
-    int             OSPPSSLWrapAttachConnection(OSPTSSLSESSION *, void *);
-    int             OSPPSSLWrapSessionGracefulShutdown(OSPTSSLSESSION *);
-    int             OSPPSSLWrapHandshake(OSPTSSLSESSION *);
-    int             OSPPSSLWrapGetData(void *, unsigned int *, 
-                        OSPTSSLSESSION *);
-    int             OSPPSSLWrapSendData(void *, unsigned int *, 
-                        OSPTSSLSESSION *);
-    int             OSPPSSLWrapGetServerRootCACert(void **,
-                        int *, OSPTSSLSESSION *);
-    void            OSPPSSLWrapFreeServerRootCACert(void **);
+    int OSPPSSLWrapInit(void *);
+    void OSPPSSLWrapCleanup(void *);
+    int OSPPSSLWrapSessionContextNew(void *, void *);
+    int OSPPSSLWrapSessionContextDelete(OSPTSSLSESSION *);
+    int OSPPSSLWrapAttachConnection(OSPTSSLSESSION *, void *);
+    int OSPPSSLWrapSessionGracefulShutdown(OSPTSSLSESSION *);
+    int OSPPSSLWrapHandshake(OSPTSSLSESSION *);
+    int OSPPSSLWrapGetData(void *, unsigned int *, OSPTSSLSESSION *);
+    int OSPPSSLWrapSendData(void *, unsigned int *, OSPTSSLSESSION *);
+    int OSPPSSLWrapGetServerRootCACert(void **, int *, OSPTSSLSESSION *);
+    void OSPPSSLWrapFreeServerRootCACert(void **);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPSSL_H */

@@ -15,48 +15,43 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospmsgque.h - Structures and prototypes for message queue object.
  */
+
 #ifndef _OSPMSGQUE_H
 #define _OSPMSGQUE_H
 
 #include "osp/osp.h"
 #include "osp/ospmsginfo.h"
 
-#define OSPPMsgQueueGetCondVar(ospvMsgQueue)   (ospvMsgQueue)->CondVar
+#define OSPPMsgQueueGetCondVar(ospvMsgQueue)    (ospvMsgQueue)->CondVar
 
-/*-------------------------------------------*/
-/* message queue typedef                     */
-/*-------------------------------------------*/ 
-typedef struct _OSPTMSGQUEUE
-{
-    unsigned            NumberOfTransactions;
-    OSPTMUTEX           Mutex;
-    OSPTCONDVAR         CondVar;
-    OSPTMSGINFO         *MsgInfoList;
+/*
+ * message queue typedef
+ */
+typedef struct _OSPTMSGQUEUE {
+    unsigned NumberOfTransactions;
+    OSPTMUTEX Mutex;
+    OSPTCONDVAR CondVar;
+    OSPT_MSG_INFO *MsgInfoList;
 } OSPTMSGQUEUE;
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    int  OSPPMsgQueueNew(OSPTMSGQUEUE **);
+    int OSPPMsgQueueNew(OSPTMSGQUEUE **);
     void OSPPMsgQueueDelete(OSPTMSGQUEUE **);
-    int  OSPPMsgQueueAddTransaction(OSPTMSGQUEUE *, OSPTMSGINFO *);
+    int OSPPMsgQueueAddTransaction(OSPTMSGQUEUE *, OSPT_MSG_INFO *);
     void OSPPMsgQueueIncrementNumberOfTransactions(OSPTMSGQUEUE *);
     void OSPPMsgQueueDecrementNumberOfTransactions(OSPTMSGQUEUE *);
-    int  OSPPMsgQueueGetNumberOfTransactions(OSPTMSGQUEUE *, unsigned *);
+    int OSPPMsgQueueGetNumberOfTransactions(OSPTMSGQUEUE *, unsigned *);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPMSGQUE_H */

@@ -15,43 +15,32 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 #include "osp/osposincl.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /* Defines how many octets are dumped per line: */
-#define OSPC_ENROLL_OCTETS_PER_LINE      2
+#define OSPC_ENROLL_OCTETS_PER_LINE         2
 
 /* Defines how may characters are dumped line: */
-#define OSPC_ENROLL_HEX_CHARS_PER_LINE   ( 8 * ( OSPC_ENROLL_OCTETS_PER_LINE ))
+#define OSPC_ENROLL_HEX_CHARS_PER_LINE      (8 * OSPC_ENROLL_OCTETS_PER_LINE)
 
-/* Given a string of characters, print out their hex and alphanumeric encoding.
+/* 
+ * Given a string of characters, print out their hex and alphanumeric encoding.
  *
  * Input: the string to be printed and the length of that string.
  */
-void OSPPDumpHex( 
-    unsigned char* ospvDumpee, 
-    unsigned       ospvDumpeeLen
-);
+void OSPPDumpHex(unsigned char *ospvDumpee, unsigned ospvDumpeeLen);
 
-/* Dump a line of hex characters. Pad the end with spaces if there aren't
+/* 
+ * Dump a line of hex characters. Pad the end with spaces if there aren't
  * enough characters.
  *
  * Input: the line to be dumped and the number of characters to be dumped.
  */
-void OSPPDumpHexLine (
-    unsigned char* ospvDumpeeLine,
-    unsigned       ospvDumpeeLineLen
-);
+void OSPPDumpHexLine(unsigned char *ospvDumpeeLine, unsigned ospvDumpeeLineLen);
 
 #ifdef __cplusplus
 }

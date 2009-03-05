@@ -15,15 +15,10 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospfail.cpp - Failure reasons.
  */
+
 #include "osp/osp.h"
 #include "osp/ospfail.h"
 
@@ -31,16 +26,112 @@
  * Will return success as long as ospvFailureReason is between
  * OSPC_FAIL_NONE (0) and OSPC_FAIL_GENERAL (999)
  */
-int
-OSPPFailReasonFind(enum OSPEFAILREASON ospvFailureReason)
+int OSPPFailReasonFind(
+    OSPEFAILREASON ospvFailureReason)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if( (ospvFailureReason < OSPC_FAIL_NONE) || (ospvFailureReason > OSPC_FAIL_GENERAL) )
-    {
+    if ((ospvFailureReason < OSPC_FAIL_NONE) || (ospvFailureReason > OSPC_FAIL_GENERAL)) {
         errorcode = OSPC_ERR_FAILRSN_INVALID;
         OSPM_DBGERRORLOG(errorcode, "Failure code invalid");
     }
 
     return errorcode;
 }
+
+/*
+ * OSPPHasTermCause() - Does request have termination cause
+ */
+OSPTBOOL OSPPHasTermCause(          /* returns non-zero if time */
+    OSPT_TERM_CAUSE *ospvTermCause, /* usage request in question */
+    OSPE_TERM_CAUSE ospvType)       /* termination cause type */
+{
+    OSPTBOOL ospvHas = OSPC_FALSE;
+
+    if (ospvTermCause != OSPC_OSNULL) {
+        if ((ospvType >= OSPC_TCAUSE_START) && (ospvType < OSPC_TCAUSE_NUMBER)) {
+            ospvHas = ospvTermCause->hastermcause[ospvType];
+        }
+    }
+
+    return ospvHas;
+}
+
+/*
+ * OSPPHasTermCauseAny() - Does request have a termination cause
+ */
+OSPTBOOL OSPPHasTermCauseAny(       /* returns non-zero if time */
+    OSPT_TERM_CAUSE *ospvTermCause) /* usage request in question */
+{
+    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPE_TERM_CAUSE ospvType;
+
+    if (ospvTermCause != OSPC_OSNULL) {
+        for (ospvType = OSPC_TCAUSE_START; ospvType < OSPC_TCAUSE_NUMBER; ospvType++) {
+            ospvHas |= ospvTermCause->hastermcause[ospvType];
+        }
+    }
+
+    return ospvHas;
+}
+
+/*
+ * OSPPSetTermCause() - Set termination cause
+ */
+void OSPPSetTermCause(     /* nothing returned */
+    OSPT_TERM_CAUSE *ospvTermCause,
+    OSPE_TERM_CAUSE ospvType,    
+    unsigned ospvTCCode,
+    const char *ospvTCDesc)
+{
+    if (ospvTermCause != OSPC_OSNULL) {
+        if ((ospvType >= OSPC_TCAUSE_START) && (ospvType < OSPC_TCAUSE_NUMBER)) {
+            ospvTermCause->tccode[ospvType] = ospvTCCode;
+            if ((ospvTCDesc != OSPC_OSNULL) && (ospvTCDesc[0] != '\0')) {
+                OSPM_STRNCPY(ospvTermCause->tcdesc[ospvType], ospvTCDesc, sizeof(ospvTermCause->tcdesc[ospvType]));
+            }
+            ospvTermCause->hastermcause[ospvType] = OSPC_TRUE;
+        }
+    }
+}
+
+/*
+ * OSPPGetTCCode() - returns termination cause code
+ */
+unsigned OSPPGetTCCode(
+    OSPT_TERM_CAUSE *ospvTermCause, /* Termination cause */
+    OSPE_TERM_CAUSE ospvType)       /* Termination cause type */    
+{
+    unsigned ospvTCCode = 0;
+
+    if (ospvTermCause != OSPC_OSNULL) {
+        if ((ospvType >= OSPC_TCAUSE_START) && (ospvType < OSPC_TCAUSE_NUMBER)) {
+            if (ospvTermCause->hastermcause[ospvType]) {
+                ospvTCCode = ospvTermCause->tccode[ospvType];
+            }
+        }
+    }
+    
+    return ospvTCCode;
+}
+
+/*
+ * OSPPGetTCDesc() - returns termination cause description
+ */
+const char *OSPPGetTCDesc(
+    OSPT_TERM_CAUSE *ospvTermCause,   /* Termination cause */
+    OSPE_TERM_CAUSE ospvType)         /* Termination cause type */    
+{
+    const char *ospvTCDesc = OSPC_OSNULL;
+
+    if (ospvTermCause != OSPC_OSNULL) {
+        if ((ospvType >= OSPC_TCAUSE_START) && (ospvType < OSPC_TCAUSE_NUMBER)) {
+            if (ospvTermCause->hastermcause[ospvType]) {
+                ospvTCDesc = ospvTermCause->tcdesc[ospvType];
+            }
+        }
+    }
+    
+    return ospvTCDesc;
+}
+

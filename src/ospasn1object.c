@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospasn1object.c  Functions to implement PKCS7 ASN1 Objects 
  */
@@ -28,66 +22,55 @@
 #include "osp/osp.h"
 #include "osp/ospasn1.h"
 
-#define OSPC_ERR_PKCS7                              (25500)
+#define OSPC_ERR_PKCS7                  25500
 #define OSPC_ERR_PKCS7_MALLOC_FAILED    (OSPC_ERR_PKCS7 + 1000)
 
 #define OSPC_SIGNEDDATA_VERSION 1
 
 /* FUNCTION PROTOTYPES */
 
-/* ---------------------------------------------------------*/
-/* Member functions                                         */
-/* ---------------------------------------------------------*/
+/*
+ * Member functions
+ */
 
-
-int
-OSPPASN1ObjectGetElementInfo(
-    OSPTASN1OBJECT *ospvObject,
+int OSPPASN1ObjectGetElementInfo(
+    OSPTASN1OBJECT *ospvObject, 
     OSPTASN1ELEMENTINFO **ospvElementInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvObject == OSPC_OSNULL)
-    {
+    if (ospvObject == OSPC_OSNULL) {
         errorcode = OSPC_ERR_ASN1_NULL_POINTER;
         OSPM_DBGERRORLOG(errorcode, "Invalid pointer to Object");
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvElementInfo = ospvObject->ElementInfo;
     }
 
     return errorcode;
 }
 
-
-
-int
-OSPPASN1ObjectGetParseResults(
-    OSPTASN1OBJECT *ospvObject,
+int OSPPASN1ObjectGetParseResults(
+    OSPTASN1OBJECT *ospvObject, 
     OSPTASN1PARSERESULT **ospvParseResults)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    if (ospvObject == OSPC_OSNULL)
-    {
+    if (ospvObject == OSPC_OSNULL) {
         errorcode = OSPC_ERR_ASN1_NULL_POINTER;
         OSPM_DBGERRORLOG(errorcode, "Invalid pointer to Object");
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvParseResults = ospvObject->ParseResults;
     }
 
     return errorcode;
 }
 
-
-int
-OSPPASN1ObjectNew(
-    OSPTASN1OBJECT **ospvASN1Object,
+int OSPPASN1ObjectNew(
+    OSPTASN1OBJECT **ospvASN1Object, 
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -95,122 +78,95 @@ OSPPASN1ObjectNew(
     OSPTASN1ELEMENTINFO *newElement = OSPC_OSNULL;
     OSPTASN1PARSERESULT *newResult = OSPC_OSNULL;
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Get a new Element Info */
         errorcode = OSPPASN1ElementCreate(&newElement);
-
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = PTPResultsCreate(&newResult, newElement, ospvDataRefId);
     }
 
-
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPASN1ObjectCreate(&newObject, newElement, newResult);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvASN1Object = newObject;
-    }
-    else
-    {
+    } else {
         OSPPASN1ObjectDelete(&newObject);
-        OSPPASN1ElementDelete(&newElement,0);
+        OSPPASN1ElementDelete(&newElement, 0);
         PTPResultsDelete(&newResult);
     }
 
     return errorcode;
 }
 
-int
-OSPPASN1ObjectCreate(
-    OSPTASN1OBJECT **ospvASN1Object,
-    OSPTASN1ELEMENTINFO *ospvElementInfo,
+int OSPPASN1ObjectCreate(
+    OSPTASN1OBJECT **ospvASN1Object, 
+    OSPTASN1ELEMENTINFO *ospvElementInfo, 
     OSPTASN1PARSERESULT *ospvParseResults)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTASN1OBJECT *newObject = OSPC_OSNULL;
 
     OSPM_MALLOC(newObject, OSPTASN1OBJECT, sizeof(OSPTASN1OBJECT));
-    if (newObject == OSPC_OSNULL)
-    {
+    if (newObject == OSPC_OSNULL) {
         errorcode = OSPC_ERR_ASN1_UNABLE_TO_ALLOCATE_SPACE;
         OSPM_DBGERRORLOG(errorcode, "Unable to create an ASN1 Object");
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Init the new object */
         OSPM_MEMSET(newObject, 0, sizeof(OSPTASN1OBJECT));
 
         newObject->ElementInfo = ospvElementInfo;
         newObject->ParseResults = ospvParseResults;
         *ospvASN1Object = newObject;
-    }
-    else
-    {
+    } else {
         OSPPASN1ObjectDelete(&newObject);
     }
+
     return errorcode;
 }
 
-
-void
-OSPPASN1ObjectDelete(
-    OSPTASN1OBJECT **ospvASN1Object)
+void OSPPASN1ObjectDelete(OSPTASN1OBJECT ** ospvASN1Object)
 {
     OSPTASN1OBJECT *object = OSPC_OSNULL;
 
-    if (ospvASN1Object != OSPC_OSNULL)
-    {
+    if (ospvASN1Object != OSPC_OSNULL) {
         object = *ospvASN1Object;
-
-        if (object != OSPC_OSNULL)
-        {
-            OSPPASN1ElementDelete(&(object->ElementInfo),0);
+        if (object != OSPC_OSNULL) {
+            OSPPASN1ElementDelete(&(object->ElementInfo), 0);
             PTPResultsDelete(&(object->ParseResults));
 
-            OSPM_FREE(*ospvASN1Object); 
+            OSPM_FREE(*ospvASN1Object);
             *ospvASN1Object = OSPC_OSNULL;
         }
     }
-    return;
 }
 
-
-int
-OSPPASN1ObjectCopyElementObject(
-    OSPTASN1OBJECT **ospvFoundObject,
-    OSPTASN1OBJECT *ospvParentObject,
+int OSPPASN1ObjectCopyElementObject(
+    OSPTASN1OBJECT **ospvFoundObject, 
+    OSPTASN1OBJECT *ospvParentObject, 
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
-    OSPTASN1OBJECT  foundObject;
+    OSPTASN1OBJECT foundObject;
     OSPTASN1PARSERESULT *parseResults = OSPC_OSNULL;
     OSPTASN1ELEMENTINFO *eInfo = OSPC_OSNULL;
-
 
     OSPM_MEMSET(&foundObject, 0, sizeof(OSPTASN1OBJECT));
 
     errorcode = OSPPASN1ObjectGetParseResults(ospvParentObject, &parseResults);
-
-
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = PTPResultsGetElement(ospvDataRefId, parseResults, &eInfo);
     }
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = PTPResultsCreate(&parseResults, eInfo, ospvDataRefId);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         foundObject.ElementInfo = eInfo;
         foundObject.ParseResults = parseResults;
 
@@ -222,30 +178,25 @@ OSPPASN1ObjectCopyElementObject(
     return errorcode;
 }
 
-int
-OSPPASN1ObjectGetElementByDataRef(
-    OSPTASN1OBJECT *ospvObject,
-    OSPTASN1ELEMENTINFO **ospvElementInfo,
+int OSPPASN1ObjectGetElementByDataRef(
+    OSPTASN1OBJECT *ospvObject, 
+    OSPTASN1ELEMENTINFO **ospvElementInfo, 
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPTASN1OBJECT *foundObject = OSPC_OSNULL;
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
-        errorcode = OSPPASN1ObjectCopyElementObject( &foundObject,
-            ospvObject, ospvDataRefId);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPASN1ObjectCopyElementObject(&foundObject, ospvObject, ospvDataRefId);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPASN1ObjectGetElementInfo(foundObject, ospvElementInfo);
     }
 
-    if(foundObject != OSPC_OSNULL)
-    {
-        OSPPASN1ElementDelete(&(foundObject->ParseResults->ElementInfo),0);
+    if (foundObject != OSPC_OSNULL) {
+        OSPPASN1ElementDelete(&(foundObject->ParseResults->ElementInfo), 0);
         OSPM_FREE(foundObject->ParseResults);
         OSPM_FREE(foundObject);
     }
@@ -253,16 +204,14 @@ OSPPASN1ObjectGetElementByDataRef(
     return errorcode;
 }
 
-
 /* ObjectCopy 
 This routine only copies the object and it's immediate children,i.e. the
 element info and parse results that are pointed to by it's pointers.  It
 DOES NOT recurse through the element info linked list(s), or grab all of
 the results in the parse results linked list. */
 
-int
-OSPPASN1ObjectCopy(
-    OSPTASN1OBJECT **ospvDstObject,
+int OSPPASN1ObjectCopy(
+    OSPTASN1OBJECT **ospvDstObject, 
     OSPTASN1OBJECT *ospvSrcObject)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -276,58 +225,47 @@ OSPPASN1ObjectCopy(
     /* Create the new object */
     OSPM_MALLOC(newObject, OSPTASN1OBJECT, sizeof(OSPTASN1OBJECT));
 
-    if (newObject == OSPC_OSNULL)
-    {
+    if (newObject == OSPC_OSNULL) {
         errorcode = OSPC_ERR_ASN1_UNABLE_TO_ALLOCATE_SPACE;
         OSPM_DBGERRORLOG(errorcode, "Unable to create an ASN1 Object for copy");
-    }
-    else
-    {
+    } else {
         OSPM_MEMSET(newObject, 0, sizeof(newObject));
     }
 
     /* Get the element info from the source object */
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPASN1ObjectGetElementInfo(ospvSrcObject, &eInfo);
     }
 
     /* Get the parse results from the source object */
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
-        errorcode = OSPPASN1ObjectGetParseResults(ospvSrcObject, 
-            &parseResults);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPASN1ObjectGetParseResults(ospvSrcObject, &parseResults);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPASN1ElementCopy(&newElement, eInfo);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = PTPResultsCopy(&newResult, parseResults);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         newObject->ElementInfo = newElement;
         newObject->ParseResults = newResult;
         *ospvDstObject = newObject;
-    }
-    else
-    {
+    } else {
         OSPM_FREE(newElement);
         OSPM_FREE(newResult);
         OSPM_FREE(newObject);
     }
+
     return errorcode;
 }
 
-int
-OSPPASN1ObjectAddChild( 
-    OSPTASN1OBJECT  *ospvParent,
-    OSPTASN1OBJECT  *ospvChild,
+int OSPPASN1ObjectAddChild(
+    OSPTASN1OBJECT *ospvParent, 
+    OSPTASN1OBJECT *ospvChild, 
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -339,45 +277,38 @@ OSPPASN1ObjectAddChild(
     unsigned char *tmpDataRef = OSPC_OSNULL;
 
     /* Add the child's eInfo tree to the parent's eInfo tree on the end of
-    the contentElementInfo chain. Then add the child's result list to the 
-    end of the parents result list. In both cases, use the data provided
-    without allocating new data. */
+       the contentElementInfo chain. Then add the child's result list to the 
+       end of the parents result list. In both cases, use the data provided
+       without allocating new data. */
 
     errorcode = OSPPASN1ObjectGetElementInfo(ospvParent, &parentElement);
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPASN1ObjectGetElementInfo(ospvChild, &childElement);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Get parents current parse results */
         errorcode = OSPPASN1ObjectGetParseResults(ospvParent, &tmpResults);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Go to the end of the list */
         lastResult = PTPResultsEndOfList(tmpResults);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Get the childs parse results */
         errorcode = OSPPASN1ObjectGetParseResults(ospvChild, &tmpResults);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Update the child's dataReference */
         errorcode = PTPDataRefIdGetValue(ospvDataRefId, &tmpDataRef);
-        OSPM_MEMCPY(tmpResults->DataReference, tmpDataRef,
-            OSPC_ASN1_DATAREF_MAXLENGTH);
+        OSPM_MEMCPY(tmpResults->DataReference, tmpDataRef, OSPC_ASN1_DATAREF_MAXLENGTH);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Concatenate them to the list */
         lastResult->NextResult = tmpResults;
     }
@@ -393,22 +324,19 @@ OSPPASN1ObjectAddChild(
     found, add it to the parse table being built.  This sets you up to
     encode the parsed object by scanning the element list.
 */
-
-int
-OSPPASN1ObjectDeparse(
-    OSPTASN1OBJECT *ospvObject,
-    OSPEASN1PARSETABLEID ospvParseTableId,
+int OSPPASN1ObjectDeparse(
+    OSPTASN1OBJECT *ospvObject, 
+    OSPEASN1PARSETABLEID ospvParseTableId, 
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
-    OSPTASN1PARSERESULT     *origParseResults;
-    OSPTASN1PARSERESULT     *parseResults;
-    OSPTASN1ELEMENTINFO     *elementInfo;
+    OSPTASN1PARSERESULT *origParseResults;
+    OSPTASN1PARSERESULT *parseResults;
+    OSPTASN1ELEMENTINFO *elementInfo;
     unsigned char dataReference[OSPC_ASN1_DATAREF_MAXLENGTH];
     unsigned char *dataReferencePtr = OSPC_OSNULL;
 
-    /* Get the process started. Call ElementDeparse to generate the element
-    list */
+    /* Get the process started. Call ElementDeparse to generate the element list */
 
     OSPM_MEMSET(dataReference, 0xff, sizeof(dataReference));
     errorcode = PTPDataRefIdGetValue(ospvDataRefId, &dataReferencePtr);
@@ -417,27 +345,23 @@ OSPPASN1ObjectDeparse(
     errorcode = OSPPASN1ObjectGetParseResults(ospvObject, &origParseResults);
     parseResults = origParseResults;
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         elementInfo = ospvObject->ElementInfo;
 
         /* Generate the element list first - this is a recursive call */
-        errorcode = OSPPASN1ElementDeparse(&elementInfo, &parseResults, 
-            ospvParseTableId, dataReferencePtr);
+        errorcode = OSPPASN1ElementDeparse(&elementInfo, &parseResults, ospvParseTableId, dataReferencePtr);
     }
 
     return errorcode;
 }
 
-
-int 
-OSPPASN1ObjectEncode(
+int OSPPASN1ObjectEncode(
     OSPTASN1OBJECT **ospvEncodedObject,
-    unsigned char  *ospvTag,
-    unsigned        ospvTagLength,
-    unsigned char   ospvTagFlags,
-    unsigned char  *ospvContent,
-    unsigned        ospvContentLength,
+    unsigned char *ospvTag,
+    unsigned ospvTagLength,
+    unsigned char ospvTagFlags, 
+    unsigned char *ospvContent, 
+    unsigned ospvContentLength, 
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -445,39 +369,29 @@ OSPPASN1ObjectEncode(
     OSPTASN1ELEMENTINFO *eInfo = OSPC_OSNULL;
     OSPTASN1OBJECT *encodedObject = OSPC_OSNULL;
 
-    errorcode = OSPPASN1ElementFormat(&eInfo, 
-        ospvTag, ospvTagFlags, ospvTagLength, 
-        ospvContent, ospvContentLength);
+    errorcode = OSPPASN1ElementFormat(&eInfo, ospvTag, ospvTagFlags, ospvTagLength, ospvContent, ospvContentLength);
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPASN1ObjectFormat(&encodedObject, eInfo, ospvDataRefId);
     }
 
-    if (errorcode != OSPC_ERR_NO_ERROR)
-    {
-        if (eInfo != OSPC_OSNULL)
-        {
-            OSPPASN1ElementDelete(&eInfo,0);
+    if (errorcode != OSPC_ERR_NO_ERROR) {
+        if (eInfo != OSPC_OSNULL) {
+            OSPPASN1ElementDelete(&eInfo, 0);
         }
-        if (encodedObject != OSPC_OSNULL)
-        {
+        if (encodedObject != OSPC_OSNULL) {
             OSPPASN1ObjectDelete(&encodedObject);
         }
-    }
-    else
-    {
+    } else {
         *ospvEncodedObject = encodedObject;
     }
 
     return errorcode;
 }
 
-
-int 
-OSPPASN1ObjectFormat(
-    OSPTASN1OBJECT **ospvObject,
-    OSPTASN1ELEMENTINFO *ospvElement,
+int OSPPASN1ObjectFormat(
+    OSPTASN1OBJECT **ospvObject, 
+    OSPTASN1ELEMENTINFO *ospvElement, 
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -487,35 +401,25 @@ OSPPASN1ObjectFormat(
 
     OSPM_MALLOC(object, OSPTASN1OBJECT, sizeof(OSPTASN1OBJECT));
 
-    if (object == OSPC_OSNULL)
-    {
+    if (object == OSPC_OSNULL) {
         errorcode = OSPC_ERR_ASN1_UNABLE_TO_ALLOCATE_SPACE;
-        OSPM_DBGERRORLOG(errorcode, 
-            "Unable to allocate space for new object");
-    }
-    else
-    {
+        OSPM_DBGERRORLOG(errorcode, "Unable to allocate space for new object");
+    } else {
         OSPM_MEMSET(object, 0, sizeof(object));
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
-
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = PTPResultsCreate(&parseResults, ospvElement, ospvDataRefId);
     }
 
-    if (errorcode != OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode != OSPC_ERR_NO_ERROR) {
         OSPM_FREE(object);
         OSPM_FREE(parseResults);
-    }
-    else
-    {
-        object->ElementInfo = ospvElement;  
+    } else {
+        object->ElementInfo = ospvElement;
         object->ParseResults = parseResults;
         *ospvObject = object;
     }
 
     return errorcode;
 }
-

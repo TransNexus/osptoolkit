@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospusage.h - OSP usage detail objects
  */
@@ -30,19 +24,19 @@
 
 #include "osp/osp.h"
 #include "osp/ospxmlelem.h"
+#include "osp/ospmsgattr.h"
+#include "osp/ospaltinfo.h"
 
+/* Function Prototypes */
 
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+unsigned OSPPUsageFromElement(OSPT_XML_ELEM *, unsigned *);
+unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned, OSPT_XML_ELEM *);
+unsigned OSPPAddConfIdToUsageElement(const char *, OSPT_XML_ELEM **);
+unsigned OSPPAddServiceTypeToUsageElement(OSPE_SERVICE, OSPT_XML_ELEM **);
+unsigned OSPPAddPricingInfoToUsageElement(OSPT_PRICING_INFO, OSPT_XML_ELEM **);
 
-unsigned OSPPUsageFromElement(OSPTXMLELEM *, unsigned *);
-unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned, OSPTXMLELEM **);
-unsigned OSPPAddConfIdToUsageElement(unsigned char *,OSPTXMLELEM **);
-
-unsigned OSPPAddServiceTypeToUsageElement(OSPE_SERVICE_TYPE,OSPTXMLELEM **);
-unsigned OSPPAddPricingInfoToUsageElement(OSPT_PRICING_INFO,OSPTXMLELEM **);
-
-#endif
-
+unsigned OSPPCallPartyNumToElement(OSPE_MSG_ELEM, const char *, OSPE_NUMBER_FORMAT, OSPT_XML_ELEM **);
+unsigned OSPPTermCauseToElement(OSPE_TERM_CAUSE, unsigned, const char *, OSPT_XML_ELEM **);
+unsigned OSPPStringToElement(OSPE_MSG_ELEM, const char *, unsigned, OSPE_MSG_ATTR *, OSPE_ALTINFO *, OSPT_XML_ELEM **);
+unsigned OSPPCustomInfoToElement(unsigned, const char *, OSPT_XML_ELEM **);
+#endif /* _OSPUSAGE_H */

@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospmsgattr.h - Definitions for OSP message attributes.
  */
@@ -31,38 +25,42 @@
 #include "osp/ospmsgdesc.h"
 #include "osp/ospmsgpart.h"
 
-/* attributes defined by the Open Settlement Protocol */
+/* Attributes defined by the Open Settlement Protocol */
+typedef enum {
+    OSPC_MATTR_UNKNOWN = OSPC_MPART_UNKNOWN,    
+    OSPC_MATTR_UNDEFINED,
+    /* Message attribute start */
+    OSPC_MATTR_START = OSPC_MPART_START,
+    OSPC_MATTR_MESSAGEID = OSPC_MATTR_START,
+    OSPC_MATTR_COMPONENTID,
+    OSPC_MATTR_RANDOM,
+    OSPC_MATTR_CRITICAL,
+    OSPC_MATTR_ENCODING,
+    OSPC_MATTR_TYPE,
+    OSPC_MATTR_VERSION,
+    OSPC_MATTR_INDEX,
+    /* Number of message attribtes */
+    OSPC_MATTR_NUMBER
+} OSPE_MSG_ATTR;
 
-typedef enum
-{
-    ospeAttrUnknown = OSPC_MSGPARTUNKNOWN,
-    ospeAttrComponentId,
-    ospeAttrCritical,
-    ospeAttrEncoding,
-    ospeAttrMessageId,
-    ospeAttrType,
-    ospeAttrVersion,
-    ospeAttrRandom
-}
-OSPTMSGATTRPART;
+#define OSPC_MAX_INDEX  32 
 
-/**/
-/*-----------------------------------------------------------------------*
+/* Direction types */
+typedef enum {
+    OSPC_DIR_GENERAL = -1,
+    OSPC_DIR_INBOUND = 0,
+    OSPC_DIR_OUTBOUND,
+    /* Number of direction types */
+    OSPC_DIR_NUMBER
+} OSPE_DIRECTION;
+
+/*
  * externally declared global variables
- *-----------------------------------------------------------------------*/
+ */
+extern const OSPT_MSG_DESC OSPV_MATTR_DESCS[];
 
-extern const OSPTMSGDESC OSPVAttrDescs[];
-extern const unsigned    OSPVNumAttrDesc;
-
-
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
-
-const char *OSPPMsgGetAttrName(OSPTMSGATTRPART);
-OSPTMSGATTRPART OSPPMsgGetAttrPart(const char *);
-
+/* Function Prototypes */
+OSPE_MSG_ATTR OSPPMsgAttrGetPart(const char *);
+const char *OSPPMsgAttrGetName(OSPE_MSG_ATTR);
 
 #endif /* _OSPMSGATTR_H */
-

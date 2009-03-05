@@ -15,18 +15,12 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  *  ospacapind.h - OSP capabiliti indication objects
  */
 
-#ifndef _OSPACAPIND_H
-#define _OSPACAPIND_H
+#ifndef _OSPCAPIND_H
+#define _OSPCAPIND_H
 
 #include "osp/osp.h"
 #include "osp/ospxmlelem.h"
@@ -34,32 +28,25 @@
 #include "osp/ospaltinfo.h"
 #include "osp/osptrans.h"
 
+typedef struct {
+    OSPTTIME ospmTimestamp;
+    char *ospmMessageId;
+    char *ospmComponentId;
+    OSPTLIST ospmDeviceInfo;
+    unsigned ospmAlmostOutOfResources;
+    OSPTLIST ospmSrcAlternate;
+} OSPT_CAP_IND;
 
-
-typedef struct
-{
-    OSPTTIME          ospmTimestamp;
-    unsigned char    *ospmMessageId;
-    unsigned char    *ospmComponentId;
-    OSPTLIST          ospmDeviceInfo;
-    unsigned          ospmAlmostOutOfResources;
-    OSPTLIST          ospmSrcAlternate;
-}
-OSPTCAPIND;
-
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    /*-----------------------------------------------------------------------*
-     *  function prototypes
-     *-----------------------------------------------------------------------*/
-    unsigned       OSPPGenerateUniqueId(OSPTTRANS*, unsigned char **);
-    unsigned       OSPPCapIndNew(OSPTCAPIND**, OSPTTRANS*, const char*, const char *, const char*, unsigned);
-    void           OSPPCapIndDelete(OSPTCAPIND **);
-  int            OSPPCapIndToElement(OSPTCAPIND *, OSPTXMLELEM **);
+    unsigned OSPPGenerateUniqueId(OSPTTRANS *, char **);
+    unsigned OSPPCapIndNew(OSPT_CAP_IND **, OSPTTRANS *, const char *, const char *, const char *, unsigned);
+    void OSPPCapIndDelete(OSPT_CAP_IND **);
+    int OSPPCapIndToElement(OSPT_CAP_IND *, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

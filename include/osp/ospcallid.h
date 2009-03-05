@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospcallid.h - OSP call identifier objects
  */
@@ -31,46 +25,38 @@
 #include "osp/osp.h"
 #include "osp/osplist.h"
 #include "osp/ospxmlelem.h"
-
+#include "osp/ospaltinfo.h"
+#include "osp/ospmsgattr.h"
 
 /* max size of a call ID (bytes) */
 
-#define OSPC_CALLID_MAXSIZE        256
+#define OSPC_CALLID_MAXSIZE         256
 
 /* the basic call identifier structure */
 
-typedef struct
-{
-    OSPTLISTLINK   ospmCallIdLink;
-    unsigned       ospmCallIdLen;
+typedef struct {
+    OSPTLISTLINK ospmCallIdLink;
+    unsigned ospmCallIdLen;
     unsigned char *ospmCallIdVal;
-}
-OSPTCALLID;
+} OSPT_CALL_ID;
 
-
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    OSPTCALLID    *OSPPCallIdNew(unsigned, const unsigned char *);
-    void           OSPPCallIdDelete(OSPTCALLID **);
-    unsigned       OSPPCallIdFromElement(OSPTXMLELEM *, OSPTCALLID  **);
-    unsigned       OSPPCallIdToElement(OSPTCALLID *, OSPTXMLELEM **, OSPTBOOL);
-
-    unsigned       OSPPCallIdGetSize(OSPTCALLID *);
-    unsigned char *OSPPCallIdGetValue(OSPTCALLID *);
-    unsigned       OSPPCallIdFromASCIIElement(unsigned char *,OSPTCALLID  **);
-
+    OSPT_CALL_ID *OSPPCallIdNew(unsigned, const unsigned char *);
+    void OSPPCallIdDelete(OSPT_CALL_ID **);
+    unsigned OSPPCallIdFromElement(OSPT_XML_ELEM *, OSPT_CALL_ID **);
+    unsigned OSPPCallIdToElement(OSPT_CALL_ID *, OSPT_XML_ELEM **, OSPTBOOL);
+    unsigned OSPPCallIdGetSize(OSPT_CALL_ID *);
+    unsigned char *OSPPCallIdGetValue(OSPT_CALL_ID *);
+    unsigned OSPPCallIdFromASCIIElement(unsigned char *, OSPT_CALL_ID **);
+    unsigned OSPPSessionIdToElement(OSPT_CALL_ID *, OSPE_DIRECTION, OSPTBOOL, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* _OSPCALLID_H */
-

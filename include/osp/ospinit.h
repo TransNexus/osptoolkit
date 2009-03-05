@@ -15,27 +15,23 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospinit.h - Constants and prototypes for initialization.
  */
-#ifndef _OSP_INIT_H
-#define _OSP_INIT_H
+
+#ifndef _OSPINIT_H
+#define _OSPINIT_H
 
 #define OSPC_MAX_PROVIDERS  10
 #define OSPC_NO_PROVIDERS   -1
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    int  OSPPInit(OSPTBOOL hw_enabled);
+    int OSPPInit(OSPTBOOL hw_enabled);
     void OSPPCleanup(void);
     void OSPPOpenSSLInit(OSPTBOOL hw_enabled);
     void OSPPOpenSSLCleanUp(void);
@@ -46,5 +42,4 @@ extern "C"
 }
 #endif
 
-#endif
-
+#endif /* _OSPINIT_H */

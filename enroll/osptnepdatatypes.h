@@ -15,14 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
-
 #include "osp/ospasn1.h"
 
 /*************************************************************************
@@ -35,25 +27,24 @@
  * can be used to describe the type of operation being performed by the
  * enrollment client. 
  */
-typedef struct _OSPTENROLLPARAMS 
-{
-    unsigned char*  Function;
-    unsigned char*  Username;
-    unsigned char*  Password;
-    unsigned char*  DeviceId;
-    unsigned char*  CustomerId;
-    unsigned char*  Nonce;
-    unsigned        NonceLen;
-    unsigned char*  CertReq;
-    unsigned char*  Subject;
-    unsigned char*  SSLUrl;
-    unsigned char*  CAUrl;
-    unsigned char*  CAFprint;
-    unsigned char*  CACert;
-    unsigned        CACertLen;
-    unsigned char*  CACertB64;
-    unsigned        CACertB64Len;
-    unsigned        Verbose;
+typedef struct _OSPTENROLLPARAMS {
+    unsigned char *Function;
+    unsigned char *Username;
+    unsigned char *Password;
+    unsigned char *DeviceId;
+    unsigned char *CustomerId;
+    unsigned char *Nonce;
+    unsigned NonceLen;
+    unsigned char *CertReq;
+    unsigned char *Subject;
+    unsigned char *SSLUrl;
+    unsigned char *CAUrl;
+    unsigned char *CAFprint;
+    unsigned char *CACert;
+    unsigned CACertLen;
+    unsigned char *CACertB64;
+    unsigned CACertB64Len;
+    unsigned Verbose;
 } OSPTENROLLPARAMS;
 
 /* 
@@ -69,12 +60,11 @@ typedef struct _OSPTENROLLPARAMS
  * The authority's certificates are included here for validating any
  * information ( e.g., certificates ) that come back.
  */
-typedef struct _OSPTCOMMPARAMS
-{
-    unsigned    SSLLifetime;    
-    unsigned    HTTPMaxConnections;
-    unsigned    HTTPPersistence;
-    unsigned    HTTPRetryDelay;
-    unsigned    HTTPRetryLimit;
-    unsigned    HTTPTimeout;
+typedef struct {
+    unsigned SSLLifetime;
+    unsigned HTTPMaxConnections;
+    unsigned HTTPPersistence;
+    unsigned HTTPRetryDelay;
+    unsigned HTTPRetryLimit;
+    unsigned HTTPTimeout;
 } OSPTCOMMPARAMS;

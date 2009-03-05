@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospbfr.h - Structures and prototypes for TransNexus message buffers.
  *            These should replaced by native buffer management routines,
@@ -36,45 +30,34 @@
 
 #include "osp/ospossys.h"
 
-
-typedef struct
-{
+typedef struct {
     unsigned char *ospmBfrGuard;    /* to detect invalid pointers */
     unsigned char *ospmBfrEnd;      /* end of message buffer */
     unsigned char *ospmBfrRead;     /* current read position */
     unsigned char *ospmBfrWrite;    /* current write position */
-
     /* be sure structure ends on aligned byte boundary */
-}
-OSPTBFR;
+} OSPTBFR;
 
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    /**/
-    /*-----------------------------------------------------------------------*/
-    /* function prototypes                                                   */
-    /*-----------------------------------------------------------------------*/
-    OSPTBFR  *OSPPBfrNew(unsigned);
-    unsigned  OSPPBfrWriteByte(OSPTBFR **, unsigned char );
-    unsigned  OSPPBfrWriteBlock(OSPTBFR **, const void *, unsigned );
-    unsigned  OSPPBfrReadBlock(OSPTBFR **, void *, unsigned );
-    void      OSPPBfrClear(OSPTBFR  *);
-
-    void     *OSPPBfrLinearPtr(OSPTBFR *);
-    unsigned  OSPPBfrSize(OSPTBFR *);
-    int       OSPPBfrReadByte(OSPTBFR *);
-    int       OSPPBfrPeekByte(OSPTBFR *);
-    int       OSPPBfrPeekByteN(OSPTBFR *, unsigned);
-    void      OSPPBfrDelete(OSPTBFR **);
-
+    OSPTBFR *OSPPBfrNew(unsigned);
+    unsigned OSPPBfrWriteByte(OSPTBFR **, unsigned char);
+    unsigned OSPPBfrWriteBlock(OSPTBFR **, const void *, unsigned);
+    unsigned OSPPBfrReadBlock(OSPTBFR **, void *, unsigned);
+    void OSPPBfrClear(OSPTBFR *);
+    void *OSPPBfrLinearPtr(OSPTBFR *);
+    unsigned OSPPBfrSize(OSPTBFR *);
+    int OSPPBfrReadByte(OSPTBFR *);
+    int OSPPBfrPeekByte(OSPTBFR *);
+    int OSPPBfrPeekByteN(OSPTBFR *, unsigned);
+    void OSPPBfrDelete(OSPTBFR **);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* _OSPBFR_H */
-

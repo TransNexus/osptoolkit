@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospcallid.c - OSP call identifier functions
  */
@@ -35,25 +29,18 @@
 #include "osp/ospmsgelem.h"
 #include "osp/ospmsg.h"
 
-
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPCallIdNew() - create a new call identifier object
- *-----------------------------------------------------------------------*/
-
-OSPTCALLID *                           /* returns ptr to call ID or null */
-    OSPPCallIdNew(
-    unsigned             ospvLen,      /* size of call ID */
-    const unsigned char *ospvValue     /* call ID value */
-    )
+ */
+OSPT_CALL_ID *OSPPCallIdNew(        /* returns ptr to call ID or null */
+    unsigned ospvLen,               /* size of call ID */
+    const unsigned char *ospvValue) /* call ID value */
 {
-    OSPTCALLID    *ospvCallId = OSPC_OSNULL;
+    OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
     unsigned char *valptr;
 
-    if (ospvLen   >  0)
-    {
-        if (ospvValue != OSPC_OSNULL)
-        {
+    if (ospvLen > 0) {
+        if (ospvValue != OSPC_OSNULL) {
 
             /*
              * CallId objects are actually two parts -- the first is the CallId
@@ -98,13 +85,12 @@ OSPTCALLID *                           /* returns ptr to call ID or null */
              */
 
             /* try to allocate the memory for the entire object */
-            OSPM_MALLOC(ospvCallId, OSPTCALLID,sizeof(OSPTCALLID) + ospvLen);
+            OSPM_MALLOC(ospvCallId, OSPT_CALL_ID, sizeof(OSPT_CALL_ID) + ospvLen);
 
             /* make sure the allocation succeeded before proceeding */
-            if (ospvCallId != OSPC_OSNULL)
-            {
+            if (ospvCallId != OSPC_OSNULL) {
                 /* calculate where the "hidden" values will go */
-                valptr = ((unsigned char *)ospvCallId) + sizeof(OSPTCALLID);
+                valptr = ((unsigned char *)ospvCallId) + sizeof(OSPT_CALL_ID);
 
                 /* copy the values into their hidden location */
                 OSPM_MEMCPY(valptr, ospvValue, ospvLen);
@@ -116,198 +102,192 @@ OSPTCALLID *                           /* returns ptr to call ID or null */
             }
         }
     }
-    return(ospvCallId);
+
+    return ospvCallId;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPCallIdFromASCIIElement() - create a call id from an ASCII element
- *-----------------------------------------------------------------------*/
-
-unsigned                          /* returns error code */
-OSPPCallIdFromASCIIElement(
-    unsigned char *ospvElem,        /* input is ASCII element */
-    OSPTCALLID **ospvCallId       /* where to put CallID pointer */
-)
+ */
+unsigned OSPPCallIdFromASCIIElement(    /* returns error code */
+    unsigned char *ospvElem,            /* input is ASCII element */
+    OSPT_CALL_ID **ospvCallId)          /* where to put CallID pointer */
 {
-    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     unsigned char *callIdValue = OSPC_OSNULL;
-    unsigned      callIdLen = 0;
+    unsigned callIdLen = 0;
 
-    if (ospvElem   == OSPC_OSNULL) 
-    {
+    if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_ASCII_NO_ELEMENT;
     }
-    if (ospvCallId == OSPC_OSNULL) 
-    {
+    if (ospvCallId == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_DATA_NOCALLID;
     }
 
     /* start by assuming we will fail */
     *ospvCallId = OSPC_OSNULL;
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) 
-    {
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         ospvErrCode = OSPPMsgBinFromASCIIElement(ospvElem, &callIdLen, &callIdValue);
 
         /* create the CallId structure */
-        if (ospvErrCode == OSPC_ERR_NO_ERROR)
-        {
+        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
             *ospvCallId = OSPPCallIdNew(callIdLen, callIdValue);
-            if (*ospvCallId == OSPC_OSNULL)
-            {
+            if (*ospvCallId == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_DATA_NOCALLID;
             }
         }
     }
 
-    if(callIdValue != OSPC_OSNULL)
-    {
+    if (callIdValue != OSPC_OSNULL) {
         OSPM_FREE(callIdValue);
     }
 
-    return(ospvErrCode);
+    return ospvErrCode;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPCallIdFromElement() - create a call id from an XML element
- *-----------------------------------------------------------------------*/
-
-unsigned                          /* returns error code */
-OSPPCallIdFromElement(
-    OSPTXMLELEM *ospvElem,        /* input is XML element */
-    OSPTCALLID **ospvCallId       /* where to put CallID pointer */
-)
+ */
+unsigned OSPPCallIdFromElement( /* returns error code */
+    OSPT_XML_ELEM *ospvElem,    /* input is XML element */
+    OSPT_CALL_ID **ospvCallId)  /* where to put CallID pointer */
 {
-    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     unsigned char *callIdValue = OSPC_OSNULL;
-    unsigned      callIdLen = 0;
+    unsigned callIdLen = 0;
 
-    if (ospvElem   == OSPC_OSNULL) 
-    {
+    if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvCallId == OSPC_OSNULL) 
-    {
+    if (ospvCallId == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_DATA_NOCALLID;
     }
-    /*    assert(OSPPMsgGetElemPart(OSPPXMLElemGetName(ospvElem)) ==
-               ospeElemCallId);
-    */
-
+    /* assert(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_CALLID); */
+    
     /* start by assuming we will fail */
     *ospvCallId = OSPC_OSNULL;
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) 
-    {
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         ospvErrCode = OSPPMsgBinFromElement(ospvElem, &callIdLen, &callIdValue);
 
         /* create the CallId structure */
-        if (ospvErrCode == OSPC_ERR_NO_ERROR)
-        {
+        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
             *ospvCallId = OSPPCallIdNew(callIdLen, callIdValue);
-            if (*ospvCallId == OSPC_OSNULL)
-            {
+            if (*ospvCallId == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_DATA_NOCALLID;
             }
         }
     }
 
-    if(callIdValue != OSPC_OSNULL)
-    {
+    if (callIdValue != OSPC_OSNULL) {
         OSPM_FREE(callIdValue);
     }
 
-    return(ospvErrCode);
+    return ospvErrCode;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPCallIdDelete() - destroy a call identifier object
- *-----------------------------------------------------------------------*/
-void                                  /* no return */
-OSPPCallIdDelete(
-    OSPTCALLID **ospvCallId            /* CallId to destroy */
-)
+ */
+void OSPPCallIdDelete(          /* no return */
+    OSPT_CALL_ID **ospvCallId)  /* CallId to destroy */
 {
-    /*We free the whole callid at once because of the way
-     * it is constructed.
-     */
-
-    if ((*ospvCallId != OSPC_OSNULL) &&
-        (ospvCallId != OSPC_OSNULL))
-    {
+    /* We free the whole callid at once because of the way it is constructed. */
+    if ((*ospvCallId != OSPC_OSNULL) && (ospvCallId != OSPC_OSNULL)) {
         OSPM_FREE(*ospvCallId);
         *ospvCallId = OSPC_OSNULL;
     }
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPCallIdToElement() - create an XML element from a call id
- *-----------------------------------------------------------------------*/
-unsigned                           /* returns error code */
-OSPPCallIdToElement(
-    OSPTCALLID   *ospvCallId,      /* Call ID */
-    OSPTXMLELEM **ospvElem,        /* where to put XML element pointer */
-    OSPTBOOL    ospvIsBase64       /* indicates base64 or cdata */
-)
+ */
+unsigned OSPPCallIdToElement(   /* returns error code */
+    OSPT_CALL_ID *ospvCallId,   /* Call ID */
+    OSPT_XML_ELEM **ospvElem,   /* where to put XML element pointer */
+    OSPTBOOL ospvIsBase64)      /* indicates base64 or cdata */
 {
-    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
 
-    if (ospvElem   == OSPC_OSNULL) 
-    {
+    if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvCallId == OSPC_OSNULL) 
-    {
+    if (ospvCallId == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_DATA_NOCALLID;
     }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) 
-    {
-        ospvErrCode = OSPPMsgBinToElement(OSPPCallIdGetSize(ospvCallId),
-            OSPPCallIdGetValue(ospvCallId),
-            (const unsigned char *)OSPPMsgGetElemName(ospeElemCallId),
-            ospvElem, ospvIsBase64);
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CALLID),
+            OSPPCallIdGetSize(ospvCallId), OSPPCallIdGetValue(ospvCallId),
+            OSPC_OSNULL, OSPC_OSNULL, ospvIsBase64,
+            ospvElem); 
     }
 
-    return(ospvErrCode);
+    return ospvErrCode;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPCallIdGetSize() - returns size of call ID value
- *-----------------------------------------------------------------------*/
-unsigned
-OSPPCallIdGetSize(
-    OSPTCALLID *ospvCallId
-)
+ */
+unsigned OSPPCallIdGetSize(
+    OSPT_CALL_ID *ospvCallId)
 {
     unsigned ospvSize = 0;
-    if (ospvCallId != OSPC_OSNULL) 
-    {
-        ospvSize = ((ospvCallId)->ospmCallIdLen);
+
+    if (ospvCallId != OSPC_OSNULL) {
+        ospvSize = ospvCallId->ospmCallIdLen;
     }
-    return(ospvSize);
+
+    return ospvSize;
 }
 
-
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPCallIdGetValue() - returns pointer to call ID value
- *-----------------------------------------------------------------------*/
-unsigned char *
-OSPPCallIdGetValue(
-    OSPTCALLID *ospvCallId
-)
+ */
+unsigned char *OSPPCallIdGetValue(
+    OSPT_CALL_ID *ospvCallId)
 {
     unsigned char *ospvVal = OSPC_OSNULL;
 
-    if (ospvCallId != OSPC_OSNULL) 
-    {
+    if (ospvCallId != OSPC_OSNULL) {
         ospvVal = ospvCallId->ospmCallIdVal;
     }
 
-    return(ospvVal);
+    return ospvVal;
 }
 
+/*
+ * OSPPSessionIdToElement() - create an XML element from a call id
+ */
+unsigned OSPPSessionIdToElement(    /* returns error code */
+    OSPT_CALL_ID *ospvSessionId,    /* Session ID */
+    OSPE_DIRECTION ospvType,        /* Direction */
+    OSPTBOOL ospvIsBase64,          /* indicates base64 or cdata */
+    OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
+{
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+ 
+    if (ospvElem == OSPC_OSNULL) {
+        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+    } else if (ospvSessionId == OSPC_OSNULL) {
+        ospvErrCode = OSPC_ERR_DATA_NOCALLID;
+    } else {
+        switch (ospvType) {
+        case OSPC_DIR_INBOUND:
+            ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
+                OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
+                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_INBOUND), ospvIsBase64,
+                ospvElem);
+            break;
+        case OSPC_DIR_OUTBOUND:
+            ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
+                OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
+                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_OUTBOUND), ospvIsBase64,
+                ospvElem);
+            break;
+        default:
+            ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+           break;
+        }
+    }
 
+    return ospvErrCode;
+}

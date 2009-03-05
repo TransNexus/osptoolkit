@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospxml.h - Header file for xml calls
  */
@@ -32,20 +26,20 @@
 #include "osp/ospmsg.h"
 #include "osp/osptrans.h"
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    int OSPPXMLElementProcess(OSPTXMLELEM *, unsigned char **, unsigned *);
-    int OSPPXMLGetDataType(OSPTXMLELEM *, OSPE_MSG_DATATYPES *);
-
-    int OSPPXMLMessageCreate(OSPE_MSG_DATATYPES, unsigned char **, unsigned *, void *, OSPTTRANS *);
-    int OSPPXMLMessageParse(unsigned char *, unsigned, void **, OSPE_MSG_DATATYPES *);
-    int OSPPXMLMessageProcess(OSPTXMLELEM *, void **, OSPE_MSG_DATATYPES);
+    int OSPPXMLElementProcess(OSPT_XML_ELEM *, unsigned char **, unsigned *);
+    int OSPPXMLGetDataType(OSPT_XML_ELEM *, OSPE_MESSAGE *);
+    int OSPPXMLMessageCreate(OSPE_MESSAGE, unsigned char **, unsigned *, void *, OSPTTRANS *);
+    int OSPPXMLMessageParse(unsigned char *, unsigned, void **, OSPE_MESSAGE *);
+    int OSPPXMLMessageProcess(OSPT_XML_ELEM *, void **, OSPE_MESSAGE);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPXML_H */

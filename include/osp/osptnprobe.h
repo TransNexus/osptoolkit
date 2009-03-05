@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * osptnprobe.h - structures and prototypes for functions that probe
  *             response time to different systems
@@ -58,95 +52,60 @@
  *      and average the remainder.
  */
 
-#ifndef osptnprobe_h
-#define osptnprobe_h
+#ifndef _OSPTNPROBE_H
+#define _OSPTNPROBE_H
 
 #include "osp/osp.h"
 
-typedef struct                      /* structure to pass probe information */
-{
-    OSPTIPADDR    ospmipaddr;
-    unsigned long ospmTime;         /* 0xFFFFFFFF = unreachable */
-    int           ospmSocket;       /* only used internally */
-    unsigned      ospmPrStatus;     /* only used internally */
-    unsigned      ospmPrRef;        /* Initial order in list */
+typedef struct {                /* structure to pass probe information */
+    OSPTIPADDR ospmipaddr;
+    unsigned long ospmTime;     /* 0xFFFFFFFF = unreachable */
+    int ospmSocket;             /* only used internally */
+    unsigned ospmPrStatus;      /* only used internally */
+    unsigned ospmPrRef;         /* Initial order in list */
 } OSPT_TN_PROBE;
 
 #define OSPC_TN_PROBE_UNREACHABLE 0xFFFFFFFF
 
-
 #define OSPC_ERR_TNPROBE_ERROR  0x01
-#define OSPC_ERR_TNPROBE_NORMAL     0x00
+#define OSPC_ERR_TNPROBE_NORMAL 0x00
 
 #define OSPC_TNPROBE_MAXTIMER   0xFFFF
 #define OSPC_TNPROBE_MAXWAIT    500
 #define OSPC_TNPROBE_TIMERMOD   10000000
 #define OSPC_TNPROBE_TIMERMULT  1000
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    /* function prototypes */
-
-    int 
-    OSPPTNProbe(OSPT_TN_PROBE *pProbeList, unsigned uNumHosts, 
-                       unsigned uMaxWait);
-
-    int                                /* 0 - maxFD ; !0 - error code */
-    OSPPTNProbeInit(
-            OSPT_TN_PROBE *pProbeList,  /* list to initialize */
-            unsigned *lpNumHosts,   /* number of hosts */
-            fd_set   *pSocketSet,   /* socket set */
-            int      *nMinFd        /*pointer to min val for socket fds */
-    ); 
-
-    int                             /* 0 - socket descriptor; !0 - error code */
-    OSPPTNProbeConnect(
-            OSPTIPADDR ipAddr);     /* remote address to connect */
-
-
-    void                                /* no return values */
-    OSPPTNProbeCleanup(
-            OSPT_TN_PROBE *pProbeList,  /* list to cleanup */
-            unsigned  uNumHosts);       /* number of hosts */
-
-
-    void                                /* no return value */
-    OSPPTNProbeEcho(
-        fd_set   *pSockets,         /* sockets to probe */
-        OSPT_TN_PROBE *pProbeList,  /* place to store results */
-        unsigned  uNumHosts,        /* number of hosts to probe */
-        unsigned  uMaxWait,         /* max ms to wait */
-        int       nMaxFd,           /* max fd number for sockets */
-        int       nMinFd            /* min fd number for sockets */
-    );
-
-    int 
-    OSPPTNProbeCompare( 
-        const void *, 
-        const void *);
-
-    unsigned long 
-    OSPPTNProbeTimerMS(
-        void);
-
-    void
-    OSPPTNProbePruneList(
-        OSPTLIST *,
-        OSPT_TN_PROBE *,
-        unsigned,
-        unsigned *);
-
-    void         
-    OSPPTNProbeArrangeList(
-        OSPTLIST *,
-        OSPT_TN_PROBE *,
-        unsigned);
+    int OSPPTNProbe(OSPT_TN_PROBE *pProbeList, unsigned uNumHosts, unsigned uMaxWait);
+    /* 0 - maxFD ; !0 - error code */
+    int  OSPPTNProbeInit(OSPT_TN_PROBE *pProbeList,     /* list to initialize */
+            unsigned *lpNumHosts,                       /* number of hosts */
+            fd_set *pSocketSet,                         /* socket set */
+            int *nMinFd);                               /*pointer to min val for socket fds */
+    /* 0 - socket descriptor; !0 - error code */
+    int OSPPTNProbeConnect(OSPTIPADDR ipAddr);          /* remote address to connect */
+    /* no return values */
+    void OSPPTNProbeCleanup(OSPT_TN_PROBE *pProbeList,  /* list to cleanup */
+            unsigned uNumHosts);                        /* number of hosts */
+    /* no return value */
+    void OSPPTNProbeEcho(fd_set *pSockets,              /* sockets to probe */
+            OSPT_TN_PROBE *pProbeList,                  /* place to store results */
+            unsigned uNumHosts,                         /* number of hosts to probe */
+            unsigned uMaxWait,                          /* max ms to wait */
+            int nMaxFd,                                 /* max fd number for sockets */
+            int nMinFd);                                /* min fd number for sockets */
+    int OSPPTNProbeCompare(const void *, const void *);
+    unsigned long OSPPTNProbeTimerMS(void);
+    void OSPPTNProbePruneList(OSPTLIST *, OSPT_TN_PROBE *, unsigned, unsigned *);
+    void OSPPTNProbeArrangeList(OSPTLIST *, OSPT_TN_PROBE *, unsigned);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPTNPROBE_H */

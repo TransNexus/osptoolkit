@@ -15,67 +15,59 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
- * tnids.h - structures and prototypes for functions that manage
- *           TransNexus transaction IDs
+ * osptransids.h - structures and prototypes for functions that manage
+ *                 TransNexus transaction IDs
  */
 
-#ifndef tnids_h
-#define tnids_h
+#ifndef _OSPTRANSIDS_H
+#define _OSPTRANSIDS_H
 
 #include "osp/osp.h"
 
-
-/*MACROS
-#define tnListNewest (tnSentinel.tidOlderPtr)
-#define tnListOldest (tnSentinel.tidNewerPtr)
-#define tnListEnd    (&tnSentinel)
+/* MACROS
+ * #define tnListNewest (tnSentinel.tidOlderPtr)
+ * #define tnListOldest (tnSentinel.tidNewerPtr)
+ * #define tnListEnd    (&tnSentinel)
 */
 
-typedef struct _OSPTTRANSID                  /* info about a transaction ID */
-{
-    OSPTUINT64     ospmTransactionId;           /* the actual transaction ID value */
-    unsigned long  ospmTransactionIdExpires;    /* expiration time */
-    struct _OSPTTRANSID    *ospmTransactionIdLessPtr;    /* lower valued ID in tree */
-    struct _OSPTTRANSID    *ospmTransactionIdMorePtr;    /* greater valued ID in tree */
-    struct _OSPTTRANSID   **ospmTransactionIdParent;     /* parent pointer (for removes) */
-    struct _OSPTTRANSID    *ospmTransactionIdOlderPtr;   /* older in list */
-    struct _OSPTTRANSID    *ospmTransactionIdNewerPtr;   /* more recent in list */
-}OSPTTRANSID;
+typedef struct _OSPTTRANSID {                           /* info about a transaction ID */
+    OSPTUINT64 ospmTransactionId;                       /* the actual transaction ID value */
+    unsigned long ospmTransactionIdExpires;             /* expiration time */
+    struct _OSPTTRANSID *ospmTransactionIdLessPtr;      /* lower valued ID in tree */
+    struct _OSPTTRANSID *ospmTransactionIdMorePtr;      /* greater valued ID in tree */
+    struct _OSPTTRANSID **ospmTransactionIdParent;      /* parent pointer (for removes) */
+    struct _OSPTTRANSID *ospmTransactionIdOlderPtr;     /* older in list */
+    struct _OSPTTRANSID *ospmTransactionIdNewerPtr;     /* more recent in list */
+} OSPTTRANSID;
 
 #include "osp/ospprovider.h"
 
+/* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    /* Function Definitions */
-	OSPTBOOL        OSPPTransIdAdd(OSPTTRANSID *, struct _OSPTPROVIDER *);
-	OSPTBOOL        OSPPTransIdCheckAndAdd(OSPTUINT64, unsigned long, struct _OSPTPROVIDER   *);
-	void            OSPPTransIdDelete(OSPTTRANSID *);
-	void            OSPPTransIdInit(struct _OSPTPROVIDER *);
-	OSPTTRANSID    *OSPPTransIdNew(OSPTUINT64, unsigned long);
-	void            OSPPTransIdPurge(OSPTTRANSID *);
-	void            OSPPTransIdRemove(OSPTTRANSID *);
-	unsigned long   OSPPTransIdSecNow(void);
-	void            OSPPTransIdTimeAdd(OSPTTRANSID *, struct _OSPTPROVIDER *);
-    void            OSPPTransIDTreeDelete(struct _OSPTPROVIDER *);
+    OSPTBOOL OSPPTransIdAdd(OSPTTRANSID *, struct _OSPTPROVIDER *);
+    OSPTBOOL OSPPTransIdCheckAndAdd(OSPTUINT64, unsigned long, struct _OSPTPROVIDER *);
+    void OSPPTransIdDelete(OSPTTRANSID *);
+    void OSPPTransIdInit(struct _OSPTPROVIDER *);
+    OSPTTRANSID *OSPPTransIdNew(OSPTUINT64, unsigned long);
+    void OSPPTransIdPurge(OSPTTRANSID *);
+    void OSPPTransIdRemove(OSPTTRANSID *);
+    unsigned long OSPPTransIdSecNow(void);
+    void OSPPTransIdTimeAdd(OSPTTRANSID *, struct _OSPTPROVIDER *);
+    void OSPPTransIDTreeDelete(struct _OSPTPROVIDER *);
 
 #ifdef TN_TRANSDBG
-	void tnPrintTree(OSPTTRANSID *pTrans);
-	void tnTransById(struct _OSPTPROVIDER *);    /* print by transaction ID */
-	void tnTransByTime(struct _OSPTPROVIDER *);  /* print by expiration time */
+    void tnPrintTree(OSPTTRANSID *pTrans);
+    void tnTransById(OSPTPROVIDER *);   /* print by transaction ID */
+    void tnTransByTime(OSPTPROVIDER *); /* print by expiration time */
 #endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* _OSPTRANSIDS_H */

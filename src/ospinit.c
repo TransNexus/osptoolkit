@@ -15,26 +15,18 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * ospinit.cpp - Provider space initialization.
  */
 #include "osp/osp.h"
 #include "osp/ospprovider.h"
 
-OSPTPROVIDER    OSPVProviderCollection[OSPC_MAX_PROVIDERS];
-OSPTMUTEX       OSPVProviderMutex;
+OSPTPROVIDER OSPVProviderCollection[OSPC_MAX_PROVIDERS];
+OSPTMUTEX OSPVProviderMutex;
 
 #ifdef OSPC_GK_SIM
 char *OSPVDeleteAllowed;
 #endif
-
 
 /*
  * The OSPPInit function performs internal housekeeping necessary to 
@@ -42,26 +34,22 @@ char *OSPVDeleteAllowed;
  *
  * returns OSPC_ERR_NO_ERROR if successful, OSPC_ERR_XXX otherwise.
  */
-int
-OSPPInit(OSPTBOOL hw_enabled)
+int OSPPInit(
+    OSPTBOOL hw_enabled)
 {
-    int         providerindex = 0;
-    int         errorcode     = OSPC_ERR_NO_ERROR,
-                tmperror      = OSPC_ERR_NO_ERROR;
+    int providerindex = 0;
+    int errorcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
 
     /*
      * create global provider mutex
      */
     OSPM_MUTEX_INIT(OSPVProviderMutex, NULL, errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR) 
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
          * cycle thru collection, initializing each element.
          */
-        for(providerindex = 0; providerindex < OSPC_MAX_PROVIDERS; providerindex++)
-        {
-            OSPM_MEMSET(&OSPVProviderCollection[providerindex], 0, 
-                sizeof(OSPTPROVIDER));
+        for (providerindex = 0; providerindex < OSPC_MAX_PROVIDERS; providerindex++) {
+            OSPM_MEMSET(&OSPVProviderCollection[providerindex], 0, sizeof(OSPTPROVIDER));
         }
 
         /*
@@ -80,8 +68,7 @@ OSPPInit(OSPTBOOL hw_enabled)
         errorcode = OSPC_ERR_PROV_INIT_FAILURE;
 
 #ifdef OSPC_GK_SIM
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPVDeleteAllowed = OSPM_GETENV("GKSIM_DELETE_ALLOWED");
     }
 #endif
@@ -94,8 +81,7 @@ OSPPInit(OSPTBOOL hw_enabled)
     return errorcode;
 }
 
-void
-OSPPCleanup(void)
+void OSPPCleanup(void)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
@@ -109,5 +95,4 @@ OSPPCleanup(void)
      * Clean up openssl global parameters
      */
     OSPPOpenSSLCleanUp();
-    return;
 }

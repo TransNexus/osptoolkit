@@ -15,34 +15,22 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * ospmsginfo.c
  */
 #include "osp/osp.h"
 #include "osp/ospmsginfo.h"
 
-static
-int
-osppMsgInfoInitSync(
-    OSPTMSGINFO *ospvMsgInfo)
+static int osppMsgInfoInitSync(
+    OSPT_MSG_INFO *ospvMsgInfo)
 {
-    int errorcode = OSPC_ERR_NO_ERROR,
-        tmperror  = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: osppMsgInfoInitSync()\n"));
     OSPM_MUTEX_INIT(ospvMsgInfo->Mutex, NULL, errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
+    if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPM_CONDVAR_INIT(ospvMsgInfo->CondVar, NULL, errorcode);
-        if (errorcode != OSPC_ERR_NO_ERROR)
-        {
+        if (errorcode != OSPC_ERR_NO_ERROR) {
             OSPM_MUTEX_DESTROY(ospvMsgInfo->Mutex, tmperror);
         }
     }
@@ -50,45 +38,40 @@ osppMsgInfoInitSync(
     return errorcode;
 }
 
-int
-OSPPMsgInfoNew(
-    OSPTMSGINFO **ospvMsgInfo)
+int OSPPMsgInfoNew(
+    OSPT_MSG_INFO **ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoNew()\n"));
-    OSPM_MALLOC(*ospvMsgInfo, OSPTMSGINFO, sizeof(OSPTMSGINFO));
-    if (*ospvMsgInfo != (OSPTMSGINFO *)OSPC_OSNULL)
-    {
-        OSPM_MEMSET(*ospvMsgInfo, 0, sizeof(OSPTMSGINFO));
+    OSPM_MALLOC(*ospvMsgInfo, OSPT_MSG_INFO, sizeof(OSPT_MSG_INFO));
+    if (*ospvMsgInfo != OSPC_OSNULL) {
+        OSPM_MEMSET(*ospvMsgInfo, 0, sizeof(OSPT_MSG_INFO));
 
         errorcode = osppMsgInfoInitSync(*ospvMsgInfo);
-        if (errorcode != OSPC_ERR_NO_ERROR)
-        {
+        if (errorcode != OSPC_ERR_NO_ERROR) {
             OSPM_FREE(*ospvMsgInfo);
-            *ospvMsgInfo = (OSPTMSGINFO *)OSPC_OSNULL;
+            *ospvMsgInfo = OSPC_OSNULL;
         }
     }
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoNew()\n"));
     return errorcode;
 }
 
-void
-OSPPMsgInfoDelete(
-    OSPTMSGINFO **ospvMsgInfo)
+void OSPPMsgInfoDelete(
+    OSPT_MSG_INFO **ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoDelete()\n"));
-    if (*ospvMsgInfo)
-    {
-        if ((*ospvMsgInfo)->ResponseMsg != (unsigned char *)OSPC_OSNULL)
+    if (*ospvMsgInfo) {
+        if ((*ospvMsgInfo)->ResponseMsg != OSPC_OSNULL)
             OSPM_FREE((*ospvMsgInfo)->ResponseMsg);
 
-        if ((*ospvMsgInfo)->RequestMsg != (unsigned char *)OSPC_OSNULL)
+        if ((*ospvMsgInfo)->RequestMsg != OSPC_OSNULL)
             OSPM_FREE((*ospvMsgInfo)->RequestMsg);
 
-        if ((*ospvMsgInfo)->ContentType != (unsigned char *)OSPC_OSNULL)
+        if ((*ospvMsgInfo)->ContentType != OSPC_OSNULL)
             OSPM_FREE((*ospvMsgInfo)->ContentType);
 
 
@@ -97,54 +80,44 @@ OSPPMsgInfoDelete(
         OSPM_CONDVAR_DESTROY((*ospvMsgInfo)->CondVar, errorcode);
 
         OSPM_FREE(*ospvMsgInfo);
-        *ospvMsgInfo = (OSPTMSGINFO *)OSPC_OSNULL;
+        *ospvMsgInfo = OSPC_OSNULL;
     }
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoDelete()\n"));
-    return;
 }
 
-void
-OSPPMsgInfoAssignRequestMsg(
-    OSPTMSGINFO   *ospvMsgInfo,
-    unsigned char *ospvRequestMsg,
-    unsigned      ospvRequestSz)
+void OSPPMsgInfoAssignRequestMsg(
+    OSPT_MSG_INFO *ospvMsgInfo, 
+    unsigned char *ospvRequestMsg, 
+    unsigned ospvRequestSz)
 {
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoAssignRequestMsg()\n"));
-    if (ospvMsgInfo != (OSPTMSGINFO *)OSPC_OSNULL) 
-    {
+    if (ospvMsgInfo != OSPC_OSNULL) {
 
         ospvMsgInfo->RequestMsg = ospvRequestMsg;
-        ospvMsgInfo->RequestSz  = ospvRequestSz;
+        ospvMsgInfo->RequestSz = ospvRequestSz;
     }
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoAssignRequestMsg()\n"));
-    return;
 }
 
-int
-OSPPMsgInfoProcessResponse(
-    OSPTMSGINFO *ospvMsgInfo)
+int OSPPMsgInfoProcessResponse(
+    OSPT_MSG_INFO *ospvMsgInfo)
 {
-    int errorcode  = OSPC_ERR_NO_ERROR,
-        tmperrcode = OSPC_ERR_NO_ERROR;
+    int errorcode = OSPC_ERR_NO_ERROR, tmperrcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoProcessResponse()\n"));
 
-    if (ospvMsgInfo->IsNonBlocking == OSPC_FALSE)
-    {
+    if (ospvMsgInfo->IsNonBlocking == OSPC_FALSE) {
         /* 
          * once signalled, acquire the mutex for the individual
          * transaction.
          */
         OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errorcode);
-        if (errorcode == OSPC_ERR_NO_ERROR)
-        {
+        if (errorcode == OSPC_ERR_NO_ERROR) {
             ospvMsgInfo->HasBeenProcessed = OSPC_TRUE;
             OSPM_CONDVAR_SIGNAL(ospvMsgInfo->CondVar, errorcode);
             OSPM_MUTEX_UNLOCK(ospvMsgInfo->Mutex, tmperrcode);
         }
-    }
-    else
-    {
+    } else {
         OSPPMsgInfoDelete(&ospvMsgInfo);
     }
 
@@ -153,24 +126,20 @@ OSPPMsgInfoProcessResponse(
     return errorcode;
 }
 
-int
-OSPPMsgInfoWaitForMsg(
-    OSPTMSGINFO *ospvMsgInfo)
+int OSPPMsgInfoWaitForMsg(
+    OSPT_MSG_INFO *ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoWaitForMsg()\n"));
 
     OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR)
-    {
-       while (ospvMsgInfo->HasBeenProcessed == OSPC_FALSE)
-       {
-           OSPM_CONDVAR_WAIT(ospvMsgInfo->CondVar, ospvMsgInfo->Mutex,
-                    errorcode);
-       }
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        while (ospvMsgInfo->HasBeenProcessed == OSPC_FALSE) {
+            OSPM_CONDVAR_WAIT(ospvMsgInfo->CondVar, ospvMsgInfo->Mutex, errorcode);
+        }
 
-            OSPM_MUTEX_UNLOCK(ospvMsgInfo->Mutex, errorcode);
+        OSPM_MUTEX_UNLOCK(ospvMsgInfo->Mutex, errorcode);
     }
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoWaitForMsg()\n"));
     return errorcode;

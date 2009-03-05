@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospostime.h - OS-specific time structures and prototypes
  */
@@ -32,48 +26,28 @@
 
 #include "osp/osp.h"
 
-
 /* time limits */
 
 #define OSPC_TIMEMIN    ((OSPTTIME)0)
-#define OSPC_TIMEMAX ((OSPTTIME)LONG_MAX)
-
+#define OSPC_TIMEMAX    ((OSPTTIME)LONG_MAX)
 
 /* OSP string time format is YYYY-MM-DDThh:mm:ssZ */
 
 #define OSPC_TIMESTRINGSIZE (sizeof("YYYY-MM-DDThh:mm:ssZ") + 1)
 
-/**/
-/*-----------------------------------------------------------------------*
- * Function prototypes
- *-----------------------------------------------------------------------*/
-
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
     unsigned OSPPOSTimeCalToString(OSPTTIME, char *);
     unsigned OSPPOSTimeStringToCal(const char *, OSPTTIME *);
-
-    int
-    OSPPOSTimeGetTime(
-        OSPTTIME *ospvTime,
-        unsigned int *ospvTimeMS);
-
-    int
-    OSPPOSTimeFormatGMTTime(
-        OSPTTIME ospvTime,
-        char *ospvFormat,
-        char *ospvTimeString);
-
+    int OSPPOSTimeGetTime(OSPTTIME *ospvTime, unsigned int *ospvTimeMS);
+    int OSPPOSTimeFormatGMTTime(OSPTTIME ospvTime, char *ospvFormat, char *ospvTimeString);
 
 #ifdef __cplusplus
 }
 #endif
 
-
-
-#endif
-
+#endif /* _OSPOSTIME_H */

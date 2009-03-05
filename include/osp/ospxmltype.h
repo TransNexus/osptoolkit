@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospxmltype.h - Structures and prototypes for generic XML character
  *                types. These are more or less a duplication of the
@@ -44,13 +38,13 @@
  * ctype-like array.
  */
 
-#define OSPC_XMLTYPE_NONE   0x00
-#define OSPC_XMLTYPE_CHAR   0x01
-#define OSPC_XMLTYPE_SPACE  0x02
-#define OSPC_XMLTYPE_LETTER 0x04
-#define OSPC_XMLTYPE_DIGIT  0x08
-#define OSPC_XMLTYPE_NAME   0x10
-#define OSPC_XMLTYPE_NAME1  0x20
+#define OSPC_XMLTYPE_NONE       0x00
+#define OSPC_XMLTYPE_CHAR       0x01
+#define OSPC_XMLTYPE_SPACE      0x02
+#define OSPC_XMLTYPE_LETTER     0x04
+#define OSPC_XMLTYPE_DIGIT      0x08
+#define OSPC_XMLTYPE_NAME       0x10
+#define OSPC_XMLTYPE_NAME1      0x20
 
 /*
  * external definition of the XML ctype-like array; this is not
@@ -59,22 +53,13 @@
 
 extern const unsigned char OSPVXMLCType[];
 
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+/* Function Prototypes */
 
 unsigned OSPPXMLIsChar(unsigned char);
-
 unsigned OSPPXMLIsSpace(unsigned char);
-
 unsigned OSPPXMLIsLetter(unsigned char);
-
 unsigned OSPPXMLIsDigit(unsigned char);
-
 unsigned OSPPXMLIsName(unsigned char);
-
 unsigned OSPPXMLIsName1(unsigned char);
 
-#endif
-
+#endif /* _OSPXMLTYPE_H */

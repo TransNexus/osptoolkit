@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospaltinfo.c - OSP alt info functions
  */
@@ -33,41 +27,46 @@
 #include "osp/ospmsgattr.h"
 #include "osp/ospaltinfo.h"
 
-OSP_TYPE_ATTR_STRUCT OSPVTypeStringTable[] = {
-    {ospetypeupper,     "top"},
-    {ospeE164,          "e164"},
-    {ospeH323,          "h323"},
-    {ospeUrl,           "url"},
-    {ospeEmail,         "email"},
-    {ospeTransport,     "transport"},
-    {ospeInternational, "international"},
-    {ospeNational,      "national"},
-    {ospeNetwork,       "network"},
-    {ospeSubscriber,    "subscriber"},
-    {ospeAbbreviated,   "abbreviated"},
-    {ospeE164prefix,    "e164prefix"},
-    {ospetypelower,     "bottom"},
-    {ospeSip,           "sip"},
-    {ospeDeviceId,      "deviceId"}
+const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
+    /* For Alt/Info attributes */
+    { OSPC_ALTINFO_E164,            "e164" },
+    { OSPC_ALTINFO_H323,            "h323" },
+    { OSPC_ALTINFO_URL,             "url" },
+    { OSPC_ALTINFO_EMAIL,           "email" },
+    { OSPC_ALTINFO_TRANSPORT,       "transport" },
+    { OSPC_ALTINFO_INTERNATIONAL,   "international" },
+    { OSPC_ALTINFO_NATIONAL,        "national" },
+    { OSPC_ALTINFO_NETWORK,         "network" },
+    { OSPC_ALTINFO_SUBSCRIBER,      "subscriber" },
+    { OSPC_ALTINFO_ABBREVIATED,     "abbreviated" },
+    { OSPC_ALTINFO_E164PREFIX,      "e164prefix" },
+    { OSPC_ALTINFO_SIP,             "sip" },
+    { OSPC_ALTINFO_XMPP,            "xmpp" },
+    { OSPC_ALTINFO_Q850,            "q850" },
+    { OSPC_ALTINFO_DEVICEID,        "deviceid" },
+    { OSPC_ALTINFO_ASSERTEDID,      "assertedid" },
+    { OSPC_ALTINFO_ROUTINGNUM,      "routingnumber" },
+    /* For other attributes */
+    { OSPC_ALTINFO_FALSE,           "flase" },
+    { OSPC_ALTINFO_BASE64,          "base64" },
+    { OSPC_ALTINFO_CDATA,           "cdata" },
+    { OSPC_ALTINFO_FORWARD,         "forward" },
+    { OSPC_ALTINFO_REVERSE,         "reverse" },
+    { OSPC_ALTINFO_GENERAL,         "general" },
+    { OSPC_ALTINFO_INBOUND,         "inbound" },
+    { OSPC_ALTINFO_OUTBOUND,        "outbound" }
 };
 
-const unsigned OSPVNumElemAltInfoTypes = sizeof(OSPVTypeStringTable)/sizeof(OSP_TYPE_ATTR_STRUCT);
-
-
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPAltInfoNew() - create a new altinfo object
- *-----------------------------------------------------------------------*/
-
-OSPTALTINFO *                           /* returns ptr to altinfo or null */
-    OSPPAltInfoNew(
-    unsigned             ospvLen,      /* size of altinfo */
-    const unsigned char *ospvValue,    /* altinfo value */
-    OSPE_TYPE_ATTR_VAL   ospvType
-    )
+ */
+OSPT_ALTINFO *OSPPAltInfoNew(   /* returns ptr to altinfo or null */
+    unsigned ospvLen,           /* size of altinfo */
+    const char *ospvValue,      /* altinfo value */
+    OSPE_ALTINFO ospvType)
 {
-    OSPTALTINFO     *ospvAltInfo = OSPC_OSNULL;
-    unsigned char   *valptr;
+    OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
+    char *valptr;
 
     /*
      * AltInfo objects are actually two parts -- the first is the AltInfo
@@ -102,19 +101,14 @@ OSPTALTINFO *                           /* returns ptr to altinfo or null */
      * (or, perhaps, if the pool was empty).
      */
 
-    if (ospvLen > 0)
-    {
-        if (ospvValue != OSPC_OSNULL)
-        {
-
+    if (ospvLen > 0) {
+        if (ospvValue != OSPC_OSNULL) {
             /* try to allocate the memory for the entire object */
-            OSPM_MALLOC(ospvAltInfo, OSPTALTINFO,sizeof(OSPTALTINFO) + ospvLen + 1);
-
+            OSPM_MALLOC(ospvAltInfo, OSPT_ALTINFO, sizeof(OSPT_ALTINFO) + ospvLen + 1);
             /* make sure the allocation succeeded before proceeding */
-            if (ospvAltInfo != OSPC_OSNULL)
-            {
+            if (ospvAltInfo != OSPC_OSNULL) {
                 /* calculate where the "hidden" values will go */
-                valptr = ((unsigned char *)ospvAltInfo) + sizeof(OSPTALTINFO);
+                valptr = (char *)ospvAltInfo + sizeof(OSPT_ALTINFO);
 
                 /* copy the values into their hidden location */
                 OSPM_MEMCPY(valptr, ospvValue, ospvLen);
@@ -129,150 +123,113 @@ OSPTALTINFO *                           /* returns ptr to altinfo or null */
         }
     }
 
-    return(ospvAltInfo);
+    return ospvAltInfo;
 }
 
-
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPAltInfoDelete() - destroy a altinfo object
- *-----------------------------------------------------------------------*/
-void                                  /* no return */
-OSPPAltInfoDelete(
-    OSPTALTINFO **ospvAltInfo            /* AltInfo to destroy */
-)
+ */
+void OSPPAltInfoDelete(
+    OSPT_ALTINFO **ospvAltInfo)     /* AltInfo to destroy */
 {
-    if (*ospvAltInfo != OSPC_OSNULL)
-    {
+    if (*ospvAltInfo != OSPC_OSNULL) {
         OSPM_FREE(*ospvAltInfo);
         *ospvAltInfo = OSPC_OSNULL;
     }
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPAltInfoGetSize() - returns size of altinfo value
- *-----------------------------------------------------------------------*/
-unsigned
-OSPPAltInfoGetSize(
-    OSPTALTINFO *ospvAltInfo
-)
+ */
+unsigned OSPPAltInfoGetSize(
+    OSPT_ALTINFO *ospvAltInfo)
 {
     unsigned ospvSize = 0;
-    if (ospvAltInfo != OSPC_OSNULL)
-    {
+
+    if (ospvAltInfo != OSPC_OSNULL) {
         ospvSize = ospvAltInfo->ospmAltInfoLen;
     }
-    return(ospvSize);
+
+    return ospvSize;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
- * OSPPAltInfoGetType() - returns altinfo type
- *-----------------------------------------------------------------------*/
-OSPE_TYPE_ATTR_VAL
-    OSPPAltInfoGetType(
-    OSPTALTINFO *ospvAltInfo
-    )
+/*
+ * OSPPAltInfoTypeGetPart() - returns altinfo type
+ */
+OSPE_ALTINFO OSPPAltInfoTypeGetPart(
+    OSPT_ALTINFO *ospvAltInfo)
 {
-    OSPE_TYPE_ATTR_VAL  ospvType = ospetypeupper;
+    OSPE_ALTINFO ospvType = OSPC_ALTINFO_UNKNOWN;
 
-    if (ospvAltInfo != OSPC_OSNULL)
-    {
-        ospvType = (OSPE_TYPE_ATTR_VAL)ospvAltInfo->ospmAltInfoType;
+    if (ospvAltInfo != OSPC_OSNULL) {
+        ospvType = (OSPE_ALTINFO)ospvAltInfo->ospmAltInfoType;
     }
-    return(ospvType);
+
+    return ospvType;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPAltInfoGetValue() - returns pointer to altinfo value
- *-----------------------------------------------------------------------*/
-const unsigned char *
-OSPPAltInfoGetValue(
-    OSPTALTINFO *ospvAltInfo
-)
+ */
+const char *OSPPAltInfoGetValue(
+    OSPT_ALTINFO *ospvAltInfo)
 {
-    const unsigned char *ospvVal = OSPC_OSNULL;
-    if (ospvAltInfo != OSPC_OSNULL)
-    {
+    const char *ospvVal = OSPC_OSNULL;
+
+    if (ospvAltInfo != OSPC_OSNULL) {
         ospvVal = ospvAltInfo->ospmAltInfoVal;
     }
-    return(ospvVal);
+
+    return ospvVal;
 }
 
-
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPAltInfoToElement() - create an XML element from a altinfo
- *-----------------------------------------------------------------------*/
-unsigned                           /* returns error code */
-OSPPAltInfoToElement(
-    OSPTALTINFO             *ospvAltInfo,   /* In - altinfo */
-    OSPTXMLELEM             **ospvElem,     /* Out - XML element pointer */
-    OSPTMSGELEMPART         ospvPart        /* In -source or dest alternate */
-)
+ */
+unsigned OSPPAltInfoToElement(      /* returns error code */
+    OSPT_ALTINFO *ospvAltInfo,      /* In - altinfo */
+    OSPT_XML_ELEM **ospvElem,       /* Out - XML element pointer */
+    OSPE_MSG_ELEM ospvPart)         /* In -source or dest alternate */
 {
-    unsigned      ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPTXMLATTR  *attr        = OSPC_OSNULL;
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
-    if (ospvElem == OSPC_OSNULL)
-    {
+    if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvAltInfo == OSPC_OSNULL)
-    {
+    if (ospvAltInfo == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_DATA_NO_ALTINFO;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-    {
-        *ospvElem = OSPPXMLElemNew(OSPPMsgGetElemName(ospvPart),
-            (const char *)OSPPAltInfoGetValue(ospvAltInfo));
-
-        if (ospvElem != OSPC_OSNULL)
-        {
-            attr = OSPPXMLAttrNew((const unsigned char *)OSPPMsgGetAttrName(
-                ospeAttrType),
-                (const unsigned char *)OSPPAltInfoGetTypeName(ospvAltInfo));
-
-            if (attr == OSPC_OSNULL)
-            {
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ospvPart), OSPPAltInfoGetValue(ospvAltInfo));
+        if (ospvElem != OSPC_OSNULL) {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->ospmAltInfoType));       
+            if (attr == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ATTR;
             }
 
-            if (ospvErrCode == OSPC_ERR_NO_ERROR)
-            {
+            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
             }
         }
     }
-    return(ospvErrCode);
+
+    return ospvErrCode;
 }
 
-/*-----------------------------------------------------------------------*
- * OSPPAltInfoGetTypeName() - get type name from an altinfo
- *-----------------------------------------------------------------------*/
-
-const char *                        /* Returns a pointer to the name */
-OSPPAltInfoGetTypeName(
-    OSPTALTINFO     *ospvAltInfo
-)
+/*
+ * OSPPAltInfoTypeGetName() - get type name from an altinfo
+ */
+const char *OSPPAltInfoTypeGetName( /* Returns a pointer to the name */
+    OSPE_ALTINFO ospvPart)
 {
     const char *ospvName = OSPC_OSNULL;
-    OSPE_TYPE_ATTR_VAL  ospvType = ospetypeupper;
-    unsigned int cnt = 0;
 
-    ospvType = (OSPE_TYPE_ATTR_VAL)ospvAltInfo->ospmAltInfoType;
-
-    for (cnt=0; cnt < OSPVNumElemAltInfoTypes; cnt++)
-    {
-        if (OSPVTypeStringTable[cnt].ospmType == ospvType)
-        {
-        ospvName = OSPVTypeStringTable[cnt].ospmTypeStr;
-        break;
-        }
+    if ((ospvPart >= OSPC_ALTINFO_START) && (ospvPart < OSPC_ALTINFO_NUMBER)) {
+        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_ATYPE_DESCS, OSPC_ALTINFO_NUMBER);
     }
-    return(ospvName);
+
+    return ospvName;
 }

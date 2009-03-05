@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospusageind.h - OSP Usage Indication Objects
  */
@@ -35,147 +29,140 @@
 #include "osp/ospaltinfo.h"
 #include "osp/ospstatistics.h"
 
-typedef struct
-{
-    OSPTLISTLINK      ospmUsageIndLink;
-    OSPTTIME          ospmUsageIndTimestamp;
-    OSPTTIME          ospmUsageIndStartTime;
-    OSPTTIME          ospmUsageIndEndTime;
-    OSPTTIME          ospmUsageIndAlertTime;
-    OSPTTIME          ospmUsageIndConnectTime;
-    OSPTTIME          ospmUsageIndPostDialDelay;
-    OSPTBOOL          ospvUsageIndIsPDDInfoPresent;
-    unsigned          ospmUsageIndReleaseSource;
-    unsigned char     ospmUsageIndConferenceId[OSPC_CONFIDSIZE]; /* This is in chararcters */
-    unsigned char     *ospmUsageIndMessageId;
-    unsigned char     *ospmUsageIndComponentId;
-    unsigned          ospmUsageIndRole;
-    unsigned          ospmUsageIndHasRole;
-    OSPTTRXID         ospmUsageIndTransactionId;
-    OSPTCALLID        *ospmUsageIndCallId;
-    int               ospmUsageIndDuration;
-    unsigned char     ospmUsageIndSourceNumber[OSPC_E164NUMSIZE];
-    unsigned char     ospmUsageIndDestNumber[OSPC_E164NUMSIZE];
-    OSPTLIST          ospmUsageIndSourceAlternate;
-    OSPTLIST          ospmUsageIndDeviceInfo; 
-    OSPTLIST          ospmUsageIndDestinationAlternate;
-    unsigned long     ospmUsageIndTNCustId;
-    unsigned long     ospmUsageIndTNDeviceId;
-    unsigned          ospmUsageIndTNFailReason;
-    unsigned          ospmUsageIndTNFailReasonInd;
-    OSPTSTATISTICS    *ospmUsageIndTNStats;
-    OSPTBOOL          ospmUsageIndIsPricingInfoPresent;
+typedef struct {
+    OSPTLISTLINK ospmUsageIndLink;
+    OSPTTIME ospmUsageIndTimestamp;
+    OSPTTIME ospmUsageIndStartTime;
+    OSPTTIME ospmUsageIndEndTime;
+    OSPTTIME ospmUsageIndAlertTime;
+    OSPTTIME ospmUsageIndConnectTime;
+    OSPTTIME ospmUsageIndPostDialDelay;
+    OSPTBOOL ospmUsageIndHasPDD;
+    unsigned ospmUsageIndReleaseSource;
+    char ospmUsageIndConferenceId[OSPC_CONFIDSIZE];    /* This is in chararcters */
+    char *ospmUsageIndMessageId;
+    char *ospmUsageIndComponentId;
+    OSPE_ROLE ospmUsageIndRole;
+    OSPTBOOL ospmUsageIndHasRole;
+    OSPTTRXID ospmUsageIndTransactionId;
+    OSPT_CALL_ID *ospmUsageIndCallId;
+    int ospmUsageIndDuration;
+    char ospmUsageIndSourceNumber[OSPC_SIZE_E164NUM];
+    char ospmUsageIndDestNumber[OSPC_SIZE_E164NUM];
+    OSPTLIST ospmUsageIndSourceAlt;
+    OSPTLIST ospmUsageIndDeviceInfo;
+    OSPTLIST ospmUsageIndDestinationAlt;
+    unsigned long ospmUsageIndCustId;
+    unsigned long ospmUsageIndDeviceId;
+    OSPT_TERM_CAUSE ospmUsageIndTermCause;
+    OSPT_STATS *ospmUsageIndStats;
+    OSPTBOOL ospmUsageIndHasPricingInfo;
     OSPT_PRICING_INFO osmpUsageIndPricingInfo;
-    OSPTBOOL          osmpUsageIndIsServiceInfoPresent;
-    OSPE_SERVICE_TYPE osmpUsageIndServiceType;
-    OSPTALTINFO       *ospmUsageIndDestinationCount;
-}
-OSPTUSAGEIND;
+    OSPTBOOL osmpUsageIndHasServiceInfo;
+    OSPE_SERVICE osmpUsageIndServiceType;
+    OSPT_ALTINFO *ospmUsageIndDestinationCount;
+    char ospmUsageIndAssertedId[OSPC_SIZE_NORID];
+    OSPE_DEST_PROTOCOL ospmUsageIndDestProtocol;
+    char ospmUsageIndForwardCodec[OSPC_SIZE_CODEC];
+    char ospmUsageIndReverseCodec[OSPC_SIZE_CODEC];
+    OSPT_CALL_ID *ospmUsageIndSessionId[OSPC_DIR_NUMBER];
+} OSPT_USAGEIND;
 
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    OSPTUSAGEIND    *OSPPUsageIndNew(void);
-    void            OSPPUsageIndDelete( OSPTUSAGEIND **);
-    int             OSPPUsageIndToElement(OSPTLIST *, OSPTXMLELEM **, void *);
-    void            OSPPUsageIndSetCallId(OSPTUSAGEIND *, OSPTCALLID *);
-
-    void      OSPPUsageIndMoveSourceAlt(OSPTUSAGEIND *, OSPTLIST *);
-    void      OSPPUsageIndMoveDeviceInfo(OSPTUSAGEIND *, OSPTLIST *); 
-    void      OSPPUsageIndMoveDestinationAlt(OSPTUSAGEIND *, OSPTLIST *);
-    void      OSPPUsageIndCopySourceAlt(OSPTUSAGEIND *, OSPTLIST *);
-    void      OSPPUsageIndMergeSourceAlt(OSPTUSAGEIND *, OSPTLIST *,OSPTLIST *);
-    void      OSPPUsageIndCopyDeviceInfo(OSPTUSAGEIND *, OSPTLIST *); 
-    void      OSPPUsageIndSetComponentId(OSPTUSAGEIND *, unsigned char *);
-
-    unsigned       OSPPUsageIndHasMessageId(OSPTUSAGEIND *);
-    unsigned char  *OSPPUsageIndGetMessageId(OSPTUSAGEIND *);
-
-
-    unsigned       OSPPUsageIndHasTimestamp(OSPTUSAGEIND *);
-    void           OSPPUsageIndSetTimestamp(OSPTUSAGEIND *, OSPTTIME);
-    OSPTTIME       OSPPUsageIndGetTimestamp(OSPTUSAGEIND *);
-
-    unsigned       OSPPUsageIndHasComponentId(OSPTUSAGEIND *);
-    unsigned char  *OSPPUsageIndGetComponentId(OSPTUSAGEIND *);
-
-    unsigned            OSPPUsageIndHasRole(OSPTUSAGEIND *);
-    OSPE_MSG_ROLETYPES  OSPPUsageIndGetRole(OSPTUSAGEIND *);
-    void                OSPPUsageIndSetRole(OSPTUSAGEIND *, unsigned);
-
-    unsigned       OSPPUsageIndHasTransactionId(OSPTUSAGEIND *);
-    void           OSPPUsageIndSetTransactionId(OSPTUSAGEIND *, OSPTTRXID ospvTransactionId);
-    OSPTTRXID      OSPPUsageIndGetTransactionId(OSPTUSAGEIND *);
-
-    unsigned       OSPPUsageIndHasCallId(OSPTUSAGEIND *);
-    OSPTCALLID    *OSPPUsageIndGetCallId(OSPTUSAGEIND *);
-
-    void           OSPPUsageIndSetSourceNumber(OSPTUSAGEIND *,unsigned char *);
-    unsigned char *OSPPUsageIndGetSourceNumber(OSPTUSAGEIND *);
-
-    void           OSPPUsageIndSetCurrency(OSPTUSAGEIND *,unsigned char *);
-    unsigned char *OSPPUsageIndGetCurrency(OSPTUSAGEIND *);
-
-    void           OSPPUsageIndSetDestNumber(OSPTUSAGEIND *,unsigned char *);
-    unsigned char *OSPPUsageIndGetDestNumber(OSPTUSAGEIND *);
-
-    unsigned       OSPPUsageIndHasSourceAlt(OSPTUSAGEIND *);
-    OSPTALTINFO   *OSPPUsageIndFirstSourceAlt(OSPTUSAGEIND *);
-    OSPTALTINFO   *OSPPUsageIndNextSourceAlt(OSPTUSAGEIND *, OSPTALTINFO  *);
-
-    unsigned       OSPPUsageIndHasDestinationAlt(OSPTUSAGEIND *);
-    unsigned       OSPPUsageIndGetDestinationAltSize(OSPTALTINFO *);
-    OSPTALTINFO   *OSPPUsageIndFirstDestinationAlt(OSPTUSAGEIND *);
-    OSPTALTINFO   *OSPPUsageIndNextDestinationAlt(OSPTUSAGEIND *, OSPTALTINFO  *);
-
-    unsigned       OSPPUsageIndHasDuration(OSPTUSAGEIND *);
-    void           OSPPUsageIndSetDuration(OSPTUSAGEIND *, int ospvDuration);
-    int            OSPPUsageIndGetDuration(OSPTUSAGEIND *);
-
-    unsigned       OSPPUsageIndHasTNCustId(OSPTUSAGEIND *ospvUsageInd);
-    void           OSPPUsageIndSetTNCustId(OSPTUSAGEIND *, unsigned long);
-    unsigned long  OSPPUsageIndGetTNCustId(OSPTUSAGEIND *);
-
-    unsigned       OSPPUsageIndHasTNDeviceId(OSPTUSAGEIND *ospvUsageInd);
-    void           OSPPUsageIndSetTNDeviceId(OSPTUSAGEIND *, unsigned long);
-    unsigned long  OSPPUsageIndGetTNDeviceId(OSPTUSAGEIND *);
-
-    unsigned       OSPPUsageIndHasTNFailReason(OSPTUSAGEIND *ospvUsageInd);
-    void           OSPPUsageIndSetTNFailReason(OSPTUSAGEIND *, unsigned);
-    unsigned       OSPPUsageIndGetTNFailReason(OSPTUSAGEIND *);
-
-
-    OSPTBOOL       OSPPUsageIndHasTNStatistics(OSPTUSAGEIND *);
-    void           OSPPUsageIndSetTNStatistics(OSPTUSAGEIND *, OSPTSTATISTICS *);
-    void           OSPPUsageIndAddDestinationAlt(OSPTUSAGEIND *ospvUsageInd, OSPTALTINFO *ospvAltInfo);
-
-    void           OSPPUsageIndSetStartTime(OSPTUSAGEIND *, OSPTTIME ospvStartTime);
-    OSPTTIME       OSPPUsageIndGetStartTime(OSPTUSAGEIND *);
-    void           OSPPUsageIndSetEndTime(OSPTUSAGEIND *, OSPTTIME ospvEndTime);
-    OSPTTIME       OSPPUsageIndGetEndTime(OSPTUSAGEIND *);
-
-    void           OSPPUsageIndSetConnectTime(OSPTUSAGEIND *, OSPTTIME ospvEndTime);
-    OSPTTIME       OSPPUsageIndGetConnectTime(OSPTUSAGEIND *);
-    void           OSPPUsageIndSetAlertTime(OSPTUSAGEIND *, OSPTTIME ospvEndTime);
-    OSPTTIME       OSPPUsageIndGetAlertTime(OSPTUSAGEIND *);
-    void           OSPPUsageIndSetPostDialDelay(OSPTUSAGEIND *, int ospvPostDialDelay);
-    int            OSPPUsageIndGetPostDialDelay(OSPTUSAGEIND *);
-    void           OSPPUsageIndSetIsPDDInfoPresent(OSPTUSAGEIND *, unsigned ospvIsPDDInfoPresent);
-    int            OSPPUsageIndGetIsPDDInfoPresent(OSPTUSAGEIND *);
-    void           OSPPUsageIndSetReleaseSource(OSPTUSAGEIND *, unsigned ospvReleaseSource);
-    unsigned       OSPPUsageIndGetReleaseSource(OSPTUSAGEIND *);
-    void           OSPPUsageIndSetConferenceId(OSPTUSAGEIND *,unsigned char *);
-    unsigned char * OSPPUsageIndGetConferenceId(OSPTUSAGEIND *);
-
-    void           OSPPUsageIndSetDestinationCount(OSPTUSAGEIND *, unsigned ospvDestinationCount);
-    OSPTALTINFO   *OSPPUsageIndGetDestinationCount(OSPTUSAGEIND *);
+    OSPT_USAGEIND *OSPPUsageIndNew(void);
+    void OSPPUsageIndDelete(OSPT_USAGEIND **);
+    int OSPPUsageIndToElement(OSPTLIST *, OSPT_XML_ELEM **, void *);
+    void OSPPUsageIndMoveSourceAlt(OSPT_USAGEIND *, OSPTLIST *);
+    void OSPPUsageIndMoveDeviceInfo(OSPT_USAGEIND *, OSPTLIST *);
+    void OSPPUsageIndMoveDestinationAlt(OSPT_USAGEIND *, OSPTLIST *);
+    void OSPPUsageIndCopySourceAlt(OSPT_USAGEIND *, OSPTLIST *);
+    void OSPPUsageIndMergeSourceAlt(OSPT_USAGEIND *, OSPTLIST *, OSPTLIST *);
+    void OSPPUsageIndCopyDeviceInfo(OSPT_USAGEIND *, OSPTLIST *);
+    OSPTBOOL OSPPUsageIndHasMessageId(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetMessageId(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasTimestamp(OSPT_USAGEIND *);
+    void OSPPUsageIndSetTimestamp(OSPT_USAGEIND *, OSPTTIME);
+    OSPTTIME OSPPUsageIndGetTimestamp(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasComponentId(OSPT_USAGEIND *);
+    void OSPPUsageIndSetComponentId(OSPT_USAGEIND *, const char *);
+    const char *OSPPUsageIndGetComponentId(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasRole(OSPT_USAGEIND *);
+    OSPE_ROLE OSPPUsageIndGetRole(OSPT_USAGEIND *);
+    void OSPPUsageIndSetRole(OSPT_USAGEIND *, OSPE_ROLE);
+    OSPTBOOL OSPPUsageIndHasTransactionId(OSPT_USAGEIND *);
+    void OSPPUsageIndSetTransactionId(OSPT_USAGEIND *, OSPTTRXID ospvTransactionId);
+    OSPTTRXID OSPPUsageIndGetTransactionId(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasCallId(OSPT_USAGEIND *);
+    OSPT_CALL_ID *OSPPUsageIndGetCallId(OSPT_USAGEIND *);
+    void OSPPUsageIndSetCallId(OSPT_USAGEIND *, OSPT_CALL_ID *);
+    void OSPPUsageIndSetSourceNumber(OSPT_USAGEIND *, const char *);
+    const char *OSPPUsageIndGetSourceNumber(OSPT_USAGEIND *);
+    void OSPPUsageIndSetCurrency(OSPT_USAGEIND *, const char *);
+    const char *OSPPUsageIndGetCurrency(OSPT_USAGEIND *);
+    void OSPPUsageIndSetDestNumber(OSPT_USAGEIND *, const char *);
+    const char *OSPPUsageIndGetDestNumber(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasSourceAlt(OSPT_USAGEIND *);
+    OSPT_ALTINFO *OSPPUsageIndFirstSourceAlt(OSPT_USAGEIND *);
+    OSPT_ALTINFO *OSPPUsageIndNextSourceAlt(OSPT_USAGEIND *, OSPT_ALTINFO *);
+    OSPTBOOL OSPPUsageIndHasDestinationAlt(OSPT_USAGEIND *);
+    unsigned OSPPUsageIndGetDestinationAltSize(OSPT_ALTINFO *);
+    OSPT_ALTINFO *OSPPUsageIndFirstDestinationAlt(OSPT_USAGEIND *);
+    OSPT_ALTINFO *OSPPUsageIndNextDestinationAlt(OSPT_USAGEIND *, OSPT_ALTINFO *);
+    OSPTBOOL OSPPUsageIndHasDuration(OSPT_USAGEIND *);
+    void OSPPUsageIndSetDuration(OSPT_USAGEIND *, int ospvDuration);
+    int OSPPUsageIndGetDuration(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasCustId(OSPT_USAGEIND *ospvUsageInd);
+    void OSPPUsageIndSetCustId(OSPT_USAGEIND *, unsigned long);
+    unsigned long OSPPUsageIndGetCustId(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasDeviceId(OSPT_USAGEIND *ospvUsageInd);
+    void OSPPUsageIndSetDeviceId(OSPT_USAGEIND *, unsigned long);
+    unsigned long OSPPUsageIndGetDeviceId(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasTermCause(OSPT_USAGEIND *ospvUsageInd, OSPE_TERM_CAUSE);
+    void OSPPUsageIndSetTermCause(OSPT_USAGEIND *, OSPE_TERM_CAUSE, unsigned, const char *);
+    void OSPPUsageIndCopyTermCause(OSPT_USAGEIND *, OSPT_TERM_CAUSE *);
+    unsigned OSPPUsageIndGetTCCode(OSPT_USAGEIND *, OSPE_TERM_CAUSE);
+    const char *OSPPUsageIndGetTCDesc(OSPT_USAGEIND *, OSPE_TERM_CAUSE);
+    OSPTBOOL OSPPUsageIndHasStatistics(OSPT_USAGEIND *);
+    void OSPPUsageIndSetStatistics(OSPT_USAGEIND *, OSPT_STATS *);
+    void OSPPUsageIndAddDestinationAlt(OSPT_USAGEIND *ospvUsageInd, OSPT_ALTINFO *ospvAltInfo);
+    void OSPPUsageIndSetStartTime(OSPT_USAGEIND *, OSPTTIME ospvStartTime);
+    OSPTTIME OSPPUsageIndGetStartTime(OSPT_USAGEIND *);
+    void OSPPUsageIndSetEndTime(OSPT_USAGEIND *, OSPTTIME ospvEndTime);
+    OSPTTIME OSPPUsageIndGetEndTime(OSPT_USAGEIND *);
+    void OSPPUsageIndSetConnectTime(OSPT_USAGEIND *, OSPTTIME ospvEndTime);
+    OSPTTIME OSPPUsageIndGetConnectTime(OSPT_USAGEIND *);
+    void OSPPUsageIndSetAlertTime(OSPT_USAGEIND *, OSPTTIME ospvEndTime);
+    OSPTTIME OSPPUsageIndGetAlertTime(OSPT_USAGEIND *);
+    void OSPPUsageIndSetPostDialDelay(OSPT_USAGEIND *, int ospvPostDialDelay);
+    int OSPPUsageIndGetPostDialDelay(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasPDD(OSPT_USAGEIND *);
+    void OSPPUsageIndSetReleaseSource(OSPT_USAGEIND *, unsigned ospvReleaseSource);
+    unsigned OSPPUsageIndGetReleaseSource(OSPT_USAGEIND *);
+    void OSPPUsageIndSetConferenceId(OSPT_USAGEIND *, const char *);
+    const char *OSPPUsageIndGetConferenceId(OSPT_USAGEIND *);
+    void OSPPUsageIndSetDestinationCount(OSPT_USAGEIND *, unsigned ospvDestinationCount);
+    OSPT_ALTINFO *OSPPUsageIndGetDestinationCount(OSPT_USAGEIND *);
+    OSPTBOOL OSPPUsageIndHasAssertedId(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetAssertedId(OSPT_USAGEIND *);
+    void OSPPUsageIndSetAssertedId(OSPT_USAGEIND *, const char *);
+    OSPTBOOL OSPPUsageIndHasDestProtocol(OSPT_USAGEIND *);
+    OSPE_DEST_PROTOCOL OSPPUsageIndGetDestProtocol(OSPT_USAGEIND *);
+    void OSPPUsageIndSetDestProtocol(OSPT_USAGEIND *, OSPE_DEST_PROTOCOL);
+    OSPTBOOL OSPPUsageIndHasForwardCodec(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetForwardCodec(OSPT_USAGEIND *);
+    void OSPPUsageIndSetForwardCodec(OSPT_USAGEIND *, const char *);
+    OSPTBOOL OSPPUsageIndHasReverseCodec(OSPT_USAGEIND *);
+    const char *OSPPUsageIndGetReverseCodec(OSPT_USAGEIND *);
+    void OSPPUsageIndSetReverseCodec(OSPT_USAGEIND *, const char *);
+    OSPTBOOL OSPPUsageIndHasSessionId(OSPT_USAGEIND *, OSPE_DIRECTION);
+    OSPT_CALL_ID *OSPPUsageIndGetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION);
+    void OSPPUsageIndSetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION, OSPT_CALL_ID *);
+    
 #ifdef __cplusplus
 }
 #endif

@@ -15,24 +15,16 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospmsgdesc.h - Structures and prototypes for generic XML message
  *                descriptors.
  */
 
-#ifndef OSPMSGDESC_H
-#define OSPMSGDESC_H
-
+#ifndef _OSPMSGDESC_H
+#define _OSPMSGDESC_H
 
 #include "osp/osp.h"
 #include "osp/ospmsgpart.h"
-
 
 /*
  * The OSPPMsgDescGetName includes two different implementations: the
@@ -46,27 +38,18 @@
  */
 
 /*
- * An OPSMsgDesc structure is used to associate a part (for an attribute
+ * An OPST_MSG_DESC structure is used to associate a part (for an attribute
  * or an element) with a name.
  */
 
-typedef struct
-{
-    OSPTMSGPART  ospmMsgDescPart;
-    const char  *ospmMsgDescName;
-}
-OSPTMSGDESC;
+typedef struct {
+    OSPT_MSG_PART ospmMsgDescPart;
+    const char *ospmMsgDescName;
+} OSPT_MSG_DESC;
 
+/* Function Prototypes */
 
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+OSPT_MSG_PART OSPPMsgDescGetPart(const char *, const OSPT_MSG_DESC *, unsigned);
+const char *OSPPMsgDescGetName(OSPT_MSG_PART, const OSPT_MSG_DESC *, unsigned);
 
-
-OSPTMSGPART  OSPPMsgDescGetPart(const char *, const OSPTMSGDESC *, unsigned);
-
-const char  *OSPPMsgDescGetName(OSPTMSGPART,  const OSPTMSGDESC *, unsigned);
-
-#endif /* OSPMSGDESC_H */
-
+#endif /* _OSPMSGDESC_H */

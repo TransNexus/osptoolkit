@@ -484,3 +484,5 @@ Version 3.4.2
 Version 3.5.0
 * Modified to remove compile warning messages for test_app on 64bit box.
 * Added CDR role type for RADIUS.
+* Added support for ACME.
+* Added custom info.

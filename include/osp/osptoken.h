@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * osptoken.h - OSP token objects
  */
@@ -32,50 +26,40 @@
 #include "osp/osplist.h"
 #include "osp/ospxmlelem.h"
 
-
 /* max size of a token (bytes) */
 
-#define OSPC_TOKENMAXSIZE        3200
-#define OSPC_TOKENMAXSTRINGSIZE  6*OSPC_TOKENMAXSIZE
+#define OSPC_TOKENMAXSIZE           3200
+#define OSPC_TOKENMAXSTRINGSIZE     6 * OSPC_TOKENMAXSIZE
 
 /* the basic token structure */
 
-typedef struct
-{
-    OSPTLISTLINK   ospmTokenLink;
-    unsigned       ospmTokenLen;
+typedef struct {
+    OSPTLISTLINK ospmTokenLink;
+    unsigned ospmTokenLen;
     unsigned char *ospmTokenVal;
-}
-OSPTTOKEN;
+} OSPTTOKEN;
 
-typedef enum
-{
+typedef enum {
     TOKEN_ALGO_SIGNED,
     TOKEN_ALGO_UNSIGNED,
     TOKEN_ALGO_BOTH
-}token_algo_t;
+} token_algo_t;
+
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    /**/
-    /*-----------------------------------------------------------------------*
-     * function prototypes
-     *-----------------------------------------------------------------------*/
-
     OSPTTOKEN *OSPPTokenNew(unsigned, const unsigned char *);
-    unsigned OSPPTokenFromElement(OSPTXMLELEM *, OSPTTOKEN  **);
-
+    unsigned OSPPTokenFromElement(OSPT_XML_ELEM *, OSPTTOKEN **);
     unsigned OSPPTokenGetSize(OSPTTOKEN *);
     const unsigned char *OSPPTokenGetValue(OSPTTOKEN *);
     void OSPPTokenDelete(OSPTTOKEN **);
-    unsigned OSPPTokenToElement(OSPTTOKEN *, OSPTXMLELEM **);
+    unsigned OSPPTokenToElement(OSPTTOKEN *, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
-
+#endif /* _OSPTOKEN_H */

@@ -15,13 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * ospxmlattr.c - Functions for generic XML attributes.
  */
@@ -30,22 +23,19 @@
 #include "osp/osplist.h"
 #include "osp/ospxmlattr.h"
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPXMLAttrNew() - create a new attribute
- *-----------------------------------------------------------------------*/
+ */
 
-OSPTXMLATTR *               /* returns the new attribute (or NULL) */
-    OSPPXMLAttrNew(
-    const unsigned char *ospvName,  /* name of attribute */
-    const unsigned char *ospvValue  /* character string value for attr */
-    )
+OSPT_XML_ATTR *OSPPXMLAttrNew(  /* returns the new attribute (or NULL) */ 
+    const char *ospvName,       /* name of attribute */
+    const char *ospvValue)      /* character string value for attr */
 {
-    OSPTXMLATTR *ospvAttr = OSPC_OSNULL;
-    char        *nameptr = OSPC_OSNULL;
-    unsigned     namelen = 0;
-    char        *valptr = OSPC_OSNULL;
-    unsigned     vallen = 0;
+    OSPT_XML_ATTR *ospvAttr = OSPC_OSNULL;
+    char *nameptr = OSPC_OSNULL;
+    unsigned namelen = 0;
+    char *valptr = OSPC_OSNULL;
+    unsigned vallen = 0;
 
     /*
      * XMLAttr objects are actually two parts -- the first is the XMLAttr
@@ -81,23 +71,20 @@ OSPTXMLATTR *               /* returns the new attribute (or NULL) */
      * (or, perhaps, if the pool was empty).
      */
 
-    if (ospvName  != OSPC_OSNULL)
-    {
-        if (ospvValue != OSPC_OSNULL)
-        {
+    if (ospvName != OSPC_OSNULL) {
+        if (ospvValue != OSPC_OSNULL) {
             /* get the length of the name and value since we'll need it a few times */
-            namelen = OSPM_STRLEN((const char *)ospvName) + 1;      /* including terminating 0 */
-            vallen = OSPM_STRLEN((const char *)ospvValue) + 1;      /* including terminating 0 */
+            namelen = OSPM_STRLEN(ospvName) + 1;    /* including terminating 0 */
+            vallen = OSPM_STRLEN(ospvValue) + 1;    /* including terminating 0 */
 
             /* try to allocate the memory for the entire object */
-            OSPM_MALLOC(ospvAttr, OSPTXMLATTR,sizeof(OSPTXMLATTR) + namelen + vallen);
+            OSPM_MALLOC(ospvAttr, OSPT_XML_ATTR, sizeof(OSPT_XML_ATTR) + namelen + vallen);
 
             /* make sure the allocation succeeded before proceeding */
-            if (ospvAttr != OSPC_OSNULL)
-            {
+            if (ospvAttr != OSPC_OSNULL) {
                 /* calculate where the "hidden" values will go */
-                nameptr = ((char *)(ospvAttr)) + sizeof(OSPTXMLATTR);
-                valptr  = nameptr + namelen;
+                nameptr = ((char *) (ospvAttr)) + sizeof(OSPT_XML_ATTR);
+                valptr = nameptr + namelen;
 
                 /* copy the values into their hidden location */
                 OSPM_MEMCPY(nameptr, ospvName, namelen);
@@ -105,69 +92,56 @@ OSPTXMLATTR *               /* returns the new attribute (or NULL) */
 
                 /* fill in the structure fields */
                 OSPPListLinkNew(&ospvAttr->ospmXMLAttrLink);
-                ospvAttr->ospmXMLAttrName  = nameptr;
+                ospvAttr->ospmXMLAttrName = nameptr;
                 ospvAttr->ospmXMLAttrValue = valptr;
             }
         }
     }
-    return(ospvAttr);
+
+    return ospvAttr;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPXMLAttrDelete() - destroy an XML attribute
- *-----------------------------------------------------------------------*/
+ */
 
-void                               /* no return value */
-OSPPXMLAttrDelete(
-    OSPTXMLATTR **ospvAttr          /* attribute to destroy */
-)
+void OSPPXMLAttrDelete(         /* no return value */
+    OSPT_XML_ATTR **ospvAttr)    /* attribute to destroy */
 {
-    if(*ospvAttr != OSPC_OSNULL)
-    {
-            OSPM_FREE(*ospvAttr);
-            *ospvAttr = OSPC_OSNULL;
+    if (*ospvAttr != OSPC_OSNULL) {
+        OSPM_FREE(*ospvAttr);
+        *ospvAttr = OSPC_OSNULL;
     }
 }
 
-
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPXMLAttrGetName()
- *-----------------------------------------------------------------------*/
+ */
 
-const char *
-OSPPXMLAttrGetName(
-    OSPTXMLATTR *ospvAttr
-)
+const char *OSPPXMLAttrGetName(
+    OSPT_XML_ATTR * ospvAttr)
 {
     const char *ospvName = OSPC_OSNULL;
 
-    if (ospvAttr != OSPC_OSNULL)
-    {
-
-        ospvName = (ospvAttr->ospmXMLAttrName);
+    if (ospvAttr != OSPC_OSNULL) {
+        ospvName = ospvAttr->ospmXMLAttrName;
     }
 
-    return(ospvName);
+    return ospvName;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * OSPPXMLAttrGetValue()
- *-----------------------------------------------------------------------*/
+ */
 
-const char *
-OSPPXMLAttrGetValue(
-    OSPTXMLATTR *ospvAttr
-)
+const char *OSPPXMLAttrGetValue(
+    OSPT_XML_ATTR * ospvAttr)
 {
     const char *ospvValue = OSPC_OSNULL;
 
-    if (ospvAttr != OSPC_OSNULL)
-    {
+    if (ospvAttr != OSPC_OSNULL) {
         ospvValue = ospvAttr->ospmXMLAttrValue;
     }
-    return(ospvValue);
-}
 
+    return ospvValue;
+}

@@ -15,32 +15,26 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospcode.h - Status codes and strings for status element
  */
+
 #ifndef _OSPCODE_H
 #define _OSPCODE_H
 
-
-typedef struct statuscode{
+typedef struct {
     unsigned ospmCode;
-    unsigned char *ospmDesc;
-}OSPTSTATLIST;
+    char *ospmDesc;
+} OSPT_STATE;
 
-#define MAX_STATS   23
+#define OSPC_MAX_STATS   23
 
-OSPTSTATLIST statlist[23] = {
-/*2xx  =  operation successful*/
+OSPT_STATE statlist[OSPC_MAX_STATS] = {
+    /* 2xx  =  operation successful */
     {200, "success"},
     {201, "information created"},
     {210, "updated information accepted"},
-/*4xx  =  client error*/
+    /* 4xx  =  client error */
     {400, "bad request"},
     {401, "unauthorised"},
     {410, "character encoding not supported"},
@@ -52,17 +46,16 @@ OSPTSTATLIST statlist[23] = {
     {423, "certificate invalid"},
     {424, "certificate revoked"},
     {425, "encryption required"},
-/*5xx  =  server error*/
+    /* 5xx  =  server error */
     {500, "internal server error"},
     {501, "not implemented"},
-    {503, "service not available},
-    {510, "transient problem in server},
-    {520, "long term problem in server},
-    {530, "time problem"}
+    {503, "service not available"},
+    {510, "transient problem in server"},
+    {520, "long term problem in server"},
+    {530, "time problem"},
     {531, "valid time too soon"},
     {532, "time interval too small"},
     {999, "generic failure"}
-    };
+};
 
-
-#endif
+#endif /* _OSPCODE_H */

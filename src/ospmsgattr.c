@@ -15,13 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * ospmsgattr.c - OSP attribute processing.
  */
@@ -30,62 +23,62 @@
 #include "osp/ospmsgdesc.h"
 #include "osp/ospmsgattr.h"
 
-/**/
-/*-----------------------------------------------------------------------*
+/*
  * global variables
- *-----------------------------------------------------------------------*/
+ */
 
-/* array that associates attribute and names */
-
-const OSPTMSGDESC OSPVAttrDescs[] =
-{
-    { ospeAttrUnknown,       "" },
-    { ospeAttrComponentId,   "componentId" },
-    { ospeAttrCritical,      "critical" },
-    { ospeAttrEncoding,      "encoding" },
-    { ospeAttrMessageId,     "messageId" },
-    { ospeAttrType,          "type" },
-    { ospeAttrVersion,       "version"},
-    { ospeAttrRandom,        "random"}
+/* Array that associates attribute and names */
+const OSPT_MSG_DESC OSPV_MATTR_DESCS[OSPC_MATTR_NUMBER] = {
+    { OSPC_MATTR_MESSAGEID,     "messageId" },
+    { OSPC_MATTR_COMPONENTID,   "componentId" },
+    { OSPC_MATTR_RANDOM,        "random" },
+    { OSPC_MATTR_CRITICAL,      "critical" },
+    { OSPC_MATTR_ENCODING,      "encoding" },
+    { OSPC_MATTR_TYPE,          "type" },
+    { OSPC_MATTR_VERSION,       "version" },
+    { OSPC_MATTR_INDEX,         "index" }
 };
 
-const unsigned OSPVNumAttrDesc = sizeof(OSPVAttrDescs)/sizeof(OSPTMSGDESC);
+/* Array that associates role and names */
+const OSPT_MSG_DESC OSPV_RTYPE_DESCS[OSPC_ROLE_NUMBER] = {
+    { OSPC_ROLE_DESTINATION,   "destination" },
+    { OSPC_ROLE_SOURCE,        "source" },
+    { OSPC_ROLE_OTHER,         "other" },
+    { OSPC_ROLE_RADSRCSTART,   "radsrcstart" },
+    { OSPC_ROLE_RADDESTSTART,  "raddeststart" },
+    { OSPC_ROLE_RADSRCSTOP,    "radsrcstop" },
+    { OSPC_ROLE_RADDESTSTOP,   "raddeststop" },
+    { OSPC_ROLE_RADSRCINTERIM, "radsrcinterim" },
+    { OSPC_ROLE_RADDESTINTERIM,"raddestinterim" }
+};
 
-/**/
-/*-----------------------------------------------------------------------*
- * OSPPMsgGetAttrName() - get an attribute name from a part value
- *-----------------------------------------------------------------------*/
-const char *                              /* returns pointer to the name */
-OSPPMsgGetAttrName(
-    OSPTMSGATTRPART ospvPart
-)
+/*
+ * OSPPMsgAttrGetName() - get an attribute name from a part value
+ */
+const char *OSPPMsgAttrGetName(     /* returns pointer to the name */                  
+    OSPE_MSG_ATTR ospvPart)
 {
     const char *ospvName = OSPC_OSNULL;
 
-    if (ospvPart!= OSPC_MSGPARTUNKNOWN) 
-    {
-        ospvName = OSPPMsgDescGetName((OSPTMSGPART)ospvPart, OSPVAttrDescs,
-            OSPVNumAttrDesc);
+    if ((ospvPart >= OSPC_MATTR_START) && (ospvPart < OSPC_MATTR_NUMBER)) {
+        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_MATTR_DESCS, OSPC_MATTR_NUMBER);
     }
-    return(ospvName);
+
+    return ospvName;
 }
 
-/**/
-/*-----------------------------------------------------------------------*
- * OSPPMsgGetAttrPart() - get an attribute part ID from its name
- *-----------------------------------------------------------------------*/
-OSPTMSGATTRPART                           /* returns part */
-    OSPPMsgGetAttrPart(
-    const char *ospvName
-    )
+/*
+ * OSPPMsgAttrGetPart() - get an attribute part ID from its name
+ */
+OSPE_MSG_ATTR OSPPMsgAttrGetPart(   /* returns part */
+    const char *ospvName)
 {
-    OSPTMSGATTRPART ospvPart = ospeAttrUnknown;
+    OSPE_MSG_ATTR ospvPart = OSPC_MATTR_UNKNOWN;
 
-    if (ospvName != OSPC_OSNULL) 
-    {
-        ospvPart = (OSPTMSGATTRPART) OSPPMsgDescGetPart(ospvName,
-            OSPVAttrDescs, OSPVNumAttrDesc);
+    if (ospvName != OSPC_OSNULL) {
+        ospvPart = (OSPE_MSG_ATTR)OSPPMsgDescGetPart(ospvName, OSPV_MATTR_DESCS, OSPC_MATTR_NUMBER);
     }
-    return(ospvPart);
+
+    return ospvPart;
 }
 

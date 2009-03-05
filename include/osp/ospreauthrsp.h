@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospreauthrsp.h - OSP reauthorisation response objects
  */
@@ -37,53 +31,41 @@
 #include "osp/ospstatus.h"
 #include "osp/osptnaudit.h"
 
-typedef struct
-{
-    OSPTTIME          ospmReauthRspTimestamp;
-    unsigned char    *ospmReauthRspMessageId;
-    unsigned char    *ospmReauthRspComponentId;
-    OSPTSTATUS       *ospmReauthRspStatus;
-    OSPTTRXID         ospmReauthRspTrxId;
-    OSPTDEST         *ospmReauthRspDest;
-    OSPTTNAUDIT      *ospmReauthRspTNAudit;
-}
-OSPTREAUTHRSP;
+typedef struct {
+    OSPTTIME ospmReauthRspTimestamp;
+    char *ospmReauthRspMessageId;
+    char *ospmReauthRspComponentId;
+    OSPTSTATUS *ospmReauthRspStatus;
+    OSPTTRXID ospmReauthRspTrxId;
+    OSPT_DEST *ospmReauthRspDest;
+    OSPTTNAUDIT *ospmReauthRspTNAudit;
+} OSPTREAUTHRSP;
 
-
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    OSPTREAUTHRSP   *OSPPReauthRspNew(void);
-    void            OSPPReauthRspDelete(OSPTREAUTHRSP **);
-    int             OSPPReauthRspFromElement(OSPTXMLELEM *, OSPTREAUTHRSP **);
-    void            OSPPReauthRspSetComponentId(OSPTREAUTHRSP *, unsigned char *);
-    unsigned        OSPPReauthRspHasMessageId(OSPTREAUTHRSP *);
-    void            OSPPReauthRspSetMessageId(OSPTREAUTHRSP *, unsigned char *);
-    void            OSPPReauthRspMessageIdFromElement(OSPTXMLELEM *, unsigned char **);
-    void            OSPPReauthRspComponentIdFromElement(OSPTXMLELEM *, unsigned char **);
-
-
-    void            OSPPReauthRspSetTimestamp(OSPTREAUTHRSP *, OSPTTIME);
-    unsigned        OSPPReauthRspHasComponentId(OSPTREAUTHRSP *);
-
-    unsigned        OSPPReauthRspHasStatus(OSPTREAUTHRSP *ospvReauthRsp);
-    OSPTSTATUS      *OSPPReauthRspGetStatus(OSPTREAUTHRSP *);
-    void            OSPPReauthRspSetTrxId(OSPTREAUTHRSP *, OSPTTRXID);
-    unsigned        OSPPReauthRspHasDest(OSPTREAUTHRSP *ospvReauthRsp);
-    void            OSPPReauthRspSetDest(OSPTREAUTHRSP *, OSPTDEST *);
-
-    OSPTTNAUDIT     *OSPPReauthRspGetTNAudit(OSPTREAUTHRSP *);
+    OSPTREAUTHRSP *OSPPReauthRspNew(void);
+    void OSPPReauthRspDelete(OSPTREAUTHRSP **);
+    int OSPPReauthRspFromElement(OSPT_XML_ELEM *, OSPTREAUTHRSP **);
+    void OSPPReauthRspSetComponentId(OSPTREAUTHRSP *, const char *);
+    OSPTBOOL OSPPReauthRspHasMessageId(OSPTREAUTHRSP *);
+    void OSPPReauthRspSetMessageId(OSPTREAUTHRSP *, const char *);
+    void OSPPReauthRspMessageIdFromElement(OSPT_XML_ELEM *, const char **);
+    void OSPPReauthRspComponentIdFromElement(OSPT_XML_ELEM *, const char **);
+    void OSPPReauthRspSetTimestamp(OSPTREAUTHRSP *, OSPTTIME);
+    OSPTBOOL OSPPReauthRspHasComponentId(OSPTREAUTHRSP *);
+    OSPTBOOL OSPPReauthRspHasStatus(OSPTREAUTHRSP *ospvReauthRsp);
+    OSPTSTATUS *OSPPReauthRspGetStatus(OSPTREAUTHRSP *);
+    void OSPPReauthRspSetTrxId(OSPTREAUTHRSP *, OSPTTRXID);
+    OSPTBOOL OSPPReauthRspHasDest(OSPTREAUTHRSP *ospvReauthRsp);
+    void OSPPReauthRspSetDest(OSPTREAUTHRSP *, OSPT_DEST *);
+    OSPTTNAUDIT *OSPPReauthRspGetTNAudit(OSPTREAUTHRSP *);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
-
+#endif /* _OSPREAUTHRSP_H */

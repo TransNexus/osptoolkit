@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * osplibversion.h - OSP Toolkit version
  */
@@ -28,9 +22,8 @@
 #ifndef _OSPLIBVERSION_H
 #define _OSPLIBVERSION_H
 
-#define OSP_CLIENT_TOOLKIT_VERSION_MAJOR	3
-#define OSP_CLIENT_TOOLKIT_VERSION_MINOR	5
-#define OSP_CLIENT_TOOLKIT_VERSION_BUGFIX	0
+#define OSP_CLIENT_TOOLKIT_VERSION_MAJOR    3
+#define OSP_CLIENT_TOOLKIT_VERSION_MINOR    5
+#define OSP_CLIENT_TOOLKIT_VERSION_BUGFIX   0
 
-#endif
-
+#endif /* _OSPLIBVERSION_H */

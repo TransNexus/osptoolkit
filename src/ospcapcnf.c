@@ -15,13 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
-
 /*
  * osptcapncf.cpp 
  */
@@ -42,21 +35,16 @@
 #include "osp/ospfail.h"
 #include "osp/ospaltinfo.h"
 
-
-
-unsigned
-OSPPCapCnfNew(OSPTCAPCNF **ospvCapCnf)
+unsigned OSPPCapCnfNew(
+    OSPT_CAP_CNF **ospvCapCnf)
 {
     unsigned errorcode = OSPC_ERR_NO_ERROR;
 
-    OSPM_MALLOC(*ospvCapCnf, OSPTCAPCNF,sizeof(OSPTCAPCNF));
+    OSPM_MALLOC(*ospvCapCnf, OSPT_CAP_CNF, sizeof(OSPT_CAP_CNF));
 
-    if (OSPC_OSNULL != *ospvCapCnf)
-    {
-        OSPM_MEMSET(*ospvCapCnf,0,sizeof(OSPTCAPCNF));
-    }
-    else
-    {
+    if (OSPC_OSNULL != *ospvCapCnf) {
+        OSPM_MEMSET(*ospvCapCnf, 0, sizeof(OSPT_CAP_CNF));
+    } else {
         errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
         OSPM_DBGERRORLOG(errorcode, "CapCnf struct not created.");
     }
@@ -64,105 +52,82 @@ OSPPCapCnfNew(OSPTCAPCNF **ospvCapCnf)
     return errorcode;
 }
 
-
-
-
-
-void
-OSPPCapCnfDelete(OSPTCAPCNF **ospvCapCnf)
+void OSPPCapCnfDelete(
+    OSPT_CAP_CNF **ospvCapCnf)
 {
-    if (OSPC_OSNULL != ospvCapCnf && OSPC_OSNULL != *ospvCapCnf)
-    {
-        OSPPStatusDelete( &((*ospvCapCnf)->ospmStatus) );
+    if (OSPC_OSNULL != ospvCapCnf && OSPC_OSNULL != *ospvCapCnf) {
+        OSPPStatusDelete(&((*ospvCapCnf)->ospmStatus));
 
-        OSPM_FREE( *ospvCapCnf );
+        OSPM_FREE(*ospvCapCnf);
 
         *ospvCapCnf = OSPC_OSNULL;
     }
 }
 
-
-unsigned                          /* returns error code */
-OSPPCapCnfFromElement(
-    OSPTXMLELEM *ospvParent,      /* input is XML element */
-    OSPTCAPCNF **ospvCapCnf       /* where to put capability confirmation pointer */
-)
+unsigned OSPPCapCnfFromElement( /* returns error code */
+    OSPT_XML_ELEM *ospvParent,  /* input is XML element */
+    OSPT_CAP_CNF **ospvCapCnf)  /* where to put capability confirmation pointer */
 {
-    unsigned      ospvErrCode   = OSPC_ERR_NO_ERROR;
-    OSPTXMLELEM  *elem          = OSPC_OSNULL;
-    OSPTXMLELEM  *capCnfElem    = OSPC_OSNULL;
-    OSPTCAPCNF   *capcnf        = OSPC_OSNULL;
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPT_XML_ELEM *capCnfElem = OSPC_OSNULL;
+    OSPT_CAP_CNF *capcnf = OSPC_OSNULL;
 
     /*
      * Check input data
      */
-    if (OSPC_OSNULL == ospvParent)
-    {
+    if (OSPC_OSNULL == ospvParent) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
     /*
      * Create new confirmation object
      */
-    if (OSPC_ERR_NO_ERROR == ospvErrCode)
-    {
+    if (OSPC_ERR_NO_ERROR == ospvErrCode) {
         ospvErrCode = OSPPCapCnfNew(&capcnf);
     }
 
-
-
-    if (OSPC_ERR_NO_ERROR == ospvErrCode)
-    {
+    if (OSPC_ERR_NO_ERROR == ospvErrCode) {
         /*
          * The Parent points to Message, its 1st child is 
          * CapabilityConfirmation
          */
-        capCnfElem = (OSPTXMLELEM *)OSPPXMLElemFirstChild(ospvParent);
+        capCnfElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvParent);
 
         /*
          * The Confirmation element should consist of several
          * child elements. We'll run through what's there and pick out
          * the information we need.
          */
-        for (elem  = (OSPTXMLELEM *)OSPPXMLElemFirstChild(capCnfElem);
-            (elem != (OSPTXMLELEM *)OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-             elem = (OSPTXMLELEM *)OSPPXMLElemNextChild(capCnfElem,elem))
-        {
-            switch (OSPPMsgGetElemPart(OSPPXMLElemGetName(elem)))
-            {
-                case ospeElemTimestamp:
-                case ospeElemDestOSPVersion:
-                    /* For now, we aren't interested in the value */
-                    break;
+        for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(capCnfElem);
+             (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR); elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(capCnfElem, elem)) {
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
+            case OSPC_MELEM_TIMESTAMP:
+            case OSPC_MELEM_DESTOSPVERSION:
+                /* For now, we aren't interested in the value */
+                break;
 
-                case ospeElemStatus:
-                    ospvErrCode = OSPPStatusFromElement(elem, &(capcnf->ospmStatus));
-                    break;
-                
-                
-                default:
-                    /*
-                     * This is an element we don't understand. If it's
-                     * critical, then we have to report an error.
-                     * Otherwise we can ignore it.
-                     */
-                    if (OSPPMsgElemIsCritical(elem))
-                    {
-                        ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
-                    }
-                    break;
+            case OSPC_MELEM_STATUS:
+                ospvErrCode = OSPPStatusFromElement(elem, &(capcnf->ospmStatus));
+                break;
+
+            default:
+                /*
+                 * This is an element we don't understand. If it's
+                 * critical, then we have to report an error.
+                 * Otherwise we can ignore it.
+                 */
+                if (OSPPMsgElemIsCritical(elem)) {
+                    ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
+                }
+                break;
             }
-        } /* For each child element of CapabilitiesConfirmation */
+        }   /* For each child element of CapabilitiesConfirmation */
     }
 
-
-
-
-    if (ospvErrCode == OSPC_ERR_NO_ERROR)
-    {
+    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         *ospvCapCnf = capcnf;
     }
-    
-    return(ospvErrCode);
-}
 
+    return ospvErrCode;
+}

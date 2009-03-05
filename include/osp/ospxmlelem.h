@@ -15,12 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * ospxmlelem.h - Structures and prototypes for generic XML elements.
  */
@@ -32,7 +26,6 @@
 #include "osp/osplist.h"
 #include "osp/ospxmlattr.h"
 
-
 /*
  * An XMLElem structure represents an XML element in its natural
  * form ("natural" in the sense of easiest to reference in code).
@@ -41,51 +34,33 @@
  * element.
  */
 
-typedef struct
-{
+typedef struct {
     OSPTLISTLINK ospmXMLElemLink;
-    OSPTLIST     ospmXMLElemChild;
-    OSPTLIST     ospmXMLElemAttrs;
-    char        *ospmXMLElemName;
-    char        *ospmXMLElemValue;
-}
-OSPTXMLELEM;
+    OSPTLIST ospmXMLElemChild;
+    OSPTLIST ospmXMLElemAttrs;
+    char *ospmXMLElemName;
+    char *ospmXMLElemValue;
+} OSPT_XML_ELEM;
 
-
-/**/
-/*-----------------------------------------------------------------------*
- * function prototypes
- *-----------------------------------------------------------------------*/
+/* Function Prototypes */
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-    OSPTXMLELEM *OSPPXMLElemNew(const char *, const char *);
-
-    void OSPPXMLElemDelete(OSPTXMLELEM **);
-
-    const char *OSPPXMLElemGetName(OSPTXMLELEM *);
-
-    const char *OSPPXMLElemGetValue(OSPTXMLELEM *);
-
-    void OSPPXMLElemAddChild(OSPTXMLELEM *, OSPTXMLELEM *);
-
-    OSPTXMLELEM *OSPPXMLElemFirstChild(OSPTXMLELEM *);
-
-    OSPTXMLELEM *OSPPXMLElemNextChild(OSPTXMLELEM *, OSPTXMLELEM *);
-
-    void OSPPXMLElemAddAttr(OSPTXMLELEM *, OSPTXMLATTR *);
-
-    OSPTXMLATTR *OSPPXMLElemFirstAttr(OSPTXMLELEM *);
-
-    OSPTXMLATTR *OSPPXMLElemNextAttr(OSPTXMLELEM *, OSPTXMLATTR *);
-
+    OSPT_XML_ELEM *OSPPXMLElemNew(const char *, const char *);
+    void OSPPXMLElemDelete(OSPT_XML_ELEM **);
+    const char *OSPPXMLElemGetName(OSPT_XML_ELEM *);
+    const char *OSPPXMLElemGetValue(OSPT_XML_ELEM *);
+    void OSPPXMLElemAddChild(OSPT_XML_ELEM *, OSPT_XML_ELEM *);
+    OSPT_XML_ELEM *OSPPXMLElemFirstChild(OSPT_XML_ELEM *);
+    OSPT_XML_ELEM *OSPPXMLElemNextChild(OSPT_XML_ELEM *, OSPT_XML_ELEM *);
+    void OSPPXMLElemAddAttr(OSPT_XML_ELEM *, OSPT_XML_ATTR *);
+    OSPT_XML_ATTR *OSPPXMLElemFirstAttr(OSPT_XML_ELEM *);
+    OSPT_XML_ATTR *OSPPXMLElemNextAttr(OSPT_XML_ELEM *, OSPT_XML_ATTR *);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
-
+#endif /* _OSPXMLELEM_H */

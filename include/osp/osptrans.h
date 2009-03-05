@@ -15,15 +15,10 @@
 ***                                                                     ***
 **************************************************************************/
 
-
-
-
-
-
-
 /*
  * osptrans.h - Constants and prototypes for global transaction functions.
  */
+
 #ifndef _OSPTRANS_H
 #define _OSPTRANS_H
 
@@ -43,12 +38,10 @@
 #include "osp/ospfail.h"
 #include "osp/osptokeninfo.h"
 
-
 /*
  * Transaction States
  */
-typedef enum
-{
+typedef enum {
     OSPC_INVALID_STATE,
     OSPC_TRANSNEW,
     OSPC_AUTH_REQUEST_BLOCK,
@@ -74,136 +67,127 @@ typedef enum
 
 #define MAX_PRICING_INFO_ALLOWED 10
 
-/*-------------------------------------------*/
-/* transaction typedef                       */
-/*-------------------------------------------*/ 
-typedef struct _OSPTTRANS
-{
-    struct _OSPTPROVIDER        *Provider;
-    OSPTAUTHREQ                 *AuthReq;
-    OSPTAUTHRSP                 *AuthRsp;
-    OSPTDEST                    *CurrentDest;
-    OSPTAUTHIND                 *AuthInd;
-    OSPTAUTHCNF                 *AuthCnf;
-    OSPTLIST                    UsageInd;      /* list of OSPTUSAGEIND*/
-    OSPTUSAGECNF                *UsageCnf;
-    OSPTCAPCNF                  *CapCnf;
-    OSPE_TRANS_STATE            State;
-    OSPTUINT64                  TransactionID;
-    OSPTBOOL                    HasTransactionID;
-    OSPTBOOL                    HasGetDestSucceeded;
-    unsigned                    Counter;
-    unsigned                    Duration;
-    char                        *SrcNetworkId;
-    char                        *DstNetworkId;
-    unsigned                    SizeOfDetailLog;
-    void                        *DetailLog;
-    OSPTSTATISTICS              *TNStatistics;
-    OSPTREAUTHREQ               *ReauthReq;
-    OSPTREAUTHRSP               *ReauthRsp;
-    OSPTBOOL                    WasLookAheadInfoGivenToApp;
-    OSPTBOOL                    TokenInfoIsLookAheadInfoPresent;
-    OSPTTOKENLOOKAHEADINFO      TokenLookAheadInfo;
-    OSPE_NUMBERING_FORMAT       CallingNumberFormat;
-    OSPE_NUMBERING_FORMAT       CalledNumberFormat;
-    OSPTBOOL                    IsServiceInfoPresent;
-    OSPE_SERVICE_TYPE           ServiceType;
-    OSPTBOOL                    IsPricingInfoPresent;
-    unsigned                    NumOfPricingInfoElements;
-    unsigned                    CurrentPricingInfoElement;
-    OSPT_PRICING_INFO           PricingInfo[MAX_PRICING_INFO_ALLOWED];
+/*
+ * transaction typedef
+ */
+typedef struct _OSPTTRANS {
+    struct _OSPTPROVIDER *Provider;
+    OSPT_AUTH_REQ *AuthReq;
+    OSPT_AUTH_RSP *AuthRsp;
+    OSPT_DEST *CurrentDest;
+    OSPT_AUTH_IND *AuthInd;
+    OSPT_AUTH_CNF *AuthCnf;
+    OSPTLIST UsageInd;          /* list of OSPT_USAGEIND */
+    OSPTUSAGECNF *UsageCnf;
+    OSPT_CAP_CNF *CapCnf;
+    OSPE_TRANS_STATE State;
+    OSPTUINT64 TransactionID;
+    OSPTBOOL HasTransactionID;
+    OSPTBOOL HasGetDestSucceeded;
+    unsigned Counter;
+    unsigned Duration;
+    char *SrcNetworkId;
+    char *DstNetworkId;
+    unsigned SizeOfDetailLog;
+    void *DetailLog;
+    OSPT_STATS *Statistics;
+    OSPTREAUTHREQ *ReauthReq;
+    OSPTREAUTHRSP *ReauthRsp;
+    OSPTBOOL WasLookAheadInfoGivenToApp;
+    OSPTBOOL TokenInfoHasLookAheadInfo;
+    OSPTTOKENLOOKAHEADINFO TokenLookAheadInfo;
+    OSPE_NUMBER_FORMAT CallingNumberFormat;
+    OSPE_NUMBER_FORMAT CalledNumberFormat;
+    OSPTBOOL HasServiceInfo;
+    OSPE_SERVICE ServiceType;
+    OSPTBOOL HasPricingInfo;
+    unsigned NumOfPricingInfoElements;
+    unsigned CurrentPricingInfoElement;
+    OSPT_PRICING_INFO PricingInfo[MAX_PRICING_INFO_ALLOWED];
+    char *RoutingNumber;
+    char AssertedId[OSPC_SIZE_NORID];
+    OSPE_DEST_PROTOCOL DestProtocol;
+    char ForwardCodec[OSPC_SIZE_CODEC];
+    char ReverseCodec[OSPC_SIZE_CODEC];
+    OSPT_CALL_ID *SessionId[OSPC_DIR_NUMBER];
+    char *CustomInfo[OSPC_MAX_INDEX];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000
-/*-------------------------------------------*/
-/* transaction collection typedef            */
-/*-------------------------------------------*/ 
-typedef struct _OSPTTRANCOLLECTION
-{
-    OSPTTRANS   *Trans[OSPC_MAX_TRANS];
-    unsigned    NumberOfTrans;
-    OSPTMUTEX   TransactionMutex;
+/*
+ * transaction collection typedef
+ */
+typedef struct _OSPTTRANCOLLECTION {
+    OSPTTRANS *Trans[OSPC_MAX_TRANS];
+    unsigned NumberOfTrans;
+    OSPTMUTEX TransactionMutex;
 } OSPTTRANCOLLECTION;
 
 /* Types for parsing and creating forms */
 
-#define     OSPC_USAGE   0x01    
-#define     OSPC_AUTH    0x02
-#define     OSPC_REAUTH  0x03
-
+#define OSPC_USAGE      0x01
+#define OSPC_AUTH       0x02
+#define OSPC_REAUTH     0x03
 
 /* Transaction Mask */
-#define OSPC_TRANSACTIONMASK    0xFFFFFF
+#define OSPC_TRANSACTIONMASK        0xFFFFFF
 
 #define OSPC_TRAN_TIME_UNLIMITED    0
 
 #define OSPC_TRAN_HANDLE_INVALID    -1
 
 /* MACROS */
-#define OSPM_GET_TRANSACTION_INDEX(e) (e & OSPC_TRANSACTIONMASK);
+#define OSPM_GET_TRANSACTION_INDEX(e)   (e & OSPC_TRANSACTIONMASK);
 
 /* Function Prototypes */
+
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-int             OSPPTransactionBuildReauthRequest(OSPTTRANS *, unsigned);
-int             OSPPTransactionBuildUsage(OSPTTRANS *, OSPTUSAGEIND **,
-                                      OSPTDEST *, OSPE_MSG_DATATYPES);
+    int OSPPTransactionBuildReauthRequest(OSPTTRANS *, unsigned);
+    int OSPPTransactionBuildUsage(OSPTTRANS *, OSPT_USAGEIND **, OSPT_DEST *, OSPE_MESSAGE);
+    OSPTTRANS *OSPPTransactionCollectionGetItem(OSPTTRANCOLLECTION *, OSPTCOLLECTIONINDEX);
+    OSPTTRANHANDLE OSPPTransactionCollectionGetNewItem(OSPTPROVHANDLE, OSPTTRANCOLLECTION *, int *);
+    void OSPPTransactionCollectionRemoveItem(OSPTTRANCOLLECTION *, OSPTCOLLECTIONINDEX);
+    void OSPPTransactionDeleteRequest(OSPTTRANS *);
+    void OSPPTransactionDeleteResponse(OSPTTRANS *);
+    void OSPPTransactionDeleteAuthInd(OSPTTRANS *);
+    void OSPPTransactionDeleteAuthCnf(OSPTTRANS *);
+    void OSPPTransactionDeleteUsageInd(OSPTTRANS *);
+    void OSPPTransactionDeleteUsageCnf(OSPTTRANS *);
+    void OSPPTransactionDeleteStatistics(OSPTTRANS *);
+    void OSPPTransactionDeleteReauthReq(OSPTTRANS *);
+    void OSPPTransactionDeleteReauthRsp(OSPTTRANS *);
+    void OSPPTransactionDeleteCapCnf(OSPTTRANS *);
+    void OSPPTransactionGetAccumAllowed(OSPTTRANS *, OSPTBOOL *);
+    OSPTTRANS *OSPPTransactionGetContext(OSPTTRANHANDLE, int *);
+    int OSPPTransactionGetCounter(OSPTTRANS *);
+    void OSPPTransactionGetDeleteAllowed(OSPTTRANS *, OSPTBOOL *);
+    void OSPPTransactionGetIsModifyDeviceIdAllowed(OSPTTRANS *, OSPTBOOL *);
+    int OSPPTransactionGetDestAllowed(OSPTTRANS *);
+    int OSPPTransactionGetDestination(OSPTTRANS *, OSPEFAILREASON, unsigned, char *, char *, unsigned *, unsigned *,
+            void *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned *, void *);
+    int OSPPTransactionGetNewContext(OSPTPROVHANDLE, OSPTTRANHANDLE *);
+    int OSPPTransactionGetProvider(OSPTTRANS *, struct _OSPTPROVIDER **);
+    void OSPPTransactionGetReportUsageAllowed(OSPTTRANS *, OSPTBOOL *);
+    void OSPPTransactionGetState(OSPTTRANS *, OSPE_TRANS_STATE *);
+    void OSPPTransactionGetStatistics(OSPTTRANS *, OSPT_STATS *);
+    OSPTBOOL OSPPTransactionHasStatistics(OSPTTRANS *);
+    int OSPPTransactionPrepareAndQueMessage(OSPTTRANS *, unsigned char *, unsigned, OSPT_MSG_INFO **);
+    int OSPPTransactionProcessReturn(OSPTTRANS *, OSPT_MSG_INFO *);
+    int OSPPTransactionRequestNew(OSPTTRANS *, const char *, const char *, const char *, const char *, const char *, unsigned,
+            OSPT_CALL_ID *[], const char *[], unsigned *, unsigned *, void *);
+    int OSPPTransactionResponseBuild(OSPTTRANS *, const char *, const char *, unsigned, const void *, unsigned, const void *);
+    int OSPPTransactionSetProvider(OSPTTRANS *, struct _OSPTPROVIDER *);
+    void OSPPTransactionSetState(OSPTTRANS *, OSPE_TRANS_STATE);
+    void OSPPTransactionUpdateCounter(OSPTTRANS *);
+    int OSPPTransactionValidateTokenCert(OSPTTRANS *, unsigned char *, unsigned);
+    int OSPPTransactionVerifyAuthCnf(OSPT_AUTH_CNF *);
+    int OSPPTransactionVerifyUsageCnf(OSPTUSAGECNF *);
 
-OSPTTRANS       *OSPPTransactionCollectionGetItem(OSPTTRANCOLLECTION  *, 
-                                              OSPTCOLLECTIONINDEX);
-OSPTTRANHANDLE OSPPTransactionCollectionGetNewItem(OSPTPROVHANDLE,
-    OSPTTRANCOLLECTION *, int *);
-void           OSPPTransactionCollectionRemoveItem(OSPTTRANCOLLECTION *,
-                                                  OSPTCOLLECTIONINDEX);
-
-void           OSPPTransactionDeleteRequest(OSPTTRANS *);
-void           OSPPTransactionDeleteResponse(OSPTTRANS *);
-void           OSPPTransactionDeleteAuthInd(OSPTTRANS *);
-void           OSPPTransactionDeleteAuthCnf(OSPTTRANS *);
-void           OSPPTransactionDeleteUsageInd(OSPTTRANS *);
-void           OSPPTransactionDeleteUsageCnf(OSPTTRANS *);
-void           OSPPTransactionDeleteStatistics(OSPTTRANS *);
-void           OSPPTransactionDeleteReauthReq(OSPTTRANS *);
-void           OSPPTransactionDeleteReauthRsp(OSPTTRANS *);
-void           OSPPTransactionDeleteCapCnf(OSPTTRANS *);
-
-void           OSPPTransactionGetAccumAllowed(OSPTTRANS *, OSPTBOOL *);
-OSPTTRANS     *OSPPTransactionGetContext(OSPTTRANHANDLE, int *);
-int            OSPPTransactionGetCounter(OSPTTRANS *);
-void           OSPPTransactionGetDeleteAllowed(OSPTTRANS *, OSPTBOOL *);
-void           OSPPTransactionGetIsModifyDeviceIdAllowed(OSPTTRANS *, OSPTBOOL *);
-int            OSPPTransactionGetDestAllowed(OSPTTRANS *);
-int            OSPPTransactionGetDestination(OSPTTRANS *, enum OSPEFAILREASON,
-                   unsigned, char *, char *, unsigned *, unsigned *, void *,
-                   unsigned, char *, unsigned, char *, unsigned, char *, unsigned, char *,
-                   unsigned *, void *);
-int         OSPPTransactionGetNewContext(OSPTPROVHANDLE, OSPTTRANHANDLE *);
-int         OSPPTransactionGetProvider(OSPTTRANS *, struct _OSPTPROVIDER **);
-void        OSPPTransactionGetReportUsageAllowed(OSPTTRANS *, OSPTBOOL *);
-void        OSPPTransactionGetState(OSPTTRANS *, OSPE_TRANS_STATE *);
-void        OSPPTransactionGetStatistics(OSPTTRANS *, OSPTSTATISTICS *);
-OSPTBOOL    OSPPTransactionHasStatistics(OSPTTRANS *);
-
-int         OSPPTransactionPrepareAndQueMessage(OSPTTRANS *, unsigned char *, 
-                   unsigned, OSPTMSGINFO **);
-int         OSPPTransactionProcessReturn(OSPTTRANS *, OSPTMSGINFO *);
-int         OSPPTransactionRequestNew(OSPTTRANS *, const char *, const char *,
-                   const char *, const char *, const char *, unsigned, 
-                   OSPTCALLID *[], const char *[], unsigned *, unsigned *, 
-                   void *);
-int         OSPPTransactionResponseBuild(OSPTTRANS *, const char *, const char *, unsigned,
-                   const void *, unsigned, const void *);
-int         OSPPTransactionSetProvider(OSPTTRANS *, struct _OSPTPROVIDER *);
-void        OSPPTransactionSetState(OSPTTRANS *, OSPE_TRANS_STATE);
-void        OSPPTransactionUpdateCounter(OSPTTRANS *);
-int         OSPPTransactionValidateTokenCert(OSPTTRANS *, unsigned char *, unsigned);
-int         OSPPTransactionVerifyAuthCnf(OSPTAUTHCNF *);
-int         OSPPTransactionVerifyUsageCnf(OSPTUSAGECNF *);
 #ifdef __cplusplus
 }
 #endif
-#endif
 
+#endif /* _OSPTRANS_H */
