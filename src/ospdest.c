@@ -77,8 +77,8 @@ void OSPPDestSetProtocol(   /* nothing returned */
 /*
  * OSPPDestHasNumber() - does the destination include a called number?
  */
-OSPTBOOL OSPPDestHasNumber(/* returns non-zero if number exists */
-    OSPT_DEST *ospvDest)   /* destination effected */
+OSPTBOOL OSPPDestHasNumber( /* returns non-zero if number exists */
+    OSPT_DEST *ospvDest)    /* destination effected */
 {
     OSPTBOOL ospvHas = OSPC_FALSE;
 
@@ -576,7 +576,7 @@ OSPTBOOL OSPPDestHasTermCauseAny(   /* returns non-zero if time */
 /*
  * OSPPDestSetTermCause() - Set Fail Reason
  */
-void OSPPDestSetTermCause( /* nothing returned */
+void OSPPDestSetTermCause(  /* nothing returned */
     OSPT_DEST *ospvDest,
     OSPE_TERM_CAUSE ospvType,
     unsigned ospvTCCode,
@@ -591,7 +591,7 @@ void OSPPDestSetTermCause( /* nothing returned */
  * OSPPDestGetTermCause() - returns Fail Reason structure for an destination
  */
 OSPT_TERM_CAUSE *OSPPDestGetTermCause(
-    OSPT_DEST *ospvDest)        /* destination */
+    OSPT_DEST *ospvDest)    /* destination */
 {
     OSPT_TERM_CAUSE *ospvTermCause = OSPC_OSNULL;
     

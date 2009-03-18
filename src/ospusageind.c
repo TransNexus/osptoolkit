@@ -378,9 +378,9 @@ int OSPPUsageIndGetDuration(
 /*
  * OSPPUsageIndSetHasPDDInfo() - set the IsPDDInfoPResent variable
  */
-void OSPPUsageIndSetHasPDDInfo(   /* nothing returned */
-    OSPT_USAGEIND *ospvUsageInd,        /* usage indication to set */
-    OSPTBOOL HasPDDInfo)                /* duration to set to */
+void OSPPUsageIndSetHasPDDInfo(     /* nothing returned */
+    OSPT_USAGEIND *ospvUsageInd,    /* usage indication to set */
+    OSPTBOOL HasPDDInfo)            /* duration to set to */
 {
     if (ospvUsageInd != OSPC_OSNULL) {
         ospvUsageInd->ospmUsageIndHasPDD = HasPDDInfo;
@@ -576,7 +576,7 @@ void OSPPUsageIndCopyTermCause(     /* nothing returned */
 /*
  * OSPPUsageIndSetTermCause() - Set Fail Reason
  */
-void OSPPUsageIndSetTermCause(     /* nothing returned */
+void OSPPUsageIndSetTermCause(      /* nothing returned */
     OSPT_USAGEIND *ospvUsageInd,
     OSPE_TERM_CAUSE ospvType,    
     unsigned ospvTCCode,
@@ -1153,7 +1153,7 @@ void OSPPUsageIndDelete(
  */
 void OSPPUsageIndSetCallId(         /* nothing returned */
     OSPT_USAGEIND *ospvUsageInd,    /* usage indication */
-    OSPT_CALL_ID *ospvCallId)         /* call ID */
+    OSPT_CALL_ID *ospvCallId)       /* call ID */
 {
     if (ospvUsageInd != OSPC_OSNULL) {
         if ((ospvCallId) != OSPC_OSNULL) {
@@ -1322,8 +1322,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* add the call ID */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
-                OSPPUsageIndHasCallId(usage)) {
+            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasCallId(usage)) {
                 ospvErrCode = OSPPCallIdToElement(OSPPUsageIndGetCallId(usage), &subelem, isbase64);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
@@ -1358,8 +1357,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             }            
             
             /* add the device info */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
-                (usage->ospmUsageIndDeviceInfo != NULL)) {
+            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (usage->ospmUsageIndDeviceInfo != NULL)) {
                 for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(usage->ospmUsageIndDeviceInfo));
                     altinfo != OSPC_OSNULL;
                     altinfo = (OSPT_ALTINFO *)OSPPListNext(&(usage->ospmUsageIndDeviceInfo), altinfo)) 
@@ -1373,8 +1371,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* add the source alternates */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
-                OSPPUsageIndHasSourceAlt(usage)) {
+            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasSourceAlt(usage)) {
                 for (altinfo = (OSPT_ALTINFO *)OSPPUsageIndFirstSourceAlt(usage);
                     ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
                      altinfo = (OSPT_ALTINFO *)OSPPUsageIndNextSourceAlt(usage, altinfo)) 
@@ -1400,8 +1397,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             }            
             
             /* add the destination alternates */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
-                OSPPUsageIndHasDestinationAlt(usage)) {
+            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasDestinationAlt(usage)) {
                 for (altinfo = (OSPT_ALTINFO *)OSPPUsageIndFirstDestinationAlt(usage);
                     ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
                     altinfo = (OSPT_ALTINFO *)OSPPUsageIndNextDestinationAlt(usage, altinfo))
@@ -1628,7 +1624,7 @@ int OSPPUsageIndToElement(      /* returns error code */
                 OSPPXMLElemAddChild(*ospvElem, usageindelem);
                 usageindelem = OSPC_OSNULL;
             }
-        }                        /* end for */
+        }   /* end for */
     }
 
     /* if for any reason we found an error - destroy any elements created */
@@ -1655,6 +1651,18 @@ int OSPPUsageIndToElement(      /* returns error code */
     }
 
     return ospvErrCode;
+}
+
+/*
+ * OSPPUsageIndAddSourceAlt() - add a source alt to list a list
+ */
+void OSPPUsageIndAddSourceAlt(
+    OSPT_USAGEIND *ospvUsageInd,    /* authorisation indication */
+    OSPT_ALTINFO *ospvAltInfo)      /* alt info to add */
+{
+    if ((ospvUsageInd != OSPC_OSNULL) && (ospvAltInfo != OSPC_OSNULL)) {
+        OSPPListAppend(&(ospvUsageInd->ospmUsageIndSourceAlt), ospvAltInfo);
+    }
 }
 
 /*

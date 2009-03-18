@@ -994,7 +994,7 @@ unsigned OSPPStatsGetMin(
 }
 
 unsigned OSPPStatsGetMax(
-    OSPT_STATS * ospvStats, 
+    OSPT_STATS *ospvStats, 
     OSPE_STATS ospvType,
     OSPE_DIRECTION ospvDirection)
 {
@@ -1150,7 +1150,7 @@ void OSPPStatsSetMin(
 }
 
 void OSPPStatsSetMax(
-    OSPT_STATS * ospvStats, 
+    OSPT_STATS *ospvStats, 
     OSPE_STATS ospvType,
     OSPE_DIRECTION ospvDirection,
     unsigned ospvMax)

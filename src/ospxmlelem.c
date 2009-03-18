@@ -29,8 +29,8 @@
  */
 
 OSPT_XML_ELEM *OSPPXMLElemNew(  /* returns the new element (or NULL) */                
-    const char *ospvName,     /* name of the element */
-    const char *ospvValue)    /* character string value for element */
+    const char *ospvName,       /* name of the element */
+    const char *ospvValue)      /* character string value for element */
 {
     OSPT_XML_ELEM *ospvElem = OSPC_OSNULL;
     char *nameptr = OSPC_OSNULL;
@@ -83,7 +83,7 @@ OSPT_XML_ELEM *OSPPXMLElemNew(  /* returns the new element (or NULL) */
             /* make sure the allocation succeeded before proceeding */
             if (ospvElem != OSPC_OSNULL) {
                 /* calculate where the "hidden" value will go */
-                nameptr = ((char *) (ospvElem)) + sizeof(OSPT_XML_ELEM);
+                nameptr = ((char *)(ospvElem)) + sizeof(OSPT_XML_ELEM);
                 valptr = nameptr + namelen;
 
                 /* copy the value into it's hidden location */
@@ -106,8 +106,7 @@ OSPT_XML_ELEM *OSPPXMLElemNew(  /* returns the new element (or NULL) */
 /*
  * OSPPXMLElemDelete() - destroy an XML element
  */
-
-void OSPPXMLElemDelete(       /* no return value */
+void OSPPXMLElemDelete(         /* no return value */
     OSPT_XML_ELEM **ospvElem)   /* element to destroy */
 {
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
@@ -135,7 +134,7 @@ void OSPPXMLElemDelete(       /* no return value */
  */
 
 const char *OSPPXMLElemGetName( /* returns pointer to name */ 
-    OSPT_XML_ELEM *ospvElem)      /* element being querried */
+    OSPT_XML_ELEM *ospvElem)    /* element being querried */
 {
     const char *ospvName = OSPC_OSNULL;
 
@@ -151,7 +150,7 @@ const char *OSPPXMLElemGetName( /* returns pointer to name */
  */
 
 const char *OSPPXMLElemGetValue(    /* returns pointer to character value */    
-    OSPT_XML_ELEM *ospvElem)          /* element in question */
+    OSPT_XML_ELEM *ospvElem)        /* element in question */
 {
     const char *ospvValue = OSPC_OSNULL;
 
@@ -166,7 +165,7 @@ const char *OSPPXMLElemGetValue(    /* returns pointer to character value */
  * OSPPXMLElemAddChild() - add a child element to the current element
  */
 
-void OSPPXMLElemAddChild(     /* no return value */
+void OSPPXMLElemAddChild(       /* no return value */
     OSPT_XML_ELEM *ospvElem,    /* element to which child is added */
     OSPT_XML_ELEM *ospvChild)   /* child element to add */
 {
@@ -181,8 +180,8 @@ void OSPPXMLElemAddChild(     /* no return value */
  * OSPPXMLElemFirstChild() - returns the first child of an element
  */
 
-OSPT_XML_ELEM *OSPPXMLElemFirstChild( /* returns pointer to child or NULL */     
-    OSPT_XML_ELEM *ospvElem)          /* parent element in question */
+OSPT_XML_ELEM *OSPPXMLElemFirstChild(   /* returns pointer to child or NULL */     
+    OSPT_XML_ELEM *ospvElem)            /* parent element in question */
 {
     OSPT_XML_ELEM *ospvChild = OSPC_OSNULL;
 
@@ -197,9 +196,9 @@ OSPT_XML_ELEM *OSPPXMLElemFirstChild( /* returns pointer to child or NULL */
  * OSPPXMLElemNextChild() - returns the next child of an element
  */
 
-OSPT_XML_ELEM *OSPPXMLElemNextChild(  /* returns pointer to child or NULL */
-    OSPT_XML_ELEM *ospvElem,          /* parent element in question */
-    OSPT_XML_ELEM *ospvChild)         /* current child element */
+OSPT_XML_ELEM *OSPPXMLElemNextChild(    /* returns pointer to child or NULL */
+    OSPT_XML_ELEM *ospvElem,            /* parent element in question */
+    OSPT_XML_ELEM *ospvChild)           /* current child element */
 {
     OSPT_XML_ELEM *ospvNext = OSPC_OSNULL;
 
@@ -216,7 +215,7 @@ OSPT_XML_ELEM *OSPPXMLElemNextChild(  /* returns pointer to child or NULL */
  * OSPPXMLElemAddAttr() - add an attribute to the current element
  */
 
-void OSPPXMLElemAddAttr(      /* no return value */
+void OSPPXMLElemAddAttr(        /* no return value */
     OSPT_XML_ELEM *ospvElem,    /* element to which attribute is added */
     OSPT_XML_ATTR *ospvAttr)    /* attribute to add */
 {
@@ -231,8 +230,8 @@ void OSPPXMLElemAddAttr(      /* no return value */
  * OSPPXMLElemFirstAttr() - returns the first attribute of an element
  */
 
-OSPT_XML_ATTR *OSPPXMLElemFirstAttr(  /* returns pointer to attribute or NULL */
-    OSPT_XML_ELEM *ospvElem)          /* parent element in question */
+OSPT_XML_ATTR *OSPPXMLElemFirstAttr(    /* returns pointer to attribute or NULL */
+    OSPT_XML_ELEM *ospvElem)            /* parent element in question */
 {
     OSPT_XML_ATTR *ospvAttr = OSPC_OSNULL;
 
@@ -246,9 +245,9 @@ OSPT_XML_ATTR *OSPPXMLElemFirstAttr(  /* returns pointer to attribute or NULL */
  * OSPPXMLElemNextAttr() - returns the next attribute of an element
  */
 
-OSPT_XML_ATTR *OSPPXMLElemNextAttr(   /* returns pointer to attribute or NULL */
-    OSPT_XML_ELEM *ospvElem,          /* parent element in question */
-    OSPT_XML_ATTR *ospvAttr)          /* current attribute */
+OSPT_XML_ATTR *OSPPXMLElemNextAttr(     /* returns pointer to attribute or NULL */
+    OSPT_XML_ELEM *ospvElem,            /* parent element in question */
+    OSPT_XML_ATTR *ospvAttr)            /* current attribute */
 {
     OSPT_XML_ATTR *ospvNext = OSPC_OSNULL;
 

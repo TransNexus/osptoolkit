@@ -338,7 +338,7 @@ OSPTTRANSID *  OSPPTransIdNew(  /* returns null on failure */
     OSPTUINT64 ospvTransIdVal,  /* transaction ID value */
     unsigned long ospvExpires)  /* expiration time in seconds */
 {
-    OSPTTRANSID *transid = OSPC_OSNULL;    /* pointer to Transaction ID */
+    OSPTTRANSID *transid = OSPC_OSNULL;     /* pointer to Transaction ID */
 
     OSPM_MALLOC(transid, OSPTTRANSID, sizeof(OSPTTRANSID));
     if (transid) {
@@ -376,8 +376,8 @@ void OSPPTransIdPurge(      /* returns nothing */
 void OSPPTransIdRemove(         /* no return value */
     OSPTTRANSID *ospvTransId)   /* transaction ID to remove */
 {
-    OSPTTRANSID *splice = OSPC_OSNULL;    /* node to be spliced */
-    OSPTTRANSID *child = OSPC_OSNULL;    /* child of spliced node */
+    OSPTTRANSID *splice = OSPC_OSNULL;  /* node to be spliced */
+    OSPTTRANSID *child = OSPC_OSNULL;   /* child of spliced node */
     int errorcode = OSPC_ERR_NO_ERROR;
 
     /*

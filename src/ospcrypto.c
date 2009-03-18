@@ -204,7 +204,7 @@ int OSPPCryptoDigest(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPASN1OctetStringEncode(ospvDigest, digest, digestLength, OSPEDRID_NOTDEFINED);
     }
-    if (OSPC_OSNULL != digest) {
+    if (digest != OSPC_OSNULL) {
         OSPM_FREE(digest);
     }
 
@@ -282,7 +282,7 @@ int OSPPCryptoDecrypt(
         /* Encode the encrypted data buffer */
         errorcode = OSPPASN1OctetStringEncode(ospvDecryptedData, decryptedData, decryptedDataLength, OSPEDRID_NOTDEFINED);
     }
-    if (OSPC_OSNULL != decryptedData) {
+    if (decryptedData != OSPC_OSNULL) {
         OSPM_FREE(decryptedData);
     }
 

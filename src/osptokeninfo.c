@@ -179,9 +179,9 @@ const char *OSPPTokenInfoGetDestNumber(
 }
 
 /*
- * OSPPTokenInfoSetDstNetworkId() - set the destination network id
+ * OSPPTokenInfoSetDestNetworkId() - set the destination network id
  */
-void OSPPTokenInfoSetDstNetworkId(  /* nothing returned */
+void OSPPTokenInfoSetDestNetworkId( /* nothing returned */
     OSPTTOKENINFO *ospvTokenInfo,   /* token info to set */
     const char *ospvDestId)         /* destination id to set to */
 {
@@ -193,9 +193,9 @@ void OSPPTokenInfoSetDstNetworkId(  /* nothing returned */
 }
 
 /*
- * OSPPTokenInfoGetDstNetworkId() - returns the destination network id for a token info
+ * OSPPTokenInfoGetDestNetworkId() - returns the destination network id for a token info
  */
-const char *OSPPTokenInfoGetDstNetworkId(
+const char *OSPPTokenInfoGetDestNetworkId(
     OSPTTOKENINFO *ospvTokenInfo)           /* token info */
 {
     const char *ospvDestId = OSPC_OSNULL;
@@ -227,7 +227,7 @@ OSPTBOOL OSPPTokenInfoHasCallId(    /* returns non-zero if number exists */
  */
 void OSPPTokenInfoSetCallId(        /* nothing returned */
     OSPTTOKENINFO *ospvTokenInfo,   /* token info to set */
-    OSPT_CALL_ID *ospvCallId)         /* call id to set to */
+    OSPT_CALL_ID *ospvCallId)       /* call id to set to */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
         if ((ospvCallId) != OSPC_OSNULL) {
@@ -430,7 +430,7 @@ OSPTTOKENINFO *OSPPTokenInfoNew(void)   /* returns pointer or NULL */
         ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDestProt = OSPC_DPROT_UNDEFINED;
         ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDestOSPStatus = OSPC_DOSP_UNDEFINED;
         ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDest[0] = '\0';
-        ospvTokenInfo->ospmTokenInfoHasDstNetworkId = OSPC_FALSE;
+        ospvTokenInfo->ospmTokenInfoHasDestNetworkId = OSPC_FALSE;
         ospvTokenInfo->dstNetworkId[0] = '\0';
     }
 
@@ -504,13 +504,13 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
                  * address or the network addr
                  */
                 if (OSPPXMLAttrGetValue
-                    ((OSPT_XML_ATTR *) elem->ospmXMLElemAttrs)) {
+                    ((OSPT_XML_ATTR *)elem->ospmXMLElemAttrs)) {
                     if (!OSPM_STRCMP("network", OSPPXMLAttrGetValue((OSPT_XML_ATTR *)OSPPListFirst(&elem->ospmXMLElemAttrs)))) {
                         /* 
                          * This is network information
                          */
-                        tokeninfo->ospmTokenInfoHasDstNetworkId = OSPC_TRUE;
-                        OSPPTokenInfoSetDstNetworkId(tokeninfo, OSPPXMLElemGetValue(elem));
+                        tokeninfo->ospmTokenInfoHasDestNetworkId = OSPC_TRUE;
+                        OSPPTokenInfoSetDestNetworkId(tokeninfo, OSPPXMLElemGetValue(elem));
                     } else {
                         /*
                          * This must be the IP Address
@@ -699,8 +699,8 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
                 break;
             case 'e':
                 if (OSPM_STRLEN((const char *)val) > 2) {
-                    tokeninfo->ospmTokenInfoHasDstNetworkId = OSPC_TRUE;
-                    OSPPTokenInfoSetDstNetworkId(tokeninfo, (const char *)(val + 2));
+                    tokeninfo->ospmTokenInfoHasDestNetworkId = OSPC_TRUE;
+                    OSPPTokenInfoSetDestNetworkId(tokeninfo, (const char *)(val + 2));
                 }
                 break;
             case 'A':

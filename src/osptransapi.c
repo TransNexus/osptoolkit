@@ -38,7 +38,7 @@
 
 #define OSPC_UNDEFINED_CALLID_NUM   ((unsigned)1)
 #define OSPC_UNDEFINED_CALLID_STR   ((unsigned char*)"UNDEFINED")
-#define OSPC_UNDEFINED_CALLID_SIZE  ((unsigned)9)    /* size of OSPC_UNDEFINED_CALLID_STR */
+#define OSPC_UNDEFINED_CALLID_SIZE  ((unsigned)9)   /* size of OSPC_UNDEFINED_CALLID_STR */
 
 /*
  * OSPPTransactionSetServiceAndPricingInfo
@@ -159,9 +159,8 @@ int OSPPTransactionModifyDeviceIdentifiers(
                      * Now add.
                      */
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ALTINFO_TRANSPORT);
-
                     if (altinfo != OSPC_OSNULL) {
-                        OSPPListAppend((OSPTLIST *)&(dest->ospmUpdatedSourceAddr), (void *) altinfo);
+                        OSPPListAppend((OSPTLIST *)&(dest->ospmUpdatedSourceAddr), (void *)altinfo);
                     }
                 }
 
@@ -183,9 +182,8 @@ int OSPPTransactionModifyDeviceIdentifiers(
                      * Now add.
                      */
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ALTINFO_TRANSPORT);
-
                     if (altinfo != OSPC_OSNULL) {
-                        OSPPListAppend((OSPTLIST *)&(dest->ospmUpdatedDeviceInfo), (void *) altinfo);
+                        OSPPListAppend((OSPTLIST *)&(dest->ospmUpdatedDeviceInfo), (void *)altinfo);
                     }
                 }
                 altinfo = NULL;
@@ -235,8 +233,8 @@ int OSPPTransactionModifyDeviceIdentifiers(
                             altinfoToKeep = NULL;
                         }
                     }
+                    
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ALTINFO_TRANSPORT);
-
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *)altinfo);
                     }
@@ -274,10 +272,9 @@ int OSPPTransactionModifyDeviceIdentifiers(
                             altinfoToKeep = NULL;
                         }
                     }
+                    
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ALTINFO_TRANSPORT);
-
                     if (altinfo != OSPC_OSNULL) {
-
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDeviceInfo), (void *)altinfo);
                     }
                     altinfo = NULL;
@@ -328,9 +325,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                     /*
                      * Now add the new destination
                      */
-
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestination), ospvDestination, OSPC_ALTINFO_TRANSPORT);
-
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
                     }
@@ -384,7 +379,6 @@ int OSPPTransactionModifyDeviceIdentifiers(
                     /*
                      * Now add the new node for destinationDevice
                      */
-
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestinationDevice), ospvDestinationDevice, OSPC_ALTINFO_H323);
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
@@ -480,7 +474,6 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
             }
 
             altinfo = OSPPAltInfoNew(OSPM_STRLEN(destinfo), destinfo, OSPC_ALTINFO_TRANSPORT);
-
             if (altinfo != OSPC_OSNULL) {
                 OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
             }
@@ -666,14 +659,14 @@ int OSPPTransactionIsDestOSPEnabled(
 int OSPPTransactionSetNetworkIds(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     const char *ospvSrcNetworkId,   /* In - Src network specific information */
-    const char *ospvDstNetworkId)   /* In - Dst network specific information */
+    const char *ospvDestNetworkId)  /* In - Dest network specific information */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
     if (((ospvSrcNetworkId == OSPC_OSNULL) || (ospvSrcNetworkId[0] == '\0')) &&
-        ((ospvDstNetworkId == OSPC_OSNULL) || (ospvDstNetworkId[0] == '\0')))
+        ((ospvDestNetworkId == OSPC_OSNULL) || (ospvDestNetworkId[0] == '\0')))
     {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
         OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionSetNetworkIds");
@@ -690,7 +683,7 @@ int OSPPTransactionSetNetworkIds(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            if ((trans->SrcNetworkId != OSPC_OSNULL) || (trans->DstNetworkId != OSPC_OSNULL)) {
+            if ((trans->SrcNetworkId != OSPC_OSNULL) || (trans->DestNetworkId != OSPC_OSNULL)) {
                 errorcode = OSPC_ERR_TRAN_DUPLICATE_REQUEST;
                 OSPM_DBGERRORLOG(errorcode, "Duplicate Calls to OSPPTransactionSetNetworkIds");
             }
@@ -712,10 +705,10 @@ int OSPPTransactionSetNetworkIds(
                     }
                 }
 
-                if (ospvDstNetworkId != NULL) {
-                    OSPM_MALLOC(trans->DstNetworkId, char, OSPM_STRLEN(ospvDstNetworkId) + 1);
-                    if (trans->DstNetworkId != OSPC_OSNULL) {
-                        OSPM_MEMCPY(trans->DstNetworkId, ospvDstNetworkId, OSPM_STRLEN(ospvDstNetworkId) + 1);
+                if (ospvDestNetworkId != NULL) {
+                    OSPM_MALLOC(trans->DestNetworkId, char, OSPM_STRLEN(ospvDestNetworkId) + 1);
+                    if (trans->DestNetworkId != OSPC_OSNULL) {
+                        OSPM_MEMCPY(trans->DestNetworkId, ospvDestNetworkId, OSPM_STRLEN(ospvDestNetworkId) + 1);
                     } else {
                         errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
                     }
@@ -741,16 +734,16 @@ int OSPPTransactionSetNetworkIds(
                      * We will NOT overwrite the Network Id
                      * if specified in the token.
                      */
-                    if (ospvDstNetworkId != NULL) {
-                        OSPM_MALLOC(trans->DstNetworkId, char, OSPM_STRLEN(ospvDstNetworkId) + 1);
-                        if (trans->DstNetworkId != OSPC_OSNULL) {
-                            OSPM_MEMCPY(trans->DstNetworkId, ospvDstNetworkId, OSPM_STRLEN(ospvDstNetworkId) + 1);
+                    if (ospvDestNetworkId != NULL) {
+                        OSPM_MALLOC(trans->DestNetworkId, char, OSPM_STRLEN(ospvDestNetworkId) + 1);
+                        if (trans->DestNetworkId != OSPC_OSNULL) {
+                            OSPM_MEMCPY(trans->DestNetworkId, ospvDestNetworkId, OSPM_STRLEN(ospvDestNetworkId) + 1);
                         } else {
                             errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
                         }
                     }
 
-                    if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvDstNetworkId != NULL)) {
+                    if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvDestNetworkId != NULL)) {
                         if (trans->AuthInd->ospmAuthIndDestinationAlternate == OSPC_OSNULL) {
                             /*
                              * Make a new list
@@ -760,12 +753,12 @@ int OSPPTransactionSetNetworkIds(
                         /*
                          * add to the list
                          */
-                        altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDstNetworkId), ospvDstNetworkId, OSPC_ALTINFO_NETWORK);
+                        altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestNetworkId), ospvDestNetworkId, OSPC_ALTINFO_NETWORK);
                         if (altinfo != OSPC_OSNULL) {
-                            OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *) altinfo);
+                            OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
                             altinfo = OSPC_OSNULL;
                         }
-                    }            /* ospvDstNetworkId != NULL */
+                    }   /* ospvDestNetworkId != NULL */
                 }
 
                 /*
@@ -798,9 +791,9 @@ int OSPPTransactionSetNetworkIds(
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *)altinfo);
                         altinfo = OSPC_OSNULL;
                     }
-                }                /* errorcode == OSPC_ERR_NO_ERROR */
+                }   /* errorcode == OSPC_ERR_NO_ERROR */
             }
-        }                        /* errorcode == OSPC_ERR_NO_ERROR */
+        }   /* errorcode == OSPC_ERR_NO_ERROR */
     }
     /* trans != (OSPTTRANS*)NULL */
     return errorcode;
@@ -1184,8 +1177,8 @@ int OSPPTransactionDelete(
                 OSPM_FREE(trans->SrcNetworkId);
             }
 
-            if (trans->DstNetworkId != OSPC_OSNULL) {
-                OSPM_FREE(trans->DstNetworkId);
+            if (trans->DestNetworkId != OSPC_OSNULL) {
+                OSPM_FREE(trans->DestNetworkId);
             }
 
             if (trans->RoutingNumber != OSPC_OSNULL) {
@@ -1687,7 +1680,7 @@ int OSPPTransactionBuildUsageFromScratch(
 
                     /* now build new dest */
                     errorcode = OSPPTransactionResponseBuild(trans, ospvDestination, ospvCallingNumber, ospvSizeOfCallId, ospvCallId, 
-                        5,    /* Just giving a size because the Response function does not like a size of 0 */
+                        5,  /* Just giving a size because the Response function does not like a size of 0 */
                         "ABCDE");
                 }
             } else {
@@ -1724,7 +1717,7 @@ int OSPPTransactionBuildUsageFromScratch(
 
                 if (errorcode == OSPC_ERR_NO_ERROR) {
                     errorcode = OSPPTransactionResponseBuild(trans, ospvDestination, ospvCallingNumber, ospvSizeOfCallId, ospvCallId, 
-                        5,    /* Just giving a size because the Response function does not like a size of 0 */
+                        5,  /* Just giving a size because the Response function does not like a size of 0 */
                         "ABCDE");
 
                     /*
@@ -1795,10 +1788,9 @@ int OSPPTransactionBuildUsageFromScratch(
                     if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvSourceDevice != OSPC_OSNULL)) {
                         /* device information - create a linked list */
                         OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDeviceInfo));
-
                         altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ALTINFO_TRANSPORT);
                         if (altinfo != OSPC_OSNULL) {
-                            OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDeviceInfo), (void *) altinfo);
+                            OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDeviceInfo), (void *)altinfo);
                         }
                         altinfo = OSPC_OSNULL;
                     }
@@ -1815,18 +1807,16 @@ int OSPPTransactionBuildUsageFromScratch(
 
                             if (trans->SrcNetworkId != OSPC_OSNULL) {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->SrcNetworkId), trans->SrcNetworkId, OSPC_ALTINFO_NETWORK);
-
                                 if (altinfo != OSPC_OSNULL) {
-                                    OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *) altinfo);
+                                    OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *)altinfo);
                                 }
                             }
                             altinfo = OSPC_OSNULL;
 
                             if (ospvSource != OSPC_OSNULL) {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ALTINFO_TRANSPORT);
-
                                 if (altinfo != OSPC_OSNULL) {
-                                    OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *) altinfo);
+                                    OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *)altinfo);
                                 }
                             }
 
@@ -1842,15 +1832,14 @@ int OSPPTransactionBuildUsageFromScratch(
                      * -----------------------------------------------------
                      */
                     if (errorcode == OSPC_ERR_NO_ERROR) {
-                        if ((ospvDestination != OSPC_OSNULL) || (ospvDestinationDevice != OSPC_OSNULL) || (trans->DstNetworkId != OSPC_OSNULL)) {
+                        if ((ospvDestination != OSPC_OSNULL) || (ospvDestinationDevice != OSPC_OSNULL) || (trans->DestNetworkId != OSPC_OSNULL)) {
                             /* destination alternates - create a linked list */
                             OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate));
 
-                            if (trans->DstNetworkId != OSPC_OSNULL) {
-                                altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->DstNetworkId), trans->DstNetworkId, OSPC_ALTINFO_NETWORK);
-
+                            if (trans->DestNetworkId != OSPC_OSNULL) {
+                                altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->DestNetworkId), trans->DestNetworkId, OSPC_ALTINFO_NETWORK);
                                 if (altinfo != OSPC_OSNULL) {
-                                    OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *) altinfo);
+                                    OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
                                 }
                             }
 
@@ -1858,9 +1847,8 @@ int OSPPTransactionBuildUsageFromScratch(
 
                             if (ospvDestination != OSPC_OSNULL) {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestination), ospvDestination, OSPC_ALTINFO_TRANSPORT);
-
                                 if (altinfo != OSPC_OSNULL) {
-                                    OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *) altinfo);
+                                    OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
                                 }
                             }
 
@@ -1868,11 +1856,10 @@ int OSPPTransactionBuildUsageFromScratch(
 
                             if (ospvDestinationDevice != OSPC_OSNULL) {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestinationDevice), ospvDestinationDevice, OSPC_ALTINFO_H323);
-
                                 if (altinfo != OSPC_OSNULL) {
-                                    OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *) altinfo);
+                                    OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
                                 }
-                            }    /* end if ospvDestinationDevice != OSPC_OSNULL */
+                            }   /* end if ospvDestinationDevice != OSPC_OSNULL */
                         } else {
                             errorcode = OSPC_ERR_TRAN_DEST_INVALID;
                         }
@@ -2213,15 +2200,20 @@ int OSPPTransactionNew(
         trans->WasLookAheadInfoGivenToApp = OSPC_FALSE;
         trans->TokenInfoHasLookAheadInfo = OSPC_FALSE;
         trans->SrcNetworkId = OSPC_OSNULL;
-        trans->DstNetworkId = OSPC_OSNULL;
+        trans->DestNetworkId = OSPC_OSNULL;
         trans->RoutingNumber = OSPC_OSNULL;
+        trans->AssertedId[0] = '\0';
         trans->DestProtocol = OSPC_DPROT_UNKNOWN;
+        trans->ForwardCodec[0] = '\0';
+        trans->ReverseCodec[0] = '\0';
         for (cnt = 0; cnt < OSPC_DIR_NUMBER; cnt++) {
             trans->SessionId[cnt] = OSPC_OSNULL;
         }
         for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
             trans->CustomInfo[cnt] = OSPC_OSNULL;
         }
+        trans->UsageSrcNetworkId[0] = '\0';
+        trans->UsageDestNetworkId[0] = '\0';        
     }
 
     return errorcode;
@@ -2456,7 +2448,7 @@ int OSPPTransactionReinitializeAtDevice(
                 OSPM_DBGERRORLOG(errorcode, "Token invalid");
             }
         }
-    }                            /* end else (parameters are correct) */
+    }   /* end else (parameters are correct) */
 
     /* Set transaction state */
     if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -2536,6 +2528,7 @@ int OSPPTransactionReportUsage(
     unsigned sizeofxmldoc = 0;
     OSPT_MSG_INFO *msginfo = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo = OSPC_OSNULL;
     OSPTBOOL usageallowed = OSPC_FALSE;
     OSPT_STATS stats;
     unsigned cnt;
@@ -2681,6 +2674,18 @@ int OSPPTransactionReportUsage(
                                     OSPPUsageIndSetSessionId(usage, cnt, trans->SessionId[cnt]);
                                 }
                             }
+                            
+                            if (trans->UsageSrcNetworkId[0] != '\0') {
+                                altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->UsageSrcNetworkId), trans->UsageSrcNetworkId, OSPC_ALTINFO_NETWORK);
+                                OSPPUsageIndAddSourceAlt(usage, altinfo);
+                                altinfo = OSPC_OSNULL;
+                            }
+                            
+                            if (trans->UsageDestNetworkId[0] != '\0') {
+                                altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->UsageDestNetworkId), trans->UsageDestNetworkId, OSPC_ALTINFO_NETWORK);
+                                OSPPUsageIndAddDestinationAlt(usage, altinfo);
+                                altinfo = OSPC_OSNULL;
+                            }
                         }
 
                         OSPPListAppend(&(trans->UsageInd), usage);
@@ -2720,6 +2725,16 @@ int OSPPTransactionReportUsage(
                 OSPPUsageIndSetReleaseSource(usage, ospvReleaseSource);
                 if ((ospvConferenceId) && (ospvConferenceId[0] != '\0') && (OSPM_STRLEN(ospvConferenceId) < OSPC_CONFIDSIZE)) {
                     OSPPUsageIndSetConferenceId(usage, ospvConferenceId);
+                }
+                if (trans->UsageSrcNetworkId[0] != '\0') {
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->UsageSrcNetworkId), trans->UsageSrcNetworkId, OSPC_ALTINFO_NETWORK);
+                    OSPPUsageIndAddSourceAlt(usage, altinfo);
+                    altinfo = OSPC_OSNULL;
+                }
+                if (trans->UsageDestNetworkId[0] != '\0') {
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->UsageDestNetworkId), trans->UsageDestNetworkId, OSPC_ALTINFO_NETWORK);
+                    OSPPUsageIndAddDestinationAlt(usage, altinfo);
+                    altinfo = OSPC_OSNULL;
                 }
                 OSPPListAppend(&(trans->UsageInd), usage);
                 usage = OSPC_OSNULL;
@@ -2918,12 +2933,9 @@ int OSPPTransactionRequestAuthorisation(
 
 /* Relax the number of call ids check for Emergent's two call ids solution */
 /*
-            if ((ospvNumberOfCallIds > 1) &&
-                (ospvNumberOfCallIds != *ospvNumberOfDestinations))
-            {
+            if ((ospvNumberOfCallIds > 1) && (ospvNumberOfCallIds != *ospvNumberOfDestinations)) {
                 errorcode = OSPC_ERR_TRAN_CALLID_DEST_MISMATCH;
-                OSPM_DBGERRORLOG(errorcode,
-                    "number of callids != number of dests sent in.");
+                OSPM_DBGERRORLOG(errorcode, "number of callids != number of dests sent in.");
             }
 */
         }
@@ -3167,7 +3179,7 @@ int OSPPTransactionRequestReauthorisation(
             /* Build ReauthReq */
             errorcode = OSPPTransactionBuildReauthRequest(trans, ospvDuration);
 
-        } else if (trans->AuthInd != OSPC_OSNULL) {    /* TGW */
+        } else if (trans->AuthInd != OSPC_OSNULL) {     /* TGW */
             errorcode = OSPC_ERR_TRAN_TRANSACTION_NOT_ALLOWED;
             OSPM_DBGERRORLOG(errorcode, "This transaction not allowed on TGW.");
         } else {
@@ -3406,10 +3418,10 @@ int OSPPTransactionValidateAuthorisation(
     unsigned CallIdSize = 0;
     OSPTBOOL callidundefined = OSPC_FALSE;
     unsigned char *AuthIndCallId = OSPC_OSNULL;
-    unsigned char AsciiTokenMsg[1000];    /* The assumption is that the ASCII
-                                         * token will be less than 1000 bytes
-                                         * long.
-                                         */
+    unsigned char AsciiTokenMsg[1000];   /* The assumption is that the ASCII
+                                          * token will be less than 1000 bytes
+                                          * long.
+                                          */
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
@@ -3500,8 +3512,8 @@ int OSPPTransactionValidateAuthorisation(
      * Parse the Token into a TokenInfo structure
      */
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        if (OSPM_STRNCMP("<?xml", (const char *) tokenmsg, 5) == 0) {
-            errorcode = OSPPXMLMessageParse((unsigned char *) tokenmsg, sizeoftokenmsg, (void **)&tokeninfo, &dtype);
+        if (OSPM_STRNCMP("<?xml", (const char *)tokenmsg, 5) == 0) {
+            errorcode = OSPPXMLMessageParse((unsigned char *)tokenmsg, sizeoftokenmsg, (void **)&tokeninfo, &dtype);
         } else {
             /*
              * This is an IAX or SIP token
@@ -3513,7 +3525,7 @@ int OSPPTransactionValidateAuthorisation(
             OSPM_MEMCPY(AsciiTokenMsg, tokenmsg, sizeoftokenmsg);
             AsciiTokenMsg[sizeoftokenmsg] = '\0';
             dtype = OSPC_MSG_TOKINFO;
-            errorcode = OSPPParseTokenInfoFromASCIIToken((unsigned char *) AsciiTokenMsg, sizeoftokenmsg, &tokeninfo);
+            errorcode = OSPPParseTokenInfoFromASCIIToken((unsigned char *)AsciiTokenMsg, sizeoftokenmsg, &tokeninfo);
         }
     }
 
@@ -3550,7 +3562,7 @@ int OSPPTransactionValidateAuthorisation(
                     /*
                      * Copy the callId from the token.
                      */
-                    callid = OSPPCallIdNew(CallIdSize, (const unsigned char *) CallIdValue);
+                    callid = OSPPCallIdNew(CallIdSize, (const unsigned char *)CallIdValue);
                 }
 
                 if (callid != OSPC_OSNULL) {
@@ -3597,7 +3609,7 @@ int OSPPTransactionValidateAuthorisation(
                     token = OSPPTokenNew(ospvSizeOfToken, (const unsigned char *)ospvToken);
 
                     if (token != OSPC_OSNULL) {
-                        OSPPListAppend(&(authind->ospmAuthIndTokens), (void *) token);
+                        OSPPListAppend(&(authind->ospmAuthIndTokens), (void *)token);
 
                         trans->AuthInd = authind;
                     } else {
@@ -3609,12 +3621,9 @@ int OSPPTransactionValidateAuthorisation(
                 if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvSourceDevice != OSPC_OSNULL)) {
                     /* device information - create a linked list */
                     OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDeviceInfo));
-
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ALTINFO_TRANSPORT);
-
                     if (altinfo != OSPC_OSNULL) {
-
-                        OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDeviceInfo), (void *) altinfo);
+                        OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDeviceInfo), (void *)altinfo);
                     }
                     altinfo = OSPC_OSNULL;
                 }
@@ -3632,7 +3641,7 @@ int OSPPTransactionValidateAuthorisation(
                         if (trans->SrcNetworkId != OSPC_OSNULL) {
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->SrcNetworkId), trans->SrcNetworkId, OSPC_ALTINFO_NETWORK);
                             if (altinfo != OSPC_OSNULL) {
-                                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *) altinfo);
+                                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *)altinfo);
                             }
                         }
                         altinfo = OSPC_OSNULL;
@@ -3640,7 +3649,7 @@ int OSPPTransactionValidateAuthorisation(
                         if (ospvSource != OSPC_OSNULL) {
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ALTINFO_TRANSPORT);
                             if (altinfo != OSPC_OSNULL) {
-                                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *) altinfo);
+                                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *)altinfo);
                             }
                         }
                         altinfo = OSPC_OSNULL;
@@ -3656,55 +3665,45 @@ int OSPPTransactionValidateAuthorisation(
                  */
                 if (errorcode == OSPC_ERR_NO_ERROR) {
 
-                    if ((ospvDestination != OSPC_OSNULL) || (ospvDestinationDevice != OSPC_OSNULL) || (trans->DstNetworkId != OSPC_OSNULL)) {
+                    if ((ospvDestination != OSPC_OSNULL) || (ospvDestinationDevice != OSPC_OSNULL) || (trans->DestNetworkId != OSPC_OSNULL)) {
 
                         /* destination alternates - create a linked list */
                         OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate));
 
 
                         /*
-                         * We want to copy the Dst Trnk Group from the
+                         * We want to copy the Dest Trnk Group from the
                          * Transaction Structure only when the tokenInfo
                          * does not contain the Network Id.
                          * Thus, we are overwriting what had been Set using
                          * the SetNetworkIds API
                          */
-                        if ((trans->DstNetworkId != OSPC_OSNULL) && tokeninfo && (tokeninfo->ospmTokenInfoHasDstNetworkId == OSPC_FALSE)) {
-
-                            altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->DstNetworkId), trans->DstNetworkId, OSPC_ALTINFO_NETWORK);
-
+                        if ((trans->DestNetworkId != OSPC_OSNULL) && tokeninfo && (tokeninfo->ospmTokenInfoHasDestNetworkId == OSPC_FALSE)) {
+                            altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->DestNetworkId), trans->DestNetworkId, OSPC_ALTINFO_NETWORK);
                             if (altinfo != OSPC_OSNULL) {
-
-                                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *) altinfo);
+                                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
                             }
                         }
-
                         altinfo = OSPC_OSNULL;
 
                         if (ospvDestination != OSPC_OSNULL) {
-
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestination), ospvDestination, OSPC_ALTINFO_TRANSPORT);
-
                             if (altinfo != OSPC_OSNULL) {
-
-                                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *) altinfo);
+                                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
                             }
                         }
-
                         altinfo = OSPC_OSNULL;
 
                         if (ospvDestinationDevice != OSPC_OSNULL) {
-
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestinationDevice), ospvDestinationDevice, OSPC_ALTINFO_H323);
-
                             if (altinfo != OSPC_OSNULL) {
-                                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *) altinfo);
+                                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
                             }
-                        }        /* end if ospvDestinationDevice != OSPC_OSNULL */
+                        }   /* end if ospvDestinationDevice != OSPC_OSNULL */
                     } else {
                         errorcode = OSPC_ERR_TRAN_DEST_INVALID;
                     }
-                }                /* end  if (errorcode == OSPC_ERR_NO_ERROR) */
+                }   /* end  if (errorcode == OSPC_ERR_NO_ERROR) */
             }
         } else {
             /* authind already here, make sure it is the right one */
@@ -3729,7 +3728,7 @@ int OSPPTransactionValidateAuthorisation(
                     token = OSPPTokenNew(ospvSizeOfToken, (const unsigned char *)ospvToken);
 
                     if (token != OSPC_OSNULL) {
-                        OSPPListAppend(&(trans->AuthInd->ospmAuthIndTokens), (void *) token);
+                        OSPPListAppend(&(trans->AuthInd->ospmAuthIndTokens), (void *)token);
                     } else {
                         errorcode = OSPC_ERR_TRAN_TOKEN_NOT_FOUND;
                         OSPM_DBGERRORLOG(errorcode, "token is null");
@@ -3784,14 +3783,14 @@ int OSPPTransactionValidateAuthorisation(
          * If the token contains the Network Id
          * then add that to the list of destination Alternates
          */
-        if (tokeninfo && (tokeninfo->ospmTokenInfoHasDstNetworkId == OSPC_TRUE)) {
+        if (tokeninfo && (tokeninfo->ospmTokenInfoHasDestNetworkId == OSPC_TRUE)) {
             altinfo = NULL;
-            altinfo = OSPPAltInfoNew(OSPM_STRLEN(OSPPTokenInfoGetDstNetworkId(tokeninfo)),
-                                     OSPPTokenInfoGetDstNetworkId(tokeninfo), OSPC_ALTINFO_NETWORK);
+            altinfo = OSPPAltInfoNew(OSPM_STRLEN(OSPPTokenInfoGetDestNetworkId(tokeninfo)),
+                OSPPTokenInfoGetDestNetworkId(tokeninfo), OSPC_ALTINFO_NETWORK);
 
             if (altinfo != OSPC_OSNULL) {
 
-                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *) altinfo);
+                OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
             }
             altinfo = NULL;
             trans->AuthInd->ospmAuthIndHasDestNetworkIdInToken = OSPC_TRUE;
@@ -3834,14 +3833,14 @@ int OSPPTransactionValidateAuthorisation(
                         /*
                          * Verify Valid After
                          */
-                        if (time((time_t *) 0) < OSPPTokenInfoGetValidAfter(tokeninfo)) {
+                        if (time((time_t *)0) < OSPPTokenInfoGetValidAfter(tokeninfo)) {
                             errorcode = OSPC_ERR_TRAN_TOO_SOON_TO_USE_TOKEN;
                             OSPM_DBGERRORLOG(errorcode, "too soon to use token");
                         } else {
                             /*
                              * Verify Valid Until
                              */
-                            if (time((time_t *) 0) > OSPPTokenInfoGetValidUntil(tokeninfo)) {
+                            if (time((time_t *)0) > OSPPTokenInfoGetValidUntil(tokeninfo)) {
                                 errorcode = OSPC_ERR_TRAN_TOO_LATE_TO_USE_TOKEN;
                                 OSPM_DBGERRORLOG(errorcode, "too late to use token");
                             }
@@ -4048,10 +4047,10 @@ int OSPPTransactionIndicateCapabilities(
      * response, auth response, or token structures assigned to it.
      */
     if (OSPC_ERR_NO_ERROR == errorcode) {
-        if (OSPC_OSNULL != trans->CapCnf) {
+        if (trans->CapCnf != OSPC_OSNULL) {
             errorcode = OSPC_ERR_TRAN_DUPLICATE_REQUEST;
             OSPM_DBGERRORLOG(errorcode, "Duplicate Call To OSPPTransactionIndicateCapabilities");
-        } else if (OSPC_OSNULL != trans->AuthRsp || OSPC_OSNULL != trans->AuthInd) {
+        } else if (trans->AuthRsp != OSPC_OSNULL || trans->AuthInd != OSPC_OSNULL) {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
             OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
         }
@@ -4127,16 +4126,16 @@ int OSPPTransactionIndicateCapabilities(
     /*
      * Clean-up temporary objects
      */
-    if (OSPC_OSNULL != xmldoc) {
+    if (xmldoc != OSPC_OSNULL) {
         OSPM_FREE(xmldoc);
         xmldoc = NULL;
     }
 
-    if (OSPC_OSNULL != capind) {
+    if (capind != OSPC_OSNULL) {
         OSPPCapIndDelete(&capind);
     }
 
-    if (OSPC_OSNULL != msginfo) {
+    if (msginfo != OSPC_OSNULL) {
         OSPPMsgInfoDelete(&msginfo);
     }
 
@@ -4418,6 +4417,44 @@ int OSPPTransactionSetPackLossMean(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             OSPPStatsSetMean(trans->Statistics, OSPC_STATS_PACKLOSS, ospvDirection, ospvMean);
+        }
+    }
+
+    return errorcode;
+}
+
+int OSPPTransactionSetSrcNetworkId(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvSrcNetworkId)   /* In - Source network ID */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    
+    if ((ospvSrcNetworkId == OSPC_OSNULL) || (ospvSrcNetworkId[0] == '\0')) {
+        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+               OSPM_STRNCPY(trans->UsageSrcNetworkId, ospvSrcNetworkId, sizeof(trans->UsageSrcNetworkId));
+        }
+    }
+
+    return errorcode;
+}
+
+int OSPPTransactionSetDestNetworkId(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvDestNetworkId)  /* In - Destination network ID */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    
+    if ((ospvDestNetworkId == OSPC_OSNULL) || (ospvDestNetworkId[0] == '\0')) {
+        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+               OSPM_STRNCPY(trans->UsageDestNetworkId, ospvDestNetworkId, sizeof(trans->UsageDestNetworkId));
         }
     }
 

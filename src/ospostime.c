@@ -68,7 +68,7 @@ OSPTTIME OSPPOSTimeConvertToGMT(
     if ((month < 3) && OSPM_IS_LEAP(year)) {
         --days;
     }
-    days -= 719528;                /* Subtract out Jan 1, 1970 base date */
+    days -= 719528; /* Subtract out Jan 1, 1970 base date */
     return ((days * 86400) + (hour * 3600) + (minute * 60) + second);
 }
 
@@ -168,7 +168,7 @@ int OSPPOSTimeGetTime(
         OSPM_DBGERRORLOG(errorcode, "Null pointers specified for time and mstime");
     } else {
 
-#ifndef _WIN32                    /* UNIX */
+#ifndef _WIN32  /* UNIX */
         struct timeb timenow;
 
         OSPM_MEMSET(&timenow, 0, sizeof(struct timeb));

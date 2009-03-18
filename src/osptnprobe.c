@@ -101,7 +101,7 @@ enum socket_stats {
 
 /* miscellaneous constants */
 
-#define OSPC_TN_UDP_ECHOPORT 7    /* UDP echo port is 7 */
+#define OSPC_TN_UDP_ECHOPORT    7   /* UDP echo port is 7 */
 
 /* private globals - for multithreading, these MUST be read-only */
 
@@ -113,7 +113,7 @@ int OSPPTNProbe(                /*0 - normal; < 0 - error code  */
     unsigned uNumHosts,         /* number of hosts to check */
     unsigned uMaxWait)          /* maximum wait in milliseconds */
 {
-    fd_set fdSocketSet;            /* set of sockets for testing */
+    fd_set fdSocketSet; /* set of sockets for testing */
     int nMaxFd = 0, nMinFd = 0;
     int uErr = OSPC_ERR_TNPROBE_ERROR;
 
@@ -266,7 +266,7 @@ void OSPPTNProbeCleanup(
     OSPT_TN_PROBE *pProbeList,  /* list to cleanup */
     unsigned uNumHosts)         /* number of hosts */
 {
-    register unsigned uCnt;        /* simple counter */
+    register unsigned uCnt; /* simple counter */
     int errorcode = OSPC_ERR_NO_ERROR;
 
     /*
@@ -337,7 +337,7 @@ void OSPPTNProbeEcho(
                 OSPM_SEND(pProbeList[uHost].ospmSocket, uSent, tnBuffer, sizeof(tnBuffer), uErr);
                 if (uSent != sizeof(tnBuffer)) {
                     /* if the send didn't succeed, ... */
-                    uHostsLeft--;    /* there's one less host that will respond */
+                    uHostsLeft--;   /* there's one less host that will respond */
                 } else {
                     pProbeList[uHost].ospmPrStatus = OSPE_PRSENT;
                 }
@@ -372,8 +372,8 @@ void OSPPTNProbeEcho(
          * while outside of select.
          */
 
-        uTimeLeft = uMaxWait;    /* to start out, we've got the full time */
-        uTime1 = OSPPTNProbeTimerMS();    /* remember starting time */
+        uTimeLeft = uMaxWait;           /* to start out, we've got the full time */
+        uTime1 = OSPPTNProbeTimerMS();  /* remember starting time */
 
         while (uHostsLeft > 0) {
             /* make a working copy of our socket set */
@@ -478,7 +478,7 @@ unsigned long OSPPTNProbeTimerMS(void)  /* returns current time in ms */
     unsigned long millisecs = 0;
     int errcode = 0;
 
-#ifndef _WIN32                    /* UNIX */
+#ifndef _WIN32  /* UNIX */
     struct timeb timenow;
 
     OSPM_MEMSET(&timenow, 0, sizeof(struct timeb));

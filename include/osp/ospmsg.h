@@ -49,7 +49,7 @@ typedef enum {
 } OSPE_MESSAGE;
 
 typedef enum {
-    OSPC_ROLE_UNKNOWN = OSPC_MPART_UNKNOWN,    /* Not a known role */
+    OSPC_ROLE_UNKNOWN = OSPC_MPART_UNKNOWN,     /* Not a known role */
     OSPC_ROLE_UNDEFINED,
     /* Role type start */
     OSPC_ROLE_START = 0,

@@ -128,7 +128,7 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
                  * data. The result is the unencoded data is 3/4 that of the data
                  * when encoded.
                  */
-                outlen = (unsigned int)ceil((0.75) * OSPM_STRLEN((char *) encodeddata));
+                outlen = (unsigned int)ceil((0.75) * OSPM_STRLEN((char *)encodeddata));
                                        
                 OSPM_MALLOC(*ospvData, unsigned char, outlen + 1);
                 OSPM_MEMSET(*ospvData, 0, outlen + 1);
@@ -282,7 +282,7 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                     unsigned char tmpbuf[5000];
                     unsigned tmpbufsize = sizeof(tmpbuf);
-                    ospvErrCode = OSPPBase64Decode((const char *) base64buf, base64bufsz, tmpbuf, &tmpbufsize);
+                    ospvErrCode = OSPPBase64Decode((const char *)base64buf, base64bufsz, tmpbuf, &tmpbufsize);
                     OSPTNLOGDUMP(ospvData, ospvDataLen, "DATA IN");
                     OSPTNLOGDUMP(tmpbuf, tmpbufsize, "DATA IN");
 
@@ -400,7 +400,7 @@ unsigned OSPPMsgNumToElement(   /* returns error code */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
-    char val[41];                /* 39 digits will accomodate 2^128 *//*!!!PS added 1 */
+    char val[41];   /* 39 digits will accomodate 2^128 */   /*!!!PS added 1 */
     char *cptr;
 
     if (ospvElem == OSPC_OSNULL) {
@@ -418,7 +418,7 @@ unsigned OSPPMsgNumToElement(   /* returns error code */
          * So we don't have to worry about the size of unsigned longs on
          * the system, we work backwards.
          */
-        val[sizeof(val) - 1] = 0;    /* !!!PS Make sure it looks like a string */
+        val[sizeof(val) - 1] = 0;   /* !!!PS Make sure it looks like a string */
         cptr = &val[sizeof(val) - 2];
         do {
             *cptr-- = (char)('0' + (ospvNumber % 10));
@@ -607,7 +607,7 @@ unsigned OSPPMsgTXToElement(    /* returns error code */
          * So we don't have to worry about the size of unsigned longs on
          * the system, we work backwards.
          */
-        val[sizeof(val) - 1] = 0;    /* !!!PS Make sure it looks like a string */
+        val[sizeof(val) - 1] = 0;   /* !!!PS Make sure it looks like a string */
         cptr = &val[sizeof(val) - 2];
         do {
             *cptr-- = (char)('0' + (ospvNumber % 10));
@@ -735,7 +735,7 @@ const char *OSPPRoleGetName(    /* returns pointer to the name */
 /*
  * OSPPRoleGetPart() - get a role value part ID from its name
  */
-OSPE_ROLE OSPPRoleGetPart(   /* returns part */
+OSPE_ROLE OSPPRoleGetPart(  /* returns part */
     const char *ospvName)
 {
     OSPE_ROLE ospvPart = OSPC_ROLE_UNKNOWN;

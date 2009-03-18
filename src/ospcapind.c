@@ -44,21 +44,21 @@ void OSPPCapIndDelete(
     OSPT_CAP_IND *pTmp = OSPC_OSNULL;
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
-    if (OSPC_OSNULL != *ospvCapInd) {
+    if (*ospvCapInd != OSPC_OSNULL) {
         pTmp = (*ospvCapInd);
 
         /* Release Message Id */
-        if (OSPC_OSNULL != pTmp->ospmMessageId) {
+        if (pTmp->ospmMessageId != OSPC_OSNULL) {
             OSPM_FREE(pTmp->ospmMessageId);
         }
 
         /* Release Component Id */
-        if (OSPC_OSNULL != pTmp->ospmComponentId) {
+        if (pTmp->ospmComponentId != OSPC_OSNULL) {
             OSPM_FREE(pTmp->ospmComponentId);
         }
 
         /* Release Source Alterntaes */
-        if (OSPC_OSNULL != pTmp->ospmDeviceInfo) {
+        if (pTmp->ospmDeviceInfo != OSPC_OSNULL) {
             while (!OSPPListEmpty(&(pTmp->ospmDeviceInfo))) {
                 altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(pTmp->ospmDeviceInfo));
                 if (altinfo != OSPC_OSNULL) {
@@ -70,7 +70,7 @@ void OSPPCapIndDelete(
         }
 
         /* Release Source Alterntaes */
-        if (OSPC_OSNULL != pTmp->ospmSrcAlternate) {
+        if (pTmp->ospmSrcAlternate != OSPC_OSNULL) {
             while (!OSPPListEmpty(&(pTmp->ospmSrcAlternate))) {
                 altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(pTmp->ospmSrcAlternate));
                 if (altinfo != OSPC_OSNULL) {
@@ -113,7 +113,7 @@ unsigned OSPPCapIndNew(
      */
     OSPM_MALLOC(*ospvCapInd, OSPT_CAP_IND, sizeof(OSPT_CAP_IND));
 
-    if (OSPC_OSNULL != *ospvCapInd) {
+    if (*ospvCapInd != OSPC_OSNULL) {
         capInd = (*ospvCapInd);
         OSPM_MEMSET(capInd, 0, sizeof(OSPT_CAP_IND));
     } else {
@@ -147,37 +147,32 @@ unsigned OSPPCapIndNew(
      */
     if (OSPC_ERR_NO_ERROR == errorcode) {
         /* Add Source if it is present */
-        if (OSPC_OSNULL != ospvSource && OSPM_STRLEN(ospvSource) > 0) {
+        if (ospvSource != OSPC_OSNULL && OSPM_STRLEN(ospvSource) > 0) {
             /* Initialize the list */
             OSPPListNew(&(capInd->ospmSrcAlternate));
-
             altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ALTINFO_TRANSPORT);
-
-            if (OSPC_OSNULL != altinfo) {
+            if (altinfo != OSPC_OSNULL) {
                 OSPPListAppend((OSPTLIST *)&(capInd->ospmSrcAlternate), altinfo);
             }
         }
 
         /* Add SourceDevice if it is present */
-        if (OSPC_OSNULL != ospvSourceDevice && OSPM_STRLEN(ospvSourceDevice) > 0) {
+        if (ospvSourceDevice != OSPC_OSNULL && OSPM_STRLEN(ospvSourceDevice) > 0) {
             OSPPListNew(&(capInd->ospmDeviceInfo));
             altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ALTINFO_TRANSPORT);
-
-            if (OSPC_OSNULL != altinfo) {
+            if (altinfo != OSPC_OSNULL) {
                 OSPPListAppend((OSPTLIST *)&(capInd->ospmDeviceInfo), altinfo);
             }
         }
 
         /* Add Network info if it is present */
-        if (OSPC_OSNULL != ospvSourceNetworkId && OSPM_STRLEN(ospvSourceNetworkId) > 0) {
+        if (ospvSourceNetworkId != OSPC_OSNULL && OSPM_STRLEN(ospvSourceNetworkId) > 0) {
             /* Initialize the list only if the list has not been initialized above */
             if (OSPM_STRLEN(ospvSource) == 0) {
                 OSPPListNew(&(capInd->ospmSrcAlternate));
             }
-
             altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceNetworkId), ospvSourceNetworkId, OSPC_ALTINFO_NETWORK);
-
-            if (OSPC_OSNULL != altinfo) {
+            if (altinfo != OSPC_OSNULL) {
                 OSPPListAppend((OSPTLIST *)&(capInd->ospmSrcAlternate), altinfo);
             }
         }
@@ -193,7 +188,7 @@ unsigned OSPPCapIndNew(
     /*
      * On error, release any allocated space
      */
-    if (OSPC_ERR_NO_ERROR != errorcode && OSPC_OSNULL != capInd) {
+    if (OSPC_ERR_NO_ERROR != errorcode && capInd != OSPC_OSNULL) {
         OSPPCapIndDelete(ospvCapInd);
     }
 
@@ -234,7 +229,7 @@ unsigned OSPPGenerateUniqueId(
      */
     OSPM_MALLOC(*ospvIdBuffer, char, numbytesrandom + numbytescounter + 1);
 
-    if (OSPC_OSNULL != *ospvIdBuffer) {
+    if (*ospvIdBuffer != OSPC_OSNULL) {
         /*
          * Init the buffer to 0s
          */

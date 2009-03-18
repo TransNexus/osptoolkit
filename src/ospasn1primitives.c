@@ -616,7 +616,7 @@ int OSPPASN1SmallIntegerEncode(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPASN1ObjectEncode(ospvEncodedObject, &tag, 1, OSPC_BER_MODE_PRIMITIVE, tmpData, tmpLength, ospvDataRefId);
     }
-    if (OSPC_OSNULL != tmpData) {
+    if (tmpData != OSPC_OSNULL) {
         OSPM_FREE(tmpData);
     }
 
@@ -722,8 +722,8 @@ int OSPPASN1SmallInt2UnsignedChar(
         for (i = (ucCnt - 1); i >= 0; i--, ucPtr++) {
             *ucPtr |= tmpBuffer[i];
         };
-        mask = (unsigned char) ~mask;    /* Complement Mask */
-        (*ospvBuffer)[ucCnt - 1] &= mask;    /* Apply complement mask */
+        mask = (unsigned char) ~mask;       /* Complement Mask */
+        (*ospvBuffer)[ucCnt - 1] &= mask;   /* Apply complement mask */
     }
 
     return errorcode;

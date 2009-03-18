@@ -31,9 +31,9 @@
  * OSPPXMLDocCreate() - create a linear document from a root element
  */
 
-int OSPPXMLDocCreate(         /* returns error code */
+int OSPPXMLDocCreate(           /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* root element for document */
-    OSPTBFR **ospvBfrAddr)    /* buffer in which to put doc */
+    OSPTBFR **ospvBfrAddr)      /* buffer in which to put doc */
 {
     int ospvErrCode = OSPC_ERR_NO_ERROR;
     unsigned cnt = 0;
@@ -82,9 +82,9 @@ int OSPPXMLDocCreate(         /* returns error code */
  * OSPPXMLDocAddElem() - add an element to a document
  */
 
-int OSPPXMLDocAddElem(        /* returns error code */
+int OSPPXMLDocAddElem(          /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* element to add */
-    OSPTBFR **ospvBfrAddr)    /* buffer to add to */
+    OSPTBFR **ospvBfrAddr)      /* buffer to add to */
 {
     int ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *child = OSPC_OSNULL;
@@ -241,9 +241,9 @@ int OSPPXMLDocAddElem(        /* returns error code */
  * OSPPXMLDocAddElemName() - add an element name to a document
  */
 
-int OSPPXMLDocAddElemName(    /* returns error code */
+int OSPPXMLDocAddElemName(      /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* element whose name to add */
-    OSPTBFR **ospvBfrAddr)    /* buffer to add to */
+    OSPTBFR **ospvBfrAddr)      /* buffer to add to */
 {
     int ospvErrCode = OSPC_ERR_NO_ERROR;
     const char *name = OSPC_OSNULL;
@@ -283,9 +283,9 @@ int OSPPXMLDocAddElemName(    /* returns error code */
  * OSPPXMLDocAddAttr() - add an attribute to a document
  */
 
-int OSPPXMLDocAddAttr(        /* returns error code */
+int OSPPXMLDocAddAttr(          /* returns error code */
     OSPT_XML_ATTR *ospvAttr,    /* attribute to add */
-    OSPTBFR **ospvBfrAddr)    /* buffer to add to */
+    OSPTBFR **ospvBfrAddr)      /* buffer to add to */
 {
     int ospvErrCode = OSPC_ERR_NO_ERROR;
     const char *val;
@@ -347,10 +347,9 @@ int OSPPXMLDocAddAttr(        /* returns error code */
 /*
  * OSPPXMLDocAddAttrName() - add an attribute name to a document
  */
-
-int OSPPXMLDocAddAttrName(    /* returns error code */
+int OSPPXMLDocAddAttrName(      /* returns error code */
     OSPT_XML_ATTR *ospvAttr,    /* attribute whose name to add */
-    OSPTBFR **ospvBfrAddr)    /* buffer to add to */
+    OSPTBFR **ospvBfrAddr)      /* buffer to add to */
 {
     int ospvErrCode = OSPC_ERR_NO_ERROR;
     const char *name = OSPC_OSNULL;
@@ -395,7 +394,6 @@ int OSPPXMLDocAddAttrName(    /* returns error code */
 /*
  * OSPPXMLDocAddChar() - add a single character to an XML document
  */
-
 int OSPPXMLDocAddChar(        /* returns error code */
     OSPTBFR **ospvBfrAddr,    /* buffer in which to add */
     char ospvChar)            /* character to add */

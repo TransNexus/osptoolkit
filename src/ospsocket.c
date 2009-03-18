@@ -280,9 +280,9 @@ int OSPPSockConnectServicePoint(
                      * first service point in the list
                      */
                     if (ospvHttp->ServicePoint == OSPC_OSNULL) {
-                        ospvHttp->ServicePoint = (OSPTSVCPT *)OSPPListFirst((OSPTLIST *) & svcptlist);
+                        ospvHttp->ServicePoint = (OSPTSVCPT *)OSPPListFirst((OSPTLIST *)& svcptlist);
                     } else {
-                        ospvHttp->ServicePoint = (OSPTSVCPT *)OSPPListNext((OSPTLIST *) & svcptlist, ospvHttp->ServicePoint);
+                        ospvHttp->ServicePoint = (OSPTSVCPT *)OSPPListNext((OSPTLIST *)& svcptlist, ospvHttp->ServicePoint);
 
                         /*
                          * let the calling function know that the 
@@ -290,7 +290,7 @@ int OSPPSockConnectServicePoint(
                          * to the beginning
                          */
                         if (ospvHttp->ServicePoint == OSPC_OSNULL) {
-                            ospvHttp->ServicePoint = (OSPTSVCPT *)OSPPListFirst((OSPTLIST *) & svcptlist);
+                            ospvHttp->ServicePoint = (OSPTSVCPT *)OSPPListFirst((OSPTLIST *)& svcptlist);
                         }
                     }
 
@@ -298,7 +298,7 @@ int OSPPSockConnectServicePoint(
                      * if the next item in the service point list is null,
                      * then the list is exhausted
                      */
-                    if ((svcptitem = (OSPTSVCPT *)OSPPListNext((OSPTLIST *) & svcptlist, ospvHttp->ServicePoint)) == OSPC_OSNULL) {
+                    if ((svcptitem = (OSPTSVCPT *)OSPPListNext((OSPTLIST *)& svcptlist, ospvHttp->ServicePoint)) == OSPC_OSNULL) {
                         *ospvRollover = OSPC_TRUE;
                     }
 
@@ -375,7 +375,7 @@ int OSPPSockGetHostIP(
     /*
      * see if char IP was passed
      */
-    OSPM_INET_ADDR((const char *) Host, *ospvIpAddr);
+    OSPM_INET_ADDR((const char *)Host, *ospvIpAddr);
     if (*ospvIpAddr)
         return errorcode;
 
@@ -491,7 +491,7 @@ void OSPPSockProcessRequest(
                  * Read again for the 200 header.
                  */
                 recvheadbufsz = 256;
-                *ospvError = OSPPSSLSessionRead(ospvHttp, (unsigned char *) recvheadbuf, &recvheadbufsz, "\r\n\r\n");
+                *ospvError = OSPPSSLSessionRead(ospvHttp, (unsigned char *)recvheadbuf, &recvheadbufsz, "\r\n\r\n");
 
                 responsetype = 0;
             }
@@ -536,7 +536,7 @@ void OSPPSockProcessRequest(
                      */
 
                     if ((tmpConnectionBuffer != OSPC_OSNULL) && (tmpConnectionBufferSz > 0)) {
-                        if (OSPM_STRSTR((char *) tmpConnectionBuffer, (const char *) "close") != OSPC_OSNULL) {
+                        if (OSPM_STRSTR((char *)tmpConnectionBuffer, (const char *)"close") != OSPC_OSNULL) {
                             connectionCloseFlag = OSPC_TRUE;
                         }
                     }
@@ -554,7 +554,7 @@ void OSPPSockProcessRequest(
                      * tmpContentBuffer.
                      */
 
-                    OSPPHttpParseHeader((unsigned char *) recvheadbuf, &tmpContentBuffer, &tmpContentBufferSz, OSPC_HTTP_CONTENT_TYPE, ospvError);
+                    OSPPHttpParseHeader((unsigned char *)recvheadbuf, &tmpContentBuffer, &tmpContentBufferSz, OSPC_HTTP_CONTENT_TYPE, ospvError);
 
                     if (*ospvError == OSPC_ERR_NO_ERROR) {
                         /*

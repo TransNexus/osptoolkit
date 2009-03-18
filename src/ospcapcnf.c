@@ -42,7 +42,7 @@ unsigned OSPPCapCnfNew(
 
     OSPM_MALLOC(*ospvCapCnf, OSPT_CAP_CNF, sizeof(OSPT_CAP_CNF));
 
-    if (OSPC_OSNULL != *ospvCapCnf) {
+    if (*ospvCapCnf != OSPC_OSNULL) {
         OSPM_MEMSET(*ospvCapCnf, 0, sizeof(OSPT_CAP_CNF));
     } else {
         errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
@@ -55,7 +55,7 @@ unsigned OSPPCapCnfNew(
 void OSPPCapCnfDelete(
     OSPT_CAP_CNF **ospvCapCnf)
 {
-    if (OSPC_OSNULL != ospvCapCnf && OSPC_OSNULL != *ospvCapCnf) {
+    if (ospvCapCnf != OSPC_OSNULL && *ospvCapCnf != OSPC_OSNULL) {
         OSPPStatusDelete(&((*ospvCapCnf)->ospmStatus));
 
         OSPM_FREE(*ospvCapCnf);

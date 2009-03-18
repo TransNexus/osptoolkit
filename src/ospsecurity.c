@@ -397,12 +397,12 @@ int OSPPSecVerifyRootAuthorityCertificate(
     int ospvRootCACertLen)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
-    unsigned certNum = 0;        /* Number of certificates */
+    unsigned certNum = 0;                   /* Number of certificates */
     OSPTASN1OBJECT **cert = OSPC_OSNULL;    /* Certificate info pointers */
-    unsigned count = 0;            /* Loop var. */
-    unsigned char *certData = NULL;    /* Certificate itself */
-    unsigned certSize = 0;        /* Certificate size */
-    int certMatch = OSPC_FALSE;    /* Do they match ? */
+    unsigned count = 0;                     /* Loop var. */
+    unsigned char *certData = NULL;         /* Certificate itself */
+    unsigned certSize = 0;                  /* Certificate size */
+    int certMatch = OSPC_FALSE;             /* Do they match ? */
 
     errorcode = OSPPSecLock(ospvSecurity, OSPC_LOCK_READ);
 
@@ -532,7 +532,7 @@ int OSPPSecSetAuthorityCertificates(
 
                 /* p is a temporary pointer, it will be updated by the functions */
                 p = ospvAuthorityCertificates[i]->CertData;
-                newX509Cert = d2i_X509(OSPC_OSNULL, (const unsigned char **) (&p), ospvAuthorityCertificates[i]->CertDataLength);
+                newX509Cert = d2i_X509(OSPC_OSNULL, (const unsigned char **)(&p), ospvAuthorityCertificates[i]->CertDataLength);
 
                 if (newX509Cert != OSPC_OSNULL) {
                     sk_X509_push(ospvSecurity->AuthorityCertStack, newX509Cert);
@@ -695,7 +695,7 @@ int OSPPSecSignatureVerify(
     } else {
         OSPM_DBGERRORLOG(errorcode, "SIGNATURE - ERROR");
     }
-    if (OSPC_OSNULL != el) {
+    if (el != OSPC_OSNULL) {
         OSPPASN1ElementDelete(&el, 0);
     }
     OSPPASN1ObjectDelete(&signatureObject);
@@ -762,7 +762,7 @@ int OSPPSecCopyLocalCertificate(
 
 /* Return the number of authority certificates stored in the security object */
 int OSPPSecGetNumberOfAuthorityCertificates(
-    OSPTSEC *ospvSecurity,    /* In - Security context */
+    OSPTSEC *ospvSecurity,  /* In - Security context */
     unsigned *ospvNumberOfAuthorityCertificates)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

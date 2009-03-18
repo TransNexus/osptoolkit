@@ -39,7 +39,7 @@ typedef struct {
     OSPTTIME ospmUsageIndPostDialDelay;
     OSPTBOOL ospmUsageIndHasPDD;
     unsigned ospmUsageIndReleaseSource;
-    char ospmUsageIndConferenceId[OSPC_CONFIDSIZE];    /* This is in chararcters */
+    char ospmUsageIndConferenceId[OSPC_CONFIDSIZE];     /* This is in chararcters */
     char *ospmUsageIndMessageId;
     char *ospmUsageIndComponentId;
     OSPE_ROLE ospmUsageIndRole;
@@ -129,6 +129,7 @@ extern "C" {
     const char *OSPPUsageIndGetTCDesc(OSPT_USAGEIND *, OSPE_TERM_CAUSE);
     OSPTBOOL OSPPUsageIndHasStatistics(OSPT_USAGEIND *);
     void OSPPUsageIndSetStatistics(OSPT_USAGEIND *, OSPT_STATS *);
+    void OSPPUsageIndAddSourceAlt(OSPT_USAGEIND *ospvUsageInd, OSPT_ALTINFO *ospvAltInfo);
     void OSPPUsageIndAddDestinationAlt(OSPT_USAGEIND *ospvUsageInd, OSPT_ALTINFO *ospvAltInfo);
     void OSPPUsageIndSetStartTime(OSPT_USAGEIND *, OSPTTIME ospvStartTime);
     OSPTTIME OSPPUsageIndGetStartTime(OSPT_USAGEIND *);

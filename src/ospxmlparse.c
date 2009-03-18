@@ -33,9 +33,9 @@
  * OSPPXMLDocParse() - parse a document into its elements and attributes
  */
 
-unsigned OSPPXMLDocParse(       /* returns error code */
-    OSPTBFR **ospvBfrAddr,      /* buffer containing document */
-    OSPT_XML_ELEM **ospvElemAddr) /* where to put parsed element */
+unsigned OSPPXMLDocParse(           /* returns error code */
+    OSPTBFR **ospvBfrAddr,          /* buffer containing document */
+    OSPT_XML_ELEM **ospvElemAddr)   /* where to put parsed element */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPE_XML_ENC encoding = OSPC_XENC_UNKNOW;
@@ -87,11 +87,10 @@ unsigned OSPPXMLDocParse(       /* returns error code */
 /*
  * OSPPXMLDocParseElem() - parse a document element
  */
-
-unsigned OSPPXMLDocParseElem( /* returns error code */
-    OSPTBFR ** ospvBfrAddr,    /* buffer containing document */
-    OSPE_XML_ENC ospvEncoding,    /* character encoding for the document */
-    OSPT_XML_ELEM ** ospvElemAddr)   /* where to put parsed element */
+unsigned OSPPXMLDocParseElem(       /* returns error code */
+    OSPTBFR ** ospvBfrAddr,         /* buffer containing document */
+    OSPE_XML_ENC ospvEncoding,      /* character encoding for the document */
+    OSPT_XML_ELEM ** ospvElemAddr)  /* where to put parsed element */
 {
     /*
      * CAUTION: This function is called recursively; be sure to account for that in any modifications
@@ -269,7 +268,6 @@ unsigned OSPPXMLDocParseElem( /* returns error code */
 /*
  * OSPPXMLDocGetAttrs() - get the attributes for an element
  */
-
 unsigned OSPPXMLDocGetAttrs(    /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */
@@ -326,11 +324,10 @@ unsigned OSPPXMLDocGetAttrs(    /* returns error code */
 /*
  * OSPPXMLDocGetAttr() - get a single attribute
  */
-
-unsigned OSPPXMLDocGetAttr(     /* returns error code */
-    OSPTBFR **ospvBfrAddr,      /* buffer containing document */
-    OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */
-    OSPT_XML_ATTR **ospvAttrAddr) /* list for attributes */
+unsigned OSPPXMLDocGetAttr(         /* returns error code */
+    OSPTBFR **ospvBfrAddr,          /* buffer containing document */
+    OSPE_XML_ENC ospvEncoding,      /* character encoding for the document */
+    OSPT_XML_ATTR **ospvAttrAddr)   /* list for attributes */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     unsigned char readChar = '\0';
@@ -432,7 +429,6 @@ unsigned OSPPXMLDocGetAttr(     /* returns error code */
 /*
  * OSPPXMLDocGetContent() - get the content an element
  */
-
 unsigned OSPPXMLDocGetContent(  /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */
@@ -560,7 +556,6 @@ unsigned OSPPXMLDocGetContent(  /* returns error code */
 /*
  * OSPPXMLDocGetCdata() - get CDATA from an XML document
  */
-
 unsigned OSPPXMLDocGetCdata(    /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */
@@ -621,7 +616,6 @@ unsigned OSPPXMLDocGetCdata(    /* returns error code */
 /*
  * OSPPXMLDocGetName() - get the name from and XML document
  */
-
 unsigned OSPPXMLDocGetName(     /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */
@@ -714,7 +708,6 @@ unsigned OSPPXMLDocGetName(     /* returns error code */
 /*
  * OSPPXMLDocSkipProlog() - skip the XML prolog
  */
-
 unsigned OSPPXMLDocSkipProlog(  /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)  /* character encoding for the document */
@@ -764,7 +757,6 @@ unsigned OSPPXMLDocSkipProlog(  /* returns error code */
 /*
  * OSPPXMLDocSkipAllMisc() - skip miscellaneous components in prolog
  */
-
 unsigned OSPPXMLDocSkipAllMisc( /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)  /* character encoding for the document */
@@ -828,7 +820,6 @@ unsigned OSPPXMLDocSkipAllMisc( /* returns error code */
 /*
  * OSPPXMLDocSkipDTD() - skip document type definition (if present)
  */
-
 unsigned OSPPXMLDocSkipDTD(     /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)  /* character encoding for the document */
@@ -903,7 +894,6 @@ unsigned OSPPXMLDocSkipDTD(     /* returns error code */
 /*
  * OSPPXMLDocSkipMarkupDecl() - skip markup declarations in prolog
  */
-
 unsigned OSPPXMLDocSkipMarkupDecl(  /* returns error code */
     OSPTBFR **ospvBfrAddr,          /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)      /* character encoding for the document */
@@ -1007,7 +997,6 @@ unsigned OSPPXMLDocSkipMarkupDecl(  /* returns error code */
 /*
  * OSPPXMLDocSkipDecl() - skip XML declaration (if present)
  */
-
 unsigned OSPPXMLDocSkipDecl(    /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)  /* character encoding for the document */
@@ -1052,7 +1041,6 @@ unsigned OSPPXMLDocSkipDecl(    /* returns error code */
 /*
  * OSPPXMLDocSkipComment() - skip XML comment (if present)
  */
-
 unsigned OSPPXMLDocSkipComment( /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)  /* character encoding for the document */
@@ -1096,7 +1084,6 @@ unsigned OSPPXMLDocSkipComment( /* returns error code */
 /*
  * OSPPXMLDocSkipPI() - skip XML processing instruction (if present)
  */
-
 unsigned OSPPXMLDocSkipPI(      /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)  /* character encoding for the document */
@@ -1140,7 +1127,6 @@ unsigned OSPPXMLDocSkipPI(      /* returns error code */
 /*
  * OSPPXMLDocSkipElementDecl() - skip XML element declaration (if present)
  */
-
 unsigned OSPPXMLDocSkipElementDecl( /* returns error code */
     OSPTBFR **ospvBfrAddr,          /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)      /* character encoding for the document */
@@ -1184,7 +1170,6 @@ unsigned OSPPXMLDocSkipElementDecl( /* returns error code */
 /*
  * OSPPXMLDocSkipEntityDecl() - skip XML entity declaration (if present)
  */
-
 unsigned OSPPXMLDocSkipEntityDecl(  /* returns error code */
     OSPTBFR **ospvBfrAddr,          /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)      /* character encoding for the document */
@@ -1228,7 +1213,6 @@ unsigned OSPPXMLDocSkipEntityDecl(  /* returns error code */
 /*
  * OSPPXMLDocSkipAttlist() - skip XML attribute list (if present)
  */
-
 unsigned OSPPXMLDocSkipAttlist( /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)  /* character encoding for the document */
@@ -1272,7 +1256,6 @@ unsigned OSPPXMLDocSkipAttlist( /* returns error code */
 /*
  * OSPPXMLDocSkipPastCdataBeg() - skip XML CDATA beginning section
  */
-
 unsigned OSPPXMLDocSkipPastCdataBeg(    /* returns error code */
     OSPTBFR **ospvBfrAddr,              /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)          /* character encoding for the document */
@@ -1376,7 +1359,6 @@ unsigned OSPPXMLDocIsDecl(      /* returns error code */
 /*
  * OSPPXMLDocIsComment() - is the document at an XML comment
  */
-
 unsigned OSPPXMLDocIsComment(   /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */
@@ -1410,7 +1392,6 @@ unsigned OSPPXMLDocIsComment(   /* returns error code */
 /*
  * OSPPXMLDocIsPI() - is the document at an XML processing instruction
  */
-
 unsigned OSPPXMLDocIsPI(        /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */
@@ -1447,7 +1428,6 @@ unsigned OSPPXMLDocIsPI(        /* returns error code */
 /*
  * OSPPXMLDocIsDTD() - is the document at an XML data type definition
  */
-
 unsigned OSPPXMLDocIsDTD(       /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */
@@ -1484,7 +1464,6 @@ unsigned OSPPXMLDocIsDTD(       /* returns error code */
 /*
  * OSPPXMLDocIsElementDecl() - is document at an XML element declaration
  */
-
 unsigned OSPPXMLDocIsElementDecl(   /* returns error code */
     OSPTBFR **ospvBfrAddr,          /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,      /* character encoding for the document */
@@ -1521,7 +1500,6 @@ unsigned OSPPXMLDocIsElementDecl(   /* returns error code */
 /*
  * OSPPXMLDocIsAttlist() - is document at an XML attribute list
  */
-
 unsigned OSPPXMLDocIsAttlist(   /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */
@@ -1558,7 +1536,6 @@ unsigned OSPPXMLDocIsAttlist(   /* returns error code */
 /*
  * OSPPXMLDocIsEntityDecl() - is document at an XML entity declaration
  */
-
 unsigned OSPPXMLDocIsEntityDecl(    /* returns error code */
     OSPTBFR **ospvBfrAddr,          /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,      /* character encoding for the document */
@@ -1595,7 +1572,6 @@ unsigned OSPPXMLDocIsEntityDecl(    /* returns error code */
 /*
  * OSPPXMLDocIsCdata() - is document at an XML CDATA section
  */
-
 unsigned OSPPXMLDocIsCdata(     /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */
@@ -1632,7 +1608,6 @@ unsigned OSPPXMLDocIsCdata(     /* returns error code */
 /*
  * OSPPXMLDocIsCdataEnd() - is document at the end of an XML CDATA section
  */
-
 unsigned OSPPXMLDocIsCdataEnd(  /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for the document */

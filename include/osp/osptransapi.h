@@ -107,6 +107,8 @@ extern "C" {
     int OSPPTransactionSetDelayMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetJitterMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetPackLossMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
+    int OSPPTransactionSetSrcNetworkId(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetDestNetworkId(OSPTTRANHANDLE, const char *);
         
 #ifdef __cplusplus
 }

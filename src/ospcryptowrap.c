@@ -56,7 +56,7 @@ int OSPPCryptoWrapDigest(
     OSPTNLOGDUMP(ospvData, ospvDataLength, "DIGEST: ospvData");
 
     /* Set digest algorithm */
-    type = (EVP_MD *) EVP_md5();
+    type = (EVP_MD *)EVP_md5();
 
     if (type) {
         /* Calcualte digest */
@@ -139,7 +139,7 @@ int OSPPCryptoWrapDecrypt(
     OSPTNLOGDUMP(ospvEncryptedData, ospvEncryptedDataLength, "DECRYPT: ospvEncryptedData");
     OSPTNLOGDUMP(ospvBERReaderKey, ospvBERReaderKeyLength, "DECRYPT: ospvBERReaderKey");
 
-    pX509PubKey = d2i_X509_PUBKEY(NULL, (const unsigned char **) (&ospvBERReaderKey), ospvBERReaderKeyLength);
+    pX509PubKey = d2i_X509_PUBKEY(NULL, (const unsigned char **)(&ospvBERReaderKey), ospvBERReaderKeyLength);
 
     if (pX509PubKey) {
         pData = pX509PubKey->public_key->data;

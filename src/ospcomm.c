@@ -477,7 +477,7 @@ void OSPPCommSignalAllConnections(
             OSPM_CONDVAR_SIGNAL(httpconn->CondVar, errorcode);
 
             if (!OSPPListEmpty((OSPTLIST *)&(ospvComm->HttpConnList))) {
-                httpconn = (OSPTHTTP *)OSPPListNext((OSPTLIST *)&(ospvComm->HttpConnList), (void *) httpconn);
+                httpconn = (OSPTHTTP *)OSPPListNext((OSPTLIST *)&(ospvComm->HttpConnList), (void *)httpconn);
             } else {
                 httpconn = OSPC_OSNULL;
             }
@@ -604,7 +604,7 @@ int OSPPCommGetServicePoints(
              svcpt = (OSPTSVCPT *)OSPPListFirst((OSPTLIST *)&(ospvComm->ServicePointList));
              count < ospvComm->NumberOfServicePoints &&
              count < ospvNumberOfServicePoints;
-             count++, svcpt = (OSPTSVCPT *)OSPPListNext((OSPTLIST *)&(ospvComm->ServicePointList), (void *) svcpt)) {
+             count++, svcpt = (OSPTSVCPT *)OSPPListNext((OSPTLIST *)&(ospvComm->ServicePointList), (void *)svcpt)) {
             if (svcpt == OSPC_OSNULL)
                 break;
 
@@ -636,7 +636,7 @@ static void osppCommDeleteServicePointList(
     OSPTSVCPT *deletesvcpt = OSPC_OSNULL;
 
     for (count = 0; count < ospvNumberOfServicePoints; count++) {
-        deletesvcpt = (OSPTSVCPT *)OSPPListRemove((OSPTLIST *) svcpt);
+        deletesvcpt = (OSPTSVCPT *)OSPPListRemove((OSPTLIST *)svcpt);
         if (deletesvcpt != OSPC_OSNULL) {
             if (deletesvcpt->HostName)
                 OSPM_FREE(deletesvcpt->HostName);
@@ -647,7 +647,7 @@ static void osppCommDeleteServicePointList(
             OSPM_FREE(deletesvcpt);
         }
     }
-    OSPPListDelete((OSPTLIST *) svcpt);
+    OSPPListDelete((OSPTLIST *)svcpt);
 }
 
 /*
@@ -935,7 +935,7 @@ int OSPPCommSetServicePoints(
         if (errorcode != OSPC_ERR_NO_ERROR)
             break;
 
-        OSPPListAppend((OSPTLIST *)&newroot, (void *) newsvcpt);
+        OSPPListAppend((OSPTLIST *)&newroot, (void *)newsvcpt);
     }
 
     /*

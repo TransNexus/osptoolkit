@@ -60,7 +60,7 @@ int OSPPMsgQueueNew(
          * initialize the list used to hold message info
          * structures (items)
          */
-        OSPPListNew((OSPTLIST *) & ((*ospvMsgQueue)->MsgInfoList));
+        OSPPListNew((OSPTLIST *)&((*ospvMsgQueue)->MsgInfoList));
 
         if (errorcode != OSPC_ERR_NO_ERROR)
             OSPM_FREE(*ospvMsgQueue);
@@ -136,7 +136,7 @@ int OSPPMsgQueueAddTransaction(
         /*
          * add the item to the message queue list
          */
-        OSPPListAppend((OSPTLIST *) & (ospvMsgQueue->MsgInfoList), (void *)ospvMsgInfo);
+        OSPPListAppend((OSPTLIST *)&(ospvMsgQueue->MsgInfoList), (void *)ospvMsgInfo);
 
         /*
          * increment number of transactions in the queue

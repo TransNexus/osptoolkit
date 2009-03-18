@@ -39,7 +39,7 @@ typedef struct _NBAUTHREQ {
     OSPE_NUMBER_FORMAT ospvCalledNumberFormat;  /* In - Called number Format */
     const char *ospvUser;                       /* In - End user (optional) */
     unsigned ospvNumberOfCallIds;               /* In - Number of call identifiers */
-    OSPT_CALL_ID **ospvCallIds;                   /* In - List of call identifiers */
+    OSPT_CALL_ID **ospvCallIds;                 /* In - List of call identifiers */
     const char **ospvPreferredDestinations;     /* In - List of preferred destinations for call */
     unsigned *ospvNumberOfDestinations;         /* In\Out - Max number of destinations \ Actual number of dests authorised */
     unsigned *ospvSizeOfDetailLog;              /* In\Out - Max size of detail log \ Actual size of detail log */
@@ -354,7 +354,7 @@ int NonBlockingQueueMonitorBlockWhileQueueNotEmpty(NBMONITOR *nbMonitor)
 
 OSPTTHREADRETURN WorkThread(void *arg)
 {
-    NBMONITOR *nbMonitor = (NBMONITOR *) arg;
+    NBMONITOR *nbMonitor = (NBMONITOR *)arg;
     NBDATA *transaction = NULL;
     int TimeToExit = 0;
     int errorcode = 0;
@@ -641,7 +641,7 @@ int OSPPTransactionRequestAuthorisation_nb(NBMONITOR *nbMonitor,    /* In - NBMo
     OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                      /* In - Called number Format */
     const char *ospvUser,                                           /* In - End user (optional) */
     unsigned ospvNumberOfCallIds,                                   /* In - Number of call identifiers */
-    OSPT_CALL_ID *ospvCallIds[],                                      /* In - List of call identifiers */
+    OSPT_CALL_ID *ospvCallIds[],                                    /* In - List of call identifiers */
     const char *ospvPreferredDestinations[],                        /* In - List of preferred destinations for call */
     unsigned *ospvNumberOfDestinations,                             /* In\Out - Max number of destinations \ Actual number of dests authorised */
     unsigned *ospvSizeOfDetailLog,                                  /* In\Out - Max size of detail log \ Actual size of detail log */

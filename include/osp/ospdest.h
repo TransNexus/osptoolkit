@@ -54,10 +54,10 @@ extern const OSPT_MSG_DESC OSPV_DPROT_DESCS[];
  * Destination OSP Enabled Data Type
  */
 typedef enum {
-    OSPC_DOSP_UNKNOWN = 0,   /* Could not be understood by the Client as Sent by the Server */
-    OSPC_DOSP_UNDEFINED,     /* Not Configured at Server */
-    OSPC_DOSP_TRUE,          /* Destination is OSP Enabled */
-    OSPC_DOSP_FALSE          /* Destination is Not OSP Enabled */
+    OSPC_DOSP_UNKNOWN = 0,    /* Could not be understood by the Client as Sent by the Server */
+    OSPC_DOSP_UNDEFINED,      /* Not Configured at Server */
+    OSPC_DOSP_TRUE,           /* Destination is OSP Enabled */
+    OSPC_DOSP_FALSE           /* Destination is Not OSP Enabled */
 } OSPE_DEST_OSPENABLED;
 
 #define DEST_OSP_DIABLED                "0.0.0"

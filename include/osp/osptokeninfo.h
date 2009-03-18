@@ -44,7 +44,7 @@ typedef struct {
     int ospmTokenInfoDuration;
     OSPTBOOL ospmTokenInfoHasLookAheadInfo;
     OSPTTOKENLOOKAHEADINFO ospmTokenLookAheadInfo;
-    OSPTBOOL ospmTokenInfoHasDstNetworkId;
+    OSPTBOOL ospmTokenInfoHasDestNetworkId;
     char dstNetworkId[OSPC_SIZE_E164NUM];
 } OSPTTOKENINFO;
 
@@ -81,7 +81,7 @@ extern "C" {
     OSPE_DEST_PROTOCOL OSPPTokenInfoGetLookAheadDestProtocol(OSPTTOKENLOOKAHEADINFO *);
     void OSPPTokenInfoSetLookAheadOSPVersion(OSPTTOKENLOOKAHEADINFO *, const char *);
     OSPE_DEST_OSPENABLED OSPPTokenInfoGetLookAheadOSPVersion(OSPTTOKENLOOKAHEADINFO *);
-    const char *OSPPTokenInfoGetDstNetworkId(OSPTTOKENINFO *);
+    const char *OSPPTokenInfoGetDestNetworkId(OSPTTOKENINFO *);
     unsigned OSPPParseTokenInfoFromASCIIToken(unsigned char *, unsigned, OSPTTOKENINFO **);
 
 #ifdef __cplusplus

@@ -88,7 +88,7 @@ int OSPPSSLWrapInit(
          * Openssl initialization has now been moved from here to the OSPPInit
          * function. It will be done only once now, rather than with every ProviderNew
          */
-        ctx = (SSL_CTX **) & (security->ContextRef);
+        ctx = (SSL_CTX **)&(security->ContextRef);
         version = SSLv3_client_method();
         *ctx = SSL_CTX_new(version);
 
@@ -185,7 +185,7 @@ void win32_locking_callback(
     }
 }
 
-#else /* Solaris and Linux */
+#else   /* Solaris and Linux */
 
 void thread_setup(void)
 {
@@ -271,7 +271,7 @@ void OSPPSSLWrapCleanup(
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapCleanup()\n"));
     security = (OSPTSEC *)ospvRef;
     if (security != OSPC_OSNULL) {
-        ctx = (SSL_CTX **) & (security->ContextRef);
+        ctx = (SSL_CTX **)&(security->ContextRef);
         SSL_CTX_free(*ctx);
     }
     if (bio_stdout != OSPC_OSNULL) {
@@ -297,7 +297,7 @@ int OSPPSSLWrapSessionContextNew(
 
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapSessionContextNew()\n"));
 
-    OSPM_ARGUSED(ospvConnection);    /* not needed for SSLEAY */
+    OSPM_ARGUSED(ospvConnection);   /* not needed for SSLEAY */
 
     security = (OSPTSEC *)ospvContextRef;
 
@@ -307,13 +307,13 @@ int OSPPSSLWrapSessionContextNew(
      */
 
     if (security != OSPC_OSNULL) {
-        ctx = (SSL_CTX *) security->ContextRef;
+        ctx = (SSL_CTX *)security->ContextRef;
         sslsession = ((OSPTHTTP *)ospvConnection)->SSLSession;
 
-        conref = (SSL **) & (sslsession->Context);
+        conref = (SSL **)&(sslsession->Context);
 
         if (OSPPSSLLoadCerts(security) == OSPC_ERR_NO_ERROR) {
-            *conref = (SSL *) SSL_new(ctx);
+            *conref = (SSL *)SSL_new(ctx);
 
             if (*conref == OSPC_OSNULL) {
                 ERR_print_errors(bio_stdout);
@@ -545,7 +545,7 @@ long bio_dump_cb(
 {
     BIO *out;
 
-    out = (BIO *) BIO_get_callback_arg(bio);
+    out = (BIO *)BIO_get_callback_arg(bio);
 
     if (out == NULL)
         return ret;
@@ -591,7 +591,7 @@ int OSPPSSLLoadCerts(
     if ((security != OSPC_OSNULL) && (errorcode == OSPC_ERR_NO_ERROR)) {
         lock = OSPC_TRUE;
         errorcode = OSPC_ERR_SEC_MODULE;
-        if ((ctx = (SSL_CTX **) & (security->ContextRef)) != OSPC_OSNULL)
+        if ((ctx = (SSL_CTX **)&(security->ContextRef)) != OSPC_OSNULL)
             if ((errorcode = OSPPSecGetNumberOfAuthorityCertificates(security, &count)) == OSPC_ERR_NO_ERROR) {
                 if (count <= 0) {
                     errorcode = OSPC_ERR_SEC_NO_AUTHORITY_CERTIFICATES;
@@ -600,7 +600,7 @@ int OSPPSSLLoadCerts(
                     for (i = 0; i < count; i++) {
                         if (security->AuthorityCertInfo[i] != OSPC_OSNULL) {
                             if ((errorcode = OSPPX509CertGetCertificate(security->AuthorityCertInfo[i], &ca, &certlen)) == OSPC_ERR_NO_ERROR) {
-                                if ((x509 = d2i_X509(NULL, (const unsigned char **) (&ca), certlen)) != OSPC_OSNULL) {
+                                if ((x509 = d2i_X509(NULL, (const unsigned char **)(&ca), certlen)) != OSPC_OSNULL) {
                                     SSL_CTX_add_client_CA(*ctx, x509);
                                     /* decrement reference count */
                                     X509_free(x509);
@@ -622,7 +622,7 @@ int OSPPSSLLoadCerts(
                         OSPM_PRINTTOERR((stderr, "Unable to get Local Certificate\n"));
                     } else {
                         ca = &certbuf[0];
-                        if ((x509 = d2i_X509(NULL, (const unsigned char **) (&ca), certlen)) != OSPC_OSNULL) {
+                        if ((x509 = d2i_X509(NULL, (const unsigned char **)(&ca), certlen)) != OSPC_OSNULL) {
                             if (SSL_CTX_use_certificate(*ctx, x509) > 0) {
                                 /* decrement reference count */
                                 X509_free(x509);
@@ -631,7 +631,7 @@ int OSPPSSLLoadCerts(
                                     errorcode = OSPC_ERR_SEC_CERTIFICATE_TOO_BIG;
                                     OSPM_DBGERRORLOG(errorcode, "Private Key is too big");
                                 } else {
-                                    if ((errorcode = OSPPSecGetPrivateKeyData(security, &pkey, (unsigned int *) &certlen)) != OSPC_ERR_NO_ERROR) {
+                                    if ((errorcode = OSPPSecGetPrivateKeyData(security, &pkey, (unsigned int *)&certlen)) != OSPC_ERR_NO_ERROR) {
                                         errorcode = OSPC_ERR_SEC_PRIVATE_KEY_NOT_FOUND;
                                         OSPM_DBGERRORLOG(errorcode, "Unable to get private key");
                                     } else {

@@ -67,7 +67,7 @@ int OSPPUtilBuildString(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        strptr++;                /*get back to beginning of string */
+        strptr++;   /*get back to beginning of string */
         OSPM_MALLOC(*ospvNumberString, char, OSPM_STRLEN(strptr) + 1);
         OSPM_MEMSET(*ospvNumberString, 0, OSPM_STRLEN(strptr) + 1);
         OSPM_MEMCPY(*ospvNumberString, strptr, OSPM_STRLEN(strptr));

@@ -113,7 +113,7 @@ int tnlogdump(
          * of newline.  25 is end of string.  Then
          * copy the string to the buffer.
          */
-        get_log_time((char *) tmpbuf);
+        get_log_time((char *)tmpbuf);
         sprintf(buf, "\n%s", tmpbuf);
 
         sprintf(tmpbuf, "LOGDUMP - %s\n", msg);

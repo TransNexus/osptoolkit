@@ -78,7 +78,7 @@ OSPTBOOL OSPPHasTermCauseAny(       /* returns non-zero if time */
 /*
  * OSPPSetTermCause() - Set termination cause
  */
-void OSPPSetTermCause(     /* nothing returned */
+void OSPPSetTermCause(  /* nothing returned */
     OSPT_TERM_CAUSE *ospvTermCause,
     OSPE_TERM_CAUSE ospvType,    
     unsigned ospvTCCode,
@@ -119,8 +119,8 @@ unsigned OSPPGetTCCode(
  * OSPPGetTCDesc() - returns termination cause description
  */
 const char *OSPPGetTCDesc(
-    OSPT_TERM_CAUSE *ospvTermCause,   /* Termination cause */
-    OSPE_TERM_CAUSE ospvType)         /* Termination cause type */    
+    OSPT_TERM_CAUSE *ospvTermCause, /* Termination cause */
+    OSPE_TERM_CAUSE ospvType)       /* Termination cause type */    
 {
     const char *ospvTCDesc = OSPC_OSNULL;
 

@@ -66,7 +66,7 @@ int OSPPPKCS8KeyInfoCreate(
     /* Add the content type Element to the result list */
     for (i = 0; errorcode == OSPC_ERR_NO_ERROR; i++) {
         switch (i) {
-        case 0:                /* Add VERSION Element */
+        case 0: /* Add VERSION Element */
             dataRefId = OSPEDRID_PVTKEYINF_VERSION;
             errorcode = OSPPASN1SmallIntegerEncode(&newObject, OSPC_ASN1_PRIVATEKEYINFO_VERSION, dataRefId);
             break;
@@ -79,12 +79,12 @@ int OSPPPKCS8KeyInfoCreate(
                 errorcode = OSPPASN1ObjectCopy(&newObject, tmpObject);
             }
 
-            OSPM_FREE(newObject->ElementInfo->Element);    /* !!! PS */
-            OSPM_FREE(newObject->ElementInfo);    /* !!! PS */
+            OSPM_FREE(newObject->ElementInfo->Element); /* !!! PS */
+            OSPM_FREE(newObject->ElementInfo);          /* !!! PS */
             OSPPASN1ObjectDelete(&tmpObject);
             break;
 
-        case 2:                /* Add PrivateKey OctetString */
+        case 2: /* Add PrivateKey OctetString */
             dataRefId = OSPEDRID_PVTKEYINF_PRIVATEKEY;
 
             rsaPrivateKey = ospvPrivateKey->PrivateKeyData;
@@ -93,7 +93,7 @@ int OSPPPKCS8KeyInfoCreate(
             errorcode = OSPPASN1OctetStringEncode(&newObject, rsaPrivateKey, rsaPrivateKeyLength, dataRefId);
             break;
 
-        case 3:                /* Add PrivateKey Attributes */
+        case 3: /* Add PrivateKey Attributes */
             dataRefId = OSPEDRID_PVTKEYINF_ATTRIBUTES;
             newObject = OSPC_OSNULL;    /* None required for rsaPrivateKey */
             break;
@@ -112,7 +112,7 @@ int OSPPPKCS8KeyInfoCreate(
             /* Add new object to this object */
             if (newObject != OSPC_OSNULL) {
                 errorcode = OSPPASN1ObjectAddChild(privateKeyInfo, newObject, dataRefId);
-                OSPM_FREE(newObject);    /* !!! PS */
+                OSPM_FREE(newObject);   /* !!! PS */
                 newObject = OSPC_OSNULL;
             }
         }
