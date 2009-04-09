@@ -101,7 +101,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_STATISTICS,           "Statistics" },
     { OSPC_MELEM_STATUS,               "Status" },
     { OSPC_MELEM_TCCODE,               "TCCode" },
-    { OSPC_MELEM_TERMCAUSE,           "TermiantionCause" },
+    { OSPC_MELEM_TERMCAUSE,            "TerminationCause" },
     { OSPC_MELEM_TIMESTAMP,            "Timestamp" },
     { OSPC_MELEM_TOKEN,                "Token" },
     { OSPC_MELEM_TOKENINFO,            "TokenInfo" },
