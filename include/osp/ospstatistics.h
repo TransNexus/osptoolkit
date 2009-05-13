@@ -25,13 +25,14 @@
 #include "osp/osp.h"
 
 #define OSPC_SVALUE_UNUSED      ((unsigned)(1 << 0))    /* Reserve for OSPTBOOL */
-#define OSPC_SVALUE_SAMPLES     ((unsigned)(1 << 1))
-#define OSPC_SVALUE_MIN         ((unsigned)(1 << 2))
-#define OSPC_SVALUE_MAX         ((unsigned)(1 << 3))
-#define OSPC_SVALUE_MEAN        ((unsigned)(1 << 4))
-#define OSPC_SVALUE_VARIANCE    ((unsigned)(1 << 5))
-#define OSPC_SVALUE_SQUARES     ((unsigned)(1 << 6))
-#define OSPC_SVALUE_ALL         ((unsigned)(OSPC_SVALUE_SAMPLES | OSPC_SVALUE_MIN | OSPC_SVALUE_MAX | OSPC_SVALUE_MEAN | OSPC_SVALUE_VARIANCE | OSPC_SVALUE_SQUARES))
+#define OSPC_SVALUE_VALUE       ((unsigned)(1 << 1))
+#define OSPC_SVALUE_SAMPLES     ((unsigned)(1 << 2))
+#define OSPC_SVALUE_MIN         ((unsigned)(1 << 3))
+#define OSPC_SVALUE_MAX         ((unsigned)(1 << 4))
+#define OSPC_SVALUE_MEAN        ((unsigned)(1 << 5))
+#define OSPC_SVALUE_VARIANCE    ((unsigned)(1 << 6))
+#define OSPC_SVALUE_SQUARES     ((unsigned)(1 << 7))
+#define OSPC_SVALUE_FULL        ((unsigned)(OSPC_SVALUE_SAMPLES | OSPC_SVALUE_MIN | OSPC_SVALUE_MAX | OSPC_SVALUE_MEAN | OSPC_SVALUE_VARIANCE | OSPC_SVALUE_SQUARES))
 
 /*
  * Statistics value types
@@ -40,6 +41,8 @@ typedef enum {
     OSPC_STATS_DELAY = 0,
     OSPC_STATS_JITTER,
     OSPC_STATS_PACKLOSS,
+    OSPC_STATS_RFACTOR,
+    OSPC_STATS_MOS,
     /* Number of statistics types */
     OSPC_STATS_NUMBER
 } OSPE_STATS;
@@ -49,6 +52,7 @@ typedef enum {
  */
 typedef struct {
     OSPTBOOL HasValue;
+    unsigned Value;
     unsigned Samples;
     unsigned Minimum;
     unsigned Maximum;
@@ -65,13 +69,13 @@ typedef struct {
     OSPTBOOL ospmHasReceivedStats;
     unsigned ospmLossPacketsReceived;
     unsigned ospmLossFractionReceived;
-    OSPTBOOL ospmHasOneWay;
     OSPT_STATS_VALUE ospmOneWay;
-    OSPTBOOL ospmHasRoundTrip;
     OSPT_STATS_VALUE ospmRoundTrip;
     OSPT_STATS_VALUE ospmDelay[OSPC_DIR_NUMBER];
     OSPT_STATS_VALUE ospmJitter[OSPC_DIR_NUMBER];
     OSPT_STATS_VALUE ospmPackLoss[OSPC_DIR_NUMBER];
+    OSPT_STATS_VALUE ospmRFactor[OSPC_DIR_NUMBER];
+    OSPT_STATS_VALUE ospmMOS[OSPC_DIR_NUMBER];
 } OSPT_STATS;
 
 /* Function Prototypes */
@@ -107,6 +111,7 @@ extern "C" {
     void OSPPStatsSetSentStatistics(OSPT_STATS *, unsigned, signed);
     int OSPPStatsToElement(OSPT_STATS *, OSPT_XML_ELEM **);
     OSPTBOOL OSPPStatsHasValue(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
+    unsigned OSPPStatsGetValue(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
     unsigned OSPPStatsGetSamples(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
     unsigned OSPPStatsGetMin(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
     unsigned OSPPStatsGetMax(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
@@ -119,8 +124,10 @@ extern "C" {
     void OSPPStatsSetMean(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
     void OSPPStatsSetVariance(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, float);
     void OSPPStatsSetSquaresSum(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, double);
+    void OSPPStatsSetRFactor(OSPT_STATS *, OSPE_DIRECTION, unsigned);
+    void OSPPStatsSetMOS(OSPT_STATS *, OSPE_DIRECTION, unsigned);
     int OSPPStatsValueToElement(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, OSPT_XML_ELEM **);
-    
+
 #ifdef __cplusplus
 }
 #endif

@@ -69,11 +69,11 @@
 #define DESTINATION_SZ          64
 #define TOKEN_SZ                2096*8
 
-/* 
+/*
  * WARNING: BEFORE CHANGING THE VALUE OF NUM_CALL_IDS, BE SURE
  *   TO MODIFY THE FUNCTION testInitializeCallIds SO THAT
  *   THE NUMBER OF ELEMENTS IN THE ARRAYS MATCH THIS VALUE.
- */   
+ */
 #define NUM_CALL_IDS            8
 
 #define TIMESTAMP_SZ            32
@@ -108,7 +108,7 @@ static OSPT_CALL_ID *callids[NUM_CALL_IDS];
 token_algo_t tokenalgo = TOKEN_ALGO_SIGNED;
 char *SourceIP = NULL, *SourceDevIP = NULL, *DestIP = NULL, *DestDevIP = NULL;
 char *ModifiedSourceIP = NULL, *ModifiedSourceDevIP = NULL, *ModifiedDestIP = NULL, *ModifiedDestDevIP = NULL;
-   
+
 unsigned almostOutOfResources = 0;
 unsigned hardwareSupport = 0;
 unsigned TCcode = 0;
@@ -215,7 +215,7 @@ int testOSPPSetServicePoints()
     servpts = &New_ServicePoint;
 
     errorcode = OSPPProviderSetServicePoints(OSPVProviderHandle, 1, MsgCount, servpts);
-                                    
+
     return errorcode;
 }
 
@@ -297,8 +297,8 @@ int testOSPPProviderNew(OSPTPROVHANDLE *ProvHandle)
         DEF_HTTP_RETRYDELAY,
         DEF_HTTP_RETRYLIMIT,
         DEF_HTTP_TIMEOUT,
-        customer_id, 
-        device_id, 
+        customer_id,
+        device_id,
         ProvHandle);
 
     /* Free memory allocated while loading crypto information from PEM-encoded files */
@@ -345,7 +345,7 @@ int testOSPPProviderGetAuthorityCertificates()
 
     if (certCount != NUM_CA_CERTS) {
         printf("Count Mismatch: Authority Certificates Loaded: %d, Authority Certificates Stored: %d\n", NUM_CA_CERTS, certCount);
-              
+
     } else {
         printf("Authority Certificates Loaded/Stored: %d\n", certCount);
     }
@@ -850,7 +850,7 @@ int testOSPPTransactionGetDestProtocol()
             break;
         }
     }
-    
+
     return errorcode;
 }
 
@@ -876,7 +876,7 @@ int testOSPPTransactionIsDestOSPEnabled()
             break;
         }
     }
-    
+
     return errorcode;
 }
 
@@ -1034,7 +1034,7 @@ int testBuildUsageFromScratch(int IsSource, int BuildNew)
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
 
-        errorcode = OSPPTransactionBuildUsageFromScratch(OSPVTransactionHandle, 
+        errorcode = OSPPTransactionBuildUsageFromScratch(OSPVTransactionHandle,
             (OSPTUINT64)server_txn_id,    /* Some hard coded Server Tx Id */
             IsSource, SourceIP,
             DestIP, SourceDevIP,
@@ -1300,8 +1300,8 @@ int testOSPPTransactionRequestSuggestedAuthorisation()
 
     numdestinations = NUM_CALL_IDS;
     if (errorcode == OSPC_ERR_NO_ERROR)
-        errorcode = OSPPTransactionRequestAuthorisation(OSPVTransactionHandle, 
-            SourceIP, 
+        errorcode = OSPPTransactionRequestAuthorisation(OSPVTransactionHandle,
+            SourceIP,
             SourceDevIP,    /* Some random IP address that would probably not be in the Server */
             callingnumber,
             CallingNumFormat,
@@ -1539,7 +1539,7 @@ int testOSPPTransactionGetLookAheadInfoIfPresent()
                 break;
             default:
                 printf("Wrong Destination Protocol \n");
-                break;            	
+                break;
             }
 
             switch (DestOSPStatus) {
@@ -1617,7 +1617,7 @@ int testOSPPTransactionReportUsage()
         if (!quietmode)
             printf("Reporting Usage for OSPVTransactionHandle %d\n", (int)OSPVTransactionHandle);
 
-        errorcode = OSPPTransactionReportUsage(OSPVTransactionHandle, 
+        errorcode = OSPPTransactionReportUsage(OSPVTransactionHandle,
             duration, call_start_time, call_end_time, call_alert_time, call_connect_time, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
             0,    /* Release Source */
             "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
@@ -1632,7 +1632,7 @@ int testOSPPTransactionReportUsage()
 
         printf("Reporting Usage for tranhandle2\n");
 
-        errorcode = OSPPTransactionReportUsage(tranhandle2, 
+        errorcode = OSPPTransactionReportUsage(tranhandle2,
             duration, call_start_time, call_end_time, call_alert_time, call_connect_time, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
             0,    /* Release Source */
             "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
@@ -1777,7 +1777,7 @@ int testOSPToolkitVersion()
 int test201()
 {
     int errorcode = 0;
-    
+
     errorcode = OSPPTransactionSetRoutingNumber(OSPVTransactionHandle, "RoutingNumber");
 
     return errorcode;
@@ -1786,28 +1786,28 @@ int test201()
 int test202()
 {
     int errorcode = 0;
-    
+
     errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_Q850, 1, "tc_q850");
     errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_H323, 2, "tc_h323");
     errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_SIP, 3, "tc_sip");
     errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_XMPP, 4, "tc_xmpp");
-    
+
     return errorcode;
 }
 
 int test203()
 {
     int errorcode = 0;
-	
+
     OSPPTransactionSetAssertedId(OSPVTransactionHandle, "AssertedId");
-	
+
     return errorcode;
 }
 
 int test204()
 {
     int errorcode = 0;
-    
+
     OSPPTransactionSetDestProtocol(OSPVTransactionHandle, OSPPDestProtocolGetPart("h323-LRQ"));
 
     return errorcode;
@@ -1816,17 +1816,17 @@ int test204()
 int test205()
 {
     int errorcode = 0;
-    
+
     OSPPTransactionSetForwardCodec(OSPVTransactionHandle, "g729");
     OSPPTransactionSetReverseCodec(OSPVTransactionHandle, "g723");
-    
+
     return errorcode;
 }
 
 int test206()
 {
     int errorcode = 0;
-    
+
     OSPT_CALL_ID *callid;
     callid = OSPPCallIdNew(8, (const unsigned char *)"incallid");
     errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_DIR_INBOUND, callid);
@@ -1834,34 +1834,34 @@ int test206()
     callid = OSPPCallIdNew(9, (const unsigned char *)"outcallid");
     errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, callid);
     OSPPCallIdDelete(&callid);
-    
+
     return errorcode;
 }
 
 int test207()
 {
     int errorcode = 0;
-    
+
     OSPPTransactionSetDelayMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 1);
     OSPPTransactionSetDelayMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 2);
-    
+
     return errorcode;
 }
 
 int test208()
 {
     int errorcode = 0;
-    
+
     OSPPTransactionSetJitterMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 3);
     OSPPTransactionSetJitterMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 4);
-    
+
     return errorcode;
 }
 
 int test209()
 {
     int errorcode = 0;
-    
+
     OSPPTransactionSetPackLossMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 5);
     OSPPTransactionSetPackLossMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 6);
 
@@ -1871,7 +1871,7 @@ int test209()
 int test210()
 {
     int errorcode = 0;
-    
+
     OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
 
     return errorcode;
@@ -1880,7 +1880,7 @@ int test210()
 int test211()
 {
     int errorcode = 0;
-    
+
     OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
 
     return errorcode;
@@ -1889,9 +1889,29 @@ int test211()
 int test212()
 {
     int errorcode = 0;
-    
+
     OSPPTransactionSetSrcNetworkId(OSPVTransactionHandle, "SrcNetworkId");
     OSPPTransactionSetDestNetworkId(OSPVTransactionHandle, "DestNetworkId");
+
+    return errorcode;
+}
+
+int test213()
+{
+    int errorcode = 0;
+
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_DIR_INBOUND, 7);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 8);
+
+    return errorcode;
+}
+
+int test214()
+{
+    int errorcode = 0;
+
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_DIR_INBOUND, 9);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 10);
 
     return errorcode;
 }
@@ -2172,6 +2192,12 @@ int testAPI(int apinumber)
     	break;
     case 212:
     	errorcode = test212();
+    	break;
+    case 213:
+    	errorcode = test213();
+    	break;
+    case 214:
+    	errorcode = test214();
     	break;
     default:
         errorcode = -1;
@@ -2518,26 +2544,26 @@ int main(int argc, char *argv[])
 *                 Phase IIIT: Validate authorization for T
 *                 Phase IV:   Report Usage for O and T
 *                 Phase V:    Delete transactions for O and T
-*                 
+*
 *                 Each Phase is timed in seconds.
-*                 
+*
 *                 Phases I, III, and V are non-blocking and a
 *                 single thread is used to perform theses operations.
 *
 *                 Phases II and IV are blocking and, in order to
 *                 increase performance by executing blocking requests
 *                 in parallel, NonBlockingQueueMonitor module is used.
-*                 
+*
 *                 NonBlockingQueueMonitor module allows consumers,
 *                 AuthorisationRequest and ReportUsage, to put requests
 *                 on the non-blocking queue.  These messages are later
 *                 processed by a pull of work threads that make blocking
 *                 ToolKit API calls in parallel.
-*                 
+*
 *                 Non-Blocking versions of AuthorisationRequest and
 *                 ReportUsage, in addition to the parameters that the
 *                 corresponding blocking functions take, take a handle
-*                 to the NonBlockingQueueMonitor module and pointer to the 
+*                 to the NonBlockingQueueMonitor module and pointer to the
 *                 place where return value from the blocking ToolKit API
 *                 should be stored.  Initially the return value is set to
 *                 OSPC_AUTH_REQUEST_BLOCK or OSPC_REPORT_USAGE_BLOCK
@@ -2551,8 +2577,8 @@ int main(int argc, char *argv[])
 *
 *                 In order to make sure that all Non-Blocking transactions have
 *                 completed, use the NonBlockingQueueMonitorBlockWhileQueueNotEmpty mehtod
-*                 
-* Returns       : 0 on Success 
+*
+* Returns       : 0 on Success
 *
 ********************************************************/
 OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
@@ -2633,7 +2659,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
         || (TTransactionHandles == NULL) || (NumOfDestinations == NULL) ||
         (TokenSizes == NULL)
         || (CallIds == NULL) || (CallIdsNum == NULL) || (CallIdsLen == NULL)
-        || (authorised == NULL)) 
+        || (authorised == NULL))
     {
         printf("Malloc Failed !! Exiting ! \n");
         exit(0);
@@ -2680,15 +2706,15 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
     errorcode = testOSPPProviderNew(&provHandle);
     printf("Thread Id: %lu, ProviderNew returned: %d, ProviderId: %d\n", (unsigned long int)thr_id, errorcode, provHandle);
 
-    /* 
+    /*
      * Phase I Creating new transactions / 2 (O + T) transactions for every call
      */
     printf("\n\n");
     printf("Thread Id: %lu, Phase I (Source and Destination): OSPPTransactionNew.\n", (unsigned long int)thr_id);
     time(&start_time);
     for (i = 0; i < num_test_calls; i++) {
-        if ((errorcode = OSPPTransactionNew(provHandle, &OTransactionHandles[i])) != OSPC_ERR_NO_ERROR || 
-            (errorcode = OSPPTransactionNew(provHandle, &TTransactionHandles[i])) != OSPC_ERR_NO_ERROR) 
+        if ((errorcode = OSPPTransactionNew(provHandle, &OTransactionHandles[i])) != OSPC_ERR_NO_ERROR ||
+            (errorcode = OSPPTransactionNew(provHandle, &TTransactionHandles[i])) != OSPC_ERR_NO_ERROR)
         {
             printf("OSPPTransactionNew failed, aborting the test.\n");
             exit(0);
@@ -2697,7 +2723,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
     time(&end_time);
     printf("Time elapsed <%ld>\n", end_time - start_time);
 
-    /* 
+    /*
      * Phase II Sending AuthorizationRequests
      */
     printf("\n\n");
@@ -2729,7 +2755,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
         }
     }
 
-    /* 
+    /*
      * Wait
      */
     printf("Waiting on queued up transactions\n");
@@ -2747,7 +2773,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
         }
     }
 
-    /* 
+    /*
      * Phase III (Source) Getting 1st destination
      */
     printf("\n\n");
@@ -2783,7 +2809,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
     time(&end_time);
     printf("Time elapsed <%ld>\n", end_time - start_time);
 
-    /* 
+    /*
      * Phase III (Destination) Validate destination
      */
     printf("\n\n");
@@ -2816,7 +2842,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
         }
     }
 
-    /* 
+    /*
      * Wait
      */
     printf("Waiting on queued up transactions\n");
@@ -2833,7 +2859,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
         }
     }
 
-    /* 
+    /*
      * Phase IV Sending 2 (Source and Destination) UsageIndications for each call
      */
     printf("\n\n");
@@ -2841,8 +2867,8 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
     time(&start_time);
     for (i = 0; i < num_test_calls; i++) {
         errorcode = OSPPTransactionReportUsage_nb(nbMonitor, 0,    /* DON'T BLOCK */
-            &OErrorCodes[i], 
-            OTransactionHandles[i], 
+            &OErrorCodes[i],
+            OTransactionHandles[i],
             duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
             3,    /* Release Source */
             "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
@@ -2858,8 +2884,8 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
         }
 
         errorcode = OSPPTransactionReportUsage_nb(nbMonitor, 0,    /* DON'T BLOCK */
-            &TErrorCodes[i], 
-            TTransactionHandles[i], 
+            &TErrorCodes[i],
+            TTransactionHandles[i],
             duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
             3,    /* Release Source */
             "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
@@ -2875,7 +2901,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
         }
     }
 
-    /* 
+    /*
      * Wait
      */
     printf("Waiting on queued up transactions\n");
@@ -2898,7 +2924,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
         }
     }
 
-    /* 
+    /*
      * Phase V Deleting transactions
      */
     printf("\n\n");
@@ -2907,7 +2933,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
     time(&start_time);
     for (i = 0; i < num_test_calls; i++) {
         if ((errorcode = OSPPTransactionDelete(OTransactionHandles[i])) != OSPC_ERR_NO_ERROR ||
-            (errorcode = OSPPTransactionDelete(TTransactionHandles[i])) != OSPC_ERR_NO_ERROR) 
+            (errorcode = OSPPTransactionDelete(TTransactionHandles[i])) != OSPC_ERR_NO_ERROR)
         {
             printf("OSPPTransactionDelete failed, aborting the test.\n");
             exit(0);
@@ -3022,7 +3048,7 @@ int testNonBlockingPerformanceTestForCapabilities()
         OErrorCodes[i] = 0;
     }
 
-    /* 
+    /*
      * Phase I Creating new transactions transactions for every call
      */
     printf("\n\n");
@@ -3037,7 +3063,7 @@ int testNonBlockingPerformanceTestForCapabilities()
     time(&end_time);
     printf("Time elapsed <%ld>\n", end_time - start_time);
 
-    /* 
+    /*
      * Phase II Sending CapabilitiesIndication
      */
     printf("\n\n");
@@ -3060,7 +3086,7 @@ int testNonBlockingPerformanceTestForCapabilities()
         }
     }
 
-    /* 
+    /*
      * Wait
      */
     printf("Waiting on queued up transactions\n");
@@ -3077,7 +3103,7 @@ int testNonBlockingPerformanceTestForCapabilities()
         }
     }
 
-    /* 
+    /*
      * Phase V Deleting transactions
      */
     printf("\n\n");

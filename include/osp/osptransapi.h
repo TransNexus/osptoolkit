@@ -76,7 +76,7 @@ extern "C" {
         OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                          /* In - Called number formaat : sip/e.164/url */
         unsigned ospvSizeOfCallId,                                          /* In - Size of Callid */
         const void *ospvCallId,                                             /* In - Call identifier */
-        OSPEFAILREASON ospvFailureReason, 
+        OSPEFAILREASON ospvFailureReason,
         unsigned *ospvSizeOfDetailLog,                                      /* In/Out - Max size of detail log\ Actual size of detail log */
         void *ospvDetailLog);                                               /* In - Pointer to storage for detail log */
     int OSPPTransactionSetDestinationCount(OSPTTRANHANDLE ospvTransaction,  /*In - Transaction handle */
@@ -103,13 +103,15 @@ extern "C" {
     int OSPPTransactionSetForwardCodec(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetReverseCodec(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetSessionId(OSPTTRANHANDLE, OSPE_DIRECTION, OSPT_CALL_ID *);
-    int OSPPTransactionSetCustomInfo(OSPTTRANHANDLE, unsigned, const char *);    
+    int OSPPTransactionSetCustomInfo(OSPTTRANHANDLE, unsigned, const char *);
     int OSPPTransactionSetDelayMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetJitterMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetPackLossMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetSrcNetworkId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetDestNetworkId(OSPTTRANHANDLE, const char *);
-        
+    int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
+    int OSPPTransactionSetMOS(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
+
 #ifdef __cplusplus
 }
 #endif
