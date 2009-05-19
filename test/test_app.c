@@ -1900,8 +1900,8 @@ int test213()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_DIR_INBOUND, 7);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 8);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_DIR_INBOUND, 7.65);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 8.765);
 
     return errorcode;
 }
@@ -1910,8 +1910,8 @@ int test214()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_DIR_INBOUND, 9);
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 10);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_DIR_INBOUND, 9.8765);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 10.98765);
 
     return errorcode;
 }

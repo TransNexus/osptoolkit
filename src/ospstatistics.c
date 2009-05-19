@@ -982,12 +982,12 @@ OSPTBOOL OSPPStatsHasValue(
     return ospvHas;
 }
 
-unsigned OSPPStatsGetValue(
+float OSPPStatsGetValue(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
     OSPE_DIRECTION ospvDirection)
 {
-    unsigned ospvValue = 0;
+    float ospvValue = 0;
 
     if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
         switch (ospvType) {
@@ -1161,6 +1161,28 @@ double OSPPStatsGetSquaresSum(
     return ospvSquaresSum;
 }
 
+void OSPPStatsSetValue(
+    OSPT_STATS *ospvStats,
+    OSPE_STATS ospvType,
+    OSPE_DIRECTION ospvDirection,
+    float ospvValue)
+{
+    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
+        switch (ospvType) {
+        case OSPC_STATS_RFACTOR:
+            ospvStats->ospmRFactor[ospvDirection].Value = ospvValue;
+            ospvStats->ospmRFactor[ospvDirection].HasValue = OSPC_SVALUE_VALUE;
+            break;
+        case OSPC_STATS_MOS:
+            ospvStats->ospmMOS[ospvDirection].Value = ospvValue;
+            ospvStats->ospmMOS[ospvDirection].HasValue = OSPC_SVALUE_VALUE;
+            break;
+        default:
+            break;
+        }
+    }
+}
+
 void OSPPStatsSetSamples(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
@@ -1317,28 +1339,6 @@ void OSPPStatsSetSquaresSum(
     }
 }
 
-void OSPPStatsSetRFactor(
-    OSPT_STATS *ospvStats,
-    OSPE_DIRECTION ospvDirection,
-    unsigned ospvRFactor)
-{
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        ospvStats->ospmRFactor[ospvDirection].Value = ospvRFactor;
-        ospvStats->ospmRFactor[ospvDirection].HasValue = OSPC_SVALUE_VALUE;
-    }
-}
-
-void OSPPStatsSetMOS(
-    OSPT_STATS *ospvStats,
-    OSPE_DIRECTION ospvDirection,
-    unsigned ospvMOS)
-{
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        ospvStats->ospmMOS[ospvDirection].Value = ospvMOS;
-        ospvStats->ospmMOS[ospvDirection].HasValue = OSPC_SVALUE_VALUE;
-    }
-}
-
 int OSPPStatsValueToElement(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
@@ -1387,7 +1387,7 @@ int OSPPStatsValueToElement(
 
     if (error == OSPC_ERR_NO_ERROR) {
         if (OSPPStatsHasValue(ospvStats, ospvType, ospvDirection, OSPC_SVALUE_VALUE)) {
-            error = OSPPMsgNumToElement(OSPPStatsGetValue(ospvStats, ospvType, ospvDirection),
+            error = OSPPMsgFloatToElement(OSPPStatsGetValue(ospvStats, ospvType, ospvDirection),
                 OSPPMsgElemGetName(etype), ospvElem);
             if ((error != OSPC_ERR_NO_ERROR) || (*ospvElem == OSPC_OSNULL)) {
                 error = OSPC_ERR_XML_NO_ELEMENT;

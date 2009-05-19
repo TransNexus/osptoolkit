@@ -4461,7 +4461,7 @@ int OSPPTransactionSetDestNetworkId(
 int OSPPTransactionSetRFactor(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     OSPE_DIRECTION ospvDirection,   /* In - Statistics direction */
-    unsigned ospvRFactor)           /* In - R-Factor */
+    float ospvRFactor)              /* In - R-Factor */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -4477,7 +4477,7 @@ int OSPPTransactionSetRFactor(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetRFactor(trans->Statistics, ospvDirection, ospvRFactor);
+            OSPPStatsSetValue(trans->Statistics, OSPC_STATS_RFACTOR, ospvDirection, ospvRFactor);
         }
     }
 
@@ -4487,7 +4487,7 @@ int OSPPTransactionSetRFactor(
 int OSPPTransactionSetMOS(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     OSPE_DIRECTION ospvDirection,   /* In - Statistics direction */
-    unsigned ospvMOS)               /* In - MOS */
+    float ospvMOS)                  /* In - MOS */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -4503,7 +4503,7 @@ int OSPPTransactionSetMOS(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetMOS(trans->Statistics, ospvDirection, ospvMOS);
+            OSPPStatsSetValue(trans->Statistics, OSPC_STATS_MOS, ospvDirection, ospvMOS);
         }
     }
 

@@ -52,7 +52,7 @@ typedef enum {
  */
 typedef struct {
     OSPTBOOL HasValue;
-    unsigned Value;
+    float Value;
     unsigned Samples;
     unsigned Minimum;
     unsigned Maximum;
@@ -111,21 +111,20 @@ extern "C" {
     void OSPPStatsSetSentStatistics(OSPT_STATS *, unsigned, signed);
     int OSPPStatsToElement(OSPT_STATS *, OSPT_XML_ELEM **);
     OSPTBOOL OSPPStatsHasValue(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
-    unsigned OSPPStatsGetValue(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
+    float OSPPStatsGetValue(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
     unsigned OSPPStatsGetSamples(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
     unsigned OSPPStatsGetMin(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
     unsigned OSPPStatsGetMax(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
     unsigned OSPPStatsGetMean(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
     float OSPPStatsGetVariance(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
     double OSPPStatsGetSquaresSum(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
+    void OSPPStatsSetValue(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, float);
     void OSPPStatsSetSamples(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
     void OSPPStatsSetMin(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
     void OSPPStatsSetMax(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
     void OSPPStatsSetMean(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
     void OSPPStatsSetVariance(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, float);
     void OSPPStatsSetSquaresSum(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, double);
-    void OSPPStatsSetRFactor(OSPT_STATS *, OSPE_DIRECTION, unsigned);
-    void OSPPStatsSetMOS(OSPT_STATS *, OSPE_DIRECTION, unsigned);
     int OSPPStatsValueToElement(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus

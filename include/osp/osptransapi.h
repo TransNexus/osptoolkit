@@ -109,8 +109,8 @@ extern "C" {
     int OSPPTransactionSetPackLossMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
     int OSPPTransactionSetSrcNetworkId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetDestNetworkId(OSPTTRANHANDLE, const char *);
-    int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
-    int OSPPTransactionSetMOS(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
+    int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_DIRECTION, float);
+    int OSPPTransactionSetMOS(OSPTTRANHANDLE, OSPE_DIRECTION, float);
 
 #ifdef __cplusplus
 }
