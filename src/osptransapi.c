@@ -4328,9 +4328,9 @@ int OSPPTransactionSetCustomInfo(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-        	if (trans->CustomInfo[ospvIndex] == OSPC_OSNULL) {
+            if (trans->CustomInfo[ospvIndex] == OSPC_OSNULL) {
                 OSPM_MALLOC(trans->CustomInfo[ospvIndex], char, OSPC_SIZE_CUSTINFO);
-        	}
+            }
             if (trans->CustomInfo[ospvIndex] != OSPC_OSNULL) {
                 OSPM_STRCPY(trans->CustomInfo[ospvIndex], ospvInfo);
             } else {

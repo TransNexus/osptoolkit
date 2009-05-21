@@ -486,3 +486,8 @@ Version 3.5.0
 * Added CDR role type for RADIUS.
 * Added support for ACME.
 * Added custom info.
+---------------------------------------------------------------------------
+
+Version 3.5.1
+* Added reporting network ID in UsageInd.
+* Added support for R-Factor and MOS.

@@ -331,7 +331,7 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
             if (*ospvElem == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
             } else {
-            	if ((ospvAttrType != OSPC_OSNULL) && (ospvAttrType[0] != '\0')) {
+                if ((ospvAttrType != OSPC_OSNULL) && (ospvAttrType[0] != '\0')) {
                     attr = OSPPXMLAttrNew(ospvAttrType, ospvAttrValue);
                     if (attr == OSPC_OSNULL) {
                         OSPPXMLElemDelete(ospvElem);
@@ -339,7 +339,7 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
                     } else {
                         OSPPXMLElemAddAttr(*ospvElem, attr);
                     }
-            	}
+                }
                 if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvUseBase64 == OSPC_TRUE)) {
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_ENCODING), OSPPAltInfoTypeGetName(OSPC_ALTINFO_BASE64));
                     if (attr == OSPC_OSNULL) {
@@ -348,7 +348,7 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
                     } else {
                         OSPPXMLElemAddAttr(*ospvElem, attr);
                    }
-                }            	
+                }
             }
         }
 

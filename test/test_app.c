@@ -2158,47 +2158,47 @@ int testAPI(int apinumber)
         errorcode = testNonBlockingPerformanceTestForCapabilities();
         break;
     case 201:
-    	errorcode = test201();
-    	break;
+        errorcode = test201();
+        break;
     case 202:
-    	errorcode = test202();
-    	break;
+        errorcode = test202();
+        break;
     case 203:
-    	errorcode = test203();
-    	break;
+        errorcode = test203();
+        break;
     case 204:
-    	errorcode = test204();
-    	break;
+        errorcode = test204();
+        break;
     case 205:
-    	errorcode = test205();
-    	break;
+        errorcode = test205();
+        break;
     case 206:
-    	errorcode = test206();
-    	break;
+        errorcode = test206();
+        break;
     case 207:
-    	errorcode = test207();
-    	break;
+        errorcode = test207();
+        break;
     case 208:
-    	errorcode = test208();
-    	break;
+        errorcode = test208();
+        break;
     case 209:
-    	errorcode = test209();
-    	break;
+        errorcode = test209();
+        break;
     case 210:
-    	errorcode = test210();
-    	break;
+        errorcode = test210();
+        break;
     case 211:
-    	errorcode = test211();
-    	break;
+        errorcode = test211();
+        break;
     case 212:
-    	errorcode = test212();
-    	break;
+        errorcode = test212();
+        break;
     case 213:
-    	errorcode = test213();
-    	break;
+        errorcode = test213();
+        break;
     case 214:
-    	errorcode = test214();
-    	break;
+        errorcode = test214();
+        break;
     default:
         errorcode = -1;
     }
