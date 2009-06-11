@@ -110,7 +110,7 @@ typedef struct _OSPTTRANS {
     OSPE_DEST_PROTOCOL DestProtocol;
     char ForwardCodec[OSPC_SIZE_CODEC];
     char ReverseCodec[OSPC_SIZE_CODEC];
-    OSPT_CALL_ID *SessionId[OSPC_DIR_NUMBER];
+    OSPT_CALL_ID *SessionId[OSPC_CLEG_NUMBER];
     char *CustomInfo[OSPC_MAX_INDEX];
     /* These two network ID's are only used to report usage */
     char UsageSrcNetworkId[OSPC_SIZE_NORID];

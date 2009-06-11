@@ -1774,7 +1774,7 @@ int testOSPToolkitVersion()
     return 0;
 }
 
-int test201()
+int testRoutingNumber()
 {
     int errorcode = 0;
 
@@ -1783,7 +1783,7 @@ int test201()
     return errorcode;
 }
 
-int test202()
+int testTermCause()
 {
     int errorcode = 0;
 
@@ -1795,7 +1795,7 @@ int test202()
     return errorcode;
 }
 
-int test203()
+int testAssertedId()
 {
     int errorcode = 0;
 
@@ -1804,7 +1804,7 @@ int test203()
     return errorcode;
 }
 
-int test204()
+int testDestProtocol()
 {
     int errorcode = 0;
 
@@ -1813,7 +1813,7 @@ int test204()
     return errorcode;
 }
 
-int test205()
+int testCodec()
 {
     int errorcode = 0;
 
@@ -1823,70 +1823,7 @@ int test205()
     return errorcode;
 }
 
-int test206()
-{
-    int errorcode = 0;
-
-    OSPT_CALL_ID *callid;
-    callid = OSPPCallIdNew(8, (const unsigned char *)"incallid");
-    errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_DIR_INBOUND, callid);
-    OSPPCallIdDelete(&callid);
-    callid = OSPPCallIdNew(9, (const unsigned char *)"outcallid");
-    errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, callid);
-    OSPPCallIdDelete(&callid);
-
-    return errorcode;
-}
-
-int test207()
-{
-    int errorcode = 0;
-
-    OSPPTransactionSetDelayMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 1);
-    OSPPTransactionSetDelayMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 2);
-
-    return errorcode;
-}
-
-int test208()
-{
-    int errorcode = 0;
-
-    OSPPTransactionSetJitterMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 3);
-    OSPPTransactionSetJitterMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 4);
-
-    return errorcode;
-}
-
-int test209()
-{
-    int errorcode = 0;
-
-    OSPPTransactionSetPackLossMean(OSPVTransactionHandle, OSPC_DIR_INBOUND, 5);
-    OSPPTransactionSetPackLossMean(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 6);
-
-    return errorcode;
-}
-
-int test210()
-{
-    int errorcode = 0;
-
-    OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
-
-    return errorcode;
-}
-
-int test211()
-{
-    int errorcode = 0;
-
-    OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
-
-    return errorcode;
-}
-
-int test212()
+int testNetworkId()
 {
     int errorcode = 0;
 
@@ -1896,22 +1833,134 @@ int test212()
     return errorcode;
 }
 
-int test213()
+int testCallId()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_DIR_INBOUND, 7.65);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 8.765);
+    OSPT_CALL_ID *callid;
+    callid = OSPPCallIdNew(8, (const unsigned char *)"incallid");
+    errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_CLEG_INBOUND, callid);
+    OSPPCallIdDelete(&callid);
+    callid = OSPPCallIdNew(9, (const unsigned char *)"outcallid");
+    errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_CLEG_OUTBOUND, callid);
+    OSPPCallIdDelete(&callid);
 
     return errorcode;
 }
 
-int test214()
+int testCustomInfo()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_DIR_INBOUND, 9.8765);
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_DIR_OUTBOUND, 10.98765);
+    OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
+    OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
+
+    return errorcode;
+}
+
+int testStatsReporter()
+{
+    int errorcode = 0;
+
+    OSPPTransactionSetReporter(OSPVTransactionHandle, OSPC_SREPORTER_CALLING);
+
+    return errorcode;
+}
+
+int testStatsLost()
+{
+    int errorcode = 0;
+
+    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1, 2);
+    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 3, 4);
+    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 5, -1);
+    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, -1, 6);
+    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, -1, -1);
+    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 7, 8);
+
+    return errorcode;
+}
+
+int testStatsJitter()
+{
+    int errorcode = 0;
+
+    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1, 2, 3, 4, 5);
+    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, -1, 6, 7, 8, 9);
+    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 10, -1, 11, 12, 13);
+    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, 14, 15, -1, 16, 17);
+    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, 18, 19, 20, -1, 21);
+    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 22, 23, 24, 25, -1);
+
+    return errorcode;
+}
+
+int testStatsDelay()
+{
+    int errorcode = 0;
+
+    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1, 2, 3, 4, 5);
+    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, -1, 6, 7, 8, 9);
+    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 10, -1, 11, 12, 13);
+    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, 14, 15, -1, 16, 17);
+    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, 18, 19, 20, -1, 21);
+    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 22, 23, 24, 25, -1);
+
+    return errorcode;
+}
+
+int testStatsOctets()
+{
+    int errorcode = 0;
+
+    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1);
+    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2);
+    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, -1);
+    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, 3);
+    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, 4);
+    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, -1);
+
+    return errorcode;
+}
+
+int testStatsPackets()
+{
+    int errorcode = 0;
+
+    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1);
+    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2);
+    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 3);
+    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, -1);
+    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, -1);
+    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 4);
+
+    return errorcode;
+}
+
+int testStatsRFactor()
+{
+    int errorcode = 0;
+
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, -1);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, 3);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, 4);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, -1);
+
+    return errorcode;
+}
+
+int testStatsMOS()
+{
+    int errorcode = 0;
+
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 3);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, -1);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, -1);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 4);
 
     return errorcode;
 }
@@ -2158,46 +2207,52 @@ int testAPI(int apinumber)
         errorcode = testNonBlockingPerformanceTestForCapabilities();
         break;
     case 201:
-        errorcode = test201();
+        errorcode = testRoutingNumber();
         break;
     case 202:
-        errorcode = test202();
+        errorcode = testTermCause();
         break;
     case 203:
-        errorcode = test203();
+        errorcode = testAssertedId();
         break;
     case 204:
-        errorcode = test204();
+        errorcode = testDestProtocol();
         break;
     case 205:
-        errorcode = test205();
+        errorcode = testCodec();
         break;
     case 206:
-        errorcode = test206();
+        errorcode = testNetworkId();
         break;
     case 207:
-        errorcode = test207();
-        break;
-    case 208:
-        errorcode = test208();
-        break;
-    case 209:
-        errorcode = test209();
+        errorcode = testCallId();
         break;
     case 210:
-        errorcode = test210();
+        errorcode = testCustomInfo();
         break;
-    case 211:
-        errorcode = test211();
+    case 220:
+        errorcode = testStatsReporter();
         break;
-    case 212:
-        errorcode = test212();
+    case 221:
+        errorcode = testStatsLost();
         break;
-    case 213:
-        errorcode = test213();
+    case 222:
+        errorcode = testStatsJitter();
         break;
-    case 214:
-        errorcode = test214();
+    case 223:
+        errorcode = testStatsDelay();
+        break;
+    case 224:
+        errorcode = testStatsOctets();
+        break;
+    case 225:
+        errorcode = testStatsPackets();
+        break;
+    case 226:
+        errorcode = testStatsRFactor();
+        break;
+    case 227:
+        errorcode = testStatsMOS();
         break;
     default:
         errorcode = -1;

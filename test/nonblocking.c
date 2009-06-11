@@ -57,10 +57,10 @@ typedef struct _NBUSEIND {
     unsigned ospvPostDialDelay;                         /* In - PDD */
     unsigned ospvReleaseSource;                         /* In - Rel Src */
     char ospvConferenceId[OSPC_CONFIDSIZE];             /* In - ConferenceId */
-    unsigned ospvLossPacketsSent;                       /* In - Packets not received by peer */
-    signed ospvLossFractionSent;                        /* In - Fraction of packets not received by peer */
-    unsigned ospvLossPacketsReceived;                   /* In - Packets not received that were expected */
-    signed ospvLossFractionReceived;                    /* In - Fraction of packets expected but not received */
+    int ospvLossPacketsSent;                            /* In - Packets not received by peer */
+    int ospvLossFractionSent;                           /* In - Fraction of packets not received by peer */
+    int ospvLossPacketsReceived;                        /* In - Packets not received that were expected */
+    int ospvLossFractionReceived;                       /* In - Fraction of packets expected but not received */
     unsigned *ospvSizeOfDetailLog;                      /* In\Out - Max size of detail log \ Actual size of detail log */
     void *ospvDetailLog;                                /* In\Out - Location of detail log storage */
 } NBUSEIND;
@@ -186,7 +186,7 @@ int deleteNBDATA(NBDATA * nbData)
 
 int NonBlockingQueueMonitorNew(NBMONITOR **nbMonitor,
     unsigned NumberOfWorkThreads,
-    unsigned MaxQueSize, 
+    unsigned MaxQueSize,
     unsigned MaxQueWaitMS)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -385,7 +385,7 @@ OSPTTHREADRETURN WorkThread(void *arg)
                 TimeToExit = 1;
                 break;
             case MESSAGE_TYPE_AUTH_REQ:    //  AuthorisationRequest
-                /* 
+                /*
                  * Make sure that the request has not expired
                  */
                 if (QTime < nbMonitor->MaxQueWaitMS) {
@@ -439,7 +439,7 @@ OSPTTHREADRETURN WorkThread(void *arg)
                     transaction->Message.CapInd.ospvDetailLog);
                 break;
             case MESSAGE_TYPE_VALIDATE_AUTH:    //  ValidationRequest
-                /* 
+                /*
                  * Make sure that the request has not expired
                  */
                 if (QTime < nbMonitor->MaxQueWaitMS) {
@@ -499,7 +499,7 @@ OSPTTHREADRETURN WorkThread(void *arg)
             }
 
             /*
-             *  This is a bit odd.  If the caller wants to wait, 
+             *  This is a bit odd.  If the caller wants to wait,
              *    it is responsible for deleting nbData.
              *  Oterwise, the work thread will clean up
              */
@@ -601,7 +601,7 @@ int OSPPTransactionValidateAuthorisation_nb(NBMONITOR *nbMonitor,   /* In - NBMo
 
             if (OSPC_ERR_NO_ERROR == errorcode) {
                 /*
-                 *  This is a bit odd.  If the caller wants to wait, 
+                 *  This is a bit odd.  If the caller wants to wait,
                  *    it is responsible for deleting nbData.
                  *  Oterwise, the work thread will clean up
                  */
@@ -695,7 +695,7 @@ int OSPPTransactionRequestAuthorisation_nb(NBMONITOR *nbMonitor,    /* In - NBMo
 
             if (OSPC_ERR_NO_ERROR == errorcode) {
                 /*
-                 *  This is a bit odd.  If the caller wants to wait, 
+                 *  This is a bit odd.  If the caller wants to wait,
                  *    it is responsible for deleting nbData.
                  *  Oterwise, the work thread will clean up
                  */
@@ -723,25 +723,26 @@ int OSPPTransactionRequestAuthorisation_nb(NBMONITOR *nbMonitor,    /* In - NBMo
     return errorcode;
 }
 
-int OSPPTransactionReportUsage_nb(NBMONITOR *nbMonitor,     /* In - NBMonitor Pointer   */
-    int ShouldBlock,                                        /* In - 1 WILL block, 0 - will NOT block */
-    int *OSPErrorCode,                                      /* Out- Error code returned by the blocking function */
-    OSPTTRANHANDLE ospvTransaction,                         /* In - Transaction handle */
-    unsigned ospvDuration,                                  /* In - Length of call */
-    OSPTTIME ospvStartTime,                                 /* In - StartTime of call */
-    OSPTTIME ospvEndTime,                                   /* In - EndTime of call */
-    OSPTTIME ospvAlertTime,                                 /* In - AlertTime of call */
-    OSPTTIME ospvConnectTime,                               /* In - ConnectTime of call */
-    OSPTBOOL ospvHasPDDInfo,                                /* In - Is PDD info available */
-    unsigned ospvPostDialDelay,                             /* In - PDD */
-    unsigned ospvReleaseSource,                             /* In - Release Src */
-    const char *ospvConferenceId,                           /* In - ConferenceId */
-    unsigned ospvLossPacketsSent,                           /* In - Packets not received by peer */
-    signed ospvLossFractionSent,                            /* In - Fraction of packets not received by peer */
-    unsigned ospvLossPacketsReceived,                       /* In - Packets not received that were expected */
-    signed ospvLossFractionReceived,                        /* In - Fraction of packets expected but not received */
-    unsigned *ospvSizeOfDetailLog,                          /* In/Out - Max size of detail log \ Actual size of detail log */
-    void *ospvDetailLog)                                    /* Out - Pointer to detail log storage */
+int OSPPTransactionReportUsage_nb(
+    NBMONITOR *nbMonitor,           /* In - NBMonitor Pointer   */
+    int ShouldBlock,                /* In - 1 WILL block, 0 - will NOT block */
+    int *OSPErrorCode,              /* Out- Error code returned by the blocking function */
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvDuration,          /* In - Length of call */
+    OSPTTIME ospvStartTime,         /* In - StartTime of call */
+    OSPTTIME ospvEndTime,           /* In - EndTime of call */
+    OSPTTIME ospvAlertTime,         /* In - AlertTime of call */
+    OSPTTIME ospvConnectTime,       /* In - ConnectTime of call */
+    OSPTBOOL ospvHasPDDInfo,        /* In - Is PDD info available */
+    unsigned ospvPostDialDelay,     /* In - PDD */
+    unsigned ospvReleaseSource,     /* In - Release Src */
+    const char *ospvConferenceId,   /* In - ConferenceId */
+    int ospvLossPacketsSent,        /* In - Packets not received by peer */
+    int ospvLossFractionSent,       /* In - Fraction of packets not received by peer */
+    int ospvLossPacketsReceived,    /* In - Packets not received that were expected */
+    int ospvLossFractionReceived,   /* In - Fraction of packets expected but not received */
+    unsigned *ospvSizeOfDetailLog,  /* In/Out - Max size of detail log \ Actual size of detail log */
+    void *ospvDetailLog)            /* Out - Pointer to detail log storage */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     NBDATA *nbData = OSPC_OSNULL;
@@ -785,7 +786,7 @@ int OSPPTransactionReportUsage_nb(NBMONITOR *nbMonitor,     /* In - NBMonitor Po
 
             if (OSPC_ERR_NO_ERROR == errorcode) {
                 /*
-                 *  This is a bit odd.  If the caller wants to wait, 
+                 *  This is a bit odd.  If the caller wants to wait,
                  *    it is responsible for deleting nbData.
                  *  Oterwise, the work thread will clean up
                  */
@@ -867,7 +868,7 @@ int OSPPTransactionIndicateCapabilities_nb(NBMONITOR *nbMonitor,    /* In - NBMo
 
             if (OSPC_ERR_NO_ERROR == errorcode) {
                 /*
-                 *  This is a bit odd.  If the caller wants to wait, 
+                 *  This is a bit odd.  If the caller wants to wait,
                  *    it is responsible for deleting nbData.
                  *  Oterwise, the work thread will clean up
                  */

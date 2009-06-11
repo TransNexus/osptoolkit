@@ -36,13 +36,13 @@ void OSPPStatsDelete(
 }
 
 /* Get value for fractionreceived */
-signed OSPPStatsGetFracReceived(
+unsigned OSPPStatsGetFracReceived(
     OSPT_STATS *ospvStats)
 {
-    signed fracrecvd = 0;
+    unsigned fracrecvd = 0;
 
-    if (ospvStats != OSPC_OSNULL) {
-        fracrecvd = ospvStats->ospmLossFractionReceived;
+    if ((ospvStats != OSPC_OSNULL) || (ospvStats->ospmLossReceived.hasvalue & OSPC_SVALUE_FRACTION) != 0) {
+        fracrecvd = ospvStats->ospmLossReceived.fraction;
     }
 
     return fracrecvd;
@@ -55,7 +55,7 @@ unsigned OSPPStatsGetOneWayMinimum(
     unsigned min = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        min = ospvStats->ospmOneWay.Minimum;
+        min = ospvStats->ospmOneWay.minimum;
     }
 
     return min;
@@ -68,7 +68,7 @@ unsigned OSPPStatsGetOneWayMean(
     unsigned mean = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        mean = ospvStats->ospmOneWay.Mean;
+        mean = ospvStats->ospmOneWay.mean;
     }
 
     return mean;
@@ -81,7 +81,7 @@ float OSPPStatsGetOneWayVariance(
     float var = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        var = ospvStats->ospmOneWay.Variance;
+        var = ospvStats->ospmOneWay.variance;
     }
 
     return var;
@@ -94,7 +94,7 @@ unsigned OSPPStatsGetOneWaySamples(
     unsigned samp = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        samp = ospvStats->ospmOneWay.Samples;
+        samp = ospvStats->ospmOneWay.samples;
     }
 
     return samp;
@@ -107,20 +107,20 @@ unsigned OSPPStatsGetPktReceived(
     unsigned pktsrecvd = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        pktsrecvd = ospvStats->ospmLossPacketsReceived;
+        pktsrecvd = ospvStats->ospmLossReceived.packets;
     }
 
     return pktsrecvd;
 }
 
 /* Get value for fractionsent */
-signed OSPPStatsGetFracSent(
+unsigned OSPPStatsGetFracSent(
     OSPT_STATS *ospvStats)
 {
-    signed fracsent = 0;
+    unsigned fracsent = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        fracsent = ospvStats->ospmLossFractionSent;
+        fracsent = ospvStats->ospmLossSent.fraction;
     }
 
     return fracsent;
@@ -133,7 +133,7 @@ unsigned OSPPStatsGetPktSent(
     unsigned pktssent = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        pktssent = ospvStats->ospmLossPacketsSent;
+        pktssent = ospvStats->ospmLossSent.packets;
     }
 
     return pktssent;
@@ -146,7 +146,7 @@ unsigned OSPPStatsGetRoundTripMinimum(
     unsigned min = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        min = ospvStats->ospmRoundTrip.Minimum;
+        min = ospvStats->ospmRoundTrip.minimum;
     }
 
     return min;
@@ -159,7 +159,7 @@ unsigned OSPPStatsGetRoundTripMean(
     unsigned mean = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        mean = ospvStats->ospmRoundTrip.Mean;
+        mean = ospvStats->ospmRoundTrip.mean;
     }
 
     return mean;
@@ -172,7 +172,7 @@ float OSPPStatsGetRoundTripVariance(
     float var = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        var = ospvStats->ospmRoundTrip.Variance;
+        var = ospvStats->ospmRoundTrip.variance;
     }
 
     return var;
@@ -185,7 +185,7 @@ unsigned OSPPStatsGetRoundTripSamples(
     unsigned samp = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        samp = ospvStats->ospmRoundTrip.Samples;
+        samp = ospvStats->ospmRoundTrip.samples;
     }
 
     return samp;
@@ -196,7 +196,7 @@ OSPTBOOL OSPPStatsHasLossReceived(
     OSPT_STATS *ospvStats)
 {
     if (ospvStats != OSPC_OSNULL) {
-        return ospvStats->ospmHasReceivedStats;
+        return ((ospvStats->ospmLossReceived.packets >=0) || (ospvStats->ospmLossReceived.fraction >= 0));
     } else {
         return OSPC_FALSE;
     }
@@ -207,7 +207,7 @@ OSPTBOOL OSPPStatsHasLossSent(
     OSPT_STATS *ospvStats)
 {
     if (ospvStats != OSPC_OSNULL) {
-        return ospvStats->ospmHasSentStats;
+        return ((ospvStats->ospmLossSent.packets >= 0) || (ospvStats->ospmLossSent.fraction >= 0));
     } else {
         return OSPC_FALSE;
     }
@@ -218,7 +218,7 @@ OSPTBOOL OSPPStatsHasOneWay(
     OSPT_STATS *ospvStats)
 {
     if (ospvStats != OSPC_OSNULL) {
-        return ospvStats->ospmOneWay.HasValue;
+        return ospvStats->ospmOneWay.hasvalue;
     } else {
         return OSPC_FALSE;
     }
@@ -229,7 +229,7 @@ OSPTBOOL OSPPStatsHasRoundTrip(
     OSPT_STATS *ospvStats)
 {
     if (ospvStats != OSPC_OSNULL) {
-        return ospvStats->ospmRoundTrip.HasValue;
+        return ospvStats->ospmRoundTrip.hasvalue;
     } else {
         return OSPC_FALSE;
     }
@@ -412,11 +412,22 @@ int OSPPStatsLossSentToElement(
 /* Create new Statistics Structure */
 OSPT_STATS *OSPPStatsNew(void)
 {
+    OSPE_STATS_RANGE range;
+    OSPE_STATS_FLOW flow;
     OSPT_STATS *ospvStats = OSPC_OSNULL;
 
     OSPM_MALLOC(ospvStats, OSPT_STATS, sizeof(OSPT_STATS));
     if (ospvStats != OSPC_OSNULL) {
         OSPM_MEMSET(ospvStats, 0, sizeof(OSPT_STATS));
+
+        for (range = OSPC_SRANGE_PEERPEER; range < OSPC_SRANGE_NUMBER; range++) {
+            for (flow = OSPC_SFLOW_DOWNSTREAM; flow < OSPC_SFLOW_NUMBER; flow++) {
+                ospvStats->ospmOctets[range][flow] = -1;
+                ospvStats->ospmPackets[range][flow] = -1;
+                ospvStats->ospmRFactor[range][flow] = -1;
+                ospvStats->ospmMOS[range][flow] = -1;
+            }
+        }
     }
 
     return ospvStats;
@@ -692,20 +703,19 @@ int OSPPStatsRoundTripToElement(
 
 /* Report statistics for this transaction. */
 int OSPPStatsReportUsage(
-    OSPT_STATS **ospvStats,             /* In - pter to place for stats struct */
-    unsigned ospvLossPacketsSent,       /* In  */
-    signed ospvLossFractionSent,        /* In  */
-    unsigned ospvLossPacketsReceived,   /* In  */
-    signed ospvLossFractionReceived)    /* In  */
+    OSPT_STATS **ospvStats,         /* In - pter to place for stats struct */
+    int ospvLossPacketsSent,        /* In  */
+    int ospvLossFractionSent,       /* In  */
+    int ospvLossPacketsReceived,    /* In  */
+    int ospvLossFractionReceived)   /* In  */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 
     /*
-     * If LossFractionSent and received vars are negative, no statistics are
-     * reported.
+     * If variables are negative, no statistics are reported.
      * Just return with no error
      */
-    if (ospvLossFractionSent >= 0) {
+    if (ospvLossFractionSent >= 0 || (ospvLossPacketsSent >= 0)) {
         if (*ospvStats == OSPC_OSNULL) {
             *ospvStats = OSPPStatsNew();
             if (*ospvStats == OSPC_OSNULL) {
@@ -718,7 +728,7 @@ int OSPPStatsReportUsage(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        if (ospvLossFractionReceived >= 0) {
+        if ((ospvLossFractionReceived >= 0) || (ospvLossPacketsReceived >= 0)) {
             if (*ospvStats == OSPC_OSNULL) {
                 *ospvStats = OSPPStatsNew();
                 if (*ospvStats == OSPC_OSNULL) {
@@ -741,26 +751,24 @@ int OSPPStatsReportUsage(
 /* Set Received statistics */
 void OSPPStatsSetReceivedStatistics(
     OSPT_STATS *ospvStats,
-    unsigned ospvLossPacketsReceived,
-    signed ospvLossFractionReceived)
+    int ospvLossPacketsReceived,
+    int ospvLossFractionReceived)
 {
     if (ospvStats != OSPC_OSNULL) {
-        ospvStats->ospmHasReceivedStats = OSPC_TRUE;
-        ospvStats->ospmLossPacketsReceived = ospvLossPacketsReceived;
-        ospvStats->ospmLossFractionReceived = ospvLossFractionReceived;
+        ospvStats->ospmLossReceived.packets = ospvLossPacketsReceived;
+        ospvStats->ospmLossReceived.fraction = ospvLossFractionReceived;
     }
 }
 
 /* Set Sent statistics */
 void OSPPStatsSetSentStatistics(
     OSPT_STATS *ospvStats,
-    unsigned ospvLossPacketsSent,
-    signed ospvLossFractionSent)
+    int ospvLossPacketsSent,
+    int ospvLossFractionSent)
 {
     if (ospvStats != OSPC_OSNULL) {
-        ospvStats->ospmHasSentStats = OSPC_TRUE;
-        ospvStats->ospmLossPacketsSent = ospvLossPacketsSent;
-        ospvStats->ospmLossFractionSent = ospvLossFractionSent;
+        ospvStats->ospmLossSent.packets = ospvLossPacketsSent;
+        ospvStats->ospmLossSent.fraction = ospvLossFractionSent;
     }
 }
 
@@ -770,6 +778,10 @@ int OSPPStatsToElement(
     OSPT_XML_ELEM **ospvElem)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
+    OSPE_STATS_REPORTER reporter;
+    OSPE_STATS type;
+    OSPE_STATS_RANGE range;
+    OSPE_STATS_FLOW flow;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
@@ -787,10 +799,30 @@ int OSPPStatsToElement(
         if (*ospvElem == OSPC_OSNULL) {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+            switch (OSPPStatsGetReporter(ospvStats)) {
+            case OSPC_SREPORTER_CALLING:
+                reporter = OSPC_ALTINFO_CALLING;
+                break;
+            case OSPC_SREPORTER_CALLED:
+                reporter = OSPC_ALTINFO_CALLED;
+                break;
+            case OSPC_SREPORTER_PROXY:
+            default:
+                reporter = OSPC_ALTINFO_PROXY;
+                break;
+            }
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_REPORTER), OSPPAltInfoTypeGetName(reporter));
             if (attr != OSPC_OSNULL) {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
+
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr != OSPC_OSNULL) {
+                    OSPPXMLElemAddAttr(*ospvElem, attr);
+                    attr = OSPC_OSNULL;
+                } else {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                }
             } else {
                 errorcode = OSPC_ERR_XML_NO_ATTR;
             }
@@ -842,91 +874,14 @@ int OSPPStatsToElement(
         }
     }
 
-    /* Inbound Delay */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPPStatsValueToElement(ospvStats, OSPC_STATS_DELAY, OSPC_DIR_INBOUND, &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-            elem = OSPC_OSNULL;
+    /* Lost/Jitter/Delay/Octets/Packets/RFactor/MOS */
+    for (range = OSPC_SRANGE_PEERPEER; (range < OSPC_SRANGE_NUMBER) && (errorcode == OSPC_ERR_NO_ERROR); range++) {
+           for (type = OSPC_STATS_LOST; (type < OSPC_STATS_NUMBER) && (errorcode == OSPC_ERR_NO_ERROR); type++) {
+            for (flow = OSPC_SFLOW_DOWNSTREAM; (flow < OSPC_SFLOW_NUMBER) && (errorcode == OSPC_ERR_NO_ERROR); flow++) {
+                errorcode = OSPPStatsValueToElement(ospvStats, type, range, flow, &elem);
+            }
         }
-    }
-
-    /* Outbound Delay */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPPStatsValueToElement(ospvStats, OSPC_STATS_DELAY, OSPC_DIR_OUTBOUND, &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-            elem = OSPC_OSNULL;
-        }
-    }
-
-    /* Inbound Jitter */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPPStatsValueToElement(ospvStats, OSPC_STATS_JITTER, OSPC_DIR_INBOUND, &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-            elem = OSPC_OSNULL;
-        }
-    }
-
-    /* Outbound Jitter */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPPStatsValueToElement(ospvStats, OSPC_STATS_JITTER, OSPC_DIR_OUTBOUND, &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-            elem = OSPC_OSNULL;
-        }
-    }
-
-    /* Inbound PackLoss */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPPStatsValueToElement(ospvStats, OSPC_STATS_PACKLOSS, OSPC_DIR_INBOUND, &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-            elem = OSPC_OSNULL;
-        }
-    }
-
-    /* Outbound PackLoss */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPPStatsValueToElement(ospvStats, OSPC_STATS_PACKLOSS, OSPC_DIR_OUTBOUND, &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-            elem = OSPC_OSNULL;
-        }
-    }
-
-    /* Inbound R-Factor */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPPStatsValueToElement(ospvStats, OSPC_STATS_RFACTOR, OSPC_DIR_INBOUND, &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-            elem = OSPC_OSNULL;
-        }
-    }
-
-    /* Outbound R-Factor */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPPStatsValueToElement(ospvStats, OSPC_STATS_RFACTOR, OSPC_DIR_OUTBOUND, &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-            elem = OSPC_OSNULL;
-        }
-    }
-
-    /* Inbound MOS */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPPStatsValueToElement(ospvStats, OSPC_STATS_MOS, OSPC_DIR_INBOUND, &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-            elem = OSPC_OSNULL;
-        }
-    }
-
-    /* Outbound MOS */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPPStatsValueToElement(ospvStats, OSPC_STATS_MOS, OSPC_DIR_OUTBOUND, &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (elem != OSPC_OSNULL)) {
             OSPPXMLElemAddChild(*ospvElem, elem);
             elem = OSPC_OSNULL;
         }
@@ -952,27 +907,37 @@ int OSPPStatsToElement(
 OSPTBOOL OSPPStatsHasValue(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection,
+    OSPE_STATS_RANGE ospvRange,
+    OSPE_STATS_FLOW ospvFlow,
     unsigned ospvValueFlags)
 {
     OSPTBOOL ospvHas = OSPC_FALSE;
 
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
+    if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvRange == OSPC_SRANGE_PEERPEER) || (ospvRange == OSPC_SRANGE_PEERPROXY) || (ospvRange == OSPC_SRANGE_PROXYPEER)) &&
+        ((ospvFlow == OSPC_SFLOW_DOWNSTREAM) || (ospvFlow == OSPC_SFLOW_UPSTREAM)))
+    {
         switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvHas = ((ospvStats->ospmDelay[ospvDirection].HasValue & ospvValueFlags & OSPC_SVALUE_FULL) != 0);
+        case OSPC_STATS_LOST:
+            ospvHas = ((ospvStats->ospmLost[ospvRange][ospvFlow].hasvalue & ospvValueFlags & OSPC_SVALUE_PACK) != 0);
             break;
         case OSPC_STATS_JITTER:
-            ospvHas = ((ospvStats->ospmJitter[ospvDirection].HasValue & ospvValueFlags & OSPC_SVALUE_FULL) != 0);
+            ospvHas = ((ospvStats->ospmJitter[ospvRange][ospvFlow].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
             break;
-        case OSPC_STATS_PACKLOSS:
-            ospvHas = ((ospvStats->ospmPackLoss[ospvDirection].HasValue & ospvValueFlags & OSPC_SVALUE_FULL) != 0);
+        case OSPC_STATS_DELAY:
+            ospvHas = ((ospvStats->ospmDelay[ospvRange][ospvFlow].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
+            break;
+        case OSPC_STATS_OCTETS:
+            ospvHas = (ospvStats->ospmOctets[ospvRange][ospvFlow] >= 0);
+            break;
+        case OSPC_STATS_PACKETS:
+            ospvHas = (ospvStats->ospmPackets[ospvRange][ospvFlow] >= 0);
             break;
         case OSPC_STATS_RFACTOR:
-            ospvHas = ((ospvStats->ospmRFactor[ospvDirection].HasValue & ospvValueFlags & OSPC_SVALUE_VALUE) != 0);
+            ospvHas = (ospvStats->ospmRFactor[ospvRange][ospvFlow] >= 0);
             break;
         case OSPC_STATS_MOS:
-            ospvHas = ((ospvStats->ospmMOS[ospvDirection].HasValue & ospvValueFlags & OSPC_SVALUE_VALUE) != 0);
+            ospvHas = (ospvStats->ospmMOS[ospvRange][ospvFlow] >= 0);
             break;
         default:
             break;
@@ -982,20 +947,261 @@ OSPTBOOL OSPPStatsHasValue(
     return ospvHas;
 }
 
-float OSPPStatsGetValue(
+void OSPPStatsSetReporter(
+    OSPT_STATS *ospvStats,
+    OSPE_STATS_REPORTER ospvReporter)
+{
+    if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvReporter == OSPC_SREPORTER_PROXY) || (ospvReporter == OSPC_SREPORTER_CALLING) || (ospvReporter == OSPC_SREPORTER_CALLED)))
+    {
+        ospvStats->ospmReporter = ospvReporter;
+    }
+}
+
+void OSPPStatsSetPack(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection)
+    OSPE_STATS_RANGE ospvRange,
+    OSPE_STATS_FLOW ospvFlow,
+    int ospvPackets,
+    int ospvFraction)
 {
-    float ospvValue = 0;
+    OSPT_STATS_PACK *ospvPack;
 
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
+    if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvRange == OSPC_SRANGE_PEERPEER) || (ospvRange == OSPC_SRANGE_PEERPROXY) || (ospvRange == OSPC_SRANGE_PROXYPEER)) &&
+        ((ospvFlow == OSPC_SFLOW_DOWNSTREAM) || (ospvFlow == OSPC_SFLOW_UPSTREAM)))
+    {
+        switch (ospvType) {
+        case OSPC_STATS_LOST:
+            ospvPack = &ospvStats->ospmLost[ospvRange][ospvFlow];
+            break;
+        default:
+            return;
+        }
+        if (ospvPackets >= 0) {
+            ospvPack->hasvalue |= OSPC_SVALUE_PACKETS;
+            ospvPack->packets = ospvPackets;
+        }
+        if (ospvFraction >= 0) {
+            ospvPack->hasvalue |= OSPC_SVALUE_FRACTION;
+            ospvPack->fraction = ospvFraction;
+        }
+    }
+}
+
+void OSPPStatsSetMetrics(
+    OSPT_STATS *ospvStats,
+    OSPE_STATS ospvType,
+    OSPE_STATS_RANGE ospvRange,
+    OSPE_STATS_FLOW ospvFlow,
+    int ospvSamples,
+    int ospvMinimum,
+    int ospvMaximum,
+    int ospvMean,
+    float ospvVariance)
+{
+    OSPT_STATS_METRICS *metrics;
+
+    if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvRange == OSPC_SRANGE_PEERPEER) || (ospvRange == OSPC_SRANGE_PEERPROXY) || (ospvRange == OSPC_SRANGE_PROXYPEER)) &&
+        ((ospvFlow == OSPC_SFLOW_DOWNSTREAM) || (ospvFlow == OSPC_SFLOW_UPSTREAM)))
+    {
+        switch (ospvType) {
+        case OSPC_STATS_JITTER:
+            metrics = &ospvStats->ospmJitter[ospvRange][ospvFlow];
+            break;
+        case OSPC_STATS_DELAY:
+            metrics = &ospvStats->ospmDelay[ospvRange][ospvFlow];
+            break;
+        default:
+            return;
+        }
+        if (ospvSamples >= 0) {
+            metrics->hasvalue |= OSPC_SVALUE_SAMPLES;
+            metrics->samples = ospvSamples;
+        }
+        if (ospvMinimum >= 0) {
+            metrics->hasvalue |= OSPC_SVALUE_MIN;
+            metrics->minimum = ospvMinimum;
+        }
+        if (ospvMaximum >= 0) {
+            metrics->hasvalue |= OSPC_SVALUE_MAX;
+            metrics->maximum = ospvMaximum;
+        }
+        if (ospvMean >= 0) {
+            metrics->hasvalue |= OSPC_SVALUE_MEAN;
+            metrics->mean = ospvMean;
+        }
+        if (ospvVariance >= 0) {
+            metrics->hasvalue |= OSPC_SVALUE_VARIANCE;
+            metrics->variance = ospvVariance;
+        }
+    }
+}
+
+void OSPPStatsSetInteger(
+    OSPT_STATS *ospvStats,
+    OSPE_STATS ospvType,
+    OSPE_STATS_RANGE ospvRange,
+    OSPE_STATS_FLOW ospvFlow,
+    int ospvValue)
+{
+    if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvRange == OSPC_SRANGE_PEERPEER) || (ospvRange == OSPC_SRANGE_PEERPROXY) || (ospvRange == OSPC_SRANGE_PROXYPEER)) &&
+        ((ospvFlow == OSPC_SFLOW_DOWNSTREAM) || (ospvFlow == OSPC_SFLOW_UPSTREAM)))
+    {
+        switch (ospvType) {
+        case OSPC_STATS_OCTETS:
+            ospvStats->ospmOctets[ospvRange][ospvFlow] = ospvValue;
+            break;
+        case OSPC_STATS_PACKETS:
+            ospvStats->ospmPackets[ospvRange][ospvFlow] = ospvValue;
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void OSPPStatsSetFloat(
+    OSPT_STATS *ospvStats,
+    OSPE_STATS ospvType,
+    OSPE_STATS_RANGE ospvRange,
+    OSPE_STATS_FLOW ospvFlow,
+    float ospvValue)
+{
+    if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvRange == OSPC_SRANGE_PEERPEER) || (ospvRange == OSPC_SRANGE_PEERPROXY) || (ospvRange == OSPC_SRANGE_PROXYPEER)) &&
+        ((ospvFlow == OSPC_SFLOW_DOWNSTREAM) || (ospvFlow == OSPC_SFLOW_UPSTREAM)))
+    {
         switch (ospvType) {
         case OSPC_STATS_RFACTOR:
-            ospvValue = ospvStats->ospmRFactor[ospvDirection].Value;
+            ospvStats->ospmRFactor[ospvRange][ospvFlow] = ospvValue;
             break;
         case OSPC_STATS_MOS:
-            ospvValue = ospvStats->ospmMOS[ospvDirection].Value;
+            ospvStats->ospmMOS[ospvRange][ospvFlow] = ospvValue;
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+OSPE_STATS_REPORTER OSPPStatsGetReporter(
+    OSPT_STATS *ospvStats)
+{
+    OSPE_STATS_REPORTER ospvReporter = OSPC_SREPORTER_PROXY;
+
+    if (ospvStats != OSPC_OSNULL) {
+        ospvReporter = ospvStats->ospmReporter;
+    }
+
+    return ospvReporter;
+}
+
+void OSPPStatsGetPack(
+    OSPT_STATS *ospvStats,
+    OSPE_STATS ospvType,
+    OSPE_STATS_RANGE ospvRange,
+    OSPE_STATS_FLOW ospvFlow,
+    int *ospvPackets,
+    int *ospvFraction)
+{
+    OSPT_STATS_PACK *ospvPack;
+
+    *ospvPackets = -1;
+    *ospvFraction = -1;
+
+    if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvRange == OSPC_SRANGE_PEERPEER) || (ospvRange == OSPC_SRANGE_PEERPROXY) || (ospvRange == OSPC_SRANGE_PROXYPEER)) &&
+        ((ospvFlow == OSPC_SFLOW_DOWNSTREAM) || (ospvFlow == OSPC_SFLOW_UPSTREAM)))
+    {
+        switch (ospvType) {
+        case OSPC_STATS_LOST:
+            ospvPack = &ospvStats->ospmLost[ospvRange][ospvFlow];
+            break;
+        default:
+            return;
+        }
+        if ((ospvPack->hasvalue & OSPC_SVALUE_PACKETS) != 0) {
+            *ospvPackets = ospvPack->packets;
+        }
+        if ((ospvPack->hasvalue & OSPC_SVALUE_FRACTION) != 0) {
+            *ospvFraction = ospvPack->fraction;
+        }
+    }
+}
+
+void OSPPStatsGetMetrics(
+    OSPT_STATS *ospvStats,
+    OSPE_STATS ospvType,
+    OSPE_STATS_RANGE ospvRange,
+    OSPE_STATS_FLOW ospvFlow,
+    int *ospvSamples,
+    int *ospvMinimum,
+    int *ospvMaximum,
+    int *ospvMean,
+    float *ospvVariance)
+{
+    OSPT_STATS_METRICS *metrics;
+
+    *ospvSamples = -1;
+    *ospvMinimum = -1;
+    *ospvMaximum = -1;
+    *ospvMean = -1;
+    *ospvVariance = -1;
+
+    if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvRange == OSPC_SRANGE_PEERPEER) || (ospvRange == OSPC_SRANGE_PEERPROXY) || (ospvRange == OSPC_SRANGE_PROXYPEER)) &&
+        ((ospvFlow == OSPC_SFLOW_DOWNSTREAM) || (ospvFlow == OSPC_SFLOW_UPSTREAM)))
+    {
+        switch (ospvType) {
+        case OSPC_STATS_JITTER:
+            metrics = &ospvStats->ospmJitter[ospvRange][ospvFlow];
+            break;
+        case OSPC_STATS_DELAY:
+            metrics = &ospvStats->ospmDelay[ospvRange][ospvFlow];
+            break;
+        default:
+            return;
+        }
+        if ((metrics->hasvalue & OSPC_SVALUE_SAMPLES) != 0) {
+            *ospvSamples = metrics->samples;
+        }
+        if ((metrics->hasvalue & OSPC_SVALUE_MIN) != 0) {
+            *ospvMinimum = metrics->minimum;
+        }
+        if ((metrics->hasvalue & OSPC_SVALUE_MAX) != 0) {
+            *ospvMaximum = metrics->maximum;
+        }
+        if ((metrics->hasvalue & OSPC_SVALUE_MEAN) != 0) {
+            *ospvMean = metrics->mean;
+        }
+        if ((metrics->hasvalue & OSPC_SVALUE_VARIANCE) != 0) {
+            *ospvVariance = metrics->variance;
+        }
+    }
+}
+
+int OSPPStatsGetInteger(
+    OSPT_STATS *ospvStats,
+    OSPE_STATS ospvType,
+    OSPE_STATS_RANGE ospvRange,
+    OSPE_STATS_FLOW ospvFlow)
+{
+    int ospvValue = -1;
+
+    if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvRange == OSPC_SRANGE_PEERPEER) || (ospvRange == OSPC_SRANGE_PEERPROXY) || (ospvRange == OSPC_SRANGE_PROXYPEER)) &&
+        ((ospvFlow == OSPC_SFLOW_DOWNSTREAM) || (ospvFlow == OSPC_SFLOW_UPSTREAM)))
+    {
+        switch (ospvType) {
+        case OSPC_STATS_OCTETS:
+            ospvValue = ospvStats->ospmOctets[ospvRange][ospvFlow];
+            break;
+        case OSPC_STATS_PACKETS:
+            ospvValue = ospvStats->ospmPackets[ospvRange][ospvFlow];
             break;
         default:
             break;
@@ -1005,490 +1211,322 @@ float OSPPStatsGetValue(
     return ospvValue;
 }
 
-unsigned OSPPStatsGetSamples(
+float OSPPStatsGetFloat(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection)
+    OSPE_STATS_RANGE ospvRange,
+    OSPE_STATS_FLOW ospvFlow)
 {
-    unsigned ospvSamples = 0;
+    int ospvValue = -1;
 
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvSamples = ospvStats->ospmDelay[ospvDirection].Samples;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvSamples = ospvStats->ospmJitter[ospvDirection].Samples;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvSamples = ospvStats->ospmPackLoss[ospvDirection].Samples;
-            break;
-        default:
-            break;
-        }
-    }
-
-    return ospvSamples;
-}
-
-unsigned OSPPStatsGetMin(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection)
-{
-    unsigned ospvMin = 0;
-
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvMin = ospvStats->ospmDelay[ospvDirection].Minimum;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvMin = ospvStats->ospmJitter[ospvDirection].Minimum;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvMin = ospvStats->ospmPackLoss[ospvDirection].Minimum;
-            break;
-        default:
-            break;
-        }
-    }
-
-    return ospvMin;
-}
-
-unsigned OSPPStatsGetMax(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection)
-{
-    unsigned ospvMax = 0;
-
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvMax = ospvStats->ospmDelay[ospvDirection].Maximum;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvMax = ospvStats->ospmJitter[ospvDirection].Maximum;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvMax = ospvStats->ospmPackLoss[ospvDirection].Maximum;
-            break;
-        default:
-            break;
-        }
-    }
-
-    return ospvMax;
-}
-
-unsigned OSPPStatsGetMean(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection)
-{
-    unsigned ospvMean = 0;
-
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvMean = ospvStats->ospmDelay[ospvDirection].Mean;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvMean = ospvStats->ospmJitter[ospvDirection].Mean;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvMean = ospvStats->ospmPackLoss[ospvDirection].Mean;
-            break;
-        default:
-            break;
-        }
-    }
-
-    return ospvMean;
-}
-
-float OSPPStatsGetVariance(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection)
-{
-    float ospvVariance = 0;
-
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvVariance = ospvStats->ospmDelay[ospvDirection].Variance;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvVariance = ospvStats->ospmJitter[ospvDirection].Variance;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvVariance = ospvStats->ospmPackLoss[ospvDirection].Variance;
-            break;
-        default:
-            break;
-        }
-    }
-
-    return ospvVariance;
-}
-
-double OSPPStatsGetSquaresSum(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection)
-{
-    float ospvSquaresSum = 0;
-
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvSquaresSum = ospvStats->ospmDelay[ospvDirection].SquaresSum;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvSquaresSum = ospvStats->ospmJitter[ospvDirection].SquaresSum;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvSquaresSum = ospvStats->ospmPackLoss[ospvDirection].SquaresSum;
-            break;
-        default:
-            break;
-        }
-    }
-
-    return ospvSquaresSum;
-}
-
-void OSPPStatsSetValue(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection,
-    float ospvValue)
-{
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
+    if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvRange == OSPC_SRANGE_PEERPEER) || (ospvRange == OSPC_SRANGE_PEERPROXY) || (ospvRange == OSPC_SRANGE_PROXYPEER)) &&
+        ((ospvFlow == OSPC_SFLOW_DOWNSTREAM) || (ospvFlow == OSPC_SFLOW_UPSTREAM)))
+    {
         switch (ospvType) {
         case OSPC_STATS_RFACTOR:
-            ospvStats->ospmRFactor[ospvDirection].Value = ospvValue;
-            ospvStats->ospmRFactor[ospvDirection].HasValue = OSPC_SVALUE_VALUE;
+            ospvValue = ospvStats->ospmRFactor[ospvRange][ospvFlow];
             break;
         case OSPC_STATS_MOS:
-            ospvStats->ospmMOS[ospvDirection].Value = ospvValue;
-            ospvStats->ospmMOS[ospvDirection].HasValue = OSPC_SVALUE_VALUE;
+            ospvValue = ospvStats->ospmMOS[ospvRange][ospvFlow];
             break;
         default:
             break;
         }
     }
-}
 
-void OSPPStatsSetSamples(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection,
-    unsigned ospvSamples)
-{
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvStats->ospmDelay[ospvDirection].Samples = ospvSamples;
-            ospvStats->ospmDelay[ospvDirection].HasValue |= OSPC_SVALUE_SAMPLES;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvStats->ospmJitter[ospvDirection].Samples = ospvSamples;
-            ospvStats->ospmJitter[ospvDirection].HasValue |= OSPC_SVALUE_SAMPLES;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvStats->ospmPackLoss[ospvDirection].Samples = ospvSamples;
-            ospvStats->ospmPackLoss[ospvDirection].HasValue |= OSPC_SVALUE_SAMPLES;
-            break;
-        default:
-            break;
-        }
-    }
-}
-
-void OSPPStatsSetMin(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection,
-    unsigned ospvMin)
-{
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvStats->ospmDelay[ospvDirection].Minimum = ospvMin;
-            ospvStats->ospmDelay[ospvDirection].HasValue |= OSPC_SVALUE_MIN;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvStats->ospmJitter[ospvDirection].Minimum = ospvMin;
-            ospvStats->ospmJitter[ospvDirection].HasValue |= OSPC_SVALUE_MIN;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvStats->ospmPackLoss[ospvDirection].Minimum = ospvMin;
-            ospvStats->ospmPackLoss[ospvDirection].HasValue |= OSPC_SVALUE_MIN;
-            break;
-        default:
-            break;
-        }
-    }
-}
-
-void OSPPStatsSetMax(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection,
-    unsigned ospvMax)
-{
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvStats->ospmDelay[ospvDirection].Maximum = ospvMax;
-            ospvStats->ospmDelay[ospvDirection].HasValue |= OSPC_SVALUE_MAX;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvStats->ospmJitter[ospvDirection].Maximum = ospvMax;
-            ospvStats->ospmJitter[ospvDirection].HasValue |= OSPC_SVALUE_MAX;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvStats->ospmPackLoss[ospvDirection].Maximum = ospvMax;
-            ospvStats->ospmPackLoss[ospvDirection].HasValue |= OSPC_SVALUE_MAX;
-            break;
-        default:
-            break;
-        }
-    }
-}
-
-void OSPPStatsSetMean(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection,
-    unsigned ospvMean)
-{
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvStats->ospmDelay[ospvDirection].Mean = ospvMean;
-            ospvStats->ospmDelay[ospvDirection].HasValue |= OSPC_SVALUE_MEAN;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvStats->ospmJitter[ospvDirection].Mean = ospvMean;
-            ospvStats->ospmJitter[ospvDirection].HasValue |= OSPC_SVALUE_MEAN;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvStats->ospmPackLoss[ospvDirection].Mean = ospvMean;
-            ospvStats->ospmPackLoss[ospvDirection].HasValue |= OSPC_SVALUE_MEAN;
-            break;
-        default:
-            break;
-        }
-    }
-}
-
-void OSPPStatsSetVariance(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection,
-    float ospvVariance)
-{
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvStats->ospmDelay[ospvDirection].Variance = ospvVariance;
-            ospvStats->ospmDelay[ospvDirection].HasValue |= OSPC_SVALUE_VARIANCE;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvStats->ospmJitter[ospvDirection].Variance = ospvVariance;
-            ospvStats->ospmJitter[ospvDirection].HasValue |= OSPC_SVALUE_VARIANCE;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvStats->ospmPackLoss[ospvDirection].Variance = ospvVariance;
-            ospvStats->ospmPackLoss[ospvDirection].HasValue |= OSPC_SVALUE_VARIANCE;
-            break;
-        default:
-            break;
-        }
-    }
-}
-
-void OSPPStatsSetSquaresSum(
-    OSPT_STATS *ospvStats,
-    OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection,
-    double ospvSquaresSum)
-{
-    if ((ospvStats != OSPC_OSNULL) && ((ospvDirection == OSPC_DIR_INBOUND) || (ospvDirection == OSPC_DIR_OUTBOUND))) {
-        switch (ospvType) {
-        case OSPC_STATS_DELAY:
-            ospvStats->ospmDelay[ospvDirection].SquaresSum = ospvSquaresSum;
-            ospvStats->ospmDelay[ospvDirection].HasValue |= OSPC_SVALUE_SQUARES;
-            break;
-        case OSPC_STATS_JITTER:
-            ospvStats->ospmJitter[ospvDirection].SquaresSum = ospvSquaresSum;
-            ospvStats->ospmJitter[ospvDirection].HasValue |= OSPC_SVALUE_SQUARES;
-            break;
-        case OSPC_STATS_PACKLOSS:
-            ospvStats->ospmPackLoss[ospvDirection].SquaresSum = ospvSquaresSum;
-            ospvStats->ospmPackLoss[ospvDirection].HasValue |= OSPC_SVALUE_SQUARES;
-            break;
-        default:
-            break;
-        }
-    }
+    return ospvValue;
 }
 
 int OSPPStatsValueToElement(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
-    OSPE_DIRECTION ospvDirection,
+    OSPE_STATS_RANGE ospvRange,
+    OSPE_STATS_FLOW ospvFlow,
     OSPT_XML_ELEM **ospvElem)
 {
     int error = OSPC_ERR_NO_ERROR;
-    OSPE_MSG_ELEM etype = OSPC_MELEM_UNKNOWN;
-    OSPE_ALTINFO atype = OSPC_ALTINFO_UNKNOWN;
-    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPE_STATS_STRUCT stype = -1;
+    OSPE_MSG_ELEM stats = OSPC_MELEM_UNKNOWN;
+    OSPE_ALTINFO range = OSPC_ALTINFO_UNKNOWN;
+    OSPE_ALTINFO flow = OSPC_ALTINFO_UNKNOWN;
+    OSPT_XML_ELEM *statselem = OSPC_OSNULL;
+    OSPT_XML_ELEM *valueelem = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
+    int packets;
+    int fraction;
+    int samples;
+    int min;
+    int max;
+    int mean;
+    float variance;
+    int ivalue;
+    float fvalue;
 
     if (ospvStats == OSPC_OSNULL) {
         error = OSPC_ERR_DATA_NO_STATS;
     }
 
     if (error == OSPC_ERR_NO_ERROR) {
-        if (ospvType == OSPC_STATS_DELAY) {
-            etype = OSPC_MELEM_DELAY;
-        } else if (ospvType == OSPC_STATS_JITTER) {
-            etype = OSPC_MELEM_JITTER;
-        } else if (ospvType == OSPC_STATS_PACKLOSS) {
-            etype = OSPC_MELEM_PACKLOSS;
-        } else if (ospvType == OSPC_STATS_RFACTOR) {
-            etype = OSPC_MELEM_RFACTOR;
-        } else if (ospvType == OSPC_STATS_MOS) {
-            etype = OSPC_MELEM_MOS;
-        } else {
+        switch (ospvType) {
+        case OSPC_STATS_LOST:
+            stype = OSPC_SSTRUCT_PACK;
+            stats = OSPC_MELEM_LOST;
+            break;
+        case OSPC_STATS_JITTER:
+            stype = OSPC_SSTRUCT_METRICS;
+            stats = OSPC_MELEM_JITTER;
+            break;
+        case OSPC_STATS_DELAY:
+            stype = OSPC_SSTRUCT_METRICS;
+            stats = OSPC_MELEM_DELAY;
+            break;
+        case OSPC_STATS_OCTETS:
+            stype = OSPC_SSTRUCT_INTEGER;
+            stats = OSPC_MELEM_OCTETS;
+            break;
+        case OSPC_STATS_PACKETS:
+            stype = OSPC_SSTRUCT_INTEGER;
+            stats = OSPC_MELEM_PACKETS;
+            break;
+        case OSPC_STATS_RFACTOR:
+            stype = OSPC_SSTRUCT_FLOAT;
+            stats = OSPC_MELEM_RFACTOR;
+            break;
+        case OSPC_STATS_MOS:
+            stype = OSPC_SSTRUCT_FLOAT;
+            stats = OSPC_MELEM_MOS;
+            break;
+        default:
             error = OSPC_ERR_DATA_INVALID_TYPE;
         }
     }
 
     if (error == OSPC_ERR_NO_ERROR) {
-        if (ospvDirection == OSPC_DIR_INBOUND) {
-            atype = OSPC_ALTINFO_INBOUND;
-        } else if (ospvDirection == OSPC_DIR_OUTBOUND) {
-            atype = OSPC_ALTINFO_OUTBOUND;
-        } else {
+        switch (ospvRange) {
+        case OSPC_SRANGE_PEERPEER:
+            range = OSPC_ALTINFO_PEERPEER;
+            break;
+        case OSPC_SRANGE_PEERPROXY:
+            range = OSPC_ALTINFO_PEERPROXY;
+            break;
+        case OSPC_SRANGE_PROXYPEER:
+            range = OSPC_ALTINFO_PROXYPEER;
+            break;
+        default:
             error = OSPC_ERR_DATA_INVALID_TYPE;
         }
     }
 
-    if ((error == OSPC_ERR_NO_ERROR) && (ospvElem == OSPC_OSNULL)) {
-        error = OSPC_ERR_XML_NO_ELEMENT;
+    if (error == OSPC_ERR_NO_ERROR) {
+        switch (ospvFlow) {
+        case OSPC_SFLOW_DOWNSTREAM:
+            flow = OSPC_ALTINFO_DOWNSTREAM;
+            break;
+        case OSPC_SFLOW_UPSTREAM:
+            flow = OSPC_ALTINFO_UPSTREAM;
+            break;
+        default:
+            error = OSPC_ERR_DATA_INVALID_TYPE;
+        }
     }
 
     if (error == OSPC_ERR_NO_ERROR) {
-        if (OSPPStatsHasValue(ospvStats, ospvType, ospvDirection, OSPC_SVALUE_VALUE)) {
-            error = OSPPMsgFloatToElement(OSPPStatsGetValue(ospvStats, ospvType, ospvDirection),
-                OSPPMsgElemGetName(etype), ospvElem);
-            if ((error != OSPC_ERR_NO_ERROR) || (*ospvElem == OSPC_OSNULL)) {
-                error = OSPC_ERR_XML_NO_ELEMENT;
-            } else {
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(atype));
-                if (attr != OSPC_OSNULL) {
-                    OSPPXMLElemAddAttr(*ospvElem, attr);
-                    attr = OSPC_OSNULL;
+        if (ospvElem == OSPC_OSNULL) {
+            error = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (error == OSPC_ERR_NO_ERROR) {
+        switch (stype) {
+        case OSPC_SSTRUCT_PACK:
+            if (OSPPStatsHasValue(ospvStats, ospvType, ospvRange, ospvFlow, OSPC_SVALUE_PACK)) {
+                OSPPStatsGetPack(ospvStats, ospvType, ospvRange, ospvFlow, &packets, &fraction);
+
+                statselem = OSPPXMLElemNew(OSPPMsgElemGetName(stats), "");
+                if (statselem == OSPC_OSNULL) {
+                    error = OSPC_ERR_XML_NO_ELEMENT;
                 } else {
-                    error = OSPC_ERR_XML_NO_ATTR;
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(flow));
+                    if (attr != OSPC_OSNULL) {
+                        OSPPXMLElemAddAttr(statselem, attr);
+                        attr = OSPC_OSNULL;
+                    } else {
+                        error = OSPC_ERR_XML_NO_ATTR;
+                    }
+                }
+
+                /* Packets */
+                if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvRange, ospvFlow, OSPC_SVALUE_PACKETS)) {
+                    error = OSPPMsgNumToElement(packets, OSPPMsgElemGetName(OSPC_MELEM_PACKETS), &valueelem);
+                    if (error == OSPC_ERR_NO_ERROR) {
+                        OSPPXMLElemAddChild(statselem, valueelem);
+                        valueelem = OSPC_OSNULL;
+                    } else {
+                        error = OSPC_ERR_XML_NO_ELEMENT;
+                    }
+                }
+
+                /* Fraction */
+                if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvRange, ospvFlow, OSPC_SVALUE_FRACTION)) {
+                    error = OSPPMsgNumToElement(fraction, OSPPMsgElemGetName(OSPC_MELEM_FRACTION), &valueelem);
+                    if (error == OSPC_ERR_NO_ERROR) {
+                        OSPPXMLElemAddChild(statselem, valueelem);
+                        valueelem = OSPC_OSNULL;
+                    } else {
+                        error = OSPC_ERR_XML_NO_ELEMENT;
+                    }
                 }
             }
-        } else if (OSPPStatsHasValue(ospvStats, ospvType, ospvDirection, OSPC_SVALUE_FULL)) {
-            *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(etype), "");
+            break;
+        case OSPC_SSTRUCT_METRICS:
+            if (OSPPStatsHasValue(ospvStats, ospvType, ospvRange, ospvFlow, OSPC_SVALUE_METRICS)) {
+                OSPPStatsGetMetrics(ospvStats, ospvType, ospvRange, ospvFlow, &samples, &min, &max, &mean, &variance);
+
+                statselem = OSPPXMLElemNew(OSPPMsgElemGetName(stats), "");
+                if (statselem == OSPC_OSNULL) {
+                    error = OSPC_ERR_XML_NO_ELEMENT;
+                } else {
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(flow));
+                    if (attr != OSPC_OSNULL) {
+                        OSPPXMLElemAddAttr(statselem, attr);
+                        attr = OSPC_OSNULL;
+                    } else {
+                        error = OSPC_ERR_XML_NO_ATTR;
+                    }
+                }
+
+                /* Samples */
+                if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvRange, ospvFlow, OSPC_SVALUE_SAMPLES)) {
+                    error = OSPPMsgNumToElement(samples, OSPPMsgElemGetName(OSPC_MELEM_SAMPLES), &valueelem);
+                    if ((error == OSPC_ERR_NO_ERROR) && (valueelem != OSPC_OSNULL)) {
+                        OSPPXMLElemAddChild(statselem, valueelem);
+                        valueelem = OSPC_OSNULL;
+                    } else {
+                        error = OSPC_ERR_XML_NO_ELEMENT;
+                    }
+                }
+
+                /* Minimum */
+                if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvRange, ospvFlow, OSPC_SVALUE_MIN)) {
+                    error = OSPPMsgNumToElement(min, OSPPMsgElemGetName(OSPC_MELEM_MINIMUM), &valueelem);
+                    if ((error == OSPC_ERR_NO_ERROR) && (valueelem != OSPC_OSNULL)) {
+                        OSPPXMLElemAddChild(statselem, valueelem);
+                        valueelem = OSPC_OSNULL;
+                    } else {
+                        error = OSPC_ERR_XML_NO_ELEMENT;
+                    }
+                }
+
+                /* Maximum */
+                if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvRange, ospvFlow, OSPC_SVALUE_MAX)) {
+                    error = OSPPMsgNumToElement(max, OSPPMsgElemGetName(OSPC_MELEM_MAXIMUM), &valueelem);
+                    if ((error == OSPC_ERR_NO_ERROR) && (valueelem != OSPC_OSNULL)) {
+                        OSPPXMLElemAddChild(statselem, valueelem);
+                        valueelem = OSPC_OSNULL;
+                    } else {
+                        error = OSPC_ERR_XML_NO_ELEMENT;
+                    }
+                }
+
+                /* Mean */
+                if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvRange, ospvFlow, OSPC_SVALUE_MEAN)) {
+                    error = OSPPMsgNumToElement(mean, OSPPMsgElemGetName(OSPC_MELEM_MEAN), &valueelem);
+                    if ((error == OSPC_ERR_NO_ERROR) && (valueelem != OSPC_OSNULL)) {
+                        OSPPXMLElemAddChild(statselem, valueelem);
+                        valueelem = OSPC_OSNULL;
+                    } else {
+                        error = OSPC_ERR_XML_NO_ELEMENT;
+                    }
+                }
+
+                /* Variance */
+                if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvRange, ospvFlow, OSPC_SVALUE_VARIANCE)) {
+                    error = OSPPMsgFloatToElement(variance, OSPPMsgElemGetName(OSPC_MELEM_VARIANCE), &valueelem);
+                    if ((error == OSPC_ERR_NO_ERROR) && (valueelem != OSPC_OSNULL)) {
+                        OSPPXMLElemAddChild(statselem, valueelem);
+                        valueelem = OSPC_OSNULL;
+                    } else {
+                        error = OSPC_ERR_XML_NO_ELEMENT;
+                    }
+                }
+            }
+            break;
+        case OSPC_SSTRUCT_INTEGER:
+            if (OSPPStatsHasValue(ospvStats, ospvType, ospvRange, ospvFlow, OSPC_SVALUE_VALUE)) {
+                ivalue = OSPPStatsGetInteger(ospvStats, ospvType, ospvRange, ospvFlow);
+
+                error = OSPPMsgNumToElement(ivalue, OSPPMsgElemGetName(stats), &statselem);
+                if ((error != OSPC_ERR_NO_ERROR) || (statselem == OSPC_OSNULL)) {
+                    error = OSPC_ERR_XML_NO_ELEMENT;
+                } else {
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(flow));
+                    if (attr != OSPC_OSNULL) {
+                        OSPPXMLElemAddAttr(statselem, attr);
+                        attr = OSPC_OSNULL;
+                    } else {
+                        error = OSPC_ERR_XML_NO_ATTR;
+                    }
+                }
+            }
+            break;
+        case OSPC_SSTRUCT_FLOAT:
+            if (OSPPStatsHasValue(ospvStats, ospvType, ospvRange, ospvFlow, OSPC_SVALUE_VALUE)) {
+                fvalue = OSPPStatsGetFloat(ospvStats, ospvType, ospvRange, ospvFlow);
+
+                error = OSPPMsgFloatToElement(fvalue, OSPPMsgElemGetName(stats), &statselem);
+                if ((error != OSPC_ERR_NO_ERROR) || (statselem == OSPC_OSNULL)) {
+                    error = OSPC_ERR_XML_NO_ELEMENT;
+                } else {
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(flow));
+                    if (attr != OSPC_OSNULL) {
+                        OSPPXMLElemAddAttr(statselem, attr);
+                        attr = OSPC_OSNULL;
+                    } else {
+                        error = OSPC_ERR_XML_NO_ATTR;
+                    }
+                }
+            }
+            break;
+        default:
+            error = OSPC_ERR_DATA_INVALID_TYPE;
+            break;
+        }
+    }
+
+    if ((error == OSPC_ERR_NO_ERROR) && (statselem != OSPC_OSNULL)) {
+        if (*ospvElem == OSPC_OSNULL) {
+            *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_METRICS), "");
             if (*ospvElem == OSPC_OSNULL) {
                 error = OSPC_ERR_XML_NO_ELEMENT;
             } else {
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(atype));
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(range));
                 if (attr != OSPC_OSNULL) {
                     OSPPXMLElemAddAttr(*ospvElem, attr);
                     attr = OSPC_OSNULL;
                 } else {
+                    OSPPXMLElemDelete(ospvElem);
                     error = OSPC_ERR_XML_NO_ATTR;
                 }
             }
-
-            /* Samples */
-            if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvDirection, OSPC_SVALUE_SAMPLES)) {
-                error = OSPPMsgNumToElement(OSPPStatsGetSamples(ospvStats, ospvType, ospvDirection),
-                    OSPPMsgElemGetName(OSPC_MELEM_SAMPLES), &elem);
-                if (error == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(*ospvElem, elem);
-                    elem = OSPC_OSNULL;
-                } else {
-                    error = OSPC_ERR_XML_NO_ELEMENT;
-                }
-            }
-
-            /* Minimum */
-            if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvDirection, OSPC_SVALUE_MIN)) {
-                error = OSPPMsgNumToElement(OSPPStatsGetMin(ospvStats, ospvType, ospvDirection),
-                    OSPPMsgElemGetName(OSPC_MELEM_MINIMUM), &elem);
-                if (error == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(*ospvElem, elem);
-                    elem = OSPC_OSNULL;
-                } else {
-                    error = OSPC_ERR_XML_NO_ELEMENT;
-                }
-            }
-
-            /* Maximum */
-            if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvDirection, OSPC_SVALUE_MAX)) {
-                error = OSPPMsgNumToElement(OSPPStatsGetMax(ospvStats, ospvType, ospvDirection),
-                    OSPPMsgElemGetName(OSPC_MELEM_MAXIMUM), &elem);
-                if (error == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(*ospvElem, elem);
-                    elem = OSPC_OSNULL;
-                } else {
-                    error = OSPC_ERR_XML_NO_ELEMENT;
-                }
-            }
-
-            /* Mean */
-            if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvDirection, OSPC_SVALUE_MEAN)) {
-                error = OSPPMsgNumToElement(OSPPStatsGetMean(ospvStats, ospvType, ospvDirection),
-                    OSPPMsgElemGetName(OSPC_MELEM_MEAN), &elem);
-                if (error == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(*ospvElem, elem);
-                    elem = OSPC_OSNULL;
-                } else {
-                    error = OSPC_ERR_XML_NO_ELEMENT;
-                }
-            }
-
-            if ((error == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvDirection, OSPC_SVALUE_VARIANCE)) {
-                error = OSPPMsgFloatToElement(OSPPStatsGetVariance(ospvStats, ospvType, ospvDirection),
-                    OSPPMsgElemGetName(OSPC_MELEM_VARIANCE), &elem);
-                if (error == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(*ospvElem, elem);
-                    elem = OSPC_OSNULL;
-                } else {
-                    error = OSPC_ERR_XML_NO_ELEMENT;
-                }
-            }
-
-            if (error != OSPC_ERR_NO_ERROR) {
-                if (*ospvElem != OSPC_OSNULL) {
-                    OSPPXMLElemDelete(ospvElem);
-                }
-            }
-
-            if (elem != OSPC_OSNULL) {
-                OSPPXMLElemDelete(&elem);
-            }
-
-            if (attr != OSPC_OSNULL) {
-                OSPPXMLAttrDelete(&attr);
-            }
         }
+        if (error == OSPC_ERR_NO_ERROR) {
+            OSPPXMLElemAddChild(*ospvElem, statselem);
+            statselem = OSPC_OSNULL;
+        }
+    }
+
+    if (statselem != OSPC_OSNULL) {
+        OSPPXMLElemDelete(&statselem);
+    }
+
+    if (valueelem != OSPC_OSNULL) {
+        OSPPXMLElemDelete(&valueelem);
+    }
+
+    if (attr != OSPC_OSNULL) {
+        OSPPXMLAttrDelete(&attr);
     }
 
     return error;
 }
-

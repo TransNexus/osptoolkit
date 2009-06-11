@@ -77,7 +77,7 @@ OSPT_CALL_ID *OSPPCallIdNew(        /* returns ptr to call ID or null */
 
             /* NOTE: The following code has a very similar structure to OSPPAltInfoNew()
              * in ospaltinfo.c and OSPPTokenNew() in osptoken.c. One might think that
-             * the malloc'd size needs to be one byte bigger to allow for a null 
+             * the malloc'd size needs to be one byte bigger to allow for a null
              * character at the end of ospvValue; this is not so. Even though
              * ospvValue is an unsigned char, callid values are not always strings.
              * For this reason a null character should NOT be placed at the end of a
@@ -163,7 +163,7 @@ unsigned OSPPCallIdFromElement( /* returns error code */
         ospvErrCode = OSPC_ERR_DATA_NOCALLID;
     }
     /* assert(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_CALLID); */
-    
+
     /* start by assuming we will fail */
     *ospvCallId = OSPC_OSNULL;
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
@@ -218,7 +218,7 @@ unsigned OSPPCallIdToElement(   /* returns error code */
         ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CALLID),
             OSPPCallIdGetSize(ospvCallId), OSPPCallIdGetValue(ospvCallId),
             OSPC_OSNULL, OSPC_OSNULL, ospvIsBase64,
-            ospvElem); 
+            ospvElem);
     }
 
     return ospvErrCode;
@@ -259,25 +259,25 @@ unsigned char *OSPPCallIdGetValue(
  */
 unsigned OSPPSessionIdToElement(    /* returns error code */
     OSPT_CALL_ID *ospvSessionId,    /* Session ID */
-    OSPE_DIRECTION ospvType,        /* Direction */
+    OSPE_CALL_LEG ospvType,         /* Call leg */
     OSPTBOOL ospvIsBase64,          /* indicates base64 or cdata */
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
- 
+
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     } else if (ospvSessionId == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_DATA_NOCALLID;
     } else {
         switch (ospvType) {
-        case OSPC_DIR_INBOUND:
+        case OSPC_CLEG_INBOUND:
             ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
                 OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
                 OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_INBOUND), ospvIsBase64,
                 ospvElem);
             break;
-        case OSPC_DIR_OUTBOUND:
+        case OSPC_CLEG_OUTBOUND:
             ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
                 OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
                 OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_OUTBOUND), ospvIsBase64,

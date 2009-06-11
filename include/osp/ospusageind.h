@@ -65,7 +65,7 @@ typedef struct {
     OSPE_DEST_PROTOCOL ospmUsageIndDestProtocol;
     char ospmUsageIndForwardCodec[OSPC_SIZE_CODEC];
     char ospmUsageIndReverseCodec[OSPC_SIZE_CODEC];
-    OSPT_CALL_ID *ospmUsageIndSessionId[OSPC_DIR_NUMBER];
+    OSPT_CALL_ID *ospmUsageIndSessionId[OSPC_CLEG_NUMBER];
 } OSPT_USAGEIND;
 
 /* Function Prototypes */
@@ -160,10 +160,10 @@ extern "C" {
     OSPTBOOL OSPPUsageIndHasReverseCodec(OSPT_USAGEIND *);
     const char *OSPPUsageIndGetReverseCodec(OSPT_USAGEIND *);
     void OSPPUsageIndSetReverseCodec(OSPT_USAGEIND *, const char *);
-    OSPTBOOL OSPPUsageIndHasSessionId(OSPT_USAGEIND *, OSPE_DIRECTION);
-    OSPT_CALL_ID *OSPPUsageIndGetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION);
-    void OSPPUsageIndSetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION, OSPT_CALL_ID *);
-    
+    OSPTBOOL OSPPUsageIndHasSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG);
+    OSPT_CALL_ID *OSPPUsageIndGetSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG);
+    void OSPPUsageIndSetSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG, OSPT_CALL_ID *);
+
 #ifdef __cplusplus
 }
 #endif

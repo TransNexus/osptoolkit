@@ -17,8 +17,8 @@
 
 /*
  *  nonblocking.h - Structures and prototypes for non-blocking.
- *  
- *  This module implements non-blocking API on top of blocking 
+ *
+ *  This module implements non-blocking API on top of blocking
  *  OSP Toolkit API.
  *
  *  Before the non-blocking API may be used, an instance of
@@ -36,10 +36,10 @@
  *
  *  Method NonBlockingQueueMonitorBlockWhileQueueNotEmpty allows the caller to block
  *  while there are transactions being processed.  NOTE: This function call does not
- *  prevent from adding more non-blocking transactions and maybe starved if there is a 
+ *  prevent from adding more non-blocking transactions and maybe starved if there is a
  *  sufficient flow of transactions.
  *
- *  There are 2 non-blocking methods OSPPTransactionRequestAuthorisation_nb, and 
+ *  There are 2 non-blocking methods OSPPTransactionRequestAuthorisation_nb, and
  *  OSPPTransactionReportUsage_nb which correspond to the OSP Toolkit API methods
  *  OSPPTransactionRequestAuthorisation and OSPPTransactionReportUsage respectively.
  *  The non-blocking methods follow the same naming conventions with an exception of
@@ -48,14 +48,14 @@
  *  blocking counterparts, expect 2 variables of types: NBMONITOR* and int*.
  *  The 1st one is a pointer to the NonBlockingQueueMonitor (which should have been
  *  initialized using NonBlockingQueueMonitorNew).
- *  The 2nd one is a pointer to the space where return value from the blocking 
+ *  The 2nd one is a pointer to the space where return value from the blocking
  *  function should be stored.  The caller is responsible for allocating space and
  *  passing a valid pointer.  Initially the value is set to OSPC_REPORT_USAGE_BLOCK or
  *  OSPC_AUTH_REQUEST_BLOCK to indicate that a blocking call is in progress.  When
  *  the blocking function returns and the value is set to the actual return value.
  *
  *  NOTE: (1) The caller must not delete transaction handle or any other resources that may
- *  be used by the blocking functions while a transaction is in progress.  Failing to do 
+ *  be used by the blocking functions while a transaction is in progress.  Failing to do
  *  so will result in unpredictable behavior. (2) The caller must not attempt to call
  *  OSPPTransactionGetFirstDestination while OSPPTransactionRequestAuthorisation is still in
  *  progress.
@@ -90,85 +90,90 @@ typedef struct _NBMONITOR {
 extern "C" {
 #endif
 
-    int NonBlockingQueueMonitorNew(NBMONITOR **nbMonitor,               /* In\Out - NBMonitor Pointer */
-        unsigned NumberOfWorkThreads,                                   /* Max number of concurent tool kit requets */
-        unsigned MaxQueSize,                                            /* Apply only to AuthReq, limit number of requets in the queue */
-        unsigned MaxQueWaitMS);                                         /* Apply only to AuthReq, queue expiration time in ms */
+    int NonBlockingQueueMonitorNew(
+        NBMONITOR **nbMonitor,          /* In\Out - NBMonitor Pointer */
+        unsigned NumberOfWorkThreads,   /* Max number of concurent tool kit requets */
+        unsigned MaxQueSize,            /* Apply only to AuthReq, limit number of requets in the queue */
+        unsigned MaxQueWaitMS);         /* Apply only to AuthReq, queue expiration time in ms */
 
     int NonBlockingQueueMonitorBlockWhileQueueNotEmpty(NBMONITOR *nbMonitor);   /* In - NBMonitor Pointer */
 
-    int NonBlockingQueueMonitorDelete(NBMONITOR **nbMonitor);           /* In\Out - NBMonitor Pointer */
+    int NonBlockingQueueMonitorDelete(NBMONITOR **nbMonitor);   /* In\Out - NBMonitor Pointer */
 
-    int OSPPTransactionRequestAuthorisation_nb(NBMONITOR *nbMonitor,    /* In - NBMonitor Pointer */
-        int ShouldBlock,                                                /* In - 1 WILL block, 0 - will NOT block */
-        int *OSPErrorCode,                                              /* Out- Error code returned by the blocking function */
-        OSPTTRANHANDLE ospvTransaction,                                 /* In - Transaction Handle */
-        const char *ospvSource,                                         /* In - Source of call */
-        const char *ospvSourceDevice,                                   /* In - SourceDevice of call */
-        const char *ospvCallingNumber,                                  /* In - Calling number */
-        OSPE_NUMBER_FORMAT ospvCallingNumberFormat,                     /* In - Calling number Format */
-        const char *ospvCalledNumber,                                   /* In - Called number */
-        OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                      /* In - Called number */
-        const char *ospvUser,                                           /* In - End user (optional) */
-        unsigned ospvNumberOfCallIds,                                   /* In - Number of call identifiers */
-        OSPT_CALL_ID *ospvCallIds[],                                    /* In - List of call identifiers */
-        const char *ospvPreferredDestinations[],                        /* In - List of preferred destinations for call */
-        unsigned *ospvNumberOfDestinations,                             /* In\Out - Max number of destinations \ Actual number of dests authorised */
-        unsigned *ospvSizeOfDetailLog,                                  /* In\Out - Max size of detail log \ Actual size of detail log */
-        void *ospvDetailLog);                                           /* In\Out - Location of detail log storage */
+    int OSPPTransactionRequestAuthorisation_nb(
+        NBMONITOR *nbMonitor,                           /* In - NBMonitor Pointer */
+        int ShouldBlock,                                /* In - 1 WILL block, 0 - will NOT block */
+        int *OSPErrorCode,                              /* Out- Error code returned by the blocking function */
+        OSPTTRANHANDLE ospvTransaction,                 /* In - Transaction Handle */
+        const char *ospvSource,                         /* In - Source of call */
+        const char *ospvSourceDevice,                   /* In - SourceDevice of call */
+        const char *ospvCallingNumber,                  /* In - Calling number */
+        OSPE_NUMBER_FORMAT ospvCallingNumberFormat,     /* In - Calling number Format */
+        const char *ospvCalledNumber,                   /* In - Called number */
+        OSPE_NUMBER_FORMAT ospvCalledNumberFormat,      /* In - Called number */
+        const char *ospvUser,                           /* In - End user (optional) */
+        unsigned ospvNumberOfCallIds,                   /* In - Number of call identifiers */
+        OSPT_CALL_ID *ospvCallIds[],                    /* In - List of call identifiers */
+        const char *ospvPreferredDestinations[],        /* In - List of preferred destinations for call */
+        unsigned *ospvNumberOfDestinations,             /* In\Out - Max number of destinations \ Actual number of dests authorised */
+        unsigned *ospvSizeOfDetailLog,                  /* In\Out - Max size of detail log \ Actual size of detail log */
+        void *ospvDetailLog);                           /* In\Out - Location of detail log storage */
 
-    int OSPPTransactionReportUsage_nb(NBMONITOR *nbMonitor,             /* In - NBMonitor Pointer   */
-        int ShouldBlock,                                                /* In - 1 WILL block, 0 - will NOT block */
-        int *OSPErrorCode,                                              /* Out- Error code returned by the blocking function */
-        OSPTTRANHANDLE ospvTransaction,                                 /* In - Transaction handle */
-        unsigned ospvDuration,                                          /* In - Length of call */
-        OSPTTIME ospvStartTime,                                         /* In - StartTime of call */
-        OSPTTIME ospvEndTime,                                           /* In - EndTime of call */
-        OSPTTIME ospvAlertTime,                                         /* In - AlertTime of call */
-        OSPTTIME ospvConnectTime,                                       /* In - ConnectTime of call */
-        OSPTBOOL ospvHasPDDInfo,                                        /* In - Is PDD present */
-        unsigned ospvPostDialDelay,                                     /* In - PDD */
-        unsigned ospvReleaseSource,                                     /* In - Rel Src */
-        const char *ospvConferenceId,                                   /* In - Conference Id */
-        unsigned ospvLossPacketsSent,                                   /* In - Packets not received by peer */
-        signed ospvLossFractionSent,                                    /* In - Fraction of packets not received by peer */
-        unsigned ospvLossPacketsReceived,                               /* In - Packets not received that were expected */
-        signed ospvLossFractionReceived,                                /* In - Fraction of packets expected but not received */
-        unsigned *ospvSizeOfDetailLog,                                  /* In/Out - Max size of detail log \ Actual size of detail log */
-        void *ospvDetailLog);                                           /* Out - Pointer to detail log storage */
+    int OSPPTransactionReportUsage_nb(
+        NBMONITOR *nbMonitor,           /* In - NBMonitor Pointer   */
+        int ShouldBlock,                /* In - 1 WILL block, 0 - will NOT block */
+        int *OSPErrorCode,              /* Out- Error code returned by the blocking function */
+        OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+        unsigned ospvDuration,          /* In - Length of call */
+        OSPTTIME ospvStartTime,         /* In - StartTime of call */
+        OSPTTIME ospvEndTime,           /* In - EndTime of call */
+        OSPTTIME ospvAlertTime,         /* In - AlertTime of call */
+        OSPTTIME ospvConnectTime,       /* In - ConnectTime of call */
+        OSPTBOOL ospvHasPDDInfo,        /* In - Is PDD present */
+        unsigned ospvPostDialDelay,     /* In - PDD */
+        unsigned ospvReleaseSource,     /* In - Rel Src */
+        const char *ospvConferenceId,   /* In - Conference Id */
+        int ospvLossPacketsSent,        /* In - Packets not received by peer */
+        int ospvLossFractionSent,       /* In - Fraction of packets not received by peer */
+        int ospvLossPacketsReceived,    /* In - Packets not received that were expected */
+        int ospvLossFractionReceived,   /* In - Fraction of packets expected but not received */
+        unsigned *ospvSizeOfDetailLog,  /* In/Out - Max size of detail log \ Actual size of detail log */
+        void *ospvDetailLog);           /* Out - Pointer to detail log storage */
 
-    int OSPPTransactionIndicateCapabilities_nb(NBMONITOR *nbMonitor,    /* In - NBMonitor Pointer   */
-        int ShouldBlock,                                                /* In - 1 WILL block, 0 - will NOT block */
-        int *OSPErrorCode,                                              /* Out- Error code returned by the blocking function */
-        OSPTTRANHANDLE ospvTransaction,                                 /* In - Transaction Handle  */
-        const char *ospvSource,                                         /* In - Source of call      */
-        const char *ospvSourceDevice,                                   /* In - SourceDevice of call */
-        const char *ospvSourceNetworkId,                                /* In - NetworkId of call */
-        unsigned ospvAlmostOutOfResource,                               /* In - A Boolean flag indicating device's availability */
-        unsigned *ospvSizeOfDetailLog,                                  /* In\Out - Max size of detail log \ Actual size of detail log */
-        void *ospvDetailLog);                                           /* In\Out - Location of detail log storage */
+    int OSPPTransactionIndicateCapabilities_nb(
+        NBMONITOR *nbMonitor,               /* In - NBMonitor Pointer   */
+        int ShouldBlock,                    /* In - 1 WILL block, 0 - will NOT block */
+        int *OSPErrorCode,                  /* Out- Error code returned by the blocking function */
+        OSPTTRANHANDLE ospvTransaction,     /* In - Transaction Handle  */
+        const char *ospvSource,             /* In - Source of call      */
+        const char *ospvSourceDevice,       /* In - SourceDevice of call */
+        const char *ospvSourceNetworkId,    /* In - NetworkId of call */
+        unsigned ospvAlmostOutOfResource,   /* In - A Boolean flag indicating device's availability */
+        unsigned *ospvSizeOfDetailLog,      /* In\Out - Max size of detail log \ Actual size of detail log */
+        void *ospvDetailLog);               /* In\Out - Location of detail log storage */
 
-    int OSPPTransactionValidateAuthorisation_nb(NBMONITOR *nbMonitor,   /* In - NBMonitor Pointer   */
-        int ShouldBlock,                                                /* In - 1 WILL block, 0 - will NOT block */
-        int *OSPErrorCode,                                              /* Out- Error code returned by the blocking function */
-        OSPTTRANHANDLE ospvTransaction,                                 /* In - Transaction handle */
-        const char *ospvSource,                                         /* In - Source of call */
-        const char *ospvDestination,                                    /* In - Destination for call */
-        const char *ospvSourceDevice,                                   /* In - SourceDevice of call */
-        const char *ospvDestinationDevice,                              /* In - DestinationDevice for call */
-        const char *ospvCallingNumber,                                  /* In - Calling number string */
-        OSPE_NUMBER_FORMAT ospvCallingNumberFormat,                     /* In - Calling number Format */
-        const char *ospvCalledNumber,                                   /* In - Called number string */
-        OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                      /* In - Called number Format */
-        unsigned ospvSizeOfCallId,                                      /* In - Size of call id value */
-        const void *ospvCallId,                                         /* In - Call Id for this call */
-        unsigned ospvSizeOfToken,                                       /* In - Size of authorization token */
-        const void *ospvToken,                                          /* In - Authorisation token */
-        unsigned *ospvAuthorised,                                       /* Out - Call authorisation indicator */
-        unsigned *ospvTimeLimit,                                        /* Out - Number of seconds call is authorised for */
-        unsigned *ospvSizeOfDetailLog,                                  /* In\Out - Max size of detail log \ Actual size of detail log */
-        void *ospvDetailLog,                                            /* In\Out - Location of detail log storage */
-        unsigned ospvTokenAlgo);                                        /* In - Algorithm to be used for Validating Token */
+    int OSPPTransactionValidateAuthorisation_nb(
+        NBMONITOR *nbMonitor,                           /* In - NBMonitor Pointer   */
+        int ShouldBlock,                                /* In - 1 WILL block, 0 - will NOT block */
+        int *OSPErrorCode,                              /* Out- Error code returned by the blocking function */
+        OSPTTRANHANDLE ospvTransaction,                 /* In - Transaction handle */
+        const char *ospvSource,                         /* In - Source of call */
+        const char *ospvDestination,                    /* In - Destination for call */
+        const char *ospvSourceDevice,                   /* In - SourceDevice of call */
+        const char *ospvDestinationDevice,              /* In - DestinationDevice for call */
+        const char *ospvCallingNumber,                  /* In - Calling number string */
+        OSPE_NUMBER_FORMAT ospvCallingNumberFormat,     /* In - Calling number Format */
+        const char *ospvCalledNumber,                   /* In - Called number string */
+        OSPE_NUMBER_FORMAT ospvCalledNumberFormat,      /* In - Called number Format */
+        unsigned ospvSizeOfCallId,                      /* In - Size of call id value */
+        const void *ospvCallId,                         /* In - Call Id for this call */
+        unsigned ospvSizeOfToken,                       /* In - Size of authorization token */
+        const void *ospvToken,                          /* In - Authorisation token */
+        unsigned *ospvAuthorised,                       /* Out - Call authorisation indicator */
+        unsigned *ospvTimeLimit,                        /* Out - Number of seconds call is authorised for */
+        unsigned *ospvSizeOfDetailLog,                  /* In\Out - Max size of detail log \ Actual size of detail log */
+        void *ospvDetailLog,                            /* In\Out - Location of detail log storage */
+        unsigned ospvTokenAlgo);                        /* In - Algorithm to be used for Validating Token */
 
 #ifdef __cplusplus
 }

@@ -47,14 +47,22 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_ASSERTEDID,      "assertedId" },
     { OSPC_ALTINFO_ROUTINGNUM,      "routingnumber" },
     /* For other attributes */
+    { OSPC_ALTINFO_TRUE,            "true" },
     { OSPC_ALTINFO_FALSE,           "false" },
     { OSPC_ALTINFO_BASE64,          "base64" },
     { OSPC_ALTINFO_CDATA,           "cdata" },
     { OSPC_ALTINFO_FORWARD,         "forward" },
     { OSPC_ALTINFO_REVERSE,         "reverse" },
-    { OSPC_ALTINFO_GENERAL,         "general" },
     { OSPC_ALTINFO_INBOUND,         "inbound" },
-    { OSPC_ALTINFO_OUTBOUND,        "outbound" }
+    { OSPC_ALTINFO_OUTBOUND,        "outbound" },
+    { OSPC_ALTINFO_CALLING,         "calling" },
+    { OSPC_ALTINFO_CALLED,          "called" },
+    { OSPC_ALTINFO_PROXY,           "proxy" },
+    { OSPC_ALTINFO_PEERPEER,        "peer-peer" },
+    { OSPC_ALTINFO_PEERPROXY,       "peer-proxy" },
+    { OSPC_ALTINFO_PROXYPEER,       "proxy-peer" },
+    { OSPC_ALTINFO_DOWNSTREAM,      "downstream" },
+    { OSPC_ALTINFO_UPSTREAM,        "upstream" },
 };
 
 /*
@@ -205,7 +213,7 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ospvPart), OSPPAltInfoGetValue(ospvAltInfo));
         if (ospvElem != OSPC_OSNULL) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->ospmAltInfoType));       
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->ospmAltInfoType));
             if (attr == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ATTR;
             }
