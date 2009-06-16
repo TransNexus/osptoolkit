@@ -25,6 +25,30 @@
 #include "osp/ospmsgattr.h"
 #include "osp/ospmsg.h"
 
+/* Create new Statistics Structure */
+OSPT_STATS *OSPPStatsNew(void)
+{
+    OSPE_STATS_RANGE range;
+    OSPE_STATS_FLOW flow;
+    OSPT_STATS *ospvStats = OSPC_OSNULL;
+
+    OSPM_MALLOC(ospvStats, OSPT_STATS, sizeof(OSPT_STATS));
+    if (ospvStats != OSPC_OSNULL) {
+        OSPM_MEMSET(ospvStats, 0, sizeof(OSPT_STATS));
+
+        for (range = OSPC_SRANGE_PEERPEER; range < OSPC_SRANGE_NUMBER; range++) {
+            for (flow = OSPC_SFLOW_DOWNSTREAM; flow < OSPC_SFLOW_NUMBER; flow++) {
+                ospvStats->ospmOctets[range][flow] = -1;
+                ospvStats->ospmPackets[range][flow] = -1;
+                ospvStats->ospmRFactor[range][flow] = -1;
+                ospvStats->ospmMOS[range][flow] = -1;
+            }
+        }
+    }
+
+    return ospvStats;
+}
+
 /* Delete Statistics structure */
 void OSPPStatsDelete(
     OSPT_STATS **ospvStats)
@@ -35,17 +59,278 @@ void OSPPStatsDelete(
     }
 }
 
-/* Get value for fractionreceived */
-unsigned OSPPStatsGetFracReceived(
-    OSPT_STATS *ospvStats)
+/* Create xml element from statistics structure */
+int OSPPStatsToElement(
+    OSPT_STATS *ospvStats,
+    OSPT_XML_ELEM **ospvElem)
 {
-    unsigned fracrecvd = 0;
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPE_STATS_REPORTER reporter;
+    OSPE_STATS type;
+    OSPE_STATS_RANGE range;
+    OSPE_STATS_FLOW flow;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
-    if ((ospvStats != OSPC_OSNULL) || (ospvStats->ospmLossReceived.hasvalue & OSPC_SVALUE_FRACTION) != 0) {
-        fracrecvd = ospvStats->ospmLossReceived.fraction;
+    if (ospvStats == OSPC_OSNULL) {
+        errorcode = OSPC_ERR_DATA_NO_STATS;
     }
 
-    return fracrecvd;
+    if (ospvElem == OSPC_OSNULL) {
+        errorcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        /* create the Statistics element as the parent */
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_STATISTICS), "");
+        if (*ospvElem == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_XML_NO_ELEMENT;
+        } else {
+            switch (OSPPStatsGetReporter(ospvStats)) {
+            case OSPC_SREPORTER_CALLING:
+                reporter = OSPC_ALTINFO_CALLING;
+                break;
+            case OSPC_SREPORTER_CALLED:
+                reporter = OSPC_ALTINFO_CALLED;
+                break;
+            case OSPC_SREPORTER_PROXY:
+            default:
+                reporter = OSPC_ALTINFO_PROXY;
+                break;
+            }
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_REPORTER), OSPPAltInfoTypeGetName(reporter));
+            if (attr != OSPC_OSNULL) {
+                OSPPXMLElemAddAttr(*ospvElem, attr);
+                attr = OSPC_OSNULL;
+
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr != OSPC_OSNULL) {
+                    OSPPXMLElemAddAttr(*ospvElem, attr);
+                    attr = OSPC_OSNULL;
+                } else {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                }
+            } else {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            }
+        }
+    }
+
+    /* Now add the children */
+    /* First LossSent */
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasLossSent(ospvStats, OSPC_SVALUE_PACK)) {
+            errorcode = OSPPStatsLossSentToElement(ospvStats, &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* LossReceived */
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasLossReceived(ospvStats, OSPC_SVALUE_PACK)) {
+            errorcode = OSPPStatsLossReceivedToElement(ospvStats, &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* OneWay */
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasOneWay(ospvStats)) {
+            errorcode = OSPPStatsOneWayToElement(ospvStats, &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* RoundTrip */
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasRoundTrip(ospvStats)) {
+            errorcode = OSPPStatsRoundTripToElement(ospvStats, &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* Lost/Jitter/Delay/Octets/Packets/RFactor/MOS */
+    for (range = OSPC_SRANGE_PEERPEER; (range < OSPC_SRANGE_NUMBER) && (errorcode == OSPC_ERR_NO_ERROR); range++) {
+           for (type = OSPC_STATS_LOST; (type < OSPC_STATS_NUMBER) && (errorcode == OSPC_ERR_NO_ERROR); type++) {
+            for (flow = OSPC_SFLOW_DOWNSTREAM; (flow < OSPC_SFLOW_NUMBER) && (errorcode == OSPC_ERR_NO_ERROR); flow++) {
+                errorcode = OSPPStatsValueToElement(ospvStats, type, range, flow, &elem);
+            }
+        }
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (elem != OSPC_OSNULL)) {
+            OSPPXMLElemAddChild(*ospvElem, elem);
+            elem = OSPC_OSNULL;
+        }
+    }
+
+    if (errorcode != OSPC_ERR_NO_ERROR) {
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
+        }
+    }
+
+    if (elem != OSPC_OSNULL) {
+        OSPPXMLElemDelete(&elem);
+    }
+
+    if (attr != OSPC_OSNULL) {
+        OSPPXMLAttrDelete(&attr);
+    }
+
+    return errorcode;
+}
+
+/* Check for existence of OneWay statistics */
+OSPTBOOL OSPPStatsHasOneWay(
+    OSPT_STATS *ospvStats)
+{
+    if (ospvStats != OSPC_OSNULL) {
+        return ospvStats->ospmOneWay.hasvalue;
+    } else {
+        return OSPC_FALSE;
+    }
+}
+
+/* Check for existence of RoundTrip statistics */
+OSPTBOOL OSPPStatsHasRoundTrip(
+    OSPT_STATS *ospvStats)
+{
+    if (ospvStats != OSPC_OSNULL) {
+        return ospvStats->ospmRoundTrip.hasvalue;
+    } else {
+        return OSPC_FALSE;
+    }
+}
+
+/* Check for existence of LossSent statistics */
+OSPTBOOL OSPPStatsHasLossSent(
+    OSPT_STATS *ospvStats,
+    unsigned ospvValueFlags)
+{
+    if (ospvStats != OSPC_OSNULL) {
+        return ((ospvStats->ospmLossSent.hasvalue & ospvValueFlags & OSPC_SVALUE_PACK) != 0);
+    } else {
+        return OSPC_FALSE;
+    }
+}
+
+/* Check for existence of LossReceived statistics */
+OSPTBOOL OSPPStatsHasLossReceived(
+    OSPT_STATS *ospvStats,
+    unsigned ospvValueFlags)
+{
+    if (ospvStats != OSPC_OSNULL) {
+        return ((ospvStats->ospmLossReceived.hasvalue & ospvValueFlags & OSPC_SVALUE_PACK) != 0);
+    } else {
+        return OSPC_FALSE;
+    }
+}
+
+/* Report statistics for this transaction. */
+int OSPPStatsReportUsage(
+    OSPT_STATS **ospvStats,         /* In - pter to place for stats struct */
+    int ospvLossPacketsSent,        /* In  */
+    int ospvLossFractionSent,       /* In  */
+    int ospvLossPacketsReceived,    /* In  */
+    int ospvLossFractionReceived)   /* In  */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+
+    /*
+     * If variables are negative, no statistics are reported.
+     * Just return with no error
+     */
+    if ((ospvLossPacketsSent >= 0) || (ospvLossFractionSent >= 0)) {
+        if (*ospvStats == OSPC_OSNULL) {
+            *ospvStats = OSPPStatsNew();
+            if (*ospvStats == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_TRAN_STATS_NEW_FAIL;
+            }
+        }
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            OSPPStatsSetSentStatistics(*ospvStats, ospvLossPacketsSent, ospvLossFractionSent);
+        }
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if ((ospvLossPacketsReceived >= 0) || (ospvLossFractionReceived >= 0)) {
+            if (*ospvStats == OSPC_OSNULL) {
+                *ospvStats = OSPPStatsNew();
+                if (*ospvStats == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_TRAN_STATS_NEW_FAIL;
+                }
+            }
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                OSPPStatsSetReceivedStatistics(*ospvStats, ospvLossPacketsReceived, ospvLossFractionReceived);
+            }
+        }
+    }
+
+    if ((errorcode != OSPC_ERR_NO_ERROR) && (*ospvStats != OSPC_OSNULL)) {
+        OSPPStatsDelete(ospvStats);
+    }
+
+    return errorcode;
+}
+
+/* Set Sent statistics */
+void OSPPStatsSetSentStatistics(
+    OSPT_STATS *ospvStats,
+    int ospvLossPacketsSent,
+    int ospvLossFractionSent)
+{
+    if (ospvStats != OSPC_OSNULL) {
+        if (ospvLossPacketsSent >= 0) {
+            ospvStats->ospmLossSent.hasvalue |= OSPC_SVALUE_PACKETS;
+            ospvStats->ospmLossSent.packets = ospvLossPacketsSent;
+        }
+        if (ospvLossFractionSent >= 0) {
+            ospvStats->ospmLossSent.hasvalue |= OSPC_SVALUE_FRACTION;
+            ospvStats->ospmLossSent.fraction = ospvLossFractionSent;
+        }
+    }
+}
+
+/* Set Received statistics */
+void OSPPStatsSetReceivedStatistics(
+    OSPT_STATS *ospvStats,
+    int ospvLossPacketsReceived,
+    int ospvLossFractionReceived)
+{
+    if (ospvStats != OSPC_OSNULL) {
+        if (ospvLossPacketsReceived >= 0) {
+            ospvStats->ospmLossReceived.hasvalue |= OSPC_SVALUE_PACKETS;
+            ospvStats->ospmLossReceived.packets = ospvLossPacketsReceived;
+        }
+        if (ospvLossFractionReceived >= 0) {
+            ospvStats->ospmLossReceived.hasvalue |= OSPC_SVALUE_FRACTION;
+            ospvStats->ospmLossReceived.fraction = ospvLossFractionReceived;
+        }
+    }
+}
+
+/* Get value for OneWay.Samples */
+unsigned OSPPStatsGetOneWaySamples(
+    OSPT_STATS *ospvStats)
+{
+    unsigned samp = 0;
+
+    if (ospvStats != OSPC_OSNULL) {
+        samp = ospvStats->ospmOneWay.samples;
+    }
+
+    return samp;
 }
 
 /* Get value for OneWay.Minimum */
@@ -87,56 +372,17 @@ float OSPPStatsGetOneWayVariance(
     return var;
 }
 
-/* Get value for OneWay.Samples */
-unsigned OSPPStatsGetOneWaySamples(
+/* Get value for RoundTrip.Samples */
+unsigned OSPPStatsGetRoundTripSamples(
     OSPT_STATS *ospvStats)
 {
     unsigned samp = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        samp = ospvStats->ospmOneWay.samples;
+        samp = ospvStats->ospmRoundTrip.samples;
     }
 
     return samp;
-}
-
-/* Get value for packetsreceived */
-unsigned OSPPStatsGetPktReceived(
-    OSPT_STATS *ospvStats)
-{
-    unsigned pktsrecvd = 0;
-
-    if (ospvStats != OSPC_OSNULL) {
-        pktsrecvd = ospvStats->ospmLossReceived.packets;
-    }
-
-    return pktsrecvd;
-}
-
-/* Get value for fractionsent */
-unsigned OSPPStatsGetFracSent(
-    OSPT_STATS *ospvStats)
-{
-    unsigned fracsent = 0;
-
-    if (ospvStats != OSPC_OSNULL) {
-        fracsent = ospvStats->ospmLossSent.fraction;
-    }
-
-    return fracsent;
-}
-
-/* Get value for packetssent */
-unsigned OSPPStatsGetPktSent(
-    OSPT_STATS *ospvStats)
-{
-    unsigned pktssent = 0;
-
-    if (ospvStats != OSPC_OSNULL) {
-        pktssent = ospvStats->ospmLossSent.packets;
-    }
-
-    return pktssent;
 }
 
 /* Get value for RoundTrip.Minimum */
@@ -178,259 +424,56 @@ float OSPPStatsGetRoundTripVariance(
     return var;
 }
 
-/* Get value for RoundTrip.Samples */
-unsigned OSPPStatsGetRoundTripSamples(
+/* Get value for packetsreceived */
+unsigned OSPPStatsGetPktReceived(
     OSPT_STATS *ospvStats)
 {
-    unsigned samp = 0;
+    unsigned pktsrecvd = 0;
 
-    if (ospvStats != OSPC_OSNULL) {
-        samp = ospvStats->ospmRoundTrip.samples;
+    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->ospmLossReceived.hasvalue & OSPC_SVALUE_PACKETS) != 0)) {
+        pktsrecvd = ospvStats->ospmLossReceived.packets;
     }
 
-    return samp;
+    return pktsrecvd;
 }
 
-/* Check for existence of LossReceived statistics */
-OSPTBOOL OSPPStatsHasLossReceived(
+/* Get value for fractionreceived */
+unsigned OSPPStatsGetFracReceived(
     OSPT_STATS *ospvStats)
 {
-    if (ospvStats != OSPC_OSNULL) {
-        return ((ospvStats->ospmLossReceived.packets >=0) || (ospvStats->ospmLossReceived.fraction >= 0));
-    } else {
-        return OSPC_FALSE;
+    unsigned fracrecvd = 0;
+
+    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->ospmLossReceived.hasvalue & OSPC_SVALUE_FRACTION) != 0)) {
+        fracrecvd = ospvStats->ospmLossReceived.fraction;
     }
+
+    return fracrecvd;
 }
 
-/* Check for existence of LossSent statistics */
-OSPTBOOL OSPPStatsHasLossSent(
+/* Get value for packetssent */
+unsigned OSPPStatsGetPktSent(
     OSPT_STATS *ospvStats)
 {
-    if (ospvStats != OSPC_OSNULL) {
-        return ((ospvStats->ospmLossSent.packets >= 0) || (ospvStats->ospmLossSent.fraction >= 0));
-    } else {
-        return OSPC_FALSE;
+    unsigned pktssent = 0;
+
+    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->ospmLossSent.hasvalue & OSPC_SVALUE_PACKETS) != 0)) {
+        pktssent = ospvStats->ospmLossSent.packets;
     }
+
+    return pktssent;
 }
 
-/* Check for existence of OneWay statistics */
-OSPTBOOL OSPPStatsHasOneWay(
+/* Get value for fractionsent */
+unsigned OSPPStatsGetFracSent(
     OSPT_STATS *ospvStats)
 {
-    if (ospvStats != OSPC_OSNULL) {
-        return ospvStats->ospmOneWay.hasvalue;
-    } else {
-        return OSPC_FALSE;
-    }
-}
+    unsigned fracsent = 0;
 
-/* Check for existence of RoundTrip statistics */
-OSPTBOOL OSPPStatsHasRoundTrip(
-    OSPT_STATS *ospvStats)
-{
-    if (ospvStats != OSPC_OSNULL) {
-        return ospvStats->ospmRoundTrip.hasvalue;
-    } else {
-        return OSPC_FALSE;
-    }
-}
-
-/* Create loss received element */
-int OSPPStatsLossReceivedToElement(
-    OSPT_STATS *ospvStats,
-    OSPT_XML_ELEM **ospvElem)
-{
-    int errorcode = OSPC_ERR_NO_ERROR;
-    OSPT_XML_ELEM *elem = OSPC_OSNULL;
-    OSPT_XML_ATTR *attr = OSPC_OSNULL;
-
-    if (ospvElem == OSPC_OSNULL) {
-        errorcode = OSPC_ERR_XML_NO_ELEMENT;
+    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->ospmLossSent.hasvalue & OSPC_SVALUE_FRACTION) != 0)) {
+        fracsent = ospvStats->ospmLossSent.fraction;
     }
 
-    if (ospvStats == OSPC_OSNULL) {
-        errorcode = OSPC_ERR_DATA_NO_STATS;
-    }
-
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_LOSSRCVD), "");
-        if (*ospvElem == OSPC_OSNULL) {
-            errorcode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
-                OSPPXMLElemAddAttr(*ospvElem, attr);
-                attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-        }
-    }
-
-    /* Loss Packets Received */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetPktReceived(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_PACKETS),
-            &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-            if (errorcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
-            }
-        }
-    }
-
-    /* Loss Fraction Received */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetFracReceived(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_FRACTION),
-            &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-            if (errorcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
-            }
-        }
-    }
-
-    /* clean up */
-    if (attr != OSPC_OSNULL) {
-        OSPM_FREE(attr);
-        attr = OSPC_OSNULL;
-    }
-
-    if (elem != OSPC_OSNULL) {
-        OSPM_FREE(elem);
-        elem = OSPC_OSNULL;
-    }
-
-    return errorcode;
-}
-
-/* Create loss sent element */
-int OSPPStatsLossSentToElement(
-    OSPT_STATS *ospvStats,
-    OSPT_XML_ELEM **ospvElem)
-{
-    int errorcode = OSPC_ERR_NO_ERROR;
-    OSPT_XML_ELEM *elem = OSPC_OSNULL;
-    OSPT_XML_ATTR *attr = OSPC_OSNULL;
-
-    if (ospvElem == OSPC_OSNULL) {
-        errorcode = OSPC_ERR_XML_NO_ELEMENT;
-    }
-
-    if (ospvStats == OSPC_OSNULL) {
-        errorcode = OSPC_ERR_DATA_NO_STATS;
-    }
-
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_LOSSSENT), "");
-        if (*ospvElem == OSPC_OSNULL) {
-            errorcode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
-                OSPPXMLElemAddAttr(*ospvElem, attr);
-                attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-        }
-    }
-
-    /* Loss Packets Sent */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetPktSent(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_PACKETS),
-            &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-            if (errorcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
-            }
-        }
-    }
-
-    /* Loss Fraction Sent */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetFracSent(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_FRACTION),
-            &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-            if (errorcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
-            }
-        }
-    }
-
-    /* clean up */
-    if (attr != OSPC_OSNULL) {
-        OSPM_FREE(attr);
-        attr = OSPC_OSNULL;
-    }
-
-    if (elem != OSPC_OSNULL) {
-        OSPM_FREE(elem);
-        elem = OSPC_OSNULL;
-    }
-
-    return errorcode;
-}
-
-/* Create new Statistics Structure */
-OSPT_STATS *OSPPStatsNew(void)
-{
-    OSPE_STATS_RANGE range;
-    OSPE_STATS_FLOW flow;
-    OSPT_STATS *ospvStats = OSPC_OSNULL;
-
-    OSPM_MALLOC(ospvStats, OSPT_STATS, sizeof(OSPT_STATS));
-    if (ospvStats != OSPC_OSNULL) {
-        OSPM_MEMSET(ospvStats, 0, sizeof(OSPT_STATS));
-
-        for (range = OSPC_SRANGE_PEERPEER; range < OSPC_SRANGE_NUMBER; range++) {
-            for (flow = OSPC_SFLOW_DOWNSTREAM; flow < OSPC_SFLOW_NUMBER; flow++) {
-                ospvStats->ospmOctets[range][flow] = -1;
-                ospvStats->ospmPackets[range][flow] = -1;
-                ospvStats->ospmRFactor[range][flow] = -1;
-                ospvStats->ospmMOS[range][flow] = -1;
-            }
-        }
-    }
-
-    return ospvStats;
+    return fracsent;
 }
 
 /* OneWay to Element */
@@ -701,139 +744,52 @@ int OSPPStatsRoundTripToElement(
     return errorcode;
 }
 
-/* Report statistics for this transaction. */
-int OSPPStatsReportUsage(
-    OSPT_STATS **ospvStats,         /* In - pter to place for stats struct */
-    int ospvLossPacketsSent,        /* In  */
-    int ospvLossFractionSent,       /* In  */
-    int ospvLossPacketsReceived,    /* In  */
-    int ospvLossFractionReceived)   /* In  */
-{
-    int errorcode = OSPC_ERR_NO_ERROR;
-
-    /*
-     * If variables are negative, no statistics are reported.
-     * Just return with no error
-     */
-    if (ospvLossFractionSent >= 0 || (ospvLossPacketsSent >= 0)) {
-        if (*ospvStats == OSPC_OSNULL) {
-            *ospvStats = OSPPStatsNew();
-            if (*ospvStats == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_TRAN_STATS_NEW_FAIL;
-            }
-        }
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetSentStatistics(*ospvStats, ospvLossPacketsSent, ospvLossFractionSent);
-        }
-    }
-
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        if ((ospvLossFractionReceived >= 0) || (ospvLossPacketsReceived >= 0)) {
-            if (*ospvStats == OSPC_OSNULL) {
-                *ospvStats = OSPPStatsNew();
-                if (*ospvStats == OSPC_OSNULL) {
-                    errorcode = OSPC_ERR_TRAN_STATS_NEW_FAIL;
-                }
-            }
-            if (errorcode == OSPC_ERR_NO_ERROR) {
-                OSPPStatsSetReceivedStatistics(*ospvStats, ospvLossPacketsReceived, ospvLossFractionReceived);
-            }
-        }
-    }
-
-    if ((errorcode != OSPC_ERR_NO_ERROR) && (*ospvStats != OSPC_OSNULL)) {
-        OSPPStatsDelete(ospvStats);
-    }
-
-    return errorcode;
-}
-
-/* Set Received statistics */
-void OSPPStatsSetReceivedStatistics(
-    OSPT_STATS *ospvStats,
-    int ospvLossPacketsReceived,
-    int ospvLossFractionReceived)
-{
-    if (ospvStats != OSPC_OSNULL) {
-        ospvStats->ospmLossReceived.packets = ospvLossPacketsReceived;
-        ospvStats->ospmLossReceived.fraction = ospvLossFractionReceived;
-    }
-}
-
-/* Set Sent statistics */
-void OSPPStatsSetSentStatistics(
-    OSPT_STATS *ospvStats,
-    int ospvLossPacketsSent,
-    int ospvLossFractionSent)
-{
-    if (ospvStats != OSPC_OSNULL) {
-        ospvStats->ospmLossSent.packets = ospvLossPacketsSent;
-        ospvStats->ospmLossSent.fraction = ospvLossFractionSent;
-    }
-}
-
-/* Create xml element from statistics structure */
-int OSPPStatsToElement(
+/* Create loss sent element */
+int OSPPStatsLossSentToElement(
     OSPT_STATS *ospvStats,
     OSPT_XML_ELEM **ospvElem)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
-    OSPE_STATS_REPORTER reporter;
-    OSPE_STATS type;
-    OSPE_STATS_RANGE range;
-    OSPE_STATS_FLOW flow;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
-
-    if (ospvStats == OSPC_OSNULL) {
-        errorcode = OSPC_ERR_DATA_NO_STATS;
-    }
 
     if (ospvElem == OSPC_OSNULL) {
         errorcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
+    if (ospvStats == OSPC_OSNULL) {
+        errorcode = OSPC_ERR_DATA_NO_STATS;
+    }
+
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* create the Statistics element as the parent */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_STATISTICS), "");
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_LOSSSENT), "");
         if (*ospvElem == OSPC_OSNULL) {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
-        } else {
-            switch (OSPPStatsGetReporter(ospvStats)) {
-            case OSPC_SREPORTER_CALLING:
-                reporter = OSPC_ALTINFO_CALLING;
-                break;
-            case OSPC_SREPORTER_CALLED:
-                reporter = OSPC_ALTINFO_CALLED;
-                break;
-            case OSPC_SREPORTER_PROXY:
-            default:
-                reporter = OSPC_ALTINFO_PROXY;
-                break;
-            }
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_REPORTER), OSPPAltInfoTypeGetName(reporter));
+        }
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
             if (attr != OSPC_OSNULL) {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
-
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-                if (attr != OSPC_OSNULL) {
-                    OSPPXMLElemAddAttr(*ospvElem, attr);
-                    attr = OSPC_OSNULL;
-                } else {
-                    errorcode = OSPC_ERR_XML_NO_ATTR;
-                }
             } else {
                 errorcode = OSPC_ERR_XML_NO_ATTR;
             }
         }
     }
 
-    /* Now add the children */
-    /* First LossSent */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        if (OSPPStatsHasLossSent(ospvStats)) {
-            errorcode = OSPPStatsLossSentToElement(ospvStats, &elem);
+    /* Loss Packets Sent */
+    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasLossSent(ospvStats, OSPC_SVALUE_PACKETS))) {
+        errorcode = OSPPMsgNumToElement(OSPPStatsGetPktSent(ospvStats),
+            OSPPMsgElemGetName(OSPC_MELEM_PACKETS),
+            &elem);
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+            if (attr != OSPC_OSNULL) {
+                OSPPXMLElemAddAttr(elem, attr);
+                attr = OSPC_OSNULL;
+            } else {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            }
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
@@ -841,10 +797,19 @@ int OSPPStatsToElement(
         }
     }
 
-    /* LossReceived */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        if (OSPPStatsHasLossReceived(ospvStats)) {
-            errorcode = OSPPStatsLossReceivedToElement(ospvStats, &elem);
+    /* Loss Fraction Sent */
+    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasLossSent(ospvStats, OSPC_SVALUE_FRACTION))) {
+        errorcode = OSPPMsgNumToElement(OSPPStatsGetFracSent(ospvStats),
+            OSPPMsgElemGetName(OSPC_MELEM_FRACTION),
+            &elem);
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+            if (attr != OSPC_OSNULL) {
+                OSPPXMLElemAddAttr(elem, attr);
+                attr = OSPC_OSNULL;
+            } else {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            }
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
@@ -852,53 +817,102 @@ int OSPPStatsToElement(
         }
     }
 
-    /* OneWay */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        if (OSPPStatsHasOneWay(ospvStats)) {
-            errorcode = OSPPStatsOneWayToElement(ospvStats, &elem);
-            if (errorcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
-            }
-        }
-    }
-
-    /* RoundTrip */
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        if (OSPPStatsHasRoundTrip(ospvStats)) {
-            errorcode = OSPPStatsRoundTripToElement(ospvStats, &elem);
-            if (errorcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
-            }
-        }
-    }
-
-    /* Lost/Jitter/Delay/Octets/Packets/RFactor/MOS */
-    for (range = OSPC_SRANGE_PEERPEER; (range < OSPC_SRANGE_NUMBER) && (errorcode == OSPC_ERR_NO_ERROR); range++) {
-           for (type = OSPC_STATS_LOST; (type < OSPC_STATS_NUMBER) && (errorcode == OSPC_ERR_NO_ERROR); type++) {
-            for (flow = OSPC_SFLOW_DOWNSTREAM; (flow < OSPC_SFLOW_NUMBER) && (errorcode == OSPC_ERR_NO_ERROR); flow++) {
-                errorcode = OSPPStatsValueToElement(ospvStats, type, range, flow, &elem);
-            }
-        }
-        if ((errorcode == OSPC_ERR_NO_ERROR) && (elem != OSPC_OSNULL)) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-            elem = OSPC_OSNULL;
-        }
-    }
-
-    if (errorcode != OSPC_ERR_NO_ERROR) {
-        if (*ospvElem != OSPC_OSNULL) {
-            OSPPXMLElemDelete(ospvElem);
-        }
+    /* clean up */
+    if (attr != OSPC_OSNULL) {
+        OSPM_FREE(attr);
+        attr = OSPC_OSNULL;
     }
 
     if (elem != OSPC_OSNULL) {
-        OSPPXMLElemDelete(&elem);
+        OSPM_FREE(elem);
+        elem = OSPC_OSNULL;
     }
 
+    return errorcode;
+}
+
+/* Create loss received element */
+int OSPPStatsLossReceivedToElement(
+    OSPT_STATS *ospvStats,
+    OSPT_XML_ELEM **ospvElem)
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        errorcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (ospvStats == OSPC_OSNULL) {
+        errorcode = OSPC_ERR_DATA_NO_STATS;
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_LOSSRCVD), "");
+        if (*ospvElem == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+            if (attr != OSPC_OSNULL) {
+                OSPPXMLElemAddAttr(*ospvElem, attr);
+                attr = OSPC_OSNULL;
+            } else {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            }
+        }
+    }
+
+    /* Loss Packets Received */
+    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasLossReceived(ospvStats, OSPC_SVALUE_PACKETS))) {
+        errorcode = OSPPMsgNumToElement(OSPPStatsGetPktReceived(ospvStats),
+            OSPPMsgElemGetName(OSPC_MELEM_PACKETS),
+            &elem);
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+            if (attr != OSPC_OSNULL) {
+                OSPPXMLElemAddAttr(elem, attr);
+                attr = OSPC_OSNULL;
+            } else {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            }
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* Loss Fraction Received */
+    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasLossReceived(ospvStats, OSPC_SVALUE_FRACTION))) {
+        errorcode = OSPPMsgNumToElement(OSPPStatsGetFracReceived(ospvStats),
+            OSPPMsgElemGetName(OSPC_MELEM_FRACTION),
+            &elem);
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+            if (attr != OSPC_OSNULL) {
+                OSPPXMLElemAddAttr(elem, attr);
+                attr = OSPC_OSNULL;
+            } else {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            }
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* clean up */
     if (attr != OSPC_OSNULL) {
-        OSPPXMLAttrDelete(&attr);
+        OSPM_FREE(attr);
+        attr = OSPC_OSNULL;
+    }
+
+    if (elem != OSPC_OSNULL) {
+        OSPM_FREE(elem);
+        elem = OSPC_OSNULL;
     }
 
     return errorcode;

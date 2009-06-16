@@ -139,32 +139,38 @@ typedef struct {
 extern "C" {
 #endif
 
+    OSPT_STATS *OSPPStatsNew(void);
     void OSPPStatsDelete(OSPT_STATS **);
-    unsigned OSPPStatsGetFracReceived(OSPT_STATS *);
-    unsigned OSPPStatsGetFracSent(OSPT_STATS *);
-    unsigned OSPPStatsGetOneWayMinimum(OSPT_STATS *);
-    unsigned OSPPStatsGetOneWayMean(OSPT_STATS *);
-    unsigned OSPPStatsGetOneWaySamples(OSPT_STATS *);
-    float OSPPStatsGetOneWayVariance(OSPT_STATS *);
-    unsigned OSPPStatsGetPktReceived(OSPT_STATS *);
-    unsigned OSPPStatsGetPktSent(OSPT_STATS *);
-    unsigned OSPPStatsGetRoundTripMinimum(OSPT_STATS *);
-    unsigned OSPPStatsGetRoundTripMean(OSPT_STATS *);
-    unsigned OSPPStatsGetRoundTripSamples(OSPT_STATS *);
-    float OSPPStatsGetRoundTripVariance(OSPT_STATS *);
-    OSPTBOOL OSPPStatsHasLossReceived(OSPT_STATS *);
-    OSPTBOOL OSPPStatsHasLossSent(OSPT_STATS *);
+    int OSPPStatsToElement(OSPT_STATS *, OSPT_XML_ELEM **);
+
     OSPTBOOL OSPPStatsHasOneWay(OSPT_STATS *);
     OSPTBOOL OSPPStatsHasRoundTrip(OSPT_STATS *);
-    int OSPPStatsLossReceivedToElement(OSPT_STATS *, OSPT_XML_ELEM **);
-    int OSPPStatsLossSentToElement(OSPT_STATS *, OSPT_XML_ELEM **);
-    OSPT_STATS *OSPPStatsNew(void);
+    OSPTBOOL OSPPStatsHasLossSent(OSPT_STATS *, unsigned);
+    OSPTBOOL OSPPStatsHasLossReceived(OSPT_STATS *, unsigned);
+
+    int OSPPStatsReportUsage(OSPT_STATS **, int, int, int, int);
+    void OSPPStatsSetSentStatistics(OSPT_STATS *, int, int);
+    void OSPPStatsSetReceivedStatistics(OSPT_STATS *, int, int);
+
+    unsigned OSPPStatsGetOneWaySamples(OSPT_STATS *);
+    unsigned OSPPStatsGetOneWayMinimum(OSPT_STATS *);
+    unsigned OSPPStatsGetOneWayMean(OSPT_STATS *);
+    float OSPPStatsGetOneWayVariance(OSPT_STATS *);
+
+    unsigned OSPPStatsGetRoundTripSamples(OSPT_STATS *);
+    unsigned OSPPStatsGetRoundTripMinimum(OSPT_STATS *);
+    unsigned OSPPStatsGetRoundTripMean(OSPT_STATS *);
+    float OSPPStatsGetRoundTripVariance(OSPT_STATS *);
+
+    unsigned OSPPStatsGetPktSent(OSPT_STATS *);
+    unsigned OSPPStatsGetFracSent(OSPT_STATS *);
+    unsigned OSPPStatsGetPktReceived(OSPT_STATS *);
+    unsigned OSPPStatsGetFracReceived(OSPT_STATS *);
+
     int OSPPStatsOneWayToElement(OSPT_STATS *, OSPT_XML_ELEM **);
     int OSPPStatsRoundTripToElement(OSPT_STATS *, OSPT_XML_ELEM **);
-    int OSPPStatsReportUsage(OSPT_STATS **, int, int, int, int);
-    void OSPPStatsSetReceivedStatistics(OSPT_STATS *, int, int);
-    void OSPPStatsSetSentStatistics(OSPT_STATS *, int, int);
-    int OSPPStatsToElement(OSPT_STATS *, OSPT_XML_ELEM **);
+    int OSPPStatsLossSentToElement(OSPT_STATS *, OSPT_XML_ELEM **);
+    int OSPPStatsLossReceivedToElement(OSPT_STATS *, OSPT_XML_ELEM **);
 
     OSPTBOOL OSPPStatsHasValue(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, unsigned);
     void OSPPStatsSetReporter(OSPT_STATS *, OSPE_STATS_REPORTER);
