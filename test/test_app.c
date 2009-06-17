@@ -1717,7 +1717,7 @@ int testOSPPSecCertShowChain()
     OSPM_MALLOC(certificate, unsigned char, CERT_SZ);
 
     if (certificate == OSPC_OSNULL) {
-        errorcode = (-1);
+        errorcode = -1;
         OSPM_DBGERRORLOG(errorcode, "Error allocating space for certificate");
     }
 
@@ -1730,7 +1730,7 @@ int testOSPPSecCertShowChain()
     }
 
 
-    for (caIndex = (-1); errorcode == OSPC_ERR_NO_ERROR;
+    for (caIndex = -1; errorcode == OSPC_ERR_NO_ERROR;
          caIndex = nextCAIndex) {
         if (errorcode == OSPC_ERR_NO_ERROR) {
             /* Reset buffer size */
@@ -1941,11 +1941,11 @@ int testStatsRFactor()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1.1);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2.2);
     OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, -1);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, 3);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, 4);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, 3.3);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, 4.4);
     OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, -1);
 
     return errorcode;
@@ -1955,12 +1955,12 @@ int testStatsMOS()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1);
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2);
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 3);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1.1);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2.2);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 3.3);
     OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, -1);
     OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, -1);
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 4);
+    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 4.4);
 
     return errorcode;
 }

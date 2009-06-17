@@ -171,7 +171,7 @@ int OSPPTNProbeInit(            /* returns maxFD (< 0 on error) */
     nMaxFd = -1;                /* so far, no error */
     *nMinFd = 0x0fffffff;
 
-    /* ZERO OUT THE SOCKET SET 
+    /* ZERO OUT THE SOCKET SET
      */
 
     FD_ZERO(pSocketSet);
@@ -284,7 +284,7 @@ void OSPPTNProbeCleanup(
 
         /* if an error, set the response time to infinite */
         if (pProbeList[uCnt].ospmPrStatus < OSPE_PRDONE) {
-            pProbeList[uCnt].ospmTime = (unsigned long) (-1);
+            pProbeList[uCnt].ospmTime = (unsigned long)(-1);
         }
     }
 }
@@ -390,11 +390,11 @@ void OSPPTNProbeEcho(
                 (fd_set *)0,                /* set for exceptions */
                 &timeout);                  /* time to wait */
 
-            /* CHECK FOR ERRORS/TIMEOUT 
+            /* CHECK FOR ERRORS/TIMEOUT
              */
             if (nRetVal <= 0) {
                 /*
-                 * Time ran out or Error Occurred; 
+                 * Time ran out or Error Occurred;
                  */
                 break;
             }
@@ -499,9 +499,9 @@ unsigned long OSPPTNProbeTimerMS(void)  /* returns current time in ms */
 }
 
 void OSPPTNProbePruneList(
-    OSPTLIST *ospvDests, 
-    OSPT_TN_PROBE *ospvProbes, 
-    unsigned ospvDelayLimit, 
+    OSPTLIST *ospvDests,
+    OSPT_TN_PROBE *ospvProbes,
+    unsigned ospvDelayLimit,
     unsigned *ospvNumDests)
 {
 
@@ -513,7 +513,7 @@ void OSPPTNProbePruneList(
     while (probecnt < *ospvNumDests) {
         if (tmpprobelist->ospmTime > ospvDelayLimit) {
 
-            /* find specific node in destlist that matches ipaddr 
+            /* find specific node in destlist that matches ipaddr
              * in probelist and remove it
              */
             for (dest = (OSPT_DEST *)OSPPListFirst(ospvDests); dest != OSPC_OSNULL; dest = (OSPT_DEST *)OSPPListNext(ospvDests, dest)) {
@@ -568,15 +568,15 @@ void OSPPTNProbePruneList(
 }
 
 int OSPPTNProbeCompare(
-    const void *probeptr1, 
+    const void *probeptr1,
     const void *probeptr2)
 {
     return ((OSPT_TN_PROBE *)probeptr1)->ospmTime - ((OSPT_TN_PROBE *)probeptr2)->ospmTime;
 }
 
 void OSPPTNProbeArrangeList(
-    OSPTLIST *ospvDests, 
-    OSPT_TN_PROBE *ospvProbes, 
+    OSPTLIST *ospvDests,
+    OSPT_TN_PROBE *ospvProbes,
     unsigned ospvNumDests)
 {
     OSPTLIST newlist = OSPC_OSNULL;
@@ -590,7 +590,7 @@ void OSPPTNProbeArrangeList(
 
     for (probecnt = 0; probecnt < ospvNumDests; probecnt++) {
 
-        /* find specific node in destlist that matches ipaddr 
+        /* find specific node in destlist that matches ipaddr
          * in probelist, remove it and add to new list
          */
         for (dest = (OSPT_DEST *)OSPPListFirst(ospvDests); dest != OSPC_OSNULL; dest = (OSPT_DEST *)OSPPListNext(ospvDests, dest)) {

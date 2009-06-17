@@ -40,8 +40,8 @@ OSPT_STATS *OSPPStatsNew(void)
             for (flow = OSPC_SFLOW_DOWNSTREAM; flow < OSPC_SFLOW_NUMBER; flow++) {
                 ospvStats->ospmOctets[range][flow] = -1;
                 ospvStats->ospmPackets[range][flow] = -1;
-                ospvStats->ospmRFactor[range][flow] = -1;
-                ospvStats->ospmMOS[range][flow] = -1;
+                ospvStats->ospmRFactor[range][flow] = -1.0;
+                ospvStats->ospmMOS[range][flow] = -1.0;
             }
         }
     }
@@ -1164,7 +1164,7 @@ void OSPPStatsGetMetrics(
     *ospvMinimum = -1;
     *ospvMaximum = -1;
     *ospvMean = -1;
-    *ospvVariance = -1;
+    *ospvVariance = -1.0;
 
     if ((ospvStats != OSPC_OSNULL) &&
         ((ospvRange == OSPC_SRANGE_PEERPEER) || (ospvRange == OSPC_SRANGE_PEERPROXY) || (ospvRange == OSPC_SRANGE_PROXYPEER)) &&
@@ -1231,7 +1231,7 @@ float OSPPStatsGetFloat(
     OSPE_STATS_RANGE ospvRange,
     OSPE_STATS_FLOW ospvFlow)
 {
-    int ospvValue = -1;
+    float ospvValue = -1.0;
 
     if ((ospvStats != OSPC_OSNULL) &&
         ((ospvRange == OSPC_SRANGE_PEERPEER) || (ospvRange == OSPC_SRANGE_PEERPROXY) || (ospvRange == OSPC_SRANGE_PROXYPEER)) &&
