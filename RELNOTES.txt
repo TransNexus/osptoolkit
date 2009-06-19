@@ -492,4 +492,7 @@ Version 3.5.1
 * Fixed typos of destination count.
 * Added reporting network ID in UsageInd.
 * Added support for reporting full statistics.
+---------------------------------------------------------------------------
+
+Version 3.5.2
 
