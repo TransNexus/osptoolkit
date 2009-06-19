@@ -110,7 +110,7 @@ void OSPPHttpDelete(
         OSPPSockClose(OSPC_TRUE, &((*ospvHttp)->SockFd), &((*ospvHttp)->SSLSession));
     }
 
-    comm = (OSPTCOMM *) (*ospvHttp)->Comm;
+    comm = (OSPTCOMM *)(*ospvHttp)->Comm;
 
     osppHttpDeleteServicePointList(&(*ospvHttp)->ServicePointList, comm->NumberOfServicePoints);
     OSPM_FREE(*ospvHttp);
@@ -126,7 +126,7 @@ void osppHttpDeleteServicePointList(
     OSPTSVCPT *deletesvcpt = OSPC_OSNULL;
 
     for (count = 0; count < ospvNumberOfServicePoints; count++) {
-        deletesvcpt = (OSPTSVCPT *)OSPPListRemove((OSPTLIST *) svcpt);
+        deletesvcpt = (OSPTSVCPT *)OSPPListRemove((OSPTLIST *)svcpt);
         if (deletesvcpt != OSPC_OSNULL) {
             if (deletesvcpt->HostName)
                 OSPM_FREE(deletesvcpt->HostName);
@@ -137,7 +137,7 @@ void osppHttpDeleteServicePointList(
             OSPM_FREE(deletesvcpt);
         }
     }
-    OSPPListDelete((OSPTLIST *) svcpt);
+    OSPPListDelete((OSPTLIST *)svcpt);
 }
 
 static int osppHttpBuildMsg(
@@ -315,7 +315,7 @@ static OSPTTHREADRETURN osppHttpSetupAndMonitor(
         OSPM_DBGNET(("MISC : osppHttpSetupAndMonitor() monitor start\n"));
 
         msginfo = OSPC_OSNULL;
-        comm = (OSPTCOMM *) httpconn->Comm;
+        comm = (OSPTCOMM *)httpconn->Comm;
 
         /*
          * acquire message queue mutex
@@ -558,7 +558,7 @@ static OSPTTHREADRETURN osppHttpSetupAndMonitor(
             connected = OSPC_FALSE;
             httpconn->CurrentMsgCount = 0;
         }
-    }                            /* Loop until signaled to exit */
+    }   /* Loop until signaled to exit */
 
     /*
      * finally clean up the memory for the connection
@@ -782,7 +782,7 @@ static int osppHttpSelectConnection(
              * add the new http connection object to the HttpConnList
              */
 
-            OSPPListAppend((OSPTLIST *)&(ospvComm->HttpConnList), (void *) *ospvHttp);
+            OSPPListAppend((OSPTLIST *)&(ospvComm->HttpConnList), (void *)*ospvHttp);
 
             /*
              * Copy the SP list from the CommMgr to the http obj
@@ -831,7 +831,7 @@ int osppHttpGetIdleHttpConn(
 
     /* Get the first item in the queue */
     *ospvHttp = (OSPTHTTP *)OSPPListFirst((OSPTLIST *)ospvHttpList);
-    Comm = (OSPTCOMM *) (*ospvHttp)->Comm;
+    Comm = (OSPTCOMM *)(*ospvHttp)->Comm;
 
     if (*ospvHttp == OSPC_OSNULL) {
         errorcode = OSPC_ERR_HTTP_BAD_QUEUE;
@@ -842,7 +842,7 @@ int osppHttpGetIdleHttpConn(
      */
     if (errorcode == OSPC_ERR_NO_ERROR) {
         for (i = 0; i < RoundRobinIndex; i++) {
-            *ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList, (void *) *ospvHttp);
+            *ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList, (void *)*ospvHttp);
         }
 
         assert(*ospvHttp != NULL);
@@ -861,7 +861,7 @@ int osppHttpGetIdleHttpConn(
                 found = OSPC_TRUE;
                 break;
             } else {
-                *ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList, (void *) *ospvHttp);
+                *ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList, (void *)*ospvHttp);
                 if (*ospvHttp == NULL) {
                     *ospvHttp = (OSPTHTTP *)OSPPListFirst((OSPTLIST *)ospvHttpList);
                 }
@@ -909,7 +909,7 @@ int osppHttpGetIdleHttpConn(
                         found = OSPC_TRUE;
                         break;
                     } else {
-                        *ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList, (void *) *ospvHttp);
+                        *ospvHttp = (OSPTHTTP *)OSPPListNext((OSPTLIST *)ospvHttpList, (void *)*ospvHttp);
                         if (*ospvHttp == NULL) {
                             *ospvHttp = (OSPTHTTP *)OSPPListFirst((OSPTLIST *)ospvHttpList);
                         }
@@ -967,7 +967,7 @@ void osppHttpCopySPList(
         newsvcptnode->HostName = OSPM_STRDUP(svcptitem->HostName);
         newsvcptnode->URI = OSPM_STRDUP(svcptitem->URI);
 
-        OSPPListAppend((OSPTLIST *)&newroot, (void *) newsvcptnode);
+        OSPPListAppend((OSPTLIST *)&newroot, (void *)newsvcptnode);
 
         svcptitem = (OSPTSVCPT *)OSPPListNext((OSPTLIST *)&svcptlist, svcptitem);
         if (svcptitem == NULL) {

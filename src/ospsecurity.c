@@ -45,7 +45,7 @@ void OpenSSLErrorLog(int errorcode);
 /* IMPLEMENTATION OF MEMBER FUNCTIONS */
 /**************************************/
 
-/* Create and initialize new security object 
+/* Create and initialize new security object
     Create the object and zero it out.
     Elements will be added separately by the caller.
     Set default digest algorithm and local validation.
@@ -118,7 +118,7 @@ int OSPPSecNew(
 }
 
 int OSPPSecSetPrivateKey(
-    OSPTSEC *ospvSecurity, 
+    OSPTSEC *ospvSecurity,
     OSPTPRIVATEKEY *ospvPrivateKey)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -172,7 +172,7 @@ int OSPPSecCopyPrivateKey(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Test data size */
         if ((ospvPrivateKey == OSPC_OSNULL) ||
-            (ospvPrivateKey->PrivateKeyData == OSPC_OSNULL) || (privateKeyDataLength > ospvPrivateKey->PrivateKeyLength)) 
+            (ospvPrivateKey->PrivateKeyData == OSPC_OSNULL) || (privateKeyDataLength > ospvPrivateKey->PrivateKeyLength))
         {
             errorcode = OSPC_ERR_SEC_NOT_ENOUGH_SPACE_FOR_COPY;
             OSPM_DBGERRORLOG(errorcode, "Not enough space provided for key\n"
@@ -193,7 +193,7 @@ int OSPPSecCopyPrivateKey(
 }
 
 int OSPPSecGetLocalValidation(
-    OSPTSEC *ospvSecurity, 
+    OSPTSEC *ospvSecurity,
     unsigned *ospvLocalValidation)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -210,9 +210,9 @@ int OSPPSecGetLocalValidation(
 }
 
 int OSPPSecSetLocalCertificate(
-    OSPTSEC *ospvSecurity, 
-    unsigned char *ospvLocalCertificate, 
-    unsigned long *ospvCustomerId, 
+    OSPTSEC *ospvSecurity,
+    unsigned char *ospvLocalCertificate,
+    unsigned long *ospvCustomerId,
     unsigned long *ospvDeviceId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -256,7 +256,7 @@ int OSPPSecSetLocalCertificate(
 }
 
 int OSPPSecSetLocalValidation(
-    OSPTSEC *ospvSecurity, 
+    OSPTSEC *ospvSecurity,
     unsigned ospvLocalValidation)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -272,14 +272,14 @@ int OSPPSecSetLocalValidation(
     return errorcode;
 }
 
-/* Return the list of authority certificates stored in the security object.  
+/* Return the list of authority certificates stored in the security object.
     Storage for ospvCertificateCount certificates, each less than or equal to
     ospvMaxCertificateSize bytes must be provided by the caller.
 */
 int OSPPSecCopyAuthorityCertificates(
     OSPTSEC *ospvSecurity,                      /* In - security context */
     unsigned ospvMaxCertificateSize,            /* In - Max cert size */
-    unsigned char *ospvAuthorityCertificates[], 
+    unsigned char *ospvAuthorityCertificates[],
     unsigned *ospvCertificateCount)             /* In/Out - Max allowed/# returned */
 {
     unsigned i;
@@ -392,17 +392,17 @@ int OSPPSecDelete(
 }
 
 int OSPPSecVerifyRootAuthorityCertificate(
-    OSPTSEC *ospvSecurity, 
-    void *ospvRootCACert, 
+    OSPTSEC *ospvSecurity,
+    void *ospvRootCACert,
     int ospvRootCACertLen)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
-    unsigned certNum = 0;        /* Number of certificates */
+    unsigned certNum = 0;                   /* Number of certificates */
     OSPTASN1OBJECT **cert = OSPC_OSNULL;    /* Certificate info pointers */
-    unsigned count = 0;            /* Loop var. */
-    unsigned char *certData = NULL;    /* Certificate itself */
-    unsigned certSize = 0;        /* Certificate size */
-    int certMatch = OSPC_FALSE;    /* Do they match ? */
+    unsigned count = 0;                     /* Loop var. */
+    unsigned char *certData = NULL;         /* Certificate itself */
+    unsigned certSize = 0;                  /* Certificate size */
+    int certMatch = OSPC_FALSE;             /* Do they match ? */
 
     errorcode = OSPPSecLock(ospvSecurity, OSPC_LOCK_READ);
 
@@ -481,8 +481,8 @@ int OSPPSecVerifyRootAuthorityCertificate(
 }   /* OSPPSecVerifyRootAuthorityCertificate */
 
 int OSPPSecSetAuthorityCertificates(
-    OSPTSEC *ospvSecurity, 
-    unsigned ospvNumberOfAuthorityCertificates, 
+    OSPTSEC *ospvSecurity,
+    unsigned ospvNumberOfAuthorityCertificates,
     const OSPT_CERT *ospvAuthorityCertificates[])
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -532,7 +532,7 @@ int OSPPSecSetAuthorityCertificates(
 
                 /* p is a temporary pointer, it will be updated by the functions */
                 p = ospvAuthorityCertificates[i]->CertData;
-                newX509Cert = d2i_X509(OSPC_OSNULL, (const unsigned char **) (&p), ospvAuthorityCertificates[i]->CertDataLength);
+                newX509Cert = d2i_X509(OSPC_OSNULL, (const unsigned char **)(&p), ospvAuthorityCertificates[i]->CertDataLength);
 
                 if (newX509Cert != OSPC_OSNULL) {
                     sk_X509_push(ospvSecurity->AuthorityCertStack, newX509Cert);
@@ -546,7 +546,7 @@ int OSPPSecSetAuthorityCertificates(
                     }
 
                     /*
-                     ** At this time, there are two references to the X509 object - 
+                     ** At this time, there are two references to the X509 object -
                      ** this pointer and the X509_STORE.
                      ** This call will decrement the reference counter, but
                      ** will NOT release the object.
@@ -577,9 +577,9 @@ int OSPPSecSetAuthorityCertificates(
 int OSPPSecSignatureVerify(
     OSPTSEC *ospvSecurity,
     unsigned char **ospvContent,
-    unsigned *ospvContentLength, 
-    unsigned char *ospvSignature, 
-    unsigned ospvSignatureLength, 
+    unsigned *ospvContentLength,
+    unsigned char *ospvSignature,
+    unsigned ospvSignatureLength,
     int ospvSignatureOnly)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -632,12 +632,12 @@ int OSPPSecSignatureVerify(
        whose content type is SIGNED DATA.  The SIGNED DATA content
        contains a CONTENT INFO whose content type is DATA.  The DATA
        content may or may not contain the data that was digested to create
-       the SIGNED DATA Signature element.  
+       the SIGNED DATA Signature element.
 
        If ospvContent is a null pointer, then expect the content that was
        digested to be included in the signature.  Verify the signature
        using the data and then extract the data into dynamically allocated
-       storage.  
+       storage.
 
        If ospvContent is non-null, then assume the signature does not
        contain the data that was digested to create the signature.  Digest
@@ -695,7 +695,7 @@ int OSPPSecSignatureVerify(
     } else {
         OSPM_DBGERRORLOG(errorcode, "SIGNATURE - ERROR");
     }
-    if (OSPC_OSNULL != el) {
+    if (el != OSPC_OSNULL) {
         OSPPASN1ElementDelete(&el, 0);
     }
     OSPPASN1ObjectDelete(&signatureObject);
@@ -704,8 +704,8 @@ int OSPPSecSignatureVerify(
     return errorcode;
 }
 
-/* 
- * Copy the DER encoded local certificate from the security object  to the storage supplied by the caller 
+/*
+ * Copy the DER encoded local certificate from the security object  to the storage supplied by the caller
  */
 int OSPPSecCopyLocalCertificate(
     OSPTSEC *ospvSecurity,                  /* In - security context */
@@ -762,7 +762,7 @@ int OSPPSecCopyLocalCertificate(
 
 /* Return the number of authority certificates stored in the security object */
 int OSPPSecGetNumberOfAuthorityCertificates(
-    OSPTSEC *ospvSecurity,    /* In - Security context */
+    OSPTSEC *ospvSecurity,  /* In - Security context */
     unsigned *ospvNumberOfAuthorityCertificates)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -872,7 +872,7 @@ int OSPPSecDeleteAuthorityCertificates(
 }
 
 int OSPPSecSetDigestAlgorithm(
-    OSPTSEC *ospvSecurity, 
+    OSPTSEC *ospvSecurity,
     OSPTASN1OBJECT *ospvDigestAlgorithmId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -887,9 +887,9 @@ int OSPPSecSetDigestAlgorithm(
 
 int OSPPSecSignatureCreate(OSPTSEC *ospvSecurity,
     unsigned char *ospvContent,
-    unsigned ospvContentLength, 
-    unsigned char **ospvSignature, 
-    unsigned *ospvSignatureLength, 
+    unsigned ospvContentLength,
+    unsigned char **ospvSignature,
+    unsigned *ospvSignatureLength,
     int ospvSignatureOnly)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -942,8 +942,8 @@ int OSPPSecSignatureCreate(OSPTSEC *ospvSecurity,
 }
 
 int OSPPSecGetPrivateKeyData(
-    OSPTSEC *ospvSecurity, 
-    unsigned char **ospvPrivateKeyData, 
+    OSPTSEC *ospvSecurity,
+    unsigned char **ospvPrivateKeyData,
     unsigned int *ospvPrivateKeyDataLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -974,9 +974,9 @@ int OSPPSecGetLocalCertInfo(
 }
 
 int OSPPSecValidCertChain(
-    OSPTSEC *ospvSecurity, 
-    int *ospvCAIndex, 
-    unsigned char *ospvCertificate, 
+    OSPTSEC *ospvSecurity,
+    int *ospvCAIndex,
+    unsigned char *ospvCertificate,
     unsigned int *ospvCertificateLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -986,15 +986,15 @@ int OSPPSecValidCertChain(
     unsigned int certificateLength = 0;
     OSPTBOOL localcert = OSPC_FALSE;
 
-    /* 
+    /*
        This function tests certificates against the certificates stored in the
        CA certificate list. If it finds a parent certificate, it returns the
-       index of the parent to the caller.  
+       index of the parent to the caller.
 
-       The first time this fuction is called, the caller will set the CAIndex 
-       to -1 to indicate that the certificate to be tested is the 
+       The first time this fuction is called, the caller will set the CAIndex
+       to -1 to indicate that the certificate to be tested is the
        local signing certificate.  Upon return, CAIndex will be set to the
-       index of the issuing certificate.  
+       index of the issuing certificate.
 
        For subsequent calls to this function the caller will leave the CAIndex
        value as is.  The function will use that certificate as the test
@@ -1017,7 +1017,7 @@ int OSPPSecValidCertChain(
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Get the test certificate */
-        if (*ospvCAIndex == (-1)) {
+        if (*ospvCAIndex == -1) {
             /* Get local certificate for testing */
             testCert = ospvSecurity->LocalCertInfo;
             localcert = OSPC_TRUE;
@@ -1065,9 +1065,9 @@ int OSPPSecValidCertChain(
 
 int OSPPSecGetSignerCertSubjectName(
     OSPTSEC *ospvSecurity,
-    unsigned char *ospvToken, 
-    unsigned ospvTokenLen, 
-    unsigned char **ospvSubjectName, 
+    unsigned char *ospvToken,
+    unsigned ospvTokenLen,
+    unsigned char **ospvSubjectName,
     unsigned *ospvSubjectNameLen)
 {
     OSPTASN1OBJECT *signercert = OSPC_OSNULL;

@@ -56,7 +56,7 @@ int OSPPMimeBodyPartsParse(
     OSPTMIMEPART header;
     int partsfound = 0;
 
-    OSPM_DBGENTER(("ENTER: OSPPMimeBodyPartsParse() bufend == [%d] buf = [%*s]\n", bufend, bufend, (char *) buf));
+    OSPM_DBGENTER(("ENTER: OSPPMimeBodyPartsParse() bufend == [%d] buf = [%*s]\n", bufend, bufend, (char *)buf));
     OSPM_MEMSET(&header, 0, sizeof(OSPTMIMEPART));
 
     /* strip off body parts, send to parser */
@@ -76,7 +76,7 @@ int OSPPMimeBodyPartsParse(
                     }
                 }
                 currpos++;
-            }                    /* end while(currpos < bufend... */
+            }   /* end while(currpos < bufend... */
 
             if (found) {
 
@@ -309,7 +309,7 @@ int OSPPMimeMessageBuild(
     }
 
     OSPM_DBGENTER(("ENTER: OSPPMimeMessageBuild()\n"));
-    count = (boundln * 3) + mshdrln + msszln + ospvMessage->MsgPart->Length + sighdrln + sigszln + ospvMessage->SigPart->Length + 2 * numdelims + 2 * numcrlfs;    /* CRLFs, boundary delimiters */
+    count = (boundln * 3) + mshdrln + msszln + ospvMessage->MsgPart->Length + sighdrln + sigszln + ospvMessage->SigPart->Length + 2 * numdelims + 2 * numcrlfs;     /* CRLFs, boundary delimiters */
 
     ospvMessage->Length = count;
 
@@ -650,7 +650,7 @@ int OSPPMimeMessageParse(
 
     OSPPMimeFieldFree(&content);
 
-    if (OSPM_STRSTR((const char *) content.FieldBody.Content, "multipart")) {
+    if (OSPM_STRSTR((const char *)content.FieldBody.Content, "multipart")) {
         OSPPMimeBodyFree(&mimebody);
     } else {
         OSPM_FREE(mimebody.BodyParts[0]);
@@ -1009,7 +1009,7 @@ int OSPPMimeVerifyParameters(
                         errorcode = OSPC_ERR_MIME_MALLOC_FAILED;
                         OSPM_DBGERRORLOG(errorcode, "malloc failed for boundary content");
                     }
-                } /* end if (pfound) */
+                }   /* end if (pfound) */
                 else {
                     errorcode = OSPC_ERR_MIME_BOUNDARY_NOT_FOUND;
                     OSPM_DBGERRORLOG(errorcode, "boundary not found");
@@ -1102,7 +1102,7 @@ int OSPPUtilMemCaseCmp(
                 *ospvResult = 1;
                 break;
             }
-        }                        /* end for */
+        }   /* end for */
     } else {
         errorcode = OSPC_ERR_MIME_INVALID_ARG;
         OSPM_DBGERRORLOG(errorcode, "no data for compare");

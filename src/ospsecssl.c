@@ -34,7 +34,7 @@ OSPTBOOL OSPPSecSSLLifetimeHasExpired(
     if (ospvSessionId != OSPC_OSNULL) {
         lifetime = OSPPSecGetSSLLifetime(ospvSecurity);
 
-        if ((ospvSessionId->IssuedTime + (OSPTTIME) lifetime) < (OSPTTIME)OSPM_TIME((OSPTTIME *) 0) || ospvSessionId->Length == 0) {
+        if ((ospvSessionId->IssuedTime + (OSPTTIME) lifetime) < (OSPTTIME)OSPM_TIME((OSPTTIME *)0) || ospvSessionId->Length == 0) {
             hasexpired = OSPC_TRUE;
             OSPM_DBGSEC(("SSL  : OSPPSecSSLLifetimeHasExpired() session expired\n"));
         }
@@ -68,7 +68,7 @@ int OSPPSecSSLSessionIdNew(
                  */
                 sslsessionid->Length = ospvLength;
                 OSPM_MEMCPY(sslsessionid->Value, ospvData, ospvLength);
-                sslsessionid->IssuedTime = OSPM_TIME((OSPTTIME *) 0);
+                sslsessionid->IssuedTime = OSPM_TIME((OSPTTIME *)0);
                 OSPM_MALLOC(sslsessionid->HostName, char, OSPM_STRLEN(ospvHostName));
                 if (sslsessionid->HostName != OSPC_OSNULL) {
                     OSPM_MEMCPY(sslsessionid->HostName, ospvHostName, OSPM_STRLEN(ospvHostName));
@@ -83,9 +83,9 @@ int OSPPSecSSLSessionIdNew(
                                (unsigned long)sslsessionid, sslsessionid->Length, 
                                (unsigned long)sslsessionid->Value);
                              */
-                            for (item = (OSPTSSLSESSIONID *)OSPPListFirst((OSPTLIST *) & (ospvSecurity->SSLSessionIdList));
+                            for (item = (OSPTSSLSESSIONID *)OSPPListFirst((OSPTLIST *)&(ospvSecurity->SSLSessionIdList));
                                  item != OSPC_OSNULL;
-                                 item = (OSPTSSLSESSIONID *)OSPPListNext((OSPTLIST *) & (ospvSecurity->SSLSessionIdList), item)) 
+                                 item = (OSPTSSLSESSIONID *)OSPPListNext((OSPTLIST *)&(ospvSecurity->SSLSessionIdList), item)) 
                             {
                                 /*
                                    fprintf(stderr, "Comparing sess %lx val %lx with sess %lx val %lx sz %d\n", 
@@ -104,7 +104,7 @@ int OSPPSecSSLSessionIdNew(
                                    fprintf(stderr, "Session Id Added Value = %lx\n", (unsigned long)sslsessionid->Value);
                                  */
                                 /* add sessionid to current list */
-                                OSPPListAppend((OSPTLIST *) & (ospvSecurity->SSLSessionIdList), (void *) sslsessionid);
+                                OSPPListAppend((OSPTLIST *)&(ospvSecurity->SSLSessionIdList), (void *)sslsessionid);
                                 OSPM_DBGSEC(("SSL  : OSPPSecSSLSessionIdNew() session add to list\n"));
                             } else {
                                 /* it's a duplicate, SSLREF will make 'Add' callback even on reuse */
@@ -129,7 +129,7 @@ int OSPPSecSSLSessionIdNew(
             errorcode = OSPC_ERR_SSL_INIT_SESSION_FAILED;
         }
     }
-    OSPM_DBGSEC(("SSL  : OSPPSecSSLSessionIdNew() db count = <%u>\n", OSPPListCount((OSPTLIST *) & (ospvSecurity->SSLSessionIdList))));
+    OSPM_DBGSEC(("SSL  : OSPPSecSSLSessionIdNew() db count = <%u>\n", OSPPListCount((OSPTLIST *)&(ospvSecurity->SSLSessionIdList))));
 
     OSPM_DBGEXIT(("EXIT : OSPPSecSSLSessionIdNew() (%d)\n", errorcode));
     return errorcode;
@@ -153,9 +153,9 @@ int OSPPSecSSLSessionIdGet(
         if (ospvSecurity->SSLSessionHasMutex == OSPC_TRUE) {
             OSPM_MUTEX_LOCK(ospvSecurity->SSLSessionMutex, errorcode);
             if (errorcode == OSPC_ERR_NO_ERROR) {
-                for (sslsessionid = (OSPTSSLSESSIONID *)OSPPListFirst((OSPTLIST *) & (ospvSecurity->SSLSessionIdList));
+                for (sslsessionid = (OSPTSSLSESSIONID *)OSPPListFirst((OSPTLIST *)&(ospvSecurity->SSLSessionIdList));
                      sslsessionid != OSPC_OSNULL;
-                     sslsessionid = (OSPTSSLSESSIONID *)OSPPListNext((OSPTLIST *) & (ospvSecurity->SSLSessionIdList), sslsessionid)) 
+                     sslsessionid = (OSPTSSLSESSIONID *)OSPPListNext((OSPTLIST *)&(ospvSecurity->SSLSessionIdList), sslsessionid)) 
                 {
                     result = OSPM_MEMCMP(ospvHostName, sslsessionid->HostName, OSPM_STRLEN(ospvHostName));
 
@@ -201,7 +201,7 @@ void OSPPSecSSLSessionIdDelete(
                 OSPM_MUTEX_LOCK(ospvSecurity->SSLSessionMutex, errorcode);
             }
             if (errorcode == OSPC_ERR_NO_ERROR) {
-                OSPPListRemoveSpecificItem((OSPTLIST *) & (ospvSecurity->SSLSessionIdList), (void *) (*ospvSSLSessionId));
+                OSPPListRemoveSpecificItem((OSPTLIST *)&(ospvSecurity->SSLSessionIdList), (void *)(*ospvSSLSessionId));
 
                 if ((*ospvSSLSessionId)->Value != OSPC_OSNULL) {
                     OSPM_FREE((*ospvSSLSessionId)->Value);
@@ -240,7 +240,7 @@ int OSPPSecSSLSessionIdInitDB(
         }
         OSPM_MUTEX_LOCK(ospvSecurity->SSLSessionMutex, errorcode);
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPListNew((OSPTLIST *) & (ospvSecurity->SSLSessionIdList));
+            OSPPListNew((OSPTLIST *)&(ospvSecurity->SSLSessionIdList));
             OSPM_MUTEX_UNLOCK(ospvSecurity->SSLSessionMutex, errorcode);
         }
     }
@@ -258,8 +258,8 @@ void OSPPSecSSLSessionIdDeleteDB(
             OSPM_MUTEX_LOCK(ospvSecurity->SSLSessionMutex, errorcode);
             if (errorcode == OSPC_ERR_NO_ERROR && ospvSecurity->SSLSessionIdList != OSPC_OSNULL) {
 
-                while (!OSPPListEmpty((OSPTLIST *) & (ospvSecurity->SSLSessionIdList))) {
-                    sslsessionid = (OSPTSSLSESSIONID *)OSPPListRemove((OSPTLIST *) & (ospvSecurity->SSLSessionIdList));
+                while (!OSPPListEmpty((OSPTLIST *)&(ospvSecurity->SSLSessionIdList))) {
+                    sslsessionid = (OSPTSSLSESSIONID *)OSPPListRemove((OSPTLIST *)&(ospvSecurity->SSLSessionIdList));
                     OSPPSecSSLSessionIdDelete(ospvSecurity, &sslsessionid, OSPC_FALSE);
                 }
             }

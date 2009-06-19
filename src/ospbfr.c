@@ -100,7 +100,7 @@ unsigned OSPPBfrWriteBlock( /* returns number of bytes written */
     unsigned ospvWritten = 0;   /* count of bytes written */
 
     if (ospvBfrAddr != OSPC_OSNULL) {
-        if (*ospvBfrAddr != OSPC_OSNULL) {    /* guard will catch bad indirection */
+        if (*ospvBfrAddr != OSPC_OSNULL) {  /* guard will catch bad indirection */
             oldBfr = *ospvBfrAddr;
             ospvWritten = 0;
 
@@ -156,7 +156,7 @@ unsigned OSPPBfrWriteByte(  /* returns number of bytes written */
     unsigned addSize;           /* if new buffer needed, how much to grow */
 
     if (ospvBfrAddr != OSPC_OSNULL) {
-        if (*ospvBfrAddr != OSPC_OSNULL) {    /* guard will catch bad indirection */
+        if (*ospvBfrAddr != OSPC_OSNULL) {  /* guard will catch bad indirection */
             oldBfr = *ospvBfrAddr;
             ospvWritten = 0;
 
@@ -171,7 +171,7 @@ unsigned OSPPBfrWriteByte(  /* returns number of bytes written */
                  * possible optimizations include trying realloc first
                  */
 
-                addSize = 1 + OSPPBfrSize(oldBfr) / 10;    /* try adding 10% */
+                addSize = 1 + OSPPBfrSize(oldBfr) / 10;     /* try adding 10% */
                 newBfr = OSPPBfrNew(OSPPBfrSize(oldBfr) + addSize);
                 if (newBfr != OSPC_OSNULL) {
                     /*
@@ -222,7 +222,7 @@ unsigned OSPPBfrReadBlock(  /* returns number of bytes read */
             }
 
             OSPM_MEMCPY(ospvPtr, OSPPBfrLinearPtr(bfr), ospvRead);
-            bfr->ospmBfrRead += ospvRead;    /* update header */
+            bfr->ospmBfrRead += ospvRead;   /* update header */
         }
     }
 

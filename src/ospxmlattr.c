@@ -83,7 +83,7 @@ OSPT_XML_ATTR *OSPPXMLAttrNew(  /* returns the new attribute (or NULL) */
             /* make sure the allocation succeeded before proceeding */
             if (ospvAttr != OSPC_OSNULL) {
                 /* calculate where the "hidden" values will go */
-                nameptr = ((char *) (ospvAttr)) + sizeof(OSPT_XML_ATTR);
+                nameptr = ((char *)(ospvAttr)) + sizeof(OSPT_XML_ATTR);
                 valptr = nameptr + namelen;
 
                 /* copy the values into their hidden location */
@@ -106,7 +106,7 @@ OSPT_XML_ATTR *OSPPXMLAttrNew(  /* returns the new attribute (or NULL) */
  */
 
 void OSPPXMLAttrDelete(         /* no return value */
-    OSPT_XML_ATTR **ospvAttr)    /* attribute to destroy */
+    OSPT_XML_ATTR **ospvAttr)   /* attribute to destroy */
 {
     if (*ospvAttr != OSPC_OSNULL) {
         OSPM_FREE(*ospvAttr);
@@ -119,7 +119,7 @@ void OSPPXMLAttrDelete(         /* no return value */
  */
 
 const char *OSPPXMLAttrGetName(
-    OSPT_XML_ATTR * ospvAttr)
+    OSPT_XML_ATTR *ospvAttr)
 {
     const char *ospvName = OSPC_OSNULL;
 
@@ -135,7 +135,7 @@ const char *OSPPXMLAttrGetName(
  */
 
 const char *OSPPXMLAttrGetValue(
-    OSPT_XML_ATTR * ospvAttr)
+    OSPT_XML_ATTR *ospvAttr)
 {
     const char *ospvValue = OSPC_OSNULL;
 

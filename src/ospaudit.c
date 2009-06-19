@@ -42,12 +42,12 @@ int OSPPAuditAddMessageToBuffer(
 
     if ((ospvAudit != OSPC_OSNULL) && (dataptr != OSPC_OSNULL) && (ospvAuditDataSz > 0)) {
         /* Clean buffer up */
-        if (OSPM_STRSTR((const char *) dataptr, OSPC_AUDIT_XML_HEADER) != OSPC_OSNULL) {
+        if (OSPM_STRSTR((const char *)dataptr, OSPC_AUDIT_XML_HEADER) != OSPC_OSNULL) {
             dataptr += OSPC_AUDIT_XML_HDR_LEN;
             ospvAuditDataSz -= OSPC_AUDIT_XML_HDR_LEN;
         }
 
-        if (OSPM_STRSTR((const char *) dataptr, OSPC_AUDIT_MSG_HEADER) != OSPC_OSNULL) {
+        if (OSPM_STRSTR((const char *)dataptr, OSPC_AUDIT_MSG_HEADER) != OSPC_OSNULL) {
             dataptr += OSPC_AUDIT_MSG_HDR_LEN;
             ospvAuditDataSz -= OSPC_AUDIT_MSG_HDR_LEN;
         }
@@ -84,8 +84,8 @@ int OSPPAuditAddMessageToBuffer(
                             while (!isalnum(*begptr) && ispunct(*begptr))
                                 begptr++;
 
-                            if ((endptr = (unsigned char *)OSPM_STRSTR((const char *) begptr, "\"")) != OSPC_OSNULL) {
-                                compid = OSPPAuditComponentIdNew((const char *) begptr, (endptr - begptr));
+                            if ((endptr = (unsigned char *)OSPM_STRSTR((const char *)begptr, "\"")) != OSPC_OSNULL) {
+                                compid = OSPPAuditComponentIdNew((const char *)begptr, (endptr - begptr));
                                 if (compid != OSPC_OSNULL) {
                                     OSPPListAppend(&(ospvAudit)->ospmAuditComponentIdList, compid);
                                 }
@@ -233,7 +233,7 @@ void OSPPAuditCheck(
                             OSPM_MUTEX_UNLOCK(ospvAudit->ospmAuditWorkerMutex, errorcode);
                         }
                     }
-                } else if (OSPM_STRCMP((const char *) trigger, "start") == 0) {
+                } else if (OSPM_STRCMP((const char *)trigger, "start") == 0) {
                     /* If already on, don't turn on again */
                     if (!(ospvAudit->ospmAuditComm->Flags & OSPC_COMM_AUDIT_ON)) {
                         /* Make sure buffer is clear */
@@ -679,8 +679,8 @@ int OSPPAuditPrepareAndSend(
                 if ((errorcode == OSPC_ERR_NO_ERROR) && (signature == OSPC_OSNULL)) {
                     OSPM_MALLOC(signature, unsigned char, 64);
                     if (signature != OSPC_OSNULL) {
-                        OSPM_STRCPY((char *) signature, "Signature placeholder");
-                        sizeofsignature = OSPM_STRLEN((char *) signature);
+                        OSPM_STRCPY((char *)signature, "Signature placeholder");
+                        sizeofsignature = OSPM_STRLEN((char *)signature);
                     } else {
                         errorcode = OSPC_ERR_SEC_NO_MEMORY;
                     }
@@ -730,9 +730,9 @@ int OSPPAuditPrepareAndSend(
                             errorcode = OSPPAuditProcessReturn(ospvAudit, msginfo);
                         }
                     }
-                }                /* end if errorcode == OSPC_ERR_NO_ERROR before mimemessagecreate */
-            }                    /* end if auditbuffersz > 0 */
-        }                        /* end if security and storage != OSPC_OSNULL */
+                }               /* end if errorcode == OSPC_ERR_NO_ERROR before mimemessagecreate */
+            }                   /* end if auditbuffersz > 0 */
+        }                       /* end if security and storage != OSPC_OSNULL */
     }
     /* end if ospvAudit != OSPC_OSNULL */
     if (signature != OSPC_OSNULL) {
@@ -748,7 +748,9 @@ int OSPPAuditPrepareAndSend(
 }
 
 /* Process return from server */
-int OSPPAuditProcessReturn(OSPT_AUDIT * ospvAudit, OSPT_MSG_INFO * ospvMsgInfo)
+int OSPPAuditProcessReturn(
+    OSPT_AUDIT *ospvAudit, 
+    OSPT_MSG_INFO *ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     unsigned char *incomingmsg = OSPC_OSNULL;
@@ -857,9 +859,12 @@ int OSPPAuditProcessReturn(OSPT_AUDIT * ospvAudit, OSPT_MSG_INFO * ospvMsgInfo)
     return errorcode;
 }
 
-/* Subtract Usage Indications from the buffer according to the component ID
+/* 
+ * Subtract Usage Indications from the buffer according to the component ID
  */
-void OSPPAuditRemoveComponentIdFromList(const char *ospvCompid, OSPT_AUDIT * ospvAudit)
+void OSPPAuditRemoveComponentIdFromList(
+    const char *ospvCompid, 
+    OSPT_AUDIT *ospvAudit)
 {
     OSPT_COMPONENT_ID *compid = OSPC_OSNULL;
 
@@ -877,7 +882,8 @@ void OSPPAuditRemoveComponentIdFromList(const char *ospvCompid, OSPT_AUDIT * osp
 }
 
 /* Reset audit values to current defaults */
-int OSPPAuditResetDefaults(OSPT_AUDIT * ospvAudit)
+int OSPPAuditResetDefaults(
+    OSPT_AUDIT *ospvAudit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
 

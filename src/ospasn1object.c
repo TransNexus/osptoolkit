@@ -211,7 +211,7 @@ DOES NOT recurse through the element info linked list(s), or grab all of
 the results in the parse results linked list. */
 
 int OSPPASN1ObjectCopy(
-    OSPTASN1OBJECT **ospvDstObject, 
+    OSPTASN1OBJECT **ospvDestObject, 
     OSPTASN1OBJECT *ospvSrcObject)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -253,7 +253,7 @@ int OSPPASN1ObjectCopy(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         newObject->ElementInfo = newElement;
         newObject->ParseResults = newResult;
-        *ospvDstObject = newObject;
+        *ospvDestObject = newObject;
     } else {
         OSPM_FREE(newElement);
         OSPM_FREE(newResult);

@@ -875,9 +875,7 @@ int OSPPExtractCACertFromResponse(unsigned char *ospvResponseIn,
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
         OSPM_MALLOC(*ospvCACertOut, unsigned char, 2 * caCertB64Len + 1);
-
-        if (*ospvCACertOut == OSPC_OSNULL)
-        {
+        if (*ospvCACertOut == OSPC_OSNULL) {
             retVal = OSPC_ERR_ENROLL_NO_MEMORY;
             OSPM_DBGERRORLOG(retVal, "Unable to allocate memory for the certificate buffers.\n");
         }

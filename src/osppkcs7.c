@@ -158,7 +158,7 @@ int OSPPPKCS7DigestInfoCreate(
 
     for (i = 0; errorcode == OSPC_ERR_NO_ERROR; i++) {
         switch (i) {
-        case 0:                /* Add Digest Algorithm */
+        case 0: /* Add Digest Algorithm */
             dataRefId = OSPEDRID_DIGINF_DIGESTALGORITHM;
             errorcode = OSPPASN1ObjectCopy(&newObject, ospvDigestAlgorithm);
             if (newObject) {    /* !!! PS */
@@ -167,7 +167,7 @@ int OSPPPKCS7DigestInfoCreate(
             }
             break;
 
-        case 1:                /* Add Digest */
+        case 1: /* Add Digest */
             dataRefId = OSPEDRID_DIGINF_DIGEST;
             if (newObject) {    /* !!! PS */
                 OSPM_FREE(newObject->ElementInfo->Element);
@@ -200,8 +200,7 @@ int OSPPPKCS7DigestInfoCreate(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* Complete the encoding for this object. Update results, elements, 
-           etc. */
+        /* Complete the encoding for this object. Update results, elements, etc. */
         errorcode = OSPPASN1ObjectDeparse(digestInfo, OSPEPTID_DIGESTINFO, OSPEDRID_DIGESTINFO);
     }
 
@@ -245,12 +244,12 @@ int OSPPPKCS7SignerInfoCreate(
     /* Add the content type Element to the result list */
     for (i = 0; errorcode == OSPC_ERR_NO_ERROR; i++) {
         switch (i) {
-        case 0:                /* Add VERSION Element */
+        case 0: /* Add VERSION Element */
             dataRefId = OSPEDRID_SGNINF_VERSION;
             errorcode = OSPPASN1SmallIntegerEncode(&newObject, OSPC_ASN1_SIGNERINFO_VERSION, dataRefId);
             break;
 
-        case 1:                /* Add Issuer */
+        case 1: /* Add Issuer */
             dataRefId = OSPEDRID_SGNINF_ISSUER;
             errorcode = OSPPASN1ObjectCopyElementObject(&newObject, ospvSignerCertInfo, OSPEDRID_CERT_ISSUER);
             if (newObject != OSPC_OSNULL) {
@@ -260,7 +259,7 @@ int OSPPPKCS7SignerInfoCreate(
             }
             break;
 
-        case 2:                /* Add SerialNumber */
+        case 2: /* Add SerialNumber */
             dataRefId = OSPEDRID_SGNINF_SERIALNUMBER;
             errorcode = OSPPASN1ObjectCopyElementObject(&newObject, ospvSignerCertInfo, OSPEDRID_CERT_SERIALNUMBER);
             if (newObject != OSPC_OSNULL) {
@@ -270,7 +269,7 @@ int OSPPPKCS7SignerInfoCreate(
             }
             break;
 
-        case 3:                /* Add DigestAlgorithm */
+        case 3: /* Add DigestAlgorithm */
             dataRefId = OSPEDRID_SGNINF_DIGESTALGORITHM;
             errorcode = OSPPASN1ObjectCopy(&newObject, ospvDigestAlgorithm);
             if (newObject != OSPC_OSNULL) {
@@ -280,11 +279,11 @@ int OSPPPKCS7SignerInfoCreate(
             }
             break;
 
-        case 4:                /* Add AuthenticatedAttributes */
+        case 4: /* Add AuthenticatedAttributes */
             dataRefId = OSPEDRID_SGNINF_AUTHATTRIBUTES;
             break;
 
-        case 5:                /* Add DigestEncryptionAlgorithm */
+        case 5: /* Add DigestEncryptionAlgorithm */
             dataRefId = OSPEDRID_SGNINF_DIGENCRYPTALG;
             errorcode = OSPPASN1ObjectCopyElementObject(&newObject, ospvSignerCertInfo, OSPEDRID_CERT_PUBLICKEYALG);
             if (newObject != OSPC_OSNULL) {
@@ -294,7 +293,7 @@ int OSPPPKCS7SignerInfoCreate(
             }
             break;
 
-        case 6:                /* Add EncryptedDigest */
+        case 6: /* Add EncryptedDigest */
             dataRefId = OSPEDRID_SGNINF_ENCRYPTEDDIGEST;
             errorcode = OSPPASN1ObjectGetElementInfo(ospvDataContent, &eInfo);
 
@@ -311,8 +310,7 @@ int OSPPPKCS7SignerInfoCreate(
                 errorcode = OSPPASN1ObjectCopyElementObject(&digestEncryptionAlgorithm, ospvSignerCertInfo, OSPEDRID_CERT_PUBLICKEYALG);
             }
 /*
-            if (errorcode == OSPC_ERR_NO_ERROR)
-            {
+            if (errorcode == OSPC_ERR_NO_ERROR) {
                 unsigned char *pubkeybuf = OSPC_OSNULL;
                 unsigned int pubkeybuflen = 0;
                 OSPTASN1ELEMENTINFO *tmpSignerSubjPubKeyInfo = OSPC_OSNULL;
@@ -340,7 +338,7 @@ int OSPPPKCS7SignerInfoCreate(
             }
             break;
 
-        case 7:                /* Add UnAuthenticatedAttributes */
+        case 7: /* Add UnAuthenticatedAttributes */
             dataRefId = OSPEDRID_SGNINF_UNAUTHATTRIBUTES;
             newObject = OSPC_OSNULL;    /* Add nothing */
             break;
@@ -472,7 +470,7 @@ int OSPPPKCS7CertificatesCreate(
     /* Add the content type Element to the result list */
     for (i = 0; errorcode == OSPC_ERR_NO_ERROR; i++) {
         switch (i) {
-        case 0:                /* Add Certificate */
+        case 0: /* Add Certificate */
             dataRefId = OSPEDRID_SGNDAT_CERTIFICATE;
             errorcode = OSPPASN1ObjectCopy(&newObject, ospvCertificate);
             if (newObject->ElementInfo->Element != OSPC_OSNULL) {
@@ -503,8 +501,7 @@ int OSPPPKCS7CertificatesCreate(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* Complete the encoding for this object. Update results, elements, 
-           etc. */
+        /* Complete the encoding for this object. Update results, elements, etc. */
         errorcode = OSPPASN1ObjectDeparse(certificates, OSPEPTID_CERTIFICATES, OSPEDRID_SGNDAT_CERTIFICATES);
     }
 
@@ -536,7 +533,7 @@ int OSPPPKCS7SignerInfosCreate(
     /* Add the content type Element to the result list */
     for (i = 0; errorcode == OSPC_ERR_NO_ERROR; i++) {
         switch (i) {
-        case 0:                /* Add SignerInfo */
+        case 0: /* Add SignerInfo */
             dataRefId = OSPEDRID_SGNDAT_SIGNERINFO;
             errorcode = OSPPASN1ObjectCopy(&newObject, ospvSignerInfo);
             if (newObject->ElementInfo->Element != OSPC_OSNULL) {
@@ -870,7 +867,7 @@ int OSPPPKCS7SignatureGetContent(
             *ospvContentLength = contentLength;
 
         }
-        if (OSPC_OSNULL != el) {    /* !!! PS */
+        if (el != OSPC_OSNULL) {    /* !!! PS */
             *el = contentElement;
         }
     }
@@ -989,31 +986,31 @@ int OSPPPKCS7SignatureVerify(
             /* Test valid signer certificate against CA certificates */
             errorcode = OSPPX509CertValidateCertificate(signerCertificate, ospvAuthorityCertificates, ospvNumberOfAuthorityCertificates, &ix);
         }
-        if (OSPC_OSNULL != signerCertificate) {    /* !!! PS */
+        if (signerCertificate != OSPC_OSNULL) { /* !!! PS */
             OSPPASN1ElementDelete(&(signerCertificate->ParseResults->ElementInfo), 0);
             OSPPASN1ObjectDelete(&signerCertificate);
         }
     }
-    if (OSPC_OSNULL != subjPubKeyInfo) {    /* !!! PS */
+    if (subjPubKeyInfo != OSPC_OSNULL) {    /* !!! PS */
         OSPPASN1ElementDelete(&(subjPubKeyInfo->ParseResults->ElementInfo), 0);
         OSPPASN1ObjectDelete(&subjPubKeyInfo);
     }
-    if (OSPC_OSNULL != digestAlgorithmId) {    /* !!! PS */
+    if (digestAlgorithmId != OSPC_OSNULL) { /* !!! PS */
         OSPPASN1ElementDelete(&(digestAlgorithmId->ParseResults->ElementInfo), 0);
         OSPPASN1ObjectDelete(&digestAlgorithmId);
     }
-    if (OSPC_OSNULL != encryptionAlgorithm) {    /* !!! PS */
+    if (encryptionAlgorithm != OSPC_OSNULL) {   /* !!! PS */
         OSPPASN1ElementDelete(&(encryptionAlgorithm->ParseResults->ElementInfo), 0);
         OSPPASN1ObjectDelete(&encryptionAlgorithm);
     }
-    if (OSPC_OSNULL != encryptedDigest) {    /* !!! PS */
+    if (encryptedDigest != OSPC_OSNULL) {   /* !!! PS */
         OSPPASN1ElementDelete(&(encryptedDigest->ParseResults->ElementInfo), 0);
         OSPPASN1ObjectDelete(&encryptedDigest);
     }
-    if (OSPC_OSNULL != decryptedDigestObject) {    /* !!! PS */
+    if (decryptedDigestObject != OSPC_OSNULL) { /* !!! PS */
         OSPPASN1ObjectDelete(&decryptedDigestObject);
     }
-    if (OSPC_OSNULL != digestInfo) {    /* !!! PS */
+    if (digestInfo != OSPC_OSNULL) {    /* !!! PS */
         OSPPASN1ObjectDelete(&digestInfo);
     }
 

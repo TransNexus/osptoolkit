@@ -98,8 +98,8 @@ OSPTBOOL OSPPReauthReqHasCallId(    /* returns non-zero if exists */
 /*
  * OSPPReauthReqGetCallId() - gets the call ID for an authorisation request
  */
-OSPT_CALL_ID *OSPPReauthReqGetCallId( /* returns call ID pointer */
-    OSPTREAUTHREQ *ospvReauthReq)   /* authorisation request */
+OSPT_CALL_ID *OSPPReauthReqGetCallId(   /* returns call ID pointer */
+    OSPTREAUTHREQ *ospvReauthReq)       /* authorisation request */
 {
     OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
 
@@ -342,7 +342,7 @@ const char *OSPPReauthReqGetComponentId(
  */
 void OSPPReauthReqSetCallId(        /* nothing returned */
     OSPTREAUTHREQ *ospvReauthReq,   /* authorisation request */
-    OSPT_CALL_ID *ospvCallId)         /* call ID to set */
+    OSPT_CALL_ID *ospvCallId)       /* call ID to set */
 {
     if (ospvReauthReq != OSPC_OSNULL) {
         if (ospvCallId != OSPC_OSNULL) {
@@ -640,7 +640,7 @@ int OSPPReauthReqToElement(         /* returns error code */
 
             /* random */
             if ((OSPPUtilGetRandom(random, 0) > 0) && (ospvErrCode == OSPC_ERR_NO_ERROR)) {
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_RANDOM), (const char *) random);
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_RANDOM), (const char *)random);
 
                 if (attr != OSPC_OSNULL) {
                     OSPPXMLElemAddAttr(*ospvElem, attr);
@@ -956,7 +956,7 @@ OSPTBOOL OSPPReauthReqHasDeviceId(      /* returns non-zero if true */
 /*
  * OSPPReauthReqSetTNDeviceId() - Set Device Id
  */
-void OSPPReauthReqSetDeviceId(    /* nothing returned */
+void OSPPReauthReqSetDeviceId(  /* nothing returned */
     OSPTREAUTHREQ *ospvReauthReq, 
     unsigned long ospvDeviceId)
 {

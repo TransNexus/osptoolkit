@@ -72,7 +72,7 @@ int OSPPProviderDelete(
              */
             OSPPCommSetShutdown(&(provider->Comm), ospvTimeLimit);
             OSPPCommSetShutdown(&(provider->CommForCapabilities), ospvTimeLimit);
-            OSPPSSLSessionCleanup((void *) provider->Security);
+            OSPPSSLSessionCleanup((void *)provider->Security);
 
             OSPPSecDelete(&provider->Security);
 
@@ -700,7 +700,7 @@ int OSPPProviderNew(
                     /*
                      * Perform any global SSL initialisation routines
                      */
-                    errorcode = OSPPSSLSessionInit((void *) provider->Security);
+                    errorcode = OSPPSSLSessionInit((void *)provider->Security);
                 }
             }
 
@@ -781,7 +781,7 @@ int OSPPProviderNew(
                  * set local validation
                  */
                 if (ospvLocalValidation)
-                    errorcode = errorcode;    /* not implemented */
+                    errorcode = errorcode;  /* not implemented */
 
             /* 
              * set audit info 
@@ -1103,17 +1103,17 @@ int OSPPProviderSetSPMessageCount(
      */
     OSPPCommGetServicePointList(comm, &svcptlist);
 
-    svcptitem = (OSPTSVCPT *)OSPPListFirst((OSPTLIST *) & svcptlist);
+    svcptitem = (OSPTSVCPT *)OSPPListFirst((OSPTLIST *)& svcptlist);
 
     if (ospvMessageCount != NULL) {
         while (svcptitem != OSPC_OSNULL) {
             svcptitem->MaxMsgAllowed = ospvMessageCount[i++];
-            svcptitem = (OSPTSVCPT *)OSPPListNext((OSPTLIST *) & svcptlist, svcptitem);
+            svcptitem = (OSPTSVCPT *)OSPPListNext((OSPTLIST *)& svcptlist, svcptitem);
         }
     } else {
         while (svcptitem != OSPC_OSNULL) {
             svcptitem->MaxMsgAllowed = 0;
-            svcptitem = (OSPTSVCPT *)OSPPListNext((OSPTLIST *) & svcptlist, svcptitem);
+            svcptitem = (OSPTSVCPT *)OSPPListNext((OSPTLIST *)& svcptlist, svcptitem);
         }
     }
 
@@ -1188,7 +1188,7 @@ int OSPPProviderSetServicePoints(
      * set message counts for all SP
      */
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPProviderSetSPMessageCount((void *) provider->Comm, ospvMessageCount);
+        errorcode = OSPPProviderSetSPMessageCount((void *)provider->Comm, ospvMessageCount);
     }
 
     return errorcode;
@@ -1201,10 +1201,10 @@ int OSPPProviderSetServicePoints(
  *
  */
 int OSPPProviderSetCapabilitiesURLs(
-    OSPTPROVHANDLE ospvProvider,         /* In - Provider handle     */
-    unsigned ospvNumberOfURLs,           /* In - New svc url cnt     */
-    unsigned long ospvMessageCount[],    /* In - Msg count for URL */
-    const char *ospvCapabilitiesURLs[])  /* In - New svc url strings */
+    OSPTPROVHANDLE ospvProvider,        /* In - Provider handle     */
+    unsigned ospvNumberOfURLs,          /* In - New svc url cnt     */
+    unsigned long ospvMessageCount[],   /* In - Msg count for URL */
+    const char *ospvCapabilitiesURLs[]) /* In - New svc url strings */
 {
     OSPTPROVIDER *provider = OSPC_OSNULL;
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1221,7 +1221,7 @@ int OSPPProviderSetCapabilitiesURLs(
      * set message counts for all Comm SP
      */
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPProviderSetSPMessageCount((void *) provider->CommForCapabilities, ospvMessageCount);
+        errorcode = OSPPProviderSetSPMessageCount((void *)provider->CommForCapabilities, ospvMessageCount);
     }
 
     return errorcode;

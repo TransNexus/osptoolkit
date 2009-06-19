@@ -1407,7 +1407,7 @@ int PTPResultsCreate(
 }
 
 int PTPResultsCopy(
-    OSPTASN1PARSERESULT **ospvDstResults, 
+    OSPTASN1PARSERESULT **ospvDestResults, 
     OSPTASN1PARSERESULT *ospvSrcResults)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1431,7 +1431,7 @@ int PTPResultsCopy(
         errorcode = OSPPASN1ElementCopy(&(parseResults->ElementInfo), ospvSrcResults->ElementInfo);
         parseResults->NextResult = OSPC_OSNULL;
 
-        *ospvDstResults = parseResults;
+        *ospvDestResults = parseResults;
     }
 
     return errorcode;
@@ -1444,7 +1444,7 @@ int PTPDataRefAddRef(
     int errorcode = OSPC_ERR_NO_ERROR;
     unsigned i;
 
-    if (ospvNewReference > 0) {    /* Don't add zeros - primitive as top rule */
+    if (ospvNewReference > 0) {     /* Don't add zeros - primitive as top rule */
         /* Data reference must be an array of MAXLENGTH SIZE */
         for (i = 0; (i < (OSPC_ASN1_DATAREF_MAXLENGTH - 1)) && (ospvDataReference[i] != 0xff); i++);
 

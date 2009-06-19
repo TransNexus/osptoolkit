@@ -24,54 +24,113 @@
 
 #include "osp/osp.h"
 
-#define OSPC_SVALUE_UNUSED      ((unsigned)(1 << 0))    /* Reserve for OSPTBOOL */
-#define OSPC_SVALUE_SAMPLES     ((unsigned)(1 << 1))
-#define OSPC_SVALUE_MIN         ((unsigned)(1 << 2))
-#define OSPC_SVALUE_MAX         ((unsigned)(1 << 3))
-#define OSPC_SVALUE_MEAN        ((unsigned)(1 << 4))
-#define OSPC_SVALUE_VARIANCE    ((unsigned)(1 << 5))
-#define OSPC_SVALUE_SQUARES     ((unsigned)(1 << 6))
-#define OSPC_SVALUE_ALL         ((unsigned)(OSPC_SVALUE_SAMPLES | OSPC_SVALUE_MIN | OSPC_SVALUE_MAX | OSPC_SVALUE_MEAN | OSPC_SVALUE_VARIANCE | OSPC_SVALUE_SQUARES))
+#define OSPC_SVALUE_VALUE       ((unsigned)(1 << 0))    /* Also reserved for OSPTBOOL */
+#define OSPC_SVALUE_PACKETS     ((unsigned)(1 << 1))
+#define OSPC_SVALUE_FRACTION    ((unsigned)(1 << 2))
+#define OSPC_SVALUE_SAMPLES     ((unsigned)(1 << 3))
+#define OSPC_SVALUE_MIN         ((unsigned)(1 << 4))
+#define OSPC_SVALUE_MAX         ((unsigned)(1 << 5))
+#define OSPC_SVALUE_MEAN        ((unsigned)(1 << 6))
+#define OSPC_SVALUE_VARIANCE    ((unsigned)(1 << 7))
+#define OSPC_SVALUE_SQUARES     ((unsigned)(1 << 8))
+#define OSPC_SVALUE_PACK        ((unsigned)(OSPC_SVALUE_PACKETS | OSPC_SVALUE_FRACTION))
+#define OSPC_SVALUE_METRICS     ((unsigned)(OSPC_SVALUE_SAMPLES | OSPC_SVALUE_MIN | OSPC_SVALUE_MAX | OSPC_SVALUE_MEAN | OSPC_SVALUE_VARIANCE | OSPC_SVALUE_SQUARES))
+
+/*
+ * Statistcs reporter types
+ */
+typedef enum {
+    OSPC_SREPORTER_PROXY = 0,
+    OSPC_SREPORTER_CALLING,
+    OSPC_SREPORTER_CALLED,
+    /* Number of range types */
+    OSPC_SREPORTER_NUMBER
+} OSPE_STATS_REPORTER;
+
+/*
+ * Statistcs range types
+ */
+typedef enum {
+    OSPC_SRANGE_PEERPEER = 0,
+    OSPC_SRANGE_PEERPROXY,
+    OSPC_SRANGE_PROXYPEER,
+    /* Number of range types */
+    OSPC_SRANGE_NUMBER
+} OSPE_STATS_RANGE;
+
+/*
+ * Statistcs flow types
+ */
+typedef enum {
+    OSPC_SFLOW_DOWNSTREAM = 0,
+    OSPC_SFLOW_UPSTREAM,
+    /* Number of flow types */
+    OSPC_SFLOW_NUMBER
+} OSPE_STATS_FLOW;
 
 /*
  * Statistics value types
  */
 typedef enum {
-    OSPC_STATS_DELAY = 0,
+    OSPC_STATS_LOST = 0,
     OSPC_STATS_JITTER,
-    OSPC_STATS_PACKLOSS,
+    OSPC_STATS_DELAY,
+    OSPC_STATS_OCTETS,
+    OSPC_STATS_PACKETS,
+    OSPC_STATS_RFACTOR,
+    OSPC_STATS_MOS,
     /* Number of statistics types */
     OSPC_STATS_NUMBER
 } OSPE_STATS;
 
 /*
- * Statistics value structure
+ * Statistics value structure for lost packets
  */
 typedef struct {
-    OSPTBOOL HasValue;
-    unsigned Samples;
-    unsigned Minimum;
-    unsigned Maximum;
-    unsigned Mean;
-    float Variance;
-    double SquaresSum;
-} OSPT_STATS_VALUE;
+    OSPTBOOL hasvalue;
+    unsigned packets;
+    unsigned fraction;
+} OSPT_STATS_PACK;
+
+/*
+ * Statistics value structure for Jitter, delay,
+ */
+typedef struct {
+    OSPTBOOL hasvalue;
+    unsigned samples;
+    unsigned minimum;
+    unsigned maximum;
+    unsigned mean;
+    float variance;
+    double squaressum;
+} OSPT_STATS_METRICS;
+
+/*
+ * Statistics structure types
+ */
+typedef enum {
+    OSPC_SSTRUCT_PACK = 0,
+    OSPC_SSTRUCT_METRICS,
+    OSPC_SSTRUCT_INTEGER,
+    OSPC_SSTRUCT_FLOAT,
+    /* Number of statistics structure types */
+    OSPC_SSTRUCT_NUMBER
+} OSPE_STATS_STRUCT;
 
 /* Basic structure for statistics */
 typedef struct {
-    OSPTBOOL ospmHasSentStats;
-    unsigned ospmLossPacketsSent;
-    unsigned ospmLossFractionSent;
-    OSPTBOOL ospmHasReceivedStats;
-    unsigned ospmLossPacketsReceived;
-    unsigned ospmLossFractionReceived;
-    OSPTBOOL ospmHasOneWay;
-    OSPT_STATS_VALUE ospmOneWay;
-    OSPTBOOL ospmHasRoundTrip;
-    OSPT_STATS_VALUE ospmRoundTrip;
-    OSPT_STATS_VALUE ospmDelay[OSPC_DIR_NUMBER];
-    OSPT_STATS_VALUE ospmJitter[OSPC_DIR_NUMBER];
-    OSPT_STATS_VALUE ospmPackLoss[OSPC_DIR_NUMBER];
+    OSPE_STATS_REPORTER ospmReporter;
+    OSPT_STATS_PACK ospmLossSent;
+    OSPT_STATS_PACK ospmLossReceived;
+    OSPT_STATS_METRICS ospmOneWay;
+    OSPT_STATS_METRICS ospmRoundTrip;
+    OSPT_STATS_PACK ospmLost[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
+    OSPT_STATS_METRICS ospmJitter[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
+    OSPT_STATS_METRICS ospmDelay[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
+    int ospmOctets[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
+    int ospmPackets[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
+    float ospmRFactor[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
+    float ospmMOS[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
 } OSPT_STATS;
 
 /* Function Prototypes */
@@ -80,47 +139,52 @@ typedef struct {
 extern "C" {
 #endif
 
+    OSPT_STATS *OSPPStatsNew(void);
     void OSPPStatsDelete(OSPT_STATS **);
-    signed OSPPStatsGetFracReceived(OSPT_STATS *);
-    signed OSPPStatsGetFracSent(OSPT_STATS *);
-    unsigned OSPPStatsGetOneWayMinimum(OSPT_STATS *);
-    unsigned OSPPStatsGetOneWayMean(OSPT_STATS *);
-    unsigned OSPPStatsGetOneWaySamples(OSPT_STATS *);
-    float OSPPStatsGetOneWayVariance(OSPT_STATS *);
-    unsigned OSPPStatsGetPktReceived(OSPT_STATS *);
-    unsigned OSPPStatsGetPktSent(OSPT_STATS *);
-    unsigned OSPPStatsGetRoundTripMinimum(OSPT_STATS *);
-    unsigned OSPPStatsGetRoundTripMean(OSPT_STATS *);
-    unsigned OSPPStatsGetRoundTripSamples(OSPT_STATS *);
-    float OSPPStatsGetRoundTripVariance(OSPT_STATS *);
-    OSPTBOOL OSPPStatsHasLossReceived(OSPT_STATS *);
-    OSPTBOOL OSPPStatsHasLossSent(OSPT_STATS *);
+    int OSPPStatsToElement(OSPT_STATS *, OSPT_XML_ELEM **);
+
     OSPTBOOL OSPPStatsHasOneWay(OSPT_STATS *);
     OSPTBOOL OSPPStatsHasRoundTrip(OSPT_STATS *);
-    int OSPPStatsLossReceivedToElement(OSPT_STATS *, OSPT_XML_ELEM **);
-    int OSPPStatsLossSentToElement(OSPT_STATS *, OSPT_XML_ELEM **);
-    OSPT_STATS *OSPPStatsNew(void);
+    OSPTBOOL OSPPStatsHasLossSent(OSPT_STATS *, unsigned);
+    OSPTBOOL OSPPStatsHasLossReceived(OSPT_STATS *, unsigned);
+
+    int OSPPStatsReportUsage(OSPT_STATS **, int, int, int, int);
+    void OSPPStatsSetSentStatistics(OSPT_STATS *, int, int);
+    void OSPPStatsSetReceivedStatistics(OSPT_STATS *, int, int);
+
+    unsigned OSPPStatsGetOneWaySamples(OSPT_STATS *);
+    unsigned OSPPStatsGetOneWayMinimum(OSPT_STATS *);
+    unsigned OSPPStatsGetOneWayMean(OSPT_STATS *);
+    float OSPPStatsGetOneWayVariance(OSPT_STATS *);
+
+    unsigned OSPPStatsGetRoundTripSamples(OSPT_STATS *);
+    unsigned OSPPStatsGetRoundTripMinimum(OSPT_STATS *);
+    unsigned OSPPStatsGetRoundTripMean(OSPT_STATS *);
+    float OSPPStatsGetRoundTripVariance(OSPT_STATS *);
+
+    unsigned OSPPStatsGetPktSent(OSPT_STATS *);
+    unsigned OSPPStatsGetFracSent(OSPT_STATS *);
+    unsigned OSPPStatsGetPktReceived(OSPT_STATS *);
+    unsigned OSPPStatsGetFracReceived(OSPT_STATS *);
+
     int OSPPStatsOneWayToElement(OSPT_STATS *, OSPT_XML_ELEM **);
     int OSPPStatsRoundTripToElement(OSPT_STATS *, OSPT_XML_ELEM **);
-    int OSPPStatsReportUsage(OSPT_STATS **, unsigned, signed, unsigned, signed);
-    void OSPPStatsSetReceivedStatistics(OSPT_STATS *, unsigned, signed);
-    void OSPPStatsSetSentStatistics(OSPT_STATS *, unsigned, signed);
-    int OSPPStatsToElement(OSPT_STATS *, OSPT_XML_ELEM **);
-    OSPTBOOL OSPPStatsHasValue(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
-    unsigned OSPPStatsGetSamples(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
-    unsigned OSPPStatsGetMin(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
-    unsigned OSPPStatsGetMax(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
-    unsigned OSPPStatsGetMean(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
-    float OSPPStatsGetVariance(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
-    double OSPPStatsGetSquaresSum(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION);
-    void OSPPStatsSetSamples(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
-    void OSPPStatsSetMin(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
-    void OSPPStatsSetMax(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
-    void OSPPStatsSetMean(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, unsigned);
-    void OSPPStatsSetVariance(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, float);
-    void OSPPStatsSetSquaresSum(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, double);
-    int OSPPStatsValueToElement(OSPT_STATS *, OSPE_STATS, OSPE_DIRECTION, OSPT_XML_ELEM **);
-    
+    int OSPPStatsLossSentToElement(OSPT_STATS *, OSPT_XML_ELEM **);
+    int OSPPStatsLossReceivedToElement(OSPT_STATS *, OSPT_XML_ELEM **);
+
+    OSPTBOOL OSPPStatsHasValue(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, unsigned);
+    void OSPPStatsSetReporter(OSPT_STATS *, OSPE_STATS_REPORTER);
+    void OSPPStatsSetPack(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int, int);
+    void OSPPStatsSetMetrics(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int, int, int, int, float);
+    void OSPPStatsSetInteger(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int);
+    void OSPPStatsSetFloat(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, float);
+    OSPE_STATS_REPORTER OSPPStatsGetReporter(OSPT_STATS *);
+    void OSPPStatsGetPack(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int *, int *);
+    void OSPPStatsGetMetrics(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int *, int *, int *, int *, float *);
+    int OSPPStatsGetInteger(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW);
+    float OSPPStatsGetFloat(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW);
+    int OSPPStatsValueToElement(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, OSPT_XML_ELEM **);
+
 #ifdef __cplusplus
 }
 #endif

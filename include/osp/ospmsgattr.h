@@ -27,7 +27,7 @@
 
 /* Attributes defined by the Open Settlement Protocol */
 typedef enum {
-    OSPC_MATTR_UNKNOWN = OSPC_MPART_UNKNOWN,    
+    OSPC_MATTR_UNKNOWN = OSPC_MPART_UNKNOWN,
     OSPC_MATTR_UNDEFINED,
     /* Message attribute start */
     OSPC_MATTR_START = OSPC_MPART_START,
@@ -39,20 +39,20 @@ typedef enum {
     OSPC_MATTR_TYPE,
     OSPC_MATTR_VERSION,
     OSPC_MATTR_INDEX,
+    OSPC_MATTR_REPORTER,
     /* Number of message attribtes */
     OSPC_MATTR_NUMBER
 } OSPE_MSG_ATTR;
 
-#define OSPC_MAX_INDEX  32 
+#define OSPC_MAX_INDEX  32
 
-/* Direction types */
+/* Call leg types */
 typedef enum {
-    OSPC_DIR_GENERAL = -1,
-    OSPC_DIR_INBOUND = 0,
-    OSPC_DIR_OUTBOUND,
-    /* Number of direction types */
-    OSPC_DIR_NUMBER
-} OSPE_DIRECTION;
+    OSPC_CLEG_INBOUND = 0,
+    OSPC_CLEG_OUTBOUND,
+    /* Number of call leg types */
+    OSPC_CLEG_NUMBER
+} OSPE_CALL_LEG;
 
 /*
  * externally declared global variables

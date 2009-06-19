@@ -226,7 +226,7 @@ int OSPPASN1ElementDecode(
 
         /* Extract the tag */
         eInfo->Tag = *(eptr++);
-        headerLength++;            /* Keep track of info bytes in element */
+        headerLength++;         /* Keep track of info bytes in element */
 
         if (OSPM_IS_HIGH_TAG(eInfo->Tag)) {
             errorcode = OSPC_ERR_ASN1_UNEXPECTED_HIGH_TAG;
@@ -315,8 +315,8 @@ int OSPPASN1ElementDecode(
                here if necessary */
         } else {
             /* Parse the content you found */
-            hPtr = OSPC_OSNULL;    /* Pointer to first element in content */
-            tPtr = OSPC_OSNULL;    /* Pointer to current last element in content */
+            hPtr = OSPC_OSNULL;     /* Pointer to first element in content */
+            tPtr = OSPC_OSNULL;     /* Pointer to current last element in content */
 
             /* Process chunks of content till done */
             for (i = 0; i < eInfo->ContentLength; i += length, eptr += length) {
@@ -721,7 +721,7 @@ void OSPPASN1ElementParseDelete(
 }
 
 int OSPPASN1ElementCopy(
-    OSPTASN1ELEMENTINFO **ospvDstElement, 
+    OSPTASN1ELEMENTINFO **ospvDestElement, 
     OSPTASN1ELEMENTINFO *ospvSrcElement)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -761,7 +761,7 @@ int OSPPASN1ElementCopy(
         eInfo->ContentElementInfo = OSPC_OSNULL;
         eInfo->NextElementInfo = OSPC_OSNULL;
 
-        *ospvDstElement = eInfo;
+        *ospvDestElement = eInfo;
     }
 
     return errorcode;
@@ -1020,7 +1020,7 @@ int OSPPASN1ElementFormat(
     errorcode = OSPPASN1SmallInt2UnsignedChar(ospvDataLength, 256, &lengthBuffer, &lengthLength);
     dataBufferLength = ospvDataLength + ospvTagLength + lengthLength;
     if (ospvDataLength > 127) {
-        dataBufferLength++;        /* Add a byte for length mode indicator if length is >127 */
+        dataBufferLength++;     /* Add a byte for length mode indicator if length is >127 */
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -1066,7 +1066,7 @@ int OSPPASN1ElementFormat(
 
             eInfo->Element = dataBuffer;
             eInfo->ElementLength = (dataBufferLength);
-            eInfo->ElementSpaceAllocated = 1;    /* Mark for deletion */
+            eInfo->ElementSpaceAllocated = 1;   /* Mark for deletion */
         }
     }
 

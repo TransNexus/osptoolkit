@@ -91,8 +91,8 @@ void OSPPListDelete(    /* no return value */
 /*
  * OSPPListEmpty() - is a list empty?
  */
-unsigned OSPPListEmpty(/* non-zero if empty, zero otherwise */
-    OSPTLIST *ospvList)   /* list to check */
+unsigned OSPPListEmpty( /* non-zero if empty, zero otherwise */
+    OSPTLIST *ospvList) /* list to check */
 {
     unsigned ospvEmpty = OSPC_TRUE;
 
@@ -126,13 +126,13 @@ void *OSPPListFirst(    /* returns pointer to item or null */
     OSPTLIST *ospvList) /* list to reference */
 {
     /* see introductory comment on list structure at beginning of file */
-    OSPTLISTLINK *ospvFirst = OSPC_OSNULL;    /* item to return */
+    OSPTLISTLINK *ospvFirst = OSPC_OSNULL;  /* item to return */
 
     if (ospvList != OSPC_OSNULL) {
         if (OSPPListEmpty(ospvList)) {
             ospvFirst = OSPC_OSNULL;
         } else {
-            ospvFirst = ((OSPTLISTLINK *) (*ospvList))->ospmLinkNext;
+            ospvFirst = ((OSPTLISTLINK *)(*ospvList))->ospmLinkNext;
         }
     }
 
@@ -148,7 +148,7 @@ void *OSPPListNext(     /* returns pointer to item or null */
 {
     /* see introductory comment on list structure at beginning of file */
 
-    OSPTLISTLINK *ospvNext = OSPC_OSNULL;    /* item to return */
+    OSPTLISTLINK *ospvNext = OSPC_OSNULL;   /* item to return */
 
     if (ospvList != OSPC_OSNULL) {
         if (ospvItem != OSPC_OSNULL) {
@@ -167,12 +167,12 @@ void *OSPPListNext(     /* returns pointer to item or null */
  * OSPPListMove() - move list contents from one list to another
  */
 void OSPPListMove(      /* no return */
-    OSPTLIST *ospvDst,  /* destination list */
+    OSPTLIST *ospvDest, /* destination list */
     OSPTLIST *ospvSrc)  /* source list */
 {
-    if (ospvDst != OSPC_OSNULL) {
+    if (ospvDest != OSPC_OSNULL) {
         if (ospvSrc != OSPC_OSNULL) {
-            *ospvDst = *ospvSrc;
+            *ospvDest = *ospvSrc;
             OSPPListNew(ospvSrc);
         }
     }
@@ -206,7 +206,7 @@ void *OSPPListRemove(   /* returns item removed or NULL */
     OSPTLIST *ospvList)
 {
     /* see introductory comment on list structure at beginning of file */
-    OSPTLISTLINK *ospvItem = OSPC_OSNULL;    /* item to return */
+    OSPTLISTLINK *ospvItem = OSPC_OSNULL;   /* item to return */
 
     if (ospvList != OSPC_OSNULL) {
         if (OSPPListEmpty(ospvList)) {
@@ -216,8 +216,8 @@ void *OSPPListRemove(   /* returns item removed or NULL */
             *ospvList = OSPC_OSNULL;
             ospvItem->ospmLinkNext = OSPC_OSNULL;
         } else {
-            ospvItem = ((OSPTLISTLINK *) (*ospvList))->ospmLinkNext;
-            ((OSPTLISTLINK *) (*ospvList))->ospmLinkNext = ospvItem->ospmLinkNext;
+            ospvItem = ((OSPTLISTLINK *)(*ospvList))->ospmLinkNext;
+            ((OSPTLISTLINK *)(*ospvList))->ospmLinkNext = ospvItem->ospmLinkNext;
             ospvItem->ospmLinkNext = OSPC_OSNULL;
         }
     }
@@ -236,7 +236,7 @@ void *OSPPListNextToLast(   /* returns item or NULL */
     lastitem = OSPPListLast(ospvList);
     curritem = OSPPListFirst(ospvList);
 
-    while (curritem != OSPC_OSNULL && ((OSPTLISTLINK *) curritem)->ospmLinkNext != lastitem)
+    while (curritem != OSPC_OSNULL && ((OSPTLISTLINK *)curritem)->ospmLinkNext != lastitem)
         curritem = OSPPListNext(ospvList, curritem);
 
     nextolast = curritem;
@@ -262,7 +262,7 @@ void *OSPPListRemoveSpecificItem(   /* returns item removed or NULL */
         } else {
             previtem = curritem = OSPPListFirst(ospvList);
             if (ospvItem == curritem && curritem == OSPPListLast(ospvList)) {
-                ospvItem = (void *) *ospvList;
+                ospvItem = (void *)*ospvList;
                 *ospvList = OSPC_OSNULL;
                 ((OSPTLISTLINK *)ospvItem)->ospmLinkNext = OSPC_OSNULL;
             } else {
@@ -270,17 +270,17 @@ void *OSPPListRemoveSpecificItem(   /* returns item removed or NULL */
                     if (curritem == ospvItem) {
                         /* if first item in list */
                         if (curritem == previtem) {
-                            ospvItem = ((OSPTLISTLINK *) (*ospvList))->ospmLinkNext;
-                            ((OSPTLISTLINK *) (*ospvList))->ospmLinkNext = ((OSPTLISTLINK *)ospvItem)->ospmLinkNext;
+                            ospvItem = ((OSPTLISTLINK *)(*ospvList))->ospmLinkNext;
+                            ((OSPTLISTLINK *)(*ospvList))->ospmLinkNext = ((OSPTLISTLINK *)ospvItem)->ospmLinkNext;
                             ((OSPTLISTLINK *)ospvItem)->ospmLinkNext = OSPC_OSNULL;
                         } else {
                             /* if last item in list */
                             if (curritem == OSPPListLast(ospvList)) {
-                                ospvItem = (void *) *ospvList;
+                                ospvItem = (void *)*ospvList;
                                 previtem = OSPPListNextToLast(ospvList);
                                 *ospvList = (OSPTLIST) previtem;
                             }
-                            ((OSPTLISTLINK *) previtem)->ospmLinkNext = ((OSPTLISTLINK *)ospvItem)->ospmLinkNext;
+                            ((OSPTLISTLINK *)previtem)->ospmLinkNext = ((OSPTLISTLINK *)ospvItem)->ospmLinkNext;
                         }
                         break;
                     }

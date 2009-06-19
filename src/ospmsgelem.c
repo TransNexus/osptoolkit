@@ -28,7 +28,7 @@
  */
 
 /* Array that associates elements and names */
-const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = { 
+const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_ALMOSTOUTOFRESOURCES, "AlmostOutOfResources" },
     { OSPC_MELEM_ALERTTIME,            "AlertTime" },
     { OSPC_MELEM_AMOUNT,               "Amount" },
@@ -73,13 +73,16 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_JITTER,               "Jitter" },
     { OSPC_MELEM_LOSSRCVD,             "LossReceived" },
     { OSPC_MELEM_LOSSSENT,             "LossSent" },
+    { OSPC_MELEM_LOST,                 "Lost" },
     { OSPC_MELEM_MAXDEST,              "MaximumDestinations" },
     { OSPC_MELEM_MAXIMUM,              "Maximum" },
     { OSPC_MELEM_MEAN,                 "Mean" },
     { OSPC_MELEM_MESSAGE,              "Message" },
+    { OSPC_MELEM_METRICS,              "Metrics" },
     { OSPC_MELEM_MINIMUM,              "Minimum" },
+    { OSPC_MELEM_MOS,                  "MOS" },
+    { OSPC_MELEM_OCTETS,               "Octets" },
     { OSPC_MELEM_ONEWAYDELAY,          "OneWayDelay" },
-    { OSPC_MELEM_PACKLOSS,             "PackLoss" },
     { OSPC_MELEM_PACKETS,              "Packets" },
     { OSPC_MELEM_POSTDIALDELAY,        "PostDialDelay" },
     { OSPC_MELEM_PRICINGCNF,           "PricingConfirmation" },
@@ -88,6 +91,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_REAUTHRSP,            "ReauthorizationResponse" },
     { OSPC_MELEM_RELEASESOURCE,        "ReleaseSource" },
     { OSPC_MELEM_RESOURCES,            "Resources" },
+    { OSPC_MELEM_RFACTOR,              "RFactor" },
     { OSPC_MELEM_ROLE,                 "Role" },
     { OSPC_MELEM_ROUNDTRIPDELAY,       "RoundTripDelay" },
     { OSPC_MELEM_SAMPLES,              "Samples" },
@@ -101,7 +105,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_STATISTICS,           "Statistics" },
     { OSPC_MELEM_STATUS,               "Status" },
     { OSPC_MELEM_TCCODE,               "TCCode" },
-    { OSPC_MELEM_TERMCAUSE,           "TermiantionCause" },
+    { OSPC_MELEM_TERMCAUSE,            "TerminationCause" },
     { OSPC_MELEM_TIMESTAMP,            "Timestamp" },
     { OSPC_MELEM_TOKEN,                "Token" },
     { OSPC_MELEM_TOKENINFO,            "TokenInfo" },

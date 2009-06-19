@@ -53,7 +53,7 @@ extern "C" {
     unsigned OSPPCallIdGetSize(OSPT_CALL_ID *);
     unsigned char *OSPPCallIdGetValue(OSPT_CALL_ID *);
     unsigned OSPPCallIdFromASCIIElement(unsigned char *, OSPT_CALL_ID **);
-    unsigned OSPPSessionIdToElement(OSPT_CALL_ID *, OSPE_DIRECTION, OSPTBOOL, OSPT_XML_ELEM **);
+    unsigned OSPPSessionIdToElement(OSPT_CALL_ID *, OSPE_CALL_LEG, OSPTBOOL, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

@@ -36,7 +36,8 @@ const OSPT_MSG_DESC OSPV_MATTR_DESCS[OSPC_MATTR_NUMBER] = {
     { OSPC_MATTR_ENCODING,      "encoding" },
     { OSPC_MATTR_TYPE,          "type" },
     { OSPC_MATTR_VERSION,       "version" },
-    { OSPC_MATTR_INDEX,         "index" }
+    { OSPC_MATTR_INDEX,         "index" },
+    { OSPC_MATTR_REPORTER,      "reporter" }
 };
 
 /* Array that associates role and names */
@@ -55,7 +56,7 @@ const OSPT_MSG_DESC OSPV_RTYPE_DESCS[OSPC_ROLE_NUMBER] = {
 /*
  * OSPPMsgAttrGetName() - get an attribute name from a part value
  */
-const char *OSPPMsgAttrGetName(     /* returns pointer to the name */                  
+const char *OSPPMsgAttrGetName(     /* returns pointer to the name */
     OSPE_MSG_ATTR ospvPart)
 {
     const char *ospvName = OSPC_OSNULL;

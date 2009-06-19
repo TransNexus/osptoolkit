@@ -431,7 +431,7 @@ extern "C" {
     int OSPPASN1ObjectEncode(OSPTASN1OBJECT **ospvEncodedObject, unsigned char *ospvTag, unsigned ospvTagLength, unsigned char ospvTagFlags,
             unsigned char *ospvContent, unsigned ospvContentLength, OSPEASN1DATAREFID ospvDataRefId);
     int OSPPASN1ObjectDeparse(OSPTASN1OBJECT *ospvObject, OSPEASN1PARSETABLEID ospvParseTableId, OSPEASN1DATAREFID ospvDataRefId);
-    int OSPPASN1ObjectCopyElementObject(OSPTASN1OBJECT **ospvDstObject, OSPTASN1OBJECT *ospvSrcObject, OSPEASN1DATAREFID ospvDataRefId);
+    int OSPPASN1ObjectCopyElementObject(OSPTASN1OBJECT **ospvDestObject, OSPTASN1OBJECT *ospvSrcObject, OSPEASN1DATAREFID ospvDataRefId);
     int OSPPASN1ObjectGetElementInfo(OSPTASN1OBJECT *ospvObject, OSPTASN1ELEMENTINFO **ospvElementInfo);
     int OSPPASN1ObjectGetContentElementInfo(OSPTASN1OBJECT *ospvObject, OSPTASN1ELEMENTINFO **ospvContentElementInfo);
     int OSPPASN1ObjectGetParseResults(OSPTASN1OBJECT *ospvObject, OSPTASN1PARSERESULT **ospvParseResults);
@@ -458,7 +458,7 @@ extern "C" {
             unsigned char ospvDataRef);
     int PTPDataReferencesMatch(unsigned char *ospvDataReferenceId1, unsigned char *ospvDataReferenceId2);
     int PTPResultIsRuleComponent(unsigned char *ospvRuleDataReference, unsigned char *ospvResultDataReference);
-    int PTPResultsCopy(OSPTASN1PARSERESULT **ospvDstParseResults, OSPTASN1PARSERESULT *ospvSrcParseResults);
+    int PTPResultsCopy(OSPTASN1PARSERESULT **ospvDestParseResults, OSPTASN1PARSERESULT *ospvSrcParseResults);
     int PTPResultsGetElement(OSPEASN1DATAREFID ospvDataReferenceId, OSPTASN1PARSERESULT *ospvParseResults, OSPTASN1ELEMENTINFO **ospvFoundElement);
     int PTPResultsCreate(OSPTASN1PARSERESULT **ospvParseResult, OSPTASN1ELEMENTINFO *ospvElementInfo, OSPEASN1DATAREFID ospvDataRefId);
     OSPTASN1PARSERESULT *PTPResultsEndOfList(OSPTASN1PARSERESULT *ospvResults);

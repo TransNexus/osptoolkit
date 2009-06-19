@@ -62,7 +62,7 @@ int OSPPX509CertGetCustDeviceId(
         errorcode = OSPPASN1ObjectGetElementByDataRef(ospvCertificate, &eInfo, OSPEDRID_CERT_SUBJECT);
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            errorcode = OSPPASN1ElementGetElementData(eInfo, (unsigned char **) &value, &dataLength);
+            errorcode = OSPPASN1ElementGetElementData(eInfo, (unsigned char **)&value, &dataLength);
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -97,7 +97,7 @@ int OSPPX509CertGetCustDeviceId(
             }
 
             /* Domain Name Found, we ARE in the parameter OU element */
-            pname = OSPM_STRTOK((char *) cptr, " ", &lcptr);    /* Skip domainname */
+            pname = OSPM_STRTOK((char *)cptr, " ", &lcptr); /* Skip domainname */
             while (pname) {
                 /* Get the next parameter name */
                 pname = OSPM_STRTOK(OSPC_OSNULL, " :]", &lcptr);
@@ -233,7 +233,7 @@ int OSPPX509CertCheckCertificateData(
                         /* Format the not before date */
                         century = (OSPM_MEMCMP(date, "49", 2) > 0) ? "19" : "20";
                         OSPM_STRCPY(notBeforeString, century);
-                        OSPM_STRNCAT(notBeforeString, (char *) date, 13);
+                        OSPM_STRNCAT(notBeforeString, (char *)date, 13);
                         /*OSPM_SPRINTF(notBeforeString,"%s%13s.13s", century, date); */
                     }
                 }
@@ -241,7 +241,7 @@ int OSPPX509CertCheckCertificateData(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            if (elementInfo) {    /* !!! PS */
+            if (elementInfo) {  /* !!! PS */
                 OSPM_FREE(elementInfo->Element);
                 elementInfo->ElementLength = 0;
                 OSPM_FREE(elementInfo);
@@ -259,12 +259,12 @@ int OSPPX509CertCheckCertificateData(
                         /* Format the not after date */
                         century = (OSPM_MEMCMP(date, "49", 2) > 0) ? "19" : "20";
                         OSPM_STRCPY(notAfterString, century);
-                        OSPM_STRNCAT(notAfterString, (char *) date, 13);
+                        OSPM_STRNCAT(notAfterString, (char *)date, 13);
                         /*OSPM_SPRINTF(notAfterString,"%s%13s.13s", century, date); */
                     }
                 }
             }
-            if (elementInfo) {    /* !!! PS */
+            if (elementInfo) {  /* !!! PS */
                 OSPM_FREE(elementInfo->Element);
                 elementInfo->ElementLength = 0;
                 OSPM_FREE(elementInfo);
@@ -342,7 +342,7 @@ int OSPPX509CertValidateCertificate(
             }
         }
     }
-    if (OSPC_OSNULL != publicKey) {    /* !!! PS */
+    if (publicKey != OSPC_OSNULL) { /* !!! PS */
         OSPPASN1ElementDelete(&(publicKey->ParseResults->ElementInfo), 0);
         OSPPASN1ObjectDelete(&publicKey);
     }
@@ -432,10 +432,10 @@ int OSPPX509CertIsParentCertificate(
         }
     }
 
-    if (OSPC_OSNULL != elementInfo1) {    /* !!! PS */
+    if (elementInfo1 != OSPC_OSNULL) {  /* !!! PS */
         OSPPASN1ElementDelete(&elementInfo1, 0);
     }
-    if (OSPC_OSNULL != elementInfo2) {    /* !!! PS */
+    if (elementInfo2 != OSPC_OSNULL) {  /* !!! PS */
         OSPPASN1ElementDelete(&elementInfo2, 0);
     }
     OSPPASN1ObjectDelete(&parentCertInfo);

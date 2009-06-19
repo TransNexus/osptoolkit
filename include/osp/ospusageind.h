@@ -39,7 +39,7 @@ typedef struct {
     OSPTTIME ospmUsageIndPostDialDelay;
     OSPTBOOL ospmUsageIndHasPDD;
     unsigned ospmUsageIndReleaseSource;
-    char ospmUsageIndConferenceId[OSPC_CONFIDSIZE];    /* This is in chararcters */
+    char ospmUsageIndConferenceId[OSPC_CONFIDSIZE];     /* This is in chararcters */
     char *ospmUsageIndMessageId;
     char *ospmUsageIndComponentId;
     OSPE_ROLE ospmUsageIndRole;
@@ -65,7 +65,7 @@ typedef struct {
     OSPE_DEST_PROTOCOL ospmUsageIndDestProtocol;
     char ospmUsageIndForwardCodec[OSPC_SIZE_CODEC];
     char ospmUsageIndReverseCodec[OSPC_SIZE_CODEC];
-    OSPT_CALL_ID *ospmUsageIndSessionId[OSPC_DIR_NUMBER];
+    OSPT_CALL_ID *ospmUsageIndSessionId[OSPC_CLEG_NUMBER];
 } OSPT_USAGEIND;
 
 /* Function Prototypes */
@@ -129,6 +129,7 @@ extern "C" {
     const char *OSPPUsageIndGetTCDesc(OSPT_USAGEIND *, OSPE_TERM_CAUSE);
     OSPTBOOL OSPPUsageIndHasStatistics(OSPT_USAGEIND *);
     void OSPPUsageIndSetStatistics(OSPT_USAGEIND *, OSPT_STATS *);
+    void OSPPUsageIndAddSourceAlt(OSPT_USAGEIND *ospvUsageInd, OSPT_ALTINFO *ospvAltInfo);
     void OSPPUsageIndAddDestinationAlt(OSPT_USAGEIND *ospvUsageInd, OSPT_ALTINFO *ospvAltInfo);
     void OSPPUsageIndSetStartTime(OSPT_USAGEIND *, OSPTTIME ospvStartTime);
     OSPTTIME OSPPUsageIndGetStartTime(OSPT_USAGEIND *);
@@ -159,10 +160,10 @@ extern "C" {
     OSPTBOOL OSPPUsageIndHasReverseCodec(OSPT_USAGEIND *);
     const char *OSPPUsageIndGetReverseCodec(OSPT_USAGEIND *);
     void OSPPUsageIndSetReverseCodec(OSPT_USAGEIND *, const char *);
-    OSPTBOOL OSPPUsageIndHasSessionId(OSPT_USAGEIND *, OSPE_DIRECTION);
-    OSPT_CALL_ID *OSPPUsageIndGetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION);
-    void OSPPUsageIndSetSessionId(OSPT_USAGEIND *, OSPE_DIRECTION, OSPT_CALL_ID *);
-    
+    OSPTBOOL OSPPUsageIndHasSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG);
+    OSPT_CALL_ID *OSPPUsageIndGetSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG);
+    void OSPPUsageIndSetSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG, OSPT_CALL_ID *);
+
 #ifdef __cplusplus
 }
 #endif

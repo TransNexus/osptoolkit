@@ -19,7 +19,7 @@
  * ospasn1ids.c - ASN1 defined ID's definitions and functions.
  */
 
-#define OSPC_OSPASN1ID_INCLUDE_STATIC 1    /* Forces inclusion of static */
+#define OSPC_OSPASN1ID_INCLUDE_STATIC   1   /* Forces inclusion of static */
 /* data defined in ospasn1id.h */
 #include "osp/osp.h"
 #include "osp/ospasn1.h"

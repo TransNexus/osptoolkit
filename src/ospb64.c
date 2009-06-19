@@ -92,7 +92,7 @@ int OSPPBase64Decode(
         for (x = 0; (x < inSize) && (Fretval == OSPC_ERR_NO_ERROR); x++) {
             c = in[x];
             if (!isspace((int) c)) {
-                if ((ix64 = (unsigned char *) strchr((char *) B64CharTab, c)) != NULL) {
+                if ((ix64 = (unsigned char *)strchr((char *)B64CharTab, c)) != NULL) {
                     if ((ix64 >= B64CharTab) && (ix64 < (B64CharTab + 64))) {
                         b64 = ix64 - B64CharTab;
                         switch (state) {

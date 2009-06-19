@@ -24,6 +24,7 @@
 
 #include "osp/ospfail.h"
 #include "osp/ospdest.h"
+#include "osp/ospstatistics.h"
 
 /* Authorisation Indicators */
 #define OSPC_TRAN_AUTHORISED        0x0001
@@ -51,11 +52,11 @@ extern "C" {
             unsigned *, unsigned *, unsigned *, void *, unsigned);
     int OSPPTransactionNew(OSPTPROVHANDLE, OSPTTRANHANDLE *);
     int OSPPTransactionRecordFailure(OSPTTRANHANDLE, OSPEFAILREASON);
-    int OSPPTransactionReinitializeAtDevice(OSPTTRANHANDLE, OSPEFAILREASON, unsigned, const char *, const char *,
-            const char *, const char *, const char *, const char *, unsigned, const void *, unsigned, const void *, unsigned *,
-            unsigned *, unsigned *, void *, unsigned);
+    int OSPPTransactionReinitializeAtDevice(OSPTTRANHANDLE, OSPEFAILREASON, unsigned, const char*, const char*,
+            const char*, const char*, const char*, const char*, unsigned, const void*, unsigned, const void*, unsigned*,
+            unsigned*, unsigned*, void*, unsigned);
     int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned,
-            const char *, unsigned, signed, unsigned, signed, unsigned *, void *);
+            const char *, int, int, int, int, unsigned *, void *);
     int OSPPTransactionRequestAuthorisation(OSPTTRANHANDLE, const char *, const char *, const char *, OSPE_NUMBER_FORMAT, const char *,
             OSPE_NUMBER_FORMAT, const char *, unsigned, OSPT_CALL_ID *[], const char *[], unsigned *, unsigned *, void *);
     int OSPPTransactionIndicateCapabilities(OSPTTRANHANDLE, const char *, const char *, const char *, unsigned, unsigned *, void *);
@@ -76,7 +77,7 @@ extern "C" {
         OSPE_NUMBER_FORMAT ospvCalledNumberFormat,                          /* In - Called number formaat : sip/e.164/url */
         unsigned ospvSizeOfCallId,                                          /* In - Size of Callid */
         const void *ospvCallId,                                             /* In - Call identifier */
-        OSPEFAILREASON ospvFailureReason, 
+        OSPEFAILREASON ospvFailureReason,
         unsigned *ospvSizeOfDetailLog,                                      /* In/Out - Max size of detail log\ Actual size of detail log */
         void *ospvDetailLog);                                               /* In - Pointer to storage for detail log */
     int OSPPTransactionSetDestinationCount(OSPTTRANHANDLE ospvTransaction,  /*In - Transaction handle */
@@ -102,12 +103,19 @@ extern "C" {
     int OSPPTransactionSetDestProtocol(OSPTTRANHANDLE, OSPE_DEST_PROTOCOL);
     int OSPPTransactionSetForwardCodec(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetReverseCodec(OSPTTRANHANDLE, const char *);
-    int OSPPTransactionSetSessionId(OSPTTRANHANDLE, OSPE_DIRECTION, OSPT_CALL_ID *);
-    int OSPPTransactionSetCustomInfo(OSPTTRANHANDLE, unsigned, const char *);    
-    int OSPPTransactionSetDelayMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
-    int OSPPTransactionSetJitterMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
-    int OSPPTransactionSetPackLossMean(OSPTTRANHANDLE, OSPE_DIRECTION, unsigned);
-        
+    int OSPPTransactionSetSessionId(OSPTTRANHANDLE, OSPE_CALL_LEG, OSPT_CALL_ID *);
+    int OSPPTransactionSetCustomInfo(OSPTTRANHANDLE, unsigned, const char *);
+    int OSPPTransactionSetSrcNetworkId(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetDestNetworkId(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetReporter(OSPTTRANHANDLE, OSPE_STATS_REPORTER);
+    int OSPPTransactionSetLost(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int, int);
+    int OSPPTransactionSetJitter(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int, int, int, int, float);
+    int OSPPTransactionSetDelay(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int, int, int, int, float);
+    int OSPPTransactionSetOctets(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int);
+    int OSPPTransactionSetPackets(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int);
+    int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, float);
+    int OSPPTransactionSetMOS(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, float);
+
 #ifdef __cplusplus
 }
 #endif
