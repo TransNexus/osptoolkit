@@ -1858,25 +1858,14 @@ int testCustomInfo()
     return errorcode;
 }
 
-int testStatsReporter()
-{
-    int errorcode = 0;
-
-    OSPPTransactionSetReporter(OSPVTransactionHandle, OSPC_SREPORTER_CALLING);
-
-    return errorcode;
-}
-
 int testStatsLost()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1, 2);
-    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 3, 4);
-    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 5, -1);
-    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, -1, 6);
-    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, -1, -1);
-    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 7, 8);
+    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1, 2);
+    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 3, -1);
+    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1, 4);
+    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, -1, -1);
 
     return errorcode;
 }
@@ -1885,12 +1874,10 @@ int testStatsJitter()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1, 2, 3, 4, 5);
-    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, -1, 6, 7, 8, 9);
-    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 10, -1, 11, 12, 13);
-    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, 14, 15, -1, 16, 17);
-    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, 18, 19, 20, -1, 21);
-    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 22, 23, 24, 25, -1);
+    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1, 2, 3, 4, 5);
+    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, -1, 6, 7, 8, 9);
+    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 10, -1, 11, 12, 13);
+    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 14, 15, -1, 16, 17);
 
     return errorcode;
 }
@@ -1899,12 +1886,10 @@ int testStatsDelay()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1, 2, 3, 4, 5);
-    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, -1, 6, 7, 8, 9);
-    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 10, -1, 11, 12, 13);
-    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, 14, 15, -1, 16, 17);
-    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, 18, 19, 20, -1, 21);
-    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 22, 23, 24, 25, -1);
+    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1, 2, 3, 4, 5);
+    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, -1, 6, 7, 8, 9);
+    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 10, -1, 11, 12, 13);
+    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 14, 15, -1, 16, 17);
 
     return errorcode;
 }
@@ -1913,12 +1898,10 @@ int testStatsOctets()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1);
-    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2);
-    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, -1);
-    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, 3);
-    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, 4);
-    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, -1);
+    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1);
+    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2);
+    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1);
+    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 3);
 
     return errorcode;
 }
@@ -1927,12 +1910,10 @@ int testStatsPackets()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1);
-    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2);
-    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 3);
-    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, -1);
-    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, -1);
-    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 4);
+    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1);
+    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2);
+    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 3);
+    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, -1);
 
     return errorcode;
 }
@@ -1941,26 +1922,34 @@ int testStatsRFactor()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1.1);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2.2);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, -1);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, 3.3);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, 4.4);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, -1);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1.1);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2.2);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1);
+    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 3.3);
 
     return errorcode;
 }
 
-int testStatsMOS()
+int testStatsMOSCQ()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_DOWNSTREAM, 1.1);
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPEER, OSPC_SFLOW_UPSTREAM, 2.2);
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_DOWNSTREAM, 3.3);
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PEERPROXY, OSPC_SFLOW_UPSTREAM, -1);
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_DOWNSTREAM, -1);
-    OSPPTransactionSetMOS(OSPVTransactionHandle, OSPC_SRANGE_PROXYPEER, OSPC_SFLOW_UPSTREAM, 4.4);
+    OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1.1);
+    OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2.2);
+    OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 3.3);
+    OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, -1);
+
+    return errorcode;
+}
+
+int testStatsMOSLQ()
+{
+    int errorcode = 0;
+
+    OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1.1);
+    OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2.2);
+    OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1);
+    OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 3.3);
 
     return errorcode;
 }
@@ -2230,9 +2219,6 @@ int testAPI(int apinumber)
     case 210:
         errorcode = testCustomInfo();
         break;
-    case 220:
-        errorcode = testStatsReporter();
-        break;
     case 221:
         errorcode = testStatsLost();
         break;
@@ -2252,7 +2238,10 @@ int testAPI(int apinumber)
         errorcode = testStatsRFactor();
         break;
     case 227:
-        errorcode = testStatsMOS();
+        errorcode = testStatsMOSCQ();
+        break;
+    case 228:
+        errorcode = testStatsMOSLQ();
         break;
     default:
         errorcode = -1;

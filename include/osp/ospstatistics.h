@@ -28,38 +28,26 @@
 #define OSPC_SVALUE_PACKETS     ((unsigned)(1 << 1))
 #define OSPC_SVALUE_FRACTION    ((unsigned)(1 << 2))
 #define OSPC_SVALUE_SAMPLES     ((unsigned)(1 << 3))
-#define OSPC_SVALUE_MIN         ((unsigned)(1 << 4))
-#define OSPC_SVALUE_MAX         ((unsigned)(1 << 5))
+#define OSPC_SVALUE_MINIMUM     ((unsigned)(1 << 4))
+#define OSPC_SVALUE_MAXIMUM     ((unsigned)(1 << 5))
 #define OSPC_SVALUE_MEAN        ((unsigned)(1 << 6))
 #define OSPC_SVALUE_VARIANCE    ((unsigned)(1 << 7))
 #define OSPC_SVALUE_SQUARES     ((unsigned)(1 << 8))
-#define OSPC_SVALUE_PACK        ((unsigned)(OSPC_SVALUE_PACKETS | OSPC_SVALUE_FRACTION))
-#define OSPC_SVALUE_METRICS     ((unsigned)(OSPC_SVALUE_SAMPLES | OSPC_SVALUE_MIN | OSPC_SVALUE_MAX | OSPC_SVALUE_MEAN | OSPC_SVALUE_VARIANCE | OSPC_SVALUE_SQUARES))
+#define OSPC_SVALUE_PACKET      ((unsigned)(OSPC_SVALUE_PACKETS | OSPC_SVALUE_FRACTION))
+#define OSPC_SVALUE_METRICS     ((unsigned)(OSPC_SVALUE_SAMPLES | OSPC_SVALUE_MINIMUM | OSPC_SVALUE_MAXIMUM | OSPC_SVALUE_MEAN | OSPC_SVALUE_VARIANCE | OSPC_SVALUE_SQUARES))
 
 /*
- * Statistcs reporter types
+ * Statistcs, metric types
  */
 typedef enum {
-    OSPC_SREPORTER_PROXY = 0,
-    OSPC_SREPORTER_CALLING,
-    OSPC_SREPORTER_CALLED,
-    /* Number of range types */
-    OSPC_SREPORTER_NUMBER
-} OSPE_STATS_REPORTER;
+    OSPC_SMETRIC_RTP = 0,
+    OSPC_SMETRIC_RTCP,
+    /* Number of metric types */
+    OSPC_SMETRIC_NUMBER
+} OSPE_STATS_METRIC;
 
 /*
- * Statistcs range types
- */
-typedef enum {
-    OSPC_SRANGE_PEERPEER = 0,
-    OSPC_SRANGE_PEERPROXY,
-    OSPC_SRANGE_PROXYPEER,
-    /* Number of range types */
-    OSPC_SRANGE_NUMBER
-} OSPE_STATS_RANGE;
-
-/*
- * Statistcs flow types
+ * Statistcs, flow types
  */
 typedef enum {
     OSPC_SFLOW_DOWNSTREAM = 0,
@@ -69,7 +57,7 @@ typedef enum {
 } OSPE_STATS_FLOW;
 
 /*
- * Statistics value types
+ * Statistics, value types
  */
 typedef enum {
     OSPC_STATS_LOST = 0,
@@ -78,8 +66,9 @@ typedef enum {
     OSPC_STATS_OCTETS,
     OSPC_STATS_PACKETS,
     OSPC_STATS_RFACTOR,
-    OSPC_STATS_MOS,
-    /* Number of statistics types */
+    OSPC_STATS_MOSCQ,
+    OSPC_STATS_MOSLQ,
+    /* Number of value types */
     OSPC_STATS_NUMBER
 } OSPE_STATS;
 
@@ -90,7 +79,7 @@ typedef struct {
     OSPTBOOL hasvalue;
     unsigned packets;
     unsigned fraction;
-} OSPT_STATS_PACK;
+} OSPT_STATS_PACKET;
 
 /*
  * Statistics value structure for Jitter, delay,
@@ -109,7 +98,7 @@ typedef struct {
  * Statistics structure types
  */
 typedef enum {
-    OSPC_SSTRUCT_PACK = 0,
+    OSPC_SSTRUCT_PACKET = 0,
     OSPC_SSTRUCT_METRICS,
     OSPC_SSTRUCT_INTEGER,
     OSPC_SSTRUCT_FLOAT,
@@ -119,18 +108,18 @@ typedef enum {
 
 /* Basic structure for statistics */
 typedef struct {
-    OSPE_STATS_REPORTER ospmReporter;
-    OSPT_STATS_PACK ospmLossSent;
-    OSPT_STATS_PACK ospmLossReceived;
+    OSPT_STATS_PACKET ospmLossSent;
+    OSPT_STATS_PACKET ospmLossReceived;
     OSPT_STATS_METRICS ospmOneWay;
     OSPT_STATS_METRICS ospmRoundTrip;
-    OSPT_STATS_PACK ospmLost[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
-    OSPT_STATS_METRICS ospmJitter[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
-    OSPT_STATS_METRICS ospmDelay[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
-    int ospmOctets[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
-    int ospmPackets[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
-    float ospmRFactor[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
-    float ospmMOS[OSPC_SRANGE_NUMBER][OSPC_SFLOW_NUMBER];
+    OSPT_STATS_PACKET ospmLost[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
+    OSPT_STATS_METRICS ospmJitter[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
+    OSPT_STATS_METRICS ospmDelay[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
+    int ospmOctets[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
+    int ospmPackets[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
+    float ospmRFactor[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
+    float ospmMOSCQ[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
+    float ospmMOSLQ[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
 } OSPT_STATS;
 
 /* Function Prototypes */
@@ -172,18 +161,16 @@ extern "C" {
     int OSPPStatsLossSentToElement(OSPT_STATS *, OSPT_XML_ELEM **);
     int OSPPStatsLossReceivedToElement(OSPT_STATS *, OSPT_XML_ELEM **);
 
-    OSPTBOOL OSPPStatsHasValue(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, unsigned);
-    void OSPPStatsSetReporter(OSPT_STATS *, OSPE_STATS_REPORTER);
-    void OSPPStatsSetPack(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int, int);
-    void OSPPStatsSetMetrics(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int, int, int, int, float);
-    void OSPPStatsSetInteger(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int);
-    void OSPPStatsSetFloat(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, float);
-    OSPE_STATS_REPORTER OSPPStatsGetReporter(OSPT_STATS *);
-    void OSPPStatsGetPack(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int *, int *);
-    void OSPPStatsGetMetrics(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int *, int *, int *, int *, float *);
-    int OSPPStatsGetInteger(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW);
-    float OSPPStatsGetFloat(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW);
-    int OSPPStatsValueToElement(OSPT_STATS *, OSPE_STATS, OSPE_STATS_RANGE, OSPE_STATS_FLOW, OSPT_XML_ELEM **);
+    OSPTBOOL OSPPStatsHasValue(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_FLOW, unsigned);
+    void OSPPStatsSetPacket(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_FLOW, int, int);
+    void OSPPStatsSetMetrics(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_FLOW, int, int, int, int, float);
+    void OSPPStatsSetInteger(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_FLOW, int);
+    void OSPPStatsSetFloat(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
+    void OSPPStatsGetPacket(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_FLOW, int *, int *);
+    void OSPPStatsGetMetrics(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_FLOW, int *, int *, int *, int *, float *);
+    int OSPPStatsGetInteger(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_FLOW);
+    float OSPPStatsGetFloat(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_FLOW);
+    int OSPPStatsValueToElement(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_FLOW, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }
