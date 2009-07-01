@@ -39,18 +39,18 @@
 #include "nonblocking.h"
 
 #ifdef  WIN32
-#define _Open   _open
-#define _Read   _read
-#define _Close  _close
-#define _Lseek  _lseek
-#define _Strdup _strdup
+#define _Open       _open
+#define _Read       _read
+#define _Close      _close
+#define _Lseek      _lseek
+#define _Strdup     _strdup
 #else
-#define _Open   open
-#define _Read   read
-#define _Close  close
-#define _Lseek  lseek
-#define _Strdup strdup
-#define  O_BINARY  (0)
+#define _Open       open
+#define _Read       read
+#define _Close      close
+#define _Lseek      lseek
+#define _Strdup     strdup
+#define O_BINARY    (0)
 #endif
 
 #define LOCAL_VALIDATION        1
@@ -91,24 +91,18 @@ unsigned callidsize = CALL_ID_SZ;
 void *callid = NULL;
 unsigned char ret_cid[CALL_ID_SZ];
 unsigned char c_id[CALL_ID_SZ + 1] = { "1234567890123456" };
-
 char callednumber[CALLED_NUM_SZ];
 char callingnumber[CALLING_NUM_SZ];
 char dest[DESTINATION_SZ] = { "" };
 char destdev[DESTINATION_SZ] = { "" };
-
 unsigned tokensize = TOKEN_SZ;
 char c_token[TOKEN_SZ] = { "" };
-
 void *token = NULL;
-
 const char *New_ServicePoint = { "http://osptestserver.transnexus.com:1080/osp" };
-
 static OSPT_CALL_ID *callids[NUM_CALL_IDS];
 token_algo_t tokenalgo = TOKEN_ALGO_SIGNED;
 char *SourceIP = NULL, *SourceDevIP = NULL, *DestIP = NULL, *DestDevIP = NULL;
 char *ModifiedSourceIP = NULL, *ModifiedSourceDevIP = NULL, *ModifiedDestIP = NULL, *ModifiedDestDevIP = NULL;
-
 unsigned almostOutOfResources = 0;
 unsigned hardwareSupport = 0;
 unsigned TCcode = 0;
@@ -117,13 +111,12 @@ time_t call_start_time = 0;
 time_t call_end_time = 0;
 time_t call_alert_time = 0;
 time_t call_connect_time = 0;
-
 NBMONITOR *nbMonitor = NULL;
 int WORK_THREAD_NUM = 30;        /* make sure that this number does not exceed DEF_HTTP_MAXCONN */
 
 #define TOKEN_SIZE          2000
 #define TEST_ERROR          1
-#define MAX_QUEUE_SIZE          10000
+#define MAX_QUEUE_SIZE      10000
 
 int TEST_NUM = 0;
 char **Tokens;
@@ -165,7 +158,6 @@ int testTestCalls(void);
 OSPTTHREADRETURN testNonBlockingPerformanceTest(void *);
 int testNonBlockingPerformanceTestForCapabilities();
 
-
 /*
  * accumulate table
  */
@@ -177,21 +169,21 @@ typedef struct _ACCUM {
 } ACCUM;
 
 ACCUM accumtable10[10] = {
-    {1, 3335, 3335, 0.0f},
-    {1, 822, 822, 0.0f},
-    {1, 268, 268, 0.0f},
-    {1, 524, 524, 0.0f},
-    {1, 97, 97, 0.0f},
-    {1, 874, 874, 0.0f},
-    {1, 171, 171, 0.0f},
-    {1, 595, 595, 0.0f},
-    {1, 1196, 1196, 0.0f},
-    {1, 958, 958, 0.0f}
+    { 1, 3335, 3335, 0.0f },
+    { 1, 822, 822, 0.0f },
+    { 1, 268, 268, 0.0f },
+    { 1, 524, 524, 0.0f },
+    { 1, 97, 97, 0.0f },
+    { 1, 874, 874, 0.0f },
+    { 1, 171, 171, 0.0f },
+    { 1, 595, 595, 0.0f },
+    { 1, 1196, 1196, 0.0f },
+    { 1, 958, 958, 0.0f }
 };
 
 ACCUM accumtable2[2] = {
-    {10, 6, 718, 485206.00f},
-    {20, 1, 141, 39733.00f}
+    { 10, 6, 718, 485206.00f },
+    { 20, 1, 141, 39733.00f }
 };
 
 /*
@@ -488,7 +480,6 @@ int testOSPPProviderSetHTTPRetryDelay()
 int testOSPPProviderGetHTTPTimeout()
 {
     int errorcode = 0;
-
     unsigned timeout;
 
     errorcode = OSPPProviderGetHTTPTimeout(OSPVProviderHandle, &timeout);
@@ -786,16 +777,15 @@ int testOSPPTransactionAccumulateOneWayDelay()
     int errorcode = OSPC_ERR_NO_ERROR, i = 0;
 
     for (i = 0; i < 10; i++) {
-
         errorcode = OSPPTransactionAccumulateOneWayDelay(OSPVTransactionHandle,
             accumtable10[i].Number,
             accumtable10[i].Min,
             accumtable10[i].Mean,
             accumtable10[i].Variance);
 
-        printf("OSPPTransactionAccumulateOneWayDelay errorcode = %d\n",
-               errorcode);
+        printf("OSPPTransactionAccumulateOneWayDelay errorcode = %d\n", errorcode);
     }
+
     return errorcode;
 }
 
@@ -812,6 +802,7 @@ int testOSPPTransactionAccumulateRoundTripDelay()
 
         printf("OSPPTransactionAccumulateRoundTripDelay errorcode = %d\n", errorcode);
     }
+
     return errorcode;
 }
 
@@ -820,8 +811,7 @@ int testOSPPTransactionGetDestProtocol()
     OSPE_DEST_PROTOCOL dest_prot;
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    errorcode =
-        OSPPTransactionGetDestProtocol(OSPVTransactionHandle, &dest_prot);
+    errorcode = OSPPTransactionGetDestProtocol(OSPVTransactionHandle, &dest_prot);
     if (errorcode == OSPC_ERR_NO_ERROR) {
         switch (dest_prot) {
         case OSPC_DPROT_UNDEFINED:
@@ -1833,7 +1823,7 @@ int testNetworkId()
     return errorcode;
 }
 
-int testCallId()
+int testSessionId()
 {
     int errorcode = 0;
 
@@ -2214,7 +2204,7 @@ int testAPI(int apinumber)
         errorcode = testNetworkId();
         break;
     case 207:
-        errorcode = testCallId();
+        errorcode = testSessionId();
         break;
     case 210:
         errorcode = testCustomInfo();
@@ -2286,87 +2276,65 @@ int testMenu()
 
     if (!quietmode) {
         printf("\nProvider API functions\n");
-        printf
-            ("---------------------------------------------------------------------\n");
+        printf("---------------------------------------------------------------------\n");
         printf(" 1) New                                2) Delete\n");
-        printf
-            (" 3) For future Enhancements            4) SetServicePoints\n");
-        printf
-            (" 5) GetHTTPMaxConnections              6) SetHTTPMaxConnections\n");
-        printf
-            (" 7) GetHTTPPersistence                 8) SetHTTPPersistence\n");
-        printf
-            (" 9) GetHTTPRetryDelay                 10) SetHTTPRetryDelay\n");
+        printf(" 3) For future Enhancements            4) SetServicePoints\n");
+        printf(" 5) GetHTTPMaxConnections              6) SetHTTPMaxConnections\n");
+        printf(" 7) GetHTTPPersistence                 8) SetHTTPPersistence\n");
+        printf(" 9) GetHTTPRetryDelay                 10) SetHTTPRetryDelay\n");
         printf("11) GetHTTPTimeout                    12) SetHTTPTimeout\n");
-        printf
-            ("13) For future Enhancements           14) SetCapabilitiesURLs\n");
-        printf
-            ("15) GetLocalValidation                16) SetLocalValidation\n");
-        printf
-            ("17) GetServicePoints                  18) SetServicePoints\n");
+        printf("13) For future Enhancements           14) SetCapabilitiesURLs\n");
+        printf("15) GetLocalValidation                16) SetLocalValidation\n");
+        printf("17) GetServicePoints                  18) SetServicePoints\n");
         printf("19) GetSSLLifetime                    20) SetSSLLifetime\n");
-        printf
-            ("21) GetNumberOfAuthorityCertificates  22) GetNumberOfServicePoints\n");
-        printf
-            ("---------------------------------------------------------------------\n");
+        printf("21) GetNumberOfAuthorityCertificates  22) GetNumberOfServicePoints\n");
+        printf("---------------------------------------------------------------------\n");
         printf("Transaction API functions\n");
-        printf
-            ("---------------------------------------------------------------------\n");
+        printf("---------------------------------------------------------------------\n");
         printf("23) New                               24) Delete\n");
-        printf
-            ("25) AccumulateOneWayDelay             26) AccumulateRoundTripDelay\n");
-        printf
-            ("27) GetFirstDestination               28) GetNextDestination\n");
-        printf
-            ("29) RequestAuthorisation              30) RequestSuggestedAuthorization\n");
+        printf("25) AccumulateOneWayDelay             26) AccumulateRoundTripDelay\n");
+        printf("27) GetFirstDestination               28) GetNextDestination\n");
+        printf("29) RequestAuthorisation              30) RequestSuggestedAuthorization\n");
         printf("31) ValidateAuthorisation             32) ReportUsage\n");
-        printf
-            ("33) TransactionInitializeAtDevice(OGW)34) TransactionInitialize(TGW)\n");
-        printf
-            ("35) SetNetworkId                      36) TransactionRecordFailure\n");
-        printf
-            ("37) IndicateCapabilities              38) RequestReauthorization\n");
-        printf
-            ("---------------------------------------------------------------------\n");
+        printf("33) TransactionInitializeAtDevice(OGW)34) TransactionInitialize(TGW)\n");
+        printf("35) SetNetworkId                      36) TransactionRecordFailure\n");
+        printf("37) IndicateCapabilities              38) RequestReauthorization\n");
+        printf("---------------------------------------------------------------------\n");
         printf("Miscellaneous Tests\n");
-        printf
-            ("---------------------------------------------------------------------\n");
-        printf
-            ("39) GetDestinationProtocol            40) IsDestOSPEnabled\n");
-        printf
-            ("41) %-6d Test Calls                 42) Get OSP Client Toolkit Version\n",
-             num_test_calls);
-        printf
-            ("43) BuildUsageFromScratch(OGW)        44) BuildUsageFromScratch(TGW)\n");
-        printf
-            ("45) GetLookAheadInfoIfPresent         46) ModifyDeviceIdentifiers\n");
-        printf
-            ("47) ModifyDeviceIdentifiersAgain      48) SetDestinationCount\n");
+        printf("---------------------------------------------------------------------\n");
+        printf("39) GetDestinationProtocol            40) IsDestOSPEnabled\n");
+        printf("41) %-6d Test Calls                 42) Get OSP Toolkit Version\n", num_test_calls);
+        printf("43) BuildUsageFromScratch(OGW)        44) BuildUsageFromScratch(TGW)\n");
+        printf("45) GetLookAheadInfoIfPresent         46) ModifyDeviceIdentifiers\n");
+        printf("47) ModifyDeviceIdentifiersAgain      48) SetDestinationCount\n");
         printf("99) Sleep for 2 seconds\n");
-        printf
-            ("---------------------------------------------------------------------\n");
+        printf("---------------------------------------------------------------------\n");
         printf("Configuration Parameters \n");
-        printf
-            ("---------------------------------------------------------------------\n");
-        printf
-            ("50) Set Calling Number                51) Set Called Number\n");
-        printf
-            ("52) Get Calling Number                53) Get Called Number\n");
+        printf("---------------------------------------------------------------------\n");
+        printf("50) Set Calling Number                51) Set Called Number\n");
+        printf("52) Get Calling Number                53) Get Called Number\n");
         printf("54) Set CallId to Empty for Token Validation\n");
         printf("55) Set Pricing and Service Info\n");
         printf("56) Set Duration                      57) Set TC Code\n");
         printf("58) Set Start Time                    59) Set End Time\n");
-        printf
-            ("60) Set Alert Time                    61) Set Connect Time\n");
-        printf
-            ("---------------------------------------------------------------------\n");
+        printf("60) Set Alert Time                    61) Set Connect Time\n");
+        printf("---------------------------------------------------------------------\n");
         printf("Performance tests\n");
-        printf
-            ("---------------------------------------------------------------------\n");
+        printf("---------------------------------------------------------------------\n");
         printf("100) Run Multiple calls\n");
         printf("101) Run Multiple Capabilities Indications\n");
-        printf
-            ("---------------------------------------------------------------------\n");
+        printf("---------------------------------------------------------------------\n");
+        printf("Other tests\n");
+        printf("---------------------------------------------------------------------\n");
+        printf("201) Set Routing Number               202) Set Termination Cause\n");
+        printf("203) Set Asserted ID                  204) Set Destination Protocol\n");
+        printf("205) Set Codec                        206) Set Network ID\n");
+        printf("207) Set Session ID                   210) Set Custom Info\n");
+        printf("221) Set Lost                         222) Set Jitter\n");
+        printf("223) Set Delay                        224) Set Octets\n");
+        printf("225) Set Packets                      226) Set R-Factor\n");
+        printf("227) Set MOS-CQ                       228) Set MOS-LQ\n");
+        printf("---------------------------------------------------------------------\n");
         printf("Enter function number or 'q' to quit => ");
     }
     fgets(inbuf, 256, stdin);
