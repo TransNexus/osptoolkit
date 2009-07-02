@@ -497,4 +497,7 @@ Version 3.5.1
 Version 3.5.2
 * Changed statistics reporting.
 * Added test cases in test_app list.
+---------------------------------------------------------------------------
+
+Version 3.5.3
 
