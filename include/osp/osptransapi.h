@@ -107,14 +107,14 @@ extern "C" {
     int OSPPTransactionSetCustomInfo(OSPTTRANHANDLE, unsigned, const char *);
     int OSPPTransactionSetSrcNetworkId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetDestNetworkId(OSPTTRANHANDLE, const char *);
-    int OSPPTransactionSetReporter(OSPTTRANHANDLE, OSPE_STATS_REPORTER);
-    int OSPPTransactionSetLost(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int, int);
-    int OSPPTransactionSetJitter(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int, int, int, int, float);
-    int OSPPTransactionSetDelay(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int, int, int, int, float);
-    int OSPPTransactionSetOctets(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int);
-    int OSPPTransactionSetPackets(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, int);
-    int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, float);
-    int OSPPTransactionSetMOS(OSPTTRANHANDLE, OSPE_STATS_RANGE, OSPE_STATS_FLOW, float);
+    int OSPPTransactionSetLost(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, int, int);
+    int OSPPTransactionSetJitter(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, int, int, int, int, float);
+    int OSPPTransactionSetDelay(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, int, int, int, int, float);
+    int OSPPTransactionSetOctets(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, int);
+    int OSPPTransactionSetPackets(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, int);
+    int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
+    int OSPPTransactionSetMOSCQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
+    int OSPPTransactionSetMOSLQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
 
 #ifdef __cplusplus
 }
