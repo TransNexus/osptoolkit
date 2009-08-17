@@ -1178,10 +1178,6 @@ int OSPPTransactionDelete(
                 OSPM_FREE(trans->DestNetworkId);
             }
 
-            if (trans->RoutingNumber != OSPC_OSNULL) {
-                OSPM_FREE(trans->RoutingNumber);
-            }
-
             for (cnt = 0; cnt < OSPC_CLEG_NUMBER; cnt++) {
                 if (trans->SessionId[cnt] != OSPC_OSNULL) {
                     OSPPCallIdDelete(&trans->SessionId[cnt]);
@@ -2198,7 +2194,9 @@ int OSPPTransactionNew(
         trans->TokenInfoHasLookAheadInfo = OSPC_FALSE;
         trans->SrcNetworkId = OSPC_OSNULL;
         trans->DestNetworkId = OSPC_OSNULL;
-        trans->RoutingNumber = OSPC_OSNULL;
+        trans->NPRn[0] = '\0';
+        trans->NPCic[0] = '\0';
+        trans->NPNpdi = OSPC_FALSE;
         trans->AssertedId[0] = '\0';
         trans->DestProtocol = OSPC_DPROT_UNKNOWN;
         trans->ForwardCodec[0] = '\0';
@@ -4164,18 +4162,13 @@ int OSPPTransactionSetRoutingNumber(
             if (trans->State == OSPC_REPORT_USAGE_SUCCESS) {
                 errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
             } else {
-                if (trans->RoutingNumber != OSPC_OSNULL) {
+                if (trans->NPRn[0] != '\0') {
                     errorcode = OSPC_ERR_TRAN_DUPLICATE_REQUEST;
                 } else if (trans->AuthReq == OSPC_OSNULL) {
                     /*
                      * Authorization Request has not been called.
                      */
-                    OSPM_MALLOC(trans->RoutingNumber, char, OSPM_STRLEN(ospvRoutingNumber) + 1);
-                    if (trans->RoutingNumber != OSPC_OSNULL) {
-                        OSPM_MEMCPY(trans->RoutingNumber, ospvRoutingNumber, OSPM_STRLEN(ospvRoutingNumber) + 1);
-                    } else {
-                        errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
-                    }
+                    OSPM_STRNCPY(trans->NPRn, ospvRoutingNumber, sizeof(trans->NPRn) - 1);
                 } else {
                     /*
                      * it is calling the function out of sequence as it has already called AuthReq, return an error
@@ -4183,6 +4176,60 @@ int OSPPTransactionSetRoutingNumber(
                     errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
                 }
             }
+        }
+    }
+
+    return errorcode;
+}
+
+/*
+ * OSPPTransactionSetNumberPortability()
+ *
+ * Reports number portability parameters for a particular transaction
+ * This function can be used to report NP specific information to the server.
+ *   ospvTransaction: handle of the transaction object.
+ *   ospvNPRn: the routing number specific information to be reported to the server.
+ *   ospvNPCic: the carrier identification code specific information to be reported to the server.
+ *   ospvNPNpdi: the npdi flag specific information to be reported to the server.
+ * returns OSPC_ERR_NO_ERROR if successful, else error code.
+ */
+int OSPPTransactionSetNumberPortability(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvRn,             /* In - rn specific information */
+    const char *ospvCic,            /* In - cic specific information */
+    int ospvNpdi)                   /* In - npdi specific information */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+        if (trans->State == OSPC_REPORT_USAGE_SUCCESS) {
+            errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+        } else if ((trans->NPRn[0] != '\0') || (trans->NPCic[0] != '\0') || (trans->NPNpdi == OSPC_TRUE)) {
+            errorcode = OSPC_ERR_TRAN_DUPLICATE_REQUEST;
+        } else if (trans->AuthReq == OSPC_OSNULL) {
+            /*
+             * Authorization Request has not been called.
+             */
+          	if (ospvRn != OSPC_OSNULL) {
+                OSPM_STRNCPY(trans->NPRn, ospvRn, sizeof(trans->NPRn) - 1);
+          	}
+
+            if (ospvCic != OSPC_OSNULL) {
+                OSPM_STRNCPY(trans->NPCic, ospvCic, sizeof(trans->NPCic) - 1);
+            }
+
+            if (ospvNpdi) {
+                trans->NPNpdi = OSPC_TRUE;
+            } else {
+                trans->NPNpdi = OSPC_FALSE;
+            }
+        } else {
+            /*
+             * it is calling the function out of sequence as it has already called AuthReq, return an error
+             */
+            errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
         }
     }
 
@@ -4214,6 +4261,27 @@ int OSPPTransactionSetTermCause(
     return errorcode;
 }
 
+int OSPPTransactionSetDiversion(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvNumber,         /* In - Diversion number, DiversionSourceInfo e164 */
+    const char *ospvDomain)         /* In - Diversion domain, DiversionDeviceInfo transport */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if (((ospvNumber == OSPC_OSNULL) || (ospvNumber[0] == '\0')) || ((ospvDomain == OSPC_OSNULL) || (ospvDomain[0] == '\0'))) {
+        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->DiversionSrcInfo, ospvNumber, sizeof(trans->DiversionSrcInfo) - 1);
+            OSPM_STRNCPY(trans->DiversionDevInfo, ospvDomain, sizeof(trans->DiversionDevInfo) - 1);
+        }
+    }
+
+    return errorcode;
+}
+
 int OSPPTransactionSetAssertedId(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     const char *ospvAssertedId)     /* In - Assterted ID */
@@ -4226,7 +4294,7 @@ int OSPPTransactionSetAssertedId(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-               OSPM_STRNCPY(trans->AssertedId, ospvAssertedId, sizeof(trans->AssertedId));
+            OSPM_STRNCPY(trans->AssertedId, ospvAssertedId, sizeof(trans->AssertedId) - 1);
         }
     }
 
@@ -4283,7 +4351,7 @@ int OSPPTransactionSetReverseCodec(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            OSPM_STRNCPY(trans->ReverseCodec, ospvReverseCodec, sizeof(trans->ReverseCodec));
+            OSPM_STRNCPY(trans->ReverseCodec, ospvReverseCodec, sizeof(trans->ReverseCodec) - 1);
         }
     }
 
@@ -4354,7 +4422,7 @@ int OSPPTransactionSetSrcNetworkId(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-               OSPM_STRNCPY(trans->UsageSrcNetworkId, ospvSrcNetworkId, sizeof(trans->UsageSrcNetworkId));
+               OSPM_STRNCPY(trans->UsageSrcNetworkId, ospvSrcNetworkId, sizeof(trans->UsageSrcNetworkId) - 1);
         }
     }
 
@@ -4373,7 +4441,7 @@ int OSPPTransactionSetDestNetworkId(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-               OSPM_STRNCPY(trans->UsageDestNetworkId, ospvDestNetworkId, sizeof(trans->UsageDestNetworkId));
+               OSPM_STRNCPY(trans->UsageDestNetworkId, ospvDestNetworkId, sizeof(trans->UsageDestNetworkId) - 1);
         }
     }
 
@@ -4622,3 +4690,58 @@ int OSPPTransactionSetMOSLQ(
 
     return errorcode;
 }
+
+/*
+ * OSPPTransactionGetNumberPortability() :
+ * Reports number portability parameters returned in AuthRsp
+ * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
+ */
+int OSPPTransactionGetNumberPortability(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    char *ospvNPRn,                 /* Out - routing number */
+    char *ospvNPCic,                /* Out - carrier identification code */
+    int *ospvNPNpdi)                /* Out - npdi */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    if (trans != (OSPTTRANS *)OSPC_OSNULL) {
+        if (trans->AuthReq != OSPC_OSNULL) {
+            /*
+             * We are the source.
+             * Get the information from the destination
+             * structure.
+             */
+            dest = trans->CurrentDest;
+            if (trans->State == OSPC_GET_DEST_SUCCESS) {
+                if (dest == (OSPT_DEST *)OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                } else {
+                    OSPM_STRCPY(ospvNPRn, dest->ospmNPRn);
+                    OSPM_STRCPY(ospvNPCic, dest->ospmNPCic);
+                    *ospvNPNpdi = dest->ospmNPNpdi;
+                }
+            } else {
+                errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            }
+        } else if (trans->AuthInd != OSPC_OSNULL) {
+            /*
+             * We are the destination.
+             * Get the information from the AuthInd structure.
+             */
+            OSPM_STRCPY(ospvNPRn, dest->ospmNPRn);
+            OSPM_STRCPY(ospvNPCic, dest->ospmNPCic);
+            *ospvNPNpdi = dest->ospmNPNpdi;
+        } else {
+            errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");
+        }
+    }
+
+    return errorcode;
+}
+

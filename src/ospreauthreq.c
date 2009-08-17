@@ -57,7 +57,7 @@ OSPTBOOL OSPPReauthReqHasTimestamp(     /* returns non-zero if time */
  * OSPPReauthReqSetTimestamp() - sets the timestamp for an authorisation request
  */
 void OSPPReauthReqSetTimestamp(     /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq, 
+    OSPTREAUTHREQ *ospvReauthReq,
     OSPTTIME ospvTime)
 {
     if (ospvReauthReq != OSPC_OSNULL) {
@@ -127,7 +127,7 @@ void OSPPReauthReqSetSourceNumber(  /* nothing returned */
 }
 
 /*
- * OSPPReauthReqGetSourceNumber() - returns the source number for an 
+ * OSPPReauthReqGetSourceNumber() - returns the source number for an
  * authorisation request
  */
 const char *OSPPReauthReqGetSourceNumber(   /* returns number as string */
@@ -355,7 +355,7 @@ void OSPPReauthReqSetCallId(        /* nothing returned */
 }
 
 /*
- * OSPPReauthReqAddSourceAlt() - add a source alternate to an 
+ * OSPPReauthReqAddSourceAlt() - add a source alternate to an
  * authorisation request
  */
 void OSPPReauthReqAddSourceAlt(
@@ -368,7 +368,7 @@ void OSPPReauthReqAddSourceAlt(
 }
 
 /*
- * OSPPReauthReqHasSourceAlt() - does an authorisation request have a 
+ * OSPPReauthReqHasSourceAlt() - does an authorisation request have a
  * Source Alternate?
  */
 OSPTBOOL OSPPReauthReqHasSourceAlt(     /* returns non-zero if exists */
@@ -384,7 +384,7 @@ OSPTBOOL OSPPReauthReqHasSourceAlt(     /* returns non-zero if exists */
 }
 
 /*
- * OSPPReauthReqFirstSourceAlt() - gets the First Source alternate for an 
+ * OSPPReauthReqFirstSourceAlt() - gets the First Source alternate for an
  * authorisation request
  */
 OSPT_ALTINFO *OSPPReauthReqFirstSourceAlt(  /* returns alt info pointer */
@@ -400,7 +400,7 @@ OSPT_ALTINFO *OSPPReauthReqFirstSourceAlt(  /* returns alt info pointer */
 }
 
 /*
- * OSPPReauthReqNextSourceAlt() - gets the next source alternate for an 
+ * OSPPReauthReqNextSourceAlt() - gets the next source alternate for an
  * authorisation request
  */
 OSPT_ALTINFO *OSPPReauthReqNextSourceAlt(   /* returns alt info pointer */
@@ -417,7 +417,7 @@ OSPT_ALTINFO *OSPPReauthReqNextSourceAlt(   /* returns alt info pointer */
 }
 
 /*
- * OSPPReauthReqAddDestinationAlt() - add a destination alternate to an 
+ * OSPPReauthReqAddDestinationAlt() - add a destination alternate to an
  * authorisation request
  */
 void OSPPReauthReqAddDestinationAlt(
@@ -431,7 +431,7 @@ void OSPPReauthReqAddDestinationAlt(
 }
 
 /*
- * OSPPReauthReqHasDestinationAlt() - does an authorisation request have a 
+ * OSPPReauthReqHasDestinationAlt() - does an authorisation request have a
  * Destination Alternate?
  */
 OSPTBOOL OSPPReauthReqHasDestinationAlt(/* returns non-zero if exists */
@@ -447,7 +447,7 @@ OSPTBOOL OSPPReauthReqHasDestinationAlt(/* returns non-zero if exists */
 }
 
 /*
- * OSPPReauthReqFirstDestinationAlt() - gets the First Destination alternate for an 
+ * OSPPReauthReqFirstDestinationAlt() - gets the First Destination alternate for an
  * authorisation request
  */
 OSPT_ALTINFO *OSPPReauthReqFirstDestinationAlt(     /* returns alt info pointer */
@@ -463,7 +463,7 @@ OSPT_ALTINFO *OSPPReauthReqFirstDestinationAlt(     /* returns alt info pointer 
 }
 
 /*
- * OSPPReauthReqNextDestinationAlt() - gets the next Destination alternate for an 
+ * OSPPReauthReqNextDestinationAlt() - gets the next Destination alternate for an
  * authorisation request
  */
 OSPT_ALTINFO *OSPPReauthReqNextDestinationAlt(  /* returns alt info pointer */
@@ -591,7 +591,7 @@ OSPTREAUTHREQ *OSPPReauthReqNew(void)   /* returns pointer or NULL */
 }
 
 /*
- * OSPPReauthReqToElement() - create an XML element from a reauthorisation 
+ * OSPPReauthReqToElement() - create an XML element from a reauthorisation
  * request
  */
 int OSPPReauthReqToElement(         /* returns error code */
@@ -624,29 +624,26 @@ int OSPPReauthReqToElement(         /* returns error code */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* create the "Message" element as the parent */
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_MESSAGE), "");
-
         if (*ospvElem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID),
                 OSPPReauthReqHasMessageId(ospvReauthReq) ? (const char *)(ospvReauthReq->ospmReauthReqMessageId) : "NULL");
-
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
             }
 
             /* random */
             if ((OSPPUtilGetRandom(random, 0) > 0) && (ospvErrCode == OSPC_ERR_NO_ERROR)) {
                 attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_RANDOM), (const char *)random);
-
-                if (attr != OSPC_OSNULL) {
+                if (attr == OSPC_OSNULL) {
+                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                } else {
                     OSPPXMLElemAddAttr(*ospvElem, attr);
                     attr = OSPC_OSNULL;
-                } else {
-                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
                 }
             }
         }
@@ -659,19 +656,17 @@ int OSPPReauthReqToElement(         /* returns error code */
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         }
     }
-    /* 
+    /*
      * now add the attributes to the type element -- in this case the component id
      */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_COMPONENTID),
             OSPPReauthReqHasComponentId(ospvReauthReq) ? (const char *)(ospvReauthReq->ospmReauthReqComponentId) : "NULL");
-
         if (attr == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+        } else {
+            OSPPXMLElemAddAttr(reauthelem, attr);
         }
-    }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddAttr(reauthelem, attr);
     }
 
     /* now add the children */
@@ -770,9 +765,7 @@ int OSPPReauthReqToElement(         /* returns error code */
         elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_USAGEDETAIL), "");
         if (elem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        } else {
             ospvErrCode = OSPPUsageToElement((unsigned)OSPPReauthReqGetDuration(ospvReauthReq), 0, 0, 0, 0, 0, 0, 0, elem);
         }
 
@@ -785,8 +778,8 @@ int OSPPReauthReqToElement(         /* returns error code */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* add any tokens */
         for (token = (OSPTTOKEN *)OSPPReauthReqFirstToken(ospvReauthReq);
-             ((token != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR)); token = 
-             (OSPTTOKEN *)OSPPReauthReqNextToken(ospvReauthReq, token)) 
+             ((token != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR)); token =
+             (OSPTTOKEN *)OSPPReauthReqNextToken(ospvReauthReq, token))
         {
             ospvErrCode = OSPPTokenToElement(token, &elem);
             if (ospvErrCode == OSPC_ERR_NO_ERROR) {
@@ -826,7 +819,7 @@ int OSPPReauthReqToElement(         /* returns error code */
             }
         }
     }
-    
+
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* Now add the reauthelem to the main elem */
         OSPPXMLElemAddChild(*ospvElem, reauthelem);
@@ -915,7 +908,7 @@ OSPTBOOL OSPPReauthReqHasCustId(    /* returns non-zero if true */
  * OSPPReauthReqSetCustId() - Set Customer Id
  */
 void OSPPReauthReqSetCustId(    /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq, 
+    OSPTREAUTHREQ *ospvReauthReq,
     unsigned long ospvCustId)
 {
     if (ospvReauthReq != OSPC_OSNULL) {
@@ -957,7 +950,7 @@ OSPTBOOL OSPPReauthReqHasDeviceId(      /* returns non-zero if true */
  * OSPPReauthReqSetTNDeviceId() - Set Device Id
  */
 void OSPPReauthReqSetDeviceId(  /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq, 
+    OSPTREAUTHREQ *ospvReauthReq,
     unsigned long ospvDeviceId)
 {
     if (ospvReauthReq != OSPC_OSNULL) {

@@ -36,7 +36,11 @@ typedef struct {
     OSPTLIST ospmAuthReqCallId;
     char ospmAuthReqSourceNumber[OSPC_SIZE_E164NUM];
     char ospmAuthReqDestNumber[OSPC_SIZE_E164NUM];
-    char ospmAuthReqRoutingNumber[OSPC_SIZE_E164NUM];
+    char ospmAuthReqNPRn[OSPC_SIZE_E164NUM];
+    char ospmAuthReqNPCic[OSPC_SIZE_E164NUM];
+    char ospmAuthReqDiversionSrcInfo[OSPC_SIZE_E164NUM];
+    char ospmAuthReqDiversionDevInfo[OSPC_SIZE_SIGNALADDR];
+    int ospmAuthReqNPNpdi;
     OSPTLIST ospmAuthReqSourceAlternate;
     OSPTLIST ospmAuthReqDestinationAlternate;
     unsigned ospmAuthReqMaxDest;
@@ -82,10 +86,19 @@ extern "C" {
     OSPTBOOL OSPPAuthReqHasDeviceId(OSPT_AUTH_REQ *ospvAuthReq);
     void OSPPAuthReqSetDeviceId(OSPT_AUTH_REQ *, unsigned long);
     unsigned long OSPPAuthReqGetDeviceId(OSPT_AUTH_REQ *);
-    OSPTBOOL OSPPAuthReqHasRoutingNumber(OSPT_AUTH_REQ *);
-    void OSPPAuthReqSetRoutingNumber(OSPT_AUTH_REQ *, const char *);
-    const char *OSPPAuthReqGetRoutingNumber(OSPT_AUTH_REQ *);
-    unsigned OSPPRoutingNumToElement(const char *, OSPT_XML_ELEM **);
+    void OSPPAuthReqSetNumberPortability(OSPT_AUTH_REQ *, const char *, const char *, int);
+    OSPTBOOL OSPPAuthReqHasNPRn(OSPT_AUTH_REQ *);
+    const char *OSPPAuthReqGetNPRn(OSPT_AUTH_REQ *);
+    unsigned OSPPNPRnToElement(const char *, OSPT_XML_ELEM **);
+    OSPTBOOL OSPPAuthReqHasNPCic(OSPT_AUTH_REQ *);
+    const char *OSPPAuthReqGetNPCic(OSPT_AUTH_REQ *);
+    unsigned OSPPNPCicToElement(const char *, OSPT_XML_ELEM **);
+    OSPTBOOL OSPPAuthReqHasNPNpdi(OSPT_AUTH_REQ *);
+    int OSPPAuthReqGetNPNpdi(OSPT_AUTH_REQ *);
+    unsigned OSPPNPNpdiToElement(int, OSPT_XML_ELEM **);
+    OSPTBOOL OSPPAuthReqHasDiversion(OSPT_AUTH_REQ *);
+    void OSPPAuthReqSetDiversion(OSPT_AUTH_REQ *, const char *, const char *);
+    void OSPPAuthReqGetDiversion(OSPT_AUTH_REQ *, char **, char **);
 
 #ifdef __cplusplus
 }

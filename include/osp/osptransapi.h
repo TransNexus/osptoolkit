@@ -98,7 +98,9 @@ extern "C" {
         OSPE_SERVICE ospvServiceType,                                           /* In- type of service, 0-voice, 1-data */
         OSPT_PRICING_INFO *ospvPricingInfo[]);                                  /* In- Pricing Info */
     int OSPPTransactionSetRoutingNumber(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetNumberPortability(OSPTTRANHANDLE, const char *, const char *, int);
     int OSPPTransactionSetTermCause(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned, const char *);
+    int OSPPTransactionSetDiversion(OSPTTRANHANDLE, const char *, const char *);
     int OSPPTransactionSetAssertedId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetDestProtocol(OSPTTRANHANDLE, OSPE_DEST_PROTOCOL);
     int OSPPTransactionSetForwardCodec(OSPTTRANHANDLE, const char *);
@@ -115,6 +117,7 @@ extern "C" {
     int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
     int OSPPTransactionSetMOSCQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
     int OSPPTransactionSetMOSLQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
+    int OSPPTransactionGetNumberPortability(OSPTTRANHANDLE ospvTransaction, char *, char *, int *);
 
 #ifdef __cplusplus
 }

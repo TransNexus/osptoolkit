@@ -116,6 +116,7 @@ extern "C" {
     OSPTBOOL OSPPAuthRspHasRole(OSPT_AUTH_RSP *);
     void OSPPAuthRspSetRole(OSPT_AUTH_RSP *, OSPE_ROLE);
     OSPE_ROLE OSPPAuthRspGetRole(OSPT_AUTH_RSP *);
+    void OSPPAuthRspDestInfoFromElement(OSPT_XML_ELEM *, OSPT_AUTH_RSP *);
 
 #ifdef __cplusplus
 }

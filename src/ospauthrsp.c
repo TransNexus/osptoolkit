@@ -60,7 +60,7 @@ OSPTBOOL OSPPAuthRspHasStatus(
 }
 
 /*
- * OSPPAuthRspGetStatus() - returns the status for an AuthResponse 
+ * OSPPAuthRspGetStatus() - returns the status for an AuthResponse
  */
 OSPTSTATUS* OSPPAuthRspGetStatus(
     OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response */
@@ -102,7 +102,7 @@ OSPTBOOL OSPPAuthRspHasDest(
 }
 
 /*
- * OSPPAuthRspFirstDest() - returns the first destination for an AuthResponse 
+ * OSPPAuthRspFirstDest() - returns the first destination for an AuthResponse
  */
 OSPT_DEST* OSPPAuthRspFirstDest(
     OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response */
@@ -253,7 +253,7 @@ void OSPPAuthRspSetComponentId(
 
     if (ospvAuthRsp != OSPC_OSNULL) {
         if (ospvAuthRsp->ospmAuthRspComponentId != OSPC_OSNULL) {
-            OSPM_FREE(ospvAuthRsp->ospmAuthRspComponentId);    
+            OSPM_FREE(ospvAuthRsp->ospmAuthRspComponentId);
         }
 
         OSPM_MALLOC(ospvAuthRsp->ospmAuthRspComponentId, char, len + 1);
@@ -369,7 +369,7 @@ OSPT_DEST* OSPPAuthRspAddDest(
         if (ospvAddedDest != OSPC_OSNULL) {
             /*
              OSPM_MEMCPY(ospvAddedDest, ospvDest, sizeof(OSPT_DEST));
-             ospvAddedDest->ospmDestCallId = 
+             ospvAddedDest->ospmDestCallId =
              OSPPCallIdNew(
                  OSPPCallIdGetSize(ospvDest->ospmDestCallId),
                  OSPPCallIdGetValue(ospvDest->ospmDestCallId));
@@ -409,20 +409,18 @@ unsigned OSPPAuthRspFromElement(
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* create the authorisation response object */
         authrsp = OSPPAuthRspNew();
-
         if (authrsp == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_DATA_NO_AUTHRSP;
         } else {
-
             if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem))==OSPC_MELEM_MESSAGE) {
                 OSPPAuthRspMessageIdFromElement(ospvElem, &messageId);
                 if (messageId != OSPC_OSNULL) {
                     OSPPAuthRspSetMessageId(authrsp, messageId);
                 }
 
-                /* ospvElem is pointing to the Message element. 
-                 * The first child contains the Component element. 
-                 * The following two lines of code change ospvElem from 
+                /* ospvElem is pointing to the Message element.
+                 * The first child contains the Component element.
+                 * The following two lines of code change ospvElem from
                  * pointing to the Message element to the Component element.
                  */
                 ospvParent = ospvElem;
@@ -562,7 +560,7 @@ OSPTBOOL OSPPAuthRspHasMessageId(
 /*
  * OSPPAuthRspSetMessageId() - creates space and copies in the string.
  */
-void OSPPAuthRspSetMessageId(     
+void OSPPAuthRspSetMessageId(
     OSPT_AUTH_RSP *ospvAuthRsp, /* In - pointer to Usage Indication struct */
     const char *ospvMessageId)  /* In - pointer to message id string */
 {
@@ -570,7 +568,7 @@ void OSPPAuthRspSetMessageId(
 
     if (ospvAuthRsp != OSPC_OSNULL) {
         if (ospvAuthRsp->ospmAuthRspMessageId != OSPC_OSNULL) {
-            OSPM_FREE(ospvAuthRsp->ospmAuthRspMessageId);    
+            OSPM_FREE(ospvAuthRsp->ospmAuthRspMessageId);
         }
 
         OSPM_MALLOC(ospvAuthRsp->ospmAuthRspMessageId, char, len + 1);
@@ -583,7 +581,7 @@ void OSPPAuthRspSetMessageId(
  * OSPPAuthRspMessageIdFromElement() - Get message id attribute from element.
  */
 void OSPPAuthRspMessageIdFromElement(
-    OSPT_XML_ELEM *ospvElemIn, 
+    OSPT_XML_ELEM *ospvElemIn,
     const char **ospvMessageId)
 {
     OSPT_XML_ATTR* attr = OSPC_OSNULL;
@@ -605,7 +603,7 @@ void OSPPAuthRspMessageIdFromElement(
  * OSPPAuthRspComponentIdFromElement() - Get component id attribute from element.
  */
 void OSPPAuthRspComponentIdFromElement(
-    OSPT_XML_ELEM *ospvElemIn, 
+    OSPT_XML_ELEM *ospvElemIn,
     const char **ospvComponentId)
 {
     OSPT_XML_ATTR* attr = OSPC_OSNULL;

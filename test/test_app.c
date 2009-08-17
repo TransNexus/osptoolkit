@@ -1764,15 +1764,6 @@ int testOSPToolkitVersion()
     return 0;
 }
 
-int testRoutingNumber()
-{
-    int errorcode = 0;
-
-    errorcode = OSPPTransactionSetRoutingNumber(OSPVTransactionHandle, "RoutingNumber");
-
-    return errorcode;
-}
-
 int testTermCause()
 {
     int errorcode = 0;
@@ -1781,6 +1772,24 @@ int testTermCause()
     errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_H323, 2, "tc_h323");
     errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_SIP, 3, "tc_sip");
     errorcode = OSPPTransactionSetTermCause(OSPVTransactionHandle, OSPC_TCAUSE_XMPP, 4, "tc_xmpp");
+
+    return errorcode;
+}
+
+int testNumberPortability()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPTransactionSetNumberPortability(OSPVTransactionHandle, "NPRn", "NPCic", 1);
+
+    return errorcode;
+}
+
+int testDiversion()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPTransactionSetDiversion(OSPVTransactionHandle, "DiversionSrcInfo", "DiversionDevInfo");
 
     return errorcode;
 }
@@ -1940,6 +1949,21 @@ int testStatsMOSLQ()
     OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2.2);
     OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1);
     OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 3.3);
+
+    return errorcode;
+}
+
+int testGetNumberPortability()
+{
+    int errorcode = 0;
+    char rn[1024];
+    char cic[1024];
+    int npdi;
+
+    OSPPTransactionGetNumberPortability(OSPVTransactionHandle, rn, cic, &npdi);
+    printf("rn = %s\n", rn);
+    printf("cic = %s\n", cic);
+    printf("npdi = %d\n", npdi);
 
     return errorcode;
 }
@@ -2185,53 +2209,59 @@ int testAPI(int apinumber)
     case 101:
         errorcode = testNonBlockingPerformanceTestForCapabilities();
         break;
-    case 201:
-        errorcode = testRoutingNumber();
-        break;
-    case 202:
+    case 200:
         errorcode = testTermCause();
         break;
-    case 203:
+    case 210:
+        errorcode = testNumberPortability();
+        break;
+    case 211:
+        errorcode = testDiversion();
+        break;
+    case 212:
         errorcode = testAssertedId();
         break;
-    case 204:
+    case 220:
         errorcode = testDestProtocol();
         break;
-    case 205:
+    case 221:
         errorcode = testCodec();
         break;
-    case 206:
+    case 222:
         errorcode = testNetworkId();
         break;
-    case 207:
+    case 223:
         errorcode = testSessionId();
         break;
-    case 210:
+    case 224:
         errorcode = testCustomInfo();
         break;
-    case 221:
+    case 230:
         errorcode = testStatsLost();
         break;
-    case 222:
+    case 231:
         errorcode = testStatsJitter();
         break;
-    case 223:
+    case 232:
         errorcode = testStatsDelay();
         break;
-    case 224:
+    case 233:
         errorcode = testStatsOctets();
         break;
-    case 225:
+    case 234:
         errorcode = testStatsPackets();
         break;
-    case 226:
+    case 235:
         errorcode = testStatsRFactor();
         break;
-    case 227:
+    case 236:
         errorcode = testStatsMOSCQ();
         break;
-    case 228:
+    case 237:
         errorcode = testStatsMOSLQ();
+        break;
+    case 500:
+        errorcode = testGetNumberPortability();
         break;
     default:
         errorcode = -1;
@@ -2326,14 +2356,17 @@ int testMenu()
         printf("---------------------------------------------------------------------\n");
         printf("Other tests\n");
         printf("---------------------------------------------------------------------\n");
-        printf("201) Set Routing Number               202) Set Termination Cause\n");
-        printf("203) Set Asserted ID                  204) Set Destination Protocol\n");
-        printf("205) Set Codec                        206) Set Network ID\n");
-        printf("207) Set Session ID                   210) Set Custom Info\n");
-        printf("221) Set Lost                         222) Set Jitter\n");
-        printf("223) Set Delay                        224) Set Octets\n");
-        printf("225) Set Packets                      226) Set R-Factor\n");
-        printf("227) Set MOS-CQ                       228) Set MOS-LQ\n");
+        printf("200) Set Termination Cause\n");
+        printf("210) Set NP Parameters                211) Set Diversion\n");
+        printf("212) Set Asserted ID\n");
+        printf("220) Set Destination Protocol         221) Set Codec\n");
+        printf("222) Set Network ID                   223) Set Session ID\n");
+        printf("224) Set Custom Info\n");
+        printf("230) Set Lost                         231) Set Jitter\n");
+        printf("232) Set Delay                        233) Set Octets\n");
+        printf("234) Set Packets                      235) Set R-Factor\n");
+        printf("236) Set MOS-CQ                       237) Set MOS-LQ\n");
+        printf("500) Get NP parameters\n");
         printf("---------------------------------------------------------------------\n");
         printf("Enter function number or 'q' to quit => ");
     }

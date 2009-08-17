@@ -39,7 +39,7 @@ void OSPPCSAuditDelete(
 }
 
 int OSPPCSAuditFromElement(
-    OSPT_XML_ELEM *ospvElem, 
+    OSPT_XML_ELEM *ospvElem,
     OSPTCSAUDIT **ospvCSAudit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -63,7 +63,7 @@ int OSPPCSAuditFromElement(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
          * The CSAudit element should consist of one element.
-         *  
+         *
          */
         if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_CSAUDITTRIGGER) {
             OSPPCSAuditSetTrigger(*ospvCSAudit, (unsigned char *)OSPPXMLElemGetValue(ospvElem));
@@ -111,7 +111,7 @@ OSPTCSAUDIT *OSPPCSAuditNew(void)
 }
 
 void OSPPCSAuditSetTrigger(
-    OSPTCSAUDIT *ospvCSAudit, 
+    OSPTCSAUDIT *ospvCSAudit,
     unsigned char *ospvAuditTrigger)
 {
     if (ospvCSAudit != OSPC_OSNULL) {
@@ -122,7 +122,6 @@ void OSPPCSAuditSetTrigger(
             }
 
             OSPM_MALLOC(ospvCSAudit->ospmAuditTrigger, unsigned char, OSPM_STRLEN((const char *)ospvAuditTrigger) + 1);
-
             if (ospvCSAudit->ospmAuditTrigger != OSPC_OSNULL) {
                 OSPM_MEMCPY(ospvCSAudit->ospmAuditTrigger, (const char *)ospvAuditTrigger, OSPM_STRLEN((const char *)ospvAuditTrigger) + 1);
             }

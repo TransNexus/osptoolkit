@@ -79,7 +79,7 @@ void OSPPStatusSetDesc(     /* no return */
         }
         OSPM_MALLOC(ospvStatus->ospmStatusDesc, char, OSPM_STRLEN(ospvDesc) + 1);
         if (ospvStatus->ospmStatusDesc != OSPC_OSNULL) {
-            OSPM_MEMCPY((ospvStatus->ospmStatusDesc), ospvDesc, OSPM_STRLEN(ospvDesc) + 1);
+            OSPM_MEMCPY(ospvStatus->ospmStatusDesc, ospvDesc, OSPM_STRLEN(ospvDesc) + 1);
             ospvStatus->ospmHasDesc = OSPC_TRUE;
         }
     }

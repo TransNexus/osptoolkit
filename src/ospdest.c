@@ -34,7 +34,7 @@
 #include "osp/ospaltinfo.h"
 
 /* Array that associates protocols and names */
-const OSPT_MSG_DESC OSPV_DPROT_DESCS[OSPC_DPROT_NUMBER] = { 
+const OSPT_MSG_DESC OSPV_DPROT_DESCS[OSPC_DPROT_NUMBER] = {
     { OSPC_DPROT_SIP,   "sip" },
     { OSPC_DPROT_LRQ,   "h323-LRQ" },
     { OSPC_DPROT_Q931,  "h323-Q931" },
@@ -217,7 +217,7 @@ OSPTBOOL OSPPDestDevHasAddr(    /* returns non-zero if exists */
     if (ospvDest != OSPC_OSNULL) {
         ospvHas = (ospvDest->ospmDestDevAddr[0] != '\0');
     }
-    
+
     return ospvHas;
 }
 
@@ -232,12 +232,12 @@ OSPTBOOL OSPPDestHasNetworkAddr(    /* returns non-zero if exists */
     if (ospvDest != OSPC_OSNULL) {
         ospvHas = (ospvDest->ospmDestNetworkId[0] != '\0');
     }
-    
+
     return ospvHas;
 }
 
 /*
- * OSPPDestSetNetworkAddr() - sets the network address for a destination 
+ * OSPPDestSetNetworkAddr() - sets the network address for a destination
  *  device
  */
 void OSPPDestSetNetworkAddr(    /* nothing returned */
@@ -348,7 +348,7 @@ OSPTBOOL OSPPDestHasValidUntil( /* returns non-zero if time */
     if (ospvDest != OSPC_OSNULL) {
         ospvHas = (ospvDest->ospmDestValidUntil != OSPC_TIMEMAX);
     }
-    
+
     return ospvHas;
 }
 
@@ -389,7 +389,7 @@ OSPTBOOL OSPPDestHasAuthority(  /* returns non-zero if exists */
     if (ospvDest != OSPC_OSNULL) {
         ospvHas = (ospvDest->ospmDestAuthority[0] != '\0');
     }
-    
+
     return ospvHas;
 }
 
@@ -594,11 +594,11 @@ OSPT_TERM_CAUSE *OSPPDestGetTermCause(
     OSPT_DEST *ospvDest)    /* destination */
 {
     OSPT_TERM_CAUSE *ospvTermCause = OSPC_OSNULL;
-    
+
     if (ospvDest != OSPC_OSNULL) {
         ospvTermCause = &ospvDest->ospmDestTermCause;
     }
-    
+
     return ospvTermCause;
 }
 
@@ -607,14 +607,14 @@ OSPT_TERM_CAUSE *OSPPDestGetTermCause(
  */
 unsigned OSPPDestGetTCCode(
     OSPT_DEST *ospvDest,        /* destination */
-    OSPE_TERM_CAUSE ospvType)   /* fail reasion type */    
+    OSPE_TERM_CAUSE ospvType)   /* fail reasion type */
 {
     unsigned ospvTCCode = 0;
-    
+
     if (ospvDest != OSPC_OSNULL) {
         ospvTCCode = OSPPGetTCCode(&ospvDest->ospmDestTermCause, ospvType);
     }
-    
+
     return ospvTCCode;
 }
 
@@ -623,14 +623,14 @@ unsigned OSPPDestGetTCCode(
  */
 const char *OSPPDestGetTCDesc(
     OSPT_DEST *ospvDest,        /* destination */
-    OSPE_TERM_CAUSE ospvType)   /* fail reasion type */    
+    OSPE_TERM_CAUSE ospvType)   /* fail reasion type */
 {
     const char *ospvTCDesc = OSPC_OSNULL;
-    
+
     if (ospvDest != OSPC_OSNULL) {
         ospvTCDesc = OSPPGetTCDesc(&ospvDest->ospmDestTermCause, ospvType);
     }
-    
+
     return ospvTCDesc;
 }
 
@@ -734,7 +734,6 @@ unsigned OSPPDestFromElement(   /* returns error code */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* create the destination object */
         dest = OSPPDestNew();
-
         if (dest == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_DATA_NO_DEST;
         }
@@ -748,7 +747,7 @@ unsigned OSPPDestFromElement(   /* returns error code */
         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
             (elem != OSPC_OSNULL) &&
             (ospvErrCode == OSPC_ERR_NO_ERROR);
-            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) 
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem))
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_DESTPROTOCOL:
@@ -761,7 +760,7 @@ unsigned OSPPDestFromElement(   /* returns error code */
                 OSPPDestSetSrcNumber(dest, OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_DESTINFO:
-                OSPPDestSetNumber(dest, OSPPXMLElemGetValue(elem));
+            	OSPPDestInfoFromElement(elem, dest);
                 break;
             case OSPC_MELEM_DESTALT:
                 /* OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem)); */
@@ -815,7 +814,7 @@ unsigned OSPPDestFromElement(   /* returns error code */
                     OSPPCallIdDelete(&callId);
                 }
                 break;
-// SDS TODO                
+// SDS TODO
             case OSPC_MELEM_TERMCAUSE:
                 ospvErrCode = OSPPMsgNumFromElement(elem, &failure);
                 OSPPDestSetTermCause(dest, OSPC_TCAUSE_Q850, (unsigned)failure, OSPC_OSNULL);
@@ -901,4 +900,37 @@ const char *OSPPDestProtocolGetName(
     }
 
     return ospvName;
+}
+
+void OSPPDestInfoFromElement(
+    OSPT_XML_ELEM *ospvElem,
+    OSPT_DEST *ospvDest)
+{
+    OSPT_XML_ATTR* attr = OSPC_OSNULL;
+
+    for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElem);
+        (attr != OSPC_OSNULL);
+        attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElem, attr))
+    {
+        switch (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr))) {
+        case OSPC_ALTINFO_E164:
+        	OSPM_STRNCPY(ospvDest->ospmDestNumber, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmDestNumber) - 1);
+        	break;
+        case OSPC_ALTINFO_ROUTINGNUM:
+        	OSPM_STRNCPY(ospvDest->ospmNPRn, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPRn) - 1);
+        	break;
+        case OSPC_ALTINFO_CIC:
+        	OSPM_STRNCPY(ospvDest->ospmNPCic, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPCic) - 1);
+        	break;
+        case OSPC_ALTINFO_NPDI:
+            if (OSPM_STRCASECMP(OSPPXMLElemGetValue(ospvElem), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE)) == 0) {
+            	ospvDest->ospmNPNpdi = OSPC_TRUE;
+            } else {
+            	ospvDest->ospmNPNpdi = OSPC_FALSE;
+            }
+        	break;
+        default:
+        	break;
+        }
+    }
 }

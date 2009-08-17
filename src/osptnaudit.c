@@ -38,7 +38,7 @@ void OSPPTNAuditDelete(
 }
 
 int OSPPTNAuditFromElement(
-    OSPT_XML_ELEM *ospvElem, 
+    OSPT_XML_ELEM *ospvElem,
     OSPTTNAUDIT **ospvTNAudit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -78,11 +78,11 @@ int OSPPTNAuditFromElement(
         /*
          * The TNAudit element should consist of several child
          * elements. We'll run through what's there and pick out
-         * the information we need. 
+         * the information we need.
          */
         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
              (elem != OSPC_OSNULL) && (errorcode == OSPC_ERR_NO_ERROR);
-             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) 
+             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem))
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_AUDIT:
@@ -224,7 +224,7 @@ OSPTTNAUDIT *OSPPTNAuditNew(void)
 }
 
 void OSPPTNAuditSetMaxMessages(
-    OSPTTNAUDIT *ospvTNAudit, 
+    OSPTTNAUDIT *ospvTNAudit,
     unsigned ospvMaxMessages)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
@@ -242,7 +242,7 @@ void OSPPTNAuditSetState(
 }
 
 void OSPPTNAuditSetTimeLimit(
-    OSPTTNAUDIT *ospvTNAudit, 
+    OSPTTNAUDIT *ospvTNAudit,
     unsigned ospvTimeLimit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
@@ -251,7 +251,7 @@ void OSPPTNAuditSetTimeLimit(
 }
 
 void OSPPTNAuditSetURL(
-    OSPTTNAUDIT *ospvTNAudit, 
+    OSPTTNAUDIT *ospvTNAudit,
     const char *ospvAuditURL)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
@@ -262,7 +262,6 @@ void OSPPTNAuditSetURL(
             }
 
             OSPM_MALLOC(ospvTNAudit->ospmAuditURL, char, OSPM_STRLEN(ospvAuditURL) + 1);
-
             if (ospvTNAudit->ospmAuditURL != OSPC_OSNULL) {
                 OSPM_MEMCPY(ospvTNAudit->ospmAuditURL, ospvAuditURL, OSPM_STRLEN(ospvAuditURL) + 1);
             }
