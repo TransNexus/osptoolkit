@@ -785,7 +785,7 @@ int OSPPAuthReqToElement(       /* returns error code */
 
         /* add diversion */
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        	OSPPAuthReqGetDiversion(ospvAuthReq, &number, &domain);
+            OSPPAuthReqGetDiversion(ospvAuthReq, &number, &domain);
         }
         if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (number[0] != '\0')) {
             ospvErrCode = OSPPCallPartyNumToElement(OSPC_MELEM_DIVERSIONSRCINFO, number, OSPC_NFORMAT_E164, &elem);

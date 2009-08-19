@@ -1420,8 +1420,8 @@ int OSPPUsageIndToElement(      /* returns error code */
 
             /* add diversion source info */
             if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            	tmp = trans->DiversionSrcInfo;
-            	if (tmp[0] != '\0') {
+                tmp = trans->DiversionSrcInfo;
+                if (tmp[0] != '\0') {
                     ospvErrCode = OSPPCallPartyNumToElement(OSPC_MELEM_DIVERSIONSRCINFO, tmp, OSPC_NFORMAT_E164, &subelem);
                     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(usageindelem, subelem);
@@ -1432,8 +1432,8 @@ int OSPPUsageIndToElement(      /* returns error code */
 
             /* add diversion device info */
             if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            	tmp = trans->DiversionDevInfo;
-            	if (tmp[0] != '\0') {
+                tmp = trans->DiversionDevInfo;
+                if (tmp[0] != '\0') {
                     attrtype = OSPC_MATTR_TYPE;
                     attrvalue = OSPC_ALTINFO_TRANSPORT;
                     ospvErrCode = OSPPStringToElement(OSPC_MELEM_DIVERSIONDEVINFO, tmp, 1, &attrtype, &attrvalue, &subelem);

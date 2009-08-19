@@ -1744,7 +1744,6 @@ int OSPPTransactionBuildUsageFromScratch(
                 if ((authind != OSPC_OSNULL) && (errorcode == OSPC_ERR_NO_ERROR)) {
                     OSPPAuthIndSetTimestamp(authind, time(OSPC_OSNULL));
                     callid = OSPPCallIdNew(ospvSizeOfCallId, (const unsigned char *)ospvCallId);
-
                     if (callid != OSPC_OSNULL) {
                         OSPPAuthIndSetRole(authind, ospvRole);
                         OSPPAuthIndSetCallId(authind, callid);
@@ -1762,7 +1761,6 @@ int OSPPTransactionBuildUsageFromScratch(
                     if (errorcode == OSPC_ERR_NO_ERROR) {
                         /* create the destination object */
                         dest = OSPPDestNew();
-
                         if (dest == OSPC_OSNULL) {
                             errorcode = OSPC_ERR_DATA_NO_DEST;
                         } else {
@@ -4201,20 +4199,21 @@ int OSPPTransactionSetNumberPortability(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
     if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
         if (trans->State == OSPC_REPORT_USAGE_SUCCESS) {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-        } else if ((trans->NPRn[0] != '\0') || (trans->NPCic[0] != '\0') || (trans->NPNpdi == OSPC_TRUE)) {
-            errorcode = OSPC_ERR_TRAN_DUPLICATE_REQUEST;
-        } else if (trans->AuthReq == OSPC_OSNULL) {
+        } else if ((trans->AuthReq == OSPC_OSNULL) && (trans->AuthInd == OSPC_OSNULL)) {
             /*
-             * Authorization Request has not been called.
+             * Neither Authorization Request nor Validate Authorization has
+             * been called. We dont care if it is the source or destination in
+             * this case. Just add the info to the transaction handler
              */
-          	if (ospvRn != OSPC_OSNULL) {
+            if (ospvRn != OSPC_OSNULL) {
                 OSPM_STRNCPY(trans->NPRn, ospvRn, sizeof(trans->NPRn) - 1);
-          	}
+            }
 
             if (ospvCic != OSPC_OSNULL) {
                 OSPM_STRNCPY(trans->NPCic, ospvCic, sizeof(trans->NPCic) - 1);
@@ -4225,11 +4224,34 @@ int OSPPTransactionSetNumberPortability(
             } else {
                 trans->NPNpdi = OSPC_FALSE;
             }
-        } else {
+        } else if ((trans->AuthReq != OSPC_OSNULL) && (trans->AuthInd == OSPC_OSNULL)) {
             /*
-             * it is calling the function out of sequence as it has already called AuthReq, return an error
+             * End point is a source, however it is calling the
+             * function out of sequence as it has already called
+             * AuthReq, return an error
              */
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+            OSPM_DBGERRORLOG(errorcode, "Calling OSPPTransactionSetNumberPortability after Authorization has been requested");
+        } else {
+            /*
+             * For the other two cases in which AuthInd!= NULL
+             * End point is a destination, and Validate Authorization has already been called
+             * Since out of sequence calls are allowed on the destination, add this to the Authind req
+             */
+            dest = trans->AuthInd->ospmAuthIndDest;
+            if (ospvRn != OSPC_OSNULL) {
+                OSPM_STRNCPY(dest->ospmNPRn, ospvRn, sizeof(dest->ospmNPRn) - 1);
+            }
+
+            if (ospvCic != OSPC_OSNULL) {
+                OSPM_STRNCPY(dest->ospmNPCic, ospvRn, sizeof(dest->ospmNPCic) - 1);
+            }
+
+            if (ospvNpdi) {
+                dest->ospmNPNpdi = OSPC_TRUE;
+            } else {
+                dest->ospmNPNpdi = OSPC_FALSE;
+            }
         }
     }
 
@@ -4714,8 +4736,8 @@ int OSPPTransactionGetNumberPortability(
              * Get the information from the destination
              * structure.
              */
-            dest = trans->CurrentDest;
             if (trans->State == OSPC_GET_DEST_SUCCESS) {
+                dest = trans->CurrentDest;
                 if (dest == (OSPT_DEST *)OSPC_OSNULL) {
                     errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
                     OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
@@ -4733,9 +4755,15 @@ int OSPPTransactionGetNumberPortability(
              * We are the destination.
              * Get the information from the AuthInd structure.
              */
-            OSPM_STRCPY(ospvNPRn, dest->ospmNPRn);
-            OSPM_STRCPY(ospvNPCic, dest->ospmNPCic);
-            *ospvNPNpdi = dest->ospmNPNpdi;
+            dest = trans->AuthInd->ospmAuthIndDest;
+            if (dest == (OSPT_DEST *)OSPC_OSNULL) {
+                errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+            } else {
+                OSPM_STRCPY(ospvNPRn, dest->ospmNPRn);
+                OSPM_STRCPY(ospvNPCic, dest->ospmNPCic);
+                *ospvNPNpdi = dest->ospmNPNpdi;
+            }
         } else {
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
             OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");

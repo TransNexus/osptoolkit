@@ -760,7 +760,7 @@ unsigned OSPPDestFromElement(   /* returns error code */
                 OSPPDestSetSrcNumber(dest, OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_DESTINFO:
-            	OSPPDestInfoFromElement(elem, dest);
+                OSPPDestInfoFromElement(elem, dest);
                 break;
             case OSPC_MELEM_DESTALT:
                 /* OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem)); */
@@ -914,23 +914,23 @@ void OSPPDestInfoFromElement(
     {
         switch (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr))) {
         case OSPC_ALTINFO_E164:
-        	OSPM_STRNCPY(ospvDest->ospmDestNumber, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmDestNumber) - 1);
-        	break;
+            OSPM_STRNCPY(ospvDest->ospmDestNumber, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmDestNumber) - 1);
+            break;
         case OSPC_ALTINFO_ROUTINGNUM:
-        	OSPM_STRNCPY(ospvDest->ospmNPRn, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPRn) - 1);
-        	break;
+            OSPM_STRNCPY(ospvDest->ospmNPRn, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPRn) - 1);
+            break;
         case OSPC_ALTINFO_CIC:
-        	OSPM_STRNCPY(ospvDest->ospmNPCic, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPCic) - 1);
-        	break;
+            OSPM_STRNCPY(ospvDest->ospmNPCic, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPCic) - 1);
+            break;
         case OSPC_ALTINFO_NPDI:
             if (OSPM_STRCASECMP(OSPPXMLElemGetValue(ospvElem), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE)) == 0) {
-            	ospvDest->ospmNPNpdi = OSPC_TRUE;
+                ospvDest->ospmNPNpdi = OSPC_TRUE;
             } else {
-            	ospvDest->ospmNPNpdi = OSPC_FALSE;
+                ospvDest->ospmNPNpdi = OSPC_FALSE;
             }
-        	break;
+            break;
         default:
-        	break;
+            break;
         }
     }
 }
