@@ -55,7 +55,6 @@ int OSPPTransactionSetServiceAndPricingInfo(
     OSPE_TRANS_STATE state;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-
     if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPPTransactionGetState(trans, &state);
         if (state != OSPC_TRANSNEW) {
@@ -133,7 +132,6 @@ int OSPPTransactionModifyDeviceIdentifiers(
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPPTransactionGetIsModifyDeviceIdAllowed(trans, &modifyallowed);
-
         if (modifyallowed == OSPC_TRUE) {
             if (trans->AuthRsp != OSPC_OSNULL) {
                 /*
@@ -419,7 +417,6 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
     OSPT_ALTINFO *altinfoToKeep = OSPC_OSNULL;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-
     if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvHasLookAheadInfo = trans->TokenInfoHasLookAheadInfo;
 
@@ -496,12 +493,13 @@ int OSPPTransactionGetDestNetworkId(
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
-    OSPT_ALTINFO *destination = OSPC_OSNULL;
-    OSPTBOOL found;
+    OSPT_ALTINFO *altinfo = OSPC_OSNULL;
     const char *destval = NULL;
+    OSPTBOOL found;
+
+    ospvNetworkId[0] = '\0';
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-
     if (trans != (OSPTTRANS *)NULL) {
         if (trans->AuthReq != OSPC_OSNULL) {
             /*
@@ -532,11 +530,11 @@ int OSPPTransactionGetDestNetworkId(
              * Get the information from the AuthInd structure.
              */
             found = OSPC_FALSE;
-            destination = (OSPT_ALTINFO *)OSPPAuthIndFirstDestinationAlt(trans->AuthInd);
-            while (destination != OSPC_OSNULL) {
-                if (destination->ospmAltInfoType == OSPC_ALTINFO_NETWORK) {
+            altinfo = (OSPT_ALTINFO *)OSPPAuthIndFirstDestinationAlt(trans->AuthInd);
+            while (altinfo != OSPC_OSNULL) {
+                if (altinfo->ospmAltInfoType == OSPC_ALTINFO_NETWORK) {
                     found = OSPC_TRUE;
-                    destval = OSPPAuthIndGetDestinationAltValue(destination);
+                    destval = OSPPAuthIndGetDestinationAltValue(altinfo);
                     if (destval != NULL) {
                         sprintf(ospvNetworkId, destval);
                     } else {
@@ -545,7 +543,7 @@ int OSPPTransactionGetDestNetworkId(
                     }
                     break;
                 } else {
-                    destination = (OSPT_ALTINFO *)OSPPAuthIndNextDestinationAlt(trans->AuthInd, destination);
+                    altinfo = (OSPT_ALTINFO *)OSPPAuthIndNextDestinationAlt(trans->AuthInd, altinfo);
                 }
             }
 
@@ -576,15 +574,16 @@ int OSPPTransactionGetDestNetworkId(
  * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
  */
 int OSPPTransactionGetDestProtocol(
-    OSPTTRANHANDLE ospvTransaction,                 /* In - Transaction handle */
-    OSPE_DEST_PROTOCOL *ospvDestinationProtocol)    /* Out - Destination Protocol Info */
+    OSPTTRANHANDLE ospvTransaction,         /* In - Transaction handle */
+    OSPE_DEST_PROTOCOL *ospvDestProtocol)   /* Out - Destination Protocol Info */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
 
-    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    *ospvDestProtocol = OSPC_DPROT_UNKNOWN;
 
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
     if (trans != (OSPTTRANS *)NULL) {
         dest = trans->CurrentDest;
         if (trans->State == OSPC_GET_DEST_SUCCESS) {
@@ -592,7 +591,7 @@ int OSPPTransactionGetDestProtocol(
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
                 OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
             } else {
-                *ospvDestinationProtocol = dest->ospmDestProtocol;
+                *ospvDestProtocol = dest->ospmDestProtocol;
             }
         } else {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
@@ -625,7 +624,6 @@ int OSPPTransactionIsDestOSPEnabled(
     OSPT_DEST *dest = OSPC_OSNULL;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-
     if (trans != (OSPTTRANS *)NULL) {
         dest = trans->CurrentDest;
         if (trans->State == OSPC_GET_DEST_SUCCESS) {
@@ -1304,7 +1302,6 @@ int OSPPTransactionGetFirstDestination(
     OSPTTRANS *trans = OSPC_OSNULL;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-
     if ((trans != (OSPTTRANS *)NULL) && (errorcode == OSPC_ERR_NO_ERROR)) {
         errorcode = OSPPTransactionGetDestAllowed(trans);
     }
@@ -1321,7 +1318,6 @@ int OSPPTransactionGetFirstDestination(
             /*
              * if no errors have occurred, get the destination information
              */
-
             if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPAuthRspHasDest(trans->AuthRsp) == OSPC_FALSE) {
                 errorcode = OSPC_ERR_TRAN_DEST_INVALID;
                 OSPM_DBGERRORLOG(errorcode, "destination not found");
@@ -1468,7 +1464,6 @@ int OSPPTransactionGetNextDestination(
     OSPTTRANS *trans = NULL;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPTransactionGetDestAllowed(trans);
     }
@@ -1526,7 +1521,6 @@ int OSPPTransactionGetNextDestination(
         } else {
             OSPPTransactionSetState(trans, OSPC_GET_DEST_FAIL);
         }
-
 
         if (errorcode == OSPC_ERR_TRAN_DEST_INVALID) {
             errorcode = OSPC_ERR_TRAN_NO_MORE_RESPONSES;
@@ -1910,7 +1904,6 @@ int OSPPTransactionSetDestinationCount(
     OSPTTRANS *trans = OSPC_OSNULL;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-
     if (errorcode == OSPC_ERR_NO_ERROR) {
         if ((trans->AuthReq != OSPC_OSNULL) && (trans->CurrentDest != OSPC_OSNULL)) {
             OSPPDestSetDestinationCount(trans->CurrentDest, ospvDestinationCount);
@@ -2172,7 +2165,6 @@ int OSPPTransactionNew(
     unsigned cnt;
 
     errorcode = OSPPTransactionGetNewContext(ospvProvider, ospvTransaction);
-
     if (errorcode == OSPC_ERR_NO_ERROR) {
         trans = OSPPTransactionGetContext(*ospvTransaction, &errorcode);
     }
@@ -2239,7 +2231,6 @@ int OSPPTransactionRecordFailure(
     OSPTTRANS *trans = OSPC_OSNULL;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-
     if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
         /*
          * The failurereason should be either 0 or a positive value. This is the only
@@ -3157,7 +3148,6 @@ int OSPPTransactionRequestReauthorisation(
 
     /* Get transaction context */
     if (errorcode == OSPC_ERR_NO_ERROR) {
-
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if (trans == OSPC_OSNULL) {
             errorcode = OSPC_ERR_TRAN_TRANSACTION_NOT_FOUND;
@@ -3189,12 +3179,9 @@ int OSPPTransactionRequestReauthorisation(
     /* Create msginfo, put in queue and process return */
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPMsgInfoNew(&msginfo);
-
         if (errorcode == OSPC_ERR_NO_ERROR) {
             errorcode = OSPPTransactionPrepareAndQueMessage(trans, xmldoc, sizeofxmldoc, &msginfo);
-
             if (errorcode == OSPC_ERR_NO_ERROR) {
-
                 errorcode = OSPPTransactionProcessReturn(trans, msginfo);
             }
 
@@ -3236,7 +3223,6 @@ int OSPPTransactionRequestReauthorisation(
                 /* set token from REARESP token */
 
                 if (!OSPPDestHasToken(trans->ReauthRsp->ospmReauthRspDest)) {
-
                     errorcode = OSPC_ERR_TRAN_TOKEN_INVALID;
                     OSPM_DBGERRORLOG(errorcode, "null pointer for token.");
                 } else {
@@ -4017,7 +4003,6 @@ int OSPPTransactionIndicateCapabilities(
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
 
-
     /*
      * Validate input parameters - Source and SourceDevice must not be NULLs
      */
@@ -4776,4 +4761,3 @@ int OSPPTransactionGetNumberPortability(
 
     return errorcode;
 }
-
