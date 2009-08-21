@@ -907,30 +907,25 @@ void OSPPDestInfoFromElement(
     OSPT_DEST *ospvDest)
 {
     OSPT_XML_ATTR* attr = OSPC_OSNULL;
+    const char* type;
 
     for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElem);
         (attr != OSPC_OSNULL);
         attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElem, attr))
     {
-        switch (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr))) {
-        case OSPC_ALTINFO_E164:
+        type = OSPPXMLAttrGetValue(attr);
+        if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_E164)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmDestNumber, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmDestNumber) - 1);
-            break;
-        case OSPC_ALTINFO_ROUTINGNUM:
+        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_ROUTINGNUM)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmNPRn, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPRn) - 1);
-            break;
-        case OSPC_ALTINFO_CIC:
+        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_CIC)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmNPCic, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPCic) - 1);
-            break;
-        case OSPC_ALTINFO_NPDI:
+        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_NPDI)) == 0) {
             if (OSPM_STRCASECMP(OSPPXMLElemGetValue(ospvElem), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE)) == 0) {
                 ospvDest->ospmNPNpdi = OSPC_TRUE;
             } else {
                 ospvDest->ospmNPNpdi = OSPC_FALSE;
             }
-            break;
-        default:
-            break;
         }
     }
 }

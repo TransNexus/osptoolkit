@@ -1798,7 +1798,7 @@ int testAssertedId()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetAssertedId(OSPVTransactionHandle, "AssertedId");
+    errorcode = OSPPTransactionSetAssertedId(OSPVTransactionHandle, "AssertedId");
 
     return errorcode;
 }
@@ -1807,7 +1807,7 @@ int testDestProtocol()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetDestProtocol(OSPVTransactionHandle, OSPPDestProtocolGetPart("h323-LRQ"));
+    errorcode = OSPPTransactionSetDestProtocol(OSPVTransactionHandle, OSPPDestProtocolGetPart("h323-LRQ"));
 
     return errorcode;
 }
@@ -1816,8 +1816,8 @@ int testCodec()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetForwardCodec(OSPVTransactionHandle, "g729");
-    OSPPTransactionSetReverseCodec(OSPVTransactionHandle, "g723");
+    errorcode = OSPPTransactionSetForwardCodec(OSPVTransactionHandle, "g729");
+    errorcode = OSPPTransactionSetReverseCodec(OSPVTransactionHandle, "g723");
 
     return errorcode;
 }
@@ -1826,8 +1826,8 @@ int testNetworkId()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetSrcNetworkId(OSPVTransactionHandle, "SrcNetworkId");
-    OSPPTransactionSetDestNetworkId(OSPVTransactionHandle, "DestNetworkId");
+    errorcode = OSPPTransactionSetSrcNetworkId(OSPVTransactionHandle, "SrcNetworkId");
+    errorcode = OSPPTransactionSetDestNetworkId(OSPVTransactionHandle, "DestNetworkId");
 
     return errorcode;
 }
@@ -1851,8 +1851,8 @@ int testCustomInfo()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
-    OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
+    errorcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
+    errorcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
 
     return errorcode;
 }
@@ -1861,10 +1861,10 @@ int testStatsLost()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1, 2);
-    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 3, -1);
-    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1, 4);
-    OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, -1, -1);
+    errorcode = OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1, 2);
+    errorcode = OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 3, -1);
+    errorcode = OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1, 4);
+    errorcode = OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, -1, -1);
 
     return errorcode;
 }
@@ -1873,10 +1873,10 @@ int testStatsJitter()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1, 2, 3, 4, 5);
-    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, -1, 6, 7, 8, 9);
-    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 10, -1, 11, 12, 13);
-    OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 14, 15, -1, 16, 17);
+    errorcode = OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1, 2, 3, 4, 5);
+    errorcode = OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, -1, 6, 7, 8, 9);
+    errorcode = OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 10, -1, 11, 12, 13);
+    errorcode = OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 14, 15, -1, 16, 17);
 
     return errorcode;
 }
@@ -1885,10 +1885,10 @@ int testStatsDelay()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1, 2, 3, 4, 5);
-    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, -1, 6, 7, 8, 9);
-    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 10, -1, 11, 12, 13);
-    OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 14, 15, -1, 16, 17);
+    errorcode = OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1, 2, 3, 4, 5);
+    errorcode = OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, -1, 6, 7, 8, 9);
+    errorcode = OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 10, -1, 11, 12, 13);
+    errorcode = OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 14, 15, -1, 16, 17);
 
     return errorcode;
 }
@@ -1897,10 +1897,10 @@ int testStatsOctets()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1);
-    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2);
-    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1);
-    OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 3);
+    errorcode = OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1);
+    errorcode = OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2);
+    errorcode = OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1);
+    errorcode = OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 3);
 
     return errorcode;
 }
@@ -1909,10 +1909,10 @@ int testStatsPackets()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1);
-    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2);
-    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 3);
-    OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, -1);
+    errorcode = OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1);
+    errorcode = OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2);
+    errorcode = OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 3);
+    errorcode = OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, -1);
 
     return errorcode;
 }
@@ -1921,10 +1921,10 @@ int testStatsRFactor()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1.1);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2.2);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1);
-    OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 3.3);
+    errorcode = OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1.1);
+    errorcode = OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2.2);
+    errorcode = OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1);
+    errorcode = OSPPTransactionSetRFactor(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 3.3);
 
     return errorcode;
 }
@@ -1933,10 +1933,10 @@ int testStatsMOSCQ()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1.1);
-    OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2.2);
-    OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 3.3);
-    OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, -1);
+    errorcode = OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1.1);
+    errorcode = OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2.2);
+    errorcode = OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, 3.3);
+    errorcode = OSPPTransactionSetMOSCQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, -1);
 
     return errorcode;
 }
@@ -1945,10 +1945,10 @@ int testStatsMOSLQ()
 {
     int errorcode = 0;
 
-    OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1.1);
-    OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2.2);
-    OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1);
-    OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 3.3);
+    errorcode = OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_DOWNSTREAM, 1.1);
+    errorcode = OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SFLOW_UPSTREAM, 2.2);
+    errorcode = OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_DOWNSTREAM, -1);
+    errorcode = OSPPTransactionSetMOSLQ(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SFLOW_UPSTREAM, 3.3);
 
     return errorcode;
 }
@@ -1960,9 +1960,9 @@ int testGetNumberPortability()
     char cic[1024];
     int npdi;
 
-    OSPPTransactionGetNumberPortability(OSPVTransactionHandle, rn, cic, &npdi);
-    printf("rn = %s\n", rn);
-    printf("cic = %s\n", cic);
+    errorcode = OSPPTransactionGetNumberPortability(OSPVTransactionHandle, rn, cic, &npdi);
+    printf("rn = '%s'\n", rn);
+    printf("cic = '%s'\n", cic);
     printf("npdi = %d\n", npdi);
 
     return errorcode;

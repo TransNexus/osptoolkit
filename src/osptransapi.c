@@ -4728,6 +4728,10 @@ int OSPPTransactionGetNumberPortability(
     OSPTTRANS *trans = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
 
+    ospvNPRn[0] = '\0';
+    ospvNPCic[0] = '\0';
+    *ospvNPNpdi = OSPC_FALSE;
+
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
     if (trans != (OSPTTRANS *)OSPC_OSNULL) {
         if (trans->AuthReq != OSPC_OSNULL) {
