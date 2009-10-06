@@ -38,9 +38,9 @@ typedef struct {
     char ospmAuthReqDestNumber[OSPC_SIZE_E164NUM];
     char ospmAuthReqNPRn[OSPC_SIZE_E164NUM];
     char ospmAuthReqNPCic[OSPC_SIZE_E164NUM];
+    int ospmAuthReqNPNpdi;
     char ospmAuthReqDiversionSrcInfo[OSPC_SIZE_E164NUM];
     char ospmAuthReqDiversionDevInfo[OSPC_SIZE_SIGNALADDR];
-    int ospmAuthReqNPNpdi;
     OSPTLIST ospmAuthReqSourceAlternate;
     OSPTLIST ospmAuthReqDestinationAlternate;
     unsigned ospmAuthReqMaxDest;
