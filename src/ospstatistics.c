@@ -87,11 +87,11 @@ int OSPPStatsToElement(
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
             }
         }
     }
@@ -473,19 +473,16 @@ int OSPPStatsOneWayToElement(
         errorcode = OSPC_ERR_DATA_NO_STATS;
     }
     if (errorcode == OSPC_ERR_NO_ERROR) {
-
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ONEWAYDELAY), "");
         if (*ospvElem == OSPC_OSNULL) {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        } else {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
             }
         }
     }
@@ -498,14 +495,11 @@ int OSPPStatsOneWayToElement(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -518,14 +512,11 @@ int OSPPStatsOneWayToElement(
             OSPPMsgElemGetName(OSPC_MELEM_MEAN), &elem);
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -540,14 +531,11 @@ int OSPPStatsOneWayToElement(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -562,14 +550,11 @@ int OSPPStatsOneWayToElement(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -610,15 +595,13 @@ int OSPPStatsRoundTripToElement(
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ROUNDTRIPDELAY), "");
         if (*ospvElem == OSPC_OSNULL) {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        } else {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
             }
         }
     }
@@ -631,14 +614,11 @@ int OSPPStatsRoundTripToElement(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -652,14 +632,11 @@ int OSPPStatsRoundTripToElement(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -674,14 +651,11 @@ int OSPPStatsRoundTripToElement(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -696,14 +670,11 @@ int OSPPStatsRoundTripToElement(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -745,14 +716,13 @@ int OSPPStatsLossSentToElement(
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_LOSSSENT), "");
         if (*ospvElem == OSPC_OSNULL) {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        } else {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
             }
         }
     }
@@ -764,13 +734,11 @@ int OSPPStatsLossSentToElement(
             &elem);
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -784,13 +752,11 @@ int OSPPStatsLossSentToElement(
             &elem);
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -832,14 +798,13 @@ int OSPPStatsLossReceivedToElement(
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_LOSSRCVD), "");
         if (*ospvElem == OSPC_OSNULL) {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        } else {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
             }
         }
     }
@@ -851,13 +816,11 @@ int OSPPStatsLossReceivedToElement(
             &elem);
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -871,13 +834,11 @@ int OSPPStatsLossReceivedToElement(
             &elem);
         if (errorcode == OSPC_ERR_NO_ERROR) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(elem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            }
-            if (errorcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -1329,11 +1290,11 @@ int OSPPStatsValueToElement(
                     error = OSPC_ERR_XML_NO_ELEMENT;
                 } else {
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(flow));
-                    if (attr != OSPC_OSNULL) {
+                    if (attr == OSPC_OSNULL) {
+                        error = OSPC_ERR_XML_NO_ATTR;
+                    } else {
                         OSPPXMLElemAddAttr(statselem, attr);
                         attr = OSPC_OSNULL;
-                    } else {
-                        error = OSPC_ERR_XML_NO_ATTR;
                     }
                 }
 
@@ -1369,11 +1330,11 @@ int OSPPStatsValueToElement(
                     error = OSPC_ERR_XML_NO_ELEMENT;
                 } else {
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(flow));
-                    if (attr != OSPC_OSNULL) {
+                    if (attr == OSPC_OSNULL) {
+                        error = OSPC_ERR_XML_NO_ATTR;
+                    } else {
                         OSPPXMLElemAddAttr(statselem, attr);
                         attr = OSPC_OSNULL;
-                    } else {
-                        error = OSPC_ERR_XML_NO_ATTR;
                     }
                 }
 
@@ -1442,11 +1403,11 @@ int OSPPStatsValueToElement(
                     error = OSPC_ERR_XML_NO_ELEMENT;
                 } else {
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(flow));
-                    if (attr != OSPC_OSNULL) {
+                    if (attr == OSPC_OSNULL) {
+                        error = OSPC_ERR_XML_NO_ATTR;
+                    } else {
                         OSPPXMLElemAddAttr(statselem, attr);
                         attr = OSPC_OSNULL;
-                    } else {
-                        error = OSPC_ERR_XML_NO_ATTR;
                     }
                 }
             }
@@ -1460,11 +1421,11 @@ int OSPPStatsValueToElement(
                     error = OSPC_ERR_XML_NO_ELEMENT;
                 } else {
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(flow));
-                    if (attr != OSPC_OSNULL) {
+                    if (attr == OSPC_OSNULL) {
+                        error = OSPC_ERR_XML_NO_ATTR;
+                    } else {
                         OSPPXMLElemAddAttr(statselem, attr);
                         attr = OSPC_OSNULL;
-                    } else {
-                        error = OSPC_ERR_XML_NO_ATTR;
                     }
                 }
             }
@@ -1482,12 +1443,12 @@ int OSPPStatsValueToElement(
                 error = OSPC_ERR_XML_NO_ELEMENT;
             } else {
                 attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(metric));
-                if (attr != OSPC_OSNULL) {
-                    OSPPXMLElemAddAttr(*ospvElem, attr);
-                    attr = OSPC_OSNULL;
-                } else {
+                if (attr == OSPC_OSNULL) {
                     OSPPXMLElemDelete(ospvElem);
                     error = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(*ospvElem, attr);
+                    attr = OSPC_OSNULL;
                 }
             }
         }

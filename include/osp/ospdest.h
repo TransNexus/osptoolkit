@@ -87,6 +87,9 @@ typedef struct {
     OSPE_DEST_OSPENABLED ospmDestOSPVersion;
     char ospmDestNetworkId[OSPC_NETWORKIDSIZE];
     unsigned ospmDestDestinationCount;
+    char ospmNPRn[OSPC_SIZE_E164NUM];
+    char ospmNPCic[OSPC_SIZE_E164NUM];
+    int ospmNPNpdi;
 } OSPT_DEST;
 
 /* Function Prototypes */
@@ -143,6 +146,7 @@ extern "C" {
     unsigned OSPPDestGetDestinationCount(OSPT_DEST *);
     OSPE_DEST_PROTOCOL OSPPDestProtocolGetPart(const char *);
     const char *OSPPDestProtocolGetName(OSPE_DEST_PROTOCOL);
+    void OSPPDestInfoFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
 
 #ifdef __cplusplus
 }

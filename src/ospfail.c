@@ -80,7 +80,7 @@ OSPTBOOL OSPPHasTermCauseAny(       /* returns non-zero if time */
  */
 void OSPPSetTermCause(  /* nothing returned */
     OSPT_TERM_CAUSE *ospvTermCause,
-    OSPE_TERM_CAUSE ospvType,    
+    OSPE_TERM_CAUSE ospvType,
     unsigned ospvTCCode,
     const char *ospvTCDesc)
 {
@@ -88,7 +88,7 @@ void OSPPSetTermCause(  /* nothing returned */
         if ((ospvType >= OSPC_TCAUSE_START) && (ospvType < OSPC_TCAUSE_NUMBER)) {
             ospvTermCause->tccode[ospvType] = ospvTCCode;
             if ((ospvTCDesc != OSPC_OSNULL) && (ospvTCDesc[0] != '\0')) {
-                OSPM_STRNCPY(ospvTermCause->tcdesc[ospvType], ospvTCDesc, sizeof(ospvTermCause->tcdesc[ospvType]));
+                OSPM_STRNCPY(ospvTermCause->tcdesc[ospvType], ospvTCDesc, sizeof(ospvTermCause->tcdesc[ospvType]) - 1);
             }
             ospvTermCause->hastermcause[ospvType] = OSPC_TRUE;
         }
@@ -100,7 +100,7 @@ void OSPPSetTermCause(  /* nothing returned */
  */
 unsigned OSPPGetTCCode(
     OSPT_TERM_CAUSE *ospvTermCause, /* Termination cause */
-    OSPE_TERM_CAUSE ospvType)       /* Termination cause type */    
+    OSPE_TERM_CAUSE ospvType)       /* Termination cause type */
 {
     unsigned ospvTCCode = 0;
 
@@ -111,7 +111,7 @@ unsigned OSPPGetTCCode(
             }
         }
     }
-    
+
     return ospvTCCode;
 }
 
@@ -120,7 +120,7 @@ unsigned OSPPGetTCCode(
  */
 const char *OSPPGetTCDesc(
     OSPT_TERM_CAUSE *ospvTermCause, /* Termination cause */
-    OSPE_TERM_CAUSE ospvType)       /* Termination cause type */    
+    OSPE_TERM_CAUSE ospvType)       /* Termination cause type */
 {
     const char *ospvTCDesc = OSPC_OSNULL;
 
@@ -131,7 +131,7 @@ const char *OSPPGetTCDesc(
             }
         }
     }
-    
+
     return ospvTCDesc;
 }
 

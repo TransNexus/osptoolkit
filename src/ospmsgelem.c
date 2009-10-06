@@ -64,6 +64,8 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_DESTSIGADDR,          "DestinationSignalAddress" },
     { OSPC_MELEM_DEVICEID,             "DeviceId" },
     { OSPC_MELEM_DEVICEINFO,           "DeviceInfo" },
+    { OSPC_MELEM_DIVERSIONDEVINFO,     "DiversionDeviceInfo" },
+    { OSPC_MELEM_DIVERSIONSRCINFO,     "DiversionSourceInfo" },
     { OSPC_MELEM_ENDPOINT,             "EndPoint" },
     { OSPC_MELEM_ENDTIME,              "EndTime" },
     { OSPC_MELEM_FRACTION,             "Fraction" },

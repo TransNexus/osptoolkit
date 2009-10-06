@@ -103,7 +103,7 @@ unsigned OSPPCapIndNew(
     const char *ospvSourceDevice,       /* In - SourceDevice of call */
     const char *ospvSourceNetworkId,    /* In - NetworkId of call. Could be trunk grp */
     unsigned ospvAlmostOutOfResources)  /* In - Boolean indicator of availability */
-{                             
+{
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
     OSPT_CAP_IND *capInd = OSPC_OSNULL;
@@ -246,7 +246,7 @@ unsigned OSPPGenerateUniqueId(
         OSPM_MEMCPY(((*ospvIdBuffer) + numbytesrandom), counter, numbytescounter);
 
         /*
-         *  Update the Unique counter 
+         *  Update the Unique counter
          */
         OSPPTransactionUpdateCounter(ospvTrans);
     } else {
@@ -273,7 +273,7 @@ int OSPPCapIndToElement(        /* returns error code */
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
 
     /*
-     *  Create the "Message" element as the parent 
+     *  Create the "Message" element as the parent
      */
     *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_MESSAGE), "");
 
@@ -339,7 +339,7 @@ int OSPPCapIndToElement(        /* returns error code */
     /*
      * Create/Add AlmostOutOfResources sub-element
      */
-    subelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ALMOSTOUTOFRESOURCES), ospvCapInd->ospmAlmostOutOfResources == 0 ? "false" : "true");
+    subelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ALMOSTOUTOFRESOURCES), ospvCapInd->ospmAlmostOutOfResources == 0 ? OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE) : OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE));
     OSPPXMLElemAddChild(elem, subelem);
 
     return ospvErrCode;

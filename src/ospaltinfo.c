@@ -46,6 +46,8 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_DEVICEID,        "deviceId" },
     { OSPC_ALTINFO_ASSERTEDID,      "assertedId" },
     { OSPC_ALTINFO_ROUTINGNUM,      "routingnumber" },
+    { OSPC_ALTINFO_CIC,             "cic" },
+    { OSPC_ALTINFO_NPDI,            "npdi" },
     /* For other attributes */
     { OSPC_ALTINFO_TRUE,            "true" },
     { OSPC_ALTINFO_FALSE,           "false" },
@@ -208,13 +210,13 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
 
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ospvPart), OSPPAltInfoGetValue(ospvAltInfo));
-        if (ospvElem != OSPC_OSNULL) {
+        if (ospvElem == OSPC_OSNULL) {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        } else {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->ospmAltInfoType));
             if (attr == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-            }
-
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
             }
         }

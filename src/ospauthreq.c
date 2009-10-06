@@ -50,7 +50,7 @@ OSPTBOOL OSPPAuthReqHasTimestamp(   /* returns non-zero if time */
  * OSPPAuthReqSetTimestamp() - sets the timestamp for an authorisation request
  */
 void OSPPAuthReqSetTimestamp(   /* nothing returned */
-    OSPT_AUTH_REQ *ospvAuthReq, 
+    OSPT_AUTH_REQ *ospvAuthReq,
     OSPTTIME ospvTime)
 {
     if (ospvAuthReq != OSPC_OSNULL) {
@@ -130,7 +130,7 @@ OSPTBOOL OSPPAuthReqHasSourceNumber(/* returns non-zero if number exists */
     if (ospvAuthReq != OSPC_OSNULL) {
         ospvHas = (ospvAuthReq->ospmAuthReqSourceNumber[0] != '\0');
     }
-    
+
     return ospvHas;
 }
 
@@ -179,7 +179,7 @@ OSPTBOOL OSPPAuthReqHasSourceAlt(   /* returns non-zero if exists */
 }
 
 /*
- * OSPPAuthReqFirstSourceAlt() - gets the First Source alternate for an authorisation request 
+ * OSPPAuthReqFirstSourceAlt() - gets the First Source alternate for an authorisation request
  */
 OSPT_ALTINFO *OSPPAuthReqFirstSourceAlt(/* returns alt info pointer */
     OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request */
@@ -194,7 +194,7 @@ OSPT_ALTINFO *OSPPAuthReqFirstSourceAlt(/* returns alt info pointer */
 }
 
 /*
- * OSPPAuthReqNextSourceAlt() - gets the next source alternate for an authorisation request 
+ * OSPPAuthReqNextSourceAlt() - gets the next source alternate for an authorisation request
  */
 OSPT_ALTINFO *OSPPAuthReqNextSourceAlt( /* returns alt info pointer */
     OSPT_AUTH_REQ *ospvAuthReq,         /* authorisation request */
@@ -210,7 +210,7 @@ OSPT_ALTINFO *OSPPAuthReqNextSourceAlt( /* returns alt info pointer */
 }
 
 /*
- * OSPPAuthReqHasDestinationAlt() - does an authorisation request have a Destination Alternate? 
+ * OSPPAuthReqHasDestinationAlt() - does an authorisation request have a Destination Alternate?
  */
 OSPTBOOL OSPPAuthReqHasDestinationAlt(  /* returns non-zero if exists */
     OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request */
@@ -225,7 +225,7 @@ OSPTBOOL OSPPAuthReqHasDestinationAlt(  /* returns non-zero if exists */
 }
 
 /*
- * OSPPAuthReqFirstDestinationAlt() - gets the First Destination alternate for an authorisation request 
+ * OSPPAuthReqFirstDestinationAlt() - gets the First Destination alternate for an authorisation request
  */
 OSPT_ALTINFO *OSPPAuthReqFirstDestinationAlt(   /* returns alt info pointer */
     OSPT_AUTH_REQ *ospvAuthReq)                 /* authorisation request */
@@ -240,7 +240,7 @@ OSPT_ALTINFO *OSPPAuthReqFirstDestinationAlt(   /* returns alt info pointer */
 }
 
 /*
- * OSPPAuthReqNextDestinationAlt() - gets the next Destination alternate for an authorisation request 
+ * OSPPAuthReqNextDestinationAlt() - gets the next Destination alternate for an authorisation request
  */
 OSPT_ALTINFO *OSPPAuthReqNextDestinationAlt(    /* returns alt info pointer */
     OSPT_AUTH_REQ *ospvAuthReq,                 /* authorisation request */
@@ -347,7 +347,7 @@ OSPTBOOL OSPPAuthReqHasCustId(  /* returns non-zero if time */
  * OSPPAuthReqSetCustId() - Set Customer Id
  */
 void OSPPAuthReqSetCustId(      /* nothing returned */
-    OSPT_AUTH_REQ *ospvAuthReq, 
+    OSPT_AUTH_REQ *ospvAuthReq,
     unsigned long ospvCustId)
 {
     if (ospvAuthReq != OSPC_OSNULL) {
@@ -389,7 +389,7 @@ OSPTBOOL OSPPAuthReqHasDeviceId(    /* returns non-zero if time */
  * OSPPAuthReqSetDeviceId() - Set Device Id
  */
 void OSPPAuthReqSetDeviceId(    /* nothing returned */
-    OSPT_AUTH_REQ *ospvAuthReq, 
+    OSPT_AUTH_REQ *ospvAuthReq,
     unsigned long ospvDeviceId)
 {
     if (ospvAuthReq != OSPC_OSNULL) {
@@ -535,10 +535,9 @@ unsigned OSPPAuthReqAddServiceInfo(
         }
         if (elem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        } else {
+            OSPPXMLElemAddChild(*ospvElem, elem);
         }
-    }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddChild(*ospvElem, elem);
     }
 
     /* if for any reason we found an error - destroy any elements created */
@@ -591,9 +590,7 @@ unsigned OSPPAuthReqAddPricingInfo(
         elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_UNIT), (const char *)PricingInfo.unit);
         if (elem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        } else {
             OSPPXMLElemAddChild(*ospvElem, elem);
         }
     }
@@ -603,9 +600,7 @@ unsigned OSPPAuthReqAddPricingInfo(
         elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CURRENCY), (const char *)PricingInfo.currency);
         if (elem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        } else {
             OSPPXMLElemAddChild(*ospvElem, elem);
         }
     }
@@ -635,6 +630,8 @@ int OSPPAuthReqToElement(       /* returns error code */
     OSPTBOOL isbase64 = OSPC_TRUE;
     OSPTTRANS *trans = (OSPTTRANS *)ospvtrans;
     unsigned i;
+    char *number;
+    char *domain;
 
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
 
@@ -647,29 +644,26 @@ int OSPPAuthReqToElement(       /* returns error code */
 
     /* create the "Message" element as the parent */
     *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_MESSAGE), "");
-
     if (*ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     } else {
         attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID),
             (OSPPAuthReqHasMessageId(ospvAuthReq)) ? (const char *)(ospvAuthReq->ospmAuthReqMessageId) : "NULL");
-
-        if (attr != OSPC_OSNULL) {
+        if (attr == OSPC_OSNULL) {
+            ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+        } else {
             OSPPXMLElemAddAttr(*ospvElem, attr);
             attr = OSPC_OSNULL;
-        } else {
-            ospvErrCode = OSPC_ERR_XML_NO_ATTR;
         }
 
         /* random */
         if ((OSPPUtilGetRandom(random, 0) > 0) && (ospvErrCode == OSPC_ERR_NO_ERROR)) {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_RANDOM), (const char *)random);
-
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
             }
         }
     }
@@ -679,18 +673,16 @@ int OSPPAuthReqToElement(       /* returns error code */
         authreqelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_AUTHREQ), "");
         if (authreqelem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-        /* now add the attributes to the parent -- in this case the component id */
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        } else {
+            /* now add the attributes to the parent -- in this case the component id */
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_COMPONENTID),
                 (OSPPAuthReqHasComponentId(ospvAuthReq)) ? (const char *)(ospvAuthReq->ospmAuthReqComponentId) : "NULL");
             if (attr == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+            } else {
+                OSPPXMLElemAddAttr(authreqelem, attr);
+                attr = OSPC_OSNULL;
             }
-        }
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddAttr(authreqelem, attr);
-            attr = OSPC_OSNULL;
         }
 
         /* now add the children */
@@ -707,8 +699,8 @@ int OSPPAuthReqToElement(       /* returns error code */
         /* add the call ID */
         if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasCallId(ospvAuthReq)) {
             for (callid = OSPPAuthReqFirstCallId(ospvAuthReq);
-                ((callid != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR)); 
-                callid = OSPPAuthReqNextCallId(ospvAuthReq, callid)) 
+                ((callid != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
+                callid = OSPPAuthReqNextCallId(ospvAuthReq, callid))
             {
                 ospvErrCode = OSPPCallIdToElement(callid, &elem, isbase64);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
@@ -732,7 +724,7 @@ int OSPPAuthReqToElement(       /* returns error code */
              * Create/Add DeviceInfo elements
              */
             for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvAuthReq->ospmAuthReqDeviceInfo));
-                altinfo != OSPC_OSNULL; 
+                altinfo != OSPC_OSNULL;
                 altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvAuthReq->ospmAuthReqDeviceInfo), altinfo))
             {
                 OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
@@ -745,7 +737,7 @@ int OSPPAuthReqToElement(       /* returns error code */
         if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasSourceAlt(ospvAuthReq)) {
             for (altinfo = (OSPT_ALTINFO *)OSPPAuthReqFirstSourceAlt(ospvAuthReq);
                 ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
-                altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextSourceAlt(ospvAuthReq, altinfo)) 
+                altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextSourceAlt(ospvAuthReq, altinfo))
             {
                 ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
@@ -765,20 +757,66 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
 
         /* add the routing number */
-        if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasRoutingNumber(ospvAuthReq)) {
-            ospvErrCode = OSPPRoutingNumToElement(OSPPAuthReqGetRoutingNumber(ospvAuthReq), &elem);
+        if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasNPRn(ospvAuthReq)) {
+            ospvErrCode = OSPPNPRnToElement(OSPPAuthReqGetNPRn(ospvAuthReq), &elem);
             if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(authreqelem, elem);
                 elem = OSPC_OSNULL;
             }
         }
-        
+
+        /* add the carrier identification code */
+        if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasNPCic(ospvAuthReq)) {
+            ospvErrCode = OSPPNPCicToElement(OSPPAuthReqGetNPCic(ospvAuthReq), &elem);
+            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
+        /* add the npdi flag */
+        if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasNPNpdi(ospvAuthReq)) {
+            ospvErrCode = OSPPNPNpdiToElement(OSPPAuthReqGetNPNpdi(ospvAuthReq), &elem);
+            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
+        /* add diversion */
+        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            OSPPAuthReqGetDiversion(ospvAuthReq, &number, &domain);
+        }
+        if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (number[0] != '\0')) {
+            ospvErrCode = OSPPCallPartyNumToElement(OSPC_MELEM_DIVERSIONSRCINFO, number, OSPC_NFORMAT_E164, &elem);
+            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+        if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (domain[0] != '\0')) {
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DIVERSIONDEVINFO), domain);
+            if (elem == OSPC_OSNULL) {
+                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            } else {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRANSPORT));
+                if (attr == OSPC_OSNULL) {
+                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(authreqelem, elem);
+                    elem = OSPC_OSNULL;
+                }
+            }
+        }
+
         /* add the destination alternates */
         if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasDestinationAlt(ospvAuthReq)) {
             altinfo = OSPC_OSNULL;
             for (altinfo = (OSPT_ALTINFO *)OSPPAuthReqFirstDestinationAlt(ospvAuthReq);
                 ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
-                altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextDestinationAlt(ospvAuthReq, altinfo)) 
+                altinfo = (OSPT_ALTINFO *)OSPPAuthReqNextDestinationAlt(ospvAuthReq, altinfo))
             {
                 ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DESTALT);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
@@ -813,11 +851,10 @@ int OSPPAuthReqToElement(       /* returns error code */
                 elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICE), "");
                 if (elem == OSPC_OSNULL) {
                     ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+                } else {
+                    OSPPXMLElemAddChild(authreqelem, elem);
+                    elem = OSPC_OSNULL;
                 }
-            }
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(authreqelem, elem);
-                elem = OSPC_OSNULL;
             }
         }
 
@@ -836,12 +873,11 @@ int OSPPAuthReqToElement(       /* returns error code */
                 ospvErrCode = OSPPMsgNumToElement(OSPPAuthReqGetCustId(ospvAuthReq), OSPPMsgElemGetName(OSPC_MELEM_CUSTID), &elem);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-
-                    if (attr != OSPC_OSNULL) {
+                    if (attr == OSPC_OSNULL) {
+                        ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                    } else {
                         OSPPXMLElemAddAttr(elem, attr);
                         attr = OSPC_OSNULL;
-                    } else {
-                        ospvErrCode = OSPC_ERR_XML_NO_ATTR;
                     }
 
                     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
@@ -853,14 +889,11 @@ int OSPPAuthReqToElement(       /* returns error code */
                         ospvErrCode = OSPPMsgNumToElement(OSPPAuthReqGetDeviceId(ospvAuthReq), OSPPMsgElemGetName(OSPC_MELEM_DEVICEID), &elem);
                         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-                            if (attr != OSPC_OSNULL) {
+                            if (attr == OSPC_OSNULL) {
+                                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                            } else {
                                 OSPPXMLElemAddAttr(elem, attr);
                                 attr = OSPC_OSNULL;
-                            } else {
-                                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
-                            }
-
-                            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                                 OSPPXMLElemAddChild(authreqelem, elem);
                                 elem = OSPC_OSNULL;
                             }
@@ -880,7 +913,7 @@ int OSPPAuthReqToElement(       /* returns error code */
                 }
             }
         }
-        
+
         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
             /* Now add the authreqelem to the main elem */
             OSPPXMLElemAddChild(*ospvElem, authreqelem);
@@ -925,59 +958,69 @@ OSPTBOOL OSPPAuthReqHasMessageId(   /* returns non-zero if message id is set */
 }
 
 /*
- * OSPPAuthReqHasRoutingNumber() - does the authorisation request have a routing number?
+ * OSPPAuthReqSetNumberPortability() - set number portability parameters for an authorisation request
  */
-OSPTBOOL OSPPAuthReqHasRoutingNumber(   /* returns non-zero if number exists */
-    OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request effected */
-{                            
+void OSPPAuthReqSetNumberPortability(   /* nothing returned */
+    OSPT_AUTH_REQ *ospvAuthReq,         /* authorisation request  to set */
+    const char *ospvNPRn,               /* routing number (as string) */
+    const char *ospvNPCic,              /* carrier identification code (as string) */
+    int ospvNPNpdi)                     /* npdi */
+{
+    if (ospvAuthReq != OSPC_OSNULL) {
+        if (ospvNPRn != OSPC_OSNULL) {
+            OSPM_STRNCPY(ospvAuthReq->ospmAuthReqNPRn, ospvNPRn, sizeof(ospvAuthReq->ospmAuthReqNPRn) - 1);
+        }
+        if (ospvNPCic != OSPC_OSNULL) {
+            OSPM_STRNCPY(ospvAuthReq->ospmAuthReqNPCic, ospvNPCic, sizeof(ospvAuthReq->ospmAuthReqNPCic) - 1);
+        }
+        if (ospvNPNpdi) {
+            ospvAuthReq->ospmAuthReqNPNpdi = OSPC_TRUE;
+        } else {
+            ospvAuthReq->ospmAuthReqNPNpdi = OSPC_FALSE;
+        }
+    }
+}
+
+/*
+ * OSPPAuthReqHasNPRn() - does the authorisation request have a routing number?
+ */
+OSPTBOOL OSPPAuthReqHasNPRn(    /* returns non-zero if routing number exists */
+    OSPT_AUTH_REQ *ospvAuthReq) /* authorisation request effected */
+{
     OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthReq != OSPC_OSNULL) {
-        ospvHas = (ospvAuthReq->ospmAuthReqRoutingNumber[0] != '\0');
+        ospvHas = (ospvAuthReq->ospmAuthReqNPRn[0] != '\0');
     }
 
     return ospvHas;
 }
 
 /*
- * OSPPAuthReqSetRoutingNumber() - set the routing number for an authorisation request
+ * OSPPAuthReqGetNPRn() - returns the routing number for an authorisation request
  */
-void OSPPAuthReqSetRoutingNumber(   /* nothing returned */
-    OSPT_AUTH_REQ *ospvAuthReq,     /* authorisation request  to set */
-    const char *ospvNum)            /* source number (as string) */
-{                       
-    if (ospvAuthReq != OSPC_OSNULL) {
-        if (ospvNum != OSPC_OSNULL) {
-            OSPM_STRNCPY(ospvAuthReq->ospmAuthReqRoutingNumber, ospvNum, tr_min(OSPM_STRLEN(ospvNum) + 1, OSPC_SIZE_E164NUM - 1));
-        }
-    }
-}
-
-/*
- * OSPPAuthReqGetRoutingNumber() - returns the routing number for an authorisation request
- */
-const char *OSPPAuthReqGetRoutingNumber(/* returns number as string */
-    OSPT_AUTH_REQ *ospvAuthReq)         /* authorisation request */
+const char *OSPPAuthReqGetNPRn( /* returns number as string */
+    OSPT_AUTH_REQ *ospvAuthReq) /* authorisation request */
 {
     const char *ospvNum = OSPC_OSNULL;
 
     if (ospvAuthReq != OSPC_OSNULL) {
-        ospvNum = ospvAuthReq->ospmAuthReqRoutingNumber;
+        ospvNum = ospvAuthReq->ospmAuthReqNPRn;
     }
 
     return ospvNum;
 }
 
 /*
- * OSPPRoutingNumToElement() - adds routing number to an xml element
+ * OSPPNPRnToElement() - adds routing number to an xml element
  */
-unsigned OSPPRoutingNumToElement(
+unsigned OSPPNPRnToElement(
     const char *RoutingNum,         /* Routing number */
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
-    
+
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     } else {
@@ -996,5 +1039,177 @@ unsigned OSPPRoutingNumToElement(
     }
 
     return ospvErrCode;
+}
+
+/*
+ * OSPPAuthReqHasNPCic() - does the authorisation request have a carrier identification code?
+ */
+OSPTBOOL OSPPAuthReqHasNPCic(   /* returns non-zero if carrier identification code exists */
+    OSPT_AUTH_REQ *ospvAuthReq) /* authorisation request effected */
+{
+    OSPTBOOL ospvHas = OSPC_FALSE;
+
+    if (ospvAuthReq != OSPC_OSNULL) {
+        ospvHas = (ospvAuthReq->ospmAuthReqNPCic[0] != '\0');
+    }
+
+    return ospvHas;
+}
+
+/*
+ * OSPPAuthReqGetNPCic() - returns the carrier identification code for an authorisation request
+ */
+const char *OSPPAuthReqGetNPCic(    /* returns carrier identification code as string */
+    OSPT_AUTH_REQ *ospvAuthReq)     /* authorisation request */
+{
+    const char *ospvNum = OSPC_OSNULL;
+
+    if (ospvAuthReq != OSPC_OSNULL) {
+        ospvNum = ospvAuthReq->ospmAuthReqNPCic;
+    }
+
+    return ospvNum;
+}
+
+/*
+ * OSPPNPCicToElement() - adds carrier identification code to an xml element
+ */
+unsigned OSPPNPCicToElement(
+    const char *Cic,            /* Carrier identification code */
+    OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
+{
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+    } else {
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DESTINFO), Cic);
+        if (*ospvElem == OSPC_OSNULL) {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        } else {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_CIC));
+            if (attr == OSPC_OSNULL) {
+                OSPPXMLElemDelete(ospvElem);
+                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+            } else {
+                OSPPXMLElemAddAttr(*ospvElem, attr);
+            }
+        }
+    }
+
+    return ospvErrCode;
+}
+
+/*
+ * OSPPAuthReqHasNPNpdi() - does the authorisation request have a npdi flag?
+ */
+OSPTBOOL OSPPAuthReqHasNPNpdi(  /* returns non-zero if npdi flag exists */
+    OSPT_AUTH_REQ *ospvAuthReq) /* authorisation request effected */
+{
+    OSPTBOOL ospvHas = OSPC_FALSE;
+
+    if (ospvAuthReq != OSPC_OSNULL) {
+        ospvHas = (ospvAuthReq->ospmAuthReqNPNpdi != OSPC_FALSE);
+    }
+
+    return ospvHas;
+}
+
+/*
+ * OSPPAuthReqGetNPNpdi() - returns npdi flag for an authorisation request
+ */
+int OSPPAuthReqGetNPNpdi(       /* returns npdi */
+    OSPT_AUTH_REQ *ospvAuthReq) /* authorisation request */
+{
+    int ospvNpdi = OSPC_FALSE;
+
+    if (ospvAuthReq != OSPC_OSNULL) {
+        ospvNpdi = ospvAuthReq->ospmAuthReqNPNpdi;
+    }
+
+    return ospvNpdi;
+}
+
+/*
+ * OSPPNPNpdiToElement() - adds npdi flag to an xml element
+ */
+unsigned OSPPNPNpdiToElement(
+    int Npdi,                   /* npdi */
+    OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
+{
+    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+    } else {
+        if (Npdi) {
+            *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DESTINFO), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE));
+        } else {
+            *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DESTINFO), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+        }
+        if (*ospvElem == OSPC_OSNULL) {
+            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        } else {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_NPDI));
+            if (attr == OSPC_OSNULL) {
+                OSPPXMLElemDelete(ospvElem);
+                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+            } else {
+                OSPPXMLElemAddAttr(*ospvElem, attr);
+            }
+        }
+    }
+
+    return ospvErrCode;
+}
+
+/*
+ * OSPPAuthReqHasDiversion() - does the authorisation request have a Diversion?
+ */
+OSPTBOOL OSPPAuthReqHasDiversion(   /* returns non-zero if Diversion exists */
+    OSPT_AUTH_REQ *ospvAuthReq)     /* authorisation request effected */
+{
+    OSPTBOOL ospvHas = OSPC_FALSE;
+
+    if (ospvAuthReq != OSPC_OSNULL) {
+        ospvHas = ((ospvAuthReq->ospmAuthReqDiversionSrcInfo[0] != '\0') && (ospvAuthReq->ospmAuthReqDiversionDevInfo[0] != '\0'));
+    }
+
+    return ospvHas;
+}
+
+/*
+ * OSPPAuthReqSetDiversion() - set the Diversion for an authorisation request
+ */
+void OSPPAuthReqSetDiversion(   /* nothing returned */
+    OSPT_AUTH_REQ *ospvAuthReq, /* authorisation request  to set */
+    const char *ospvNumber,     /* number (as string) */
+    const char *ospvDomain)     /* domain (as string) */
+{
+    if (ospvAuthReq != OSPC_OSNULL) {
+        if ((ospvNumber != OSPC_OSNULL) && (ospvDomain != OSPC_OSNULL)) {
+            OSPM_STRNCPY(ospvAuthReq->ospmAuthReqDiversionSrcInfo, ospvNumber, tr_min(OSPM_STRLEN(ospvNumber) + 1, OSPC_SIZE_E164NUM - 1));
+            OSPM_STRNCPY(ospvAuthReq->ospmAuthReqDiversionDevInfo, ospvDomain, tr_min(OSPM_STRLEN(ospvDomain) + 1, OSPC_SIZE_SIGNALADDR - 1));
+        }
+    }
+}
+
+/*
+ * OSPPAuthReqGetDiversion() - returns the Diversion for an authorisation request
+ */
+void OSPPAuthReqGetDiversion(    /* nothing returnd */
+    OSPT_AUTH_REQ *ospvAuthReq,     /* authorisation request */
+    char **ospvNumber,              /* number */
+    char **ospvDomain)              /* domain */
+{
+    if (ospvAuthReq != OSPC_OSNULL) {
+        *ospvNumber = ospvAuthReq->ospmAuthReqDiversionSrcInfo;
+        *ospvDomain = ospvAuthReq->ospmAuthReqDiversionDevInfo;
+    } else {
+        *ospvNumber = OSPC_OSNULL;
+        *ospvDomain = OSPC_OSNULL;
+    }
 }
 

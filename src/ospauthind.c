@@ -36,7 +36,7 @@
  * OSPPAuthIndSetTimestamp() - sets the timestamp for an authorisation indication
  */
 void OSPPAuthIndSetTimestamp(
-    OSPT_AUTH_IND *ospvAuthInd, 
+    OSPT_AUTH_IND *ospvAuthInd,
     OSPTTIME ospvTime)
 {
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -63,7 +63,7 @@ OSPTBOOL OSPPAuthIndHasRole(
  * OSPPAuthIndSetRole() - sets value for role in AuthIndication
  */
 void OSPPAuthIndSetRole(
-    OSPT_AUTH_IND *ospvAuthInd, 
+    OSPT_AUTH_IND *ospvAuthInd,
     OSPE_ROLE ospvRole)
 {
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -92,7 +92,7 @@ OSPE_ROLE OSPPAuthIndGetRole(
  */
 OSPTBOOL OSPPAuthIndHasCallId(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
-{                            
+{
     OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -107,7 +107,7 @@ OSPTBOOL OSPPAuthIndHasCallId(
  */
 OSPT_CALL_ID *OSPPAuthIndGetCallId(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
-{                             
+{
     OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -122,7 +122,7 @@ OSPT_CALL_ID *OSPPAuthIndGetCallId(
  */
 unsigned OSPPAuthIndGetCallIdSize(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
-{                             
+{
     unsigned ospvCallIdSize = 0;
 
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -137,7 +137,7 @@ unsigned OSPPAuthIndGetCallIdSize(
  */
 unsigned char *OSPPAuthIndGetCallIdValue(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
-{                            
+{
     unsigned char *ospvCallIdValue = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -152,7 +152,7 @@ unsigned char *OSPPAuthIndGetCallIdValue(
  */
 OSPTBOOL OSPPAuthIndHasSourceNumber(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication effected */
-{                            
+{
     OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -168,7 +168,7 @@ OSPTBOOL OSPPAuthIndHasSourceNumber(
 void OSPPAuthIndSetSourceNumber(
     OSPT_AUTH_IND *ospvAuthInd, /* authorisation indication  to set */
     const char *ospvNum)        /* source number (as string) */
-{                       
+{
     if (ospvAuthInd != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
             OSPM_STRNCPY(ospvAuthInd->ospmAuthIndSourceNumber, ospvNum, tr_min(OSPM_STRLEN(ospvNum) + 1, OSPC_SIZE_E164NUM - 1));
@@ -181,7 +181,7 @@ void OSPPAuthIndSetSourceNumber(
  */
 const char *OSPPAuthIndGetSourceNumber(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
-{                             
+{
     const char *ospvSourceNumber = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -196,7 +196,7 @@ const char *OSPPAuthIndGetSourceNumber(
  */
 OSPTBOOL OSPPAuthIndHasDestNumber(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication effected */
-{                            
+{
     OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -212,7 +212,7 @@ OSPTBOOL OSPPAuthIndHasDestNumber(
 void OSPPAuthIndSetDestNumber(
     OSPT_AUTH_IND *ospvAuthInd, /* authorisation indication to set */
     const char *ospvNum)        /* destination number (as string) */
-{                       
+{
     if (ospvAuthInd != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
             OSPM_STRNCPY(ospvAuthInd->ospmAuthIndDestNumber, ospvNum, tr_min(OSPM_STRLEN(ospvNum) + 1, OSPC_SIZE_E164NUM - 1));
@@ -225,7 +225,7 @@ void OSPPAuthIndSetDestNumber(
  */
 const char *OSPPAuthIndGetDestNumber(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
-{                            
+{
     const char *ospvDestNumber = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -240,7 +240,7 @@ const char *OSPPAuthIndGetDestNumber(
  */
 OSPTBOOL OSPPAuthIndHasSourceAlt(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
-{                            
+{
     OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -255,12 +255,12 @@ OSPTBOOL OSPPAuthIndHasSourceAlt(
  */
 OSPT_ALTINFO *OSPPAuthIndFirstSourceAlt(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
-{                             
+{
     OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
         ospvAltInfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvAuthInd->ospmAuthIndSourceAlternate));
-            
+
     }
 
     return ospvAltInfo;
@@ -283,11 +283,11 @@ OSPT_ALTINFO *OSPPAuthIndNextSourceAlt(
 }
 
 /*
- * OSPPAuthIndGetSourceAltValue() - gets the source alternate value for an authorisation indication 
+ * OSPPAuthIndGetSourceAltValue() - gets the source alternate value for an authorisation indication
  */
 const char *OSPPAuthIndGetSourceAltValue(
     OSPT_ALTINFO *ospvAltInfo)  /* Alt info ptr */
-{                              
+{
     const char *ospvAltInfoValue = OSPC_OSNULL;
 
     if (ospvAltInfo != OSPC_OSNULL) {
@@ -298,11 +298,11 @@ const char *OSPPAuthIndGetSourceAltValue(
 }
 
 /*
- * OSPPAuthIndHasDestinationAlt() - does an authorisation indication have a Destination Alternate? 
+ * OSPPAuthIndHasDestinationAlt() - does an authorisation indication have a Destination Alternate?
  */
 OSPTBOOL OSPPAuthIndHasDestinationAlt(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
-{                            
+{
     OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -313,11 +313,11 @@ OSPTBOOL OSPPAuthIndHasDestinationAlt(
 }
 
 /*
- * OSPPAuthIndFirstDestinationAlt() - gets the First Destination alternate for an authorisation indication 
+ * OSPPAuthIndFirstDestinationAlt() - gets the First Destination alternate for an authorisation indication
  */
 OSPT_ALTINFO *OSPPAuthIndFirstDestinationAlt(
     OSPT_AUTH_IND *ospvAuthInd) /* authorisation indication */
-{                             
+{
     OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
 
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -328,7 +328,7 @@ OSPT_ALTINFO *OSPPAuthIndFirstDestinationAlt(
 }
 
 /*
- * OSPPAuthIndNextDestinationAlt() - gets the next Destination alternate for an authorisation indication 
+ * OSPPAuthIndNextDestinationAlt() - gets the next Destination alternate for an authorisation indication
  */
 OSPT_ALTINFO *OSPPAuthIndNextDestinationAlt(
     OSPT_AUTH_IND *ospvAuthInd, /* authorisation indication */
@@ -344,12 +344,12 @@ OSPT_ALTINFO *OSPPAuthIndNextDestinationAlt(
 }
 
 /*
- * OSPPAuthIndGetDestinationAltValue() - gets the Destination alternate value for 
+ * OSPPAuthIndGetDestinationAltValue() - gets the Destination alternate value for
  * an authorisation indication
  */
 const char *OSPPAuthIndGetDestinationAltValue(
     OSPT_ALTINFO *ospvAltInfo)  /* Alt info ptr */
-{                             
+{
     const char *ospvAltInfoValue = OSPC_OSNULL;
 
     if (ospvAltInfo != OSPC_OSNULL) {
@@ -363,7 +363,7 @@ const char *OSPPAuthIndGetDestinationAltValue(
  * OSPPAuthIndSetDest() - sets the destination for an authorisation
  */
 void OSPPAuthIndSetDest(
-    OSPT_AUTH_IND *ospvAuthInd, 
+    OSPT_AUTH_IND *ospvAuthInd,
     OSPT_DEST *ospvDest)
 {
     if (ospvAuthInd != OSPC_OSNULL) {
@@ -445,7 +445,7 @@ void OSPPAuthIndDelete(
 
         while (!OSPPListEmpty(&((*ospvAuthInd)->ospmAuthIndTokens))) {
             token = (OSPTTOKEN *)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndTokens));
-               
+
             if (token != OSPC_OSNULL) {
                 OSPPTokenDelete(&token);
             }
@@ -497,7 +497,7 @@ void OSPPAuthIndDelete(
 void OSPPAuthIndSetCallId(
     OSPT_AUTH_IND *ospvAuthInd, /* authorisation indication */
     OSPT_CALL_ID *ospvCallId)   /* call ID */
-{                          
+{
     if (ospvAuthInd != OSPC_OSNULL) {
         if (ospvCallId != OSPC_OSNULL) {
             if (ospvAuthInd->ospmAuthIndCallId != OSPC_OSNULL) {

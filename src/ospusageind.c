@@ -1217,6 +1217,7 @@ int OSPPUsageIndToElement(      /* returns error code */
     OSPE_ALTINFO attrvalue;
     OSPE_TERM_CAUSE tctype;
     unsigned cnt;
+    char *tmp;
 
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
 
@@ -1230,7 +1231,6 @@ int OSPPUsageIndToElement(      /* returns error code */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         /* create the "Message" element as the parent */
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_MESSAGE), "");
-
         if (*ospvElem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
@@ -1238,24 +1238,22 @@ int OSPPUsageIndToElement(      /* returns error code */
             usage = (OSPT_USAGEIND *)OSPPListFirst(ospvUsageInd);
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID),
                 OSPPUsageIndHasMessageId(usage) ? (const char *)(usage->ospmUsageIndMessageId) : "NULL");
-
-            if (attr != OSPC_OSNULL) {
+            if (attr == OSPC_OSNULL) {
+                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+            } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
-            } else {
-                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
             }
 
             /* random */
             if ((OSPPUtilGetRandom(random, 0) > 0) &&
                 (ospvErrCode == OSPC_ERR_NO_ERROR)) {
                 attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_RANDOM), (const char *)random);
-
-                if (attr != OSPC_OSNULL) {
+                if (attr == OSPC_OSNULL) {
+                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                } else {
                     OSPPXMLElemAddAttr(*ospvElem, attr);
                     attr = OSPC_OSNULL;
-                } else {
-                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
                 }
             }
         }
@@ -1417,6 +1415,32 @@ int OSPPUsageIndToElement(      /* returns error code */
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* add diversion source info */
+            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                tmp = trans->DiversionSrcInfo;
+                if (tmp[0] != '\0') {
+                    ospvErrCode = OSPPCallPartyNumToElement(OSPC_MELEM_DIVERSIONSRCINFO, tmp, OSPC_NFORMAT_E164, &subelem);
+                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                        OSPPXMLElemAddChild(usageindelem, subelem);
+                        subelem = OSPC_OSNULL;
+                    }
+                }
+            }
+
+            /* add diversion device info */
+            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                tmp = trans->DiversionDevInfo;
+                if (tmp[0] != '\0') {
+                    attrtype = OSPC_MATTR_TYPE;
+                    attrvalue = OSPC_ALTINFO_TRANSPORT;
+                    ospvErrCode = OSPPStringToElement(OSPC_MELEM_DIVERSIONDEVINFO, tmp, 1, &attrtype, &attrvalue, &subelem);
+                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                        OSPPXMLElemAddChild(usageindelem, subelem);
+                        subelem = OSPC_OSNULL;
+                    }
                 }
             }
 
@@ -1590,15 +1614,14 @@ int OSPPUsageIndToElement(      /* returns error code */
                     /*add attribute critical = "False" since not all servers understand */
                     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                         attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-                        if (attr != OSPC_OSNULL) {
+                        if (attr == OSPC_OSNULL) {
+                            ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                        } else {
                             OSPPXMLElemAddAttr(subelem, attr);
                             attr = OSPC_OSNULL;
-                        } else {
-                            ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                            OSPPXMLElemAddChild(usageindelem, subelem);
+                            subelem = OSPC_OSNULL;
                         }
-
-                        OSPPXMLElemAddChild(usageindelem, subelem);
-                        subelem = OSPC_OSNULL;
                     }
                     if (OSPPUsageIndHasDeviceId(usage)) {
                         ospvErrCode = OSPPMsgNumToElement(OSPPUsageIndGetDeviceId(usage),
@@ -1607,14 +1630,14 @@ int OSPPUsageIndToElement(      /* returns error code */
                         /*add attribute critical = "False" since not all servers understand */
                         if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-                            if (attr != OSPC_OSNULL) {
+                            if (attr == OSPC_OSNULL) {
+                                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                            } else {
                                 OSPPXMLElemAddAttr(subelem, attr);
                                 attr = OSPC_OSNULL;
-                            } else {
-                                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                                OSPPXMLElemAddChild(usageindelem, subelem);
+                                subelem = OSPC_OSNULL;
                             }
-                            OSPPXMLElemAddChild(usageindelem, subelem);
-                            subelem = OSPC_OSNULL;
                         }
                     }
                 }

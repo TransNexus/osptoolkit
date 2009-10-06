@@ -105,7 +105,11 @@ typedef struct _OSPTTRANS {
     unsigned NumOfPricingInfoElements;
     unsigned CurrentPricingInfoElement;
     OSPT_PRICING_INFO PricingInfo[MAX_PRICING_INFO_ALLOWED];
-    char *RoutingNumber;
+    char NPRn[OSPC_SIZE_E164NUM];
+    char NPCic[OSPC_SIZE_E164NUM];
+    int NPNpdi;
+    char DiversionSrcInfo[OSPC_SIZE_E164NUM];
+    char DiversionDevInfo[OSPC_SIZE_SIGNALADDR];
     char AssertedId[OSPC_SIZE_NORID];
     OSPE_DEST_PROTOCOL DestProtocol;
     char ForwardCodec[OSPC_SIZE_CODEC];
