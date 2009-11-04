@@ -117,7 +117,9 @@ extern "C" {
     int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
     int OSPPTransactionSetMOSCQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
     int OSPPTransactionSetMOSLQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
+    int OSPPTransactionSetICPIF(OSPTTRANHANDLE, OSPE_STATS_FLOW, int);
     int OSPPTransactionGetNumberPortability(OSPTTRANHANDLE ospvTransaction, char *, char *, int *);
+    int OSPPTransactionSetRoundTripDelay(OSPTTRANHANDLE, int, int, int, int, float);
 
 #ifdef __cplusplus
 }

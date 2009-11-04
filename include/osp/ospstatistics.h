@@ -40,6 +40,7 @@
  * Statistcs, metric types
  */
 typedef enum {
+    OSPC_SMETRIC_UNDEFINED = -1,
     OSPC_SMETRIC_RTP = 0,
     OSPC_SMETRIC_RTCP,
     /* Number of metric types */
@@ -50,6 +51,7 @@ typedef enum {
  * Statistcs, flow types
  */
 typedef enum {
+    OSPC_SFLOW_UNDEFINED = -1,
     OSPC_SFLOW_DOWNSTREAM = 0,
     OSPC_SFLOW_UPSTREAM,
     /* Number of flow types */
@@ -68,6 +70,7 @@ typedef enum {
     OSPC_STATS_RFACTOR,
     OSPC_STATS_MOSCQ,
     OSPC_STATS_MOSLQ,
+    OSPC_STATS_ICPIF,
     /* Number of value types */
     OSPC_STATS_NUMBER
 } OSPE_STATS;
@@ -120,6 +123,7 @@ typedef struct {
     float ospmRFactor[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
     float ospmMOSCQ[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
     float ospmMOSLQ[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
+    int ospmICPIF[OSPC_SFLOW_NUMBER];
 } OSPT_STATS;
 
 /* Function Prototypes */
@@ -132,8 +136,8 @@ extern "C" {
     void OSPPStatsDelete(OSPT_STATS **);
     int OSPPStatsToElement(OSPT_STATS *, OSPT_XML_ELEM **);
 
-    OSPTBOOL OSPPStatsHasOneWay(OSPT_STATS *);
-    OSPTBOOL OSPPStatsHasRoundTrip(OSPT_STATS *);
+    OSPTBOOL OSPPStatsHasOneWay(OSPT_STATS *, unsigned);
+    OSPTBOOL OSPPStatsHasRoundTrip(OSPT_STATS *, unsigned);
     OSPTBOOL OSPPStatsHasLossSent(OSPT_STATS *, unsigned);
     OSPTBOOL OSPPStatsHasLossReceived(OSPT_STATS *, unsigned);
 

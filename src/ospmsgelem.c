@@ -71,6 +71,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_FRACTION,             "Fraction" },
     { OSPC_MELEM_GROUP,                "Group" },
     { OSPC_MELEM_GROUPID,              "GroupId" },
+    { OSPC_MELEM_ICPIF,                "ICPIF" },
     { OSPC_MELEM_INCREMENT,            "Increment" },
     { OSPC_MELEM_JITTER,               "Jitter" },
     { OSPC_MELEM_LOSSRCVD,             "LossReceived" },

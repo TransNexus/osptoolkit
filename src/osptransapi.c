@@ -4698,6 +4698,32 @@ int OSPPTransactionSetMOSLQ(
     return errorcode;
 }
 
+int OSPPTransactionSetICPIF(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_FLOW ospvFlow,       /* In - Statistics flow */
+    int ospvICPIF)                  /* In - ICPIF, -1 means unavailable */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        /* if no statistics structure, make one */
+        if (trans->Statistics == OSPC_OSNULL) {
+            trans->Statistics = OSPPStatsNew();
+            if (trans->Statistics == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_TRAN_STATS_NEW_FAIL;
+            }
+        }
+
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_ICPIF, OSPC_SMETRIC_UNDEFINED, ospvFlow, ospvICPIF);
+        }
+    }
+
+    return errorcode;
+}
+
 /*
  * OSPPTransactionGetNumberPortability() :
  * Reports number portability parameters returned in AuthRsp
@@ -4761,3 +4787,52 @@ int OSPPTransactionGetNumberPortability(
 
     return errorcode;
 }
+
+int OSPPTransactionSetRoundTripDelay(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    int ospvSamples,                /* In - Samples of Round Trip Delay, -1 means unavailable */
+    int ospvMin,                    /* In - Minimum of Round Trip Delay in milliseconds, -1 means unavailable */
+    int ospvMax,                    /* In - Maximum of Round Trip Delay in milliseconds, -1 means unavailable */
+    int ospvMean,                   /* In - Mean of Round Trip Delay in milliseconds, -1 means unavailable */
+    float ospvVariance)             /* In - Variance of Round Trip delay, -1 means unavailable */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        /* if no statistics structure, make one */
+        if (trans->Statistics == OSPC_OSNULL) {
+            trans->Statistics = OSPPStatsNew();
+            if (trans->Statistics == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_TRAN_STATS_NEW_FAIL;
+            }
+        }
+
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            if (ospvSamples >= 0) {
+                trans->Statistics->ospmRoundTrip.hasvalue |= OSPC_SVALUE_SAMPLES;
+                trans->Statistics->ospmRoundTrip.samples = ospvSamples;
+            }
+            if (ospvMin >= 0) {
+                trans->Statistics->ospmRoundTrip.hasvalue |= OSPC_SVALUE_MINIMUM;
+                trans->Statistics->ospmRoundTrip.minimum = ospvMin;
+            }
+            if (ospvMax >= 0) {
+                trans->Statistics->ospmRoundTrip.hasvalue |= OSPC_SVALUE_MAXIMUM;
+                trans->Statistics->ospmRoundTrip.maximum = ospvMax;
+            }
+            if (ospvMean >= 0) {
+                trans->Statistics->ospmRoundTrip.hasvalue |= OSPC_SVALUE_MEAN;
+                trans->Statistics->ospmRoundTrip.mean = ospvMean;
+            }
+            if (ospvVariance >= 0) {
+                trans->Statistics->ospmRoundTrip.hasvalue |= OSPC_SVALUE_VARIANCE;
+                trans->Statistics->ospmRoundTrip.variance = ospvVariance;
+            }
+        }
+    }
+
+    return errorcode;
+}
+

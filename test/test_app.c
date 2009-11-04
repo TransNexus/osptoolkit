@@ -1953,6 +1953,25 @@ int testStatsMOSLQ()
     return errorcode;
 }
 
+int testStatsICPIF()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPTransactionSetICPIF(OSPVTransactionHandle, OSPC_SFLOW_DOWNSTREAM, 1);
+    errorcode = OSPPTransactionSetICPIF(OSPVTransactionHandle, OSPC_SFLOW_UPSTREAM, 54);
+
+    return errorcode;
+}
+
+int testStatsRoundTrip()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPTransactionSetRoundTripDelay(OSPVTransactionHandle, 1, 2, 3, 4, 5);
+
+    return errorcode;
+}
+
 int testGetNumberPortability()
 {
     int errorcode = 0;
@@ -2260,6 +2279,12 @@ int testAPI(int apinumber)
     case 237:
         errorcode = testStatsMOSLQ();
         break;
+    case 238:
+        errorcode = testStatsICPIF();
+        break;
+    case 239:
+        errorcode = testStatsRoundTrip();
+        break;
     case 500:
         errorcode = testGetNumberPortability();
         break;
@@ -2366,6 +2391,7 @@ int testMenu()
         printf("232) Set Delay                        233) Set Octets\n");
         printf("234) Set Packets                      235) Set R-Factor\n");
         printf("236) Set MOS-CQ                       237) Set MOS-LQ\n");
+        printf("238) Set ICPIF                        239) Set Round Trip Delay\n");
         printf("500) Get NP parameters\n");
         printf("---------------------------------------------------------------------\n");
         printf("Enter function number or 'q' to quit => ");
