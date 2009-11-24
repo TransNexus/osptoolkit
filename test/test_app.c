@@ -820,14 +820,26 @@ int testOSPPTransactionGetDestProtocol()
         case OSPC_DPROT_SIP:
             printf("Destination Protocol is SIP \n");
             break;
-        case OSPC_DPROT_LRQ:
-            printf("Destination Protocol is h323-LRQ \n");
-            break;
         case OSPC_DPROT_Q931:
-            printf("Destination Protocol is h323-Q931\n");
+            printf("Destination Protocol is H.323-Q931\n");
+            break;
+        case OSPC_DPROT_LRQ:
+            printf("Destination Protocol is H.323-LRQ \n");
             break;
         case OSPC_DPROT_IAX:
             printf("Destination Protocol is IAX \n");
+            break;
+        case OSPC_DPROT_T37:
+            printf("Destination Protocol is Fax-T.37 \n");
+            break;
+        case OSPC_DPROT_T38:
+            printf("Destination Protocol is Fax-T.38 \n");
+            break;
+        case OSPC_DPROT_SKYPE:
+            printf("Destination Protocol is Skype \n");
+            break;
+        case OSPC_DPROT_SMPP:
+            printf("Destination Protocol is SMPP \n");
             break;
         case OSPC_DPROT_XMPP:
             printf("Destination Protocol is XMPP \n");
@@ -1512,14 +1524,26 @@ int testOSPPTransactionGetLookAheadInfoIfPresent()
             case OSPC_DPROT_SIP:
                 printf("Destination Protocol is SIP \n");
                 break;
-            case OSPC_DPROT_LRQ:
-                printf("Destination Protocol is h323-LRQ \n");
-                break;
             case OSPC_DPROT_Q931:
-                printf("Destination Protocol is h323-Q931\n");
+                printf("Destination Protocol is H.323-Q931\n");
+                break;
+            case OSPC_DPROT_LRQ:
+                printf("Destination Protocol is H.323-LRQ \n");
                 break;
             case OSPC_DPROT_IAX:
                 printf("Destination Protocol is IAX \n");
+                break;
+            case OSPC_DPROT_T37:
+                printf("Destination Protocol is Fax-T.37 \n");
+                break;
+            case OSPC_DPROT_T38:
+                printf("Destination Protocol is Fax-T.38 \n");
+                break;
+            case OSPC_DPROT_SKYPE:
+                printf("Destination Protocol is Skype \n");
+                break;
+            case OSPC_DPROT_SMPP:
+                printf("Destination Protocol is SMPP \n");
                 break;
             case OSPC_DPROT_XMPP:
                 printf("Destination Protocol is XMPP \n");

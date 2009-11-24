@@ -37,9 +37,13 @@ typedef enum {
     OSPC_DPROT_UNDEFINED,                       /* Not Configured at Server */
     OSPC_DPROT_START = 0,                       /* Destination Protocol start */
     OSPC_DPROT_SIP = OSPC_DPROT_START,          /* Destination Protocol - SIP */
-    OSPC_DPROT_LRQ,                             /* Destination Protocol - H323, Send LRQ to GK to Complete Call */
     OSPC_DPROT_Q931,                            /* Destination Protocol - H323, Send Setup to Complete Call */
+    OSPC_DPROT_LRQ,                             /* Destination Protocol - H323, Send LRQ to GK to Complete Call */
     OSPC_DPROT_IAX,                             /* Destination Protocol - IAX */
+    OSPC_DPROT_T37,                             /* Destination Protocol - Fax T.37 */
+    OSPC_DPROT_T38,                             /* Destination Protocol - Fax T.38 */
+    OSPC_DPROT_SKYPE,
+    OSPC_DPROT_SMPP,                            /* Destination Protocol - SMPP */
     OSPC_DPROT_XMPP,                            /* Destination Protocol - XMPP */
     /* Number of destiantion protocol types */
     OSPC_DPROT_NUMBER

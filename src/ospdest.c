@@ -36,9 +36,13 @@
 /* Array that associates protocols and names */
 const OSPT_MSG_DESC OSPV_DPROT_DESCS[OSPC_DPROT_NUMBER] = {
     { OSPC_DPROT_SIP,   "sip" },
-    { OSPC_DPROT_LRQ,   "h323-LRQ" },
     { OSPC_DPROT_Q931,  "h323-Q931" },
+    { OSPC_DPROT_LRQ,   "h323-LRQ" },
     { OSPC_DPROT_IAX,   "iax" },
+    { OSPC_DPROT_T37,   "fax-T37" },
+    { OSPC_DPROT_T38,   "fax-T38" },
+    { OSPC_DPROT_SKYPE, "skype" },
+    { OSPC_DPROT_SMPP,  "smpp" },
     { OSPC_DPROT_XMPP,  "xmpp" }
 };
 

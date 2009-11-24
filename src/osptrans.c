@@ -1173,6 +1173,8 @@ int OSPPTransactionGetDestination(
                         OSPM_MEMCPY(ospvDestinationDevice, sigaddr, OSPM_STRLEN(sigaddr) + 1);
                     }
                 }
+            } else {
+            	ospvDestinationDevice[0] = '\0';
             }
         }
 
