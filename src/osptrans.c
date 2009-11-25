@@ -1154,7 +1154,7 @@ int OSPPTransactionGetDestination(
             }
         }
 
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvSizeOfDestinationDevice != 0)) {
             if (OSPPDestDevHasAddr(dest)) {
                 sigaddr = OSPC_OSNULL;
 
@@ -1174,7 +1174,7 @@ int OSPPTransactionGetDestination(
                     }
                 }
             } else {
-            	ospvDestinationDevice[0] = '\0';
+                ospvDestinationDevice[0] = '\0';
             }
         }
 
