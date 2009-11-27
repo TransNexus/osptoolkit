@@ -343,6 +343,19 @@ unsigned OSPPStatsGetOneWayMinimum(
     return min;
 }
 
+/* Get value for OneWay.Maximum */
+unsigned OSPPStatsGetOneWayMaximum(
+    OSPT_STATS *ospvStats)
+{
+    unsigned max = 0;
+
+    if (ospvStats != OSPC_OSNULL) {
+        max = ospvStats->ospmOneWay.maximum;
+    }
+
+    return max;
+}
+
 /* Get value for OneWay.Mean */
 unsigned OSPPStatsGetOneWayMean(
     OSPT_STATS *ospvStats)
@@ -393,6 +406,19 @@ unsigned OSPPStatsGetRoundTripMinimum(
     }
 
     return min;
+}
+
+/* Get value for RoundTrip.Maximum */
+unsigned OSPPStatsGetRoundTripMaximum(
+    OSPT_STATS *ospvStats)
+{
+    unsigned max = 0;
+
+    if (ospvStats != OSPC_OSNULL) {
+        max = ospvStats->ospmRoundTrip.maximum;
+    }
+
+    return max;
 }
 
 /* Get value for RoundTrip.Mean */
@@ -522,6 +548,24 @@ int OSPPStatsOneWayToElement(
         }
     }
 
+    /* Maximum */
+    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_MAXIMUM))) {
+        errorcode = OSPPMsgNumToElement(OSPPStatsGetOneWayMaximum(ospvStats),
+            OSPPMsgElemGetName(OSPC_MELEM_MAXIMUM),
+            &elem);
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
+                OSPPXMLElemAddAttr(elem, attr);
+                attr = OSPC_OSNULL;
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
     /* Mean */
     if ((errorcode == OSPC_ERR_NO_ERROR)  && (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_MEAN))) {
         errorcode = OSPPMsgNumToElement(OSPPStatsGetOneWayMean(ospvStats),
@@ -626,6 +670,25 @@ int OSPPStatsRoundTripToElement(
     if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasRoundTrip(ospvStats, OSPC_SVALUE_MINIMUM))) {
         errorcode = OSPPMsgNumToElement(OSPPStatsGetRoundTripMinimum(ospvStats),
             OSPPMsgElemGetName(OSPC_MELEM_MINIMUM),
+            &elem);
+
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+            if (attr == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
+                OSPPXMLElemAddAttr(elem, attr);
+                attr = OSPC_OSNULL;
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* Maximum */
+    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasRoundTrip(ospvStats, OSPC_SVALUE_MAXIMUM))) {
+        errorcode = OSPPMsgNumToElement(OSPPStatsGetRoundTripMaximum(ospvStats),
+            OSPPMsgElemGetName(OSPC_MELEM_MAXIMUM),
             &elem);
 
         if (errorcode == OSPC_ERR_NO_ERROR) {

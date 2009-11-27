@@ -147,11 +147,13 @@ extern "C" {
 
     unsigned OSPPStatsGetOneWaySamples(OSPT_STATS *);
     unsigned OSPPStatsGetOneWayMinimum(OSPT_STATS *);
+    unsigned OSPPStatsGetOneWayMaximum(OSPT_STATS *);
     unsigned OSPPStatsGetOneWayMean(OSPT_STATS *);
     float OSPPStatsGetOneWayVariance(OSPT_STATS *);
 
     unsigned OSPPStatsGetRoundTripSamples(OSPT_STATS *);
     unsigned OSPPStatsGetRoundTripMinimum(OSPT_STATS *);
+    unsigned OSPPStatsGetRoundTripMaximum(OSPT_STATS *);
     unsigned OSPPStatsGetRoundTripMean(OSPT_STATS *);
     float OSPPStatsGetRoundTripVariance(OSPT_STATS *);
 
