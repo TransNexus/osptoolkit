@@ -485,6 +485,7 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
  * Reports the destination Network Id as returned in
  * either the (1) AuthRsp or the (2) Token
  * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
+ * TODO: This function is deprecated and will be removed from the next major release (3.6) because of without buffer size check.
  */
 int OSPPTransactionGetDestNetworkId(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
@@ -554,6 +555,97 @@ int OSPPTransactionGetDestNetworkId(
         } else {
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
             OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");
+        }
+    }
+
+    return errorcode;
+}
+
+/*
+ * OSPPTransactionGetDestinationNetworkId() :
+ * Reports the destination Network Id as returned in
+ * either the (1) AuthRsp or the (2) Token
+ * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
+ * TODO: This function is used to replace OSPPTransactionGetDestNetworkId.
+ */
+int OSPPTransactionGetDestinationNetworkId(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvSizeOfNetworkId,   /* In - Max size of network ID */
+    char *ospvNetworkId)            /* In - network specific information */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo = OSPC_OSNULL;
+    const char *destval = NULL;
+    const char *nid;
+    OSPTBOOL found;
+
+    if (ospvSizeOfNetworkId == 0) {
+        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy network ID.");
+    } else {
+        ospvNetworkId[0] = '\0';
+
+        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errorcode)) != OSPC_OSNULL) {
+            if (trans->AuthReq != OSPC_OSNULL) {
+                /* We are the source. Get the information from the destination structure. */
+                dest = trans->CurrentDest;
+                if (trans->State == OSPC_GET_DEST_SUCCESS) {
+                    if (dest == (OSPT_DEST *)NULL) {
+                        errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                    } else {
+                        if (OSPPDestHasNetworkAddr(dest)) {
+                            nid = OSPPDestGetNetworkAddr(dest);
+                            if (ospvSizeOfNetworkId > OSPM_STRLEN(nid)) {
+                                OSPM_STRNCPY(ospvNetworkId, nid, ospvSizeOfNetworkId);
+                            } else {
+                                errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                                OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy network ID.");
+                            }
+                        } else {
+                            errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
+                            OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                        }
+                    }
+                } else {
+                    errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                }
+            } else if (trans->AuthInd != OSPC_OSNULL) {
+                /* We are the destination. Get the information from the AuthInd structure. */
+                found = OSPC_FALSE;
+                altinfo = (OSPT_ALTINFO *)OSPPAuthIndFirstDestinationAlt(trans->AuthInd);
+                while (altinfo != OSPC_OSNULL) {
+                    if (altinfo->ospmAltInfoType == OSPC_ALTINFO_NETWORK) {
+                        found = OSPC_TRUE;
+                        destval = OSPPAuthIndGetDestinationAltValue(altinfo);
+                        if (destval != NULL) {
+                            if (ospvSizeOfNetworkId > OSPM_STRLEN(destval)) {
+                                OSPM_STRNCPY(ospvNetworkId, destval, ospvSizeOfNetworkId);
+                            } else {
+                                errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                                OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy network ID.");
+                            }
+                        } else {
+                            errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
+                            OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                        }
+                        break;
+                    } else {
+                        altinfo = (OSPT_ALTINFO *)OSPPAuthIndNextDestinationAlt(trans->AuthInd, altinfo);
+                    }
+                }
+
+                if (found == OSPC_FALSE) {
+                    errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
+                    OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                }
+            } else {
+                errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");
+            }
         }
     }
 
@@ -4129,6 +4221,7 @@ int OSPPTransactionIndicateCapabilities(
  *   ospvTransaction: handle of the transaction object.
  *   ospvRoutingNum: the routing number specific information to be reported to the server.
  * returns OSPC_ERR_NO_ERROR if successful, else error code.
+ * TODO: This function is deprecated and will be removed from the next major release (3.6).
  */
 int OSPPTransactionSetRoutingNumber(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
@@ -4728,6 +4821,7 @@ int OSPPTransactionSetICPIF(
  * OSPPTransactionGetNumberPortability() :
  * Reports number portability parameters returned in AuthRsp
  * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
+ * TODO: This function is deprecated and will be removed from the next major release (3.6) because of without buffer size check.
  */
 int OSPPTransactionGetNumberPortability(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
@@ -4778,6 +4872,109 @@ int OSPPTransactionGetNumberPortability(
                 OSPM_STRCPY(ospvNPRn, dest->ospmNPRn);
                 OSPM_STRCPY(ospvNPCic, dest->ospmNPCic);
                 *ospvNPNpdi = dest->ospmNPNpdi;
+            }
+        } else {
+            errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");
+        }
+    }
+
+    return errorcode;
+}
+
+/*
+ * OSPPTransactionGetNumberPortabilityParameters() :
+ * Reports number portability parameters returned in AuthRsp
+ * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
+ * TODO: This function is used to replace OSPPTransactionGetNumberPortibility.
+ */
+int OSPPTransactionGetNumberPortabilityParameters(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvSizeOfNPRn,        /* In - Max size of NPRn */
+    char *ospvNPRn,                 /* Out - routing number */
+    unsigned ospvSizeOfNPCic,       /* In - Max size of NPCic */
+    char *ospvNPCic,                /* Out - carrier identification code */
+    int *ospvNPNpdi)                /* Out - npdi */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    if (ospvSizeOfNPRn != 0) {
+        ospvNPRn[0] = '\0';
+    }
+    if (ospvSizeOfNPCic != 0) {
+        ospvNPCic[0] = '\0';
+    }
+    *ospvNPNpdi = OSPC_FALSE;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    if (trans != (OSPTTRANS *)OSPC_OSNULL) {
+        if (trans->AuthReq != OSPC_OSNULL) {
+            /*
+             * We are the source.
+             * Get the information from the destination
+             * structure.
+             */
+            if (trans->State == OSPC_GET_DEST_SUCCESS) {
+                dest = trans->CurrentDest;
+                if (dest == (OSPT_DEST *)OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                } else {
+                    if (ospvSizeOfNPRn != 0) {
+                        if (ospvSizeOfNPRn > OSPM_STRLEN(dest->ospmNPRn)) {
+                            OSPM_STRNCPY(ospvNPRn, dest->ospmNPRn, ospvSizeOfNPRn);
+                        } else {
+                            errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy NPRn.");
+                        }
+                    }
+                    if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvSizeOfNPCic != 0)) {
+                        if (ospvSizeOfNPCic > OSPM_STRLEN(dest->ospmNPCic)) {
+                            OSPM_STRNCPY(ospvNPCic, dest->ospmNPCic, ospvSizeOfNPCic);
+                        } else {
+                            errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy NPCic.");
+                        }
+                    }
+                    if (errorcode == OSPC_ERR_NO_ERROR) {
+                        *ospvNPNpdi = dest->ospmNPNpdi;
+                    }
+                }
+            } else {
+                errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            }
+        } else if (trans->AuthInd != OSPC_OSNULL) {
+            /*
+             * We are the destination.
+             * Get the information from the AuthInd structure.
+             */
+            dest = trans->AuthInd->ospmAuthIndDest;
+            if (dest == (OSPT_DEST *)OSPC_OSNULL) {
+                errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+            } else {
+                if (ospvSizeOfNPRn != 0) {
+                    if (ospvSizeOfNPRn > OSPM_STRLEN(dest->ospmNPRn)) {
+                        OSPM_STRNCPY(ospvNPRn, dest->ospmNPRn, ospvSizeOfNPRn);
+                    } else {
+                        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy NPRn.");
+                    }
+                }
+                if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvSizeOfNPCic != 0)) {
+                    if (ospvSizeOfNPCic > OSPM_STRLEN(dest->ospmNPCic)) {
+                        OSPM_STRNCPY(ospvNPCic, dest->ospmNPCic, ospvSizeOfNPCic);
+                    } else {
+                        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy NPCic.");
+                    }
+                }
+                if (errorcode == OSPC_ERR_NO_ERROR) {
+                    *ospvNPNpdi = dest->ospmNPNpdi;
+                }
             }
         } else {
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;

@@ -92,8 +92,8 @@ extern "C" {
         const char *ospvSourceDevice,                                           /* In - optional */
         const char *ospvDestination,                                            /* In - optional */
         const char *ospvDestinationDevice);                                     /* In - optional */
-    int OSPPTransactionGetDestNetworkId(OSPTTRANHANDLE ospvTransaction,         /* In - Transaction handle */
-        char *ospvNetworkId);
+    int OSPPTransactionGetDestNetworkId(OSPTTRANHANDLE, char *); /* TODO: is deprecated, will be removed from 3.6 */
+    int OSPPTransactionGetDestinationNetworkId(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionSetServiceAndPricingInfo(OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
         OSPE_SERVICE ospvServiceType,                                           /* In- type of service, 0-voice, 1-data */
         OSPT_PRICING_INFO *ospvPricingInfo[]);                                  /* In- Pricing Info */
@@ -118,7 +118,8 @@ extern "C" {
     int OSPPTransactionSetMOSCQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
     int OSPPTransactionSetMOSLQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
     int OSPPTransactionSetICPIF(OSPTTRANHANDLE, OSPE_STATS_FLOW, int);
-    int OSPPTransactionGetNumberPortability(OSPTTRANHANDLE ospvTransaction, char *, char *, int *);
+    int OSPPTransactionGetNumberPortability(OSPTTRANHANDLE ospvTransaction, char *, char *, int *);  /* TODO: is deprecated, will be removed from 3.6 */
+    int OSPPTransactionGetNumberPortabilityParameters(OSPTTRANHANDLE ospvTransaction, unsigned, char *, unsigned, char *, int *);
     int OSPPTransactionSetRoundTripDelay(OSPTTRANHANDLE, int, int, int, int, float);
 
 #ifdef __cplusplus

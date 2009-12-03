@@ -2003,7 +2003,7 @@ int testGetNumberPortability()
     char cic[1024];
     int npdi;
 
-    errorcode = OSPPTransactionGetNumberPortability(OSPVTransactionHandle, rn, cic, &npdi);
+    errorcode = OSPPTransactionGetNumberPortabilityParameters(OSPVTransactionHandle, sizeof(rn), rn, sizeof(cic), cic, &npdi);
     printf("rn = '%s'\n", rn);
     printf("cic = '%s'\n", cic);
     printf("npdi = %d\n", npdi);
