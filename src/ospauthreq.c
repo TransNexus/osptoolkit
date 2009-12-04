@@ -1028,7 +1028,7 @@ unsigned OSPPNPRnToElement(
         if (*ospvElem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_ROUTINGNUM));
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_NPRN));
             if (attr == OSPC_OSNULL) {
                 OSPPXMLElemDelete(ospvElem);
                 ospvErrCode = OSPC_ERR_XML_NO_ATTR;
@@ -1088,7 +1088,7 @@ unsigned OSPPNPCicToElement(
         if (*ospvElem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_CIC));
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_NPCIC));
             if (attr == OSPC_OSNULL) {
                 OSPPXMLElemDelete(ospvElem);
                 ospvErrCode = OSPC_ERR_XML_NO_ATTR;

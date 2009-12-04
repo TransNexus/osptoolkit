@@ -120,6 +120,7 @@ extern "C" {
     int OSPPTransactionSetICPIF(OSPTTRANHANDLE, OSPE_STATS_FLOW, int);
     int OSPPTransactionGetNumberPortability(OSPTTRANHANDLE ospvTransaction, char *, char *, int *);  /* TODO: is deprecated, will be removed from 3.6 */
     int OSPPTransactionGetNumberPortabilityParameters(OSPTTRANHANDLE ospvTransaction, unsigned, char *, unsigned, char *, int *);
+    int OSPPTransactionGetServiceProviderId(OSPTTRANHANDLE ospvTransaction, unsigned, char *);
     int OSPPTransactionSetRoundTripDelay(OSPTTRANHANDLE, int, int, int, int, float);
 
 #ifdef __cplusplus

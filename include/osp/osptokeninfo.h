@@ -45,7 +45,7 @@ typedef struct {
     OSPTBOOL ospmTokenInfoHasLookAheadInfo;
     OSPTTOKENLOOKAHEADINFO ospmTokenLookAheadInfo;
     OSPTBOOL ospmTokenInfoHasDestNetworkId;
-    char dstNetworkId[OSPC_SIZE_E164NUM];
+    char dstNetworkId[OSPC_SIZE_NORID];
 } OSPTTOKENINFO;
 
 /* Function Prototypes */

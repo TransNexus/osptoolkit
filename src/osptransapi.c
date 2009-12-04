@@ -590,24 +590,21 @@ int OSPPTransactionGetDestinationNetworkId(
         if ((trans = OSPPTransactionGetContext(ospvTransaction, &errorcode)) != OSPC_OSNULL) {
             if (trans->AuthReq != OSPC_OSNULL) {
                 /* We are the source. Get the information from the destination structure. */
-                dest = trans->CurrentDest;
                 if (trans->State == OSPC_GET_DEST_SUCCESS) {
-                    if (dest == (OSPT_DEST *)NULL) {
+                    if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
                         errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
                         OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
-                    } else {
-                        if (OSPPDestHasNetworkAddr(dest)) {
-                            nid = OSPPDestGetNetworkAddr(dest);
-                            if (ospvSizeOfNetworkId > OSPM_STRLEN(nid)) {
-                                OSPM_STRNCPY(ospvNetworkId, nid, ospvSizeOfNetworkId);
-                            } else {
-                                errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                                OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy network ID.");
-                            }
+                    } else if (OSPPDestHasNetworkAddr(dest)) {
+                        nid = OSPPDestGetNetworkAddr(dest);
+                        if (ospvSizeOfNetworkId > OSPM_STRLEN(nid)) {
+                            OSPM_STRNCPY(ospvNetworkId, nid, ospvSizeOfNetworkId);
                         } else {
-                            errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                            OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                            errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy network ID.");
                         }
+                    } else {
+                        errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
+                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
                     }
                 } else {
                     errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
@@ -4908,17 +4905,12 @@ int OSPPTransactionGetNumberPortabilityParameters(
     }
     *ospvNPNpdi = OSPC_FALSE;
 
-    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-    if (trans != (OSPTTRANS *)OSPC_OSNULL) {
+    
+    if ((trans = OSPPTransactionGetContext(ospvTransaction, &errorcode)) != OSPC_OSNULL) {
         if (trans->AuthReq != OSPC_OSNULL) {
-            /*
-             * We are the source.
-             * Get the information from the destination
-             * structure.
-             */
+            /* We are the source.  Get the information from the destination structure. */
             if (trans->State == OSPC_GET_DEST_SUCCESS) {
-                dest = trans->CurrentDest;
-                if (dest == (OSPT_DEST *)OSPC_OSNULL) {
+                if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
                     errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
                     OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
                 } else {
@@ -4947,12 +4939,8 @@ int OSPPTransactionGetNumberPortabilityParameters(
                 OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
             }
         } else if (trans->AuthInd != OSPC_OSNULL) {
-            /*
-             * We are the destination.
-             * Get the information from the AuthInd structure.
-             */
-            dest = trans->AuthInd->ospmAuthIndDest;
-            if (dest == (OSPT_DEST *)OSPC_OSNULL) {
+            /* We are the destination.  Get the information from the AuthInd structure. */
+            if ((dest = trans->AuthInd->ospmAuthIndDest) == OSPC_OSNULL) {
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
                 OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
             } else {
@@ -4979,6 +4967,63 @@ int OSPPTransactionGetNumberPortabilityParameters(
         } else {
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
             OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");
+        }
+    }
+
+    return errorcode;
+}
+
+/*
+ * OSPPTransactionGetServiceProviderId() :
+ * Reports SPID returned in AuthRsp
+ * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
+ */
+int OSPPTransactionGetServiceProviderId(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvSizeOfSpid,        /* In - Max size of SPID */
+    char *ospvSpid)                 /* Out - Service provider ID */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    if (ospvSizeOfSpid == 0) {
+        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy SPID.");
+    } else {
+        ospvSpid[0] = '\0';
+        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errorcode)) != OSPC_OSNULL) {
+            if (trans->AuthReq != OSPC_OSNULL) {
+                /* We are the source.  Get the information from the destination structure. */
+                if (trans->State == OSPC_GET_DEST_SUCCESS) {
+                    if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
+                        errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                    } else if (ospvSizeOfSpid > OSPM_STRLEN(dest->ospmNPSpid)) {
+                        OSPM_STRNCPY(ospvSpid, dest->ospmNPSpid, ospvSizeOfSpid);
+                    } else {
+                        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy SPID.");
+                    }
+                } else {
+                    errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                }
+            } else if (trans->AuthInd != OSPC_OSNULL) {
+                /* We are the destination.  Get the information from the AuthInd structure. */
+                if ((dest = trans->AuthInd->ospmAuthIndDest) == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                } else if (ospvSizeOfSpid > OSPM_STRLEN(dest->ospmNPSpid)) {
+                    OSPM_STRNCPY(ospvSpid, dest->ospmNPSpid, ospvSizeOfSpid);
+                } else {
+                    errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                    OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy NPRn.");
+                }
+            } else {
+                errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");
+            }
         }
     }
 

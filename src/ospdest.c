@@ -250,7 +250,7 @@ void OSPPDestSetNetworkAddr(    /* nothing returned */
 {
     if (ospvDest != OSPC_OSNULL) {
         if (ospvAddr != OSPC_OSNULL) {
-            OSPM_MEMCPY(ospvDest->ospmDestNetworkId, ospvAddr, tr_min(OSPC_NETWORKIDSIZE, OSPM_STRLEN(ospvAddr) + 1));
+            OSPM_MEMCPY(ospvDest->ospmDestNetworkId, ospvAddr, tr_min(OSPC_SIZE_NORID, OSPM_STRLEN(ospvAddr) + 1));
         }
     }
 }
@@ -920,9 +920,9 @@ void OSPPDestInfoFromElement(
         type = OSPPXMLAttrGetValue(attr);
         if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_E164)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmDestNumber, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmDestNumber) - 1);
-        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_ROUTINGNUM)) == 0) {
+        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_NPRN)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmNPRn, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPRn) - 1);
-        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_CIC)) == 0) {
+        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_NPCIC)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmNPCic, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPCic) - 1);
         } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_NPDI)) == 0) {
             if (OSPM_STRCASECMP(OSPPXMLElemGetValue(ospvElem), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE)) == 0) {
@@ -930,6 +930,8 @@ void OSPPDestInfoFromElement(
             } else {
                 ospvDest->ospmNPNpdi = OSPC_FALSE;
             }
+        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_SPID)) == 0) {
+            OSPM_STRNCPY(ospvDest->ospmNPSpid, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPSpid) - 1);
         }
     }
 }

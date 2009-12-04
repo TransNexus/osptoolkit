@@ -1999,14 +1999,25 @@ int testStatsRoundTrip()
 int testGetNumberPortability()
 {
     int errorcode = 0;
-    char rn[1024];
-    char cic[1024];
+    char rn[OSPC_SIZE_E164NUM];
+    char cic[OSPC_SIZE_NORID];
     int npdi;
 
     errorcode = OSPPTransactionGetNumberPortabilityParameters(OSPVTransactionHandle, sizeof(rn), rn, sizeof(cic), cic, &npdi);
     printf("rn = '%s'\n", rn);
     printf("cic = '%s'\n", cic);
     printf("npdi = %d\n", npdi);
+
+    return errorcode;
+}
+
+int testGetServiceProvider()
+{
+    int errorcode = 0;
+    char spid[OSPC_SIZE_NORID];
+
+    errorcode = OSPPTransactionGetServiceProviderId(OSPVTransactionHandle, sizeof(spid), spid);
+    printf("spid = '%s'\n", spid);
 
     return errorcode;
 }
@@ -2309,8 +2320,11 @@ int testAPI(int apinumber)
     case 239:
         errorcode = testStatsRoundTrip();
         break;
-    case 500:
+    case 300:
         errorcode = testGetNumberPortability();
+        break;
+    case 301:
+        errorcode = testGetServiceProvider();
         break;
     default:
         errorcode = -1;
@@ -2416,7 +2430,7 @@ int testMenu()
         printf("234) Set Packets                      235) Set R-Factor\n");
         printf("236) Set MOS-CQ                       237) Set MOS-LQ\n");
         printf("238) Set ICPIF                        239) Set Round Trip Delay\n");
-        printf("500) Get NP parameters\n");
+        printf("300) Get NP parameters                301) Get SPID\n");
         printf("---------------------------------------------------------------------\n");
         printf("Enter function number or 'q' to quit => ");
     }

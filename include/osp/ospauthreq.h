@@ -37,7 +37,7 @@ typedef struct {
     char ospmAuthReqSourceNumber[OSPC_SIZE_E164NUM];
     char ospmAuthReqDestNumber[OSPC_SIZE_E164NUM];
     char ospmAuthReqNPRn[OSPC_SIZE_E164NUM];
-    char ospmAuthReqNPCic[OSPC_SIZE_E164NUM];
+    char ospmAuthReqNPCic[OSPC_SIZE_NORID];
     int ospmAuthReqNPNpdi;
     char ospmAuthReqDiversionSrcInfo[OSPC_SIZE_E164NUM];
     char ospmAuthReqDiversionDevInfo[OSPC_SIZE_SIGNALADDR];

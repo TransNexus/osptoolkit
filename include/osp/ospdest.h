@@ -69,8 +69,6 @@ typedef enum {
 
 #define DEFAULT_GETNEXTDEST_NO_ERROR    99999
 
-#define OSPC_NETWORKIDSIZE  OSPC_SIZE_E164NUM
-
 typedef struct {
     OSPTLISTLINK ospmDestLink;
     char ospmDestNumber[OSPC_SIZE_E164NUM];
@@ -89,11 +87,12 @@ typedef struct {
     OSPT_TERM_CAUSE ospmDestTermCause;
     OSPE_DEST_PROTOCOL ospmDestProtocol;
     OSPE_DEST_OSPENABLED ospmDestOSPVersion;
-    char ospmDestNetworkId[OSPC_NETWORKIDSIZE];
+    char ospmDestNetworkId[OSPC_SIZE_NORID];
     unsigned ospmDestDestinationCount;
     char ospmNPRn[OSPC_SIZE_E164NUM];
-    char ospmNPCic[OSPC_SIZE_E164NUM];
+    char ospmNPCic[OSPC_SIZE_NORID];
     int ospmNPNpdi;
+    char ospmNPSpid[OSPC_SIZE_NORID];
 } OSPT_DEST;
 
 /* Function Prototypes */
