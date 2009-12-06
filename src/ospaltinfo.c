@@ -49,6 +49,7 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_NPCIC,           "cic" },
     { OSPC_ALTINFO_NPDI,            "npdi" },
     { OSPC_ALTINFO_SPID,            "spid" },
+    { OSPC_ALTINFO_OCN,             "ocn" },
     /* For other attributes */
     { OSPC_ALTINFO_TRUE,            "true" },
     { OSPC_ALTINFO_FALSE,           "false" },

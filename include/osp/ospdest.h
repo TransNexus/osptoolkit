@@ -93,6 +93,7 @@ typedef struct {
     char ospmNPCic[OSPC_SIZE_NORID];
     int ospmNPNpdi;
     char ospmNPSpid[OSPC_SIZE_NORID];
+    char ospmNPOcn[OSPC_SIZE_NORID];
 } OSPT_DEST;
 
 /* Function Prototypes */

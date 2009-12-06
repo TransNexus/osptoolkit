@@ -932,6 +932,8 @@ void OSPPDestInfoFromElement(
             }
         } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_SPID)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmNPSpid, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPSpid) - 1);
+        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_OCN)) == 0) {
+            OSPM_STRNCPY(ospvDest->ospmNPOcn, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPOcn) - 1);
         }
     }
 }

@@ -2015,9 +2015,12 @@ int testGetServiceProvider()
 {
     int errorcode = 0;
     char spid[OSPC_SIZE_NORID];
+    char ocn[OSPC_SIZE_NORID];
 
     errorcode = OSPPTransactionGetServiceProviderId(OSPVTransactionHandle, sizeof(spid), spid);
+    errorcode = OSPPTransactionGetOperatingCompanyNumber(OSPVTransactionHandle, sizeof(ocn), ocn);
     printf("spid = '%s'\n", spid);
+    printf("ocn = '%s'\n", ocn);
 
     return errorcode;
 }
@@ -2430,7 +2433,7 @@ int testMenu()
         printf("234) Set Packets                      235) Set R-Factor\n");
         printf("236) Set MOS-CQ                       237) Set MOS-LQ\n");
         printf("238) Set ICPIF                        239) Set Round Trip Delay\n");
-        printf("300) Get NP parameters                301) Get SPID\n");
+        printf("300) Get NP parameters                301) Get SPID & OCN\n");
         printf("---------------------------------------------------------------------\n");
         printf("Enter function number or 'q' to quit => ");
     }

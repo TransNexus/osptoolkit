@@ -4905,7 +4905,7 @@ int OSPPTransactionGetNumberPortabilityParameters(
     }
     *ospvNPNpdi = OSPC_FALSE;
 
-    
+
     if ((trans = OSPPTransactionGetContext(ospvTransaction, &errorcode)) != OSPC_OSNULL) {
         if (trans->AuthReq != OSPC_OSNULL) {
             /* We are the source.  Get the information from the destination structure. */
@@ -5018,7 +5018,64 @@ int OSPPTransactionGetServiceProviderId(
                     OSPM_STRNCPY(ospvSpid, dest->ospmNPSpid, ospvSizeOfSpid);
                 } else {
                     errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                    OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy NPRn.");
+                    OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy SPID.");
+                }
+            } else {
+                errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");
+            }
+        }
+    }
+
+    return errorcode;
+}
+
+/*
+ * OSPPTransactionGetOperatingCompanyNumber() :
+ * Reports OCN returned in AuthRsp
+ * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
+ */
+int OSPPTransactionGetOperatingCompanyNumber(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvSizeOfOcn,         /* In - Max size of OCN */
+    char *ospvOcn)                  /* Out - Operating Company Number */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    if (ospvSizeOfOcn == 0) {
+        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy OCN.");
+    } else {
+        ospvOcn[0] = '\0';
+        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errorcode)) != OSPC_OSNULL) {
+            if (trans->AuthReq != OSPC_OSNULL) {
+                /* We are the source.  Get the information from the destination structure. */
+                if (trans->State == OSPC_GET_DEST_SUCCESS) {
+                    if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
+                        errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                    } else if (ospvSizeOfOcn > OSPM_STRLEN(dest->ospmNPOcn)) {
+                        OSPM_STRNCPY(ospvOcn, dest->ospmNPOcn, ospvSizeOfOcn);
+                    } else {
+                        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy OCN.");
+                    }
+                } else {
+                    errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                }
+            } else if (trans->AuthInd != OSPC_OSNULL) {
+                /* We are the destination.  Get the information from the AuthInd structure. */
+                if ((dest = trans->AuthInd->ospmAuthIndDest) == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                } else if (ospvSizeOfOcn > OSPM_STRLEN(dest->ospmNPOcn)) {
+                    OSPM_STRNCPY(ospvOcn, dest->ospmNPOcn, ospvSizeOfOcn);
+                } else {
+                    errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                    OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy OCN.");
                 }
             } else {
                 errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;

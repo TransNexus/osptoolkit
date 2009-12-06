@@ -121,6 +121,7 @@ extern "C" {
     int OSPPTransactionGetNumberPortability(OSPTTRANHANDLE ospvTransaction, char *, char *, int *);  /* TODO: is deprecated, will be removed from 3.6 */
     int OSPPTransactionGetNumberPortabilityParameters(OSPTTRANHANDLE ospvTransaction, unsigned, char *, unsigned, char *, int *);
     int OSPPTransactionGetServiceProviderId(OSPTTRANHANDLE ospvTransaction, unsigned, char *);
+    int OSPPTransactionGetOperatingCompanyNumber(OSPTTRANHANDLE ospvTransaction, unsigned, char *);
     int OSPPTransactionSetRoundTripDelay(OSPTTRANHANDLE, int, int, int, int, float);
 
 #ifdef __cplusplus

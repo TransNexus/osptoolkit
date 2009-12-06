@@ -55,6 +55,7 @@ typedef enum {
     OSPC_ALTINFO_NPCIC,
     OSPC_ALTINFO_NPDI,
     OSPC_ALTINFO_SPID,
+    OSPC_ALTINFO_OCN,
     /* For other attributes */
     OSPC_ALTINFO_TRUE,
     OSPC_ALTINFO_FALSE,
