@@ -95,8 +95,10 @@ extern "C" {
     int OSPPTransactionGetDestNetworkId(OSPTTRANHANDLE, char *); /* TODO: is deprecated, will be removed from 3.6 */
     int OSPPTransactionGetDestinationNetworkId(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionSetServiceAndPricingInfo(OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-        OSPE_SERVICE ospvServiceType,                                           /* In- type of service, 0-voice, 1-data */
-        OSPT_PRICING_INFO *ospvPricingInfo[]);                                  /* In- Pricing Info */
+        OSPE_SERVICE ospvServiceType,                                           /* In - Service type */
+        OSPT_PRICING_INFO *ospvPricingInfo[]);                                  /* In - Pricing Info */ /* TODO: is deprecated, will be removed from 3.6 */
+    int OSPPTransactionSetServiceType(OSPTTRANHANDLE, OSPE_SERVICE);
+    int OSPPTransactionSetPricingInfo(OSPTTRANHANDLE, OSPT_PRICING_INFO **);
     int OSPPTransactionSetRoutingNumber(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetNumberPortability(OSPTTRANHANDLE, const char *, const char *, int);
     int OSPPTransactionSetTermCause(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned, const char *);

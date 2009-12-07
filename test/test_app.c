@@ -675,7 +675,7 @@ int testOSPPProviderGetNumberOfServicePoints()
     return errorcode;
 }
 
-int testOSPPTransactionSetServiceAndPricingInfo()
+int testOSPPTransactionSetPricingInfo()
 {
     int errorcode = 0;
     OSPT_PRICING_INFO PricingInfo1;
@@ -696,8 +696,7 @@ int testOSPPTransactionSetServiceAndPricingInfo()
     ospvPricingInfo[1] = &PricingInfo2;
     ospvPricingInfo[2] = NULL;
 
-    errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_SERVICE_VOICE,    /* voice */
-        ospvPricingInfo);
+    errorcode = OSPPTransactionSetPricingInfo(OSPVTransactionHandle, ospvPricingInfo);
 
     return errorcode;
 }
@@ -1030,8 +1029,8 @@ int testBuildUsageFromScratch(int IsSource, int BuildNew)
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR && BuildNew) {
-        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_SERVICE_VOICE,    /* voice */
-            ospvPricingInfo);
+        errorcode = OSPPTransactionSetServiceType(OSPVTransactionHandle, OSPC_SERVICE_VOICE);
+        errorcode = OSPPTransactionSetPricingInfo(OSPVTransactionHandle, ospvPricingInfo);
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -1143,6 +1142,15 @@ int testSetConnectTime()
     return 0;
 }
 
+int testSetServiceType()
+{
+	int errorcode;
+
+    errorcode = OSPPTransactionSetServiceType(OSPVTransactionHandle, OSPC_SERVICE_NPQUERY);
+
+    return errorcode;
+}
+
 int testOSPPTransactionInitializeAtDevice(int IsSource)
 {
     int errorcode = 0;
@@ -1176,8 +1184,8 @@ int testOSPPTransactionInitializeAtDevice(int IsSource)
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_SERVICE_VOICE,    /* voice */
-            ospvPricingInfo);
+        errorcode = OSPPTransactionSetServiceType(OSPVTransactionHandle, OSPC_SERVICE_VOICE);
+        errorcode = OSPPTransactionSetPricingInfo(OSPVTransactionHandle, ospvPricingInfo);
     }
 
     tokensize = TOKEN_SZ;
@@ -2204,7 +2212,7 @@ int testAPI(int apinumber)
     case 54:
         errorcode = testSetCallId();
     case 55:
-        errorcode = testOSPPTransactionSetServiceAndPricingInfo();
+        errorcode = testOSPPTransactionSetPricingInfo();
         break;
     case 56:
         errorcode = testSetDuration();
@@ -2223,6 +2231,9 @@ int testAPI(int apinumber)
         break;
     case 61:
         errorcode = testSetConnectTime();
+        break;
+    case 62:
+        errorcode = testSetServiceType();
         break;
     case 100:
         printf("Enter the number of Providers to be created .. ");
@@ -2410,10 +2421,11 @@ int testMenu()
         printf("50) Set Calling Number                51) Set Called Number\n");
         printf("52) Get Calling Number                53) Get Called Number\n");
         printf("54) Set CallId to Empty for Token Validation\n");
-        printf("55) Set Pricing and Service Info\n");
+        printf("55) Set Pricing Info\n");
         printf("56) Set Duration                      57) Set TC Code\n");
         printf("58) Set Start Time                    59) Set End Time\n");
         printf("60) Set Alert Time                    61) Set Connect Time\n");
+        printf("62) Set Service Type\n");
         printf("---------------------------------------------------------------------\n");
         printf("Performance tests\n");
         printf("---------------------------------------------------------------------\n");

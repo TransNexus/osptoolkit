@@ -44,11 +44,12 @@
  * OSPPTransactionSetServiceAndPricingInfo
  * The API sets the Service Type and Pricing Information
  * in the transaction structure
+ * TODO: is deprecated, will be removed from 3.6
  */
 int OSPPTransactionSetServiceAndPricingInfo(
     OSPTTRANHANDLE ospvTransaction,         /* In - Transaction handle */
-    OSPE_SERVICE ospvServiceType,           /* In- type of service, 0-voice, 1-data */
-    OSPT_PRICING_INFO *ospvPricingInfo[])   /* In- Pricing Info */
+    OSPE_SERVICE ospvServiceType,           /* In - Service type */
+    OSPT_PRICING_INFO *ospvPricingInfo[])   /* In - Pricing Info */
 {
     int errorcode = OSPC_ERR_NO_ERROR, i;
     OSPTTRANS *trans = NULL;
@@ -64,20 +65,21 @@ int OSPPTransactionSetServiceAndPricingInfo(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /*
-         * Set the service type information
-         */
-        if ((ospvServiceType == OSPC_SERVICE_VOICE) || (ospvServiceType == OSPC_SERVICE_DATA)) {
+        /* Set the service type information */
+    	switch (ospvServiceType) {
+    	case OSPC_SERVICE_VOICE:
+    	case OSPC_SERVICE_DATA:
+    	case OSPC_SERVICE_NPQUERY:
             trans->HasServiceInfo = OSPC_TRUE;
             trans->ServiceType = ospvServiceType;
-        } else {
+            break;
+    	default:
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
             OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionSetServiceAndPricingInfo");
-        }
+            break;
+    	}
 
-        /*
-         * Set the pricing info
-         */
+        /* Set the pricing info */
         for (i = 0; i < MAX_PRICING_INFO_ALLOWED; i++) {
             if ((errorcode == OSPC_ERR_NO_ERROR) && ospvPricingInfo[i] &&
                 ospvPricingInfo[i]->unit && ospvPricingInfo[i]->currency &&
@@ -87,6 +89,90 @@ int OSPPTransactionSetServiceAndPricingInfo(
                 trans->PricingInfo[i].increment = ospvPricingInfo[i]->increment;
                 OSPM_STRCPY(trans->PricingInfo[i].unit, (const char *)ospvPricingInfo[i]->unit);
                 OSPM_STRCPY(trans->PricingInfo[i].currency, (const char *)ospvPricingInfo[i]->currency);
+            } else {
+                trans->NumOfPricingInfoElements = i;
+                break;
+            }
+        }
+    }
+
+    return errorcode;
+}
+
+/*
+ * OSPPTransactionSetServiceType
+ * The API sets the Service Type in the transaction structure
+ */
+int OSPPTransactionSetServiceType(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_SERVICE ospvType)          /* In - Service Type */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = NULL;
+    OSPE_TRANS_STATE state;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        OSPPTransactionGetState(trans, &state);
+        if (state != OSPC_TRANSNEW) {
+            errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+        }
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        /* Set the service type information */
+    	switch (ospvType) {
+    	case OSPC_SERVICE_VOICE:
+    	case OSPC_SERVICE_DATA:
+    	case OSPC_SERVICE_NPQUERY:
+            trans->HasServiceInfo = OSPC_TRUE;
+            trans->ServiceType = ospvType;
+            break;
+    	default:
+            errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionSetService");
+            break;
+    	}
+    }
+
+    return errorcode;
+}
+
+/*
+ * OSPPTransactionSetPricingInfo
+ * The API sets the Pricing Information in the transaction structure
+ */
+int OSPPTransactionSetPricingInfo(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPT_PRICING_INFO *ospvInfo[])  /* In - Pricing Info */
+{
+    int errorcode = OSPC_ERR_NO_ERROR, i;
+    OSPTTRANS *trans = NULL;
+    OSPE_TRANS_STATE state;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        OSPPTransactionGetState(trans, &state);
+        if (state != OSPC_TRANSNEW) {
+            errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+        }
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        /* Set the pricing info */
+        for (i = 0; i < MAX_PRICING_INFO_ALLOWED; i++) {
+            if ((errorcode == OSPC_ERR_NO_ERROR) && ospvInfo[i] &&
+                ospvInfo[i]->unit && ospvInfo[i]->currency &&
+                (OSPM_STRLEN(ospvInfo[i]->unit) < OSPC_UNITSIZE) &&
+                (OSPM_STRLEN(ospvInfo[i]->currency) < OSPC_CURRENCYSIZE))
+            {
+                trans->HasPricingInfo = OSPC_TRUE;
+                trans->PricingInfo[i].amount = ospvInfo[i]->amount;
+                trans->PricingInfo[i].increment = ospvInfo[i]->increment;
+                OSPM_STRCPY(trans->PricingInfo[i].unit, (const char *)ospvInfo[i]->unit);
+                OSPM_STRCPY(trans->PricingInfo[i].currency, (const char *)ospvInfo[i]->currency);
             } else {
                 trans->NumOfPricingInfoElements = i;
                 break;

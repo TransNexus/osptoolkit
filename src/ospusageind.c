@@ -1448,7 +1448,7 @@ int OSPPUsageIndToElement(      /* returns error code */
              * Add Pricing Info
              */
             if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (usage->ospmUsageIndHasPricingInfo == OSPC_TRUE)) {
-                ospvErrCode = OSPPAddPricingInfoToUsageElement(usage-> osmpUsageIndPricingInfo, &subelem);
+                ospvErrCode = OSPPPricingInfoToElement(usage-> osmpUsageIndPricingInfo, &subelem);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;
@@ -1459,7 +1459,7 @@ int OSPPUsageIndToElement(      /* returns error code */
              * Add Service Info
              */
             if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (usage->osmpUsageIndHasServiceInfo == OSPC_TRUE)) {
-                ospvErrCode = OSPPAddServiceTypeToUsageElement(usage->osmpUsageIndServiceType, &subelem);
+                ospvErrCode = OSPPServiceTypeToElement(usage->osmpUsageIndServiceType, &subelem);
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;

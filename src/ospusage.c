@@ -108,48 +108,6 @@ unsigned OSPPUsageFromElement(  /* returns error code */
 }
 
 /*
- * OSPPAddServiceTypeToUsageElement() - adds service info to an xml element
- */
-unsigned OSPPAddServiceTypeToUsageElement(
-    OSPE_SERVICE ServiceType,
-    OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
-{
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
-    OSPT_XML_ELEM *elem = OSPC_OSNULL;
-
-    if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-    }
-
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        /* create the parent element */
-        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICE), "");
-        if (*ospvElem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-        }
-    }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        if (ServiceType == OSPC_SERVICE_VOICE) {
-            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICETYPE), "voice");
-        } else {
-            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_SERVICETYPE), "data");
-        }
-        if (elem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
-        } else {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-        }
-    }
-
-    /* if for any reason we found an error - destroy any elements created */
-    if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
-        OSPPXMLElemDelete(ospvElem);
-    }
-
-    return ospvErrCode;
-}
-
-/*
  * OSPPAddPricingInfoToUsageElement() - adds pricing info to an xml element
  */
 unsigned OSPPAddPricingInfoToUsageElement(

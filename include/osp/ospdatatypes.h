@@ -176,8 +176,12 @@ typedef enum {
 } OSPE_NUMBER_FORMAT;
 
 typedef enum {
-    OSPC_SERVICE_VOICE = 0,
-    OSPC_SERVICE_DATA
+    OSPC_SERVICE_START = 0,
+    OSPC_SERVICE_VOICE = OSPC_SERVICE_START,
+    OSPC_SERVICE_DATA,
+    OSPC_SERVICE_NPQUERY,
+    /* Number of service types */
+    OSPC_SERVICE_NUMBER
 } OSPE_SERVICE;
 
 typedef enum {

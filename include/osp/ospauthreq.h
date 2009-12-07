@@ -99,6 +99,8 @@ extern "C" {
     OSPTBOOL OSPPAuthReqHasDiversion(OSPT_AUTH_REQ *);
     void OSPPAuthReqSetDiversion(OSPT_AUTH_REQ *, const char *, const char *);
     void OSPPAuthReqGetDiversion(OSPT_AUTH_REQ *, char **, char **);
+    unsigned OSPPServiceTypeToElement(OSPE_SERVICE, OSPT_XML_ELEM **);
+    unsigned OSPPPricingInfoToElement(OSPT_PRICING_INFO, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }
