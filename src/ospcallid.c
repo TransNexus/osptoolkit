@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospcallid.c - OSP call identifier functions
- */
+/* ospcallid.c - OSP call identifier functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"

@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospsocket.h - Prototypes for socket functions.
- */
-
+/* ospsocket.h - Prototypes for socket functions. */
 #ifndef _OSPSOCKET_H
 #define _OSPSOCKET_H
 
@@ -33,7 +30,6 @@
 #endif
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

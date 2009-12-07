@@ -20,9 +20,7 @@
 
 #include "osp/osp.h"
 
-/*
- * message info typedef
- */
+/* message info typedef */
 typedef struct {
     OSPTLISTLINK Link;
     unsigned char *RequestMsg;
@@ -40,11 +38,11 @@ typedef struct {
      * and does not alter current behavior.  However, when the flag is set to True
      * then the OSPPMsgInfoProcessResponse function should delete the structure instead of
      * signaling that the response is ready for processing.
-     * 
+     *
      * If IsNonBlocking is set to FALSE,only then should we wait for a response back
      * by calling the OSPPMsgInfoWaitForMsg function.
      * If IsNonBlocking is set to TRUE, then we should never wait for a response because
-     * in that case, OSPPMsgInfoProcessResponse function would delete the structure. 
+     * in that case, OSPPMsgInfoProcessResponse function would delete the structure.
      */
     int IsNonBlocking;
     OSPTBOOL HasBeenProcessed;
@@ -53,7 +51,6 @@ typedef struct {
 #define OSPC_MINFO_AUDITTYPE 0x01    /* bit 1 - Message type flag */
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

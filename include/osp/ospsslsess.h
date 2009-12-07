@@ -15,16 +15,11 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospsslsess.h - SSL Session definitions
- */
-
+/* ospsslsess.h - SSL Session definitions */
 #ifndef _OSPSSLSESS_H
 #define _OSPSSLSESS_H
 
-/*
- * SSL Session Id typedef
- */
+/* SSL Session Id typedef */
 typedef struct _OSPTSSLSESSIONID {
     OSPTLISTLINK Link;
     unsigned long Length;
@@ -35,9 +30,7 @@ typedef struct _OSPTSSLSESSIONID {
     short pad;
 } OSPTSSLSESSIONID;
 
-/*
- * SSL Session typedef
- */
+/* SSL Session typedef */
 typedef struct _OSPTSSLSESSION {
     OSPTLISTLINK Link;
     void *Context;

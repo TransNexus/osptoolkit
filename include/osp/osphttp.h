@@ -38,9 +38,7 @@
 #define OSPC_SOCK_CONNECTED_BIT     0x01
 #define OSPC_HTTP_AUDIT_TYPE        0x02
 
-/*
- * http connection typedef
- */
+/* http connection typedef */
 typedef struct _OSPTHTTP {
     OSPTLISTLINK Link;
     OSPTTHREADID ThreadId;
@@ -60,7 +58,6 @@ typedef struct _OSPTHTTP {
 } OSPTHTTP;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospreauthrsp.h - OSP reauthorisation response objects
- */
-
+/* ospreauthrsp.h - OSP reauthorisation response objects */
 #ifndef _OSPREAUTHRSP_H
 #define _OSPREAUTHRSP_H
 
@@ -42,7 +39,6 @@ typedef struct {
 } OSPTREAUTHRSP;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

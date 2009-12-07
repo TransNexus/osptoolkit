@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptnaudit.c - Functions for tnaudit element.
- */
+/* osptnaudit.c - Functions for tnaudit element. */
 
 #include "osp/osptnaudit.h"
 #include "osp/ospmsgelem.h"

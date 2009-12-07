@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospauthcnf.h - OSP authorisation confirmation objects
- */
-
+/* ospauthcnf.h - OSP authorisation confirmation objects */
 #ifndef _OSPAUTHCNF_H
 #define _OSPAUTHCNF_H
 
@@ -35,7 +32,6 @@ typedef struct {
 } OSPT_AUTH_CNF;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

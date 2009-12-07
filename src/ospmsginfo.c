@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmsginfo.c
- */
+/* ospmsginfo.c */
+
 #include "osp/osp.h"
 #include "osp/ospmsginfo.h"
 
@@ -86,8 +85,8 @@ void OSPPMsgInfoDelete(
 }
 
 void OSPPMsgInfoAssignRequestMsg(
-    OSPT_MSG_INFO *ospvMsgInfo, 
-    unsigned char *ospvRequestMsg, 
+    OSPT_MSG_INFO *ospvMsgInfo,
+    unsigned char *ospvRequestMsg,
     unsigned ospvRequestSz)
 {
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoAssignRequestMsg()\n"));
@@ -107,7 +106,7 @@ int OSPPMsgInfoProcessResponse(
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoProcessResponse()\n"));
 
     if (ospvMsgInfo->IsNonBlocking == OSPC_FALSE) {
-        /* 
+        /*
          * once signalled, acquire the mutex for the individual
          * transaction.
          */

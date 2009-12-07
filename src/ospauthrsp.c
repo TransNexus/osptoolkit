@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospauthrsp.c - OSP authorisation response functions
- */
+/* ospauthrsp.c - OSP authorisation response functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"

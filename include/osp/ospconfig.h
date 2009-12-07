@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospconfig.h - OSP configuration items
- */
-
+/* ospconfig.h - OSP configuration items */
 #ifndef _OSPCONFIG_H
 #define _OSPCONFIG_H
 

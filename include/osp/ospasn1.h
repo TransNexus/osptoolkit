@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospasn1.h - Constants and typedefs for ASN.1 
- */
-
+/* ospasn1.h - Constants and typedefs for ASN.1 */
 #ifndef _OSPASN1_H
 #define _OSPASN1_H
 
@@ -102,8 +99,8 @@
 #define     OSPC_ASN1_DATAREFID_PVTKEYINF_ATTRIBUTES        0x04
 #define         OSPC_ASN1_DATAREFID_PVTKEYINF_ATTRIBUTE     0x01
 
-/* 
- * These are defined for parsing a PKCS#10 certificate request. 
+/*
+ * These are defined for parsing a PKCS#10 certificate request.
  * A certificate request contains a CertificateRequestInfo structure
  * ( with the version, subject, public key, and optional attributes ) and
  * a signature.
@@ -117,22 +114,22 @@
 #define     OSPC_ASN1_DATAREFID_CERTREQ_SIGNATURE_ALGORITHM        0x02
 #define     OSPC_ASN1_DATAREFID_CERTREQ_SIGNATURE                  0x03
 
-/* 
+/*
  * The definition for a subjectPublicKeyInfo is separate from
  * that of those for the PKCS#10 certificate request and X.509 certificates.
  */
 #define OSPC_ASN1_DATAREFID_SUBJPUBKEYINFO  0x01
 
-/* 
- * NOTE: THE OSPEASN1PARSETABLEID enum list must stay in sync with 
- * ospgParseTableIndex[].  The enum values are the index into the 
+/*
+ * NOTE: THE OSPEASN1PARSETABLEID enum list must stay in sync with
+ * ospgParseTableIndex[].  The enum values are the index into the
  * ParseTableIndex for the parse table array.
  */
 
 typedef enum _OSPEASN1PARSETABLEID {
-    /* 
+    /*
      * DO NOT CHANGE THIS TABLE WITHOUT UPDATING THE POSITIONS OF
-     * THE PARSE TABLES IN ospgParseTableIndex 
+     * THE PARSE TABLES IN ospgParseTableIndex
      */
     OSPEPTID_NOTDEFINED = 0,
     OSPEPTID_CERTIFICATE,
@@ -179,9 +176,9 @@ typedef enum _OSPEASN1PARSETABLEID {
     OSPEPTID_PRIVATEKEYINFO,
     OSPEPTID_PRIVATEKEYINFO_ATTRIBUTES,
 
-    /* 
-     * These were added for parsing the certificate requests used for 
-     * enrolling devices; they represent the same entities described 
+    /*
+     * These were added for parsing the certificate requests used for
+     * enrolling devices; they represent the same entities described
      * in PKCS#10:
      */
     OSPEPTID_CERTREQ,
@@ -277,7 +274,7 @@ typedef enum _OSPEASN1DATAREFID {
     OSPEDRID_SIG_SGNDAT_SGNINF_DIGENCRYPTALG,
     OSPEDRID_SIG_SGNDAT_SGNINF_ENCRYPTEDDIGEST,
 
-    /* 
+    /*
      * These are defined for parsing certificate requests; all possible
      * elements of a certificate request ( with the exception of the possible
      * values of the optional attributes list, which is unknown at compile
@@ -300,12 +297,12 @@ typedef struct _OSPTASN1ELEMENTINFO {
     unsigned char Tag;              /* ASN1 Data Type Tag Number */
     unsigned char *Element;         /* Pointer to beginning of encoded data for this element. */
     unsigned int ElementLength;     /* Length of data pointed to by Element above */
-    /* 
-     * Space for element and possibly for children is allocated by this element 
-     * and must be deleted when this element is deleted (after child elements are 
-     * deleted of course) 
+    /*
+     * Space for element and possibly for children is allocated by this element
+     * and must be deleted when this element is deleted (after child elements are
+     * deleted of course)
      */
-    unsigned int ElementSpaceAllocated;    
+    unsigned int ElementSpaceAllocated;
     unsigned char *Content;        /* Pointer to encoded content data that defines this element */
     unsigned int ContentLength;    /* Length of data pointed to by  Content above */
     /* "child" element - points to this element's component elements - constructed elements only. */
@@ -322,7 +319,6 @@ typedef struct _OSPTASN1PARSERESULT {
     OSPTASN1ELEMENTINFO *ElementInfo;
 } OSPTASN1PARSERESULT;
 
-
 typedef struct _OSPASN1OBJECT {
     OSPTASN1ELEMENTINFO *ElementInfo;
     OSPTASN1PARSERESULT *ParseResults;
@@ -330,37 +326,37 @@ typedef struct _OSPASN1OBJECT {
 
 typedef struct _OSPTASN1PARSERULE {
     char *Name;
-    /* 
-     * ASN1 Type Tag that the current element must match.  If the Tag is 0xFF, then this rule is 
+    /*
+     * ASN1 Type Tag that the current element must match.  If the Tag is 0xFF, then this rule is
      * a content rule and directs the parser to a differnt parse table to continue parsing.
      */
     unsigned char Tag;
-    /* 
+    /*
      * Enum identifier the parse table that describes this elements contents.  Only used
-     * for elements whose Tag is 0xFF indicating that the element is constructed. 
+     * for elements whose Tag is 0xFF indicating that the element is constructed.
     */
     OSPEASN1PARSETABLEID ParseTableId;
 
     /* Reference for this rule data in the Result's table. */
     unsigned char DataReference;
-    /* 
+    /*
      * Minimum number of occurances of this item that are allowed. If the data element is
-     * optional, then Minimum occurances will be 0 
+     * optional, then Minimum occurances will be 0
      */
     unsigned int MinimumCount;
-    /* 
+    /*
      * Maximum number of occurances of this item that are allowed.  Usually 1, unless the
-     * element contains a list (SET/SET_OF). 
+     * element contains a list (SET/SET_OF).
      */
     unsigned int MaximumCount;
-    /* 
+    /*
      * Indicates that the value can have a default value.  The default value must be assigned by
-     * using app. 
+     * using app.
      */
     OSPTBOOL HasDefault;
-    /* 
+    /*
      * Tag number used with explicit and implicit tagging.  Used in body rules, not in the id
-     * rule (index 0). Passed to Parser to modify tag within new rule table. 
+     * rule (index 0). Passed to Parser to modify tag within new rule table.
      */
     unsigned char ClassTag;
 } OSPTASN1PARSERULE;
@@ -390,7 +386,7 @@ typedef struct _OSPTBITSTRING {
     OSPTASN1BUFFER *Buffer;
 } OSPTASN1BITSTRING;
 
-/* 
+/*
  * INTEGER
  *  The integer structure holds DER encoded big integers.
  *  Assumes base 256, two's complement encoding.  digits[0] contains the
@@ -402,7 +398,6 @@ typedef struct _OSPTASN1INTEGER {
     int *SmallValue;    /* Pointer to value if less than +|- 0x7fffffff */
 } OSPTASN1INTEGER;
 
-
 typedef enum {
     OSPC_ALGORITHM_NONE,
     OSPC_ALGORITHM_RSA_ENCRYPTION,
@@ -410,7 +405,6 @@ typedef enum {
 } OSPE_ALGORITHM;
 
 /* Function Prototypes */
-
 #ifdef  __cplusplus
 extern "C" {
 #endif
@@ -425,8 +419,8 @@ extern "C" {
     int OSPPASN1ElementCopyElementData(OSPTASN1ELEMENTINFO *ospvElementInfo, unsigned char **ospvData, unsigned int *ospvDataLength);
     int OSPPASN1SmallInt2UnsignedChar(unsigned ospvIntegerValue, unsigned ospvBase, unsigned char **ospvBuffer, unsigned *ospvBufferLength);
     int OSPPASN1SmallIntegerEncode(OSPTASN1OBJECT **ospvIntegerObject, unsigned ospvInteger, OSPEASN1DATAREFID ospvDataRefId);
-    int OSPPASN1ElementFormat(OSPTASN1ELEMENTINFO **ospvElement, unsigned char *ospvTag, unsigned char ospvTagFlags, unsigned ospvTagLength, 
-            unsigned char *ospvData, unsigned ospvDataLength); 
+    int OSPPASN1ElementFormat(OSPTASN1ELEMENTINFO **ospvElement, unsigned char *ospvTag, unsigned char ospvTagFlags, unsigned ospvTagLength,
+            unsigned char *ospvData, unsigned ospvDataLength);
     int OSPPASN1ObjectFormat(OSPTASN1OBJECT **ospvObject, OSPTASN1ELEMENTINFO *ospvElement, OSPEASN1DATAREFID ospvDataRefId);
     int OSPPASN1ObjectEncode(OSPTASN1OBJECT **ospvEncodedObject, unsigned char *ospvTag, unsigned ospvTagLength, unsigned char ospvTagFlags,
             unsigned char *ospvContent, unsigned ospvContentLength, OSPEASN1DATAREFID ospvDataRefId);
@@ -448,7 +442,7 @@ extern "C" {
     int PTPDataRefIdGetValue(OSPEASN1DATAREFID ospvDataRefId, unsigned char **ospvDataRefIdValue);
     int PTPDataRefAddRef(unsigned char ospvDataReference[OSPC_ASN1_DATAREF_MAXLENGTH], unsigned char ospvNewReference);
 
-    /* 
+    /*
      * If primitive can be a list (max >= 1), then all peers of this element should be the same element and should all be
      * added to the list. Add Parse Result assumes this and adds a result for the element passed, and then traverses the
      * element's "next" pointer to add entries for each of the elements it finds.  It returns when an element's
@@ -474,7 +468,7 @@ extern "C" {
     void OSPPASN1ElementParseDelete(OSPTASN1PARSERESULT **ospvParseResult);
     int PTPTableGet(OSPEASN1PARSETABLEID ospvParseTableId, OSPTASN1PARSETABLE *ospvParseTable[]);
     /* Updated to point to next rule */
-    int PTPTableGetRule(OSPEASN1PARSETABLEID ospvParseTableId, OSPTASN1PARSERULE **ospvParseRule, unsigned int *ospvRuleIndex);    
+    int PTPTableGetRule(OSPEASN1PARSETABLEID ospvParseTableId, OSPTASN1PARSERULE **ospvParseRule, unsigned int *ospvRuleIndex);
     int PTPRuleGetParseTableId(OSPTASN1PARSERULE *ospvParseRule, OSPEASN1PARSETABLEID *ospvParseTableId);
     void OSPPASN1IntegerDelete(OSPTASN1INTEGER **ospvInteger);
     int OSPPASN1IntegerCreate(unsigned char *ospvContent, unsigned int ospvContentLength, OSPTASN1INTEGER **ospvInteger);
@@ -538,7 +532,6 @@ typedef struct {
 #define OSPC_OID_VALUE_DIGIT_MASK   0x7F    /* Base 128 */
 #define OSPC_OID_VALUE_END_MASK     0x80    /* MSB = 0 in last octet of value */
 
-
 /*****************************************************************
     OBJECT ID DEFINITIONS/XREF/TAGS
 *****************************************************************/
@@ -567,8 +560,8 @@ typedef struct {
 #define            OSPC_OID_CODE_EXT_SUBJECT_KEY_ID         OSPC_OID_CODE_LD_CE, 14
 
 /*
- * ENTRIES IN THE ARRAY THAT FOLLOWS MUST BE IN THE SAME ORDER AS 
- * THE ENUM 
+ * ENTRIES IN THE ARRAY THAT FOLLOWS MUST BE IN THE SAME ORDER AS
+ * THE ENUM
 */
 typedef enum {
     OSPC_OID_TAG_DN_COUNTRY,
@@ -609,10 +602,7 @@ typedef struct {
 
 /* typedef OSPTALGORITHMID OSPTDIGESTALGORITHMID; */
 
-/*
- *   DER/BER (Encoding/Decoding Rules) Definitions
- */
-
+/* DER/BER (Encoding/Decoding Rules) Definitions */
 #define OSPC_BER_MAX_TAG_LENGTH         10
 #define OSPC_BER_MODE_MASK              0x20
 #define OSPC_BER_MODE_PRIMITIVE         0x00

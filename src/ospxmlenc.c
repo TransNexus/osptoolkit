@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospxmlenc.c - Generic XML document encoding functions.
- */
+/* ospxmlenc.c - Generic XML document encoding functions. */
 
 #include "osp/osp.h"
 #include "osp/ospbfr.h"
@@ -30,7 +28,6 @@
 /*
  * OSPPXMLDocCreate() - create a linear document from a root element
  */
-
 int OSPPXMLDocCreate(           /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* root element for document */
     OSPTBFR **ospvBfrAddr)      /* buffer in which to put doc */

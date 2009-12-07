@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osposincl.h - OS common includes.
- */
-
+/* osposincl.h - OS common includes. */
 #ifndef _OSPOSINCL_H
 #define _OSPOSINCL_H
 

@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osppkcs7.c - PKCS #7 Cryptographic message object processing functions.
- */
+/* osppkcs7.c - PKCS #7 Cryptographic message object processing functions. */
 
 #include "osp/osp.h"
 #include "osp/ospasn1.h"
@@ -73,7 +71,7 @@ int OSPPPKCS7SignatureCreate(
     /* Generate an ASN1 Encoded PKCS7 Signed Data signature from the
        parameters given.
 
-       The signed data message is a Content info with a content type of 
+       The signed data message is a Content info with a content type of
        SIGNED DATA, and content, containing a Signed Data message which in
        turn contains a ContentInfo of type DATA.
      */
@@ -143,8 +141,8 @@ int OSPPPKCS7SignatureCreate(
 
 int OSPPPKCS7DigestInfoCreate(
     OSPTASN1OBJECT **ospvDigestInfo,
-    OSPTASN1OBJECT *ospvDigestAlgorithm, 
-    unsigned char *ospvContent, 
+    OSPTASN1OBJECT *ospvDigestAlgorithm,
+    unsigned char *ospvContent,
     unsigned int ospvContentLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -217,8 +215,8 @@ int OSPPPKCS7DigestInfoCreate(
 int OSPPPKCS7SignerInfoCreate(
     OSPTASN1OBJECT **ospvSignerInfo,
     OSPTASN1OBJECT *ospvDataContent,
-    OSPTASN1OBJECT *ospvDigestAlgorithm, 
-    OSPTASN1OBJECT *ospvSignerCertInfo, 
+    OSPTASN1OBJECT *ospvDigestAlgorithm,
+    OSPTASN1OBJECT *ospvSignerCertInfo,
     OSPTASN1OBJECT *ospvSignerPrivateKey)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -368,7 +366,7 @@ int OSPPPKCS7SignerInfoCreate(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* Complete the encoding for this object. Update results, elements, 
+        /* Complete the encoding for this object. Update results, elements,
            etc. */
         errorcode = OSPPASN1ObjectDeparse(signerInfo, OSPEPTID_SIGNERINFO, OSPEDRID_SIGNERINFO);
     }
@@ -389,7 +387,7 @@ int OSPPPKCS7SignerInfoCreate(
 }
 
 int OSPPPKCS7DigestAlgorithmsCreate(
-    OSPTASN1OBJECT **ospvDigestAlgorithms, 
+    OSPTASN1OBJECT **ospvDigestAlgorithms,
     OSPTASN1OBJECT *ospvDigestAlgorithm)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -437,7 +435,7 @@ int OSPPPKCS7DigestAlgorithmsCreate(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* Complete the encoding for this object. Update results, elements, 
+        /* Complete the encoding for this object. Update results, elements,
            etc. */
         errorcode = OSPPASN1ObjectDeparse(digestAlgorithms, OSPEPTID_DIGESTALGORITHMS, OSPEDRID_SGNDAT_DIGESTALGORITHMS);
     }
@@ -453,7 +451,7 @@ int OSPPPKCS7DigestAlgorithmsCreate(
 }
 
 int OSPPPKCS7CertificatesCreate(
-    OSPTASN1OBJECT **ospvCertificates, 
+    OSPTASN1OBJECT **ospvCertificates,
     OSPTASN1OBJECT *ospvCertificate)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -516,7 +514,7 @@ int OSPPPKCS7CertificatesCreate(
 }
 
 int OSPPPKCS7SignerInfosCreate(
-    OSPTASN1OBJECT **ospvSignerInfos, 
+    OSPTASN1OBJECT **ospvSignerInfos,
     OSPTASN1OBJECT *ospvSignerInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -566,7 +564,7 @@ int OSPPPKCS7SignerInfosCreate(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* Complete the encoding for this object. Update results, elements, 
+        /* Complete the encoding for this object. Update results, elements,
            etc. */
         errorcode = OSPPASN1ObjectDeparse(signerInfos, OSPEPTID_SIGNERINFOS, OSPEDRID_SGNDAT_SIGNERINFOS);
     }
@@ -584,8 +582,8 @@ int OSPPPKCS7SignerInfosCreate(
 int OSPPPKCS7SignedDataCreate(
     OSPTASN1OBJECT **ospvSignedData,
     OSPTASN1OBJECT *ospvContentInfo,
-    OSPTASN1OBJECT *ospvDigestAlgorithms, 
-    OSPTASN1OBJECT *ospvSignerCertificates, 
+    OSPTASN1OBJECT *ospvDigestAlgorithms,
+    OSPTASN1OBJECT *ospvSignerCertificates,
     OSPTASN1OBJECT *ospvSignerInfos)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -680,9 +678,9 @@ int OSPPPKCS7SignedDataCreate(
 }
 
 int OSPPPKCS7ContentInfoCreate(
-    OSPTASN1OBJECT **ospvContentInfo, 
-    OSPTASN1OBJECT *ospvContent, 
-    OSPEASN1ID ospvContentTypeId, 
+    OSPTASN1OBJECT **ospvContentInfo,
+    OSPTASN1OBJECT *ospvContent,
+    OSPEASN1ID ospvContentTypeId,
     int ospvSignatureOnly)
 {
     int errorcode = 0;
@@ -698,7 +696,7 @@ int OSPPPKCS7ContentInfoCreate(
      */
 
     /* Create a parse result for each of the input parameters.  Add the
-       result to the results list in the correct order.  It will be necessary 
+       result to the results list in the correct order.  It will be necessary
        to call subroutines to build the sub element.  The parse results table will
        have DataReference-able elements attached.  Running the parse table
        through the rules to build the element info list and then traversing
@@ -793,7 +791,7 @@ contained in the signature is larger than the space provided.
 
 If the signature does not contain the signed content, then the caller will
 set content to the data that was signed and set content length to the
-length of the data being signed.  
+length of the data being signed.
 
 If the signature does contain the signed content, then the call should set
 content to zeros and set contentlength to the size of the content buffer.
@@ -803,8 +801,8 @@ occur if the length of the content is larger than the length of the buffer.
 */
 
 int OSPPPKCS7SignatureParse(
-    OSPTASN1OBJECT **ospvSignatureObject, 
-    unsigned char *ospvSignature, 
+    OSPTASN1OBJECT **ospvSignatureObject,
+    unsigned char *ospvSignature,
     unsigned int ospvSignatureLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -829,7 +827,7 @@ int OSPPPKCS7SignatureParse(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* Create the signatureObject object that will contain the 
+        /* Create the signatureObject object that will contain the
            decoded/parsed signature */
         errorcode = OSPPASN1ObjectCreate(&signatureObject, eInfo, parseResults);
     }
@@ -843,8 +841,8 @@ int OSPPPKCS7SignatureParse(
 
 int OSPPPKCS7SignatureGetContent(
     OSPTASN1OBJECT *ospvSignatureObject,
-    unsigned char **ospvContent, 
-    unsigned int *ospvContentLength, 
+    unsigned char **ospvContent,
+    unsigned int *ospvContentLength,
     OSPTASN1ELEMENTINFO **el)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -878,8 +876,8 @@ int OSPPPKCS7SignatureGetContent(
 int OSPPPKCS7SignatureVerify(
     OSPTASN1OBJECT *ospvSignatureObject,
     unsigned char *ospvContent,
-    unsigned int ospvContentLength, 
-    OSPTASN1OBJECT *ospvAuthorityCertificates[], 
+    unsigned int ospvContentLength,
+    OSPTASN1OBJECT *ospvAuthorityCertificates[],
     unsigned int ospvNumberOfAuthorityCertificates)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -928,7 +926,7 @@ int OSPPPKCS7SignatureVerify(
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Ok, now we have a digest of the content, Decrypt the
-           signature to get the digest that was encrypted and compare the 
+           signature to get the digest that was encrypted and compare the
            two digests */
 
         errorcode = OSPPASN1ObjectCopyElementObject(&encryptionAlgorithm, ospvSignatureObject, OSPEDRID_SIG_SGNDAT_SGNINF_DIGENCRYPTALG);
@@ -955,7 +953,7 @@ int OSPPPKCS7SignatureVerify(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* Now we have a decrypted digest in object form and the 
+        /* Now we have a decrypted digest in object form and the
            digest generated from the content - compare them */
         errorcode = OSPPASN1ObjectGetElementInfo(decryptedDigestObject, &eInfo);
 

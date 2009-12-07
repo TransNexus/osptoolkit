@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmime.h - includes for mime
- */
-
+/* ospmime.h - includes for mime */
 #ifndef _OSPMIME_H
 #define _OSPMIME_H
 
@@ -83,7 +80,6 @@ typedef struct _OSPTMIMEMSG {
 } OSPTMIMEMSG;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

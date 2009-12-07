@@ -15,16 +15,11 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospcrypto.h      Constants and prototypes for OSP crypto library
- *
- */
-
+/* ospcrypto.h      Constants and prototypes for OSP crypto library */
 #ifndef _OSPCRYPTO_H
 #define _OSPCRYPTO_H
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -32,7 +27,7 @@ extern "C" {
     int OSPPCryptoVerify(OSPTASN1OBJECT *ospvSignature, OSPTASN1OBJECT *ospvReaderKey, unsigned char *ospvData, unsigned ospvDataLength);
     int OSPPCryptoDigest(OSPTASN1OBJECT **ospvDigest, OSPTASN1OBJECT *ospvAlgorithmId, unsigned char *ospvData, unsigned int ospvDataLength);
     int OSPPCryptoEncrypt(OSPTASN1OBJECT **ospvEncryptedData, OSPTASN1OBJECT *ospvAlgorithmId, OSPTASN1OBJECT *ospvData, OSPTASN1OBJECT *ospvPrivateKeyInfo);
-    int OSPPCryptoDecrypt(OSPTASN1OBJECT **ospvDecryptedData, OSPTASN1OBJECT *ospvAlgorithmId, OSPTASN1OBJECT *ospvEncryptedData, 
+    int OSPPCryptoDecrypt(OSPTASN1OBJECT **ospvDecryptedData, OSPTASN1OBJECT *ospvAlgorithmId, OSPTASN1OBJECT *ospvEncryptedData,
             OSPTASN1OBJECT *ospvBERReaderKey);
 
 #ifdef __cplusplus

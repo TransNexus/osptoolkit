@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osputils.h - Utility functions.
- */
+/* osputils.h - Utility functions. */
+
 #include "osp/osp.h"
 #include "osp/osputils.h"
 #include "osp/osplist.h"
@@ -28,8 +27,8 @@
 /* Build a string given a uint64 and an int.
  */
 int OSPPUtilBuildString(
-    OSPTUINT64 ospv64, 
-    int ospvInt, 
+    OSPTUINT64 ospv64,
+    int ospvInt,
     char **ospvNumberString)
 {
     char returnstring[50];
@@ -223,7 +222,7 @@ OSPTBOOL OSPPUtilIsDottedNumericIP(
  * Need to get a better way of obtaining a cryptographically strong random number
  */
 int OSPPUtilGetRandom(
-    char *ospvRandom, 
+    char *ospvRandom,
     int ospvAddValue)
 {
     int randnum = 0;
@@ -248,7 +247,7 @@ int OSPPUtilGetRandom(
     return numchars;
 }
 
-/* 
+/*
  * Converts a string to all lowercase characters
  */
 void OSPPUtilStringToLowercase(
@@ -267,7 +266,7 @@ void OSPPUtilStringToLowercase(
  * Loads the Private Key
  */
 int OSPPUtilLoadPEMPrivateKey(
-    unsigned char *FileName, 
+    unsigned char *FileName,
     OSPTPRIVATEKEY *key)
 {
     BIO *bioIn = NULL;
@@ -311,7 +310,7 @@ int OSPPUtilLoadPEMPrivateKey(
  * Loads the Certificate
  */
 int OSPPUtilLoadPEMCert(
-    unsigned char *FileName, 
+    unsigned char *FileName,
     OSPT_CERT *cert)
 {
     BIO *bioIn = NULL;

@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osplist.c - Utility functions for linked lists.
- */
+/* osplist.c - Utility functions for linked lists. */
 
 #include "osp/osp.h"
 #include "osp/osplist.h"
@@ -248,7 +246,7 @@ void *OSPPListNextToLast(   /* returns item or NULL */
  * OSPPListRemoveSpecificItem() - removes a specific item
  */
 void *OSPPListRemoveSpecificItem(   /* returns item removed or NULL */
-    OSPTLIST *ospvList, 
+    OSPTLIST *ospvList,
     void *ospvItem)
 {
     /* see introductory comment on list structure at beginning of file */

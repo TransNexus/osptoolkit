@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospxml.h - Header file for xml calls
- */
-
+/* ospxml.h - Header file for xml calls */
 #ifndef _OSPXML_H
 #define _OSPXML_H
 
@@ -27,7 +24,6 @@
 #include "osp/osptrans.h"
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

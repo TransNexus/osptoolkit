@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmsgelem.h - Definitions for OSP message elements.
- */
-
+/* ospmsgelem.h - Definitions for OSP message elements. */
 #ifndef _OSPMSGELEM_H
 #define _OSPMSGELEM_H
 
@@ -128,9 +125,7 @@ typedef enum {
     OSPC_MELEM_NUMBER
 } OSPE_MSG_ELEM;
 
-/*
- * externally declared global variables
- */
+/* externally declared global variables */
 extern const OSPT_MSG_DESC OSPV_MELEM_DESCS[];
 
 /* Function Prototypes */

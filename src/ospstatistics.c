@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospstatistics.c - OSP Statistics elements functions
- */
+/* ospstatistics.c - OSP Statistics elements functions */
 
 #include "osp/osp.h"
 #include "osp/ospstatistics.h"

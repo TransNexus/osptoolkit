@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospaltinfo.c - OSP alt info functions
- */
+/* ospaltinfo.c - OSP alt info functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"

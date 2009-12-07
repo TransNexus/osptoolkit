@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospstatistics.h - Statistics elements.
- */
-
+/* ospstatistics.h - Statistics elements. */
 #ifndef _OSPSTATISTICS_H
 #define _OSPSTATISTICS_H
 
@@ -36,9 +33,7 @@
 #define OSPC_SVALUE_PACKET      ((unsigned)(OSPC_SVALUE_PACKETS | OSPC_SVALUE_FRACTION))
 #define OSPC_SVALUE_METRICS     ((unsigned)(OSPC_SVALUE_SAMPLES | OSPC_SVALUE_MINIMUM | OSPC_SVALUE_MAXIMUM | OSPC_SVALUE_MEAN | OSPC_SVALUE_VARIANCE | OSPC_SVALUE_SQUARES))
 
-/*
- * Statistcs, metric types
- */
+/* Statistcs, metric types */
 typedef enum {
     OSPC_SMETRIC_UNDEFINED = -1,
     OSPC_SMETRIC_RTP = 0,
@@ -47,9 +42,7 @@ typedef enum {
     OSPC_SMETRIC_NUMBER
 } OSPE_STATS_METRIC;
 
-/*
- * Statistcs, flow types
- */
+/* Statistcs, flow types */
 typedef enum {
     OSPC_SFLOW_UNDEFINED = -1,
     OSPC_SFLOW_DOWNSTREAM = 0,
@@ -58,9 +51,7 @@ typedef enum {
     OSPC_SFLOW_NUMBER
 } OSPE_STATS_FLOW;
 
-/*
- * Statistics, value types
- */
+/* Statistics, value types */
 typedef enum {
     OSPC_STATS_LOST = 0,
     OSPC_STATS_JITTER,
@@ -75,18 +66,14 @@ typedef enum {
     OSPC_STATS_NUMBER
 } OSPE_STATS;
 
-/*
- * Statistics value structure for lost packets
- */
+/* Statistics value structure for lost packets */
 typedef struct {
     OSPTBOOL hasvalue;
     unsigned packets;
     unsigned fraction;
 } OSPT_STATS_PACKET;
 
-/*
- * Statistics value structure for Jitter, delay,
- */
+/* Statistics value structure for Jitter, delay */
 typedef struct {
     OSPTBOOL hasvalue;
     unsigned samples;
@@ -97,9 +84,7 @@ typedef struct {
     double squaressum;
 } OSPT_STATS_METRICS;
 
-/*
- * Statistics structure types
- */
+/* Statistics structure types */
 typedef enum {
     OSPC_SSTRUCT_PACKET = 0,
     OSPC_SSTRUCT_METRICS,
@@ -127,7 +112,6 @@ typedef struct {
 } OSPT_STATS;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

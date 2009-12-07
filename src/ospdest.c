@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospdest.c - OSP destination functions
- */
+/* ospdest.c - OSP destination functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"

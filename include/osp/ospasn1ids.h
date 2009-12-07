@@ -15,20 +15,16 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospasn1.h - Constants and typedefs for ASN.1 
- */
-
+/* ospasn1.h - Constants and typedefs for ASN.1 */
 #ifndef _OSPASN1ID_H
 #define _OSPASN1ID_H
 
 #include "osp/ospasn1.h"
 
-/* 
+/*
  * NOTE: The following definitions are used to index the ospgASN1IDIndex
- * table below.  DO NOT MODIFY ONE WITHOUT MODIFYING THE OTHER 
+ * table below.  DO NOT MODIFY ONE WITHOUT MODIFYING THE OTHER
  */
-
 typedef enum _OSPEASN1ID {
     OSPEID_RSAENCRYPTION,
     OSPEID_MD2WITHRSA,
@@ -96,20 +92,20 @@ typedef enum _OSPEASN1ID {
 } OSPEASN1ID;
 
 #ifdef OSPC_OSPASN1ID_INCLUDE_STATIC
-/* 
- * The following data is only used in ospasn1id.c where the #define is defined 
+/*
+ * The following data is only used in ospasn1id.c where the #define is defined
  */
 
-/* 
+/*
  * The object id values are already encoded in ASN1 Format where:
  * The first octet is 40*v1 + v2,
- * Subsequent octets contain v3, ... vn, where: 
+ * Subsequent octets contain v3, ... vn, where:
  * each value is encoded base in base 128 with MSB of each octet
  * except the last set to 1.
  */
 
-/* 
- * AlgorithmId encoded values contain only the oid and attribute types and values. The sequence prefix is not included in the definition 
+/*
+ * AlgorithmId encoded values contain only the oid and attribute types and values. The sequence prefix is not included in the definition
  */
 #define OSPM_PKCS1  42, 134, 72, 134, 247, 13, 1
 
@@ -190,9 +186,9 @@ typedef struct _OSPTIDINDEX {
     unsigned ValueLength;
 } OSPTIDINDEX;
 
-/* 
+/*
  * NOTE: The following indexed are referenced using the value of the enums
- * defined in OSPEASNID above.  DO NOT MODIFY ONE WITHOUT MODIFYING THE OTHER 
+ * defined in OSPEASNID above.  DO NOT MODIFY ONE WITHOUT MODIFYING THE OTHER
  */
 #define OSPM_IDIDX(a,b) {a, b, sizeof(b)}
 
@@ -265,7 +261,6 @@ static OSPTIDINDEX ospgASN1IDIndex[] = {
 #endif /* OSPC_OSPASN1_INCLUDE_STATIC */
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

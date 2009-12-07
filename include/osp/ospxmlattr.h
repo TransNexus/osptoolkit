@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospxmlattr.h - Structures and prototypes for generic XML attributes.
- */
-
+/* ospxmlattr.h - Structures and prototypes for generic XML attributes. */
 #ifndef _OSPXMLATTR_H
 #define _OSPXMLATTR_H
 
@@ -40,11 +37,9 @@ typedef struct {
     const char *ospmXMLAttrValue;
 } OSPT_XML_ATTR;
 
-
 #define OSPC_MAX_ID_LEN     25
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

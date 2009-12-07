@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospasn1ids.c - ASN1 defined ID's definitions and functions.
- */
+/* ospasn1ids.c - ASN1 defined ID's definitions and functions. */
 
 #define OSPC_OSPASN1ID_INCLUDE_STATIC   1   /* Forces inclusion of static */
 /* data defined in ospasn1id.h */
@@ -25,15 +23,11 @@
 #include "osp/ospasn1.h"
 #include "osp/ospasn1ids.h"
 
-/* FUNCTION PROTOTYPES */
-
-/*
- * Member functions
- */
+/* Member functions */
 
 int OSPPASN1IdGetValue(
-    OSPEASN1ID ospvId, 
-    unsigned char **ospvIdValue, 
+    OSPEASN1ID ospvId,
+    unsigned char **ospvIdValue,
     unsigned *ospvIdLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

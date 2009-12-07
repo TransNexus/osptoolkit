@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- *  ospacapind.h - OSP capabiliti indication objects
- */
-
+/* ospacapind.h - OSP capabiliti indication objects */
 #ifndef _OSPCAPIND_H
 #define _OSPCAPIND_H
 
@@ -38,7 +35,6 @@ typedef struct {
 } OSPT_CAP_IND;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

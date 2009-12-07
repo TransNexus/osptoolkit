@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospusageind.c - OSP usage indication functions
- */
+/* ospusageind.c - OSP usage indication functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"

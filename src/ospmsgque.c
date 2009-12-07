@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmsgque.cpp - MsgQueue object funcions.
- */
+/* ospmsgque.cpp - MsgQueue object funcions. */
 
 #include "osp/osp.h"
 #include "osp/ospmsgque.h"
@@ -105,7 +103,7 @@ void OSPPMsgQueueDecrementNumberOfTransactions(
 }
 
 int OSPPMsgQueueAddTransaction(
-    OSPTMSGQUEUE *ospvMsgQueue, 
+    OSPTMSGQUEUE *ospvMsgQueue,
     OSPT_MSG_INFO *ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -166,7 +164,7 @@ int OSPPMsgQueueAddTransaction(
 }
 
 int OSPPMsgQueueGetNumberOfTransactions(
-    OSPTMSGQUEUE *ospvMsgQueue, 
+    OSPTMSGQUEUE *ospvMsgQueue,
     unsigned *ospvMsgCount)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

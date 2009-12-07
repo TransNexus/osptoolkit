@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospusage.h - OSP usage detail objects
- */
-
+/* ospusage.h - OSP usage detail objects */
 #ifndef _OSPUSAGE_H
 #define _OSPUSAGE_H
 
@@ -28,7 +25,6 @@
 #include "osp/ospaltinfo.h"
 
 /* Function Prototypes */
-
 unsigned OSPPUsageFromElement(OSPT_XML_ELEM *, unsigned *);
 unsigned OSPPUsageToElement(unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned, OSPT_XML_ELEM *);
 unsigned OSPPAddConfIdToUsageElement(const char *, OSPT_XML_ELEM **);

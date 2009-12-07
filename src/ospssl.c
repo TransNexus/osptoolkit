@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospssl.c - SSL common functions
- */
+/* ospssl.c - SSL common functions */
 
 #include "osp/osp.h"
 #include "osp/ospssl.h"
@@ -28,7 +26,7 @@
 #include "osp/ospsecurity.h"
 
 void OSPPSSLSessionDelete(
-    OSPTBOOL ospvGracefulShutdown, 
+    OSPTBOOL ospvGracefulShutdown,
     OSPTSSLSESSION **ospvSSLSession)
 {
     OSPM_DBGENTER(("ENTER: OSPPSSLSessionDelete()\n"));
@@ -46,7 +44,7 @@ void OSPPSSLSessionDelete(
 }
 
 int OSPPSSLSessionNew(
-    OSPTHTTP *ospvHttp, 
+    OSPTHTTP *ospvHttp,
     OSPTSEC *ospvSecurity)
 {
     int errorcode = OSPC_ERR_NO_ERROR, rootcacertlen = 0;
@@ -54,7 +52,7 @@ int OSPPSSLSessionNew(
 
     OSPM_DBGENTER(("ENTER: OSPPSSLSessionNew()\n"));
     /*
-     * If https is required, ensure that a SSL Session is currently 
+     * If https is required, ensure that a SSL Session is currently
      * active for this socket and that its session-id has not expired
      */
     if (OSPM_COMM_SECURED_IO(ospvHttp->ServicePoint)) {
@@ -70,9 +68,9 @@ int OSPPSSLSessionNew(
                     if (errorcode == OSPC_ERR_NO_ERROR) {
                         /* ------------------------------------------------------
                          * Verify that we trust this server's Root CA Certificate
-                         * OpenSSL Verifies this for you.  Uncomment if you need this 
+                         * OpenSSL Verifies this for you.  Uncomment if you need this
                          * ------------------------------------------------------
-                         *errorcode = OSPPSecVerifyRootAuthorityCertificate(ospvSecurity, 
+                         *errorcode = OSPPSecVerifyRootAuthorityCertificate(ospvSecurity,
                          *   rootcacert, rootcacertlen);
                          */
                     }
@@ -93,7 +91,7 @@ int OSPPSSLSessionNew(
 }
 
 int OSPPSSLSessionInitialize(
-    OSPTHTTP *ospvHttp, 
+    OSPTHTTP *ospvHttp,
     OSPTSEC *ospvSecurity)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -138,9 +136,9 @@ int OSPPSSLSessionNegotiate(
 }
 
 int OSPPSSLSessionRead(
-    OSPTHTTP *ospvHttp, 
-    void *ospvBuffer, 
-    unsigned int *ospvLength, 
+    OSPTHTTP *ospvHttp,
+    void *ospvBuffer,
+    unsigned int *ospvLength,
     char *ospvDelimiter)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -161,7 +159,7 @@ int OSPPSSLSessionRead(
 
         while (delimitsz != delimitidx && bufidx < *ospvLength && errorcode == OSPC_ERR_NO_ERROR) {
             if (OSPM_COMM_SECURED_IO(ospvHttp->ServicePoint)) {
-                errorcode = OSPPSSLWrapGetData((void *)&((unsigned char *)ospvBuffer)[bufidx], &len, 
+                errorcode = OSPPSSLWrapGetData((void *)&((unsigned char *)ospvBuffer)[bufidx], &len,
                     (OSPTSSLSESSION *)ospvHttp->SSLSession);
             } else {
                 errorcode = OSPPSockRead(ospvHttp, &((unsigned char *)ospvBuffer)[bufidx], &len);
@@ -220,7 +218,7 @@ int OSPPSSLSessionRead(
         }
     }
 /*
-    OSPM_DBG((OSPVDbgFlag&OSPC_DBGNET),("NETIO: OSPPSSLSessionRead() recv [%*s]\n", 
+    OSPM_DBG((OSPVDbgFlag&OSPC_DBGNET),("NETIO: OSPPSSLSessionRead() recv [%*s]\n",
         len, (char *)ospvBuffer));
 */
 
@@ -229,8 +227,8 @@ int OSPPSSLSessionRead(
 }
 
 int OSPPSSLSessionWrite(
-    OSPTHTTP *ospvHttp, 
-    void *ospvBuffer, 
+    OSPTHTTP *ospvHttp,
+    void *ospvBuffer,
     unsigned int *ospvLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospcomm.cpp - Communication object functions.
- */
+/* ospcomm.cpp - Communication object functions. */
+
 #include "osp/osp.h"
 #include "osp/ospcomm.h"
 #include "osp/ospsocket.h"
@@ -31,15 +30,15 @@
  * When a new request is placed on the message queue, the conditional variable
  * (CondVar) within the message queue structure is signalled and the number of
  * transactions (NumberOfTransactions) will be incremented. This function will
- * awaken and assign the request to an available HTTP connection. Upon the 
- * handoff of the request, this function will return to the wait condition 
+ * awaken and assign the request to an available HTTP connection. Upon the
+ * handoff of the request, this function will return to the wait condition
  * until the next message queue request arrives.
  *
  * returns void (runs until the communication manager thread is terminated)
  */
 static OSPTTHREADRETURN osppCommMonitor(
     void *ospvArg)  /* In - Comm pointer casted to a void */
-{                               
+{
     OSPTCOMM **comm = OSPC_OSNULL;
     OSPTMSGQUEUE *msgqueue = OSPC_OSNULL;
     int errorcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
@@ -53,7 +52,7 @@ static OSPTTHREADRETURN osppCommMonitor(
          * acquire message queue mutex
          */
         OSPM_MUTEX_LOCK(msgqueue->Mutex, errorcode);
-        /* assert(errorcode == OSPC_ERR_NO_ERROR); 
+        /* assert(errorcode == OSPC_ERR_NO_ERROR);
            assert is being handled already below */
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -208,9 +207,9 @@ int OSPPCommNew(
                     OSPPCommDelete(ospvComm);
                 } else {
                     /*
-                     * start up the communication manager worker thread. This 
-                     * thread will monitor the queue for new requests and hand 
-                     * them off to an available HTTP connection pool for 
+                     * start up the communication manager worker thread. This
+                     * thread will monitor the queue for new requests and hand
+                     * them off to an available HTTP connection pool for
                      * fulfillment.
                      */
                     errorcode = osppCommStartWorker(ospvComm);
@@ -223,7 +222,7 @@ int OSPPCommNew(
 }
 
 void OSPPCommSetSecurity(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     OSPTSEC *ospvSecurity)
 {
     ospvComm->Security = ospvSecurity;
@@ -236,7 +235,7 @@ OSPTSEC *OSPPCommGetSecurity(
 }
 
 int OSPPCommGetPersistence(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned *ospvPersistence)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -251,7 +250,7 @@ int OSPPCommGetPersistence(
 }
 
 int OSPPCommGetRetryDelay(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned *ospvRetryDelay)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -266,7 +265,7 @@ int OSPPCommGetRetryDelay(
 }
 
 int OSPPCommGetRetryLimit(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned *ospvRetryLimit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -281,7 +280,7 @@ int OSPPCommGetRetryLimit(
 }
 
 int OSPPCommGetTimeout(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned *ospvTimeout)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -296,7 +295,7 @@ int OSPPCommGetTimeout(
 }
 
 int OSPPCommSetPersistence(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned ospvPersistence)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -311,7 +310,7 @@ int OSPPCommSetPersistence(
 }
 
 int OSPPCommSetRetryDelay(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned ospvRetryDelay)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -326,7 +325,7 @@ int OSPPCommSetRetryDelay(
 }
 
 int OSPPCommSetRetryLimit(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned ospvRetryLimit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -341,7 +340,7 @@ int OSPPCommSetRetryLimit(
 }
 
 int OSPPCommSetConnSelectionTimeout(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     OSPTUINT64 ospvTimeout)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -356,7 +355,7 @@ int OSPPCommSetConnSelectionTimeout(
 }
 
 int OSPPCommSetTimeout(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned ospvTimeout)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -371,7 +370,7 @@ int OSPPCommSetTimeout(
 }
 
 int OSPPCommGetMaxConnections(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned *ospvMaxConnections)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -386,7 +385,7 @@ int OSPPCommGetMaxConnections(
 }
 
 int OSPPCommSetMaxConnections(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned ospvMaxConnections)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -429,7 +428,7 @@ int OSPPCommDecrementHttpConnCount(
 }
 
 int OSPPCommGetHttpConnCount(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned *ospvHttpConnCount)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -444,7 +443,7 @@ int OSPPCommGetHttpConnCount(
 }
 
 void OSPPCommSetShutdown(
-    OSPTCOMM **ospvComm, 
+    OSPTCOMM **ospvComm,
     int ospvTimeLimit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -494,7 +493,7 @@ void OSPPCommSignalAllConnections(
 }
 
 void OSPPCommShutdownConnections(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     int ospvTimeLimit)
 {
     unsigned count = 0;
@@ -540,7 +539,7 @@ void OSPPCommShutdownConnections(
             ospvComm->Flags |= OSPC_COMM_HTTPSHUTDOWN_BIT;
 
             /*
-             * signal each active HTTP connection 
+             * signal each active HTTP connection
              */
             OSPPCommSignalAllConnections(ospvComm);
         }
@@ -548,7 +547,7 @@ void OSPPCommShutdownConnections(
 }
 
 int OSPPCommGetNumberOfServicePoints(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned *ospvNumberOfServicePoints)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -563,14 +562,14 @@ int OSPPCommGetNumberOfServicePoints(
 }
 
 void OSPPCommGetServicePointList(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     OSPTSVCPT **ospvSvcPt)
 {
     *ospvSvcPt = ospvComm->ServicePointList;
 }
 
 int OSPPCommBuildServicePoint(
-    OSPTSVCPT *ospvSvcPt, 
+    OSPTSVCPT *ospvSvcPt,
     char *ospvBuffer)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -587,9 +586,9 @@ int OSPPCommBuildServicePoint(
 }
 
 int OSPPCommGetServicePoints(
-    OSPTCOMM *ospvComm, 
-    unsigned ospvNumberOfServicePoints, 
-    unsigned ospvSizeOfServicePoint, 
+    OSPTCOMM *ospvComm,
+    unsigned ospvNumberOfServicePoints,
+    unsigned ospvSizeOfServicePoint,
     char *ospvServicePoints[])
 {
     unsigned count = 0;
@@ -629,7 +628,7 @@ int OSPPCommGetServicePoints(
 }
 
 static void osppCommDeleteServicePointList(
-    OSPTSVCPT **svcpt, 
+    OSPTSVCPT **svcpt,
     int ospvNumberOfServicePoints)
 {
     int count = 0;
@@ -656,8 +655,8 @@ static void osppCommDeleteServicePointList(
  * http[s] : // FQDN [: port] / URI
  */
 int OSPPCommParseSvcPt(
-    const char *ospvURL, 
-    OSPTSVCPT **ospvSvcPt, 
+    const char *ospvURL,
+    OSPTSVCPT **ospvSvcPt,
     unsigned ospvIndex)
 {
 #define OSPTMPBUFSZ    16
@@ -769,7 +768,7 @@ int OSPPCommParseSvcPt(
     /* -- END -- */
 
     /*
-     * (optional)Parse Port Number 
+     * (optional)Parse Port Number
      *
      * -- START --
      */
@@ -825,7 +824,7 @@ int OSPPCommParseSvcPt(
 }
 
 int OSPPCommSetAuditURL(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     const char *ospvAuditURL)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -850,7 +849,7 @@ int OSPPCommSetAuditURL(
 }
 
 void OSPPCommSetAuditFlag(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     unsigned ospvAuditFlag)
 {
     if (ospvComm != OSPC_OSNULL) {
@@ -915,8 +914,8 @@ int OSPPCommUpdateURLs(OSPTCOMM *ospvCommManager,   /* In - Provider handle     
 }
 
 int OSPPCommSetServicePoints(
-    OSPTCOMM *ospvComm, 
-    unsigned ospvNumberOfServicePoints, 
+    OSPTCOMM *ospvComm,
+    unsigned ospvNumberOfServicePoints,
     const char **ospvServicePoint)
 {
     unsigned count = 0;
@@ -964,7 +963,7 @@ void OSPPCommDelete(
     int errorcode = 0;
 
     /*
-     * check the communication manager first: 
+     * check the communication manager first:
      */
     if (ospvComm == OSPC_OSNULL) {
         OSPM_DBGMISC(("%s%s", "Warning; attempted to delete null reference to ", "communications manager.\n"));
@@ -1013,7 +1012,7 @@ void OSPPCommDelete(
 }
 
 int OSPPCommValidateSvcPts(
-    unsigned ospvNumberOfServicePoints, 
+    unsigned ospvNumberOfServicePoints,
     const char **ospvServicePoint)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

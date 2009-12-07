@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptransapi.cpp - API functions for transaction object.
- */
+/* osptransapi.cpp - API functions for transaction object. */
 
 #include "osp/osp.h"
 #include "osp/osptrans.h"
@@ -83,7 +81,7 @@ int OSPPTransactionSetServiceAndPricingInfo(
         for (i = 0; i < MAX_PRICING_INFO_ALLOWED; i++) {
             if ((errorcode == OSPC_ERR_NO_ERROR) && ospvPricingInfo[i] &&
                 ospvPricingInfo[i]->unit && ospvPricingInfo[i]->currency &&
-                (OSPM_STRLEN(ospvPricingInfo[i]->unit) < OSPC_UNITSIZE) && (OSPM_STRLEN(ospvPricingInfo[i]->currency) < OSPC_CURRENCYSIZE)) {
+                (OSPM_STRLEN(ospvPricingInfo[i]->unit) < OSPC_SIZE_UNIT) && (OSPM_STRLEN(ospvPricingInfo[i]->currency) < OSPC_SIZE_CONFID)) {
                 trans->HasPricingInfo = OSPC_TRUE;
                 trans->PricingInfo[i].amount = ospvPricingInfo[i]->amount;
                 trans->PricingInfo[i].increment = ospvPricingInfo[i]->increment;
@@ -165,8 +163,8 @@ int OSPPTransactionSetPricingInfo(
         for (i = 0; i < MAX_PRICING_INFO_ALLOWED; i++) {
             if ((errorcode == OSPC_ERR_NO_ERROR) && ospvInfo[i] &&
                 ospvInfo[i]->unit && ospvInfo[i]->currency &&
-                (OSPM_STRLEN(ospvInfo[i]->unit) < OSPC_UNITSIZE) &&
-                (OSPM_STRLEN(ospvInfo[i]->currency) < OSPC_CURRENCYSIZE))
+                (OSPM_STRLEN(ospvInfo[i]->unit) < OSPC_SIZE_UNIT) &&
+                (OSPM_STRLEN(ospvInfo[i]->currency) < OSPC_SIZE_CONFID))
             {
                 trans->HasPricingInfo = OSPC_TRUE;
                 trans->PricingInfo[i].amount = ospvInfo[i]->amount;
@@ -239,9 +237,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                             altinfo = OSPC_OSNULL;
                         }
                     }
-                    /*
-                     * Now add.
-                     */
+                    /* Now add. */
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ALTINFO_TRANSPORT);
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(dest->ospmUpdatedSourceAddr), (void *)altinfo);
@@ -262,9 +258,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                             altinfo = OSPC_OSNULL;
                         }
                     }
-                    /*
-                     * Now add.
-                     */
+                    /* Now add. */
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ALTINFO_TRANSPORT);
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(dest->ospmUpdatedDeviceInfo), (void *)altinfo);
@@ -273,23 +267,17 @@ int OSPPTransactionModifyDeviceIdentifiers(
                 altinfo = NULL;
 
                 if (ospvDestination != NULL) {
-                    /*
-                     * Just overwrite on the old values, if any
-                     */
+                    /* Just overwrite on the old values, if any */
                     OSPPDestSetAddr(dest, ospvDestination);
                 }
 
                 if (ospvDestinationDevice != NULL) {
-                    /*
-                     * Just overwrite on the old values, if any
-                     */
+                    /* Just overwrite on the old values, if any */
                     OSPPDestDevSetAddr(dest, ospvDestinationDevice);
                 }
             } else if (trans->AuthInd != OSPC_OSNULL) {
                 if ((ospvSource != NULL) && (errorcode == OSPC_ERR_NO_ERROR)) {
-                    /*
-                     * Overwrite the SourceAlternate in the AuthInd
-                     */
+                    /* Overwrite the SourceAlternate in the AuthInd */
                     if (OSPPAuthIndHasSourceAlt(trans->AuthInd)) {
                         /*
                          * If srcAlt is present, delete the type- transport
@@ -309,9 +297,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                                 altinfo = OSPC_OSNULL;
                             }
                         }
-                        /*
-                         * Add back the AltInfo for networkId
-                         */
+                        /* Add back the AltInfo for networkId */
                         if (altinfoToKeep) {
                             OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *)altinfoToKeep);
                             altinfoToKeep = NULL;
@@ -326,9 +312,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                 }
 
                 if ((ospvSourceDevice != NULL) && (errorcode == OSPC_ERR_NO_ERROR)) {
-                    /*
-                     * Overwrite the deviceInfo in the AuthInd
-                     */
+                    /* Overwrite the deviceInfo in the AuthInd */
                     if (trans->AuthInd->ospmAuthIndDeviceInfo != NULL) {
                         /*
                          * If srcAlt is present, delete the type- transport
@@ -348,9 +332,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                                 altinfo = OSPC_OSNULL;
                             }
                         }
-                        /*
-                         * Add back the AltInfo for networkId
-                         */
+                        /* Add back the AltInfo for networkId */
                         if (altinfoToKeep) {
                             OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDeviceInfo), (void *)altinfoToKeep);
                             altinfoToKeep = NULL;
@@ -406,9 +388,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfoToKeep2);
                         altinfoToKeep2 = NULL;
                     }
-                    /*
-                     * Now add the new destination
-                     */
+                    /* Now add the new destination */
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestination), ospvDestination, OSPC_ALTINFO_TRANSPORT);
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
@@ -460,9 +440,7 @@ int OSPPTransactionModifyDeviceIdentifiers(
                         altinfoToKeep2 = NULL;
                     }
 
-                    /*
-                     * Now add the new node for destinationDevice
-                     */
+                    /* Now add the new node for destinationDevice */
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestinationDevice), ospvDestinationDevice, OSPC_ALTINFO_H323);
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
@@ -509,9 +487,7 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
         if (trans->TokenInfoHasLookAheadInfo == OSPC_TRUE) {
             trans->WasLookAheadInfoGivenToApp = OSPC_TRUE;
 
-            /*
-             * Copy the LookAhead info into the variables passed
-             */
+            /* Copy the LookAhead info into the variables passed */
             destinfo = OSPPTokenInfoGetLookAheadDestAlt(&(trans->TokenLookAheadInfo));
             OSPM_MEMCPY(ospvLookAheadDestination, destinfo, OSPM_STRLEN(destinfo) + 1);
 
@@ -543,14 +519,10 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
 
             OSPPListDelete(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate));
 
-            /*
-             * Create a new list of destiantion Alt
-             */
+            /* Create a new list of destiantion Alt */
             OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate));
 
-            /*
-             * Add back the AltInfo for networkId
-             */
+            /* Add back the AltInfo for networkId */
             if (altinfoToKeep) {
                 OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfoToKeep);
                 altinfoToKeep = NULL;
@@ -918,14 +890,10 @@ int OSPPTransactionSetNetworkIds(
 
                     if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvDestNetworkId != NULL)) {
                         if (trans->AuthInd->ospmAuthIndDestinationAlternate == OSPC_OSNULL) {
-                            /*
-                             * Make a new list
-                             */
+                            /* Make a new list */
                             OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate));
                         }
-                        /*
-                         * add to the list
-                         */
+                        /* Add to the list */
                         altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvDestNetworkId), ospvDestNetworkId, OSPC_ALTINFO_NETWORK);
                         if (altinfo != OSPC_OSNULL) {
                             OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate), (void *)altinfo);
@@ -951,14 +919,10 @@ int OSPPTransactionSetNetworkIds(
 
                 if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvSrcNetworkId != NULL)) {
                     if (trans->AuthInd->ospmAuthIndSourceAlternate == OSPC_OSNULL) {
-                        /*
-                         * Make a new list
-                         */
+                        /* Make a new list */
                         OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate));
                     }
-                    /*
-                     * add to the list
-                     */
+                    /* Add to the list */
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSrcNetworkId), ospvSrcNetworkId, OSPC_ALTINFO_NETWORK);
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(trans->AuthInd->ospmAuthIndSourceAlternate), (void *)altinfo);
@@ -1076,9 +1040,7 @@ int OSPPTransactionAccumulateOneWayDelay(
                 metrics.minimum = ospvMinimum;
             }
 
-            /* sample mean - have to cast Samples to a float to get some precision
-             * on the mean */
-
+            /* sample mean - have to cast Samples to a float to get some precision on the mean */
             mean = ((metrics.mean * currnumber) + (ospvMean * ospvSamples)) / (float)metrics.samples;
 
             /* make sure we don't have overflow */
@@ -1115,9 +1077,7 @@ int OSPPTransactionAccumulateOneWayDelay(
                 }
             }
 
-            /* Only set state if we have actually done something, otherwise no
-             * change in state.
-             */
+            /* Only set state if we have actually done something, otherwise no change in state. */
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 metrics.hasvalue = OSPC_TRUE;
                 /* now copy values back to permanent accumulator */
@@ -1271,9 +1231,7 @@ int OSPPTransactionAccumulateRoundTripDelay(
                 }
             }
 
-            /* Only set state if we have actually done something, otherwise no
-             * change in state.
-             */
+            /* Only set state if we have actually done something, otherwise no change in state. */
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 metrics.hasvalue = OSPC_TRUE;
                 /* now copy values back to permanent accumulator */
@@ -1482,17 +1440,13 @@ int OSPPTransactionGetFirstDestination(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /*
-         * Make sure we have a response
-         */
+        /* Make sure we have a response */
         if (trans->AuthRsp == (OSPT_AUTH_RSP *)NULL) {
             errorcode = OSPC_ERR_TRAN_RESPONSE_NOT_FOUND;
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            /*
-             * if no errors have occurred, get the destination information
-             */
+            /* if no errors have occurred, get the destination information */
             if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPAuthRspHasDest(trans->AuthRsp) == OSPC_FALSE) {
                 errorcode = OSPC_ERR_TRAN_DEST_INVALID;
                 OSPM_DBGERRORLOG(errorcode, "destination not found");
@@ -1774,8 +1728,7 @@ int OSPPTransactionGetNextDestination(
  *      This should always be populated.
  * The function returns an error code or zero (if the operation was successful)
  * Specific error codes and their meanings can be found in the osperrno.h file.
-*/
-
+ */
 int OSPPTransactionBuildUsageFromScratch(
     OSPTTRANHANDLE ospvTransaction,             /* In - Transaction handle */
     OSPTUINT64 ospvServerTransactionId,         /* In - OSP Server Transaction Id */
@@ -1882,9 +1835,7 @@ int OSPPTransactionBuildUsageFromScratch(
                         5,  /* Just giving a size because the Response function does not like a size of 0 */
                         "ABCDE");
 
-                    /*
-                     * Populate Transaction Id
-                     */
+                    /* Populate Transaction Id */
                     trans->TransactionID = ospvServerTransactionId;
                     trans->HasTransactionID = OSPC_TRUE;
 
@@ -2023,12 +1974,9 @@ int OSPPTransactionBuildUsageFromScratch(
                         } else {
                             errorcode = OSPC_ERR_TRAN_DEST_INVALID;
                         }
-                    }
-
-                    /* end  if (errorcode == OSPC_ERR_NO_ERROR) */
-                    /*
-                     * Populate Transaction Id
-                     */
+                    } /* end  if (errorcode == OSPC_ERR_NO_ERROR) */
+                   
+                    /* Populate Transaction Id */
                     trans->TransactionID = ospvServerTransactionId;
                     trans->HasTransactionID = OSPC_TRUE;
 
@@ -2070,10 +2018,10 @@ int OSPPTransactionBuildUsageFromScratch(
  *
  * Specific error codes and their meanings can be found in the osperrno.h file.
  *
-*/
+ */
 int OSPPTransactionSetDestinationCount(
-    OSPTTRANHANDLE ospvTransaction, /*In - Transaction handle */
-    unsigned ospvDestinationCount)  /*In - Optional Destination Count, 0 if n/a */
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvDestinationCount)  /* In - Optional Destination Count, 0 if n/a */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -2187,7 +2135,7 @@ int OSPPTransactionSetDestinationCount(
  * behavior to prevent blocking.
  * The function returns an error code or zero (if the operation was successful)
  * Specific error codes and their meanings can be found in the osperrno.h file.
-*/
+ */
 int OSPPTransactionInitializeAtDevice(
     OSPTTRANHANDLE ospvTransaction,                 /* In - Transaction handle */
     unsigned ospvRole,                              /* In - Is this the ogw or tgw */
@@ -2252,7 +2200,6 @@ int OSPPTransactionInitializeAtDevice(
      * We are adding a destination to authrsp->dest, setting current dest to
      * point to it.
      */
-
     *ospvAuthorised = OSPC_TRAN_AUTHORISED;
 
     if ((errorcode == OSPC_ERR_NO_ERROR) && (*ospvAuthorised == OSPC_TRAN_AUTHORISED)) {
@@ -2397,7 +2344,7 @@ int OSPPTransactionNew(
  * execution.
  * The function returns an error code or zero (if the operation was successful)
  * Specific error codes and their meanings can be found in the osperrno.h file.
-*/
+ */
 int OSPPTransactionRecordFailure(
     OSPTTRANHANDLE ospvTransaction,
     OSPEFAILREASON ospvFailureReason)
@@ -2420,7 +2367,6 @@ int OSPPTransactionRecordFailure(
 
             /* Set failure reason for current destination */
             OSPPDestSetTermCause(trans->CurrentDest, OSPC_TCAUSE_Q850, ospvFailureReason, OSPC_OSNULL);
-
         }
     } else if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPC_ERR_TRAN_TRANSACTION_NOT_FOUND;
@@ -2432,92 +2378,92 @@ int OSPPTransactionRecordFailure(
 }
 
 /*
-* OSPPTransactionReinitializeAtDevice
-* The OSPPTransactionReinitializeAtDevice function re-initializes a (previously
-* initialized) transaction object. Applications can use this with a distributed
-* architecture in which the systems requesting and validating authorisation
-* (e.g. H.323 gatekeepers) are different than the systems that ultimately
-* report usage information (e.g. H.323 gateways). The reporting device can call
-* this function after failing to reach a previous destination. As such, this
-* function is an alternative to the OSPPTransactionGetNextDestination function.
-* Parameters to the function are:
-*   ospvTransaction: handle of the (previously created) transaction object.
-*   ospvFailureReason: the reason that attempts to use the previously
-*       identified destination failed; values for this parameter are listed in
-*       the ospfail.h file.
-* ospvRole: indicates whether the system calling this function is acting as
-*       the source or destination for the call.
-* ospvSource: character string identifying the source of the call. The value is
-*       expressed as either a DNS name or an IP address enclosed in square
-*       brackets, followed by an optional colon and TCP port number.
-*       Examples of valid sources include "gateway1.carrier.com" and
-*           "[172.16.1.2]:112".
-* ospvDestination: character string identifying the destination for the call.
-*       The value is expressed as either a DNS name or an IP address enclosed
-*       in square brackets, followed by an optional colon and TCP port number.
-*       Examples of valid destinations include "gateway1.carrier.com" and
-*           "[172.16.1.2]:112".
-* ospvSourceDevice: character string identifying the source device.
-*      This could be the previous hop Gateway.
-*      It is expressed as either a DNS name or an IP address enclosed in square
-*      brackets, followed by an optional colon and TCP port number.
-*      Examples of valid sources include "gateway1.carrier.com" and
-*                                                  "[172.16.1.2]:112".
-*      This string is optional and may be empty.
-* ospvDestinationDevice: character string identifying the destination device.
-*       The value is expressed as either a DNS name or an IP address enclosed
-*       in square brackets, followed by an optional colon and TCP port number.
-*       Examples of valid destinations include "gateway1.carrier.com" and
-*           "[172.16.1.2]:112".
-*      This string is optional and may be empty.
-* ospvCallingNumber: character string containing the calling party's number
-*       expressed as a full international number conforming to the ITU E.164
-*       standard (with no punctuation).
-* ospvCalledNumber: character string containing the called number, expressed
-*       as a full international number conforming to the ITU E.164 standard
-*       (with no punctuation).
-* ospvSizeOfCallId: size of the memory buffer containing the call identifier.
-* ospvCallId: memory location containing the H.323 call identifier for the
-*       call.
-* ospvSizeOfToken: size of the memory buffer containing an authorisation token
-*       for the call.
-* ospvToken: memory location containing an authorisation token.
-* ospvAuthorised: pointer to a variable in which the function will indicate
-*       whether or not the call is authorised. On return, a non-zero value
-*       indicates that the call is authorised by the provider, while a zero
-*       value indicates an authorisation failure.
-* ospvTimeLimit: pointer to a variable in which to place the number of seconds
-*       for which the call is initially authorised. A value of zero indicates
-*       that no limit exists. Note that the initial time limit may be extended
-*       during the call by using the function
-*       OSPPTransactionRequestReauthorisation.
-* ospvSizeOfDetailLog: pointer to a variable which, on input, contains the
-*       maximum size of the detail log; on output, the variable will be updated
-*       with the actual size of the detail log. By setting this value to zero,
-*       applications indicate that they do not wish a detail log for the
-*       authorisation validation.
-* ospvDetailLog: pointer to a location in which to store a detail log for the
-*       validation. If this pointer is not NULL, and if the ospvSizeOfDetailLog
-*       parameter is non-zero, then the library will store a copy of the
-*       authorisation confirmation obtained from the settlement provider,
-*       including the settlement provider's digital signature.
-*  ospvTokenAlgo: This can take either of the 3 values - TOKEN_ALGO_SIGNED,
-*      TOKEN_ALGO_UNSIGNED, and TOKEN_ALGO_BOTH. If the value is set to
-*      TOKEN_ALGO_SIGNED the toolkit expects the token to be signed, and
-*      validates the signature as a part of token validation. If the value
-*      is set to TOKEN_ALGO_UNSIGNED, an unsigned token is expected. If the
-*      value is set to TOKEN_ALGO_BOTH, then the toolkit accepts either a
-*      signed token or an unsigned token.
-* If the provider has been configured to perform local validation, the SDK
-* library is able to perform this function without network interaction, and,
-* therefore, does not block for network input or output during its execution.
-* If local validation is not used, this function blocks until authorisation has
-* been validated, refused, or an error has been detected. The Open Settlement
-* Protocol SDK Porting Guide includes information on modifying that behavior to
-* prevent blocking.
-* The function returns an error code or zero (if the operation was successful).
-* Specific error codes and their meanings can be found in the osperrno.h file.
-*/
+ * OSPPTransactionReinitializeAtDevice
+ * The OSPPTransactionReinitializeAtDevice function re-initializes a (previously
+ * initialized) transaction object. Applications can use this with a distributed
+ * architecture in which the systems requesting and validating authorisation
+ * (e.g. H.323 gatekeepers) are different than the systems that ultimately
+ * report usage information (e.g. H.323 gateways). The reporting device can call
+ * this function after failing to reach a previous destination. As such, this
+ * function is an alternative to the OSPPTransactionGetNextDestination function.
+ * Parameters to the function are:
+ *   ospvTransaction: handle of the (previously created) transaction object.
+ *   ospvFailureReason: the reason that attempts to use the previously
+ *       identified destination failed; values for this parameter are listed in
+ *       the ospfail.h file.
+ * ospvRole: indicates whether the system calling this function is acting as
+ *       the source or destination for the call.
+ * ospvSource: character string identifying the source of the call. The value is
+ *       expressed as either a DNS name or an IP address enclosed in square
+ *       brackets, followed by an optional colon and TCP port number.
+ *       Examples of valid sources include "gateway1.carrier.com" and
+ *           "[172.16.1.2]:112".
+ * ospvDestination: character string identifying the destination for the call.
+ *       The value is expressed as either a DNS name or an IP address enclosed
+ *       in square brackets, followed by an optional colon and TCP port number.
+ *       Examples of valid destinations include "gateway1.carrier.com" and
+ *           "[172.16.1.2]:112".
+ * ospvSourceDevice: character string identifying the source device.
+ *      This could be the previous hop Gateway.
+ *      It is expressed as either a DNS name or an IP address enclosed in square
+ *      brackets, followed by an optional colon and TCP port number.
+ *      Examples of valid sources include "gateway1.carrier.com" and
+ *                                                  "[172.16.1.2]:112".
+ *      This string is optional and may be empty.
+ * ospvDestinationDevice: character string identifying the destination device.
+ *       The value is expressed as either a DNS name or an IP address enclosed
+ *       in square brackets, followed by an optional colon and TCP port number.
+ *       Examples of valid destinations include "gateway1.carrier.com" and
+ *           "[172.16.1.2]:112".
+ *      This string is optional and may be empty.
+ * ospvCallingNumber: character string containing the calling party's number
+ *       expressed as a full international number conforming to the ITU E.164
+ *       standard (with no punctuation).
+ * ospvCalledNumber: character string containing the called number, expressed
+ *       as a full international number conforming to the ITU E.164 standard
+ *       (with no punctuation).
+ * ospvSizeOfCallId: size of the memory buffer containing the call identifier.
+ * ospvCallId: memory location containing the H.323 call identifier for the
+ *       call.
+ * ospvSizeOfToken: size of the memory buffer containing an authorisation token
+ *       for the call.
+ * ospvToken: memory location containing an authorisation token.
+ * ospvAuthorised: pointer to a variable in which the function will indicate
+ *       whether or not the call is authorised. On return, a non-zero value
+ *       indicates that the call is authorised by the provider, while a zero
+ *       value indicates an authorisation failure.
+ * ospvTimeLimit: pointer to a variable in which to place the number of seconds
+ *       for which the call is initially authorised. A value of zero indicates
+ *       that no limit exists. Note that the initial time limit may be extended
+ *       during the call by using the function
+ *       OSPPTransactionRequestReauthorisation.
+ * ospvSizeOfDetailLog: pointer to a variable which, on input, contains the
+ *       maximum size of the detail log; on output, the variable will be updated
+ *       with the actual size of the detail log. By setting this value to zero,
+ *       applications indicate that they do not wish a detail log for the
+ *       authorisation validation.
+ * ospvDetailLog: pointer to a location in which to store a detail log for the
+ *       validation. If this pointer is not NULL, and if the ospvSizeOfDetailLog
+ *       parameter is non-zero, then the library will store a copy of the
+ *       authorisation confirmation obtained from the settlement provider,
+ *       including the settlement provider's digital signature.
+ *  ospvTokenAlgo: This can take either of the 3 values - TOKEN_ALGO_SIGNED,
+ *      TOKEN_ALGO_UNSIGNED, and TOKEN_ALGO_BOTH. If the value is set to
+ *      TOKEN_ALGO_SIGNED the toolkit expects the token to be signed, and
+ *      validates the signature as a part of token validation. If the value
+ *      is set to TOKEN_ALGO_UNSIGNED, an unsigned token is expected. If the
+ *      value is set to TOKEN_ALGO_BOTH, then the toolkit accepts either a
+ *      signed token or an unsigned token.
+ * If the provider has been configured to perform local validation, the SDK
+ * library is able to perform this function without network interaction, and,
+ * therefore, does not block for network input or output during its execution.
+ * If local validation is not used, this function blocks until authorisation has
+ * been validated, refused, or an error has been detected. The Open Settlement
+ * Protocol SDK Porting Guide includes information on modifying that behavior to
+ * prevent blocking.
+ * The function returns an error code or zero (if the operation was successful).
+ * Specific error codes and their meanings can be found in the osperrno.h file.
+ */
 int OSPPTransactionReinitializeAtDevice(
     OSPTTRANHANDLE ospvTransaction,
     OSPEFAILREASON ospvFailureReason,
@@ -2743,17 +2689,13 @@ int OSPPTransactionReportUsage(
             if (OSPPAuthRspHasDest(trans->AuthRsp)) {
                 OSPPListNew(&(trans->UsageInd));
 
-                /* Loop through all dests from first to current and create
-                 * usages for each
-                 */
+                /* Loop through all dests from first to current and create usages for each */
                 for ((dest = (OSPT_DEST *)OSPPListFirst(&(trans->AuthRsp->ospmAuthRspDest)));
                      (dest != trans->CurrentDest) &&
                      (errorcode == OSPC_ERR_NO_ERROR) &&
                      (dest != OSPC_OSNULL); (dest = (OSPT_DEST *)OSPPListNext(&(trans->AuthRsp->ospmAuthRspDest), dest)))
                 {
-                    /*
-                     * All dests up to current (if any) must have failreasons.
-                     */
+                    /* All dests up to current (if any) must have failreasons. */
                     if (!OSPPDestHasTermCauseAny(dest)) {
                         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
                         OSPM_DBGERRORLOG(errorcode, "No failure code found.");
@@ -2762,10 +2704,8 @@ int OSPPTransactionReportUsage(
                         errorcode = OSPPTransactionBuildUsage(trans, &usage, dest, datatype);
                     }
 
-                    /*
-                     * Add conference Id
-                     */
-                    if (ospvConferenceId && (ospvConferenceId[0] != '\0') && (OSPM_STRLEN(ospvConferenceId) < OSPC_CONFIDSIZE)) {
+                    /* Add conference Id */
+                    if (ospvConferenceId && (ospvConferenceId[0] != '\0') && (OSPM_STRLEN(ospvConferenceId) < OSPC_SIZE_CONFID)) {
                         OSPPUsageIndSetConferenceId(usage, ospvConferenceId);
                     }
 
@@ -2802,7 +2742,7 @@ int OSPPTransactionReportUsage(
 
                             /* Add Conference Id */
                             if ((ospvConferenceId) && (ospvConferenceId[0] != '\0') &&
-                                (OSPM_STRLEN(ospvConferenceId) < OSPC_CONFIDSIZE)) {
+                                (OSPM_STRLEN(ospvConferenceId) < OSPC_SIZE_CONFID)) {
                                 OSPPUsageIndSetConferenceId(usage, ospvConferenceId);
                             }
 
@@ -2882,7 +2822,7 @@ int OSPPTransactionReportUsage(
                     OSPPUsageIndSetPostDialDelay(usage, (int)ospvPostDialDelay);
                 }
                 OSPPUsageIndSetReleaseSource(usage, ospvReleaseSource);
-                if ((ospvConferenceId) && (ospvConferenceId[0] != '\0') && (OSPM_STRLEN(ospvConferenceId) < OSPC_CONFIDSIZE)) {
+                if ((ospvConferenceId) && (ospvConferenceId[0] != '\0') && (OSPM_STRLEN(ospvConferenceId) < OSPC_SIZE_CONFID)) {
                     OSPPUsageIndSetConferenceId(usage, ospvConferenceId);
                 }
                 if (trans->UsageSrcNetworkId[0] != '\0') {
@@ -2909,9 +2849,7 @@ int OSPPTransactionReportUsage(
         errorcode = OSPPXMLMessageCreate(OSPC_MSG_UIND, &xmldoc, &sizeofxmldoc, &(trans->UsageInd), trans);
     }
 
-    /*
-     * Check for audit. If it is turned on add xmldoc to audit storage.
-     */
+    /* Check for audit. If it is turned on add xmldoc to audit storage. */
     if (errorcode == OSPC_ERR_NO_ERROR) {
         if (trans->Provider->Comm->Flags & OSPC_COMM_AUDIT_ON) {
             errorcode = OSPPAuditAddMessageToBuffer(trans->Provider->Audit, xmldoc, sizeofxmldoc);
@@ -3186,8 +3124,7 @@ int OSPPTransactionRequestAuthorisation(
                                                 }
                                             }
 
-                                            /* Check for delay, if present, change from default.
-                                             * Call probe */
+                                            /* Check for delay, if present, change from default. Call probe */
                                             if (OSPPAuthRspHasDelayLimit(trans->AuthRsp)) {
                                                 delay = OSPPAuthRspGetDelayLimit(trans->AuthRsp);
                                             }
@@ -3396,7 +3333,6 @@ int OSPPTransactionRequestReauthorisation(
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
             } else {
                 /* set token from REARESP token */
-
                 if (!OSPPDestHasToken(trans->ReauthRsp->ospmReauthRspDest)) {
                     errorcode = OSPC_ERR_TRAN_TOKEN_INVALID;
                     OSPM_DBGERRORLOG(errorcode, "null pointer for token.");
@@ -3412,9 +3348,7 @@ int OSPPTransactionRequestReauthorisation(
                             errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
                             OSPM_DBGERRORLOG(errorcode, "not enough space for token");
                         } else {
-                            /*
-                             * Get the token
-                             */
+                            /* Get the token */
                             OSPM_MEMCPY(ospvToken, OSPPTokenGetValue(token), OSPPTokenGetSize(token));
                         }
                         *ospvSizeOfToken = OSPPTokenGetSize(token);
@@ -3627,9 +3561,7 @@ int OSPPTransactionValidateAuthorisation(
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
     }
 
-    /*
-     * Validate the signature and get the call id from the token
-     */
+    /* Validate the signature and get the call id from the token */
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPTransactionGetProvider(trans, &provider);
     }
@@ -3640,7 +3572,7 @@ int OSPPTransactionValidateAuthorisation(
 
     if ((errorcode == OSPC_ERR_NO_ERROR) && (IsTokenSigned == OSPC_TRUE)) {
         errorcode = OSPPSecSignatureVerify(security,
-                                           &tokenmsg, &sizeoftokenmsg, (unsigned char *)ospvToken, ospvSizeOfToken, OSPC_SEC_SIGNATURE_AND_CONTENT);
+            &tokenmsg, &sizeoftokenmsg, (unsigned char *)ospvToken, ospvSizeOfToken, OSPC_SEC_SIGNATURE_AND_CONTENT);
 
 #ifdef OSPC_VALIDATE_TOKEN_CERT_SUBJECT_NAME
         if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -3662,9 +3594,7 @@ int OSPPTransactionValidateAuthorisation(
         }
     }
 
-    /*
-     * Parse the Token into a TokenInfo structure
-     */
+    /* Parse the Token into a TokenInfo structure */
     if (errorcode == OSPC_ERR_NO_ERROR) {
         if (OSPM_STRNCMP("<?xml", (const char *)tokenmsg, 5) == 0) {
             errorcode = OSPPXMLMessageParse((unsigned char *)tokenmsg, sizeoftokenmsg, (void **)&tokeninfo, &dtype);
@@ -3684,9 +3614,7 @@ int OSPPTransactionValidateAuthorisation(
     }
 
 
-    /*
-     * Get the call id from the token, if it is "UNDEFINED", set callidundefined
-     */
+    /* Get the call id from the token, if it is "UNDEFINED", set callidundefined */
     if (errorcode == OSPC_ERR_NO_ERROR) {
         CallIdSize = OSPPTokenInfoGetCallIdSize(tokeninfo);
         CallIdValue = OSPPTokenInfoGetCallIdValue(tokeninfo);
@@ -3697,9 +3625,7 @@ int OSPPTransactionValidateAuthorisation(
         }
     }
 
-    /* Is there an AuthInd here already?
-     * If so, we are only adding the token
-     */
+    /* Is there an AuthInd here already? If so, we are only adding the token */
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* not here... make a new one */
         if (trans->AuthInd == OSPC_OSNULL) {
@@ -3713,9 +3639,7 @@ int OSPPTransactionValidateAuthorisation(
                 if ((ospvSizeOfCallId > 0) && (ospvCallId != NULL)) {
                     callid = OSPPCallIdNew(ospvSizeOfCallId, (const unsigned char *)ospvCallId);
                 } else {
-                    /*
-                     * Copy the callId from the token.
-                     */
+                    /* Copy the callId from the token. */
                     callid = OSPPCallIdNew(CallIdSize, (const unsigned char *)CallIdValue);
                 }
 
@@ -3757,8 +3681,6 @@ int OSPPTransactionValidateAuthorisation(
                     }
                 }
 
-
-
                 if (errorcode == OSPC_ERR_NO_ERROR) {
                     token = OSPPTokenNew(ospvSizeOfToken, (const unsigned char *)ospvToken);
 
@@ -3781,7 +3703,6 @@ int OSPPTransactionValidateAuthorisation(
                     }
                     altinfo = OSPC_OSNULL;
                 }
-
 
                 /* end if ospvSourceDevice != OSPC_OSNULL */
                 /* --------------------------------------
@@ -3823,7 +3744,6 @@ int OSPPTransactionValidateAuthorisation(
 
                         /* destination alternates - create a linked list */
                         OSPPListNew((OSPTLIST *)&(trans->AuthInd->ospmAuthIndDestinationAlternate));
-
 
                         /*
                          * We want to copy the Dest Trnk Group from the
@@ -3915,20 +3835,14 @@ int OSPPTransactionValidateAuthorisation(
         }
 
         if (trans->TokenInfoHasLookAheadInfo) {
-            /*
-             * Set the destination
-             */
+            /* Set the destination */
             OSPPTokenInfoSetLookAheadDestAlt(&(trans->TokenLookAheadInfo), OSPPTokenInfoGetLookAheadDestAlt(&(tokeninfo->ospmTokenLookAheadInfo)));
 
-            /*
-             * Set the destination Protocol
-             */
+            /* Set the destination Protocol */
             dstProt = OSPPTokenInfoGetLookAheadDestProtocol(&(tokeninfo->ospmTokenLookAheadInfo));
             trans->TokenLookAheadInfo.lookAheadDestProt = dstProt;
 
-            /*
-             * Set the OSP Version
-             */
+            /* Set the OSP Version */
             dstOSPStatus = OSPPTokenInfoGetLookAheadOSPVersion(&(tokeninfo->ospmTokenLookAheadInfo));
             trans->TokenLookAheadInfo.lookAheadDestOSPStatus = dstOSPStatus;
         }
@@ -3953,27 +3867,21 @@ int OSPPTransactionValidateAuthorisation(
 
         if (errorcode == OSPC_ERR_NO_ERROR && dtype == OSPC_MSG_TOKINFO) {
 
-            /*
-             * Verify Source Number
-             */
+            /* Verify Source Number */
             retcode = OSPM_STRCMP(OSPPAuthIndGetSourceNumber(trans->AuthInd), OSPPTokenInfoGetSourceNumber(tokeninfo));
 
             if (retcode != 0) {
                 errorcode = OSPC_ERR_TRAN_TOKEN_INVALID;
                 OSPM_DBGERRORLOG(errorcode, "information does not match");
             } else {
-                /*
-                 * Verify Destination Number
-                 */
+                /* Verify Destination Number */
                 retcode = OSPM_STRCMP(OSPPAuthIndGetDestNumber(trans->AuthInd), OSPPTokenInfoGetDestNumber(tokeninfo));
 
                 if (retcode != 0) {
                     errorcode = OSPC_ERR_TRAN_TOKEN_INVALID;
                     OSPM_DBGERRORLOG(errorcode, "information does not match");
                 } else {
-                    /*
-                     * Verify CallId
-                     */
+                    /* Verify CallId */
                     if ((CallIdValue != OSPC_OSNULL) &&
                         ((AuthIndCallId = OSPPAuthIndGetCallIdValue(trans->AuthInd)) != OSPC_OSNULL) &&
                         (ospvSizeOfCallId > 0) && (callidundefined == OSPC_FALSE)) {
@@ -3984,16 +3892,12 @@ int OSPPTransactionValidateAuthorisation(
                         errorcode = OSPC_ERR_TRAN_TOKEN_INVALID;
                         OSPM_DBGERRORLOG(errorcode, "information does not match");
                     } else {
-                        /*
-                         * Verify Valid After
-                         */
+                        /* Verify Valid After */
                         if (time((time_t *)0) < OSPPTokenInfoGetValidAfter(tokeninfo)) {
                             errorcode = OSPC_ERR_TRAN_TOO_SOON_TO_USE_TOKEN;
                             OSPM_DBGERRORLOG(errorcode, "too soon to use token");
                         } else {
-                            /*
-                             * Verify Valid Until
-                             */
+                            /* Verify Valid Until */
                             if (time((time_t *)0) > OSPPTokenInfoGetValidUntil(tokeninfo)) {
                                 errorcode = OSPC_ERR_TRAN_TOO_LATE_TO_USE_TOKEN;
                                 OSPM_DBGERRORLOG(errorcode, "too late to use token");
@@ -4003,9 +3907,7 @@ int OSPPTransactionValidateAuthorisation(
                 }
             }
             if (errorcode == OSPC_ERR_NO_ERROR) {
-                /*
-                 * Add transaction id to transactionid tree and check for reuse.
-                 */
+                /* Add transaction id to transactionid tree and check for reuse. */
 #ifdef OSP_ALLOW_DUP_TXN
                 BAllowDupTransId = OSPC_TRUE;
 #else
@@ -4015,9 +3917,7 @@ int OSPPTransactionValidateAuthorisation(
                     (OSPPTransIdCheckAndAdd(OSPPTokenInfoGetTrxId(tokeninfo),
                     (unsigned long)OSPPTokenInfoGetValidUntil(tokeninfo), trans->Provider)))
                 {
-                    /*
-                     * Populate Transaction Id
-                     */
+                    /* Populate Transaction Id */
                     trans->TransactionID = OSPPTokenInfoGetTrxId(tokeninfo);
                     trans->HasTransactionID = OSPC_TRUE;
 
@@ -4178,9 +4078,7 @@ int OSPPTransactionIndicateCapabilities(
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
 
-    /*
-     * Validate input parameters - Source and SourceDevice must not be NULLs
-     */
+    /* Validate input parameters - Source and SourceDevice must not be NULLs */
     if (OSPC_OSNULL == ospvSource || OSPC_OSNULL == ospvSourceDevice) {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
         OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionIndicateCapabilities");
@@ -4209,27 +4107,17 @@ int OSPPTransactionIndicateCapabilities(
         }
     }
 
-    /*
-     *
-     * Input parameters and state validation are over, we are off to the business logic
-     *
-     */
+    /* Input parameters and state validation are over, we are off to the business logic */
     if (OSPC_ERR_NO_ERROR == errorcode) {
-        /*
-         * Create and initialize new Capability Indication structure
-         */
+        /* Create and initialize new Capability Indication structure */
         errorcode = OSPPCapIndNew(&capind, trans, ospvSource, ospvSourceDevice, ospvSourceNetworkId, ospvAlmostOutOfResources);
 
-        /*
-         * XML-encode the structure
-         */
+        /* XML-encode the structure */
         if (OSPC_ERR_NO_ERROR == errorcode) {
             errorcode = OSPPXMLMessageCreate(OSPC_MSG_CAPIND, &xmldoc, &sizeofxmldoc, capind, trans);
         }
 
-        /*
-         * Prepare a structure for sending the message over the network
-         */
+        /* Prepare a structure for sending the message over the network */
         if (OSPC_ERR_NO_ERROR == errorcode) {
             errorcode = OSPPMsgInfoNew(&msginfo);
         }
@@ -4255,18 +4143,14 @@ int OSPPTransactionIndicateCapabilities(
             errorcode = OSPPTransactionProcessReturn(trans, msginfo);
         }
 
-        /*
-         * If the response code is above 299, translate it to an error code
-         */
+        /* If the response code is above 299, translate it to an error code */
         if (OSPC_ERR_NO_ERROR == errorcode) {
             if (trans->CapCnf->ospmStatus->ospmStatusCode > 299) {
                 errorcode = OSPPUtilGetErrorFromStatus(trans->CapCnf->ospmStatus->ospmStatusCode);
             }
         }
 
-        /*
-         * Update the transaction status based on the error code
-         */
+        /* Update the transaction status based on the error code */
         if (OSPC_ERR_NO_ERROR == errorcode) {
             OSPPTransactionSetState(trans, OSPC_CAP_IND_SUCCESS);
         } else {
@@ -4276,9 +4160,7 @@ int OSPPTransactionIndicateCapabilities(
         /* Data or state validation must have failed */
     }
 
-    /*
-     * Clean-up temporary objects
-     */
+    /* Clean-up temporary objects */
     if (xmldoc != OSPC_OSNULL) {
         OSPM_FREE(xmldoc);
         xmldoc = NULL;
@@ -4324,9 +4206,7 @@ int OSPPTransactionSetRoutingNumber(
                 if (trans->NPRn[0] != '\0') {
                     errorcode = OSPC_ERR_TRAN_DUPLICATE_REQUEST;
                 } else if (trans->AuthReq == OSPC_OSNULL) {
-                    /*
-                     * Authorization Request has not been called.
-                     */
+                    /* Authorization Request has not been called. */
                     OSPM_STRNCPY(trans->NPRn, ospvRoutingNumber, sizeof(trans->NPRn) - 1);
                 } else {
                     /*

@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osppkcs7.h - Constants and prototypes for PKCS#7 cryptographic messages
- */
-
+/* osppkcs7.h - Constants and prototypes for PKCS#7 cryptographic messages */
 #ifndef _OSPPKCS7_H
 #define _OSPPKCS7_H
 
@@ -28,16 +25,12 @@
 #include "osp/ospx509.h"
 #include "osp/osppkcs1.h"
 
-/*
- * SIGNED DATA typedef
- */
-
+/* SIGNED DATA typedef */
 #define OSPC_SIGNERINFO_MAX_ATTRIBUTES  10
 #define OSPC_PKCS7_SIGNERINFO_VERSION   1
 #define OSPC_PKCS7_SIGNEDDATA_VERSION   1
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -59,9 +52,9 @@ extern "C" {
             unsigned char **ospvSignature,                      /* Out - ptr to ptr to sig store */
             unsigned *ospvSignatureLength);                     /* Out - length of signature */
     int OSPPPKCS7SignatureParse(OSPTASN1OBJECT **ospvSignatureObject, unsigned char *ospvSignature, unsigned int ospvSignatureLength);
-    int OSPPPKCS7SignatureGetContent(OSPTASN1OBJECT *ospvSignatureObject, unsigned char **ospvContent, unsigned int *ospvContentLength, 
+    int OSPPPKCS7SignatureGetContent(OSPTASN1OBJECT *ospvSignatureObject, unsigned char **ospvContent, unsigned int *ospvContentLength,
             OSPTASN1ELEMENTINFO **);
-    int OSPPPKCS7SignatureVerify(OSPTASN1OBJECT *ospvSignatureObject, unsigned char *ospvContent, unsigned int ospvContentLength, 
+    int OSPPPKCS7SignatureVerify(OSPTASN1OBJECT *ospvSignatureObject, unsigned char *ospvContent, unsigned int ospvContentLength,
             OSPTASN1OBJECT **ospvAuthorityCertificates, unsigned int ospvNumberOfAuthorityCertificates);
     int OSPPPKCS7DigestInfoCreate(OSPTASN1OBJECT **ospvDigestInfo, OSPTASN1OBJECT *ospvDigestAlgorithm, unsigned char *ospvContent,
             unsigned int ospvContentLength);

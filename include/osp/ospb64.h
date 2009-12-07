@@ -19,7 +19,6 @@
 #define _OSPB64_H
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

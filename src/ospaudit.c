@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospaudit.c - OSP audit functions
- */
+/* ospaudit.c - OSP audit functions */
 
 #include "osp/osp.h"
 #include "osp/ospaudit.h"

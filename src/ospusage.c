@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospusage.c - OSP usage detail functions
- */
+/* ospusage.c - OSP usage detail functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"

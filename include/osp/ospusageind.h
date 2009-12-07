@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospusageind.h - OSP Usage Indication Objects
- */
-
+/* ospusageind.h - OSP Usage Indication Objects */
 #ifndef _OSPUSAGEIND_H
 #define _OSPUSAGEIND_H
 
@@ -39,7 +36,7 @@ typedef struct {
     OSPTTIME ospmUsageIndPostDialDelay;
     OSPTBOOL ospmUsageIndHasPDD;
     unsigned ospmUsageIndReleaseSource;
-    char ospmUsageIndConferenceId[OSPC_CONFIDSIZE];     /* This is in chararcters */
+    char ospmUsageIndConferenceId[OSPC_SIZE_CONFID];    /* This is in chararcters */
     char *ospmUsageIndMessageId;
     char *ospmUsageIndComponentId;
     OSPE_ROLE ospmUsageIndRole;
@@ -69,7 +66,6 @@ typedef struct {
 } OSPT_USAGEIND;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospstatus.c - OSP status functions
- */
+/* ospstatus.c - OSP status functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"
@@ -33,7 +31,6 @@
 /*
  * OSPPStatusNew() - create a new status object
  */
-
 OSPTSTATUS *OSPPStatusNew(void)     /* returns ptr to status or null */
 {
     OSPTSTATUS *ospvStatus = OSPC_OSNULL;

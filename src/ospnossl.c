@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospnossl.c - SSL API bridge to NO SSL IMPLEMENTATION !!!
- */
+/* ospnossl.c - SSL API bridge to NO SSL IMPLEMENTATION !!! */
+
 #include "osp/osp.h"
 #include "osp/ospsocket.h"
 #include "osp/ospssl.h"
@@ -46,7 +45,7 @@ void OSPPSSLWrapCleanup(
 }
 
 int OSPPSSLWrapSessionContextNew(
-    void *ospvConnection, 
+    void *ospvConnection,
     void *ospvContextRef)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -60,7 +59,7 @@ int OSPPSSLWrapSessionContextNew(
 }
 
 int OSPPSSLWrapAttachConnection(
-    OSPTSSLSESSION *ospvSSLSession, 
+    OSPTSSLSESSION *ospvSSLSession,
     void *ospvConnection)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -98,8 +97,8 @@ int OSPPSSLWrapSessionContextDelete(
 }
 
 int OSPPSSLWrapGetData(
-    void *ospvBuffer, 
-    unsigned int *ospvLength, 
+    void *ospvBuffer,
+    unsigned int *ospvLength,
     OSPTSSLSESSION *ospvSSLSession)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -114,8 +113,8 @@ int OSPPSSLWrapGetData(
 }
 
 int OSPPSSLWrapSendData(
-    void *ospvBuffer, 
-    unsigned int *ospvLength, 
+    void *ospvBuffer,
+    unsigned int *ospvLength,
     OSPTSSLSESSION *ospvSSLSession)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -138,8 +137,8 @@ void OSPPSSLWrapFreeServerRootCACert(
 }
 
 int OSPPSSLWrapGetServerRootCACert(
-    void **ospvRootCACert, 
-    int *ospvRootCACertLen, 
+    void **ospvRootCACert,
+    int *ospvRootCACertLen,
     OSPTSSLSESSION *ospvSSLSession)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

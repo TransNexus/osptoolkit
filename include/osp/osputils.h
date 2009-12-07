@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osputils.h - Constants and prototypes for utility functions.
- */
-
+/* osputils.h - Constants and prototypes for utility functions. */
 #ifndef _OSPUTILS_H
 #define _OSPUTILS_H
 
@@ -31,7 +28,6 @@
 #define OSPC_FAKE_TOKEN         ")&(^%&$^%#"
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

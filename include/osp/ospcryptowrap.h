@@ -30,10 +30,10 @@
 #define OSPC_CRYPTO_FLAG_ENCRYPTED_WITH_PUBLIC_KEY  0x10
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
     int OSPPCryptoWrapDigest(unsigned char *ospvDigest, unsigned *ospvDigestLength, unsigned char *ospvBERAlgorithm, unsigned ospvBERAlgorithmLength,
             unsigned char *ospvData, unsigned ospvDataLength, unsigned char ospvFlags);
     int OSPPCryptoWrapEncrypt(unsigned char *ospvEncryptedData, unsigned *ospvEncryptedDataLength, unsigned char *ospvBERAlgorithm,

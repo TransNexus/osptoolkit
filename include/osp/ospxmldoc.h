@@ -29,7 +29,6 @@
 #include "osp/ospxmlelem.h"
 
 /* various XML character constants */
-
 #define OSPC_XMLDOC_LF              '\x0A'
 #define OSPC_XMLDOC_OPEN            '<'
 #define OSPC_XMLDOC_CLOSE           '>'
@@ -48,13 +47,11 @@
 #define OSPC_XMLDOC_MARKUPDECLCLOSE ']'
 
 /* UTF-16 byte order marks */
-
 #define OSPC_XMLDOC_UTF16MSB        0xFE
 #define OSPC_XMLDOC_UTF16LSB        0xFF
 #define OSPC_XMLDOC_UTF16NULL       0x00
 
 /* various XML string constants */
-
 #define OSPC_XMLDOC_DECL               "<?xml version=\"1.0\"?>"
 #define OSPC_XMLDOC_DECLLEN            (sizeof(OSPC_XMLDOC_DECL)-1)
 
@@ -105,12 +102,10 @@
  * buffers a lot; too large and we waste a little space during XML
  * parsing.
  */
-
 #define OSPC_XMLDOC_NAMESIZE   100
 #define OSPC_XMLDOC_VALUESIZE  1000
 
 /* maximum size of entity name  */
-
 #define OSPC_XMLDOC_ENTITYSIZE 10
 
 /* character encodings supported */
@@ -128,7 +123,6 @@ typedef struct {
 } OSPT_XML_ENTITY;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -144,7 +138,6 @@ extern "C" {
     unsigned OSPPXMLDereference(const unsigned char *, unsigned *, unsigned char *);
 
     /* functions in ospxmlenc.c */
-
     int OSPPXMLDocCreate(OSPT_XML_ELEM *, OSPTBFR **);
     int OSPPXMLDocAddElem(OSPT_XML_ELEM *, OSPTBFR **);
     int OSPPXMLDocAddElemName(OSPT_XML_ELEM *, OSPTBFR **);
@@ -153,7 +146,6 @@ extern "C" {
     int OSPPXMLDocAddChar(OSPTBFR **, char);
 
     /* functions in ospxmlparse.c */
-
     unsigned OSPPXMLDocParse(OSPTBFR **, OSPT_XML_ELEM **);
     unsigned OSPPXMLDocParseElem(OSPTBFR **, OSPE_XML_ENC, OSPT_XML_ELEM **);
     unsigned OSPPXMLDocGetAttrs(OSPTBFR **, OSPE_XML_ENC, OSPTLIST *);

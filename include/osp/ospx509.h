@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospx509.h - Constants and prototypes for X509 Certificate object.
- */
-
+/* ospx509.h - Constants and prototypes for X509 Certificate object. */
 #ifndef _OSPX509_H
 #define _OSPX509_H
 
@@ -45,12 +42,9 @@ typedef struct {
     OSPTASN1BUFFER *ExtnValue;
 } OSPTCERTEXT;
 
-/*
- * X509 certificate typedef
- */
+/* X509 certificate typedef */
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

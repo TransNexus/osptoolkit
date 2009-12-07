@@ -45,7 +45,6 @@
 #endif
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

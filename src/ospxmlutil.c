@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospxmlutil.c - Utility functions for parsing and encoding XML documents.
- */
+/* ospxmlutil.c - Utility functions for parsing and encoding XML documents. */
 
 #include "osp/osp.h"
 #include "osp/ospbfr.h"
@@ -152,7 +150,7 @@ unsigned OSPPXMLDocSkipPast(            /* returns error code */
      */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         for (cnt = 0, len = OSPM_STRLEN((const char *)ospvString);
-            ((cnt < len) && (ospvErrCode == OSPC_ERR_NO_ERROR)); cnt++) 
+            ((cnt < len) && (ospvErrCode == OSPC_ERR_NO_ERROR)); cnt++)
         {
             ospvErrCode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &ospvScratch[cnt]);
         }
@@ -304,7 +302,7 @@ unsigned OSPPXMLDocGetEncoding( /* returns error code */
  */
 
 unsigned OSPPXMLDocTranslateEntity( /* returns error code */
-    unsigned char *ospvName, 
+    unsigned char *ospvName,
     unsigned char *ospvChar)        /* place to store character */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -355,8 +353,8 @@ unsigned OSPPXMLDocTranslateEntity( /* returns error code */
         } else {
             /* not a character reference - check for predefined name */
             for (cnt = 0; cnt < OSPVXMLDocEntitiesSize; cnt++) {
-                if (OSPM_MEMCMP((const char *)ospvName, (const char *)OSPVXMLDocEntities[cnt].ospmXMLEntName, 
-                    OSPM_STRLEN((const char *)OSPVXMLDocEntities[cnt].ospmXMLEntName)) == 0) 
+                if (OSPM_MEMCMP((const char *)ospvName, (const char *)OSPVXMLDocEntities[cnt].ospmXMLEntName,
+                    OSPM_STRLEN((const char *)OSPVXMLDocEntities[cnt].ospmXMLEntName)) == 0)
                 {
                     break;
                 }
@@ -551,7 +549,7 @@ unsigned OSPPXMLAddReference(           /* returns error code */
     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
         for (dataCnt = 0;
              (dataCnt < ospvDataSize) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-             dataCnt++, ospvRawData++) 
+             dataCnt++, ospvRawData++)
         {
             /*
              * There are two things that will cause us to replace a raw
@@ -635,7 +633,7 @@ unsigned OSPPXMLDereference(            /* returns error code */
     unsigned flag = OSPC_FALSE;
 
     /* If flag == TRUE, the following is used to store the size of the entity
-     * after it has been translated. 
+     * after it has been translated.
      */
     unsigned char translatedEntity[OSPC_XMLDOC_ENTITYSIZE];
 

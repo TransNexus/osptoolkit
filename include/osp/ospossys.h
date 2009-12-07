@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospossys.h - OS dependent system macros.
- */
-
+/* ospossys.h - OS dependent system macros. */
 #ifndef _OSPOSSYS_H
 #define _OSPOSSYS_H
 

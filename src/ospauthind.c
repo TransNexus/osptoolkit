@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospauthind.c - OSP authorisation indication functions
- */
+/* ospauthind.c - OSP authorisation indication functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"

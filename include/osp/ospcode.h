@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospcode.h - Status codes and strings for status element
- */
-
+/* ospcode.h - Status codes and strings for status element */
 #ifndef _OSPCODE_H
 #define _OSPCODE_H
 

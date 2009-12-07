@@ -15,17 +15,13 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospasn1parse.c - Member functions for ASN1 parsing library
- */
+/* ospasn1parse.c - Member functions for ASN1 parsing library */
 
 #include "osp/osp.h"
 #include "osp/ospasn1.h"
 #include "osp/osptnlog.h"
 
-/*
- * Member functions
- */
+/* Member functions */
 
 #if 0
 
@@ -48,15 +44,15 @@ THE PARSE RESULTS TABLE WILL HAVE:
 
     datafieldindex  If a data field id can have multiple occurances, then this
     value indicates which occurance it is. 0 indicates it is
-    the only one.  
+    the only one.
 
-    treeAddress     Tree address to the data. 
+    treeAddress     Tree address to the data.
 
-    Format is 1.2.3: Last index should be a primitive.  Other 
-    indexes must be constructed.  
+    Format is 1.2.3: Last index should be a primitive.  Other
+    indexes must be constructed.
 
     Count index following next pointers. Follow child pointer at
-    period.  
+    period.
 
     null indicates not found.
 
@@ -69,7 +65,7 @@ THE PARSE RESULTS TABLE WILL HAVE:
     related to the data structure field.  Extractor can access
     data by value, element, or element content.
 
-    null indicates not found. 
+    null indicates not found.
 
     defaultValuePtr Null indicates eInfoPtr should be followed for data.  If
     not null, then a void pointer is set to point to the
@@ -79,26 +75,26 @@ THE PARSE RESULTS TABLE WILL HAVE:
 THE PARSING TABLE WILL HAVE:
     A complete description of the structure being parsed.  Default fields, etc
     must be described. All elements will be described.  The description will
-    Fields must be in the order they occur in the table.  
+    Fields must be in the order they occur in the table.
 
     componentname   Used for diagnostics.
 
     Textual description of the expected element.
 
     parsetableid    Enum indicating a parse table to use for recursive parse.
-    if PRIMITIVE, (datafieldid != NONE), then no parsetable should 
-    be followed - generate a parse result record and write it to 
+    if PRIMITIVE, (datafieldid != NONE), then no parsetable should
+    be followed - generate a parse result record and write it to
                                             result table.
 
-    If constructed, recursively parse current element using 
+    If constructed, recursively parse current element using
     parsetableid to reference the appropriate parse table for the
     element.
 
     If SEQUENCE, then get subsequent elements in parse table.
 
-    If SET, then get subsequent elements in table, repeat according to the min/max fields. 
+    If SET, then get subsequent elements in table, repeat according to the min/max fields.
 
-    If SET_OF, then get subsequent elements in table, repeat 
+    If SET_OF, then get subsequent elements in table, repeat
     according to min/max fields
 
     If ANY_DEFINED_BY   ?
@@ -112,7 +108,7 @@ THE PARSING TABLE WILL HAVE:
     When a parse result record is written, this datafieldid is
     written to it so the calling program will have something to
     search for to find data for a particular data structure
-    field.  
+    field.
     ex: When the calling program is ready to populate the
     version number field for a certificate.  It would look
     for a record in the parse results table whose
@@ -197,9 +193,9 @@ static OSPTASN1PARSETABLE ospgParseTable_Name[] = {
     {"Name", OSPC_TAG_TYPE_DERIVED, OSPEPTID_RDNSEQUENCE, 0x0, 1, 1, 0, 0},
     {OSPC_OSNULL}
 
-    /* This definition is strange because Name is a CHOICE of RDNSequence.  
-       Choice does not generate an element. Special handling at beginning 
-       of element parse to handle parse tables with first entry of Type 
+    /* This definition is strange because Name is a CHOICE of RDNSequence.
+       Choice does not generate an element. Special handling at beginning
+       of element parse to handle parse tables with first entry of Type
        Tag "CONSTRUCTED" to have it immediately parse new element. */
 };
 
@@ -253,7 +249,7 @@ static OSPTASN1PARSETABLE ospgParseTable_Time[] = {
 static OSPTASN1PARSETABLE ospgParseTable_UTCTime[] = {
     {"UTCTime", OSPC_TAG_TYPE_UTCTIME, OSPEPTID_NOTDEFINED, 0x0, 1, 1, 0, 0},
     {OSPC_OSNULL}
-    /* This one is a little strange because UTCTIME is a named type as well as a primitive type.  
+    /* This one is a little strange because UTCTIME is a named type as well as a primitive type.
        Made it a named type as well so that the Time choice would have someplace to go. */
 };
 
@@ -957,7 +953,7 @@ static unsigned char ospgDataRefId_CertReqInfo[] = {
 };
 
 /* Define the location of the version for a
- * PKCS#10 certificate request info: 
+ * PKCS#10 certificate request info:
  */
 static unsigned char ospgDataRefId_CertReqInfo_Version[] = {
     OSPC_ASN1_DATAREFID_CERTREQ,
@@ -966,8 +962,8 @@ static unsigned char ospgDataRefId_CertReqInfo_Version[] = {
     0xff
 };
 
-/* Define the location of the subject for a 
- * PKCS#10 certificate request info: 
+/* Define the location of the subject for a
+ * PKCS#10 certificate request info:
  */
 static unsigned char ospgDataRefId_CertReqInfo_Subject[] = {
     OSPC_ASN1_DATAREFID_CERTREQ,
@@ -977,7 +973,7 @@ static unsigned char ospgDataRefId_CertReqInfo_Subject[] = {
 };
 
 /* Define the location of the subjectPublicKeyInfo for a
- * PKCS#10 certificate request info: 
+ * PKCS#10 certificate request info:
  */
 static unsigned char ospgDataRefId_CertReqInfo_SubjPubKeyInfo[] = {
     OSPC_ASN1_DATAREFID_CERTREQ,
@@ -986,8 +982,8 @@ static unsigned char ospgDataRefId_CertReqInfo_SubjPubKeyInfo[] = {
     0xff
 };
 
-/* Define the location of the optional attributes for a 
- * PKCS#10 certificate request info: 
+/* Define the location of the optional attributes for a
+ * PKCS#10 certificate request info:
  */
 static unsigned char ospgDataRefId_CertReqInfo_Attributes[] = {
     OSPC_ASN1_DATAREFID_CERTREQ,
@@ -996,8 +992,8 @@ static unsigned char ospgDataRefId_CertReqInfo_Attributes[] = {
     0xff
 };
 
-/* Define the location of the signature algorithm id for 
- * a PKCS#10 certificate request: 
+/* Define the location of the signature algorithm id for
+ * a PKCS#10 certificate request:
  */
 static unsigned char ospgDataRefId_CertReq_Signature_Algorithm[] = {
     OSPC_ASN1_DATAREFID_CERTREQ,
@@ -1115,8 +1111,8 @@ static unsigned char *ospgDataRefIdIndex[] = {
 
 int PTPAddParseResults(
     OSPTASN1PARSERULE *ospvParseRule,
-    OSPTASN1ELEMENTINFO *ospvElementInfo, 
-    OSPTASN1PARSERESULT **ospvParseResult, 
+    OSPTASN1ELEMENTINFO *ospvElementInfo,
+    OSPTASN1PARSERESULT **ospvParseResult,
     unsigned char ospvDataRef)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1157,7 +1153,7 @@ int PTPAddParseResults(
 }
 
 int PTPTableGet(
-    OSPEASN1PARSETABLEID ospvParseTableId, 
+    OSPEASN1PARSETABLEID ospvParseTableId,
     OSPTASN1PARSETABLE *ospvParseTable[])
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1168,8 +1164,8 @@ int PTPTableGet(
 }
 
 int PTPTableGetRule(
-    OSPEASN1PARSETABLEID ospvParseTableId, 
-    OSPTASN1PARSERULE **ospvParseRule, 
+    OSPEASN1PARSETABLEID ospvParseTableId,
+    OSPTASN1PARSERULE **ospvParseRule,
     unsigned int *ospvRuleIndex)    /* Updated to point to next rule */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1209,7 +1205,7 @@ int PTPRuleIsPrimitive( /* Boolean */
         is_primitive = 0;
         break;
     case OSPC_TAG_TYPE_DER_FORMAT:
-        /* This one is always primitive - used to stop parsing for 
+        /* This one is always primitive - used to stop parsing for
            a construct */
         is_primitive = 1;
         break;
@@ -1235,7 +1231,7 @@ int PTPRuleIsDERFormat(
 }
 
 int PTPRuleGetParseTableId(
-    OSPTASN1PARSERULE *ospvParseRule, 
+    OSPTASN1PARSERULE *ospvParseRule,
     OSPEASN1PARSETABLEID *ospvParseTableId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1265,7 +1261,7 @@ void PTPResultsDelete(
 }
 
 int PTPDataReferencesMatch(
-    unsigned char *ospvDataReferenceId1, 
+    unsigned char *ospvDataReferenceId1,
     unsigned char *ospvDataReferenceId2)
 {
     unsigned char *ptr1 = OSPC_OSNULL;
@@ -1280,7 +1276,7 @@ int PTPDataReferencesMatch(
 }
 
 int PTPResultIsRuleComponent(
-    unsigned char *ospvRuleDataReference, 
+    unsigned char *ospvRuleDataReference,
     unsigned char *ospvResultDataReference)
 {
     unsigned char *ptr1 = OSPC_OSNULL;
@@ -1297,7 +1293,7 @@ int PTPResultIsRuleComponent(
 }
 
 int PTPDataRefIdGetValue(
-    OSPEASN1DATAREFID ospvDataRefId, 
+    OSPEASN1DATAREFID ospvDataRefId,
     unsigned char **ospvDataRefValue)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1313,8 +1309,8 @@ int PTPDataRefIdGetValue(
 }
 
 int PTPResultsGetElement(
-    OSPEASN1DATAREFID ospvDataReferenceId, 
-    OSPTASN1PARSERESULT *ospvParseResult, 
+    OSPEASN1DATAREFID ospvDataReferenceId,
+    OSPTASN1PARSERESULT *ospvParseResult,
     OSPTASN1ELEMENTINFO **ospvFoundElement)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1337,7 +1333,7 @@ int PTPResultsGetElement(
 }
 
 void PTPResultUpdateDataRef(
-    unsigned char ospvParentDataRef, 
+    unsigned char ospvParentDataRef,
     OSPTASN1PARSERESULT *ospvParseResult)
 {
     int i = 0;
@@ -1373,8 +1369,8 @@ void PTPResultUpdateDataRef(
 }
 
 int PTPResultsCreate(
-    OSPTASN1PARSERESULT **ospvParseResult, 
-    OSPTASN1ELEMENTINFO *ospvElement, 
+    OSPTASN1PARSERESULT **ospvParseResult,
+    OSPTASN1ELEMENTINFO *ospvElement,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1407,7 +1403,7 @@ int PTPResultsCreate(
 }
 
 int PTPResultsCopy(
-    OSPTASN1PARSERESULT **ospvDestResults, 
+    OSPTASN1PARSERESULT **ospvDestResults,
     OSPTASN1PARSERESULT *ospvSrcResults)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1438,7 +1434,7 @@ int PTPResultsCopy(
 }
 
 int PTPDataRefAddRef(
-    unsigned char ospvDataReference[], 
+    unsigned char ospvDataReference[],
     unsigned char ospvNewReference)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

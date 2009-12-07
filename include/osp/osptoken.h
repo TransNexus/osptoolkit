@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptoken.h - OSP token objects
- */
-
+/* osptoken.h - OSP token objects */
 #ifndef _OSPTOKEN_H
 #define _OSPTOKEN_H
 
@@ -27,12 +24,10 @@
 #include "osp/ospxmlelem.h"
 
 /* max size of a token (bytes) */
-
 #define OSPC_TOKENMAXSIZE           3200
 #define OSPC_TOKENMAXSTRINGSIZE     6 * OSPC_TOKENMAXSIZE
 
 /* the basic token structure */
-
 typedef struct {
     OSPTLISTLINK ospmTokenLink;
     unsigned ospmTokenLen;
@@ -46,7 +41,6 @@ typedef enum {
 } token_algo_t;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

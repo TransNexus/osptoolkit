@@ -15,17 +15,13 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospxmlmsgelem.c - XML element processing specific to OSP.
- */
+/* ospxmlmsgelem.c - XML element processing specific to OSP. */
 
 #include "osp/osp.h"
 #include "osp/ospmsgdesc.h"
 #include "osp/ospmsgelem.h"
 
-/*
- * Static global variables
- */
+/* Static global variables */
 
 /* Array that associates elements and names */
 const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {

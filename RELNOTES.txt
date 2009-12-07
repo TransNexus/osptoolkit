@@ -509,4 +509,5 @@ Version 3.5.4
 * Added round trip delay setting support.
 * Added support for new protocols.
 * Fixed destdev issue of OSPPTransactionGetDestination.
-* Added SPID support.
+* Added SPID & OCN support.
+* Added new ServiceType.

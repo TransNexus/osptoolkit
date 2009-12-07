@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospreauthreq.c - OSP authorisation request functions
- */
+/* ospreauthreq.c - OSP authorisation request functions */
 
 #include <assert.h>
 

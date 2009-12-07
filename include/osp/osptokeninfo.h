@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptokeninfo.h - OSP token info objects
- */
-
+/* osptokeninfo.h - OSP token info objects */
 #ifndef _OSPTOKENINFO_H
 #define _OSPTOKENINFO_H
 
@@ -49,7 +46,6 @@ typedef struct {
 } OSPTTOKENINFO;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

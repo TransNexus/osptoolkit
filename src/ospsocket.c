@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospsocket.cpp - Socket functions.
- */
+/* ospsocket.cpp - Socket functions. */
+
 #include "osp/osp.h"
 #include "osp/ospconfig.h"
 #include "osp/ospsocket.h"
@@ -31,8 +30,8 @@
 #endif
 
 int OSPPSockClose(
-    OSPTBOOL ospvGracefulSSLShutdown, 
-    OSPTSOCKET *ospvSockFd, 
+    OSPTBOOL ospvGracefulSSLShutdown,
+    OSPTSOCKET *ospvSockFd,
     OSPTSSLSESSION ** SSLSession)
 {
     int tmperror = OSPC_ERR_NO_ERROR;
@@ -51,8 +50,8 @@ int OSPPSockClose(
 }
 
 const char *OSPM_INET_NTOA(
-    OSPTIPADDR ip, 
-    char *buffer, 
+    OSPTIPADDR ip,
+    char *buffer,
     socklen_t length)
 {
     struct in_addr sin;
@@ -63,9 +62,9 @@ const char *OSPM_INET_NTOA(
 int OSPPSockConnect(
     OSPTSOCKET *ospvSockFd,
     OSPTBOOL ospvBlocking,
-    OSPTIPADDR ospvIpAddr, 
-    unsigned short ospvPort, 
-    struct timeval *ospvTimeout, 
+    OSPTIPADDR ospvIpAddr,
+    unsigned short ospvPort,
+    struct timeval *ospvTimeout,
     OSPTSSLSESSION **ospvSSLSession)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -73,7 +72,7 @@ int OSPPSockConnect(
     char buffer[INET_ADDRSTRLEN];
 
     /*
-     * set the connection socket. 
+     * set the connection socket.
      * This will also affect reads and writes.
      */
     errorcode = OSPPSockSetBlockingIO(*ospvSockFd, ospvBlocking);
@@ -103,7 +102,7 @@ int OSPPSockConnect(
             OSPPSockClose(OSPC_FALSE, ospvSockFd, ospvSSLSession);
         } else {
             /*
-             * use the configured timeout to limit how 
+             * use the configured timeout to limit how
              * long to wait for a connection
              */
             errorcode = OSPPSockWaitTillReady(*ospvSockFd, OSPC_FALSE, ospvTimeout);
@@ -131,7 +130,7 @@ int OSPPSockConnect(
 }
 
 int OSPPSockConnectAuditURL(
-    OSPTHTTP *ospvHttp, 
+    OSPTHTTP *ospvHttp,
     OSPTBOOL *ospvConnected)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -145,7 +144,7 @@ int OSPPSockConnectAuditURL(
     }
 
     /*
-     * see if the socket is or has been connected. If so, shut it 
+     * see if the socket is or has been connected. If so, shut it
      * down now.
      */
     if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -159,7 +158,7 @@ int OSPPSockConnectAuditURL(
     }
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
-         * create a new socket 
+         * create a new socket
          */
         errorcode = OSPPSockNew(ospvHttp);
         if (errorcode != OSPC_ERR_NO_ERROR) {
@@ -222,8 +221,8 @@ int OSPPSockConnectAuditURL(
 }
 
 int OSPPSockConnectServicePoint(
-    OSPTHTTP *ospvHttp, 
-    OSPTBOOL *ospvRollover, 
+    OSPTHTTP *ospvHttp,
+    OSPTBOOL *ospvRollover,
     OSPTBOOL *ospvConnected)
 {
     unsigned numsvcpts = 0, socktimeout = 0;
@@ -238,7 +237,7 @@ int OSPPSockConnectServicePoint(
     }
 
     /*
-     * see if the socket is or has been connected. If so, shut it 
+     * see if the socket is or has been connected. If so, shut it
      * down now.
      */
     if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -254,7 +253,7 @@ int OSPPSockConnectServicePoint(
     }
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
-         * create a new socket 
+         * create a new socket
          */
         errorcode = OSPPSockNew(ospvHttp);
         if (errorcode != OSPC_ERR_NO_ERROR) {
@@ -285,8 +284,8 @@ int OSPPSockConnectServicePoint(
                         ospvHttp->ServicePoint = (OSPTSVCPT *)OSPPListNext((OSPTLIST *)& svcptlist, ospvHttp->ServicePoint);
 
                         /*
-                         * let the calling function know that the 
-                         * service point list has been rolled over 
+                         * let the calling function know that the
+                         * service point list has been rolled over
                          * to the beginning
                          */
                         if (ospvHttp->ServicePoint == OSPC_OSNULL) {
@@ -294,7 +293,7 @@ int OSPPSockConnectServicePoint(
                         }
                     }
 
-                    /* 
+                    /*
                      * if the next item in the service point list is null,
                      * then the list is exhausted
                      */
@@ -366,7 +365,7 @@ int OSPPSockDisableNagle(
 }
 
 int OSPPSockGetHostIP(
-    char *Host, 
+    char *Host,
     OSPTIPADDR *ospvIpAddr)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -409,9 +408,9 @@ void OSPPSockProcessRequest(
     unsigned char *ospvRequestBuffer,
     unsigned ospvRequestBufferSz,
     unsigned char **ospvResponseBuffer,
-    unsigned *ospvResponseBufferSz, 
-    unsigned char **ospvContentBuffer, 
-    unsigned *ospvContentBufferSz, 
+    unsigned *ospvResponseBufferSz,
+    unsigned char **ospvContentBuffer,
+    unsigned *ospvContentBufferSz,
     int *ospvError)
 {
 #define OSPC_RECVBUF_SZ    256
@@ -548,9 +547,9 @@ void OSPPSockProcessRequest(
                     OSPM_DBGNET(("http header = [%s]", recvheadbuf));
 
                     /*
-                     * parse the header response and place the MIME 
+                     * parse the header response and place the MIME
                      * content-type into the tmpContentBuffer variable.
-                     * tmpContentBufferSz is set to the size of the 
+                     * tmpContentBufferSz is set to the size of the
                      * tmpContentBuffer.
                      */
 
@@ -558,10 +557,10 @@ void OSPPSockProcessRequest(
 
                     if (*ospvError == OSPC_ERR_NO_ERROR) {
                         /*
-                         * parse the header response and place the 
+                         * parse the header response and place the
                          * content-length in the tmpReceiveBufferSz
                          * variable. This is used to determine
-                         * the size of the inbound response message 
+                         * the size of the inbound response message
                          * buffer. Alloc space for the tmpReceiveBuffer in order
                          * receive the content data.
                          */
@@ -576,7 +575,7 @@ void OSPPSockProcessRequest(
 
                             if (*ospvError == OSPC_ERR_NO_ERROR) {
                                 /*
-                                 * assign the response buffer pointer after all of the 
+                                 * assign the response buffer pointer after all of the
                                  * reading is complete. This needs to be an autonomous
                                  * operation because the application thread is waiting for
                                  * the buffer to become non-null in order to indicate that
@@ -597,7 +596,7 @@ void OSPPSockProcessRequest(
                                 }
 
                                 /* Save the content buffer and content buffer size
-                                 * for the next time through this function 
+                                 * for the next time through this function
                                  */
                                 *ospvContentBuffer = tmpContentBuffer;
                                 *ospvContentBufferSz = tmpContentBufferSz;
@@ -623,7 +622,7 @@ void OSPPSockProcessRequest(
                        OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN)));
     }
 
-    /* If the Connection-Type indicated "close" in the MIME header, 
+    /* If the Connection-Type indicated "close" in the MIME header,
      * then close the connection.
      */
     if (connectionCloseFlag == OSPC_TRUE) {
@@ -634,8 +633,8 @@ void OSPPSockProcessRequest(
 }
 
 int OSPPSockRead(
-    OSPTHTTP *ospvHttp, 
-    unsigned char *ospvBuffer, 
+    OSPTHTTP *ospvHttp,
+    unsigned char *ospvBuffer,
     unsigned int *ospvBufferSz)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -687,7 +686,7 @@ int OSPPSockRead(
 }
 
 int OSPPSockSetBlockingIO(
-    OSPTSOCKET ospvSockFd, 
+    OSPTSOCKET ospvSockFd,
     OSPTBOOL ospvBlocking)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -717,8 +716,8 @@ int OSPPSockSetKeepAlive(
 }
 
 int OSPPSockWaitTillReady(
-    OSPTSOCKET ospvSockFd, 
-    OSPTBOOL ospvWaitForRead, 
+    OSPTSOCKET ospvSockFd,
+    OSPTBOOL ospvWaitForRead,
     struct timeval *ospvTimeout)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -779,8 +778,8 @@ int OSPPSockWaitTillReady(
 }
 
 int OSPPSockWrite(
-    OSPTHTTP *ospvHttp, 
-    unsigned char *ospvBuffer, 
+    OSPTHTTP *ospvHttp,
+    unsigned char *ospvBuffer,
     unsigned int *ospvBufferSz)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

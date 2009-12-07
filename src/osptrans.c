@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptrans.cpp - Global functions for transaction object.
- */
+/* osptrans.cpp - Global functions for transaction object. */
+
 #include "osp/osp.h"
 #include "osp/osptrans.h"
 #include "osp/ospprovider.h"
@@ -953,7 +952,7 @@ int OSPPTransactionGetDestination(
      */
     if (ospvSizeOfTimestamp == 0) {
         timeflag = OSPC_FALSE;
-    } else if (ospvSizeOfTimestamp < OSPC_TIMESTRINGSIZE) {
+    } else if (ospvSizeOfTimestamp < OSPC_SIZE_TIMESTRING) {
         errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
         OSPM_DBGERRORLOG(errorcode, "Not enough space for timestrings.");
     }

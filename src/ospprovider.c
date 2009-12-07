@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospprovider.cpp - Global provider functions.
- */
+/* ospprovider.cpp - Global provider functions. */
+
 #include "osp/osp.h"
 #include "osp/ospinit.h"
 #include "osp/ospprovider.h"
@@ -135,7 +134,7 @@ int OSPPProviderGetTransactionCollection(
     return errcode;
 }
 
-/* 
+/*
  * Get the **root node for the transaction Id tree.
  */
 OSPTTRANSID **OSPPProviderGetTransIdRoot(
@@ -188,7 +187,7 @@ int OSPPProviderUnLockTransIdMutex(
 
 /* Set New-Transaction-Allowed Flag in Provider Data Structure.
     OSPProviderSetNewTransactionAllowed() sets a flag in the provider
-    structure to the value of the ospvNTAFlag parameter.  
+    structure to the value of the ospvNTAFlag parameter.
 */
 void OSPPProviderSetNewTransactionAllowed(
     OSPTPROVIDER *ospvProvider,     /* In - ptr to provider structure */
@@ -283,7 +282,7 @@ unsigned long OSPPProviderGetCustId(
 }
 
 void OSPPProviderSetCustId(
-    OSPTPROVIDER *ospvProvider, 
+    OSPTPROVIDER *ospvProvider,
     unsigned long ospvCustId)
 {
     if (ospvProvider != OSPC_OSNULL) {
@@ -304,7 +303,7 @@ unsigned long OSPPProviderGetDeviceId(
 }
 
 void OSPPProviderSetDeviceId(
-    OSPTPROVIDER *ospvProvider, 
+    OSPTPROVIDER *ospvProvider,
     unsigned long ospvDeviceId)
 {
     if (ospvProvider != OSPC_OSNULL) {
@@ -313,7 +312,7 @@ void OSPPProviderSetDeviceId(
 }
 
 int OSPPProviderGetSecurity(
-    OSPTPROVIDER *ospvProvider, 
+    OSPTPROVIDER *ospvProvider,
     OSPTSEC **ospvSecurity)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

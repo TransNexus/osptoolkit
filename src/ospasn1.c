@@ -15,20 +15,17 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospasn1.c - Member functions for ASN1 decode/encode library
- */
+/* ospasn1.c - Member functions for ASN1 decode/encode library */
 
 #include "osp/osp.h"
 #include "osp/ospasn1.h"
 #include "osp/osptnlog.h"
 
-/*
- * Member functions
- */
+/* Member functions */
+
 int OSPPASN1ElementGetContentData(
-    OSPTASN1ELEMENTINFO *ospvElement, 
-    unsigned char **ospvContent, 
+    OSPTASN1ELEMENTINFO *ospvElement,
+    unsigned char **ospvContent,
     unsigned int *ospvContentLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -50,8 +47,8 @@ int OSPPASN1ElementGetContentData(
 }
 
 int OSPPASN1ElementCopyElementData(
-    OSPTASN1ELEMENTINFO *ospvSrcElement, 
-    unsigned char **ospvData, 
+    OSPTASN1ELEMENTINFO *ospvSrcElement,
+    unsigned char **ospvData,
     unsigned int *ospvDataLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -74,8 +71,8 @@ int OSPPASN1ElementCopyElementData(
 }
 
 int OSPPASN1ElementGetElementData(
-    OSPTASN1ELEMENTINFO *ospvSrcElement, 
-    unsigned char **ospvData, 
+    OSPTASN1ELEMENTINFO *ospvSrcElement,
+    unsigned char **ospvData,
     unsigned int *ospvDataLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -191,8 +188,8 @@ int OSPPASN1ElementEncode(
 }
 
 int OSPPASN1ElementDecode(
-    unsigned char *ospvASN1Element, 
-    OSPTASN1ELEMENTINFO **ospvASN1ElementInfo, 
+    unsigned char *ospvASN1Element,
+    OSPTASN1ELEMENTINFO **ospvASN1ElementInfo,
     unsigned int ospvLevel)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -387,7 +384,7 @@ int OSPPASN1ElementCreate(
 }
 
 void OSPPASN1ElementDelete(
-    OSPTASN1ELEMENTINFO **ospvElement, 
+    OSPTASN1ELEMENTINFO **ospvElement,
     unsigned int ospvLevel)
 {
     OSPTASN1ELEMENTINFO *eInfo = OSPC_OSNULL;
@@ -423,8 +420,8 @@ void OSPPASN1ElementDelete(
 }   /* OSPPASN1ElementDelete */
 
 int OSPPASN1ElementGet(
-    OSPEASN1DATAREFID ospvDataReferenceId, 
-    OSPTASN1PARSERESULT *ospvParseResults, 
+    OSPEASN1DATAREFID ospvDataReferenceId,
+    OSPTASN1PARSERESULT *ospvParseResults,
     OSPTASN1ELEMENTINFO **ospvElementInfo)
 {
     int errorcode;
@@ -434,9 +431,9 @@ int OSPPASN1ElementGet(
     return errorcode;
 }
 
-/* OSPPASN1ElementParse 
+/* OSPPASN1ElementParse
     Walk through element tree in a depth first search (child ptr then next
-    ptr).  Validate each element against the parse table. 
+    ptr).  Validate each element against the parse table.
 
     Process each element by starting another parse with the appropriate
     parsetable, generate a primitive and add it to the return list, etc.
@@ -456,19 +453,19 @@ int OSPPASN1ElementGet(
     It is an array of bytes (allowing 255 values per level).  Initially
     NULL, it is extended with the tag for the element whose value is being
     added to the parse results list, and passed to AddParseResults.
-    AddParseResults includes the parameter in the parse results record. 
+    AddParseResults includes the parameter in the parse results record.
     If the rule allows multiple occurances of the element, then the same
     reference is used for each parse result added to the list.  The
     extraction routine will know to retrieve all occurances of the
-    reference from the parse result table.  If the part to be added to the 
+    reference from the parse result table.  If the part to be added to the
     DataReferenceId is 0, then don't append anything.  This behavior may
     Cascade somewhat. (see SignatureAlgorithm Parse Table Definition)
 */
 int OSPPASN1ElementParse(
     OSPTASN1ELEMENTINFO *ospvElementInfo,
     OSPEASN1PARSETABLEID ospvParseTableId,
-    OSPTASN1PARSERULE *ospvParentParseRule, 
-    OSPTASN1PARSERESULT **ospvParseResult, 
+    OSPTASN1PARSERULE *ospvParentParseRule,
+    OSPTASN1PARSERESULT **ospvParseResult,
     unsigned char ospvDataRef)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -558,7 +555,7 @@ int OSPPASN1ElementParse(
                 lastResult->NextResult = newResults;
             }
         } else if (PTPRuleIsPrimitive(parseRule)) {
-            /* If the parseTable says this element is a primitive, 
+            /* If the parseTable says this element is a primitive,
                then the child pointers in the
                element Infos can be ignored.  THERE MIGHT BE children, but
                the parsetable is not interested in the children, this is
@@ -573,7 +570,7 @@ int OSPPASN1ElementParse(
                result for the element passed, and then traverses the
                element's "next" pointer to add entries for each of the
                elements it finds.  It returns when an element's
-               "next" pointer is NULL.  
+               "next" pointer is NULL.
              */
 
             errorcode = OSPC_ERR_ASN1_PARSE_COMPLETE;
@@ -590,9 +587,9 @@ int OSPPASN1ElementParse(
                rule in the table.  Continue parsing elements,
                following NEXT pointers until NEXT is null.  Use the
                next parse rule in the table for each jump following
-               the next pointer.  
+               the next pointer.
 
-               Always follow each rule left in the parse table until 
+               Always follow each rule left in the parse table until
                you run out, even if the NEXT pointer to be
                passed into the parse routine is NULL.  If the rule
                REQUIRES a value, then an error will occur and the
@@ -600,11 +597,11 @@ int OSPPASN1ElementParse(
                is well.
 
                There should NOT be any elements left (following NEXT
-               pointers) when the rules run out.  
+               pointers) when the rules run out.
                If there is, then it is a parse error.
              */
 
-            /* Set pointer to first child component, other children are 
+            /* Set pointer to first child component, other children are
                found by following this child's NEXT pointer. */
 
             eInfoContent = eInfo->ContentElementInfo;
@@ -721,7 +718,7 @@ void OSPPASN1ElementParseDelete(
 }
 
 int OSPPASN1ElementCopy(
-    OSPTASN1ELEMENTINFO **ospvDestElement, 
+    OSPTASN1ELEMENTINFO **ospvDestElement,
     OSPTASN1ELEMENTINFO *ospvSrcElement)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -769,8 +766,8 @@ int OSPPASN1ElementCopy(
 
 int OSPPASN1ElementDeparse(
     OSPTASN1ELEMENTINFO **ospvElementInfo,
-    OSPTASN1PARSERESULT **ospvParseResults, 
-    OSPEASN1PARSETABLEID ospvParseTableId, 
+    OSPTASN1PARSERESULT **ospvParseResults,
+    OSPEASN1PARSETABLEID ospvParseTableId,
     unsigned char *ospvDataReference)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -816,7 +813,7 @@ int OSPPASN1ElementDeparse(
                 /* Rule is a primitive or a DER format element (one that
                    would break down further if the parse rules called for
                    it).  There should be an entry in the result table for data
-                   reference for this element.  
+                   reference for this element.
 
                    If the result is not found, and it is optional, then skip
                    it and process the next rule.  If it is not optional,
@@ -825,7 +822,7 @@ int OSPPASN1ElementDeparse(
                    If the result is found, there may be more than one. If the
                    rules allow for this, then add each one in order.  They
                    should follow each other in the result list.  If more than
-                   one is not allowed, then report an error.  
+                   one is not allowed, then report an error.
 
                    If a result is found, then link it into the current
                    position in the element list.
@@ -873,7 +870,7 @@ int OSPPASN1ElementDeparse(
                            the first one to the as the head of the list */
                         newElements = foundElement;
 
-                        /* Update the parse results ptr to consume the found 
+                        /* Update the parse results ptr to consume the found
                            element */
                         parseResults = parseResults->NextResult;
 
@@ -947,8 +944,8 @@ int OSPPASN1ElementDeparse(
                 }
 
                 if (errorcode == OSPC_ERR_NO_ERROR) {
-                    /* Update the element tag with the tag from the 
-                       parse rule, this element is constructed, so 
+                    /* Update the element tag with the tag from the
+                       parse rule, this element is constructed, so
                        apply the constructed flags */
                     if (elementInfo->Tag == 0) {
                         elementInfo->Tag = (unsigned char)OSPM_CONSTRUCTED_TAG(parseRule->Tag);
@@ -1000,10 +997,10 @@ int OSPPASN1ElementDeparse(
 
 int OSPPASN1ElementFormat(
     OSPTASN1ELEMENTINFO **ospvElement,
-    unsigned char *ospvTag, 
-    unsigned char ospvTagFlags, 
-    unsigned ospvTagLength, 
-    unsigned char *ospvData, 
+    unsigned char *ospvTag,
+    unsigned char ospvTagFlags,
+    unsigned ospvTagLength,
+    unsigned char *ospvData,
     unsigned ospvDataLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

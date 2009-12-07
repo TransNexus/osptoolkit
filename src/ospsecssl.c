@@ -15,15 +15,14 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospsecssl.cpp - Functions for security object.
- */
+/* ospsecssl.cpp - Functions for security object. */
+
 #include "osp/osp.h"
 #include "osp/ospsecurity.h"
 #include "osp/ospssl.h"
 
 OSPTBOOL OSPPSecSSLLifetimeHasExpired(
-    OSPTSEC *ospvSecurity, 
+    OSPTSEC *ospvSecurity,
     OSPTSSLSESSIONID *ospvSessionId)
 {
     OSPTBOOL hasexpired = OSPC_FALSE;
@@ -44,10 +43,10 @@ OSPTBOOL OSPPSecSSLLifetimeHasExpired(
 }
 
 int OSPPSecSSLSessionIdNew(
-    OSPTSEC *ospvSecurity, 
-    unsigned long ospvLength, 
-    unsigned char *ospvData, 
-    char *ospvHostName, 
+    OSPTSEC *ospvSecurity,
+    unsigned long ospvLength,
+    unsigned char *ospvData,
+    char *ospvHostName,
     short ospvPort)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -79,18 +78,18 @@ int OSPPSecSSLSessionIdNew(
                         if (errorcode == OSPC_ERR_NO_ERROR) {
 
                             /*
-                               fprintf(stderr, "Session Id %lx Length = %ld Value = %lx\n",  
-                               (unsigned long)sslsessionid, sslsessionid->Length, 
+                               fprintf(stderr, "Session Id %lx Length = %ld Value = %lx\n",
+                               (unsigned long)sslsessionid, sslsessionid->Length,
                                (unsigned long)sslsessionid->Value);
                              */
                             for (item = (OSPTSSLSESSIONID *)OSPPListFirst((OSPTLIST *)&(ospvSecurity->SSLSessionIdList));
                                  item != OSPC_OSNULL;
-                                 item = (OSPTSSLSESSIONID *)OSPPListNext((OSPTLIST *)&(ospvSecurity->SSLSessionIdList), item)) 
+                                 item = (OSPTSSLSESSIONID *)OSPPListNext((OSPTLIST *)&(ospvSecurity->SSLSessionIdList), item))
                             {
                                 /*
-                                   fprintf(stderr, "Comparing sess %lx val %lx with sess %lx val %lx sz %d\n", 
-                                   (unsigned long)sslsessionid,(unsigned long)sslsessionid->Value, 
-                                   (unsigned long)item, (unsigned long)item->Value, sslsessionid->Length); 
+                                   fprintf(stderr, "Comparing sess %lx val %lx with sess %lx val %lx sz %d\n",
+                                   (unsigned long)sslsessionid,(unsigned long)sslsessionid->Value,
+                                   (unsigned long)item, (unsigned long)item->Value, sslsessionid->Length);
                                  */
                                 if (sslsessionid->Length == item->Length) {
                                     result = OSPM_MEMCMP(sslsessionid->Value, item->Value, sslsessionid->Length);
@@ -136,10 +135,10 @@ int OSPPSecSSLSessionIdNew(
 }
 
 int OSPPSecSSLSessionIdGet(
-    OSPTSEC *ospvSecurity, 
-    unsigned long *ospvLength, 
-    unsigned char **ospvData, 
-    char *ospvHostName, 
+    OSPTSEC *ospvSecurity,
+    unsigned long *ospvLength,
+    unsigned char **ospvData,
+    char *ospvHostName,
     short ospvPort)
 {
     int errorcode = OSPC_ERR_NO_ERROR, result = 0;
@@ -155,7 +154,7 @@ int OSPPSecSSLSessionIdGet(
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 for (sslsessionid = (OSPTSSLSESSIONID *)OSPPListFirst((OSPTLIST *)&(ospvSecurity->SSLSessionIdList));
                      sslsessionid != OSPC_OSNULL;
-                     sslsessionid = (OSPTSSLSESSIONID *)OSPPListNext((OSPTLIST *)&(ospvSecurity->SSLSessionIdList), sslsessionid)) 
+                     sslsessionid = (OSPTSSLSESSIONID *)OSPPListNext((OSPTLIST *)&(ospvSecurity->SSLSessionIdList), sslsessionid))
                 {
                     result = OSPM_MEMCMP(ospvHostName, sslsessionid->HostName, OSPM_STRLEN(ospvHostName));
 
@@ -187,8 +186,8 @@ int OSPPSecSSLSessionIdGet(
 }
 
 void OSPPSecSSLSessionIdDelete(
-    OSPTSEC *ospvSecurity, 
-    OSPTSSLSESSIONID **ospvSSLSessionId, 
+    OSPTSEC *ospvSecurity,
+    OSPTSSLSESSIONID **ospvSSLSessionId,
     OSPTBOOL ospvUseMutex)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -273,7 +272,7 @@ void OSPPSecSSLSessionIdDeleteDB(
 }
 
 void OSPPSecSetSSLLifetime(
-    OSPTSEC *ospvSecurity, 
+    OSPTSEC *ospvSecurity,
     unsigned ospvSSLLifetime)
 {
     ospvSecurity->SSLLifetime = ospvSSLLifetime;

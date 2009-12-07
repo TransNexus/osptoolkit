@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospauthcnf.c - OSP authorisation confirmation functions
- */
+/* ospauthcnf.c - OSP authorisation confirmation functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"
@@ -50,7 +48,7 @@ void OSPPAuthCnfDelete(
  */
 OSPTBOOL OSPPAuthCnfHasStatus(  /* returns non-zero if number exists */
     OSPT_AUTH_CNF *ospvAuthCnf) /* authorisation confirmation effected */
-{                            
+{
     OSPTBOOL ospvHas = OSPC_FALSE;
 
     if (ospvAuthCnf != OSPC_OSNULL) {

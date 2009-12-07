@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospxmlattr.c - Functions for generic XML attributes.
- */
+/* ospxmlattr.c - Functions for generic XML attributes. */
 
 #include "osp/osp.h"
 #include "osp/osplist.h"
@@ -26,8 +24,7 @@
 /*
  * OSPPXMLAttrNew() - create a new attribute
  */
-
-OSPT_XML_ATTR *OSPPXMLAttrNew(  /* returns the new attribute (or NULL) */ 
+OSPT_XML_ATTR *OSPPXMLAttrNew(  /* returns the new attribute (or NULL) */
     const char *ospvName,       /* name of attribute */
     const char *ospvValue)      /* character string value for attr */
 {

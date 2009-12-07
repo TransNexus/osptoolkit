@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospsecurity.h - Prototypes for security object.
- */
-
+/* ospsecurity.h - Prototypes for security object. */
 #ifndef _OSPSECURITY_H
 #define _OSPSECURITY_H
 
@@ -41,9 +38,7 @@
 #define OSPC_SEC_SIGNATURE_AND_CONTENT  0
 #define OSPC_SEC_SIGNATURE_ONLY         1
 
-/*
- * security typedef
- */
+/* security typedef */
 typedef struct _OSPTSEC {
     unsigned NumberOfAuthorityCertificates;
     OSPTASN1OBJECT *AuthorityCertInfo[OSPC_SEC_MAX_AUTH_CERTS];
@@ -63,7 +58,6 @@ typedef struct _OSPTSEC {
 } OSPTSEC;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -89,10 +83,7 @@ extern "C" {
     int OSPPSecGetSignerCertSubjectName(OSPTSEC *ospvSecurity, unsigned char *ospvToken, unsigned ospvTokenLen, unsigned char **ospvSubjectName,
             unsigned *ospvSubjectNameLen);
 
-    /*
-     * PROTOTYPES FOR ospsecssl.c
-     */
-
+    /* PROTOTYPES FOR ospsecssl.c */
     OSPTBOOL OSPPSecSSLLifetimeHasExpired(OSPTSEC *ospvSecurity, OSPTSSLSESSIONID *ospvSessionId);
     unsigned OSPPSecGetSSLLifetime(OSPTSEC *ospvSecurity);
     int OSPPSecSSLSessionIdNew(OSPTSEC *ospvSecurity, unsigned long ospvLength, unsigned char *ospvData, char *ospvHostName, short ospvPort);

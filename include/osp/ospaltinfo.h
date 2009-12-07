@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- *  ospaltinfo.h - OSP Alternate information element
- */
-
+/* ospaltinfo.h - OSP Alternate information element */
 #ifndef _OSPALTINFO_H
 #define _OSPALTINFO_H
 
@@ -26,9 +23,6 @@
 #include "osp/ospxmlelem.h"
 #include "osp/ospmsgelem.h"
 #include "osp/ospmsg.h"
-
-/* Max size of an altinfo (bytes) */
-#define OSPC_ALTINFOMAXSIZE 1024
 
 typedef enum {
     OSPC_ALTINFO_UNKNOWN = OSPC_MPART_UNKNOWN,
@@ -76,9 +70,7 @@ typedef enum {
     OSPC_ALTINFO_NUMBER
 } OSPE_ALTINFO;
 
-/*
- * externally declared global variables
- */
+/* externally declared global variables */
 extern const OSPT_MSG_DESC OSPV_ATYPE_DESCS[];
 
 /* the basic altinfo structure */
@@ -90,7 +82,6 @@ typedef struct {
 } OSPT_ALTINFO;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

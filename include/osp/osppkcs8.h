@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osppkcs8.h - PKCS8 definitions used for key objects.
- */
-
+/* osppkcs8.h - PKCS8 definitions used for key objects. */
 #ifndef _OSPPKCS8_H
 #define _OSPPKCS8_H
 
@@ -29,7 +26,6 @@
 #define OSPC_PKCS8_PRIVATEKEYINFO_VERSION 0
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

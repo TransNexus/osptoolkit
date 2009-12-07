@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptransapi.h - Prototypes for transaction object API functions.
- */
-
+/* osptransapi.h - Prototypes for transaction object API functions. */
 #ifndef _OSPTRANSAPI_H
 #define _OSPTRANSAPI_H
 
@@ -32,7 +29,6 @@
 #define OSPC_TRAN_NOT_AUTHORISED    0xefff
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptrans.h - Constants and prototypes for global transaction functions.
- */
-
+/* osptrans.h - Constants and prototypes for global transaction functions. */
 #ifndef _OSPTRANS_H
 #define _OSPTRANS_H
 
@@ -38,9 +35,7 @@
 #include "osp/ospfail.h"
 #include "osp/osptokeninfo.h"
 
-/*
- * Transaction States
- */
+/* Transaction States */
 typedef enum {
     OSPC_INVALID_STATE,
     OSPC_TRANSNEW,
@@ -67,9 +62,7 @@ typedef enum {
 
 #define MAX_PRICING_INFO_ALLOWED 10
 
-/*
- * transaction typedef
- */
+/* transaction typedef */
 typedef struct _OSPTTRANS {
     struct _OSPTPROVIDER *Provider;
     OSPT_AUTH_REQ *AuthReq;
@@ -122,9 +115,8 @@ typedef struct _OSPTTRANS {
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000
-/*
- * transaction collection typedef
- */
+
+/* transaction collection typedef */
 typedef struct _OSPTTRANCOLLECTION {
     OSPTTRANS *Trans[OSPC_MAX_TRANS];
     unsigned NumberOfTrans;
@@ -132,7 +124,6 @@ typedef struct _OSPTTRANCOLLECTION {
 } OSPTTRANCOLLECTION;
 
 /* Types for parsing and creating forms */
-
 #define OSPC_USAGE      0x01
 #define OSPC_AUTH       0x02
 #define OSPC_REAUTH     0x03
@@ -148,7 +139,6 @@ typedef struct _OSPTTRANCOLLECTION {
 #define OSPM_GET_TRANSACTION_INDEX(e)   (e & OSPC_TRANSACTIONMASK);
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

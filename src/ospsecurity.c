@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospsecurity.cpp - Functions for security object.
- */
+/* ospsecurity.cpp - Functions for security object. */
+
 #include "osp/osp.h"
 #include "osp/ospdatatypes.h"
 #include "osp/ospasn1.h"

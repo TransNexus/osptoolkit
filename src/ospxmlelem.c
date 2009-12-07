@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospxmlelem.c - Functions for generic XML attributes.
- */
+/* ospxmlelem.c - Functions for generic XML attributes. */
 
 #include "osp/osp.h"
 #include "osp/osplist.h"
@@ -27,8 +25,7 @@
 /*
  * OSPPXMLElemNew() - create a new element
  */
-
-OSPT_XML_ELEM *OSPPXMLElemNew(  /* returns the new element (or NULL) */                
+OSPT_XML_ELEM *OSPPXMLElemNew(  /* returns the new element (or NULL) */
     const char *ospvName,       /* name of the element */
     const char *ospvValue)      /* character string value for element */
 {
@@ -133,14 +130,14 @@ void OSPPXMLElemDelete(         /* no return value */
  * OSPPXMLElemGetName() - returns the name from an XML attribute
  */
 
-const char *OSPPXMLElemGetName( /* returns pointer to name */ 
+const char *OSPPXMLElemGetName( /* returns pointer to name */
     OSPT_XML_ELEM *ospvElem)    /* element being querried */
 {
     const char *ospvName = OSPC_OSNULL;
 
     if (ospvElem != OSPC_OSNULL) {
         ospvName = ospvElem->ospmXMLElemName;
-    }                  
+    }
 
     return ospvName;
 }
@@ -149,7 +146,7 @@ const char *OSPPXMLElemGetName( /* returns pointer to name */
  * OSPPXMLElemGetValue() - returns the value of an XML element
  */
 
-const char *OSPPXMLElemGetValue(    /* returns pointer to character value */    
+const char *OSPPXMLElemGetValue(    /* returns pointer to character value */
     OSPT_XML_ELEM *ospvElem)        /* element in question */
 {
     const char *ospvValue = OSPC_OSNULL;
@@ -180,7 +177,7 @@ void OSPPXMLElemAddChild(       /* no return value */
  * OSPPXMLElemFirstChild() - returns the first child of an element
  */
 
-OSPT_XML_ELEM *OSPPXMLElemFirstChild(   /* returns pointer to child or NULL */     
+OSPT_XML_ELEM *OSPPXMLElemFirstChild(   /* returns pointer to child or NULL */
     OSPT_XML_ELEM *ospvElem)            /* parent element in question */
 {
     OSPT_XML_ELEM *ospvChild = OSPC_OSNULL;

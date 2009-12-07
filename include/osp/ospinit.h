@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospinit.h - Constants and prototypes for initialization.
- */
-
+/* ospinit.h - Constants and prototypes for initialization. */
 #ifndef _OSPINIT_H
 #define _OSPINIT_H
 
@@ -26,7 +23,6 @@
 #define OSPC_NO_PROVIDERS   -1
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

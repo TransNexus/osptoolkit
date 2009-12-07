@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osperrno.h - Error numbers.
- */
-
+/* osperrno.h - Error numbers. */
 #ifndef _OSPERRNO_H
 #define _OSPERRNO_H
 
@@ -335,7 +332,7 @@
 #define OSPC_ERR_CRYPTO_UNABLE_TO_ALLOCATE_SPACE        (OSPC_ERR_CRYPTO_MODULE + 20)
 #define OSPC_ERR_CRYPTO_SIGNATURE_DID_NOT_VERIFY        (OSPC_ERR_CRYPTO_MODULE + 30)
 #define OSPC_ERR_CRYPTO_IMPLEMENTATION_SPECIFIC_ERROR   (OSPC_ERR_CRYPTO_MODULE + 40)
-                                      
+
 #define OSPC_ERR_CRYPTO_INVALID_POINTER                 (OSPC_ERR_CRYPTO_MODULE + 50)
 #define OSPC_ERR_CRYPTO_NOT_ENOUGH_SPACE                (OSPC_ERR_CRYPTO_MODULE + 60)
 #define OSPC_ERR_CRYPTO_FILE_OPEN_ERROR                 (OSPC_ERR_CRYPTO_MODULE + 70)

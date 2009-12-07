@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospinit.cpp - Provider space initialization.
- */
+/* ospinit.cpp - Provider space initialization. */
+
 #include "osp/osp.h"
 #include "osp/ospprovider.h"
 
@@ -29,7 +28,7 @@ char *OSPVDeleteAllowed;
 #endif
 
 /*
- * The OSPPInit function performs internal housekeeping necessary to 
+ * The OSPPInit function performs internal housekeeping necessary to
  * prepare the SDK software for operation.
  *
  * returns OSPC_ERR_NO_ERROR if successful, OSPC_ERR_XXX otherwise.

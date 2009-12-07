@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmsgdesc.c - generic message descriptor processing functions.
- */
+/* ospmsgdesc.c - generic message descriptor processing functions. */
 
 #include "osp/osp.h"
 #include "osp/ospmsgdesc.h"

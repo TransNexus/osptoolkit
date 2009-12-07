@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospdest.h - OSP destination objects
- */
-
+/* ospdest.h - OSP destination objects */
 #ifndef _OSPDEST_H
 #define _OSPDEST_H
 
@@ -29,9 +26,7 @@
 #include "osp/osptoken.h"
 #include "osp/ospmsgdesc.h"
 
-/*
- * Destination Protocol Data Type
- */
+/* Destination Protocol Data Type */
 typedef enum {
     OSPC_DPROT_UNKNOWN = OSPC_MPART_UNKNOWN,    /* Could not be understood by the Client as Sent by the Server */
     OSPC_DPROT_UNDEFINED,                       /* Not Configured at Server */
@@ -49,14 +44,10 @@ typedef enum {
     OSPC_DPROT_NUMBER
 } OSPE_DEST_PROTOCOL;
 
-/*
- * externally declared global variables
- */
+/* externally declared global variables */
 extern const OSPT_MSG_DESC OSPV_DPROT_DESCS[];
 
-/*
- * Destination OSP Enabled Data Type
- */
+/* Destination OSP Enabled Data Type */
 typedef enum {
     OSPC_DOSP_UNKNOWN = 0,    /* Could not be understood by the Client as Sent by the Server */
     OSPC_DOSP_UNDEFINED,      /* Not Configured at Server */
@@ -97,7 +88,6 @@ typedef struct {
 } OSPT_DEST;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

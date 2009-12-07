@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospcallid.h - OSP call identifier objects
- */
-
+/* ospcallid.h - OSP call identifier objects */
 #ifndef _OSPCALLID_H
 #define _OSPCALLID_H
 
@@ -28,12 +25,7 @@
 #include "osp/ospaltinfo.h"
 #include "osp/ospmsgattr.h"
 
-/* max size of a call ID (bytes) */
-
-#define OSPC_CALLID_MAXSIZE         256
-
 /* the basic call identifier structure */
-
 typedef struct {
     OSPTLISTLINK ospmCallIdLink;
     unsigned ospmCallIdLen;
@@ -41,7 +33,6 @@ typedef struct {
 } OSPT_CALL_ID;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospfail.cpp - Failure reasons.
- */
+/* ospfail.cpp - Failure reasons. */
 
 #include "osp/osp.h"
 #include "osp/ospfail.h"

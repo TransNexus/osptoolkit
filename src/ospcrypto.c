@@ -16,8 +16,8 @@
 **************************************************************************/
 
 /*
- * ospcrypto.c - Member functions to map OSP crypto calls to crypto 
-                    library calls. (BSAFE).  This file is included in 
+ * ospcrypto.c - Member functions to map OSP crypto calls to crypto
+                    library calls. (BSAFE).  This file is included in
                     ospcryptowrap.c if OSPC_CRYPTO_BSAFE is defined in
                     ospcrypto.h
 */
@@ -28,14 +28,12 @@
 #include "osp/ospcrypto.h"
 #include "osp/ospcryptowrap.h"
 
-/*
- * Member functions
- */
+/* Member functions */
 
 int OSPPCryptoEncrypt(
     OSPTASN1OBJECT **ospvEncryptedData,
-    OSPTASN1OBJECT *ospvAlgorithmId, 
-    OSPTASN1OBJECT *ospvData, 
+    OSPTASN1OBJECT *ospvAlgorithmId,
+    OSPTASN1OBJECT *ospvData,
     OSPTASN1OBJECT *ospvPrivateKeyInfo)
 {
     unsigned char *encryptedData = OSPC_OSNULL;
@@ -108,9 +106,9 @@ int OSPPCryptoEncrypt(
 }
 
 int OSPPCryptoVerify(
-    OSPTASN1OBJECT *ospvSignature, 
-    OSPTASN1OBJECT *ospvReaderKey, 
-    unsigned char *ospvData, 
+    OSPTASN1OBJECT *ospvSignature,
+    OSPTASN1OBJECT *ospvReaderKey,
+    unsigned char *ospvData,
     unsigned ospvDataLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -170,9 +168,9 @@ int OSPPCryptoVerify(
 }
 
 int OSPPCryptoDigest(
-    OSPTASN1OBJECT **ospvDigest, 
-    OSPTASN1OBJECT *ospvAlgorithmId, 
-    unsigned char *ospvData, 
+    OSPTASN1OBJECT **ospvDigest,
+    OSPTASN1OBJECT *ospvAlgorithmId,
+    unsigned char *ospvData,
     unsigned int ospvDataLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -213,8 +211,8 @@ int OSPPCryptoDigest(
 
 int OSPPCryptoDecrypt(
     OSPTASN1OBJECT **ospvDecryptedData,
-    OSPTASN1OBJECT *ospvAlgorithmId, 
-    OSPTASN1OBJECT *ospvEncryptedData, 
+    OSPTASN1OBJECT *ospvAlgorithmId,
+    OSPTASN1OBJECT *ospvEncryptedData,
     OSPTASN1OBJECT *ospvReaderKey)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

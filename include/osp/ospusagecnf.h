@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospusagecnf.h - OSP Usage Confirm Objects
- */
-
+/* ospusagecnf.h - OSP Usage Confirm Objects */
 #ifndef _OSPUSAGECNF_H
 #define _OSPUSAGECNF_H
 
@@ -40,7 +37,6 @@ typedef struct {
 } OSPTUSAGECNF;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
