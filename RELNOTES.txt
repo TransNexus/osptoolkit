@@ -511,3 +511,6 @@ Version 3.5.4
 * Fixed destdev issue of OSPPTransactionGetDestination.
 * Added SPID & OCN support.
 * Added new ServiceType.
+---------------------------------------------------------------------------
+
+Version 3.6.0
