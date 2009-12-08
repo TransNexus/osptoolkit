@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospciscoext.c - Functions for Cisco audit element.
- */
+/* ospciscoext.c - Functions for Cisco audit element. */
 
 #include "osp/ospciscoext.h"
 #include "osp/ospmsgelem.h"

@@ -15,20 +15,16 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospasn1primitives.c - ASN1 Primitive encode/decode functions 
- */
+/* ospasn1primitives.c - ASN1 Primitive encode/decode functions */
 
 #include "osp/osp.h"
 #include "osp/ospasn1.h"
 #include "osp/osptnlog.h"
 
-/*
- * Member functions
- */
+/* Member functions */
 
 /*****************************************
-    GENERAL PRIMITIVE ROUTINES 
+    GENERAL PRIMITIVE ROUTINES
 *****************************************/
 #ifdef PRIMITIVEDECODE
 int OSPPASN1PrimitiveDecode(
@@ -44,7 +40,7 @@ int OSPPASN1PrimitiveDecode(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         eInfo = ospvElementInfo;
 
-        sprintf(msg, "PrimitiveDecode - Tag=%0x", eInfo->Tag);  
+        sprintf(msg, "PrimitiveDecode - Tag=%0x", eInfo->Tag);
 
         /* Decode the item and save the value */
         switch (OSPM_BASE_TAG(eInfo->Tag)) {
@@ -134,7 +130,7 @@ int OSPPASN1PrimitiveDelete(
                 break;
 
             case OSPC_TAG_TYPE_OCTET_STRING:
-                OSPPASN1BufferDelete((OSPTASN1BUFFER**)&contentValue)); 
+                OSPPASN1BufferDelete((OSPTASN1BUFFER**)&contentValue));
                 break;
 
             case OSPC_TAG_TYPE_SEQUENCE:
@@ -174,7 +170,7 @@ int OSPPASN1BufferCreate(
             OSPM_MALLOC((*ospvBuffer)->Buffer, unsigned char, ospvContentLength);
             if ((*ospvBuffer)->Buffer == OSPC_OSNULL) {
                 errorcode = OSPC_ERR_ASN1_UNABLE_TO_ALLOCATE_SPACE;
-                OSPM_DBGERRORLOG(errorcode, 
+                OSPM_DBGERRORLOG(errorcode,
                     "Unable to allocate space for buffer content");
             }
         }
@@ -204,7 +200,7 @@ void OSPPASN1BufferDelete(
 }
 
 /*
- * OCTET STRING ROUTINES 
+ * OCTET STRING ROUTINES
  */
 int OSPPASN1OctetStringDecode(
     OSPTASN1BUFFER **ospvOctetStringBUffer,
@@ -224,7 +220,7 @@ int OSPPASN1OctetStringDecode(
 }
 
 /*
- * INTEGER ROUTINES 
+ * INTEGER ROUTINES
  */
 int OSPPASN1IntegerDecode(
     void **osvpContentValue,
@@ -310,7 +306,7 @@ int OSPPASN1IntegerCreate(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvInteger = intBuf;
     } else {
-        OSPPASN1IntegerDelete(&intBuf);     
+        OSPPASN1IntegerDelete(&intBuf);
     }
 
     return errorcode;
@@ -336,7 +332,7 @@ int  OSPPASN1IntegerEncode(
 }
 
 /*
- * OBJECT IDENTIFIER ROUTINES 
+ * OBJECT IDENTIFIER ROUTINES
  */
 int  OSPPASN1ObjectIdentifierDecode(
     void **osvpContentValue,
@@ -362,7 +358,7 @@ int  OSPPASN1ObjectIdentifierDecode(
 }
 
 /*
- * PRINTABLE STRING ROUTINES 
+ * PRINTABLE STRING ROUTINES
  */
 int OSPPASN1PrintableStringEncode(
     OSPTASN1ELEMENTINFO *ospvElementInfo)
@@ -377,7 +373,7 @@ int OSPPASN1PrintableStringEncode(
         eInfo = ospvElementInfo;
         buffer = (OSPTASN1BUFFER *)eInfo->ContentValue;
 
-        eInfo->Content = buffer->Buffer; 
+        eInfo->Content = buffer->Buffer;
         eInfo->ContentLength = buffer->BufferLength;
     }
 
@@ -410,9 +406,9 @@ int OSPPASN1PrintableStringDecode(
 }
 
 /*
- * UTCTIME ROUTINES 
+ * UTCTIME ROUTINES
  */
-int OSPPASN1UTCTimeEncode( 
+int OSPPASN1UTCTimeEncode(
     OSPTASN1ELEMENTINFO *ospvElementInfo)
 {
     OSPTASN1ELEMENTINFO *eInfo;
@@ -425,7 +421,7 @@ int OSPPASN1UTCTimeEncode(
         eInfo = ospvElementInfo;
         buffer = (OSPTASN1BUFFER *)eInfo->ContentValue;
 
-        eInfo->Content = buffer->Buffer; 
+        eInfo->Content = buffer->Buffer;
         eInfo->ContentLength = buffer->BufferLength;
     }
 
@@ -456,7 +452,7 @@ int OSPPASN1UTCTimeDecode(
 }
 
 /*
- * BIT STRING ROUTINES 
+ * BIT STRING ROUTINES
  */
 int  OSPPASN1BitStringDecode(
     void **osvpContentValue,
@@ -478,7 +474,7 @@ int  OSPPASN1BitStringDecode(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             eInfo = ospvElementInfo;
-            cptr = eInfo->Content;  
+            cptr = eInfo->Content;
 
             /* First byte is #unused bits in last byte */
             unusedBits = *cptr;
@@ -505,7 +501,7 @@ int OSPPASN1BitStringEncode(
         eInfo = ospvElementInfo;
         bitString = (OSPTASN1BITSTRING *)eInfo->ContentValue;
 
-        eInfo->Content = bitString->Buffer->Buffer; 
+        eInfo->Content = bitString->Buffer->Buffer;
         eInfo->ContentLength = bitString->Buffer->BufferLength;
     }
 
@@ -566,9 +562,9 @@ void  OSPPASN1BitStringDelete(
 #endif
 
 int OSPPASN1OctetStringEncode(
-    OSPTASN1OBJECT **ospvEncodedObject, 
-    unsigned char *ospvData, 
-    unsigned int ospvDataLength, 
+    OSPTASN1OBJECT **ospvEncodedObject,
+    unsigned char *ospvData,
+    unsigned int ospvDataLength,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -598,8 +594,8 @@ int OSPPASN1OctetStringEncode(
 /* Encodes small integer (represented by unsigned) as an ASN1 Integer.
 Only encodes in base 256.  Only encodes unsigned integers.  */
 int OSPPASN1SmallIntegerEncode(
-    OSPTASN1OBJECT **ospvEncodedObject, 
-    unsigned ospvInteger, 
+    OSPTASN1OBJECT **ospvEncodedObject,
+    unsigned ospvInteger,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -624,7 +620,7 @@ int OSPPASN1SmallIntegerEncode(
 }
 
 int OSPPASN1IntegerGetSmallValue(
-    OSPTASN1ELEMENTINFO *ospvElementInfo, 
+    OSPTASN1ELEMENTINFO *ospvElementInfo,
     int *ospvValue)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -662,7 +658,7 @@ int OSPPASN1IntegerGetSmallValue(
     return errorcode;
 }
 
-/* 
+/*
  * SmallInt2UnsignedChar
  * Converts integer valuses to unsigned char buffer containing the value in
  * base specified.  Unused bits in each byte are set to 1 except for the last
@@ -670,9 +666,9 @@ int OSPPASN1IntegerGetSmallValue(
  * for base 256 and base 128 values in ASN1 format.
  */
 int OSPPASN1SmallInt2UnsignedChar(
-    unsigned ospvIntegerValue, 
-    unsigned ospvBase, 
-    unsigned char **ospvBuffer, 
+    unsigned ospvIntegerValue,
+    unsigned ospvBase,
+    unsigned char **ospvBuffer,
     unsigned *ospvBufferLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -730,8 +726,8 @@ int OSPPASN1SmallInt2UnsignedChar(
 }
 
 int OSPPASN1ObjectIdentifierEncode(
-    OSPTASN1OBJECT **ospvEncodedObject, 
-    OSPEASN1ID ospvObjectIdentifier, 
+    OSPTASN1OBJECT **ospvEncodedObject,
+    OSPEASN1ID ospvObjectIdentifier,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -752,11 +748,11 @@ int OSPPASN1ObjectIdentifierEncode(
 }
 
 /*
- * ALGORITHM ID ROUTINES 
+ * ALGORITHM ID ROUTINES
  */
 int OSPPASN1AlgorithmIdEncode(
-    OSPTASN1OBJECT **ospvEncodedObject, 
-    OSPEASN1ID ospvAlgorithmId, 
+    OSPTASN1OBJECT **ospvEncodedObject,
+    OSPEASN1ID ospvAlgorithmId,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -813,7 +809,7 @@ int OSPPASN1AlgorithmIdEncode(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* Complete the encoding for this object. Update results, elements, 
+        /* Complete the encoding for this object. Update results, elements,
            etc. */
         errorcode = OSPPASN1ObjectDeparse(encodedObject, OSPEPTID_ALGORITHMID, OSPEDRID_ALGORITHMID);
     }
@@ -830,7 +826,7 @@ int OSPPASN1AlgorithmIdEncode(
 }
 
 /*
- * NULL ROUTINES 
+ * NULL ROUTINES
  */
 int OSPPASN1NullEncode(
     OSPTASN1OBJECT **ospvEncodedObject)

@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptnaudit.h - TNAudit elements.
- */
-
+/* osptnaudit.h - TNAudit elements. */
 #ifndef _OSPTNAUDIT_H
 #define _OSPTNAUDIT_H
 
@@ -32,7 +29,6 @@ typedef struct {
 } OSPTTNAUDIT;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

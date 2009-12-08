@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptransapi.h - Prototypes for transaction object API functions.
- */
-
+/* osptransapi.h - Prototypes for transaction object API functions. */
 #ifndef _OSPTRANSAPI_H
 #define _OSPTRANSAPI_H
 
@@ -32,7 +29,6 @@
 #define OSPC_TRAN_NOT_AUTHORISED    0xefff
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -92,11 +88,13 @@ extern "C" {
         const char *ospvSourceDevice,                                           /* In - optional */
         const char *ospvDestination,                                            /* In - optional */
         const char *ospvDestinationDevice);                                     /* In - optional */
-    int OSPPTransactionGetDestNetworkId(OSPTTRANHANDLE ospvTransaction,         /* In - Transaction handle */
-        char *ospvNetworkId);
+    int OSPPTransactionGetDestNetworkId(OSPTTRANHANDLE, char *); /* TODO: is deprecated, will be removed from 3.6 */
+    int OSPPTransactionGetDestinationNetworkId(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionSetServiceAndPricingInfo(OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-        OSPE_SERVICE ospvServiceType,                                           /* In- type of service, 0-voice, 1-data */
-        OSPT_PRICING_INFO *ospvPricingInfo[]);                                  /* In- Pricing Info */
+        OSPE_SERVICE ospvServiceType,                                           /* In - Service type */
+        OSPT_PRICING_INFO *ospvPricingInfo[]);                                  /* In - Pricing Info */ /* TODO: is deprecated, will be removed from 3.6 */
+    int OSPPTransactionSetServiceType(OSPTTRANHANDLE, OSPE_SERVICE);
+    int OSPPTransactionSetPricingInfo(OSPTTRANHANDLE, OSPT_PRICING_INFO **);
     int OSPPTransactionSetRoutingNumber(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetNumberPortability(OSPTTRANHANDLE, const char *, const char *, int);
     int OSPPTransactionSetTermCause(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned, const char *);
@@ -117,7 +115,12 @@ extern "C" {
     int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
     int OSPPTransactionSetMOSCQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
     int OSPPTransactionSetMOSLQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
-    int OSPPTransactionGetNumberPortability(OSPTTRANHANDLE ospvTransaction, char *, char *, int *);
+    int OSPPTransactionSetICPIF(OSPTTRANHANDLE, OSPE_STATS_FLOW, int);
+    int OSPPTransactionGetNumberPortability(OSPTTRANHANDLE ospvTransaction, char *, char *, int *);  /* TODO: is deprecated, will be removed from 3.6 */
+    int OSPPTransactionGetNumberPortabilityParameters(OSPTTRANHANDLE ospvTransaction, unsigned, char *, unsigned, char *, int *);
+    int OSPPTransactionGetServiceProviderId(OSPTTRANHANDLE ospvTransaction, unsigned, char *);
+    int OSPPTransactionGetOperatingCompanyNumber(OSPTTRANHANDLE ospvTransaction, unsigned, char *);
+    int OSPPTransactionSetRoundTripDelay(OSPTTRANHANDLE, int, int, int, int, float);
 
 #ifdef __cplusplus
 }

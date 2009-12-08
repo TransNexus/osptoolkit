@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospproviderapi.h - Prototypes for API provider functions.
- */
-
+/* ospproviderapi.h - Prototypes for API provider functions. */
 #ifndef _OSPPROVIDERAPI_H
 #define _OSPPROVIDERAPI_H
 
@@ -26,7 +23,6 @@
 #include "osp/osppkcs1.h"
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

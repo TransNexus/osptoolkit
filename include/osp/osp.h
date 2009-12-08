@@ -15,26 +15,17 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osp.h - Universal OSP includes.
- */
-
+/* osp.h - Universal OSP includes. */
 #ifndef _OSP_H
 #define _OSP_H
 
-/*
- * internal SDK includes
- */
-
+/* internal SDK includes */
 #include "osp/ospdatatypes.h"
 #include "osp/ospinit.h"
 #include "osp/osperrno.h"
 #include "osp/ospossys.h"
 
-/*
- * exposed OSP API prototypes and constants
- */
-
+/* exposed OSP API prototypes and constants */
 #include "osp/ospproviderapi.h"
 #include "osp/osptransapi.h"
 #include "osp/osplibversion.h"

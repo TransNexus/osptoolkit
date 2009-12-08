@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospauthrsp.h - OSP authorisation response objects
- */
-
+/* ospauthrsp.h - OSP authorisation response objects */
 #ifndef _OSPAUTHRSP_H
 #define _OSPAUTHRSP_H
 
@@ -79,7 +76,6 @@ typedef struct {
 #define OSPPAuthRspDestSetLimit(ospvDest, ospvLimit) OSPPDestSetLimit(ospvDest, ospvLimit)
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

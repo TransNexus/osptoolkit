@@ -76,7 +76,6 @@ typedef struct {                /* structure to pass probe information */
 #define OSPC_TNPROBE_TIMERMULT  1000
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospcustomdebug.h - Structures and prototypes for debugging and logging.
- */
-
+/* ospcustomdebug.h - Structures and prototypes for debugging and logging. */
 #ifndef _OSPCUSTOMDEBUG_H
 #define _OSPCUSTOMDEBUG_H
 

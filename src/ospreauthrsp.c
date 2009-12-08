@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospreauthrsp.c - OSP reauthorisation response functions
- */
+/* ospreauthrsp.c - OSP reauthorisation response functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"
@@ -59,7 +57,7 @@ OSPTBOOL OSPPReauthRspHasStatus(    /* returns non-zero if number exists */
 }
 
 /*
- * OSPPReauthRspGetStatus() - returns the status for an 
+ * OSPPReauthRspGetStatus() - returns the status for an
  * reauthorisation response
  */
 OSPTSTATUS *OSPPReauthRspGetStatus( /* returns pointer to dest */
@@ -193,9 +191,9 @@ int OSPPReauthRspFromElement(       /* returns error code */
             OSPPReauthRspMessageIdFromElement(ospvElem, &messageId);
             OSPPReauthRspSetMessageId(reauthrsp, messageId);
 
-            /* ospvElem is pointing to the Message element. 
-             * The first child contains the Component element. 
-             * The following two lines of code change ospvElem from 
+            /* ospvElem is pointing to the Message element.
+             * The first child contains the Component element.
+             * The following two lines of code change ospvElem from
              * pointing to the Message element to the Component element.
              */
             ospvParent = ospvElem;
@@ -364,7 +362,7 @@ void OSPPReauthRspSetMessageId(
  * OSPPReauthRspMessageIdFromElement() - Get message id attribute from element.
  */
 void OSPPReauthRspMessageIdFromElement(
-    OSPT_XML_ELEM *ospvElemIn, 
+    OSPT_XML_ELEM *ospvElemIn,
     const char **ospvMessageId)
 {
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
@@ -385,7 +383,7 @@ void OSPPReauthRspMessageIdFromElement(
  * OSPPReauthRspComponentIdFromElement() - Get component id attribute from element.
  */
 void OSPPReauthRspComponentIdFromElement(
-    OSPT_XML_ELEM *ospvElemIn, 
+    OSPT_XML_ELEM *ospvElemIn,
     const char **ospvComponentId)
 {
     OSPT_XML_ATTR *attr = OSPC_OSNULL;

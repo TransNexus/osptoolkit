@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmsgpart.h - Structures and prototypes for generic OSP message parts
- */
+/* ospmsgpart.h - Structures and prototypes for generic OSP message parts */
 
 #ifndef _OSPMSGPART_H
 #define _OSPMSGPART_H
@@ -32,7 +30,7 @@
  * elements will likely use enumerated types.
  */
 
-typedef int     OSPT_MSG_PART;
+typedef int OSPT_MSG_PART;
 
 #define OSPC_MPART_UNKNOWN      ((OSPT_MSG_PART)-16)    /* rsv'd for unknown part */
 #define OSPC_MPART_START        ((OSPT_MSG_PART)0)      /* rsv'd for start part */

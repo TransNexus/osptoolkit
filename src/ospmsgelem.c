@@ -15,17 +15,13 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospxmlmsgelem.c - XML element processing specific to OSP.
- */
+/* ospxmlmsgelem.c - XML element processing specific to OSP. */
 
 #include "osp/osp.h"
 #include "osp/ospmsgdesc.h"
 #include "osp/ospmsgelem.h"
 
-/*
- * Static global variables
- */
+/* Static global variables */
 
 /* Array that associates elements and names */
 const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
@@ -71,6 +67,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_FRACTION,             "Fraction" },
     { OSPC_MELEM_GROUP,                "Group" },
     { OSPC_MELEM_GROUPID,              "GroupId" },
+    { OSPC_MELEM_ICPIF,                "ICPIF" },
     { OSPC_MELEM_INCREMENT,            "Increment" },
     { OSPC_MELEM_JITTER,               "Jitter" },
     { OSPC_MELEM_LOSSRCVD,             "LossReceived" },

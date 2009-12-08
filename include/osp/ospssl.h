@@ -15,11 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospssl.h - common SSL object and function definitions along with
- *            wrapper prototypes
- */
-
+/* ospssl.h - common SSL object and function definitions along with wrapper prototypes */
 #ifndef _OSPSSL_H
 #define _OSPSSL_H
 
@@ -32,29 +28,22 @@
 #define OSPPSSLSessionGetContext(sslsess)   ((sslsess)->Context)
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    /*
-     * OSP SDK SSL Entry Point Macros
-     */
+    /* OSP SDK SSL Entry Point Macros */
     /* called only once for each provider */
 #define OSPPSSLSessionInit(secptr)     OSPPSSLWrapInit(secptr)
 #define OSPPSSLSessionCleanup(secptr)  OSPPSSLWrapCleanup(secptr)
 
-    /*
-     * OSP SDK SSL Entry Point Functions
-     */
+    /* OSP SDK SSL Entry Point Functions */
     int OSPPSSLSessionNew(OSPTHTTP *, OSPTSEC *);
     int OSPPSSLSessionRead(OSPTHTTP *, void *, unsigned int *, char *);
     int OSPPSSLSessionWrite(OSPTHTTP *, void *, unsigned int *);
     void OSPPSSLSessionDelete(OSPTBOOL, OSPTSSLSESSION **);
 
-    /*
-     * SSL Session Member functions
-     */
+    /* SSL Session Member functions */
     OSPTSSLSESSION *OSPPSSLSessionAlloc(void);
     OSPTBOOL OSPPSSLSessionHasSessionId(OSPTSSLSESSION *);
 
@@ -62,9 +51,7 @@ extern "C" {
     int OSPPSSLSessionInitialize(OSPTHTTP *, OSPTSEC *);
     int OSPPSSLSessionNegotiate(OSPTHTTP *);
 
-    /*
-     * SSL implementation wrapper functions 
-     */
+    /* SSL implementation wrapper functions */
     int OSPPSSLWrapInit(void *);
     void OSPPSSLWrapCleanup(void *);
     int OSPPSSLWrapSessionContextNew(void *, void *);

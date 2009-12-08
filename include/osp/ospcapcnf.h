@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- *  ospcapcnf.h - OSP capabiliti indication objects
- */
-
+/* ospcapcnf.h - OSP capabiliti indication objects */
 #ifndef _OSPCAPCNF_H
 #define _OSPCAPCNF_H
 
@@ -33,7 +30,6 @@ typedef struct {
 } OSPT_CAP_CNF;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

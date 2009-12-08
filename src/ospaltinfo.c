@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospaltinfo.c - OSP alt info functions
- */
+/* ospaltinfo.c - OSP alt info functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"
@@ -45,9 +43,11 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_Q850,            "q850" },
     { OSPC_ALTINFO_DEVICEID,        "deviceId" },
     { OSPC_ALTINFO_ASSERTEDID,      "assertedId" },
-    { OSPC_ALTINFO_ROUTINGNUM,      "routingnumber" },
-    { OSPC_ALTINFO_CIC,             "cic" },
+    { OSPC_ALTINFO_NPRN,            "routingnumber" },
+    { OSPC_ALTINFO_NPCIC,           "cic" },
     { OSPC_ALTINFO_NPDI,            "npdi" },
+    { OSPC_ALTINFO_SPID,            "spid" },
+    { OSPC_ALTINFO_OCN,             "ocn" },
     /* For other attributes */
     { OSPC_ALTINFO_TRUE,            "true" },
     { OSPC_ALTINFO_FALSE,           "false" },

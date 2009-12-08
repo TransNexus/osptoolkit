@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospfail.h - Structures and prototypes for linked lists.
- */
-
+/* ospfail.h - Structures and prototypes for linked lists. */
 #ifndef _OSPFAIL_H
 #define _OSPFAIL_H
 
@@ -116,7 +113,7 @@ int OSPPFailReasonFind(OSPEFAILREASON ospvFailureReason);
 OSPTBOOL OSPPHasTermCause(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);
 OSPTBOOL OSPPHasTermCauseAny(OSPT_TERM_CAUSE *);
 void OSPPSetTermCause(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE, unsigned, const char *);
-unsigned OSPPGetTCCode(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);    
-const char *OSPPGetTCDesc(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);    
+unsigned OSPPGetTCCode(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);
+const char *OSPPGetTCDesc(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);
 
 #endif /* _OSPFAIL_H */

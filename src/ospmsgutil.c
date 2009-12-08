@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmsgutil.c - utility functions for OSP messages
- */
+/* ospmsgutil.c - utility functions for OSP messages */
 
 #include "osp/osp.h"
 #include "osp/ospostime.h"
@@ -52,7 +50,7 @@ unsigned OSPPMsgBinFromASCIIElement(    /* returns error code */
         /* as long as there's no error, we know the encoding to use */
         encodeddata = ospvElem;
 
-        /* 
+        /*
          * Allocate memory 3/4 that of the encoded data for the decoded data.
          * The reason for the 3/4 or 0.75, is due to the way base64 encodes
          * data. The result is the unencoded data is 3/4 that of the data
@@ -95,7 +93,7 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
         /* look for a type attribute that will identify the encoding */
         for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElem);
             (attr != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-            attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElem, attr)) 
+            attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
         {
             if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_ENCODING) {
                 /* we found an encoding attribute - is it base64 */
@@ -122,14 +120,14 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
 
                 encodeddata = (unsigned char *)OSPPXMLElemGetValue(ospvElem);
 
-                /* 
+                /*
                  * Allocate memory 3/4 that of the encoded data for the decoded data.
                  * The reason for the 3/4 or 0.75, is due to the way base64 encodes
                  * data. The result is the unencoded data is 3/4 that of the data
                  * when encoded.
                  */
                 outlen = (unsigned int)ceil((0.75) * OSPM_STRLEN((char *)encodeddata));
-                                       
+
                 OSPM_MALLOC(*ospvData, unsigned char, outlen + 1);
                 OSPM_MEMSET(*ospvData, 0, outlen + 1);
 
@@ -167,9 +165,9 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
 
                         /* Verify that the lengths are what we expect */
                         if (*ospvDataLen != verifyDataLen) {
-                            /* 
+                            /*
                              * If we get to this point, it means that something seriously went
-                             * wrong. Somehow, different results were found when using 
+                             * wrong. Somehow, different results were found when using
                              * OSPPXMLDereference twice in a very small amount of time. The data
                              * is somehow corrupted. In order to avoid memory leaks, generate an
                              * error and free the allocated memory.
@@ -183,7 +181,7 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
                         }
                     }
                 } else {
-                    /* 
+                    /*
                      * Something went wrong when using OSPPXMLDereference. Send an error to
                      * indicate this.
                      */
@@ -205,7 +203,7 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
     unsigned ospvDataLen,           /* size of binary data */
     unsigned char *ospvData,        /* pointer to binary data */
     const char *ospvAttrType,       /* Attribute type */
-    const char *ospvAttrValue,      /* Attribute value */    
+    const char *ospvAttrValue,      /* Attribute value */
     OSPTBOOL ospvUseBase64,         /* base64 (1) or CDATA (0) encoding */
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
@@ -215,13 +213,13 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
 
     if ((ospvName == OSPC_OSNULL) ||
         ((ospvDataLen == 0) || (ospvData == OSPC_OSNULL)) ||
-        (((ospvAttrType != OSPC_OSNULL) && (ospvAttrType[0] != '\0')) && ((ospvAttrValue == OSPC_OSNULL) || (ospvAttrValue[0] == '\0')))) 
+        (((ospvAttrType != OSPC_OSNULL) && (ospvAttrType[0] != '\0')) && ((ospvAttrValue == OSPC_OSNULL) || (ospvAttrValue[0] == '\0'))))
     {
         ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
     } else if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    
+
 #ifdef OSPC_USE_CDATA_ONLY
     ospvUseBase64 = OSPC_FALSE;
 #endif
@@ -233,12 +231,12 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
         if (ospvUseBase64 == OSPC_FALSE) {
             /* allocate the buffer we use for the CDATA */
 
-            /* 
-             * Possible Optimization - 
+            /*
+             * Possible Optimization -
              * Instead of allocating buffer for the below mentioned size,
              * allocate for 1 byte more.
-             * This is because when we then have to finally put a '\0' char 
-             * and we call WriteByte function, the WriteByte function wont have 
+             * This is because when we then have to finally put a '\0' char
+             * and we call WriteByte function, the WriteByte function wont have
              * to allocate more memory. It will already have that space.
              */
             bfr = OSPPBfrNew(ospvDataLen + OSPC_XMLDOC_CDATABEGLEN + OSPC_XMLDOC_CDATAENDLEN);
@@ -295,12 +293,12 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
 #endif
 
                 if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                    /* 
-                     * Possible Optimization - 
+                    /*
+                     * Possible Optimization -
                      * Instead of allocating buffer for the below mentioned size,
                      * allocate for 1 byte more.
-                     * This is because when we then have to finally put a '\0' char 
-                     * and we call WriteByte function, the WriteByte function wont have 
+                     * This is because when we then have to finally put a '\0' char
+                     * and we call WriteByte function, the WriteByte function wont have
                      * to allocate more memory. It will already have that space.
                      */
                     bfr = OSPPBfrNew(base64bufsz);
@@ -635,7 +633,7 @@ unsigned OSPPMsgTXToElement(    /* returns error code */
 unsigned OSPPMsgTimeFromElement(/* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* input is XML element */
     OSPTTIME *ospvTime)         /* where to put time */
-{                                
+{
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
 
     if (ospvElem == OSPC_OSNULL) {
@@ -661,7 +659,7 @@ unsigned OSPPMsgTimeToElement(  /* returns error code */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
-    char tstr[OSPC_TIMESTRINGSIZE];
+    char tstr[OSPC_SIZE_TIMESTRING];
 
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -720,7 +718,7 @@ unsigned OSPPMsgElemIsCritical( /* returns non-zero if critical */
 /*
  * OSPPRoleGetName() - get an role name from a part value
  */
-const char *OSPPRoleGetName(    /* returns pointer to the name */                  
+const char *OSPPRoleGetName(    /* returns pointer to the name */
     OSPE_ROLE ospvPart)
 {
     const char *ospvName = OSPC_OSNULL;

@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospdatatypes.h - Structures and defines for OSP api.
- */
-
+/* ospdatatypes.h - Structures and defines for OSP API. */
 #ifndef _OSPDATATYPES_H
 #define _OSPDATATYPES_H
 
@@ -28,9 +25,7 @@
 
 /* NOTE: ospcallid.h is included at the end of this file. */
 
-/*
- * common data type typedefs
- */
+/* common data type typedefs */
 #ifndef _WIN32
 
 #ifdef __alpha__
@@ -106,54 +101,40 @@ typedef int OSPTTRANHANDLE;
 #define tr_min(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
-/*
- * Transaction Id typedef
- */
+/* Transaction Id typedef */
 typedef OSPTUINT64 OSPTTRXID;
 
-/*
- * transaction id tracking typedef
- */
+/* transaction id tracking typedef */
 typedef struct _OSPTTXID {
     OSPTUINT64 TransId;
     struct _OSPTIDTRACK *Next;
 } OSPTTXID;
 
-/*
- * collection index typedef
- */
+/* collection index typedef */
 typedef struct _OSPTCOLLECTIONINDEX {
     int Index;
 } OSPTCOLLECTIONINDEX;
 
-/*
- * Security - Private Key
- */
+/* Security - Private Key */
 typedef struct _OSPTPRIVATEKEY {
     unsigned char *PrivateKeyData;
     unsigned PrivateKeyLength;
 } OSPTPRIVATEKEY;
 
-/*
- * Security - Cert
- */
+/* Security - Cert */
 typedef struct {
     unsigned char *CertData;
     unsigned CertDataLength;
 } OSPT_CERT;
 
-/*
- * Misc Lock Modes
- */
+/* Misc Lock Modes */
 typedef enum {
     OSPC_LOCK_WRITE,
     OSPC_LOCK_READ,
     OSPC_LOCK_TRY
 } OSPE_LOCK_MODE;
 
-/*
- * Enumerated Data Types for Auditing
- */
+/* Enumerated Data Types for Auditing */
 typedef enum {
     OSPC_AUDIT_LOWER_BOUND = 10,
     OSPC_AUDIT_INIT,
@@ -162,9 +143,9 @@ typedef enum {
     OSPC_AUDIT_UPPER_BOUND
 } OSPE_AUDIT_STATE;
 
-#define OSPC_CURRENCYSIZE   5       /* We support only 3 digit Currency codes */
-#define OSPC_CONFIDSIZE     128     /* Same as Call Id Size */
-#define OSPC_UNITSIZE       20
+#define OSPC_SIZE_CURRENCY  5       /* We support only 3 digit Currency codes */
+#define OSPC_SIZE_CONFID    128     /* Same as Call Id Size */
+#define OSPC_SIZE_UNIT      20
 
 typedef enum {
     OSPC_NFORMAT_START = 0,
@@ -176,8 +157,12 @@ typedef enum {
 } OSPE_NUMBER_FORMAT;
 
 typedef enum {
-    OSPC_SERVICE_VOICE = 0,
-    OSPC_SERVICE_DATA
+    OSPC_SERVICE_START = 0,
+    OSPC_SERVICE_VOICE = OSPC_SERVICE_START,
+    OSPC_SERVICE_DATA,
+    OSPC_SERVICE_NPQUERY,
+    /* Number of service types */
+    OSPC_SERVICE_NUMBER
 } OSPE_SERVICE;
 
 typedef enum {
@@ -193,8 +178,8 @@ typedef enum {
 typedef struct {
     float amount;
     unsigned increment;
-    char unit[OSPC_UNITSIZE];
-    char currency[OSPC_CURRENCYSIZE];
+    char unit[OSPC_SIZE_UNIT];
+    char currency[OSPC_SIZE_CURRENCY];
 } OSPT_PRICING_INFO;
 
 #include "ospcallid.h"

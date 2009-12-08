@@ -24,7 +24,6 @@
  *
  *            See ospbfr.c for multi-threaded implications.
  */
-
 #ifndef _OSPBFR_H
 #define _OSPBFR_H
 
@@ -39,7 +38,6 @@ typedef struct {
 } OSPTBFR;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmsgattr.h - Definitions for OSP message attributes.
- */
-
+/* ospmsgattr.h - Definitions for OSP message attributes. */
 #ifndef _OSPMSGATTR_H
 #define _OSPMSGATTR_H
 
@@ -54,9 +51,7 @@ typedef enum {
     OSPC_CLEG_NUMBER
 } OSPE_CALL_LEG;
 
-/*
- * externally declared global variables
- */
+/* externally declared global variables */
 extern const OSPT_MSG_DESC OSPV_MATTR_DESCS[];
 
 /* Function Prototypes */

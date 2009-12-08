@@ -15,11 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmsgdesc.h - Structures and prototypes for generic XML message
- *                descriptors.
- */
-
+/* ospmsgdesc.h - Structures and prototypes for generic XML message descriptors. */
 #ifndef _OSPMSGDESC_H
 #define _OSPMSGDESC_H
 
@@ -48,7 +44,6 @@ typedef struct {
 } OSPT_MSG_DESC;
 
 /* Function Prototypes */
-
 OSPT_MSG_PART OSPPMsgDescGetPart(const char *, const OSPT_MSG_DESC *, unsigned);
 const char *OSPPMsgDescGetName(OSPT_MSG_PART, const OSPT_MSG_DESC *, unsigned);
 

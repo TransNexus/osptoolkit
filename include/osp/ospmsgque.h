@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmsgque.h - Structures and prototypes for message queue object.
- */
-
+/* ospmsgque.h - Structures and prototypes for message queue object. */
 #ifndef _OSPMSGQUE_H
 #define _OSPMSGQUE_H
 
@@ -27,9 +24,7 @@
 
 #define OSPPMsgQueueGetCondVar(ospvMsgQueue)    (ospvMsgQueue)->CondVar
 
-/*
- * message queue typedef
- */
+/* message queue typedef */
 typedef struct _OSPTMSGQUEUE {
     unsigned NumberOfTransactions;
     OSPTMUTEX Mutex;
@@ -38,7 +33,6 @@ typedef struct _OSPTMSGQUEUE {
 } OSPTMSGQUEUE;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

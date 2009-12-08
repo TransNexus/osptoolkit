@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospproviderapi.cpp - API functions for provider.
- */
+/* ospproviderapi.cpp - API functions for provider. */
+
 #include "osp/osp.h"
 #include "osp/ospossys.h"
 #include "osp/ospproviderapi.h"
@@ -29,11 +28,11 @@
 #include "osp/ospssl.h"
 #include "osp/ospconfig.h"
 
-/* 
+/*
  * OSPPProviderDelete()
  *
  * Delete the Provider Object.
- * 
+ *
  * The OSPPProviderDelete function tells the SDK library to delete a
  * provider object. This function immediately prevents the creation of
  * new transactions for the indicated provider. (Attempts to create new
@@ -41,11 +40,11 @@
  * The function also blocks until all pending transactions for the
  * provider have completed or the time limit has been exceeded.
  * The ospvTimeLimit parameter specifies the maximum number of seconds to
- * wait for pending transactions to complete. A negative value for this 
+ * wait for pending transactions to complete. A negative value for this
  * parameter instructs the library to wait indefinitely, and a value of zero
- * indicates that the deletion should occur immediately without waiting. If 
- * pending transactions are not complete within the time limit, those 
- * transactions will be terminated abruptly and information, including 
+ * indicates that the deletion should occur immediately without waiting. If
+ * pending transactions are not complete within the time limit, those
+ * transactions will be terminated abruptly and information, including
  * information necessary for billing, may be lost.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -87,20 +86,20 @@ int OSPPProviderDelete(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderGetAuthorityCertificates()
  *
  * Get trusted certificate authority public keys.
  *
- * The OSPPProviderGetAuthorityCertificates function returns the 
+ * The OSPPProviderGetAuthorityCertificates function returns the
  * certificate authority public keys that are currently trusted by
  * ospvProvider. These keys are returned in the form of X.509 formatted
  * certificates, and they are returned to the ospvAuthorityCertificates
  * array. The ospvSizeOfCertificate parameter indicates the maximum size
- * of any individual certificate. If any certificate exceeds that value 
- * then no certificates are returned and an error is returned. The parameter 
- * ospvNumberOfAuthorityCertificates points to the maximum number of 
- * certificates to return. That variable is updated with the actual number 
+ * of any individual certificate. If any certificate exceeds that value
+ * then no certificates are returned and an error is returned. The parameter
+ * ospvNumberOfAuthorityCertificates points to the maximum number of
+ * certificates to return. That variable is updated with the actual number
  * supplied when the function returns. If more certificates are available,
  * then only a partial list is returned.
  *
@@ -119,21 +118,21 @@ int OSPPProviderGetAuthorityCertificates(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPSecCopyAuthorityCertificates(provider->Security,
             ospvSizeOfCertificate,
-            (unsigned char **)ospvAuthorityCertificates, 
+            (unsigned char **)ospvAuthorityCertificates,
             ospvNumberOfAuthorityCertificates);
     }
 
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderGetHTTPMaxConnections()
  *
  * Get maximum number of simultaneous HTTP connections for provider.
  *
  * The OSPPProviderGetHTTPMaxConnections function returns the maximum
  * number of simultaneous HTTP connections that may be established with
- * ospvProvider. That number is returned in the variable pointed to by 
+ * ospvProvider. That number is returned in the variable pointed to by
  * ospvHTTPMaxConnections.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -161,12 +160,12 @@ int OSPPProviderGetHTTPMaxConnections(
 /*
  * OSPPProviderGetHTTPPersistence()
  *
- * Get the persistence, in seconds, of connections established with 
+ * Get the persistence, in seconds, of connections established with
  * provider.
  *
  * The OSPPProviderGetHTTPPersistence function returns the persistence
- * of HTTP connections established with ospvProvider. That value, 
- * returned in the location pointed to by ospvHTTPPersistence, is 
+ * of HTTP connections established with ospvProvider. That value,
+ * returned in the location pointed to by ospvHTTPPersistence, is
  * measured in seconds.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -186,14 +185,14 @@ int OSPPProviderGetHTTPPersistence(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderGetHTTPRetryDelay()
  *
  * Get delay, in seconds, between retries for connection with provider.
  *
- * The OSPPProviderGetHTTPRetryDelay function returns the delay between 
- * retries for HTTP connection attempts with ospvProvider. That value, 
- * returned in the location pointed to by ospvHTTPRetryDelay, is measured 
+ * The OSPPProviderGetHTTPRetryDelay function returns the delay between
+ * retries for HTTP connection attempts with ospvProvider. That value,
+ * returned in the location pointed to by ospvHTTPRetryDelay, is measured
  * in seconds.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -213,14 +212,14 @@ int OSPPProviderGetHTTPRetryDelay(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderGetHTTPRetryLimit()
  *
  * Get maximum number of retries for HTTP connection with provider.
  *
- * The OSPPProviderGetHTTPRetryLimit function returns the maximum 
- * number of 
- * retries for HTTP connection attempts with ospvProvider. That value is returned 
+ * The OSPPProviderGetHTTPRetryLimit function returns the maximum
+ * number of
+ * retries for HTTP connection attempts with ospvProvider. That value is returned
  * in the location pointed to by ospvHTTPRetryLimit.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -240,7 +239,7 @@ int OSPPProviderGetHTTPRetryLimit(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderGetHTTPTimeout()
  *
  * Get time, in milliseconds, to wait for a response from a provider
@@ -268,19 +267,19 @@ int OSPPProviderGetHTTPTimeout(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderGetLocalKeys()
  *
  * Get public and private key information being used by provider.
  *
- * The OSPPProviderGetLocalKeys function returns the public and 
- * private key information currently in use by ospvProvider for 
- * signing requests and indications. The RSA private key is returned 
- * in the location pointed to by ospvLocalPrivateKey, and the X.509 
- * formatted public key certificate is stored in ospvLocalCertificate. 
+ * The OSPPProviderGetLocalKeys function returns the public and
+ * private key information currently in use by ospvProvider for
+ * signing requests and indications. The RSA private key is returned
+ * in the location pointed to by ospvLocalPrivateKey, and the X.509
+ * formatted public key certificate is stored in ospvLocalCertificate.
  * The ospvSizeOfCertificate parameter indicates the maximum size of
- * the ospvLocalCertificate array. If the certificate does not fit 
- * within that limit, the function returns an appropriate error code.  
+ * the ospvLocalCertificate array. If the certificate does not fit
+ * within that limit, the function returns an appropriate error code.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
@@ -302,7 +301,7 @@ int OSPPProviderGetLocalKeys(
     }
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
-         * Copy the local certificate from the Security module 
+         * Copy the local certificate from the Security module
          */
         errorcode = OSPPSecCopyLocalCertificate(provider->Security, &ospvSizeOfCertificate, (unsigned char *)ospvLocalCertificate);
     }
@@ -310,15 +309,15 @@ int OSPPProviderGetLocalKeys(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderGetLocalValidation()
  *
  * Indicates whether to validate tokens locally or via a protocol exchange.
  *
- * The OSPPProviderGetLocalValidation function returns an indication of 
- * whether or not ospvProvider is currently set to validate authorisation 
- * tokens locally (i.e. by verifying their digital signature) or via a 
- * protocol exchange. The return value is stored in the location pointed 
+ * The OSPPProviderGetLocalValidation function returns an indication of
+ * whether or not ospvProvider is currently set to validate authorisation
+ * tokens locally (i.e. by verifying their digital signature) or via a
+ * protocol exchange. The return value is stored in the location pointed
  * to by ospvLocalValidation.
  *
  *  returns OSPC_ERR_NO_ERROR if successful, OSPC_ERR_XXX otherwise.
@@ -339,13 +338,13 @@ int OSPPProviderGetLocalValidation(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderGetNumberOfAuthorityCertificates()
  *
  * Get the number of trusted certificate authority certificates.
  *
- * The OSPPProviderGetNumberOfAuthorityCertificates function returns 
- * the number of certificate authority public keys currently trusted 
+ * The OSPPProviderGetNumberOfAuthorityCertificates function returns
+ * the number of certificate authority public keys currently trusted
  * by ospvProvider.That value is stored in the location pointed to by
  * ospvNumberOfAuthorityCertificates.
  *
@@ -366,13 +365,13 @@ int OSPPProviderGetNumberOfAuthorityCertificates(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderGetNumberOfServicePoints()
  *
  * Get number of service points defined for provider.
  *
- * The OSPPProviderGetNumberOfServicePoints interface provides the number of 
- * service points currently defined for ospvProvider. The result is returned 
+ * The OSPPProviderGetNumberOfServicePoints interface provides the number of
+ * service points currently defined for ospvProvider. The result is returned
  * in the location pointed to by ospvNumberOfServicePoints.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -392,23 +391,23 @@ int OSPPProviderGetNumberOfServicePoints(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderGetServicePoints()
  *
  * Get list of currently defined service points for provider.
  *
  * The OSPPProviderGetServicePoints function gives the caller the
- * list of service points currently defined for ospvProvider. The 
+ * list of service points currently defined for ospvProvider. The
  * ospvNumberOfServicePoints parameter indicates the maximum number
- * of service points to include, and the ospvSizeOfServicePoint 
- * parameter indicates the maximum length of the character string 
+ * of service points to include, and the ospvSizeOfServicePoint
+ * parameter indicates the maximum length of the character string
  * (including the terminating '\0') in which service points are placed.
- * The service points themselves are stored in the character strings 
+ * The service points themselves are stored in the character strings
  * indicated by the ospvServicePoints array. If the number of service
- * points is less than ospvNumberOfServicePoints, then excess entries 
+ * points is less than ospvNumberOfServicePoints, then excess entries
  * in the ospvServicePoints array are set to empty strings. If the actual
- * number is more than the parameter, then only the first 
- * ospvNumberOfServicePoints are supplied. If the string length of any 
+ * number is more than the parameter, then only the first
+ * ospvNumberOfServicePoints are supplied. If the string length of any
  * particular service point is greater than ospvSizeOfServicePoint, then no
  * service points are supplied (all pointers in the ospvServicePoints array
  * are set to empty strings) and an error is returned.
@@ -435,14 +434,14 @@ int OSPPProviderGetServicePoints(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderGetSSLLifetime()
  *
  * Get maximum lifetime, in seconds, of SSL session keys for provider.
  *
  * The OSPPProviderGetSSLLifetime function returns the maximum lifetime
- * of SSL session keys established with ospvProvider. That lifetime, 
- * expressed in seconds, is returned in the location pointed to by 
+ * of SSL session keys established with ospvProvider. That lifetime,
+ * expressed in seconds, is returned in the location pointed to by
  * ospvSSLLifetime.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -462,7 +461,7 @@ int OSPPProviderGetSSLLifetime(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderNew()
  *
  * Create and initialize a provider object.
@@ -472,10 +471,10 @@ int OSPPProviderGetSSLLifetime(
  * interaction with the SDK library can take place.
  *
  * The parameters passed to this function provide the initial configuration
- * information for the provider. That information consists of the following 
+ * information for the provider. That information consists of the following
  * items:
  *
- * ospvNumberOfServicePoints: the number of service points included in the 
+ * ospvNumberOfServicePoints: the number of service points included in the
  * list referenced by the ospvServicePoints parameter.
  *
  * ospvServicePoints: a list of character strings indicating where the library
@@ -483,8 +482,8 @@ int OSPPProviderGetSSLLifetime(
  * the form of a standard URL,and may consist of up to four components:
  *
  *  An optional indication of the protocol to be used for communicating with
- *  the service point. This release of the SDK supports both HTTP and HTTP 
- *  secured with SSL; they are indicated by "http://" and "https://" 
+ *  the service point. This release of the SDK supports both HTTP and HTTP
+ *  secured with SSL; they are indicated by "http://" and "https://"
  *  respectively. If the protocol is not explicitly indicated, the SDK defaults
  *  to HTTP secured with SSL.
  *
@@ -495,11 +494,11 @@ int OSPPProviderGetSSLLifetime(
  *  port number is omitted, the SDK defaults to port 80 (for HTTP) or port 443
  *  (for HTTP secured with SSL).
  *
- *  The uniform resource identifier for requests to the service point. This 
+ *  The uniform resource identifier for requests to the service point. This
  *  component is not optional and must be included.
  *
  * The service points are ordered in the list by decreasing preference. The SDK
- * library, therefore, attempts to contact the first service point first. Only 
+ * library, therefore, attempts to contact the first service point first. Only
  * if that attempt fails will it fall back to the second service point.
  *
  *  Examples of valid service points include:
@@ -513,23 +512,23 @@ int OSPPProviderGetSSLLifetime(
  * ospvLocalCertificate: a X.509 formatted certificate containing the RSA public
  * key corresponding to the local private key.
  *
- * ospvNumberOfAuthorityCertificates: the number of certificate authority 
+ * ospvNumberOfAuthorityCertificates: the number of certificate authority
  * certificates passed in the next parameter.
  *
- * ospvAuthorityCertificates: an array of X.509 formatted certificates 
- * containing certificate authority public keys. These public keys are used to 
+ * ospvAuthorityCertificates: an array of X.509 formatted certificates
+ * containing certificate authority public keys. These public keys are used to
  * authenticate the settlement provider server during the initial SSL exchange.
  *
- * ospvLocalValidation: a Boolean value to indicate whether or not the SDK 
- * should validation authorisation tokens locally (i.e. by verifying digital 
+ * ospvLocalValidation: a Boolean value to indicate whether or not the SDK
+ * should validation authorisation tokens locally (i.e. by verifying digital
  * signatures) or via a protocol exchange.
  *
- * ospvSSLLifetime: the lifetime, in seconds, of a single SSL session key. 
- * Once this time limit is exceeded, the SDK library will negotiate a new 
- * session key. Communication exchanges in progress will not be interrupted 
+ * ospvSSLLifetime: the lifetime, in seconds, of a single SSL session key.
+ * Once this time limit is exceeded, the SDK library will negotiate a new
+ * session key. Communication exchanges in progress will not be interrupted
  * when this time limit expires.
  *
- * ospvHTTPMaxConnections: the maximum number of simultaneous connections 
+ * ospvHTTPMaxConnections: the maximum number of simultaneous connections
  * to be used for communication to the settlement provider.
  *
  * ospvHTTPPersistence: the time, in seconds, that an HTTP connection should
@@ -537,26 +536,26 @@ int OSPPProviderGetSSLLifetime(
  * will maintain the connection for this time period in anticipation of future
  * communication exchanges to the same server.
  *
- * ospvHTTPRetryDelay: the time, in seconds, between retrying connection 
- * attempts to the provider. After exhausting all service points for the 
- * provider, the library will delay for this amount of time before resuming 
+ * ospvHTTPRetryDelay: the time, in seconds, between retrying connection
+ * attempts to the provider. After exhausting all service points for the
+ * provider, the library will delay for this amount of time before resuming
  * connection attempts.
  *
- * ospvHTTPRetryLimit: the maximum number of retries for connection attempts 
- * to the provider.If no connection is established after this many retry 
- * attempts to all service points, then the library will cease connection 
- * attempts and return appropriate error codes. 
- * This number does not count the initial connection attempt, so that an 
- * ospvHTTPRetryLimit of 1 will result in a total of two connection attempts 
+ * ospvHTTPRetryLimit: the maximum number of retries for connection attempts
+ * to the provider.If no connection is established after this many retry
+ * attempts to all service points, then the library will cease connection
+ * attempts and return appropriate error codes.
+ * This number does not count the initial connection attempt, so that an
+ * ospvHTTPRetryLimit of 1 will result in a total of two connection attempts
  * to every service point.
  *
  * ospvHTTPTimeout: the maximum time, in milliseconds, to wait for a response
- * from a server. If no response is received within this time, the current 
+ * from a server. If no response is received within this time, the current
  * connection is aborted and the  library attempts to contact the next service
  * point.
- * 
+ *
  * ospvProvider: pointer to variable in which to store a handle for the newly
- * created provider object. That handle must be used for all subsequent 
+ * created provider object. That handle must be used for all subsequent
  * interactions with the provider.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -564,7 +563,7 @@ int OSPPProviderGetSSLLifetime(
 int OSPPProviderNew(
     unsigned ospvNumberOfServicePoints,             /* In  - Svc ptr count           */
     const char *ospvServicePoints[],                /* In  - Svc pts strings         */
-    unsigned long ospvMessageCount[],               /* Array of Integers that tell the 
+    unsigned long ospvMessageCount[],               /* Array of Integers that tell the
                                                        toolkit about the maximum messages
                                                        that can be sent to each SP on a connection */
     const char *ospvAuditURL,                       /* In  - Audit URL string         */
@@ -598,17 +597,17 @@ int OSPPProviderNew(
         }
     }
 
-    /* 
+    /*
      * check incoming values and reset to defaults if necessary
      */
 
-    if ((errorcode == OSPC_ERR_NO_ERROR) && 
+    if ((errorcode == OSPC_ERR_NO_ERROR) &&
         ((ospvNumberOfServicePoints <= 0) || (ospvServicePoints == OSPC_OSNULL) ||
         (OSPPCommValidateSvcPts(ospvNumberOfServicePoints, ospvServicePoints) != OSPC_ERR_NO_ERROR) ||
         (ospvLocalPrivateKey == OSPC_OSNULL) || (ospvLocalCertificate == OSPC_OSNULL) ||
         (ospvNumberOfAuthorityCertificates <= 0) || (ospvAuthorityCertificates == OSPC_OSNULL) ||
         (ospvSSLLifetime < 0) || (ospvHTTPMaxConnections < 0) || (ospvHTTPPersistence < 0) ||
-        (ospvHTTPRetryDelay < 0) || (ospvAuditURL == OSPC_OSNULL) || (ospvHTTPRetryLimit < 0) || (ospvHTTPTimeout < 0))) 
+        (ospvHTTPRetryDelay < 0) || (ospvAuditURL == OSPC_OSNULL) || (ospvHTTPRetryLimit < 0) || (ospvHTTPTimeout < 0)))
     {
         errorcode = OSPC_ERR_PROV_INVALID_VALUE;
         OSPM_DBGERRORLOG(errorcode, "Invalid input value");
@@ -649,7 +648,7 @@ int OSPPProviderNew(
 
                 if (errorcode == OSPC_ERR_NO_ERROR) {
                     /*
-                     * initialize the area which holds the transactions 
+                     * initialize the area which holds the transactions
                      */
                     errorcode = OSPPProviderTransactionCollectionNew(&(provider->TransCollection));
                 }
@@ -741,7 +740,7 @@ int OSPPProviderNew(
             if (errorcode == OSPC_ERR_NO_ERROR)
 
                 /*
-                 * set the maximum number of HTTP connections 
+                 * set the maximum number of HTTP connections
                  */
                 errorcode = OSPPProviderSetHTTPMaxConnections(*ospvProvider, ospvHTTPMaxConnections);
 
@@ -753,7 +752,7 @@ int OSPPProviderNew(
                 deviceid = atol(ospvDeviceId);
                 OSPPProviderSetDeviceId(provider, deviceid);
                 /*
-                 * set the private key. 
+                 * set the private key.
                  */
                 errorcode = OSPPProviderSetLocalKeys(*ospvProvider, ospvLocalPrivateKey, ospvLocalCertificate->CertData);
             }
@@ -783,8 +782,8 @@ int OSPPProviderNew(
                 if (ospvLocalValidation)
                     errorcode = errorcode;  /* not implemented */
 
-            /* 
-             * set audit info 
+            /*
+             * set audit info
              */
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 provider->Audit = OSPPAuditNew(ospvAuditURL);
@@ -803,22 +802,22 @@ int OSPPProviderNew(
              */
         }
     }   /* end of valid values */
-    
+
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderSetAuthorityCertificates()
  *
  * Set the list of authority certificates trusted by the provider.
  *
- * The OSPPProviderSetAuthorityCertificates function indicates the 
- * certificate authority public keys that should be trusted for 
- * ospvProvider. Those public keys are conveyed in the form of X.509 
+ * The OSPPProviderSetAuthorityCertificates function indicates the
+ * certificate authority public keys that should be trusted for
+ * ospvProvider. Those public keys are conveyed in the form of X.509
  * formatted certificates. The parameter ospvNumberOfAuthorityCertificates
- * indicates how many of such certificates are conveyed in the 
- * ospvAuthorityCertificates array. Communication exchanges already in 
- * progress are not interrupted by this function, but subsequent exchanges 
+ * indicates how many of such certificates are conveyed in the
+ * ospvAuthorityCertificates array. Communication exchanges already in
+ * progress are not interrupted by this function, but subsequent exchanges
  * will use the new values.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -839,19 +838,19 @@ int OSPPProviderSetAuthorityCertificates(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderSetHTTPMaxConnections()
  *
- * Set the maximum number of simultaneous HTTP connections 
+ * Set the maximum number of simultaneous HTTP connections
  * with the provider.
  *
- * The OSPPProviderSetHTTPMaxConnections function indicates the 
- * maximum number of simultaneous HTTP connections that should be 
- * established with ospvProvider. The number is passed in the 
- * ospvHTTPMaxConnections parameter. Changes to this value  do not 
- * effect active communication exchanges but otherwise take place 
- * immediately. In particular, HTTP connections being kept alive 
- * strictly because of persistence are terminated immediately if 
+ * The OSPPProviderSetHTTPMaxConnections function indicates the
+ * maximum number of simultaneous HTTP connections that should be
+ * established with ospvProvider. The number is passed in the
+ * ospvHTTPMaxConnections parameter. Changes to this value  do not
+ * effect active communication exchanges but otherwise take place
+ * immediately. In particular, HTTP connections being kept alive
+ * strictly because of persistence are terminated immediately if
  * the number of open connections must be reduced.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -874,20 +873,20 @@ int OSPPProviderSetHTTPMaxConnections(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderSetHTTPPersistence()
  *
  * Set the keep-alive time, in seconds, for the connection
  * with the provider.
  *
  * The OSPPProviderSetHTTPPersistence function configures the persistence
- * of HTTP connections established with ospvProvider. That lifetime, 
+ * of HTTP connections established with ospvProvider. That lifetime,
  * expressed in seconds, is indicated by the ospvHTTPPersistence parameter.
- * The SDK library keeps a HTTP connection alive for this number of seconds 
+ * The SDK library keeps a HTTP connection alive for this number of seconds
  * after each communication exchange, anticipating that a subsequent exchange
- * may reuse the existing connection. Changes to this parameter take place 
+ * may reuse the existing connection. Changes to this parameter take place
  * immediately.
- * 
+ *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
 int OSPPProviderSetHTTPPersistence(
@@ -908,16 +907,16 @@ int OSPPProviderSetHTTPPersistence(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderSetHTTPRetryDelay()
  *
  * Set delay between retries for connection attempts with provider.
  *
- * The OSPPProviderSetHTTPRetryDelay function configures the delay 
- * between retries for connections attempts with ospvProvider. That 
+ * The OSPPProviderSetHTTPRetryDelay function configures the delay
+ * between retries for connections attempts with ospvProvider. That
  * delay, expressed in seconds, is indicated by the ospvHTTPRetryDelay
  * parameter. After exhausting all service points for the provider, the
- * library will delay for this amount of time before resuming 
+ * library will delay for this amount of time before resuming
  * connection attempts. Changes to this parameter take place immediately.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -940,19 +939,19 @@ int OSPPProviderSetHTTPRetryDelay(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderSetHTTPRetryLimit()
  *
  * Set maximum number of retries for connection attempts to provider.
  *
- * The OSPPProviderSetHTTPRetryLimit function configures the maximum 
- * number of retries for connections attempts with ospvProvider. If no 
+ * The OSPPProviderSetHTTPRetryLimit function configures the maximum
+ * number of retries for connections attempts with ospvProvider. If no
  * connection is established after this many retry attempts to all service
- * points, then the library will cease connection attempts and return 
- * appropriate error codes. This number does not count the initial 
- * connection attempt, so that an ospvHTTPRetryLimit of 1 will result 
+ * points, then the library will cease connection attempts and return
+ * appropriate error codes. This number does not count the initial
+ * connection attempt, so that an ospvHTTPRetryLimit of 1 will result
  * in a total of two connection attempts to every service point.
- * 
+ *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
  */
 int OSPPProviderSetHTTPRetryLimit(
@@ -973,17 +972,17 @@ int OSPPProviderSetHTTPRetryLimit(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderSetHTTPTimeout()
  *
  * Configure maximum time in ms to wait for HTTP reply from provider.
  *
- * The OSPPProviderSetHTTPTimeout function configures the maximum 
+ * The OSPPProviderSetHTTPTimeout function configures the maximum
  * amount of time to wait for a reply from ospvProvider. That timeout,
- * expressed in milliseconds, is indicated by the ospvHTTPTimeout 
- * parameter. If no response arrives within this time, the current 
+ * expressed in milliseconds, is indicated by the ospvHTTPTimeout
+ * parameter. If no response arrives within this time, the current
  * connection is aborted and the library attempts to connect with another
- * service point. Changes to this parameter do not affect connection 
+ * service point. Changes to this parameter do not affect connection
  * attempts already in progress, but take affect for all subsequent attempts.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
@@ -1014,20 +1013,20 @@ int OSPPProviderSetHTTPTimeout(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderSetLocalKeys()
  *
- * Set public and private keys provider uses to sign requests 
+ * Set public and private keys provider uses to sign requests
  * and indications.
  *
- * The OSPPProviderSetLocalKeys function configures the public and 
- * private key pair used by ospvProvider to sign its requests and 
- * indications. The parameter ospvLocalPrivateKey identifies the RSA 
+ * The OSPPProviderSetLocalKeys function configures the public and
+ * private key pair used by ospvProvider to sign its requests and
+ * indications. The parameter ospvLocalPrivateKey identifies the RSA
  * private key and the parameter ospvLocalCertificate points to a X.509
  * formatted certificate containing the corresponding RSA public key.
- * Communication exchanges already in progress are not interrupted by 
+ * Communication exchanges already in progress are not interrupted by
  * this function, but subsequent exchanges will use the new values.
- * 
+ *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSP_ERR_xxx otherwise.
  */
 int OSPPProviderSetLocalKeys(
@@ -1064,9 +1063,9 @@ int OSPPProviderSetLocalKeys(
  * Set local validation on or off.
  *
  * The OSPPProviderSetLocalValidation funcitonindicates to opsvProvider
- * whether authorisation tokens should be validated locally (i.e. by 
- * verifying their digital signature) or via a protocol exchange. The 
- * parameter ospvLocalValidation is non-zero for local validation or zero 
+ * whether authorisation tokens should be validated locally (i.e. by
+ * verifying their digital signature) or via a protocol exchange. The
+ * parameter ospvLocalValidation is non-zero for local validation or zero
  * for remote validation.
  *
  * returns OSPC_ERR_NO_ERROR if successful, error code otherwise.
@@ -1120,12 +1119,12 @@ int OSPPProviderSetSPMessageCount(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderSetServicePoints()
  *
- * Set service point configuration for future communications exchanges. 
+ * Set service point configuration for future communications exchanges.
  *
- * The OSPPProviderSetServicePoints function indicates the service points 
+ * The OSPPProviderSetServicePoints function indicates the service points
  * the SDK library should use for future communication exchanges with
  * ospvProvider. Communication exchanges already in progress are not
  * interrupted.
@@ -1136,26 +1135,26 @@ int OSPPProviderSetSPMessageCount(
  * of up to four components:
  *
  * An optional indication of the protocol to be used for communicating
- * with the service point. This release of the SDK supports both HTTP and 
- * with the service point. This release of the SDK supports both HTTP and 
- * HTTP secured with SSL; they are indicated by "http://" and "https://" 
- * respectively. If the protocol is not explicitly indicated, the SDK 
+ * with the service point. This release of the SDK supports both HTTP and
+ * with the service point. This release of the SDK supports both HTTP and
+ * HTTP secured with SSL; they are indicated by "http://" and "https://"
+ * respectively. If the protocol is not explicitly indicated, the SDK
  * defaults to HTTP secured with SSL.
  *
- * The Internet domain name for the service point. Raw IP addresses 
- * may also be used, provided they are enclosed in square brackets such as 
+ * The Internet domain name for the service point. Raw IP addresses
+ * may also be used, provided they are enclosed in square brackets such as
  * "[172.16.1.1]".
  *
- * An optional TCP port number for communicating with the service 
- * point. If the port number is omitted, the SDK defaults to port 80 
+ * An optional TCP port number for communicating with the service
+ * point. If the port number is omitted, the SDK defaults to port 80
  * (for HTTP) or port 443 (for HTTP secured with SSL).
  *
- * The uniform resource identifier for requests to the service point.  
+ * The uniform resource identifier for requests to the service point.
  * This component is not optional and must be included.
  *
- * The service points are ordered in the list by decreasing preference. The SDK 
- * library, therefore, attempts to contact the first service point 
- * first.  Only if that attempt fails will it fall back to the second 
+ * The service points are ordered in the list by decreasing preference. The SDK
+ * library, therefore, attempts to contact the first service point
+ * first.  Only if that attempt fails will it fall back to the second
  *      service point.
  *
  *      Examples of valid service points include:
@@ -1195,7 +1194,7 @@ int OSPPProviderSetServicePoints(
 }
 
 /*
- * 
+ *
  * Save as OSPPProviderSetServicePoints only updates the set of URLs used
  * for exchanging capabilities messages.
  *
@@ -1227,19 +1226,19 @@ int OSPPProviderSetCapabilitiesURLs(
     return errorcode;
 }
 
-/* 
+/*
  * OSPPProviderSetSSLLifetime()
  *
  * Set the maximum lifetime of SSL session keys with provider.
  *
- * The OSPPProviderSetSSLLifetime function configures the maximum 
- * lifetime of SSL session keys established with ospvProvider. That 
+ * The OSPPProviderSetSSLLifetime function configures the maximum
+ * lifetime of SSL session keys established with ospvProvider. That
  * lifetime, expressed in seconds, is indicated by the ospvSSLLifetime
- * parameter. The SDK library attempts to reuse previously established 
- * SSL session keys in order to minimize delay when communicating 
- * with a settlement server. This parameter places a maximum lifetime on 
- * these keys. Changes to this parameter take place immediately. Note, 
- * however, that communication  exchanges already in progress are never 
+ * parameter. The SDK library attempts to reuse previously established
+ * SSL session keys in order to minimize delay when communicating
+ * with a settlement server. This parameter places a maximum lifetime on
+ * these keys. Changes to this parameter take place immediately. Note,
+ * however, that communication  exchanges already in progress are never
  * interrupted when a session key lifetime expires.
  *
  * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.

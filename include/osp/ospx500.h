@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospx500.h - Constants for X500 objects.
- */
-
+/* ospx500.h - Constants for X500 objects. */
 #ifndef _OSPX500_H
 #define _OSPX500_H
 

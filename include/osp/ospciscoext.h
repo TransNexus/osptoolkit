@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospciscoext.h - Cisco Audit elements.
- */
-
+/* ospciscoext.h - Cisco Audit elements. */
 #ifndef _OSPCISCOEXT_H
 #define _OSPCISCOEXT_H
 
@@ -29,10 +26,10 @@ typedef struct {
 } OSPTCSAUDIT;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
     void OSPPCSAuditDelete(OSPTCSAUDIT **ospvCSAudit);
     int OSPPCSAuditFromElement(OSPT_XML_ELEM *, OSPTCSAUDIT **);
     unsigned char *OSPPCSAuditGetTrigger(OSPTCSAUDIT *);
@@ -40,6 +37,7 @@ extern "C" {
     OSPTCSAUDIT *OSPPCSAuditNew(void);
     void OSPPCSAuditSetTrigger(OSPTCSAUDIT *, unsigned char *);
     int OSPPCSAuditToElement(OSPTCSAUDIT *, OSPT_XML_ELEM **);
+
 #ifdef __cplusplus
 }
 #endif

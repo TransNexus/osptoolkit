@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospstatistics.h - Statistics elements.
- */
-
+/* ospstatistics.h - Statistics elements. */
 #ifndef _OSPSTATISTICS_H
 #define _OSPSTATISTICS_H
 
@@ -36,29 +33,25 @@
 #define OSPC_SVALUE_PACKET      ((unsigned)(OSPC_SVALUE_PACKETS | OSPC_SVALUE_FRACTION))
 #define OSPC_SVALUE_METRICS     ((unsigned)(OSPC_SVALUE_SAMPLES | OSPC_SVALUE_MINIMUM | OSPC_SVALUE_MAXIMUM | OSPC_SVALUE_MEAN | OSPC_SVALUE_VARIANCE | OSPC_SVALUE_SQUARES))
 
-/*
- * Statistcs, metric types
- */
+/* Statistcs, metric types */
 typedef enum {
+    OSPC_SMETRIC_UNDEFINED = -1,
     OSPC_SMETRIC_RTP = 0,
     OSPC_SMETRIC_RTCP,
     /* Number of metric types */
     OSPC_SMETRIC_NUMBER
 } OSPE_STATS_METRIC;
 
-/*
- * Statistcs, flow types
- */
+/* Statistcs, flow types */
 typedef enum {
+    OSPC_SFLOW_UNDEFINED = -1,
     OSPC_SFLOW_DOWNSTREAM = 0,
     OSPC_SFLOW_UPSTREAM,
     /* Number of flow types */
     OSPC_SFLOW_NUMBER
 } OSPE_STATS_FLOW;
 
-/*
- * Statistics, value types
- */
+/* Statistics, value types */
 typedef enum {
     OSPC_STATS_LOST = 0,
     OSPC_STATS_JITTER,
@@ -68,22 +61,19 @@ typedef enum {
     OSPC_STATS_RFACTOR,
     OSPC_STATS_MOSCQ,
     OSPC_STATS_MOSLQ,
+    OSPC_STATS_ICPIF,
     /* Number of value types */
     OSPC_STATS_NUMBER
 } OSPE_STATS;
 
-/*
- * Statistics value structure for lost packets
- */
+/* Statistics value structure for lost packets */
 typedef struct {
     OSPTBOOL hasvalue;
     unsigned packets;
     unsigned fraction;
 } OSPT_STATS_PACKET;
 
-/*
- * Statistics value structure for Jitter, delay,
- */
+/* Statistics value structure for Jitter, delay */
 typedef struct {
     OSPTBOOL hasvalue;
     unsigned samples;
@@ -94,9 +84,7 @@ typedef struct {
     double squaressum;
 } OSPT_STATS_METRICS;
 
-/*
- * Statistics structure types
- */
+/* Statistics structure types */
 typedef enum {
     OSPC_SSTRUCT_PACKET = 0,
     OSPC_SSTRUCT_METRICS,
@@ -120,10 +108,10 @@ typedef struct {
     float ospmRFactor[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
     float ospmMOSCQ[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
     float ospmMOSLQ[OSPC_SMETRIC_NUMBER][OSPC_SFLOW_NUMBER];
+    int ospmICPIF[OSPC_SFLOW_NUMBER];
 } OSPT_STATS;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -132,8 +120,8 @@ extern "C" {
     void OSPPStatsDelete(OSPT_STATS **);
     int OSPPStatsToElement(OSPT_STATS *, OSPT_XML_ELEM **);
 
-    OSPTBOOL OSPPStatsHasOneWay(OSPT_STATS *);
-    OSPTBOOL OSPPStatsHasRoundTrip(OSPT_STATS *);
+    OSPTBOOL OSPPStatsHasOneWay(OSPT_STATS *, unsigned);
+    OSPTBOOL OSPPStatsHasRoundTrip(OSPT_STATS *, unsigned);
     OSPTBOOL OSPPStatsHasLossSent(OSPT_STATS *, unsigned);
     OSPTBOOL OSPPStatsHasLossReceived(OSPT_STATS *, unsigned);
 
@@ -143,11 +131,13 @@ extern "C" {
 
     unsigned OSPPStatsGetOneWaySamples(OSPT_STATS *);
     unsigned OSPPStatsGetOneWayMinimum(OSPT_STATS *);
+    unsigned OSPPStatsGetOneWayMaximum(OSPT_STATS *);
     unsigned OSPPStatsGetOneWayMean(OSPT_STATS *);
     float OSPPStatsGetOneWayVariance(OSPT_STATS *);
 
     unsigned OSPPStatsGetRoundTripSamples(OSPT_STATS *);
     unsigned OSPPStatsGetRoundTripMinimum(OSPT_STATS *);
+    unsigned OSPPStatsGetRoundTripMaximum(OSPT_STATS *);
     unsigned OSPPStatsGetRoundTripMean(OSPT_STATS *);
     float OSPPStatsGetRoundTripVariance(OSPT_STATS *);
 

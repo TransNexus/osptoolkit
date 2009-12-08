@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospxml.cpp - XML functions
- */
+/* ospxml.cpp - XML functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"
@@ -38,7 +36,7 @@ int OSPPXMLElementProcess(
     OSPT_XML_ELEM *ospvElem,        /* In - xmlelement to be processed */
     unsigned char **ospvMessage,    /* Out - xml doc as unsigned char */
     unsigned *ospvSizeOfMessage)    /* Out - size of xml doc */
-{                               
+{
     OSPTBFR *outbuffer = NULL;
     unsigned transferlen = 0;
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -48,14 +46,14 @@ int OSPPXMLElementProcess(
         OSPM_DBGERRORLOG(errorcode, "ospvElem == NULL");
     }
 
-    /* 
-     * now that we have everything stored into the message element, 
+    /*
+     * now that we have everything stored into the message element,
      * we can
      * convert it into an XML.
      */
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* 
-         * Possible Optimization - 
+        /*
+         * Possible Optimization -
          * Instead of allocating buffer for the below mentioned size,
          * allocate for OSPC_XMLDOC_DECLLEN byte's.
          * This will cut down on some subsequent malloc calls.
@@ -112,7 +110,7 @@ int OSPPXMLMessageCreate(
     unsigned *ospvSizeOfMessage,    /* Out - size of xml message */
     void *ospvInfo,                 /* In - structure holding data */
     OSPTTRANS *trans)               /* In - transaction handle */
-{                              
+{
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *xmlelem = NULL;
 
@@ -167,7 +165,7 @@ int OSPPXMLMessageCreate(
 int OSPPXMLGetDataType(
     OSPT_XML_ELEM *ospvXMLElem,     /* In - xml element */
     OSPE_MESSAGE *ospvDataType)     /* Out - datatype for this element */
-{                               
+{
     OSPT_XML_ELEM *parent = OSPC_OSNULL;
     char *name = OSPC_OSNULL;
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -240,7 +238,7 @@ int OSPPXMLMessageParse(
     unsigned ospvSizeOfMessage,     /* In - size of message */
     void **ospvData,                /* Out - pointer to struct w/data from message */
     OSPE_MESSAGE *ospvDataType)     /* Out - what type struct void pointer is pointing to */
-{                               
+{
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *xmlelem = OSPC_OSNULL;
     OSPTBFR *xmlbufr = OSPC_OSNULL;
@@ -322,7 +320,7 @@ int OSPPXMLMessageProcess(
     OSPT_XML_ELEM *ospvElem,    /* In - xml element for this datatype */
     void **ospvStruct,          /* Out- pointer to struct to be filled in */
     OSPE_MESSAGE ospvDataType)  /* In - datatype for this struct */
-{                         
+{
     int errorcode = OSPC_ERR_NO_ERROR;
 
     switch (ospvDataType) {

@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptrans.cpp - Global functions for transaction object.
- */
+/* osptrans.cpp - Global functions for transaction object. */
+
 #include "osp/osp.h"
 #include "osp/osptrans.h"
 #include "osp/ospprovider.h"
@@ -953,7 +952,7 @@ int OSPPTransactionGetDestination(
      */
     if (ospvSizeOfTimestamp == 0) {
         timeflag = OSPC_FALSE;
-    } else if (ospvSizeOfTimestamp < OSPC_TIMESTRINGSIZE) {
+    } else if (ospvSizeOfTimestamp < OSPC_SIZE_TIMESTRING) {
         errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
         OSPM_DBGERRORLOG(errorcode, "Not enough space for timestrings.");
     }
@@ -1154,7 +1153,7 @@ int OSPPTransactionGetDestination(
             }
         }
 
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (ospvSizeOfDestinationDevice != 0) && (ospvDestinationDevice != OSPC_OSNULL)) {
             if (OSPPDestDevHasAddr(dest)) {
                 sigaddr = OSPC_OSNULL;
 
@@ -1173,6 +1172,8 @@ int OSPPTransactionGetDestination(
                         OSPM_MEMCPY(ospvDestinationDevice, sigaddr, OSPM_STRLEN(sigaddr) + 1);
                     }
                 }
+            } else {
+                ospvDestinationDevice[0] = '\0';
             }
         }
 

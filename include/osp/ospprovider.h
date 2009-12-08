@@ -15,11 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospprovider.h - Prototypes, macros and constants for global provider
- * functions.
- */
-
+/* ospprovider.h - Prototypes, macros and constants for global provider functions. */
 #ifndef _OSPPROVIDER_H
 #define _OSPPROVIDER_H
 
@@ -31,9 +27,8 @@
 #include "osp/osptransids.h"
 
 #define OSPC_PROV_SHIFT  24
-/*
- * provider typedef
- */
+
+/* provider typedef */
 typedef struct _OSPTPROVIDER {
     unsigned char ProviderInUse;
     OSPTCOMM *Comm;
@@ -43,9 +38,9 @@ typedef struct _OSPTPROVIDER {
     OSPTTXID *Id;
     OSPTMUTEX ProviderMutex;
     OSPTSEC *Security;
-    /* 
-     * bit 1 -  Trans Allowed     - 0x01; 
-     *          Trans not allowed - 0x00 
+    /*
+     * bit 1 -  Trans Allowed     - 0x01;
+     *          Trans not allowed - 0x00
      */
     unsigned char Flags;
     unsigned long CustId;
@@ -56,13 +51,11 @@ typedef struct _OSPTPROVIDER {
 } OSPTPROVIDER;
 
 /* MACROS */
-
 #define OSPC_TRANSACTION_ALLOWED    1
 #define OSPM_GET_PROV_INDEX_FM_PROV_HANDLE(e)  (e);
 #define OSPM_GET_PROV_INDEX_FM_TRANS_HANDLE(e) (e >> OSPC_PROV_SHIFT);
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

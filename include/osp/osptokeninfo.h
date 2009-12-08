@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptokeninfo.h - OSP token info objects
- */
-
+/* osptokeninfo.h - OSP token info objects */
 #ifndef _OSPTOKENINFO_H
 #define _OSPTOKENINFO_H
 
@@ -45,11 +42,10 @@ typedef struct {
     OSPTBOOL ospmTokenInfoHasLookAheadInfo;
     OSPTTOKENLOOKAHEADINFO ospmTokenLookAheadInfo;
     OSPTBOOL ospmTokenInfoHasDestNetworkId;
-    char dstNetworkId[OSPC_SIZE_E164NUM];
+    char dstNetworkId[OSPC_SIZE_NORID];
 } OSPTTOKENINFO;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

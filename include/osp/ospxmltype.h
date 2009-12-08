@@ -37,7 +37,6 @@
  * The character types we care about, as bit masks for an eventual
  * ctype-like array.
  */
-
 #define OSPC_XMLTYPE_NONE       0x00
 #define OSPC_XMLTYPE_CHAR       0x01
 #define OSPC_XMLTYPE_SPACE      0x02
@@ -50,11 +49,9 @@
  * external definition of the XML ctype-like array; this is not
  * a static array so we can use macros to access it
  */
-
 extern const unsigned char OSPVXMLCType[];
 
 /* Function Prototypes */
-
 unsigned OSPPXMLIsChar(unsigned char);
 unsigned OSPPXMLIsSpace(unsigned char);
 unsigned OSPPXMLIsLetter(unsigned char);

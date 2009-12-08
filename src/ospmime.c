@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmime.cpp - mime stuff
- */
+/* ospmime.cpp - mime stuff */
+
 #include "osp/ospmime.h"
 
 void OSPPMimeBodyFree(
@@ -42,8 +41,8 @@ void OSPPMimeBodyFree(
 }
 
 int OSPPMimeBodyPartsParse(
-    OSPTMIMEPART *ospvBodyData, 
-    OSPTMIMEBODY *ospvMimeBody, 
+    OSPTMIMEPART *ospvBodyData,
+    OSPTMIMEBODY *ospvMimeBody,
     OSPTMIMEPART *ospvBoundary)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -289,8 +288,8 @@ void OSPPMimeFieldFree(
 }
 
 int OSPPMimeMessageBuild(
-    OSPTMIMEMSG *ospvMessage, 
-    unsigned char **ospvMimeOut, 
+    OSPTMIMEMSG *ospvMessage,
+    unsigned char **ospvMimeOut,
     unsigned *ospvSizeOfMimeOut)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -460,9 +459,9 @@ int OSPPMimeMessageBuild(
 int OSPPMimeMessageCreate(
     unsigned char *ospvMessage,
     unsigned ospvSizeOfMessage,
-    unsigned char *ospvSignature, 
-    unsigned ospvSizeOfSignature, 
-    unsigned char **ospvMimeMessage, 
+    unsigned char *ospvSignature,
+    unsigned ospvSizeOfSignature,
+    unsigned char **ospvMimeMessage,
     unsigned *ospvSizeOfMimeMessage)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -472,7 +471,7 @@ int OSPPMimeMessageCreate(
     /* Initialize the structure to hold the Mime message data */
     errorcode = OSPPMimeMessageInit(&msg);
 
-    /* Set up the message and signature parts. We will use this function for the 
+    /* Set up the message and signature parts. We will use this function for the
      * signature part as well when we get a real signature in */
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPMimeMessageSetContentAndLength(msg.MsgPart, ospvMessage, ospvSizeOfMessage);
@@ -545,8 +544,8 @@ int OSPPMimeMessageParse(
     unsigned char *ospvContent,
     unsigned ospvSizeOfContent,
     unsigned char **ospvMessageData,
-    unsigned *ospvSizeOfMessageData, 
-    unsigned char **ospvSignatureData, 
+    unsigned *ospvSizeOfMessageData,
+    unsigned char **ospvSignatureData,
     unsigned *ospvSizeOfSignatureData)
 {
     int errorcode = OSPC_ERR_NO_ERROR, result = -1;
@@ -589,8 +588,8 @@ int OSPPMimeMessageParse(
     body.Content = ospvMessageBuffer;
     body.Length = ospvSizeOfMessageBuffer;
 
-    /* Make sure all the parameters meet our criteria, and copy 
-     * the ones we intend to keep into their places 
+    /* Make sure all the parameters meet our criteria, and copy
+     * the ones we intend to keep into their places
      */
     if (errorcode == OSPC_ERR_NO_ERROR) {
 
@@ -668,8 +667,8 @@ int OSPPMimeMessageParse(
 long __mptr = 0;
 
 int OSPPMimeMessageSetContentAndLength(
-    OSPTMIMEPART *ospvMimePart, 
-    unsigned char *ospvMsgBuffer, 
+    OSPTMIMEPART *ospvMimePart,
+    unsigned char *ospvMsgBuffer,
     unsigned ospvSizeOfMsgBuffer)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -893,8 +892,8 @@ void OSPPMimePartFree(
 }
 
 int OSPPMimeVerifyParameters(
-    OSPTMIMEFIELD *ospvContent, 
-    OSPTMIMEPART *ospvBoundary, 
+    OSPTMIMEFIELD *ospvContent,
+    OSPTMIMEPART *ospvBoundary,
     int ospvHeaderType)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -937,8 +936,8 @@ int OSPPMimeVerifyParameters(
 
                 if (pfound) {
 
-                    /* copy the protocol string somewhere to save it for SECURITY 
-                     * remember to strip off double quotes 
+                    /* copy the protocol string somewhere to save it for SECURITY
+                     * remember to strip off double quotes
                      */
                 } else {
                     errorcode = OSPC_ERR_MIME_PROTOCOL_NOT_FOUND;
@@ -1047,8 +1046,8 @@ int OSPPMimeVerifyParameters(
 
 int OSPPUtilMallocAndCopySubString(
     unsigned char *ospvSrcString,
-    unsigned char **ospvDestString, 
-    unsigned ospvStartOfSubString, 
+    unsigned char **ospvDestString,
+    unsigned ospvStartOfSubString,
     unsigned ospvSizeOfSubString)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1075,10 +1074,10 @@ int OSPPUtilMallocAndCopySubString(
 }
 
 int OSPPUtilMemCaseCmp(
-    unsigned char *ospvMem1, 
-    unsigned ospvLen1, 
-    char *ospvMem2, 
-    unsigned ospvLen2, 
+    unsigned char *ospvMem1,
+    unsigned ospvLen1,
+    char *ospvMem2,
+    unsigned ospvLen2,
     int *ospvResult)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

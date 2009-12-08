@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- *  ospauthreq.h - OSP authorisation request objects
- */
-
+/* ospauthreq.h - OSP authorisation request objects */
 #ifndef _OSPAUTHREQ_H
 #define _OSPAUTHREQ_H
 
@@ -37,7 +34,7 @@ typedef struct {
     char ospmAuthReqSourceNumber[OSPC_SIZE_E164NUM];
     char ospmAuthReqDestNumber[OSPC_SIZE_E164NUM];
     char ospmAuthReqNPRn[OSPC_SIZE_E164NUM];
-    char ospmAuthReqNPCic[OSPC_SIZE_E164NUM];
+    char ospmAuthReqNPCic[OSPC_SIZE_NORID];
     int ospmAuthReqNPNpdi;
     char ospmAuthReqDiversionSrcInfo[OSPC_SIZE_E164NUM];
     char ospmAuthReqDiversionDevInfo[OSPC_SIZE_SIGNALADDR];
@@ -50,7 +47,6 @@ typedef struct {
 } OSPT_AUTH_REQ;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -99,6 +95,8 @@ extern "C" {
     OSPTBOOL OSPPAuthReqHasDiversion(OSPT_AUTH_REQ *);
     void OSPPAuthReqSetDiversion(OSPT_AUTH_REQ *, const char *, const char *);
     void OSPPAuthReqGetDiversion(OSPT_AUTH_REQ *, char **, char **);
+    unsigned OSPPServiceTypeToElement(OSPE_SERVICE, OSPT_XML_ELEM **);
+    unsigned OSPPPricingInfoToElement(OSPT_PRICING_INFO, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

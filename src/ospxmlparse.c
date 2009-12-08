@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospxmlparse.c - Generic XML document parsing functions.
- */
+/* ospxmlparse.c - Generic XML document parsing functions. */
 
 #include "osp/osp.h"
 #include "osp/ospbfr.h"
@@ -32,7 +30,6 @@
 /*
  * OSPPXMLDocParse() - parse a document into its elements and attributes
  */
-
 unsigned OSPPXMLDocParse(           /* returns error code */
     OSPTBFR **ospvBfrAddr,          /* buffer containing document */
     OSPT_XML_ELEM **ospvElemAddr)   /* where to put parsed element */
@@ -187,7 +184,7 @@ unsigned OSPPXMLDocParseElem(       /* returns error code */
             ospvErrCode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &readChar);
             if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
                 (readChar != OSPC_XMLDOC_CLOSE)) {
-                /* !!TWK -- here is the actual fix.... 
+                /* !!TWK -- here is the actual fix....
                  * What I'm assuming is that since this is an empty element
                  * that there will no children
                  *
@@ -251,13 +248,13 @@ unsigned OSPPXMLDocParseElem(       /* returns error code */
     /* and delete any lists that are still hanging around */
     for (elem = (OSPT_XML_ELEM *)OSPPListRemove(&childList);
          elem != OSPC_OSNULL;
-         elem = (OSPT_XML_ELEM *)OSPPListRemove(&childList)) 
+         elem = (OSPT_XML_ELEM *)OSPPListRemove(&childList))
     {
         OSPPXMLElemDelete(&elem);
     }
     for (attr = (OSPT_XML_ATTR *)OSPPListRemove(&attrList);
          attr != OSPC_OSNULL;
-         attr = (OSPT_XML_ATTR *)OSPPListRemove(&attrList)) 
+         attr = (OSPT_XML_ATTR *)OSPPListRemove(&attrList))
     {
         OSPPXMLAttrDelete(&attr);
     }
@@ -380,7 +377,7 @@ unsigned OSPPXMLDocGetAttr(         /* returns error code */
     }
     if ((ospvErrCode == OSPC_ERR_NO_ERROR) &&
         (quoteChar != OSPC_XMLDOC_SINGLEQUOTE) &&
-        (quoteChar != OSPC_XMLDOC_DOUBLEQUOTE)) 
+        (quoteChar != OSPC_XMLDOC_DOUBLEQUOTE))
     {
         ospvErrCode = OSPC_ERR_XML_BAD_ATTR;
     }
@@ -1565,7 +1562,7 @@ unsigned OSPPXMLDocIsEntityDecl(    /* returns error code */
         /* now look for the match of the entity declaration beginning */
         ospvErrCode = OSPPXMLDocIsMatch(ospvBfrAddr, ospvEncoding, tag, OSPC_XMLDOC_ENTITYDECLBEGLEN, scratch, ospvIsEntityDecl);
     }
-                                       
+
     return ospvErrCode;
 }
 

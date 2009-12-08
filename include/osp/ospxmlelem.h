@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospxmlelem.h - Structures and prototypes for generic XML elements.
- */
-
+/* ospxmlelem.h - Structures and prototypes for generic XML elements. */
 #ifndef _OSPXMLELEM_H
 #define _OSPXMLELEM_H
 
@@ -43,7 +40,6 @@ typedef struct {
 } OSPT_XML_ELEM;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

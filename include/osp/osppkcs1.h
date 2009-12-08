@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osppkcs1.h - PKCS1 definitions used for key objects.
- */
-
+/* osppkcs1.h - PKCS1 definitions used for key objects. */
 #ifndef _OSPPKCS1_H
 #define _OSPPKCS1_H
 
@@ -29,7 +26,6 @@
 #define OSPC_ASN1_PRIVATEKEYINFO_VERSION    0
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -38,7 +34,7 @@ extern "C" {
     int OSPPPKCS1PrivateKeyCreate(OSPTPRIVATEKEY *ospvSourcePrivateKey, OSPTPRIVATEKEY **ospvNewPrivateKey);
     int OSPPPKCS1PrivateKeyCopy(OSPTPRIVATEKEY *ospvDestinationPrivateKey, OSPTPRIVATEKEY *ospvSourcePrivateKey);
     int OSPPPKCS1PrivateKeyTestContext(OSPTPRIVATEKEY *ospvPrivateKey);
-    int OSPPPKCS1Encrypt(OSPTASN1OBJECT **ospvEncryptedDigest, OSPTASN1OBJECT *ospvAlgorithmId, OSPTASN1OBJECT *ospvDigestInfo, 
+    int OSPPPKCS1Encrypt(OSPTASN1OBJECT **ospvEncryptedDigest, OSPTASN1OBJECT *ospvAlgorithmId, OSPTASN1OBJECT *ospvDigestInfo,
             OSPTPRIVATEKEY *ospvPrivateKey);
 
 #ifdef __cplusplus

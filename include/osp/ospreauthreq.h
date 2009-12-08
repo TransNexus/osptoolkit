@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospreauthreq.h - OSP reauthorisation request objects
- */
-
+/* ospreauthreq.h - OSP reauthorisation request objects */
 #ifndef _OSPREAUTHREQ_H
 #define _OSPREAUTHREQ_H
 
@@ -50,7 +47,6 @@ typedef struct {
 } OSPTREAUTHREQ;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

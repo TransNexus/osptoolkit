@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osplist.h - Structures and prototypes for linked lists.
- */
-
+/* osplist.h - Structures and prototypes for linked lists. */
 #ifndef _OSPLIST_H
 #define _OSPLIST_H
 
@@ -37,7 +34,7 @@
  * which is then circularly linked to the first item. This
  * approach minimizes the time needed to find either the
  * front (2 memory references) or back (1 memory reference)
- * of the list. 
+ * of the list.
  */
 
 typedef struct OSPSListLink {
@@ -46,9 +43,7 @@ typedef struct OSPSListLink {
 
 typedef OSPTLISTLINK *OSPTLIST;
 
-/*
- * true macros
- */
+/* true macros */
 #define OSPPListItemInList(List,InItem,ItemFld,ItemSize,PtrType,Found) { \
     PtrType  *item   = OSPC_OSNULL; \
     int       result = 0; \
@@ -65,7 +60,6 @@ typedef OSPTLISTLINK *OSPTLIST;
 }
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

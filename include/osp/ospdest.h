@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospdest.h - OSP destination objects
- */
-
+/* ospdest.h - OSP destination objects */
 #ifndef _OSPDEST_H
 #define _OSPDEST_H
 
@@ -29,30 +26,28 @@
 #include "osp/osptoken.h"
 #include "osp/ospmsgdesc.h"
 
-/*
- * Destination Protocol Data Type
- */
+/* Destination Protocol Data Type */
 typedef enum {
     OSPC_DPROT_UNKNOWN = OSPC_MPART_UNKNOWN,    /* Could not be understood by the Client as Sent by the Server */
     OSPC_DPROT_UNDEFINED,                       /* Not Configured at Server */
     OSPC_DPROT_START = 0,                       /* Destination Protocol start */
     OSPC_DPROT_SIP = OSPC_DPROT_START,          /* Destination Protocol - SIP */
-    OSPC_DPROT_LRQ,                             /* Destination Protocol - H323, Send LRQ to GK to Complete Call */
     OSPC_DPROT_Q931,                            /* Destination Protocol - H323, Send Setup to Complete Call */
+    OSPC_DPROT_LRQ,                             /* Destination Protocol - H323, Send LRQ to GK to Complete Call */
     OSPC_DPROT_IAX,                             /* Destination Protocol - IAX */
+    OSPC_DPROT_T37,                             /* Destination Protocol - Fax T.37 */
+    OSPC_DPROT_T38,                             /* Destination Protocol - Fax T.38 */
+    OSPC_DPROT_SKYPE,
+    OSPC_DPROT_SMPP,                            /* Destination Protocol - SMPP */
     OSPC_DPROT_XMPP,                            /* Destination Protocol - XMPP */
     /* Number of destiantion protocol types */
     OSPC_DPROT_NUMBER
 } OSPE_DEST_PROTOCOL;
 
-/*
- * externally declared global variables
- */
+/* externally declared global variables */
 extern const OSPT_MSG_DESC OSPV_DPROT_DESCS[];
 
-/*
- * Destination OSP Enabled Data Type
- */
+/* Destination OSP Enabled Data Type */
 typedef enum {
     OSPC_DOSP_UNKNOWN = 0,    /* Could not be understood by the Client as Sent by the Server */
     OSPC_DOSP_UNDEFINED,      /* Not Configured at Server */
@@ -64,8 +59,6 @@ typedef enum {
 #define DEST_OSP_UNKNOWN                ""
 
 #define DEFAULT_GETNEXTDEST_NO_ERROR    99999
-
-#define OSPC_NETWORKIDSIZE  OSPC_SIZE_E164NUM
 
 typedef struct {
     OSPTLISTLINK ospmDestLink;
@@ -85,15 +78,16 @@ typedef struct {
     OSPT_TERM_CAUSE ospmDestTermCause;
     OSPE_DEST_PROTOCOL ospmDestProtocol;
     OSPE_DEST_OSPENABLED ospmDestOSPVersion;
-    char ospmDestNetworkId[OSPC_NETWORKIDSIZE];
+    char ospmDestNetworkId[OSPC_SIZE_NORID];
     unsigned ospmDestDestinationCount;
     char ospmNPRn[OSPC_SIZE_E164NUM];
-    char ospmNPCic[OSPC_SIZE_E164NUM];
+    char ospmNPCic[OSPC_SIZE_NORID];
     int ospmNPNpdi;
+    char ospmNPSpid[OSPC_SIZE_NORID];
+    char ospmNPOcn[OSPC_SIZE_NORID];
 } OSPT_DEST;
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

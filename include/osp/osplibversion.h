@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osplibversion.h - OSP Toolkit version
- */
-
+/* osplibversion.h - OSP Toolkit version */
 #ifndef _OSPLIBVERSION_H
 #define _OSPLIBVERSION_H
 

@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- *  ospauthind.h - OSP authorisation indication objects
- */
-
+/* ospauthind.h - OSP authorisation indication objects */
 #ifndef _OSPAUTHIND_H
 #define _OSPAUTHIND_H
 
@@ -52,7 +49,6 @@ typedef struct {
 #define OSPPAuthIndTokenGetValue(ospvToken) OSPPTokenGetValue(ospvToken);
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospasn1object.c  Functions to implement PKCS7 ASN1 Objects 
- */
+/* ospasn1object.c  Functions to implement PKCS7 ASN1 Objects */
 
 #include "osp/osp.h"
 #include "osp/ospasn1.h"
@@ -27,14 +25,10 @@
 
 #define OSPC_SIGNEDDATA_VERSION 1
 
-/* FUNCTION PROTOTYPES */
-
-/*
- * Member functions
- */
+/* Member functions */
 
 int OSPPASN1ObjectGetElementInfo(
-    OSPTASN1OBJECT *ospvObject, 
+    OSPTASN1OBJECT *ospvObject,
     OSPTASN1ELEMENTINFO **ospvElementInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -52,7 +46,7 @@ int OSPPASN1ObjectGetElementInfo(
 }
 
 int OSPPASN1ObjectGetParseResults(
-    OSPTASN1OBJECT *ospvObject, 
+    OSPTASN1OBJECT *ospvObject,
     OSPTASN1PARSERESULT **ospvParseResults)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -70,7 +64,7 @@ int OSPPASN1ObjectGetParseResults(
 }
 
 int OSPPASN1ObjectNew(
-    OSPTASN1OBJECT **ospvASN1Object, 
+    OSPTASN1OBJECT **ospvASN1Object,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -103,8 +97,8 @@ int OSPPASN1ObjectNew(
 }
 
 int OSPPASN1ObjectCreate(
-    OSPTASN1OBJECT **ospvASN1Object, 
-    OSPTASN1ELEMENTINFO *ospvElementInfo, 
+    OSPTASN1OBJECT **ospvASN1Object,
+    OSPTASN1ELEMENTINFO *ospvElementInfo,
     OSPTASN1PARSERESULT *ospvParseResults)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -147,8 +141,8 @@ void OSPPASN1ObjectDelete(OSPTASN1OBJECT ** ospvASN1Object)
 }
 
 int OSPPASN1ObjectCopyElementObject(
-    OSPTASN1OBJECT **ospvFoundObject, 
-    OSPTASN1OBJECT *ospvParentObject, 
+    OSPTASN1OBJECT **ospvFoundObject,
+    OSPTASN1OBJECT *ospvParentObject,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -179,8 +173,8 @@ int OSPPASN1ObjectCopyElementObject(
 }
 
 int OSPPASN1ObjectGetElementByDataRef(
-    OSPTASN1OBJECT *ospvObject, 
-    OSPTASN1ELEMENTINFO **ospvElementInfo, 
+    OSPTASN1OBJECT *ospvObject,
+    OSPTASN1ELEMENTINFO **ospvElementInfo,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -204,14 +198,14 @@ int OSPPASN1ObjectGetElementByDataRef(
     return errorcode;
 }
 
-/* ObjectCopy 
+/* ObjectCopy
 This routine only copies the object and it's immediate children,i.e. the
 element info and parse results that are pointed to by it's pointers.  It
 DOES NOT recurse through the element info linked list(s), or grab all of
 the results in the parse results linked list. */
 
 int OSPPASN1ObjectCopy(
-    OSPTASN1OBJECT **ospvDestObject, 
+    OSPTASN1OBJECT **ospvDestObject,
     OSPTASN1OBJECT *ospvSrcObject)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -264,8 +258,8 @@ int OSPPASN1ObjectCopy(
 }
 
 int OSPPASN1ObjectAddChild(
-    OSPTASN1OBJECT *ospvParent, 
-    OSPTASN1OBJECT *ospvChild, 
+    OSPTASN1OBJECT *ospvParent,
+    OSPTASN1OBJECT *ospvChild,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -277,7 +271,7 @@ int OSPPASN1ObjectAddChild(
     unsigned char *tmpDataRef = OSPC_OSNULL;
 
     /* Add the child's eInfo tree to the parent's eInfo tree on the end of
-       the contentElementInfo chain. Then add the child's result list to the 
+       the contentElementInfo chain. Then add the child's result list to the
        end of the parents result list. In both cases, use the data provided
        without allocating new data. */
 
@@ -325,8 +319,8 @@ int OSPPASN1ObjectAddChild(
     encode the parsed object by scanning the element list.
 */
 int OSPPASN1ObjectDeparse(
-    OSPTASN1OBJECT *ospvObject, 
-    OSPEASN1PARSETABLEID ospvParseTableId, 
+    OSPTASN1OBJECT *ospvObject,
+    OSPEASN1PARSETABLEID ospvParseTableId,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -359,9 +353,9 @@ int OSPPASN1ObjectEncode(
     OSPTASN1OBJECT **ospvEncodedObject,
     unsigned char *ospvTag,
     unsigned ospvTagLength,
-    unsigned char ospvTagFlags, 
-    unsigned char *ospvContent, 
-    unsigned ospvContentLength, 
+    unsigned char ospvTagFlags,
+    unsigned char *ospvContent,
+    unsigned ospvContentLength,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -390,8 +384,8 @@ int OSPPASN1ObjectEncode(
 }
 
 int OSPPASN1ObjectFormat(
-    OSPTASN1OBJECT **ospvObject, 
-    OSPTASN1ELEMENTINFO *ospvElement, 
+    OSPTASN1OBJECT **ospvObject,
+    OSPTASN1ELEMENTINFO *ospvElement,
     OSPEASN1DATAREFID ospvDataRefId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

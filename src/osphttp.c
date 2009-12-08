@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osphttp.c 
- */
+/* osphttp.c */
+
 #include "osp/osp.h"
 #include "osp/osphttp.h"
 #include "osp/ospsocket.h"
@@ -29,7 +28,7 @@
 #include "osp/osputils.h"
 
 int OSPPHttpNew(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     OSPTHTTP **ospvHttp)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -76,7 +75,7 @@ int OSPPHttpNew(
         (*ospvHttp)->Comm = (void *)ospvComm;
 
         /*
-         * initialize the Socket File Descriptor to -1. 
+         * initialize the Socket File Descriptor to -1.
          * This indicates that a connection has never been established.
          */
         (*ospvHttp)->SockFd = OSPC_SOCK_INVALID;
@@ -119,7 +118,7 @@ void OSPPHttpDelete(
 }
 
 void osppHttpDeleteServicePointList(
-    OSPTSVCPT **svcpt, 
+    OSPTSVCPT **svcpt,
     int ospvNumberOfServicePoints)
 {
     int count = 0;
@@ -144,9 +143,9 @@ static int osppHttpBuildMsg(
     unsigned char **ospvHttpMsg,
     unsigned *ospvHttpMsgSz,
     unsigned char *ospvRequestMsg,
-    unsigned ospvRequestSz, 
-    OSPTSVCPT *ospvSvcPt, 
-    unsigned char *ospvContentType, 
+    unsigned ospvRequestSz,
+    OSPTSVCPT *ospvSvcPt,
+    unsigned char *ospvContentType,
     unsigned ospvContentTypeSz)
 {
     int headersz = 0, errorcode = OSPC_ERR_NO_ERROR;
@@ -165,7 +164,7 @@ static int osppHttpBuildMsg(
     OSPM_MALLOC(header, char, headersz);
     if (header != OSPC_OSNULL) {
         /*
-         * format the header with the information from the Service Point 
+         * format the header with the information from the Service Point
          * structure
          */
         OSPM_SPRINTF(header, OSPC_HTTP_HEADER_MSG_FMT, ospvSvcPt->URI, ospvSvcPt->HostName, ospvContentType, ospvRequestSz);
@@ -235,11 +234,11 @@ static void osppHttpRemoveConnection(
          */
         OSPPListRemoveSpecificItem((OSPTLIST *)&(comm->HttpConnList), ospvHttp);
         /*
-         * We have moved the OSPPCommDecrementHttpConnCount function from here 
+         * We have moved the OSPPCommDecrementHttpConnCount function from here
          * to osppHttpSetupAndMonitor function. This is so because there was a race condition.
          * Since, the communication manager waits on: (*comm)->HttpConnCount to become 0,
-         * we cannot decrement the count here, because, the Http connection object has 
-         * not been deleted yet. This can lead to potential memory access problems. 
+         * we cannot decrement the count here, because, the Http connection object has
+         * not been deleted yet. This can lead to potential memory access problems.
          * By moving the function to osppHttpSetupAndMonitor, we make sure that we decrement the count
          * only when the connection has been deleted
          */
@@ -252,7 +251,7 @@ static void osppHttpRemoveConnection(
 }
 
 static int osppHttpBuildAndSend(
-    OSPTHTTP *ospvHttp, 
+    OSPTHTTP *ospvHttp,
     OSPT_MSG_INFO *ospvMsginfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -289,10 +288,10 @@ static int osppHttpBuildAndSend(
 
 /*
  * monitors the message queue for new HTTP requests.
- * When a new request is placed on the HTTP message queue, the conditional 
+ * When a new request is placed on the HTTP message queue, the conditional
  * variable (CondVar) within the HTTP connection structure is signalled and
- * the number of transactions (NumberOfTransactions) will be incremented. 
- * This function will awake and assign the request to an available HTTP 
+ * the number of transactions (NumberOfTransactions) will be incremented.
+ * This function will awake and assign the request to an available HTTP
  * connection. Upon the handoff of the request, this function will return to
  * the wait condition until the next message queue request arrives or until
  * the HTTP connection persistence expires.
@@ -378,7 +377,7 @@ static OSPTTHREADRETURN osppHttpSetupAndMonitor(
                     httpconn->CurrentMsgCount = 0;
 
                     /*
-                     * The mutex is locked, and will be locked again at the top of the loop 
+                     * The mutex is locked, and will be locked again at the top of the loop
                      */
                     OSPM_MUTEX_UNLOCK(httpconn->Mutex, errorcode);
                     assert(errorcode == OSPC_ERR_NO_ERROR);
@@ -419,8 +418,8 @@ static OSPTTHREADRETURN osppHttpSetupAndMonitor(
                  * this loop will connect to a service point and attempt
                  * to send a request. If the service point is unavailable,
                  * then the next service point will be tried. If all service
-                 * points are exhausted then the list will be tried again 
-                 * based on the value of retrylimit. if retrylimit is 1, 
+                 * points are exhausted then the list will be tried again
+                 * based on the value of retrylimit. if retrylimit is 1,
                  * then 2 transaction attempts will be performed for each
                  * service point until completed failed.
                  * ------------------------------------------------------
@@ -573,7 +572,7 @@ static OSPTTHREADRETURN osppHttpSetupAndMonitor(
 
     /*
      * The BitReset function removed from here was erroneously introduced in 2.8.2 and was not present
-     * in the previous versions. Because of this, the ProviderDelete function call hung if multiple calls 
+     * in the previous versions. Because of this, the ProviderDelete function call hung if multiple calls
      * were run. In this function, we reset the HTTP_SHUTDOWN bit, because of which other threads do not get to
      * know that the Provider is being Deleted, and thus do not take down their connections, thereby making the
      * function call to hang and never return back to an application.
@@ -601,8 +600,8 @@ void OSPPHttpDecrementConnectionCount(
 
 
 int OSPPHttpVerifyResponse(
-    char *ospvResponse, 
-    int *ospvResponseType, 
+    char *ospvResponse,
+    int *ospvResponseType,
     OSPTHTTP *ospvHttp)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -610,13 +609,13 @@ int OSPPHttpVerifyResponse(
     char buffer[INET_ADDRSTRLEN];
 
     /* Before verifying the response, change all the characters
-     * to lowercase. 
+     * to lowercase.
      */
     if (ospvResponse != OSPC_OSNULL) {
         OSPPUtilStringToLowercase(&ospvResponse);
     }
 
-    /* 
+    /*
      * If we have service unavailable, just return an errorcode. Don't
      * be concerned with response type.
      */
@@ -698,15 +697,15 @@ static int osppHttpStartWorker(
 }
 
 void osppHttpGetServicePointList(
-    OSPTHTTP *ospvHttp, 
+    OSPTHTTP *ospvHttp,
     OSPTSVCPT **ospvSvcPt)
 {
     *ospvSvcPt = ospvHttp->ServicePointList;
 }
 
 static int osppHttpSelectConnection(
-    OSPTCOMM *ospvComm, 
-    OSPTHTTP **ospvHttp, 
+    OSPTCOMM *ospvComm,
+    OSPTHTTP **ospvHttp,
     unsigned char ospvMsgInfoType)
 {
     OSPTBOOL createnew = OSPC_FALSE;
@@ -723,7 +722,7 @@ static int osppHttpSelectConnection(
      * conditions is TRUE:
      *
      * number of connections == 0
-     * number of idle connections == 0 && 
+     * number of idle connections == 0 &&
      *     number of connections < max connections
      *
      * a connection is reused if one of the following conditions is TRUE:
@@ -745,12 +744,12 @@ static int osppHttpSelectConnection(
         /*
          * We cannot add a new one. So, check to find an idle connection
          */
-        errorcode = osppHttpGetIdleHttpConn(&(ospvComm->HttpConnList), &(*ospvHttp), 
+        errorcode = osppHttpGetIdleHttpConn(&(ospvComm->HttpConnList), &(*ospvHttp),
             (unsigned int)(ospvComm->ConnSelectionTimeout / 1000), maxcount,
             ospvComm->RoundRobinIndex);
         if (errorcode == OSPC_ERR_NO_ERROR) {
             ospvComm->RoundRobinIndex = ((ospvComm->RoundRobinIndex) + 1) % maxcount;
-            /* 
+            /*
              * check connection type. make sure it syncs up with the type of
              * msginfo we are about to send.
              */
@@ -786,7 +785,7 @@ static int osppHttpSelectConnection(
 
             /*
              * Copy the SP list from the CommMgr to the http obj
-             * The current connection counter is used to rotate the list 
+             * The current connection counter is used to rotate the list
              * by 1 everytime a new connection is created.
              */
             errorcode = OSPPCommGetHttpConnCount(ospvComm, &current_conn_count);
@@ -819,10 +818,10 @@ static int osppHttpSelectConnection(
 }
 
 int osppHttpGetIdleHttpConn(
-    OSPTHTTP **ospvHttpList, 
-    OSPTHTTP **ospvHttp, 
-    unsigned timeout, 
-    int maxconn, 
+    OSPTHTTP **ospvHttpList,
+    OSPTHTTP **ospvHttp,
+    unsigned timeout,
+    int maxconn,
     int RoundRobinIndex)
 {
     int i, err = 0, errorcode = OSPC_ERR_NO_ERROR;
@@ -872,7 +871,7 @@ int osppHttpGetIdleHttpConn(
     while ((errorcode == OSPC_ERR_NO_ERROR) && (found == OSPC_FALSE)) {
         /*
          * We went through one iteration and all the queues were full
-         * Now, wait on the condition variable and try iterate again 
+         * Now, wait on the condition variable and try iterate again
          * when it wakes up
          */
         OSPM_MUTEX_LOCK(Comm->HttpSelectMutex, errorcode);
@@ -888,11 +887,11 @@ int osppHttpGetIdleHttpConn(
             } else {
                 /*
                  * The only errorcode that we need to entertain is OSPC_ERR_OS_CONDVAR_TIMEOUT
-                 * If the wakeup was a spurious wakeup, errorcode might have been set to some 
-                 * value. To enable the control to get back into the while loop, 
+                 * If the wakeup was a spurious wakeup, errorcode might have been set to some
+                 * value. To enable the control to get back into the while loop,
                  * we need to reset the errorcode to NO_ERROR.
                  * Otherwise, if the errorcode was set during the spurious wakeup,
-                 * and we did not find a single idle connection below, 
+                 * and we did not find a single idle connection below,
                  * we would not be able to get back into the while loop above.
                  */
                 errorcode = OSPC_ERR_NO_ERROR;
@@ -923,8 +922,8 @@ int osppHttpGetIdleHttpConn(
 }
 
 void osppHttpCopySPList(
-    OSPTCOMM *ospvComm, 
-    OSPTHTTP **ospvHttp, 
+    OSPTCOMM *ospvComm,
+    OSPTHTTP **ospvHttp,
     int index)
 {
     OSPTSVCPT *svcptlist = OSPC_OSNULL, *svcptitem = OSPC_OSNULL, *newroot = OSPC_OSNULL, *newsvcptnode = OSPC_OSNULL;
@@ -980,7 +979,7 @@ void osppHttpCopySPList(
 }
 
 static int osppHttpAddRequest(
-    OSPTHTTP *ospvHttp, 
+    OSPTHTTP *ospvHttp,
     OSPT_MSG_INFO *ospvMsgInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -1010,7 +1009,7 @@ static int osppHttpAddRequest(
 }
 
 int OSPPHttpRequestHandoff(
-    OSPTCOMM *ospvComm, 
+    OSPTCOMM *ospvComm,
     OSPTMSGQUEUE *ospvMsgQueue)
 {
     int err = OSPC_ERR_NO_ERROR, errorcode = OSPC_ERR_NO_ERROR;
@@ -1071,18 +1070,18 @@ int OSPPHttpRequestHandoff(
              * try at most 3 times to get an HTTP connection object. in
              * almost all cases, the httpconn object will be obtained on
              * the first pass. however, there is a race condition between
-             * an existing idle HTTP connection thread and the 
+             * an existing idle HTTP connection thread and the
              * osppHttpAddRequest thread. if osppHttpAddRequest is waiting
              * for an idle connection mutex and this connection in is the
-             * process of shutting down, osppHttpAddRequest will fail. 
-             * try 2 more times to get another connection or create a 
+             * process of shutting down, osppHttpAddRequest will fail.
+             * try 2 more times to get another connection or create a
              * new one. The race condition will never occur when a new
              * HTTP connection is created.
              */
 
             for (attempts = 0; attempts < 3; attempts++) {
                 /*
-                 * determine which HTTP connection object to hand the 
+                 * determine which HTTP connection object to hand the
                  * request off to.
                  */
                 errorcode = osppHttpSelectConnection(ospvComm, &httpconn, msginfo->Flags);
@@ -1142,10 +1141,10 @@ int OSPPHttpRequestHandoff(
 }
 
 void OSPPHttpParseHeader(
-    unsigned char *ospvInBuffer, 
-    unsigned char **ospvOutBuffer, 
-    unsigned *ospvLength, 
-    int ospvHeaderType, 
+    unsigned char *ospvInBuffer,
+    unsigned char **ospvOutBuffer,
+    unsigned *ospvLength,
+    int ospvHeaderType,
     int *ospvError)
 {
     char *begptr = OSPC_OSNULL, *endptr = OSPC_OSNULL;
@@ -1211,7 +1210,7 @@ void OSPPHttpParseHeader(
 
         /*
          * The Connection type is optional in the header. As a result,
-         * we do not generate an error if it does not exist. When it 
+         * we do not generate an error if it does not exist. When it
          * does not exist, assume Connection: Keep-alive.
          */
 

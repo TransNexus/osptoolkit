@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospostime.c - OS-specific time functions
- */
+/* ospostime.c - OS-specific time functions */
 
 #include <assert.h>
 
@@ -105,14 +103,14 @@ unsigned OSPPOSTimeCalToString( /* returns error code (0 if no error) */
 
 #ifndef _WIN32
     /* format the output string */
-    chars = strftime(ospvTimeString, OSPC_TIMESTRINGSIZE, "%Y-%m-%dT%H:%M:%SZ", &t);
+    chars = strftime(ospvTimeString, OSPC_SIZE_TIMESTRING, "%Y-%m-%dT%H:%M:%SZ", &t);
 #else
     /* format the output string */
-    chars = strftime(ospvTimeString, OSPC_TIMESTRINGSIZE, "%Y-%m-%dT%H:%M:%SZ", t);
+    chars = strftime(ospvTimeString, OSPC_SIZE_TIMESTRING, "%Y-%m-%dT%H:%M:%SZ", t);
 #endif
 
     /* make sure the strftime() call was okay */
-    if (chars == OSPC_TIMESTRINGSIZE) {
+    if (chars == OSPC_SIZE_TIMESTRING) {
         ospvErrCode = (unsigned)OSPC_ERR_OS_FAILURE;
     } else {
         ospvErrCode = OSPC_ERR_NO_ERROR;
@@ -158,7 +156,7 @@ unsigned OSPPOSTimeStringToCal( /* returns error code (0 if no error) */
 }
 
 int OSPPOSTimeGetTime(
-    OSPTTIME *ospvTime, 
+    OSPTTIME *ospvTime,
     unsigned int *ospvMilliseconds)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -198,8 +196,8 @@ int OSPPOSTimeGetTime(
 }
 
 int OSPPOSTimeFormatGMTTime(
-    OSPTTIME ospvTime, 
-    char *ospvFormat, 
+    OSPTTIME ospvTime,
+    char *ospvFormat,
     char *ospvTimeString)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -207,7 +205,7 @@ int OSPPOSTimeFormatGMTTime(
 
     /* Converts a time in seconds since the BASETIME and then formats time
        according to the format string. ospvTimeString be provided by the
-       caller and must be at least OSPC_TIMESTRINGSIZE characters */
+       caller and must be at least OSPC_SIZE_TIMESTRING characters */
 
 #ifndef _WIN32
     struct tm t;
@@ -230,10 +228,10 @@ int OSPPOSTimeFormatGMTTime(
 
 #ifndef _WIN32
         /* format the output string */
-        chars = strftime(ospvTimeString, OSPC_TIMESTRINGSIZE, ospvFormat, &t);
+        chars = strftime(ospvTimeString, OSPC_SIZE_TIMESTRING, ospvFormat, &t);
 #else
         /* format the output string */
-        chars = strftime(ospvTimeString, OSPC_TIMESTRINGSIZE, ospvFormat, t);
+        chars = strftime(ospvTimeString, OSPC_SIZE_TIMESTRING, ospvFormat, t);
 #endif
 
         if (chars == 0) {

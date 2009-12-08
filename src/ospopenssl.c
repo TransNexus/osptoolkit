@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
-* ospopenssl.c - SSL API bridge to openSSL library implementation (v0.9.4)
-*/
+/* ospopenssl.c - SSL API bridge to openSSL library implementation (v0.9.4) */
 
 #include "osp/osp.h"
 #include "osp/ospsocket.h"
@@ -26,10 +24,7 @@
 #include "osp/ospcomm.h"
 #include "osp/ospsecurity.h"
 
-/* 
-** OpenSSL headers 
-*/
-
+/* OpenSSL headers */
 #include "openssl/bio.h"
 #include "openssl/crypto.h"
 #include "openssl/x509.h"
@@ -173,9 +168,9 @@ void thread_cleanup(void)
 }
 
 void win32_locking_callback(
-    int mode, 
-    int type, 
-    const char *file, 
+    int mode,
+    int type,
+    const char *file,
     int line)
 {
     if (mode & CRYPTO_LOCK) {
@@ -214,9 +209,9 @@ unsigned long pthreads_thread_id(void)
 }
 
 void pthreads_locking_callback(
-    int mode, 
-    int type, 
-    char *file, 
+    int mode,
+    int type,
+    char *file,
     int line)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -286,7 +281,7 @@ void OSPPSSLWrapCleanup(
 }
 
 int OSPPSSLWrapSessionContextNew(
-    void *ospvConnection, 
+    void *ospvConnection,
     void *ospvContextRef)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -301,8 +296,8 @@ int OSPPSSLWrapSessionContextNew(
 
     security = (OSPTSEC *)ospvContextRef;
 
-    /* 
-     * Make sure we have security before we 
+    /*
+     * Make sure we have security before we
      * start de-referencing
      */
 
@@ -332,7 +327,7 @@ int OSPPSSLWrapSessionContextNew(
 }
 
 int OSPPSSLWrapAttachConnection(
-    OSPTSSLSESSION *ospvSSLSession, 
+    OSPTSSLSESSION *ospvSSLSession,
     void *ospvConnection)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -372,8 +367,8 @@ int OSPPSSLWrapHandshake(
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapHandshake()\n"));
     OSPM_ARGUSED(ospvSSLSession);
 
-    /* 
-     * automagically done by SSLeay 
+    /*
+     * automagically done by SSLeay
      */
 
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapHandshake() (%d)\n", errorcode));
@@ -397,8 +392,8 @@ int OSPPSSLWrapSessionContextDelete(
 }
 
 int OSPPSSLWrapGetData(
-    void *ospvBuffer, 
-    unsigned int *ospvLength, 
+    void *ospvBuffer,
+    unsigned int *ospvLength,
     OSPTSSLSESSION *ospvSSLSession)
 {
     int errorcode = OSPC_ERR_NO_ERROR, expected = 0, sslerr = 0, bytesread = 0;
@@ -424,8 +419,8 @@ int OSPPSSLWrapGetData(
 }
 
 int OSPPSSLWrapSendData(
-    void *ospvBuffer, 
-    unsigned int *ospvLength, 
+    void *ospvBuffer,
+    unsigned int *ospvLength,
     OSPTSSLSESSION *ospvSSLSession)
 {
     int errorcode = OSPC_ERR_NO_ERROR, expected = 0, sslerr = 0, byteswritten = 0;
@@ -462,8 +457,8 @@ int OSPPSSLWrapSessionGracefulShutdown(
 }
 
 int OSPPSSLWrapGetServerRootCACert(
-    void **ospvRootCACert, 
-    int *ospvRootCACertLen, 
+    void **ospvRootCACert,
+    int *ospvRootCACertLen,
     OSPTSSLSESSION *ospvSSLSession)
 {
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapGetServerRootCACert()\n"));
@@ -486,7 +481,7 @@ void OSPPSSLWrapFreeServerRootCACert(
 }
 
 int OSPPSSLVerifyCallback(
-    int ok, 
+    int ok,
     X509_STORE_CTX * ctx)
 {
     int verify_depth = 1;
@@ -536,11 +531,11 @@ int OSPPSSLVerifyCallback(
 }
 
 long bio_dump_cb(
-    BIO * bio, 
-    int cmd, 
-    const char *argp, 
-    int argi, 
-    long argl, 
+    BIO * bio,
+    int cmd,
+    const char *argp,
+    int argi,
+    long argl,
     long ret)
 {
     BIO *out;
@@ -576,9 +571,9 @@ int OSPPSSLLoadCerts(
     OSPM_DBGENTER(("ENTER: OSPPSSLLoadCerts()\n"));
     /*
      * We need to streamline the access to this function.
-     * If we don't, then while running multiple calls, two 
+     * If we don't, then while running multiple calls, two
      * http threads may try to overwrite the same providers context.
-     * This was a bug in the toolkit which is fixed by the addition 
+     * This was a bug in the toolkit which is fixed by the addition
      * of this mutex
      */
     OSPM_MUTEX_LOCK(security->SSLCertMutex, errorcode);

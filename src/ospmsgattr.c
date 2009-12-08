@@ -15,17 +15,13 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmsgattr.c - OSP attribute processing.
- */
+/* ospmsgattr.c - OSP attribute processing. */
 
 #include "osp/osp.h"
 #include "osp/ospmsgdesc.h"
 #include "osp/ospmsgattr.h"
 
-/*
- * global variables
- */
+/* global variables */
 
 /* Array that associates attribute and names */
 const OSPT_MSG_DESC OSPV_MATTR_DESCS[OSPC_MATTR_NUMBER] = {

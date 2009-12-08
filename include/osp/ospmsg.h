@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospmsg.h - Main OSP message definitions
- */
-
+/* ospmsg.h - Main OSP message definitions */
 #ifndef _OSPMSG_H
 #define _OSPMSG_H
 
@@ -83,7 +80,6 @@ extern const OSPT_MSG_DESC OSPV_RTYPE_DESCS[];
 #define OSPC_SIZE_CUSTINFO      256 /* max characters in user-defined info */
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -105,7 +101,7 @@ extern "C" {
     unsigned OSPPMsgBinFromASCIIElement(unsigned char *, unsigned *, unsigned char **);
     OSPE_ROLE OSPPRoleGetPart(const char *);
     const char *OSPPRoleGetName(OSPE_ROLE);
-    
+
 #ifdef __cplusplus
 }
 #endif

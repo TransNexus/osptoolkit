@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospstatus.h - OSP Status Objects
- */
-
+/* ospstatus.h - OSP Status Objects */
 #ifndef _OSPSTATUS_H
 #define _OSPSTATUS_H
 
@@ -33,13 +30,10 @@ typedef struct {
     OSPTBOOL ospmHasDesc;
 } OSPTSTATUS;
 
-/*
- * general macros
- */
+/* general macros */
 #define OSPM_STATUSCODE_SUCCESSFUL(s)       (((s) > 199) &&( (s) < 300))
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

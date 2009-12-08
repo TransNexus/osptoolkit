@@ -15,11 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptransids.h - structures and prototypes for functions that manage
- *                 TransNexus transaction IDs
- */
-
+/* osptransids.h - structures and prototypes for functions that manage TransNexus transaction IDs */
 #ifndef _OSPTRANSIDS_H
 #define _OSPTRANSIDS_H
 
@@ -29,8 +25,7 @@
  * #define tnListNewest (tnSentinel.tidOlderPtr)
  * #define tnListOldest (tnSentinel.tidNewerPtr)
  * #define tnListEnd    (&tnSentinel)
-*/
-
+ */
 typedef struct _OSPTTRANSID {                           /* info about a transaction ID */
     OSPTUINT64 ospmTransactionId;                       /* the actual transaction ID value */
     unsigned long ospmTransactionIdExpires;             /* expiration time */
@@ -44,7 +39,6 @@ typedef struct _OSPTTRANSID {                           /* info about a transact
 #include "osp/ospprovider.h"
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -675,7 +675,7 @@ int testOSPPProviderGetNumberOfServicePoints()
     return errorcode;
 }
 
-int testOSPPTransactionSetServiceAndPricingInfo()
+int testOSPPTransactionSetPricingInfo()
 {
     int errorcode = 0;
     OSPT_PRICING_INFO PricingInfo1;
@@ -696,8 +696,7 @@ int testOSPPTransactionSetServiceAndPricingInfo()
     ospvPricingInfo[1] = &PricingInfo2;
     ospvPricingInfo[2] = NULL;
 
-    errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_SERVICE_VOICE,    /* voice */
-        ospvPricingInfo);
+    errorcode = OSPPTransactionSetPricingInfo(OSPVTransactionHandle, ospvPricingInfo);
 
     return errorcode;
 }
@@ -820,14 +819,26 @@ int testOSPPTransactionGetDestProtocol()
         case OSPC_DPROT_SIP:
             printf("Destination Protocol is SIP \n");
             break;
-        case OSPC_DPROT_LRQ:
-            printf("Destination Protocol is h323-LRQ \n");
-            break;
         case OSPC_DPROT_Q931:
-            printf("Destination Protocol is h323-Q931\n");
+            printf("Destination Protocol is H.323-Q931\n");
+            break;
+        case OSPC_DPROT_LRQ:
+            printf("Destination Protocol is H.323-LRQ \n");
             break;
         case OSPC_DPROT_IAX:
             printf("Destination Protocol is IAX \n");
+            break;
+        case OSPC_DPROT_T37:
+            printf("Destination Protocol is Fax-T.37 \n");
+            break;
+        case OSPC_DPROT_T38:
+            printf("Destination Protocol is Fax-T.38 \n");
+            break;
+        case OSPC_DPROT_SKYPE:
+            printf("Destination Protocol is Skype \n");
+            break;
+        case OSPC_DPROT_SMPP:
+            printf("Destination Protocol is SMPP \n");
             break;
         case OSPC_DPROT_XMPP:
             printf("Destination Protocol is XMPP \n");
@@ -1018,8 +1029,8 @@ int testBuildUsageFromScratch(int IsSource, int BuildNew)
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR && BuildNew) {
-        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_SERVICE_VOICE,    /* voice */
-            ospvPricingInfo);
+        errorcode = OSPPTransactionSetServiceType(OSPVTransactionHandle, OSPC_SERVICE_VOICE);
+        errorcode = OSPPTransactionSetPricingInfo(OSPVTransactionHandle, ospvPricingInfo);
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -1131,6 +1142,15 @@ int testSetConnectTime()
     return 0;
 }
 
+int testSetServiceType()
+{
+	int errorcode;
+
+    errorcode = OSPPTransactionSetServiceType(OSPVTransactionHandle, OSPC_SERVICE_NPQUERY);
+
+    return errorcode;
+}
+
 int testOSPPTransactionInitializeAtDevice(int IsSource)
 {
     int errorcode = 0;
@@ -1164,8 +1184,8 @@ int testOSPPTransactionInitializeAtDevice(int IsSource)
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPTransactionSetServiceAndPricingInfo(OSPVTransactionHandle, OSPC_SERVICE_VOICE,    /* voice */
-            ospvPricingInfo);
+        errorcode = OSPPTransactionSetServiceType(OSPVTransactionHandle, OSPC_SERVICE_VOICE);
+        errorcode = OSPPTransactionSetPricingInfo(OSPVTransactionHandle, ospvPricingInfo);
     }
 
     tokensize = TOKEN_SZ;
@@ -1512,14 +1532,26 @@ int testOSPPTransactionGetLookAheadInfoIfPresent()
             case OSPC_DPROT_SIP:
                 printf("Destination Protocol is SIP \n");
                 break;
-            case OSPC_DPROT_LRQ:
-                printf("Destination Protocol is h323-LRQ \n");
-                break;
             case OSPC_DPROT_Q931:
-                printf("Destination Protocol is h323-Q931\n");
+                printf("Destination Protocol is H.323-Q931\n");
+                break;
+            case OSPC_DPROT_LRQ:
+                printf("Destination Protocol is H.323-LRQ \n");
                 break;
             case OSPC_DPROT_IAX:
                 printf("Destination Protocol is IAX \n");
+                break;
+            case OSPC_DPROT_T37:
+                printf("Destination Protocol is Fax-T.37 \n");
+                break;
+            case OSPC_DPROT_T38:
+                printf("Destination Protocol is Fax-T.38 \n");
+                break;
+            case OSPC_DPROT_SKYPE:
+                printf("Destination Protocol is Skype \n");
+                break;
+            case OSPC_DPROT_SMPP:
+                printf("Destination Protocol is SMPP \n");
                 break;
             case OSPC_DPROT_XMPP:
                 printf("Destination Protocol is XMPP \n");
@@ -1953,17 +1985,50 @@ int testStatsMOSLQ()
     return errorcode;
 }
 
+int testStatsICPIF()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPTransactionSetICPIF(OSPVTransactionHandle, OSPC_SFLOW_DOWNSTREAM, 1);
+    errorcode = OSPPTransactionSetICPIF(OSPVTransactionHandle, OSPC_SFLOW_UPSTREAM, 54);
+
+    return errorcode;
+}
+
+int testStatsRoundTrip()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPTransactionSetRoundTripDelay(OSPVTransactionHandle, 1, 2, 3, 4, 5);
+
+    return errorcode;
+}
+
 int testGetNumberPortability()
 {
     int errorcode = 0;
-    char rn[1024];
-    char cic[1024];
+    char rn[OSPC_SIZE_E164NUM];
+    char cic[OSPC_SIZE_NORID];
     int npdi;
 
-    errorcode = OSPPTransactionGetNumberPortability(OSPVTransactionHandle, rn, cic, &npdi);
+    errorcode = OSPPTransactionGetNumberPortabilityParameters(OSPVTransactionHandle, sizeof(rn), rn, sizeof(cic), cic, &npdi);
     printf("rn = '%s'\n", rn);
     printf("cic = '%s'\n", cic);
     printf("npdi = %d\n", npdi);
+
+    return errorcode;
+}
+
+int testGetServiceProvider()
+{
+    int errorcode = 0;
+    char spid[OSPC_SIZE_NORID];
+    char ocn[OSPC_SIZE_NORID];
+
+    errorcode = OSPPTransactionGetServiceProviderId(OSPVTransactionHandle, sizeof(spid), spid);
+    errorcode = OSPPTransactionGetOperatingCompanyNumber(OSPVTransactionHandle, sizeof(ocn), ocn);
+    printf("spid = '%s'\n", spid);
+    printf("ocn = '%s'\n", ocn);
 
     return errorcode;
 }
@@ -2147,7 +2212,7 @@ int testAPI(int apinumber)
     case 54:
         errorcode = testSetCallId();
     case 55:
-        errorcode = testOSPPTransactionSetServiceAndPricingInfo();
+        errorcode = testOSPPTransactionSetPricingInfo();
         break;
     case 56:
         errorcode = testSetDuration();
@@ -2166,6 +2231,9 @@ int testAPI(int apinumber)
         break;
     case 61:
         errorcode = testSetConnectTime();
+        break;
+    case 62:
+        errorcode = testSetServiceType();
         break;
     case 100:
         printf("Enter the number of Providers to be created .. ");
@@ -2260,8 +2328,17 @@ int testAPI(int apinumber)
     case 237:
         errorcode = testStatsMOSLQ();
         break;
-    case 500:
+    case 238:
+        errorcode = testStatsICPIF();
+        break;
+    case 239:
+        errorcode = testStatsRoundTrip();
+        break;
+    case 300:
         errorcode = testGetNumberPortability();
+        break;
+    case 301:
+        errorcode = testGetServiceProvider();
         break;
     default:
         errorcode = -1;
@@ -2344,10 +2421,11 @@ int testMenu()
         printf("50) Set Calling Number                51) Set Called Number\n");
         printf("52) Get Calling Number                53) Get Called Number\n");
         printf("54) Set CallId to Empty for Token Validation\n");
-        printf("55) Set Pricing and Service Info\n");
+        printf("55) Set Pricing Info\n");
         printf("56) Set Duration                      57) Set TC Code\n");
         printf("58) Set Start Time                    59) Set End Time\n");
         printf("60) Set Alert Time                    61) Set Connect Time\n");
+        printf("62) Set Service Type\n");
         printf("---------------------------------------------------------------------\n");
         printf("Performance tests\n");
         printf("---------------------------------------------------------------------\n");
@@ -2366,7 +2444,8 @@ int testMenu()
         printf("232) Set Delay                        233) Set Octets\n");
         printf("234) Set Packets                      235) Set R-Factor\n");
         printf("236) Set MOS-CQ                       237) Set MOS-LQ\n");
-        printf("500) Get NP parameters\n");
+        printf("238) Set ICPIF                        239) Set Round Trip Delay\n");
+        printf("300) Get NP parameters                301) Get SPID & OCN\n");
         printf("---------------------------------------------------------------------\n");
         printf("Enter function number or 'q' to quit => ");
     }

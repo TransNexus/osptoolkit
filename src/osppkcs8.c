@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osppkcs8.c - PKCS #8 Private Key Information Standard
- */
+/* osppkcs8.c - PKCS #8 Private Key Information Standard */
 
 #include "osp/osp.h"
 #include "osp/ospdatatypes.h"
@@ -38,7 +36,7 @@
 RSAEncryption PKCS1 Private Key. It is converted to a OSPPASN1OBJECT and
 wrapped to become a PKCS8 PrivateKeyInfo Encoded object */
 int OSPPPKCS8KeyInfoCreate(
-    OSPTASN1OBJECT **ospvPrivateKeyInfo, 
+    OSPTASN1OBJECT **ospvPrivateKeyInfo,
     OSPTPRIVATEKEY *ospvPrivateKey)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -122,7 +120,7 @@ int OSPPPKCS8KeyInfoCreate(
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* Complete the encoding for this object. Update results, elements, 
+        /* Complete the encoding for this object. Update results, elements,
            etc. */
         errorcode = OSPPASN1ObjectDeparse(privateKeyInfo, OSPEPTID_PRIVATEKEYINFO, OSPEDRID_PRIVATEKEYINFO);
     }
@@ -157,8 +155,8 @@ void OSPPPKCS8KeyInfoDelete(
 }
 
 int OSPPKCS8KeyInfoGetEncodedKeyInfo(
-    OSPTASN1OBJECT *ospvPrivateKeyInfo, 
-    unsigned char **ospvBERPrivateKeyInfo, 
+    OSPTASN1OBJECT *ospvPrivateKeyInfo,
+    unsigned char **ospvBERPrivateKeyInfo,
     unsigned *ospvBERPrivateKeyInfoLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -178,8 +176,8 @@ int OSPPKCS8KeyInfoGetEncodedKeyInfo(
 }
 
 int OSPPPKCS8KeyInfoGetPrivateKey(
-    OSPTASN1OBJECT *ospvPrivateKeyInfo, 
-    unsigned char **ospvPrivateKey, 
+    OSPTASN1OBJECT *ospvPrivateKeyInfo,
+    unsigned char **ospvPrivateKey,
     unsigned *ospvPrivateKeyLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -199,8 +197,8 @@ int OSPPPKCS8KeyInfoGetPrivateKey(
 }
 
 int OSPPPKCS8KeyInfoGetPrivateKeyElement(
-    OSPTASN1OBJECT *ospvPrivateKeyInfo, 
-    OSPEASN1DATAREFID ospvDataRefId, 
+    OSPTASN1OBJECT *ospvPrivateKeyInfo,
+    OSPEASN1DATAREFID ospvDataRefId,
     OSPTASN1ELEMENTINFO **ospvElementInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osppkcs1.c - PKCS #1 RSA Encryption object processing module 
- */
+/* osppkcs1.c - PKCS #1 RSA Encryption object processing module */
 
 #include "osp/osp.h"
 #include "osp/ospdatatypes.h"

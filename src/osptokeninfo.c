@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptokeninfo.c - OSP token info functions
- */
+/* osptokeninfo.c - OSP token info functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"
@@ -46,7 +44,7 @@ void OSPPTokenInfoSetLookAheadDestAlt(              /* nothing returned */
 }
 
 /*
- * OSPPTokenInfoGetLookAheadDestAlt() - returns the look ahead route. 
+ * OSPPTokenInfoGetLookAheadDestAlt() - returns the look ahead route.
  */
 const char *OSPPTokenInfoGetLookAheadDestAlt(
     OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo)     /* token info */
@@ -73,7 +71,7 @@ void OSPPTokenInfoSetLookAheadDestProtocol(             /* nothing returned */
 }
 
 /*
- * OSPPTokenInfoGetLookAheadDestProtocol() - returns the destination Protocol for the look ahead route. 
+ * OSPPTokenInfoGetLookAheadDestProtocol() - returns the destination Protocol for the look ahead route.
  */
 OSPE_DEST_PROTOCOL OSPPTokenInfoGetLookAheadDestProtocol(
     OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo)     /* token info */
@@ -88,7 +86,7 @@ OSPE_DEST_PROTOCOL OSPPTokenInfoGetLookAheadDestProtocol(
 }
 
 /*
- * OSPPTokenInfoSetLookAheadOSPVersion() - sets the destination OSPVersion for the look ahead route. 
+ * OSPPTokenInfoSetLookAheadOSPVersion() - sets the destination OSPVersion for the look ahead route.
  */
 void OSPPTokenInfoSetLookAheadOSPVersion(           /* nothing returned */
     OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo, /* token info to set */
@@ -106,7 +104,7 @@ void OSPPTokenInfoSetLookAheadOSPVersion(           /* nothing returned */
 }
 
 /*
- * OSPPTokenInfoGetLookAheadOSPVersion() - returns the destination OSPVersion for the look ahead route. 
+ * OSPPTokenInfoGetLookAheadOSPVersion() - returns the destination OSPVersion for the look ahead route.
  */
 OSPE_DEST_OSPENABLED OSPPTokenInfoGetLookAheadOSPVersion(
     OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo)         /* token info */
@@ -295,7 +293,7 @@ OSPTBOOL OSPPTokenInfoHasValidAfter(/* returns non-zero if time */
     if (ospvTokenInfo != OSPC_OSNULL) {
         ospvHas = (ospvTokenInfo->ospmTokenInfoValidAfter != OSPC_TIMEMIN);
     }
-    
+
     return ospvHas;
 }
 
@@ -500,13 +498,13 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
             case OSPC_MELEM_DESTALT:
                 /*
                  * We need to check the "ospmXMLAttrValue"
-                 * to decide whether it is the destination Signaling  
+                 * to decide whether it is the destination Signaling
                  * address or the network addr
                  */
                 if (OSPPXMLAttrGetValue
                     ((OSPT_XML_ATTR *)elem->ospmXMLElemAttrs)) {
                     if (!OSPM_STRCMP("network", OSPPXMLAttrGetValue((OSPT_XML_ATTR *)OSPPListFirst(&elem->ospmXMLElemAttrs)))) {
-                        /* 
+                        /*
                          * This is network information
                          */
                         tokeninfo->ospmTokenInfoHasDestNetworkId = OSPC_TRUE;

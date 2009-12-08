@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptcapncf.cpp 
- */
+/* osptcapncf.cpp */
+
 #include "osp/osp.h"
 #include "osp/osptrans.h"
 #include "osp/ospprovider.h"
@@ -89,7 +88,7 @@ unsigned OSPPCapCnfFromElement( /* returns error code */
 
     if (OSPC_ERR_NO_ERROR == ospvErrCode) {
         /*
-         * The Parent points to Message, its 1st child is 
+         * The Parent points to Message, its 1st child is
          * CapabilityConfirmation
          */
         capCnfElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvParent);

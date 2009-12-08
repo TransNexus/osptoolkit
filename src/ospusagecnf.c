@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospusagecnf.c - OSP usage confirmation functions
- */
+/* ospusagecnf.c - OSP usage confirmation functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"
@@ -90,7 +88,7 @@ OSPTBOOL OSPPUsageCnfHasStatus( /* returns non-zero if number exists */
     if (ospvUsageCnf != OSPC_OSNULL) {
         ospvHas = (ospvUsageCnf->ospmUsageCnfStatus != OSPC_OSNULL);
     }
-    
+
     return ospvHas;
 }
 
@@ -212,7 +210,7 @@ void OSPPUsageCnfComponentIdFromElement(
     /* look for the component id attribute */
     for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElem);
         (attr != OSPC_OSNULL);
-        attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElem, attr)) 
+        attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
     {
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_COMPONENTID) {
             /* we found the component attribute. Get the value */
@@ -252,9 +250,9 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
                 OSPC_MELEM_MESSAGE) {
                 OSPPUsageCnfMessageIdFromElement(ospvElem, &messageId);
 
-                /* ospvElem is pointing to the Message element. 
-                 * The first child contains the Component element. 
-                 * The following two lines of code change ospvElem from 
+                /* ospvElem is pointing to the Message element.
+                 * The first child contains the Component element.
+                 * The following two lines of code change ospvElem from
                  * pointing to the Message element to the Component element.
                  */
                 ospvParent = ospvElem;
@@ -263,7 +261,7 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
 
             for (elem1 = (OSPT_XML_ELEM *)OSPPListFirst((OSPTLIST *)ospvElem);
                  (elem1 != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-                 elem1 = (OSPT_XML_ELEM *)OSPPListNext((OSPTLIST *)ospvElem, elem1)) 
+                 elem1 = (OSPT_XML_ELEM *)OSPPListNext((OSPTLIST *)ospvElem, elem1))
             {
                 /* create the usage confirmation object */
                 usagecnf = OSPPUsageCnfNew();
@@ -293,7 +291,7 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
 
                         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(elem1);
                             (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
-                             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(elem1, elem)) 
+                             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(elem1, elem))
                         {
                             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
                             case OSPC_MELEM_MESSAGE:

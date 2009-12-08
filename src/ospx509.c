@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospx509.c - Member functions for X509 Certificate object.
- */
+/* ospx509.c - Member functions for X509 Certificate object. */
 
 #include "osp/osp.h"
 #include "osp/ospasn1.h"
@@ -28,16 +26,14 @@
 #include "osp/ospostime.h"
 #include "osp/ospcrypto.h"
 
-/*
- * Member functions
- */
+/* Member functions */
 
 #define PROVIDERDOMAIN "transnexus.com"
 #define PROVIDERINFO   "transnexus.com %ld %ld"
 
 int OSPPX509CertGetCustDeviceId(
-    OSPTASN1OBJECT *ospvCertificate, 
-    unsigned long *ospvCustomerId, 
+    OSPTASN1OBJECT *ospvCertificate,
+    unsigned long *ospvCustomerId,
     unsigned long *ospvDeviceId)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -138,7 +134,7 @@ int OSPPX509CertGetCustDeviceId(
 
 
 int OSPPX509CertCheckCertificateData(
-    OSPTASN1OBJECT *ospvCertInfo, 
+    OSPTASN1OBJECT *ospvCertInfo,
     OSPTASN1OBJECT *ospvSignerPublicKey)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -148,9 +144,9 @@ int OSPPX509CertCheckCertificateData(
     /* OSPTASN1OBJECT *publicKey = OSPC_OSNULL; */
     OSPTASN1OBJECT *certInfo = OSPC_OSNULL;
     OSPTASN1ELEMENTINFO *elementInfo = OSPC_OSNULL;
-    char currentDate[OSPC_TIMESTRINGSIZE] = "";
-    char notBeforeString[OSPC_TIMESTRINGSIZE] = "";
-    char notAfterString[OSPC_TIMESTRINGSIZE] = "";
+    char currentDate[OSPC_SIZE_TIMESTRING] = "";
+    char notBeforeString[OSPC_SIZE_TIMESTRING] = "";
+    char notAfterString[OSPC_SIZE_TIMESTRING] = "";
     OSPTTIME currentTime = 0;
     char *century = OSPC_OSNULL;
     unsigned char *date = OSPC_OSNULL;
@@ -175,7 +171,7 @@ int OSPPX509CertCheckCertificateData(
     /* To validate the certificate you need to verify the certificate
        signature using teh TBSCertificate portion of the certificate being
        validated.  You also need to compre the not-before and not-after dates
-       against the current date.  
+       against the current date.
      */
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Check the certificate's signature */
@@ -297,7 +293,7 @@ int OSPPX509CertCheckCertificateData(
 int OSPPX509CertValidateCertificate(
     OSPTASN1OBJECT *ospvTestCertificate,
     OSPTASN1OBJECT *ospvAuthorityCertificates[],
-    unsigned int ospvNumberOfAuthorityCertificates, 
+    unsigned int ospvNumberOfAuthorityCertificates,
     int *ospvParentCertificateIndex)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -359,7 +355,7 @@ int OSPPX509CertValidateCertificate(
 }
 
 int OSPPX509CertIsParentCertificate(
-    OSPTASN1OBJECT *ospvParentCertificate, 
+    OSPTASN1OBJECT *ospvParentCertificate,
     OSPTASN1OBJECT *ospvTestCertificate)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -444,8 +440,8 @@ int OSPPX509CertIsParentCertificate(
 }   /* OSPPX509CertIsParentCertificate */
 
 int OSPPX509CertGetCertificate(
-    OSPTASN1OBJECT *ospvCertInfo, 
-    unsigned char **ospvCertificate, 
+    OSPTASN1OBJECT *ospvCertInfo,
+    unsigned char **ospvCertificate,
     unsigned int *ospvCertificateLength)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -465,7 +461,7 @@ int OSPPX509CertGetCertificate(
 
 int OSPPX509CertGetElement(
     OSPTASN1OBJECT *ospvCertInfo,   /* In - X509 Cert Context */
-    OSPEASN1DATAREFID ospvDataRefId, 
+    OSPEASN1DATAREFID ospvDataRefId,
     OSPTASN1ELEMENTINFO **ospvElementInfo)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -495,7 +491,7 @@ int OSPPX509CertTestContext(
 }
 
 int OSPPX509CertCreate(
-    unsigned char *ospvEncodedCertificate, 
+    unsigned char *ospvEncodedCertificate,
     OSPTASN1OBJECT **ospvCert)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -516,7 +512,7 @@ int OSPPX509CertCreate(
 }
 
 int OSPPX509CertSetCertificate(
-    OSPTASN1OBJECT *ospvCert, 
+    OSPTASN1OBJECT *ospvCert,
     unsigned char *ospvEncodedCertificate)
 {
     int errorcode = OSPC_ERR_NO_ERROR;

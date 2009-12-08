@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospcomm.h - Constants and prototypes for Comm object.
- */
-
+/* ospcomm.h - Constants and prototypes for Comm object. */
 #ifndef _OSPCOMM_H
 #define _OSPCOMM_H
 
@@ -47,9 +44,7 @@
 
 #define OSPM_COMM_SECURED_IO(sp) (sp->Flags & OSPC_COMM_SVCPT_SECURITY_BIT)
 
-/*
- * service point typedef
- */
+/* service point typedef */
 typedef struct {
     OSPTLISTLINK Link;
     OSPTIPADDR IpAddr;      /* network byte order */
@@ -58,15 +53,13 @@ typedef struct {
     unsigned short Port;    /* network byte order */
     /* bit 1: 0 - http      1 - https    */
     /* bit 2: 0 - ok        1 - degraded */
-    unsigned char Flags;    
+    unsigned char Flags;
     char *HostName;
     char *URI;
     unsigned long MaxMsgAllowed;
 } OSPTSVCPT;
 
-/*
- * communication manager typedef
- */
+/* communication manager typedef */
 typedef struct {
     OSPTMUTEX Mutex;
     OSPTTHREADID ThreadId;
@@ -96,7 +89,6 @@ typedef struct {
 #define OSPPCommAddTransaction(comm,msginfo)    OSPPMsgQueueAddTransaction(comm->MsgQueue, msginfo)
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

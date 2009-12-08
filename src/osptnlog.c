@@ -21,6 +21,7 @@
  * for its instructional value, and is not guaranteed
  * for any particular purpose.
  */
+
 #include "osp/osptnlog.h"
 #ifndef _WIN32
 #include <stdio.h>
@@ -55,7 +56,7 @@ void get_log_time(
 }
 
 void tnlog(
-    char *fmt, 
+    char *fmt,
     ...)
 {
     va_list ap;
@@ -88,8 +89,8 @@ void tnlog(
 }
 
 int tnlogdump(
-    unsigned char *data, 
-    int len, 
+    unsigned char *data,
+    int len,
     char *msg)
 {
     int i;
@@ -131,7 +132,7 @@ int tnlogdump(
         write(logfd, buf, OSPM_STRLEN(buf));
     }
 
-    /* 
+    /*
      * Dump the available data
      */
     for (i = 0;; i++, cnt++) {

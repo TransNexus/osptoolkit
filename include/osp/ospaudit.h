@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- *  ospaudit.h 
- */
-
+/* ospaudit.h */
 #ifndef _OSPAUDIT_H
 #define _OSPAUDIT_H
 
@@ -45,17 +42,15 @@ typedef struct {
     unsigned long ospmAuditStartTime;
     unsigned long ospmAuditMaxTime;
     char *ospmAuditURL;
-    /* 
-     * bit 1 - Flush Buffer - 0x01 
-     * bit 2 - Buffer Empty - 0x02 
+    /*
+     * bit 1 - Flush Buffer - 0x01
+     * bit 2 - Buffer Empty - 0x02
      */
     unsigned char ospmAuditFlags;
     OSPTLIST ospmAuditComponentIdList;
 } OSPT_AUDIT;
 
-/*
- * ComponentId list item
- */
+/* ComponentId list item */
 typedef struct {
     OSPTLISTLINK ospmComponentIdLink;
     char *ospmComponentId;
@@ -77,7 +72,6 @@ typedef struct {
 #define OSPC_AUDIT_BFR_END_LEN          (sizeof(OSPC_AUDIT_BFR_END)-1)
 
 /* Function Prototypes */
-
 #ifdef __cplusplus
 extern "C" {
 #endif

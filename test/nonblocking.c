@@ -47,22 +47,22 @@ typedef struct _NBAUTHREQ {
 } NBAUTHREQ;
 
 typedef struct _NBUSEIND {
-    OSPTTRANHANDLE ospvTransaction;                     /* In - Transaction handle */
-    unsigned ospvDuration;                              /* In - Length of call */
-    OSPTTIME ospvStartTime;                             /* In - StartTime of call */
-    OSPTTIME ospvEndTime;                               /* In - EndTime of call */
-    OSPTTIME ospvAlertTime;                             /* In - AlertTime of call */
-    OSPTTIME ospvConnectTime;                           /* In - ConnectTime of call */
-    OSPTBOOL ospvHasPDDInfo;                            /* In - Is PDD info present */
-    unsigned ospvPostDialDelay;                         /* In - PDD */
-    unsigned ospvReleaseSource;                         /* In - Rel Src */
-    char ospvConferenceId[OSPC_CONFIDSIZE];             /* In - ConferenceId */
-    int ospvLossPacketsSent;                            /* In - Packets not received by peer */
-    int ospvLossFractionSent;                           /* In - Fraction of packets not received by peer */
-    int ospvLossPacketsReceived;                        /* In - Packets not received that were expected */
-    int ospvLossFractionReceived;                       /* In - Fraction of packets expected but not received */
-    unsigned *ospvSizeOfDetailLog;                      /* In\Out - Max size of detail log \ Actual size of detail log */
-    void *ospvDetailLog;                                /* In\Out - Location of detail log storage */
+    OSPTTRANHANDLE ospvTransaction;             /* In - Transaction handle */
+    unsigned ospvDuration;                      /* In - Length of call */
+    OSPTTIME ospvStartTime;                     /* In - StartTime of call */
+    OSPTTIME ospvEndTime;                       /* In - EndTime of call */
+    OSPTTIME ospvAlertTime;                     /* In - AlertTime of call */
+    OSPTTIME ospvConnectTime;                   /* In - ConnectTime of call */
+    OSPTBOOL ospvHasPDDInfo;                    /* In - Is PDD info present */
+    unsigned ospvPostDialDelay;                 /* In - PDD */
+    unsigned ospvReleaseSource;                 /* In - Rel Src */
+    char ospvConferenceId[OSPC_SIZE_CONFID];    /* In - ConferenceId */
+    int ospvLossPacketsSent;                    /* In - Packets not received by peer */
+    int ospvLossFractionSent;                   /* In - Fraction of packets not received by peer */
+    int ospvLossPacketsReceived;                /* In - Packets not received that were expected */
+    int ospvLossFractionReceived;               /* In - Fraction of packets expected but not received */
+    unsigned *ospvSizeOfDetailLog;              /* In\Out - Max size of detail log \ Actual size of detail log */
+    void *ospvDetailLog;                        /* In\Out - Location of detail log storage */
 } NBUSEIND;
 
 typedef struct _NBCAPIND {
@@ -76,24 +76,24 @@ typedef struct _NBCAPIND {
 } NBCAPIND;
 
 typedef struct _NBVALIDATEAUTH {
-    OSPTTRANHANDLE ospvTransaction;     /* In - Transaction Handle  */
-    const char *ospvSource;             /* In - Source of call      */
-    const char *ospvDestination;        /* In - Dest of call      */
-    const char *ospvSourceDevice;       /* In - SourceDevice of call */
-    const char *ospvDestinationDevice;  /* In - DestDevice of call      */
-    const char *ospvCallingNumber;      /* In - Calling number      */
-    OSPE_NUMBER_FORMAT ospvCallingNumberFormat;        /* In - Calling number Format */
-    const char *ospvCalledNumber;       /* In - Called number       */
-    OSPE_NUMBER_FORMAT ospvCalledNumberFormat;         /* In - Called number Format */
-    unsigned ospvSizeOfCallId;          /* In - Size of call id value */
-    const void *ospvCallId;             /* In - Call Id for this call */
-    unsigned ospvSizeOfToken;           /* In - Size of authorization token */
-    const void *ospvToken;              /* In - Authorisation token */
-    unsigned *ospvAuthorised;           /* Out - Call authorisation indicator */
-    unsigned *ospvTimeLimit;            /* Out - Number of seconds call is authorised for */
-    unsigned *ospvSizeOfDetailLog;      /* In\Out - Max size of detail log \ Actual size of detail log */
-    void *ospvDetailLog;                /* In\Out - Location of detail log storage */
-    unsigned ospvTokenAlgo;             /* In - Algorithm to be used for Validating Token */
+    OSPTTRANHANDLE ospvTransaction;             /* In - Transaction Handle  */
+    const char *ospvSource;                     /* In - Source of call      */
+    const char *ospvDestination;                /* In - Dest of call      */
+    const char *ospvSourceDevice;               /* In - SourceDevice of call */
+    const char *ospvDestinationDevice;          /* In - DestDevice of call      */
+    const char *ospvCallingNumber;              /* In - Calling number      */
+    OSPE_NUMBER_FORMAT ospvCallingNumberFormat; /* In - Calling number Format */
+    const char *ospvCalledNumber;               /* In - Called number       */
+    OSPE_NUMBER_FORMAT ospvCalledNumberFormat;  /* In - Called number Format */
+    unsigned ospvSizeOfCallId;                  /* In - Size of call id value */
+    const void *ospvCallId;                     /* In - Call Id for this call */
+    unsigned ospvSizeOfToken;                   /* In - Size of authorization token */
+    const void *ospvToken;                      /* In - Authorisation token */
+    unsigned *ospvAuthorised;                   /* Out - Call authorisation indicator */
+    unsigned *ospvTimeLimit;                    /* Out - Number of seconds call is authorised for */
+    unsigned *ospvSizeOfDetailLog;              /* In\Out - Max size of detail log \ Actual size of detail log */
+    void *ospvDetailLog;                        /* In\Out - Location of detail log storage */
+    unsigned ospvTokenAlgo;                     /* In - Algorithm to be used for Validating Token */
 } NBVALIDATEAUTH;
 
 typedef union _OSPMESSAGE {

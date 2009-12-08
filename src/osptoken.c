@@ -15,9 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptoken.c - OSP token functions
- */
+/* osptoken.c - OSP token functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"

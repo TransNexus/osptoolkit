@@ -15,10 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * ospdebug.h - Structures and prototypes for debugging and logging.
- */
-
+/* ospdebug.h - Structures and prototypes for debugging and logging. */
 #ifndef _OSPDEBUG_H
 #define _OSPDEBUG_H
 
@@ -28,7 +25,7 @@
  * The OSPC_DEBUG constant is the master constant for all debugging
  * functions and structures. If that constant is undefined, then
  * all debugging code is removed from the library.
- * 
+ *
  * It must be defined at compile time
  *
  * -DOSPC_DEBUG
@@ -125,7 +122,7 @@
 #define OSPM_DBGNET(ospvParams)     OSPM_DBG((OSPVDbgFlag&OSPC_DBGNET),ospvParams)
 #define OSPM_DBGSEC(ospvParams)     OSPM_DBG((OSPVDbgFlag&OSPC_DBGSEC),ospvParams)
 #define OSPM_DBGMISC(ospvParams)    OSPM_DBG((OSPVDbgFlag&OSPC_DBGMISC),ospvParams)
-   
+
 /*
  * Finally, a special debugging macro just for error logging.
  * The macro takes two parameters: an error code and descriptive
@@ -145,7 +142,7 @@
  */
 
 #define OSPM_DBGERRORLOG(ospvErrCode,ospvErrText) \
-     OSPM_DBGERROR(("ERROR %0d: %s\n      File: %s  line: %u\n", (ospvErrCode), (ospvErrText), __FILE__, __LINE__)) 
+     OSPM_DBGERROR(("ERROR %0d: %s\n      File: %s  line: %u\n", (ospvErrCode), (ospvErrText), __FILE__, __LINE__))
 
 #else /* Use customized debug code */
 

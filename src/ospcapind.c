@@ -15,9 +15,8 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * osptcapind.c
- */
+/* osptcapind.c */
+
 #include "osp/osp.h"
 #include "osp/osptrans.h"
 #include "osp/ospprovider.h"
