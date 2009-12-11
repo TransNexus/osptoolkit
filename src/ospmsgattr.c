@@ -49,6 +49,14 @@ const OSPT_MSG_DESC OSPV_RTYPE_DESCS[OSPC_ROLE_NUMBER] = {
     { OSPC_ROLE_RADDESTINTERIM,"raddestinterim" }
 };
 
+/* Array that associates service type and names */
+const OSPT_MSG_DESC OSPV_STYPE_DESCS[OSPC_SERVICE_NUMBER] = {
+    { OSPC_SERVICE_VOICE,   "voice" },
+    { OSPC_SERVICE_VIDEO,   "video" },
+    { OSPC_SERVICE_DATA,    "data" },
+    { OSPC_SERVICE_NPQUERY, "portedNumberQuery" }
+};
+
 /*
  * OSPPMsgAttrGetName() - get an attribute name from a part value
  */
@@ -77,5 +85,20 @@ OSPE_MSG_ATTR OSPPMsgAttrGetPart(   /* returns part */
     }
 
     return ospvPart;
+}
+
+/*
+ * OSPPServiceGetName() - get an service name from a part value
+ */
+const char *OSPPServiceGetName(     /* returns pointer to the name */
+    OSPE_SERVICE ospvType)
+{
+    const char *ospvName = OSPC_OSNULL;
+
+    if ((ospvType >= OSPC_SERVICE_START) && (ospvType < OSPC_SERVICE_NUMBER)) {
+        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvType, OSPV_STYPE_DESCS, OSPC_SERVICE_NUMBER);
+    }
+
+    return ospvName;
 }
 

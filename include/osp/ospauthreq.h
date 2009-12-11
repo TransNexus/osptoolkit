@@ -77,12 +77,12 @@ extern "C" {
     OSPTBOOL OSPPAuthReqHasDeviceId(OSPT_AUTH_REQ *ospvAuthReq);
     void OSPPAuthReqSetDeviceId(OSPT_AUTH_REQ *, unsigned long);
     unsigned long OSPPAuthReqGetDeviceId(OSPT_AUTH_REQ *);
-    unsigned OSPPNPRnToElement(const char *, OSPT_XML_ELEM **);
-    unsigned OSPPNPCicToElement(const char *, OSPT_XML_ELEM **);
-    unsigned OSPPNPNpdiToElement(int, OSPT_XML_ELEM **);
-    unsigned OSPPOperatorNameToElement(OSPE_OPERATOR_NAME, const char *, OSPT_XML_ELEM **);
-    unsigned OSPPServiceTypeToElement(OSPE_SERVICE, OSPT_XML_ELEM **);
-    unsigned OSPPPricingInfoToElement(OSPT_PRICING_INFO, OSPT_XML_ELEM **);
+    int OSPPNPRnToElement(const char *, OSPT_XML_ELEM **);
+    int OSPPNPCicToElement(const char *, OSPT_XML_ELEM **);
+    int OSPPNPNpdiToElement(int, OSPT_XML_ELEM **);
+    int OSPPOperatorNameToElement(OSPE_OPERATOR_NAME, const char *, OSPT_XML_ELEM **);
+    int OSPPServiceTypeToElement(OSPE_SERVICE, OSPT_XML_ELEM **);
+    int OSPPPricingInfoToElement(OSPT_PRICING_INFO, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

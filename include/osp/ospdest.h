@@ -40,6 +40,7 @@ typedef enum {
     OSPC_DPROT_SKYPE,                           /* Destination Protocol - Skype */
     OSPC_DPROT_SMPP,                            /* Destination Protocol - SMPP */
     OSPC_DPROT_XMPP,                            /* Destination Protocol - XMPP */
+    OSPC_DPROT_SMS,                             /* Destination Protocol - SMS */
     /* Number of destiantion protocol types */
     OSPC_DPROT_NUMBER
 } OSPE_DEST_PROTOCOL;

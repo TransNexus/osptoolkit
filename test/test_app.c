@@ -240,7 +240,7 @@ int testOSPPProviderNew(OSPTPROVHANDLE *ProvHandle)
         if (errorcode == OSPC_ERR_NO_ERROR) {
             authCerts[i] = &(TheAuthCert[i]);
             i++;
-            printf("Loaded %d Authorization Certificate \n", i);
+            printf("Loaded %d Authorization Certificate\n", i);
         } else {
             if (errorcode == OSPC_ERR_CRYPTO_FILE_OPEN_ERROR) {
                 /*
@@ -249,7 +249,7 @@ int testOSPPProviderNew(OSPTPROVHANDLE *ProvHandle)
                  * Otherwise return an error
                  */
                 if (i == 0) {
-                    printf("Failed to find the File - %s \n", searchstr);
+                    printf("Failed to find the File - %s\n", searchstr);
                     return errorcode;
                 } else {
                     /*
@@ -381,7 +381,7 @@ int testOSPPProviderSetAuthorityCertificates()
         authCerts[i] = &(TheAuthCert[i]);
         if (errorcode == OSPC_ERR_NO_ERROR) {
             i++;
-            printf("Read %d Authorization Certificate \n", i);
+            printf("Read %d Authorization Certificate\n", i);
         } else {
             if (errorcode == OSPC_ERR_CRYPTO_FILE_OPEN_ERROR) {
                 /*
@@ -390,7 +390,7 @@ int testOSPPProviderSetAuthorityCertificates()
                  * Otherwise return an error
                  */
                 if (i == 0) {
-                    printf("Failed to find the File - %s \n", searchstr);
+                    printf("Failed to find the File - %s\n", searchstr);
                     return errorcode;
                 } else {
                     /*
@@ -562,12 +562,12 @@ int testOSPPProviderSetLocalKeys()
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPUtilLoadPEMCert((unsigned char *)"localcert.pem", &localcert);
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            printf("Read 1 Local Certificate \n");
+            printf("Read 1 Local Certificate\n");
         } else {
-            printf("OSPPUtilLoadPEMCertreturned Error ! \n");
+            printf("OSPPUtilLoadPEMCertreturned Error !\n");
         }
     } else {
-        printf("OSPPUtilLoadPEMPrivateKey returned Error ! \n");
+        printf("OSPPUtilLoadPEMPrivateKey returned Error !\n");
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -743,7 +743,7 @@ int testOSPPTransactionDelete()
 
     if ((OSPVTransactionHandle == OSPC_TRAN_HANDLE_INVALID) &&
         (tranhandle2 == OSPC_TRAN_HANDLE_INVALID)) {
-        printf("No Transaction to Delete \n");
+        printf("No Transaction to Delete\n");
         errorcode = OSPC_ERR_TRAN_HANDLE_INVALID;
     }
 
@@ -814,40 +814,43 @@ int testOSPPTransactionGetDestProtocol()
     if (errorcode == OSPC_ERR_NO_ERROR) {
         switch (dest_prot) {
         case OSPC_DPROT_UNDEFINED:
-            printf("Destination Protocol is Not Configured at Server \n");
+            printf("Destination Protocol is Not Configured at Server\n");
             break;
         case OSPC_DPROT_SIP:
-            printf("Destination Protocol is SIP \n");
+            printf("Destination Protocol is SIP\n");
             break;
         case OSPC_DPROT_Q931:
             printf("Destination Protocol is H.323-Q931\n");
             break;
         case OSPC_DPROT_LRQ:
-            printf("Destination Protocol is H.323-LRQ \n");
+            printf("Destination Protocol is H.323-LRQ\n");
             break;
         case OSPC_DPROT_IAX:
-            printf("Destination Protocol is IAX \n");
+            printf("Destination Protocol is IAX\n");
             break;
         case OSPC_DPROT_T37:
-            printf("Destination Protocol is Fax-T.37 \n");
+            printf("Destination Protocol is Fax-T.37\n");
             break;
         case OSPC_DPROT_T38:
-            printf("Destination Protocol is Fax-T.38 \n");
+            printf("Destination Protocol is Fax-T.38\n");
             break;
         case OSPC_DPROT_SKYPE:
-            printf("Destination Protocol is Skype \n");
+            printf("Destination Protocol is Skype\n");
             break;
         case OSPC_DPROT_SMPP:
-            printf("Destination Protocol is SMPP \n");
+            printf("Destination Protocol is SMPP\n");
             break;
         case OSPC_DPROT_XMPP:
-            printf("Destination Protocol is XMPP \n");
+            printf("Destination Protocol is XMPP\n");
+            break;
+        case OSPC_DPROT_SMS:
+            printf("Destination Protocol is SMS\n");
             break;
         case OSPC_DPROT_UNKNOWN:
-            printf("Destination Protocol is Unknown \n");
+            printf("Destination Protocol is Unknown\n");
             break;
         default:
-            printf("Wrong Destination Protocol \n");
+            printf("Wrong Destination Protocol\n");
             break;
         }
     }
@@ -864,7 +867,7 @@ int testOSPPTransactionIsDestOSPEnabled()
     if (errorcode == OSPC_ERR_NO_ERROR) {
         switch (dest_osp_ver) {
         case OSPC_DOSP_UNDEFINED:
-            printf("Destination OSP Version Not Configured at Server \n");
+            printf("Destination OSP Version Not Configured at Server\n");
             break;
         case OSPC_DOSP_TRUE:
             printf("Destination is OSP Enabled\n");
@@ -873,7 +876,7 @@ int testOSPPTransactionIsDestOSPEnabled()
             printf("Destination is Not OSP Enabled\n");
             break;
         case OSPC_DOSP_UNKNOWN:
-            printf("Destination OSP Status is Unknown \n");
+            printf("Destination OSP Status is Unknown\n");
             break;
         }
     }
@@ -1051,9 +1054,9 @@ int testBuildUsageFromScratch(int IsSource, int BuildNew)
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR && BuildNew) {
-        printf("Transaction Built \n");
+        printf("Transaction Built\n");
     } else if ((errorcode == OSPC_ERR_NO_ERROR) && (!BuildNew)) {
-        printf("Destination Added to transaction \n");
+        printf("Destination Added to transaction\n");
     } else {
         if (OSPVTransactionHandle != OSPC_TRAN_HANDLE_INVALID) {
             OSPPTransactionDelete(OSPVTransactionHandle);
@@ -1144,7 +1147,7 @@ int testSetConnectTime()
 
 int testSetServiceType()
 {
-	int errorcode;
+    int errorcode;
 
     errorcode = OSPPTransactionSetServiceType(OSPVTransactionHandle, OSPC_SERVICE_NPQUERY);
 
@@ -1420,7 +1423,7 @@ int testOSPPTransactionRequestReauthorisation()
             (void *)NULL);
     }
 
-    printf("Errorcode = %d. \nAuthorised = %u. \nTimelimit = %u. \nToken = %s.", errorcode, authorised, timelimit, (char *)token);
+    printf("Errorcode = %d.\nAuthorised = %u.\nTimelimit = %u.\nToken = %s.", errorcode, authorised, timelimit, (char *)token);
 
     return errorcode;
 }
@@ -1428,14 +1431,14 @@ int testOSPPTransactionRequestReauthorisation()
 int testGetCallingNumber()
 {
     int errorcode = 0;
-    printf("The Current Calling Number is : %s \n", callingnumber);
+    printf("The Current Calling Number is : %s\n", callingnumber);
     return errorcode;
 }
 
 int testGetCalledNumber()
 {
     int errorcode = 0;
-    printf("The Current Called Number is : %s \n", callednumber);
+    printf("The Current Called Number is : %s\n", callednumber);
     return errorcode;
 }
 
@@ -1460,7 +1463,7 @@ int testSetCallId()
     int errorcode = 0;
 
     OSPM_STRCPY((char *)ret_cid, "");
-    printf("Call Id Set to the Empty for Validate Authorization \n");
+    printf("Call Id Set to the Empty for Validate Authorization\n");
     return errorcode;
 }
 
@@ -1524,49 +1527,52 @@ int testOSPPTransactionGetLookAheadInfoIfPresent()
         }
 
         if (errorcode == 0 && HasLookAheadInfo) {
-            printf("Look Ahead Info Present .. \nLookAheadDest = %s\n", LookAheadDest);
+            printf("Look Ahead Info Present ..\nLookAheadDest = %s\n", LookAheadDest);
             switch (DestProt) {
             case OSPC_DPROT_UNDEFINED:
-                printf("Destination Protocol is Not Configured at Server \n");
+                printf("Destination Protocol is Not Configured at Server\n");
                 break;
             case OSPC_DPROT_SIP:
-                printf("Destination Protocol is SIP \n");
+                printf("Destination Protocol is SIP\n");
                 break;
             case OSPC_DPROT_Q931:
                 printf("Destination Protocol is H.323-Q931\n");
                 break;
             case OSPC_DPROT_LRQ:
-                printf("Destination Protocol is H.323-LRQ \n");
+                printf("Destination Protocol is H.323-LRQ\n");
                 break;
             case OSPC_DPROT_IAX:
-                printf("Destination Protocol is IAX \n");
+                printf("Destination Protocol is IAX\n");
                 break;
             case OSPC_DPROT_T37:
-                printf("Destination Protocol is Fax-T.37 \n");
+                printf("Destination Protocol is Fax-T.37\n");
                 break;
             case OSPC_DPROT_T38:
-                printf("Destination Protocol is Fax-T.38 \n");
+                printf("Destination Protocol is Fax-T.38\n");
                 break;
             case OSPC_DPROT_SKYPE:
-                printf("Destination Protocol is Skype \n");
+                printf("Destination Protocol is Skype\n");
                 break;
             case OSPC_DPROT_SMPP:
-                printf("Destination Protocol is SMPP \n");
+                printf("Destination Protocol is SMPP\n");
                 break;
             case OSPC_DPROT_XMPP:
-                printf("Destination Protocol is XMPP \n");
+                printf("Destination Protocol is XMPP\n");
+                break;
+            case OSPC_DPROT_SMS:
+                printf("Destination Protocol is SMS\n");
                 break;
             case OSPC_DPROT_UNKNOWN:
-                printf("Destination Protocol is Unknown \n");
+                printf("Destination Protocol is Unknown\n");
                 break;
             default:
-                printf("Wrong Destination Protocol \n");
+                printf("Wrong Destination Protocol\n");
                 break;
             }
 
             switch (DestOSPStatus) {
             case OSPC_DOSP_UNDEFINED:
-                printf("Destination OSP Version Not Configured at Server \n");
+                printf("Destination OSP Version Not Configured at Server\n");
                 break;
             case OSPC_DOSP_TRUE:
                 printf("Destination is OSP Enabled\n");
@@ -1575,7 +1581,7 @@ int testOSPPTransactionGetLookAheadInfoIfPresent()
                 printf("Destination is Not OSP Enabled\n");
                 break;
             case OSPC_DOSP_UNKNOWN:
-                printf("Destination OSP Status is Unknown \n");
+                printf("Destination OSP Status is Unknown\n");
                 break;
             }
         } else if (errorcode == 0 && (!HasLookAheadInfo)) {
@@ -2264,7 +2270,7 @@ int testAPI(int apinumber)
             }
 
             if ((errorcode == 0) && (trans_to_run > MAX_QUEUE_SIZE)) {
-                printf("Warning !!! The toolkit may not be able to process - %d calls because the maximum queue size is - %d \n",
+                printf("Warning !!! The toolkit may not be able to process - %d calls because the maximum queue size is - %d\n",
                      trans_to_run, MAX_QUEUE_SIZE);
             }
 
@@ -2296,7 +2302,7 @@ int testAPI(int apinumber)
         errorcode = testSetNumberPortability();
         break;
     case 211:
-    	errorcode = testSetOperatorName();
+        errorcode = testSetOperatorName();
     case 212:
         break;
     case 213:
@@ -2429,7 +2435,7 @@ int testMenu()
         printf("47) ModifyDeviceIdentifiersAgain      48) SetDestinationCount\n");
         printf("99) Sleep for 2 seconds\n");
         printf("---------------------------------------------------------------------\n");
-        printf("Configuration Parameters \n");
+        printf("Configuration Parameters\n");
         printf("---------------------------------------------------------------------\n");
         printf("50) Set Calling Number                51) Set Called Number\n");
         printf("52) Get Calling Number                53) Get Called Number\n");
@@ -2765,14 +2771,14 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
 
     Tokens = (char **)malloc(sizeof(char *)* num_test_calls);
     if (Tokens == NULL) {
-        printf("Malloc Failed !! Exiting ! \n");
+        printf("Malloc Failed !! Exiting !\n");
         exit(0);
     }
 
     for (i = 0; i < num_test_calls; i++) {
         Tokens[i] = (char *)malloc(sizeof(char) * TOKEN_SIZE);
         if (Tokens[i] == NULL) {
-            printf("Malloc Failed !! Exiting ! \n");
+            printf("Malloc Failed !! Exiting !\n");
             exit(0);
         }
     }
@@ -2798,7 +2804,7 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
         || (CallIds == NULL) || (CallIdsNum == NULL) || (CallIdsLen == NULL)
         || (authorised == NULL))
     {
-        printf("Malloc Failed !! Exiting ! \n");
+        printf("Malloc Failed !! Exiting !\n");
         exit(0);
     }
 
@@ -3152,11 +3158,11 @@ int testNonBlockingPerformanceTestForCapabilities()
     scanf("%d", &TEST_NUM);
 
     if ((TEST_NUM) > OSPC_MAX_TRANS)
-        printf("Warning !! The toolkit may not be able to process - %d Calls because the maximum transactions that can be created is - %d \n",
+        printf("Warning !! The toolkit may not be able to process - %d Calls because the maximum transactions that can be created is - %d\n",
             TEST_NUM, OSPC_MAX_TRANS);
 
     if (TEST_NUM > MAX_QUEUE_SIZE)
-        printf("Warning !! The toolkit may not be able to process - %d Calls because the maximum queue size is - %d \n",
+        printf("Warning !! The toolkit may not be able to process - %d Calls because the maximum queue size is - %d\n",
             TEST_NUM, MAX_QUEUE_SIZE);
 
     /*
@@ -3167,7 +3173,7 @@ int testNonBlockingPerformanceTestForCapabilities()
         (OSPTTRANHANDLE *)malloc((sizeof(OSPTTRANHANDLE) * TEST_NUM));
 
     if ((OErrorCodes == NULL) || (OTransactionHandles == NULL)) {
-        printf("Malloc Failed !! Exiting ! \n");
+        printf("Malloc Failed !! Exiting !\n");
         exit(0);
     }
 

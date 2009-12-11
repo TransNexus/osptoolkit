@@ -26,7 +26,7 @@
  * Enroll this device. This will consist of:
  *   o parsing command line options;
  *   o retrieving the CA certificate from the enrollment server;
- *   o generating a request to be sent to the enrollment server; 
+ *   o generating a request to be sent to the enrollment server;
  *   o initializing the communications manager;
  *   o transmitting the request to the enrollment server;
  *   o parsing the response for a status ( success, pending, failed ) and
@@ -41,19 +41,19 @@
  */
 int main(int argc, char *argv[])
 {
-    /* 
+    /*
      * The return value from each function; it's set to be a failure code,
      * just in case a function that fails doesn't set it.
      */
     unsigned retVal = OSPC_ENROLL_FAILURE_DEFAULT;
 
-    /* 
-     * The enrollment parameters that are received on the command line, 
-     * as documented in the requirements and design: 
+    /*
+     * The enrollment parameters that are received on the command line,
+     * as documented in the requirements and design:
      */
     OSPTENROLLPARAMS enrollParams;
 
-    /* 
+    /*
      * These are the parameters that define the communication manager's
      * running parameters, but which are not defined as input for hte
      * OSP TNEP Client Requirements. These will most likely not be entered
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
      */
     OSPTCOMMPARAMS commParams;
 
-    /* 
+    /*
      * The certificate retrieved from the enrollment server. This
      * may not be saved in stable storage, so it is possible that the
      * enrollment client will have to fetch it for every operation.
@@ -81,9 +81,9 @@ int main(int argc, char *argv[])
     /* Initialize the Toolkit library */
     OSPPInit(HW_ENABLE);
 
-    /* 
+    /*
      * Set the communications parameters to some sample values; these
-     * can be set on standard input ( along with all of the other 
+     * can be set on standard input ( along with all of the other
      * enrollment parameters ), but the list of values required on
      * the command line begins to get too long.
      */
@@ -133,9 +133,9 @@ int main(int argc, char *argv[])
 
     /* Now check that the user entered a function: */
     if (retVal == OSPC_ERR_NO_ERROR) {
-        /* 
-         * The parameters could be read, so now check the 
-         * function's integrity. 
+        /*
+         * The parameters could be read, so now check the
+         * function's integrity.
          */
         if ((enrollParams.Function == OSPC_OSNULL) || (OSPM_STRLEN((const char *)enrollParams.Function) <= 0)) {
             retVal = OSPC_ERR_ENROLL_PARAMS_FUNCTION;
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 
     /* Now execute whatever function the user entered, if it's a valid operation request. */
     if (retVal == OSPC_ERR_NO_ERROR) {
-        /* 
+        /*
          * If ( the function is for retrieving the CA certificate ) then
          *  o retrieve the CA certificate
          *  o if ( there was a problem ) then complain;
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
                 OSPM_PRINTF ("-----BEGIN CERTIFICATE-----\r\n%s\r\n-----END CERTIFICATE-----\r\n", enrollParams.CACertB64);
             }
         }
-        /* 
+        /*
          * Else ( if the function is to request or retrieve a cert ) then
          *     o enroll the device with the enrollment server
          */
@@ -191,12 +191,12 @@ int main(int argc, char *argv[])
         OSPM_FREE(localCert);
     }
 
-    /* Clean up the toolkit library */ 
+    /* Clean up the toolkit library */
     OSPPCleanup();
     return retVal;
 }
 
-/* 
+/*
  * This is a convenience function for checking arguments. For each
  * character in the input string, change the character to lowercase
  * if it's A-Z. OSPM_TOLOWER will be used for the sake of compatibility.
@@ -212,7 +212,7 @@ int OSPPEnrollStringLowercase(const char *ospvStringIn, char *ospvStringLowercas
     /* Index for parsing the input string: */
     int inputStringIndex = 0;
 
-    /* 
+    /*
      * There is initially no error to be worried about; there are
      * only errors if the output string cannot be initialized.
      */
@@ -220,7 +220,7 @@ int OSPPEnrollStringLowercase(const char *ospvStringIn, char *ospvStringLowercas
 
     OSPM_DBGENTER(("ENTER: OSPPEnrollStringLowercase\n"));
 
-    /* 
+    /*
      * If ( the input string and output string aren't null ) then
      *  o set the input string length;
      *  o if ( we can set the memory of the output string to 0's ) then
@@ -246,25 +246,25 @@ int OSPPEnrollStringLowercase(const char *ospvStringIn, char *ospvStringLowercas
     return retVal;
 }
 
-/* 
- * This function will parse the parameters that are sent on the command line. 
+/*
+ * This function will parse the parameters that are sent on the command line.
  *
- * Input: 
+ * Input:
  *  ospvArgc ( a count of all the parameters in ospvArgv )
  *  ospvArgv ( all of the input parameters to be parsed )
- *  enrollParams ( a structure with all of the parameters that could 
+ *  enrollParams ( a structure with all of the parameters that could
  *    possibly be collected on the command line )
  *
  */
 int OSPPEnrollParseParameters(int ospvArgc, char *ospvArgv[], OSPTENROLLPARAMS * enrollParams)
 {
-    /* 
+    /*
      * The return value of this function; it's initially set to true,
-     * and gets set to the subsequent value of each function call. 
+     * and gets set to the subsequent value of each function call.
      */
     int retVal = OSPC_ERR_NO_ERROR;
 
-    /* 
+    /*
      * The next argument in the parameter list, converted to lowercase
      * ( for the sake of comparisons. )
      */
@@ -286,14 +286,14 @@ int OSPPEnrollParseParameters(int ospvArgc, char *ospvArgv[], OSPTENROLLPARAMS *
         retVal = OSPC_ERR_ENROLL_INVALID_ARG;
         OSPM_DBGERRORLOG(retVal, "The parameters passed in for parsing are invalid.\n");
 
-        /* 
+        /*
          * Tell the user how to use the program, but only if we know what
          * command was entered on the command line to begin with:
          */
         if ((ospvArgv != OSPC_OSNULL) && (ospvArgv[0] != OSPC_OSNULL)) {
             OSPPEnrollUsage(ospvArgv[0], OSPC_ENROLL_HELP_MSG);
         }
-        /* 
+        /*
          * Else
          *  o use the default command for enrollment, just for the sake
          *    of syntax:
@@ -302,7 +302,7 @@ int OSPPEnrollParseParameters(int ospvArgc, char *ospvArgv[], OSPTENROLLPARAMS *
             OSPPEnrollUsage(OSPC_ENROLL_DEFAULT_CMD, OSPC_ENROLL_HELP_MSG);
         }
     }
-    /* 
+    /*
      * For ( all of the arguments in the list, as long as there are no errors )
      *     o get the lowercase version of the next argument
      *     o if ( the arg could be converted to lowercase ) then
@@ -368,7 +368,7 @@ int OSPPEnrollParseParameters(int ospvArgc, char *ospvArgv[], OSPTENROLLPARAMS *
                         bioIn = BIO_new_file(ospvArgv[argvIndex + 1], "r");
                         if (bioIn == OSPC_OSNULL) {
                             retVal = OSPC_ERR_ENROLL_PARAMS_CACERT;
-                            OSPM_DBGERROR(("Error in Opening the File : %s. File does not exist \n", ospvArgv[argvIndex + 1]));
+                            OSPM_DBGERROR(("Error in Opening the File : %s. File does not exist\n", ospvArgv[argvIndex + 1]));
                         } else {
                             temp = buf;
                             cert = PEM_read_bio_X509(bioIn, NULL, NULL, NULL);
@@ -395,7 +395,7 @@ int OSPPEnrollParseParameters(int ospvArgc, char *ospvArgv[], OSPTENROLLPARAMS *
                         bioIn = BIO_new_file(ospvArgv[argvIndex + 1], "r");
                         if (bioIn == OSPC_OSNULL) {
                             retVal = OSPC_ERR_ENROLL_PARAMS_CERTREQ;
-                            OSPM_DBGERROR(("Error in Opening the File : %s. File does not exist \n", ospvArgv[argvIndex + 1]));
+                            OSPM_DBGERROR(("Error in Opening the File : %s. File does not exist\n", ospvArgv[argvIndex + 1]));
                         } else {
                             temp = Reqbuf;
                             certreq = PEM_read_bio_X509_REQ(bioIn, NULL, NULL, NULL);
@@ -428,7 +428,7 @@ int OSPPEnrollParseParameters(int ospvArgc, char *ospvArgv[], OSPTENROLLPARAMS *
                 }
 
                 /* End of test for what to do if the argument is binary */
-                /* 
+                /*
                  * We can do all of the unary arguments separately from the
                  * binary arguments, since the binary arguments require some
                  * sort of parameter value. The unary arguments shouldn't be
@@ -461,18 +461,18 @@ int OSPPEnrollParseParameters(int ospvArgc, char *ospvArgv[], OSPTENROLLPARAMS *
     return retVal;
 }
 
-/* 
+/*
  * Given the binary of a BER-encoded certificate, print out its base64
  * encoding to STDOUT. We'll need the length of the certificate just as
  * a convenience for knowing where to stop printing.
  *
- * Input: the certificate and its length ( minus the terminating null. ) 
+ * Input: the certificate and its length ( minus the terminating null. )
  */
 int OSPPPrintCert(unsigned char *ospvCert, unsigned ospvCertLen)
 {
     int retVal = OSPC_ERR_NO_ERROR;
 
-    /* 
+    /*
      * This is initially the length allocated for encoding the certificate
      * to a base64-encoded string, and after that it will be the actual
      * length of the base64 encoding of the same string.
@@ -490,8 +490,8 @@ int OSPPPrintCert(unsigned char *ospvCert, unsigned ospvCertLen)
         OSPM_DBGMISC(("Warning; trying to print a null or empty cert.\n"));
     }
 
-    /* 
-     * Set the amount of memory for the base64-encoded cert and then 
+    /*
+     * Set the amount of memory for the base64-encoded cert and then
      * allocate it. If we have a null pointer, then set an error code
      * and print a warning.
      */
@@ -505,9 +505,9 @@ int OSPPPrintCert(unsigned char *ospvCert, unsigned ospvCertLen)
         }
     }
 
-    /* 
-     * Now initialize the memory we just allocated and base64-encode the 
-     * certificate. If we have any problems encoding it, then print a 
+    /*
+     * Now initialize the memory we just allocated and base64-encode the
+     * certificate. If we have any problems encoding it, then print a
      * warning.
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
@@ -539,8 +539,8 @@ int OSPPPrintCert(unsigned char *ospvCert, unsigned ospvCertLen)
     return retVal;
 }
 
-/* 
- * Print a block of base64-encoded text, given the text and the length 
+/*
+ * Print a block of base64-encoded text, given the text and the length
  * to print. We'll separate each line with a newline and a carriage return
  * so that this function will write truly base64-encoded text.
  *
@@ -550,9 +550,9 @@ int OSPPPrintB64Text(unsigned char *ospvTextBlock, unsigned ospvTextBlockLen)
 {
     int retVal = OSPC_ERR_NO_ERROR;
 
-    /* 
+    /*
      * The number of columns to be used per line. This may be something
-     * other than a constant ( or we may use termcap or some other 
+     * other than a constant ( or we may use termcap or some other
      * information ), so let's use an lvalue instead of a constant.
      */
     unsigned columnsPerLine = OSPC_ENROLL_B64_COLUMNS_PER_LINE;
@@ -560,7 +560,7 @@ int OSPPPrintB64Text(unsigned char *ospvTextBlock, unsigned ospvTextBlockLen)
     /* an offset into the baes64-encoded string that's being printed: */
     unsigned printIndex = 0;
 
-    /* 
+    /*
      * This is the temporary variable used for printing out the
      * characters, 64 ( or OSPC_ENROLL_B64_COLUMNS_PER_LINE ) at a time.
      */
@@ -577,11 +577,11 @@ int OSPPPrintB64Text(unsigned char *ospvTextBlock, unsigned ospvTextBlockLen)
     if (retVal == OSPC_ERR_NO_ERROR) {
         OSPM_MEMSET(outputText, 0, OSPC_ENROLL_B64_COLUMNS_PER_LINE + 1);
 
-        /* 
+        /*
          * For ( each possible line in the text ) do
          *  o copy the next line into another buffer
          *  o print that buffer in a format that is truly base64-formatted.
-         *    That is, print 64 characters per line and print a CRLF at the 
+         *    That is, print 64 characters per line and print a CRLF at the
          *    end:
          */
         OSPM_PRINTF("-----BEGIN CERTIFICATE-----\r\n");
@@ -597,7 +597,7 @@ int OSPPPrintB64Text(unsigned char *ospvTextBlock, unsigned ospvTextBlockLen)
     return retVal;
 }
 
-/* 
+/*
  * Given a certificate ( which may be null ), its length ( which may be
  * less than or equal to zero ), and the status of an enrollment request,
  * report the enrollment request's status and certificate ( if available )
@@ -610,7 +610,7 @@ void OSPPPrintCertAndStatus(unsigned char *ospvCert, unsigned ospvCertLen, unsig
 {
     OSPM_DBGENTER(("ENTER: OSPPPrintCertAndStatus\n"));
 
-    /* 
+    /*
      * Now print out the status of the certificate.
      *  o if ( the certificate isn't null and it isn't empty ) then
      *      - print the cert.
@@ -631,14 +631,14 @@ void OSPPPrintCertAndStatus(unsigned char *ospvCert, unsigned ospvCertLen, unsig
             }
         }
     }
-    /* 
+    /*
      * Else
-     *  o Report that the certificate request is still pending approval: 
+     *  o Report that the certificate request is still pending approval:
      */
     else if (ospvEnrollStatus == OSPC_ENROLL_STATUS_PENDING) {
         OSPM_PRINTF("The certificate request is pending approval.\n");
     }
-    /* 
+    /*
      * Else
      *  o report that the certificate request failed and give the reason
      *    ( returned from the enrollment server ) why.
@@ -653,7 +653,7 @@ void OSPPPrintCertAndStatus(unsigned char *ospvCert, unsigned ospvCertLen, unsig
     OSPM_DBGEXIT(("EXIT: OSPPPrintCertAndStatus\n"));
 }
 
-/* 
+/*
  * Print the usage for the enrollment command. The first string in
  * is what the user typed in for the command; it may not necessarily
  * be "enroll". The second string is the help message that the user
@@ -664,7 +664,7 @@ void OSPPPrintCertAndStatus(unsigned char *ospvCert, unsigned ospvCertLen, unsig
  */
 void OSPPEnrollUsage(char *ospvCmd, char *ospvHelpMsg)
 {
-    /* 
+    /*
      * Print both of these strings out, but only if they're valid.
      * Other logic can be used for how to handle these cases,
      * if necessary.

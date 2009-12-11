@@ -41,7 +41,8 @@ const OSPT_MSG_DESC OSPV_DPROT_DESCS[OSPC_DPROT_NUMBER] = {
     { OSPC_DPROT_T38,   "fax-T38" },
     { OSPC_DPROT_SKYPE, "skype" },
     { OSPC_DPROT_SMPP,  "smpp" },
-    { OSPC_DPROT_XMPP,  "xmpp" }
+    { OSPC_DPROT_XMPP,  "xmpp" },
+    { OSPC_DPROT_SMS,   "sms" }
 };
 
 /*
@@ -930,28 +931,28 @@ void OSPPDestInfoFromElement(
             }
         } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_SPID)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_SPID],
-            	OSPPXMLElemGetValue(ospvElem),
-            	sizeof(ospvDest->ospmOpName[OSPC_OPNAME_SPID]) - 1);
+                OSPPXMLElemGetValue(ospvElem),
+                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_SPID]) - 1);
         } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_OCN)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_OCN],
-            	OSPPXMLElemGetValue(ospvElem),
-            	sizeof(ospvDest->ospmOpName[OSPC_OPNAME_OCN]) - 1);
+                OSPPXMLElemGetValue(ospvElem),
+                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_OCN]) - 1);
         } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_SPN)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_SPN],
-            	OSPPXMLElemGetValue(ospvElem),
-            	sizeof(ospvDest->ospmOpName[OSPC_OPNAME_SPN]) - 1);
+                OSPPXMLElemGetValue(ospvElem),
+                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_SPN]) - 1);
         } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_ALTSPN)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_ALTSPN],
-            	OSPPXMLElemGetValue(ospvElem),
-            	sizeof(ospvDest->ospmOpName[OSPC_OPNAME_ALTSPN]) - 1);
+                OSPPXMLElemGetValue(ospvElem),
+                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_ALTSPN]) - 1);
         } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_MCC)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_MCC],
-            	OSPPXMLElemGetValue(ospvElem),
-            	sizeof(ospvDest->ospmOpName[OSPC_OPNAME_MCC]) - 1);
+                OSPPXMLElemGetValue(ospvElem),
+                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_MCC]) - 1);
         } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_MNC)) == 0) {
             OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_MNC],
-            	OSPPXMLElemGetValue(ospvElem),
-            	sizeof(ospvDest->ospmOpName[OSPC_OPNAME_MNC]) - 1);
+                OSPPXMLElemGetValue(ospvElem),
+                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_MNC]) - 1);
         }
     }
 }

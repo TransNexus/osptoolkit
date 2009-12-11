@@ -58,24 +58,25 @@ int OSPPTransactionSetServiceAndPricingInfo(
         OSPPTransactionGetState(trans, &state);
         if (state != OSPC_TRANSNEW) {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Set the service type information */
-    	switch (ospvServiceType) {
-    	case OSPC_SERVICE_VOICE:
-    	case OSPC_SERVICE_DATA:
-    	case OSPC_SERVICE_NPQUERY:
+        switch (ospvServiceType) {
+        case OSPC_SERVICE_VOICE:
+        case OSPC_SERVICE_VIDEO:
+        case OSPC_SERVICE_DATA:
+        case OSPC_SERVICE_NPQUERY:
             trans->HasServiceInfo = OSPC_TRUE;
             trans->ServiceType = ospvServiceType;
             break;
-    	default:
+        default:
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
             OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionSetServiceAndPricingInfo");
             break;
-    	}
+        }
 
         /* Set the pricing info */
         for (i = 0; i < MAX_PRICING_INFO_ALLOWED; i++) {
@@ -114,24 +115,25 @@ int OSPPTransactionSetServiceType(
         OSPPTransactionGetState(trans, &state);
         if (state != OSPC_TRANSNEW) {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Set the service type information */
-    	switch (ospvType) {
-    	case OSPC_SERVICE_VOICE:
-    	case OSPC_SERVICE_DATA:
-    	case OSPC_SERVICE_NPQUERY:
+        switch (ospvType) {
+        case OSPC_SERVICE_VOICE:
+        case OSPC_SERVICE_VIDEO:
+        case OSPC_SERVICE_DATA:
+        case OSPC_SERVICE_NPQUERY:
             trans->HasServiceInfo = OSPC_TRUE;
             trans->ServiceType = ospvType;
             break;
-    	default:
+        default:
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
             OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionSetService");
             break;
-    	}
+        }
     }
 
     return errorcode;
@@ -154,7 +156,7 @@ int OSPPTransactionSetPricingInfo(
         OSPPTransactionGetState(trans, &state);
         if (state != OSPC_TRANSNEW) {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
@@ -570,18 +572,18 @@ int OSPPTransactionGetDestNetworkId(
             if (trans->State == OSPC_GET_DEST_SUCCESS) {
                 if (dest == (OSPT_DEST *)NULL) {
                     errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                 } else {
                     if (OSPPDestHasNetworkAddr(dest) && OSPPDestGetNetworkAddr(dest)) {
                         sprintf(ospvNetworkId, OSPPDestGetNetworkAddr(dest));
                     } else {
                         errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
                     }
                 }
             } else {
                 errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
             }
         } else if (trans->AuthInd != OSPC_OSNULL) {
             /*
@@ -598,7 +600,7 @@ int OSPPTransactionGetDestNetworkId(
                         sprintf(ospvNetworkId, destval);
                     } else {
                         errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
                     }
                     break;
                 } else {
@@ -608,7 +610,7 @@ int OSPPTransactionGetDestNetworkId(
 
             if (found == OSPC_FALSE) {
                 errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
             }
         } else {
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -651,7 +653,7 @@ int OSPPTransactionGetDestinationNetworkId(
                 if (trans->State == OSPC_GET_DEST_SUCCESS) {
                     if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
                         errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                     } else if (OSPPDestHasNetworkAddr(dest)) {
                         nid = OSPPDestGetNetworkAddr(dest);
                         if (ospvSizeOfNetworkId > OSPM_STRLEN(nid)) {
@@ -662,11 +664,11 @@ int OSPPTransactionGetDestinationNetworkId(
                         }
                     } else {
                         errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
                     }
                 } else {
                     errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
                 }
             } else if (trans->AuthInd != OSPC_OSNULL) {
                 /* We are the destination. Get the information from the AuthInd structure. */
@@ -685,7 +687,7 @@ int OSPPTransactionGetDestinationNetworkId(
                             }
                         } else {
                             errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                            OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                            OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
                         }
                         break;
                     } else {
@@ -695,7 +697,7 @@ int OSPPTransactionGetDestinationNetworkId(
 
                 if (found == OSPC_FALSE) {
                     errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                    OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                    OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
                 }
             } else {
                 errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -736,13 +738,13 @@ int OSPPTransactionGetDestProtocol(
         if (trans->State == OSPC_GET_DEST_SUCCESS) {
             if (dest == (OSPT_DEST *)NULL) {
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
             } else {
                 *ospvDestProtocol = dest->ospmDestProtocol;
             }
         } else {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
@@ -776,13 +778,13 @@ int OSPPTransactionIsDestOSPEnabled(
         if (trans->State == OSPC_GET_DEST_SUCCESS) {
             if (dest == (OSPT_DEST *)NULL) {
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
             } else {
                 *ospvDestinationOSPStatus = dest->ospmDestOSPVersion;
             }
         } else {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
@@ -2321,7 +2323,7 @@ int OSPPTransactionNew(
         trans->UsageSrcNetworkId[0] = '\0';
         trans->UsageDestNetworkId[0] = '\0';
         for (cnt = 0; cnt < OSPC_OPNAME_NUMBER; cnt++) {
-        	trans->OpName[cnt][0] = '\0';
+            trans->OpName[cnt][0] = '\0';
         }
     }
 
@@ -4101,7 +4103,7 @@ int OSPPTransactionIndicateCapabilities(
             OSPM_DBGERRORLOG(errorcode, "Duplicate Call To OSPPTransactionIndicateCapabilities");
         } else if (trans->AuthRsp != OSPC_OSNULL || trans->AuthInd != OSPC_OSNULL) {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
@@ -4791,7 +4793,7 @@ int OSPPTransactionGetNumberPortability(
                 dest = trans->CurrentDest;
                 if (dest == (OSPT_DEST *)OSPC_OSNULL) {
                     errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                 } else {
                     OSPM_STRCPY(ospvNPRn, dest->ospmNPRn);
                     OSPM_STRCPY(ospvNPCic, dest->ospmNPCic);
@@ -4799,7 +4801,7 @@ int OSPPTransactionGetNumberPortability(
                 }
             } else {
                 errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
             }
         } else if (trans->AuthInd != OSPC_OSNULL) {
             /*
@@ -4809,7 +4811,7 @@ int OSPPTransactionGetNumberPortability(
             dest = trans->AuthInd->ospmAuthIndDest;
             if (dest == (OSPT_DEST *)OSPC_OSNULL) {
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
             } else {
                 OSPM_STRCPY(ospvNPRn, dest->ospmNPRn);
                 OSPM_STRCPY(ospvNPCic, dest->ospmNPCic);
@@ -4857,7 +4859,7 @@ int OSPPTransactionGetNumberPortabilityParameters(
             if (trans->State == OSPC_GET_DEST_SUCCESS) {
                 if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
                     errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                 } else {
                     if (ospvSizeOfNPRn != 0) {
                         if (ospvSizeOfNPRn > OSPM_STRLEN(dest->ospmNPRn)) {
@@ -4881,13 +4883,13 @@ int OSPPTransactionGetNumberPortabilityParameters(
                 }
             } else {
                 errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
             }
         } else if (trans->AuthInd != OSPC_OSNULL) {
             /* We are the destination.  Get the information from the AuthInd structure. */
             if ((dest = trans->AuthInd->ospmAuthIndDest) == OSPC_OSNULL) {
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
             } else {
                 if (ospvSizeOfNPRn != 0) {
                     if (ospvSizeOfNPRn > OSPM_STRLEN(dest->ospmNPRn)) {
@@ -4931,11 +4933,11 @@ int OSPPTransactionSetOperatorName(
     OSPTTRANS *trans = OSPC_OSNULL;
 
     if (((ospvType >= OSPC_OPNAME_START) && (ospvType < OSPC_OPNAME_NUMBER)) &&
-    	(ospvName != OSPC_OSNULL) && (*ospvName != '\0'))
+        (ospvName != OSPC_OSNULL) && (*ospvName != '\0'))
     {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if (errorcode == OSPC_ERR_NO_ERROR) {
-        	OSPM_STRNCPY(trans->OpName[ospvType], ospvName, sizeof(trans->OpName[ospvType]) - 1);
+            OSPM_STRNCPY(trans->OpName[ospvType], ospvName, sizeof(trans->OpName[ospvType]) - 1);
         }
     } else {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -4971,41 +4973,41 @@ int OSPPTransactionGetOperatorName(
                 if (trans->State == OSPC_GET_DEST_SUCCESS) {
                     if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
                         errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                     } else {
-                    	if ((ospvType >= OSPC_OPNAME_START) && (ospvType < OSPC_OPNAME_NUMBER)) {
-                    		if (ospvSizeOfName > OSPM_STRLEN(dest->ospmOpName[ospvType])) {
-    							OSPM_STRNCPY(ospvName, dest->ospmOpName[ospvType], ospvSizeOfName);
-                    		} else {
-    							errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-    							OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy operator name.");
-                    		}
-                    	} else {
-                    		errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-							OSPM_DBGERRORLOG(errorcode, "Invalid operator name type.");
-                    	}
+                        if ((ospvType >= OSPC_OPNAME_START) && (ospvType < OSPC_OPNAME_NUMBER)) {
+                            if (ospvSizeOfName > OSPM_STRLEN(dest->ospmOpName[ospvType])) {
+                                OSPM_STRNCPY(ospvName, dest->ospmOpName[ospvType], ospvSizeOfName);
+                            } else {
+                                errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                                OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy operator name.");
+                            }
+                        } else {
+                            errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                            OSPM_DBGERRORLOG(errorcode, "Invalid operator name type.");
+                        }
                     }
                 } else {
                     errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
                 }
             } else if (trans->AuthInd != OSPC_OSNULL) {
                 /* We are the destination.  Get the information from the AuthInd structure. */
                 if ((dest = trans->AuthInd->ospmAuthIndDest) == OSPC_OSNULL) {
                     errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                 } else {
-                	if ((ospvType >= OSPC_OPNAME_START) && (ospvType < OSPC_OPNAME_NUMBER)) {
-                		if (ospvSizeOfName > OSPM_STRLEN(dest->ospmOpName[ospvType])) {
-							OSPM_STRNCPY(ospvName, dest->ospmOpName[ospvType], ospvSizeOfName);
-                		} else {
-							errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-							OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy operater name.");
-                		}
-                	} else {
-                		errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-						OSPM_DBGERRORLOG(errorcode, "Invalid operator name type.");
-                	}
+                    if ((ospvType >= OSPC_OPNAME_START) && (ospvType < OSPC_OPNAME_NUMBER)) {
+                        if (ospvSizeOfName > OSPM_STRLEN(dest->ospmOpName[ospvType])) {
+                            OSPM_STRNCPY(ospvName, dest->ospmOpName[ospvType], ospvSizeOfName);
+                        } else {
+                            errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy operater name.");
+                        }
+                    } else {
+                        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                        OSPM_DBGERRORLOG(errorcode, "Invalid operator name type.");
+                    }
                 }
             } else {
                 errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
