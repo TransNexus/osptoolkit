@@ -58,7 +58,6 @@ typedef struct {
     OSPTBOOL osmpUsageIndHasServiceInfo;
     OSPE_SERVICE osmpUsageIndServiceType;
     OSPT_ALTINFO *ospmUsageIndDestinationCount;
-    char ospmUsageIndAssertedId[OSPC_SIZE_NORID];
     OSPE_DEST_PROTOCOL ospmUsageIndDestProtocol;
     char ospmUsageIndForwardCodec[OSPC_SIZE_CODEC];
     char ospmUsageIndReverseCodec[OSPC_SIZE_CODEC];
@@ -144,9 +143,6 @@ extern "C" {
     const char *OSPPUsageIndGetConferenceId(OSPT_USAGEIND *);
     void OSPPUsageIndSetDestinationCount(OSPT_USAGEIND *, unsigned ospvDestinationCount);
     OSPT_ALTINFO *OSPPUsageIndGetDestinationCount(OSPT_USAGEIND *);
-    OSPTBOOL OSPPUsageIndHasAssertedId(OSPT_USAGEIND *);
-    const char *OSPPUsageIndGetAssertedId(OSPT_USAGEIND *);
-    void OSPPUsageIndSetAssertedId(OSPT_USAGEIND *, const char *);
     OSPTBOOL OSPPUsageIndHasDestProtocol(OSPT_USAGEIND *);
     OSPE_DEST_PROTOCOL OSPPUsageIndGetDestProtocol(OSPT_USAGEIND *);
     void OSPPUsageIndSetDestProtocol(OSPT_USAGEIND *, OSPE_DEST_PROTOCOL);

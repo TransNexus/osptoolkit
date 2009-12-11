@@ -1730,16 +1730,11 @@ int OSPPTransactionRequestNew(
              */
             OSPPAuthReqSetDestNumber(ospvTrans->AuthReq, ospvCalledNumber);
 
-            OSPPAuthReqSetNumberPortability(ospvTrans->AuthReq, ospvTrans->NPRn, ospvTrans->NPCic, ospvTrans->NPNpdi);
-
-            OSPPAuthReqSetDiversion(ospvTrans->AuthReq, ospvTrans->DiversionSrcInfo, ospvTrans->DiversionDevInfo);
-
             /* -------------------------------------------
              * ospmAuthReqDestAlt (DestinationAlternative)
              * --------------------------------------------
              * Preferred destination list.
              */
-
             altinfo = OSPC_OSNULL;
 
             if (ospvPreferredDestinations != OSPC_OSNULL) {

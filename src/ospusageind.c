@@ -1065,7 +1065,6 @@ OSPT_USAGEIND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         ospvUsageInd->osmpUsageIndHasServiceInfo = OSPC_FALSE;
         ospvUsageInd->ospmUsageIndDestinationCount = OSPC_OSNULL;
 
-        ospvUsageInd->ospmUsageIndAssertedId[0] = '\0';
         ospvUsageInd->ospmUsageIndDestProtocol = OSPC_DPROT_UNKNOWN;
         ospvUsageInd->ospmUsageIndForwardCodec[0] = '\0';
         ospvUsageInd->ospmUsageIndReverseCodec[0] = '\0';
@@ -1338,20 +1337,6 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
-            /* add asserted ID */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndHasAssertedId(usage))) {
-                attrtype = OSPC_MATTR_TYPE;
-                attrvalue = OSPC_ALTINFO_ASSERTEDID;
-                ospvErrCode = OSPPStringToElement(OSPC_MELEM_SRCINFO,
-                    OSPPUsageIndGetAssertedId(usage),
-                    1, &attrtype, &attrvalue,
-                    &subelem);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(usageindelem, subelem);
-                    subelem = OSPC_OSNULL;
-                }
-            }
-
             /* add the device info */
             if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (usage->ospmUsageIndDeviceInfo != NULL)) {
                 for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(usage->ospmUsageIndDeviceInfo));
@@ -1418,9 +1403,9 @@ int OSPPUsageIndToElement(      /* returns error code */
 
             /* add diversion source info */
             if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                tmp = trans->DiversionSrcInfo;
+                tmp = trans->DivSrcInfo;
                 if (tmp[0] != '\0') {
-                    ospvErrCode = OSPPCallPartyNumToElement(OSPC_MELEM_DIVERSIONSRCINFO, tmp, OSPC_NFORMAT_E164, &subelem);
+                    ospvErrCode = OSPPCallPartyNumToElement(OSPC_MELEM_DIVSRCINFO, tmp, OSPC_NFORMAT_E164, &subelem);
                     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(usageindelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1430,11 +1415,11 @@ int OSPPUsageIndToElement(      /* returns error code */
 
             /* add diversion device info */
             if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                tmp = trans->DiversionDevInfo;
+                tmp = trans->DivDevInfo;
                 if (tmp[0] != '\0') {
                     attrtype = OSPC_MATTR_TYPE;
                     attrvalue = OSPC_ALTINFO_TRANSPORT;
-                    ospvErrCode = OSPPStringToElement(OSPC_MELEM_DIVERSIONDEVINFO, tmp, 1, &attrtype, &attrvalue, &subelem);
+                    ospvErrCode = OSPPStringToElement(OSPC_MELEM_DIVDEVINFO, tmp, 1, &attrtype, &attrvalue, &subelem);
                     if (ospvErrCode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(usageindelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1749,40 +1734,6 @@ OSPT_ALTINFO *OSPPUsageIndGetDestinationCount(
         return ospvUsageInd->ospmUsageIndDestinationCount;
     } else {
         return OSPC_OSNULL;
-    }
-}
-
-OSPTBOOL OSPPUsageIndHasAssertedId(
-    OSPT_USAGEIND *ospvUsageInd)
-{
-    OSPTBOOL ospvHas = OSPC_FALSE;
-
-    if (ospvUsageInd != OSPC_OSNULL) {
-        ospvHas = (ospvUsageInd->ospmUsageIndAssertedId[0] != '\0');
-    }
-
-    return ospvHas;
-}
-
-const char *OSPPUsageIndGetAssertedId(
-    OSPT_USAGEIND *ospvUsageInd)
-{
-    const char *ospvAssertedId = OSPC_OSNULL;
-
-    if (ospvUsageInd != OSPC_OSNULL) {
-        ospvAssertedId = ospvUsageInd->ospmUsageIndAssertedId;
-    }
-
-    return ospvAssertedId;
-}
-
-void OSPPUsageIndSetAssertedId(
-    OSPT_USAGEIND *ospvUsageInd,
-    const char *ospvAssertedId)
-{
-    if ((ospvUsageInd != OSPC_OSNULL) && (ospvAssertedId != OSPC_OSNULL)) {
-        OSPM_STRNCPY(ospvUsageInd->ospmUsageIndAssertedId,
-            ospvAssertedId, sizeof(ospvUsageInd->ospmUsageIndAssertedId));
     }
 }
 
