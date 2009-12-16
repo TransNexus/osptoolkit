@@ -27,14 +27,14 @@ extern "C" {
 /* Defines how may characters are dumped line: */
 #define OSPC_ENROLL_HEX_CHARS_PER_LINE      (8 * OSPC_ENROLL_OCTETS_PER_LINE)
 
-/* 
+/*
  * Given a string of characters, print out their hex and alphanumeric encoding.
  *
  * Input: the string to be printed and the length of that string.
  */
 void OSPPDumpHex(unsigned char *ospvDumpee, unsigned ospvDumpeeLen);
 
-/* 
+/*
  * Dump a line of hex characters. Pad the end with spaces if there aren't
  * enough characters.
  *

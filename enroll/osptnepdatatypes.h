@@ -25,7 +25,7 @@
  * This structure should be constructed so that it adequately describes
  * any parameters that may be taken from the command line. Other structures
  * can be used to describe the type of operation being performed by the
- * enrollment client. 
+ * enrollment client.
  */
 typedef struct _OSPTENROLLPARAMS {
     unsigned char *Function;
@@ -47,12 +47,12 @@ typedef struct _OSPTENROLLPARAMS {
     unsigned Verbose;
 } OSPTENROLLPARAMS;
 
-/* 
+/*
  * This is for specifying what to use for the communication manager's
  * parameters. This will have to be set from outside the enrollment client,
  * preferably in some manner that also suits the OSP SDK. This list may
  * expand or contract, but it should only be used by the functions for
- * collecting this data and for the function that initializes the 
+ * collecting this data and for the function that initializes the
  * communications manager. After that, this list will not be used anywhere
  * else, so changes to function prototypes, variables, and so
  * on should be contained to the functions using this structure.

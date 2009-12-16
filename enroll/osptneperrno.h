@@ -17,9 +17,9 @@
 
 #define OSPC_ERR_ENROLL                             24000
 
-/* 
- * Errors generated when there's something syntactically wrong 
- * with the inputs ( such as how they were entered, their length, 
+/*
+ * Errors generated when there's something syntactically wrong
+ * with the inputs ( such as how they were entered, their length,
  * and so on ): */
 #define OSPC_ERR_ENROLL_PARAMS_FUNCTION             (OSPC_ERR_ENROLL + 10)
 #define OSPC_ERR_ENROLL_PARAMS_USERNAME             (OSPC_ERR_ENROLL + 11)
@@ -32,8 +32,8 @@
 #define OSPC_ERR_ENROLL_PARAMS_CERTREQ              (OSPC_ERR_ENROLL + 18)
 #define OSPC_ERR_ENROLL_PARAMS_CA_FPRINT            (OSPC_ERR_ENROLL + 19)
 
-/* 
- * Errors generated when there's something semantically 
+/*
+ * Errors generated when there's something semantically
  * wrong with the inputs ( such as the wrong datatype, etc. )
  */
 #define OSPC_ERR_ENROLL_BAD_USERNAME                (OSPC_ERR_ENROLL + 30)

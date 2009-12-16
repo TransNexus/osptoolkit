@@ -44,13 +44,13 @@
 #define OSPC_ENROLL_STATUS_OK               0
 #define OSPC_ENROLL_STATUS_PENDING          1
 
-/* 
+/*
  * Denotes the failure of an enrollment request; this may happen even
  * if there aren't any problems with the enrollment client:
  */
 #define OSPC_ENROLL_STATUS_FAILURE_DEFAULT  2
 
-/* 
+/*
  * The possible field delimiters in a URL are an ampersand ( '&' ) and
  * a space, which would indicate some other field. Actually, this is true
  * for any whitespace character.
@@ -60,8 +60,8 @@
 /* The "normal" field delimiter for a url is an ampersand: */
 #define OSPC_ENROLL_FIELD_DELIMITER         "&"
 
-/* 
- * This separates names and values in an url. For example, 
+/*
+ * This separates names and values in an url. For example,
  * in http://www.transnexus.com/some_path/enroll?name=value&another_name=x ,
  * the name and value in the HTTP get would be the '='.
  */
@@ -70,9 +70,9 @@
 /* The content type of the message we post to the enrollment server: */
 #define OSPC_ENROLL_CONTENT_TYPE            "text/html"
 
-/* 
+/*
  * What is the maximum length of the request that could be transmitted?
- * This needs to take into account the maximum size of a 
+ * This needs to take into account the maximum size of a
  * RelativeDistinguishedName ( say, 2KB ), the size of a subjectPublicKeyInfo
  * and a signature ( 512 bytes, for 2 2048-bit values ), and the size
  * of the attributes and other cert request chaff ( say, less than 512 bytes ).
@@ -87,7 +87,7 @@
 extern "C" {
 #endif
 
-/* 
+/*
  * Given the input parameters for enrollment, setup all of the communications
  * and structures for enrollment and then send a request to the enrollment
  * server. The results should be stored in the ospvEnrollStatusOUt
@@ -97,7 +97,7 @@ extern "C" {
 int OSPPEnroll(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPTCOMMPARAMS *ospvCommParamsIn, unsigned char **ospvLocalCertOut,
             unsigned *ospvLocalCertLenOut, unsigned *ospvEnrollStatusOut);
 
-/* 
+/*
  * Given the enrollment parameters, base64-decode the CACertB64 parameter
  * of the enrollment parmaeters and place the binary CA certificate in the
  * CACert field of the enrollment parameters instead.
@@ -114,8 +114,8 @@ int OSPPEnroll(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPTCOMMPARAMS *ospvCommPar
 int OSPPBase64DecodeCACert(OSPTENROLLPARAMS *ospvEnrollParamsIn);
 
 /*
- * Create an enrollment request for requesting or retrieving a certificate, 
- * send the request to the enrollment server ( using the communications 
+ * Create an enrollment request for requesting or retrieving a certificate,
+ * send the request to the enrollment server ( using the communications
  * manager passed in ); extract the status and certificate from the
  * response, validate the certificate, and return the certificate.
  */
@@ -134,29 +134,29 @@ int OSPPValidateDeviceCert(OSPTSEC *ospvSecIn, OSPTASN1OBJECT *ospvRequestPublic
 int OSPPCreateEnrollmentRequestHeader(OSPT_MSG_INFO *ospvEnrollmentReqMsgInfo);
 
 int OSPPCreateEnrollmentRequestBody(unsigned char **ospvRequestBfrOut, OSPTENROLLPARAMS * ospvEnrollParamsIn);
-                                       
-/* 
+
+/*
  * Create a nonce value that will serve for both stronger encryption ( to
  * eliminate known-ciphertext attacks ) and for preventing flooding at the
  * server. This isn't required by an enrollment server, but it is recommended.
  *
  * Input: references to the nonce's character string and the nonce's length;
- *        both are set on output. 
+ *        both are set on output.
  *
  * Output: success in generating the nonce: OSPC_ERR_NO_ERROR if successful,
  *         another value otherwise. *ospvNonce should be allocated a block
  *         of memory whose length is specified by ospvNonceLenIn. Note that
  *         existing memory will not be used.
- * 
+ *
  */
 int OSPPFillBufWithRandomBytes(unsigned char *ospvNonce, unsigned *ospvNonceLenOut, unsigned ospvNonceLenIn);
 
-/* 
+/*
  * Check all of the enrollment parameters for any problems that might cause
  * it to be rejected by an enrollment server. We'll check that the
  * username and password are alphanumeric, that the customer and device ids
  * are numeric, and that the base64-encoded certificate request exists
- * ( the contents of the base64-encoded certificate request are validated 
+ * ( the contents of the base64-encoded certificate request are validated
  * elsewhere. ) We'll get an error if any of these values are empty or null.
  *
  * Input: reference to the enrollment parameters
@@ -167,7 +167,7 @@ int OSPPFillBufWithRandomBytes(unsigned char *ospvNonce, unsigned *ospvNonceLenO
  */
 int OSPPCheckEnrollmentParams(OSPTENROLLPARAMS *ospvEnrollParams);
 
-/* 
+/*
  * Given a pointer to some enrollment parameters, check the validity of each
  * parameter for requesting a certificate. This function returns an error
  * if any of the values are invalid.
@@ -180,28 +180,28 @@ int OSPPCheckEnrollmentParams(OSPTENROLLPARAMS *ospvEnrollParams);
  */
 int OSPPCheckEnrollmentRequestParams(OSPTENROLLPARAMS *ospvEnrollParams);
 
-/* 
+/*
  * Given a pointer to a string to write, and a pointer to its length, and
  * the length of a nonce to generate, generate a nonce and place it in the
  * output string and its referenced length. The nonce will be binary, not
  * ASCII.
  *
  * This function will use OSPPFillBufWithRandomBytes, which in turn
- * relies on OSPPUtilGetRandom, for generating the random bytes of the nonce. 
+ * relies on OSPPUtilGetRandom, for generating the random bytes of the nonce.
  * Since OSPPUtilGetRandom doesn't rely on anything special for the
- * entropy of these random values, it would be best to either modify 
+ * entropy of these random values, it would be best to either modify
  * OSPPUtilGetRandom or just pass the value of the nonce in ( so that we
  * don't generate it here. )
  *
  * Input: reference to a string and its length to write to, as well as a
  *        length that specifies how long the nonce should be.
  *
- * Output: OSPC_ERR_NO_ERROR if there aren't any problems; in this case, 
+ * Output: OSPC_ERR_NO_ERROR if there aren't any problems; in this case,
  *         the *ospvNonceOut should be non-null and *ospvNonceLenOut should
- *         specify its length. Otherwise, an error code other than 
+ *         specify its length. Otherwise, an error code other than
  *         OSPC_ERR_NO_ERROR will be returned if a problem comes up. In this
  *         case, *ospvNonceOut should be OSPC_OSNULL and *ospvNonceLenOut
- *         should be 0 ( but this isn't guaranteed, especially if 
+ *         should be 0 ( but this isn't guaranteed, especially if
  *         ospvNonceOut or ospvNonceLenOut were OSPC_OSNULL to begin with. )
  */
 int OSPPCreateNonce(unsigned char **ospvNonceOut, unsigned *ospvNonceLenOut, unsigned ospvNonceLenIn);
@@ -209,7 +209,7 @@ int OSPPCreateNonce(unsigned char **ospvNonceOut, unsigned *ospvNonceLenOut, uns
 /*
  * Given a character string that will eventually be sent to an enrollment
  * server as part of a MsgInfo's Request, add a name-value pair that reflects
- * an enrollment parameter. 
+ * an enrollment parameter.
  *
  * Input: the request's character string, plus the k
  *
@@ -218,7 +218,7 @@ int OSPPCreateNonce(unsigned char **ospvNonceOut, unsigned *ospvNonceLenOut, uns
 int OSPPAddNameValuePair(unsigned char *ospvDestStr, unsigned char *ospvName, unsigned ospvNameLen, unsigned char *ospvValue,
             unsigned ospvValueLen, unsigned ospvPrependAmpersand);
 
-/* 
+/*
  * Given a source string of characters, URL-encode it and append it to
  * the destination string:
  */
@@ -268,7 +268,7 @@ int OSPPValidateCert(const unsigned char *ospvCACertIn, const unsigned char *osp
 int OSPPASN1Compare(OSPTASN1OBJECT *ospvLHSObject, OSPTASN1OBJECT *ospvRHSObject);
 
 /*
- * This is for constructing the enrollment request that is sent to the 
+ * This is for constructing the enrollment request that is sent to the
  * enrollment server; the output is an OSPT_MSG_INFO structure that
  * contains it.
  *
@@ -284,16 +284,16 @@ int OSPPASN1Compare(OSPTASN1OBJECT *ospvLHSObject, OSPTASN1OBJECT *ospvRHSObject
  */
 int OSPPConstructEnrollmentRequest(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPT_MSG_INFO *ospvMsgInfoOut);
 
-/* 
- * Given a base64 encoding of a certificate request, retrieve the 
+/*
+ * Given a base64 encoding of a certificate request, retrieve the
  * subjectPublicKeyInfo from that certificate request and store it in the
- * given ASN.1 element info's placeholder. 
+ * given ASN.1 element info's placeholder.
  *
- * Input: base64 certificate request 
+ * Input: base64 certificate request
  *        ( unsigned char* ospvBase64CertReq )
  *
- * Output: *ospvPublicKeyInfoOut should, if successful, contain the 
- *         subjectPublicKeyInfo of the certificate request. If not, then 
+ * Output: *ospvPublicKeyInfoOut should, if successful, contain the
+ *         subjectPublicKeyInfo of the certificate request. If not, then
  *         an errorcode should be returned.
  *
  * Errors: Errorcodes other than OSPC_ERR_NO_ERROR are returned when:
@@ -305,26 +305,26 @@ int OSPPConstructEnrollmentRequest(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPT_MS
  */
 int OSPPGetPublicKeyInfoFromCertReq(unsigned char *ospvBase64CertReq, OSPTASN1OBJECT * ospvPublicKeyInfoOut);
 
-/* 
+/*
  * Given a character string, make sure that it's valid: it's non-null,
  * and has nothing but ascii characters:
  */
 int OSPPValidateAsciiString(unsigned char *ospvAlnumStr);
 
-/* 
+/*
  * Given a string of digits, make sure that it's valid: it's non-null,
  * and has nothing but digits.
  */
 int OSPPValidateDigitString(unsigned char *ospvDigitStr);
 
-/* 
+/*
  * Given an ASN1 object that represents an X.509 certificate, store its
  * subjectPublicKeyInfo in the outbound ospvPublicKeyOut structure.
  * This subjectPublicKeyInfo will be compared against what we get from
  * the server in the form of a certificate; if they match, then the
  * certificate may be ok - otherwise, the certificate is bogus.
  *
- * Input: references to the input certificate and the outgoing 
+ * Input: references to the input certificate and the outgoing
  *        subjectPublicKeyInfo
  *
  * Output: If the subjectPublicKeyInfo can be found, then it should be
@@ -334,16 +334,16 @@ int OSPPValidateDigitString(unsigned char *ospvDigitStr);
  */
 int OSPPGetPublicKeyInfoFromCert(OSPTASN1OBJECT *ospvCertIn, OSPTASN1OBJECT *ospvPublicKeyOut);
 
-/* 
+/*
  * Given a binary string that represents a PKCS#10 request, create an
  * ASN1 object that contains the subjectPublicKeyInfo of the certificate
  * request. The subjectPublicKeyInfo is found as follows:
  *
- * SEQUENCE CertificateRequest        
- *     SEQUENCE certificateRequestInfo 
- *         INTEGER  version 
- *         SEQUENCE subjectName 
- *         SEQUENCE subjectPublicKeyInfo 
+ * SEQUENCE CertificateRequest
+ *     SEQUENCE certificateRequestInfo
+ *         INTEGER  version
+ *         SEQUENCE subjectName
+ *         SEQUENCE subjectPublicKeyInfo
  *         SEQUENCE attributes
  *     OID signatureAlgorithm
  *     BIT STRING signature
@@ -360,7 +360,7 @@ int OSPPGetPublicKeyInfoFromCert(OSPTASN1OBJECT *ospvCertIn, OSPTASN1OBJECT *osp
  */
 int OSPPGetPublicKeyInfoFromCertReq(unsigned char *ospvCertReqIn, OSPTASN1OBJECT *ospvPublicKeyOut);
 
-/* 
+/*
  * Cleanup the communications manager: its HTTP connections, security manager,
  * and the communications manager itself. The only way that this function
  * will return an error is if the communications manager passed in for deletion

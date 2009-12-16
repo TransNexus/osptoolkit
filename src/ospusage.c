@@ -65,7 +65,7 @@ unsigned OSPPUsageFromElement(  /* returns error code */
                 gotIncrement = OSPC_TRUE;
                 break;
             case OSPC_MELEM_SERVICE:
-                /* we don't do anything with service at this point */
+// TODO: Added ServiceType
                 break;
             case OSPC_MELEM_UNIT:
                 gotUnit = OSPC_TRUE;
@@ -78,7 +78,7 @@ unsigned OSPPUsageFromElement(  /* returns error code */
                 }
                 break;
             case OSPC_MELEM_TERMCAUSE:
-// TODO
+// TODO: Handle TCCode
                 break;
             default:
                 /*

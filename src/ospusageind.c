@@ -902,7 +902,7 @@ void OSPPUsageIndCopyDeviceInfo(    /* nothing returned */
              altinfo1 != OSPC_OSNULL;
              altinfo1 = (OSPT_ALTINFO *)OSPPListNext(ospvList, altinfo1))
         {
-            altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1), OSPPAltInfoGetValue(altinfo1), OSPPAltInfoTypeGetPart(altinfo1));
+            altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1), OSPPAltInfoGetValue(altinfo1), OSPPAltInfoGetPart(altinfo1));
             if (altinfo2 != OSPC_OSNULL) {
                 OSPPListAppend(&ospvUsageInd->ospmUsageIndDeviceInfo, altinfo2);
             }
@@ -943,7 +943,7 @@ void OSPPUsageIndMergeSourceAlt(    /* nothing returned */
             altinfo1 != OSPC_OSNULL;
             altinfo1 = (OSPT_ALTINFO *)OSPPListNext(ospvList2, altinfo1))
         {
-            altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1), OSPPAltInfoGetValue(altinfo1), OSPPAltInfoTypeGetPart(altinfo1));
+            altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1), OSPPAltInfoGetValue(altinfo1), OSPPAltInfoGetPart(altinfo1));
             if (altinfo2 != OSPC_OSNULL) {
                 OSPPListAppend(&ospvUsageInd->ospmUsageIndSourceAlt, altinfo2);
             }
@@ -963,8 +963,8 @@ void OSPPUsageIndMergeSourceAlt(    /* nothing returned */
             altinfo1 != OSPC_OSNULL;
             altinfo1 = (OSPT_ALTINFO *)OSPPListNext(ospvList1, altinfo1))
         {
-            if (OSPPAltInfoTypeGetPart(altinfo1) != OSPC_ALTINFO_TRANSPORT) {
-                altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1), OSPPAltInfoGetValue(altinfo1), OSPPAltInfoTypeGetPart(altinfo1));
+            if (OSPPAltInfoGetPart(altinfo1) != OSPC_ALTINFO_TRANSPORT) {
+                altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1), OSPPAltInfoGetValue(altinfo1), OSPPAltInfoGetPart(altinfo1));
                 if (altinfo2 != OSPC_OSNULL) {
                     OSPPListAppend(&ospvUsageInd-> ospmUsageIndSourceAlt, altinfo2);
                 }
@@ -994,7 +994,7 @@ void OSPPUsageIndCopySourceAlt(     /* nothing returned */
             altinfo1 != OSPC_OSNULL;
             altinfo1 = (OSPT_ALTINFO *)OSPPListNext(ospvList, altinfo1))
         {
-            altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1), OSPPAltInfoGetValue(altinfo1), OSPPAltInfoTypeGetPart(altinfo1));
+            altinfo2 = OSPPAltInfoNew(OSPPAltInfoGetSize(altinfo1), OSPPAltInfoGetValue(altinfo1), OSPPAltInfoGetPart(altinfo1));
             if (altinfo2 != OSPC_OSNULL) {
                 OSPPListAppend(&ospvUsageInd->ospmUsageIndSourceAlt, altinfo2);
             }

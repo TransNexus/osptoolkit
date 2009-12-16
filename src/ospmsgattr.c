@@ -88,17 +88,32 @@ OSPE_MSG_ATTR OSPPMsgAttrGetPart(   /* returns part */
 }
 
 /*
+ * OSPPServiceGetPart() - get an service type from a part name
+ */
+OSPE_SERVICE OSPPServiceGetPart(
+    const char *ospvName)
+{
+    OSPE_MSG_ATTR part = OSPC_SERVICE_UNKNOWN;
+
+    if (ospvName != OSPC_OSNULL) {
+        part = (OSPE_SERVICE)OSPPMsgDescGetPart(ospvName, OSPV_STYPE_DESCS, OSPC_SERVICE_NUMBER);
+    }
+
+    return part;
+}
+
+/*
  * OSPPServiceGetName() - get an service name from a part value
  */
 const char *OSPPServiceGetName(     /* returns pointer to the name */
     OSPE_SERVICE ospvType)
 {
-    const char *ospvName = OSPC_OSNULL;
+    const char *name = OSPC_OSNULL;
 
     if ((ospvType >= OSPC_SERVICE_START) && (ospvType < OSPC_SERVICE_NUMBER)) {
-        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvType, OSPV_STYPE_DESCS, OSPC_SERVICE_NUMBER);
+        name = OSPPMsgDescGetName((OSPT_MSG_PART)ospvType, OSPV_STYPE_DESCS, OSPC_SERVICE_NUMBER);
     }
 
-    return ospvName;
+    return name;
 }
 

@@ -83,13 +83,13 @@ void OSPPDestSetProtocol(   /* nothing returned */
 OSPTBOOL OSPPDestHasNumber( /* returns non-zero if number exists */
     OSPT_DEST *ospvDest)    /* destination effected */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = (ospvDest->ospmDestNumber[0] != '\0');
+        has = (ospvDest->ospmDestNumber[0] != '\0');
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -98,13 +98,13 @@ OSPTBOOL OSPPDestHasNumber( /* returns non-zero if number exists */
 OSPTBOOL OSPPDestHasSrcNumber(  /* returns non-zero if number exists */
     OSPT_DEST *ospvDest)        /* destination effected */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = (ospvDest->ospmSrcNumber[0] != '\0');
+        has = (ospvDest->ospmSrcNumber[0] != '\0');
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -127,13 +127,13 @@ void OSPPDestSetSrcNumber(  /* nothing returned */
 const char *OSPPDestGetSrcNumber(   /* returns number as string */
     OSPT_DEST *ospvDest)            /* destination */
 {
-    const char *ospvNum = OSPC_OSNULL;
+    const char *num = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvNum = ospvDest->ospmSrcNumber;
+        num = ospvDest->ospmSrcNumber;
     }
 
-    return ospvNum;
+    return num;
 }
 
 /*
@@ -156,13 +156,13 @@ void OSPPDestSetNumber(     /* nothing returned */
 const char *OSPPDestGetNumber(  /* returns number as string */
     OSPT_DEST *ospvDest)        /* destination */
 {
-    const char *ospvNum = OSPC_OSNULL;
+    const char *num = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvNum = ospvDest->ospmDestNumber;
+        num = ospvDest->ospmDestNumber;
     }
 
-    return ospvNum;
+    return num;
 }
 
 /*
@@ -171,13 +171,13 @@ const char *OSPPDestGetNumber(  /* returns number as string */
 OSPTBOOL OSPPDestHasAddr(   /* returns non-zero if exists */
     OSPT_DEST *ospvDest)    /* destination in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = (ospvDest->ospmDestAddr[0] != '\0');
+        has = (ospvDest->ospmDestAddr[0] != '\0');
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -200,13 +200,13 @@ void OSPPDestSetAddr(       /* nothing returned */
 const char *OSPPDestGetAddr(    /* returns address as string */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    const char *ospvAddr = OSPC_OSNULL;
+    const char *addr = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvAddr = ospvDest->ospmDestAddr;
+        addr = ospvDest->ospmDestAddr;
     }
 
-    return ospvAddr;
+    return addr;
 }
 
 /*
@@ -215,13 +215,13 @@ const char *OSPPDestGetAddr(    /* returns address as string */
 OSPTBOOL OSPPDestDevHasAddr(    /* returns non-zero if exists */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = (ospvDest->ospmDestDevAddr[0] != '\0');
+        has = (ospvDest->ospmDestDevAddr[0] != '\0');
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -230,13 +230,13 @@ OSPTBOOL OSPPDestDevHasAddr(    /* returns non-zero if exists */
 OSPTBOOL OSPPDestHasNetworkAddr(    /* returns non-zero if exists */
     OSPT_DEST *ospvDest)            /* destination in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = (ospvDest->ospmDestNetworkId[0] != '\0');
+        has = (ospvDest->ospmDestNetworkId[0] != '\0');
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -260,13 +260,13 @@ void OSPPDestSetNetworkAddr(    /* nothing returned */
 const char *OSPPDestGetNetworkAddr( /* returns address as string */
     OSPT_DEST *ospvDest)            /* destination in question */
 {
-    const char *ospvAddr = OSPC_OSNULL;
+    const char *addr = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvAddr = ospvDest->ospmDestNetworkId;
+        addr = ospvDest->ospmDestNetworkId;
     }
 
-    return ospvAddr;
+    return addr;
 }
 
 /*
@@ -289,13 +289,13 @@ void OSPPDestDevSetAddr(    /* nothing returned */
 const char *OSPPDestDevGetAddr( /* returns address as string */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    const char *ospvAddr = OSPC_OSNULL;
+    const char *addr = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvAddr = ospvDest->ospmDestDevAddr;
+        addr = ospvDest->ospmDestDevAddr;
     }
 
-    return ospvAddr;
+    return addr;
 }
 
 /*
@@ -304,13 +304,13 @@ const char *OSPPDestDevGetAddr( /* returns address as string */
 OSPTBOOL OSPPDestHasValidAfter( /* returns non-zero if time */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = (ospvDest->ospmDestValidAfter != OSPC_TIMEMIN);
+        has = (ospvDest->ospmDestValidAfter != OSPC_TIMEMIN);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -331,13 +331,13 @@ void OSPPDestSetValidAfter(     /* nothing returned */
 OSPTTIME OSPPDestGetValidAfter( /* returns the time value */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    OSPTTIME ospvTime = 0;
+    OSPTTIME time = 0;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvTime = ospvDest->ospmDestValidAfter;
+        time = ospvDest->ospmDestValidAfter;
     }
 
-    return ospvTime;
+    return time;
 }
 
 /*
@@ -346,13 +346,13 @@ OSPTTIME OSPPDestGetValidAfter( /* returns the time value */
 OSPTBOOL OSPPDestHasValidUntil( /* returns non-zero if time */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = (ospvDest->ospmDestValidUntil != OSPC_TIMEMAX);
+        has = (ospvDest->ospmDestValidUntil != OSPC_TIMEMAX);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -373,12 +373,13 @@ void OSPPDestSetValidUntil( /* nothing returned */
 OSPTTIME OSPPDestGetValidUntil( /* returns time */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    OSPTTIME ospvTime = 0;
+    OSPTTIME time = 0;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvTime = ospvDest->ospmDestValidUntil;
+        time = ospvDest->ospmDestValidUntil;
     }
-    return ospvTime;
+
+    return time;
 }
 
 /*
@@ -387,13 +388,13 @@ OSPTTIME OSPPDestGetValidUntil( /* returns time */
 OSPTBOOL OSPPDestHasAuthority(  /* returns non-zero if exists */
     OSPT_DEST *ospvDest)        /* destination in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = (ospvDest->ospmDestAuthority[0] != '\0');
+        has = (ospvDest->ospmDestAuthority[0] != '\0');
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -414,32 +415,30 @@ void OSPPDestSetAuthority(  /* nothing returned */
  * OSPPDestHasCallId() - does a destination have a Call ID?
  */
 OSPTBOOL OSPPDestHasCallId( /* returns non-zero if exists */
-    OSPT_DEST *ospvDest     /* destination in question */
-    )
+    OSPT_DEST *ospvDest)    /* destination in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = (ospvDest->ospmDestCallId != OSPC_OSNULL);
+        has = (ospvDest->ospmDestCallId != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPDestGetCallId() - gets the call ID for a destination
  */
 OSPT_CALL_ID *OSPPDestGetCallId(/* returns call ID pointer */
-    OSPT_DEST *ospvDest         /* destination in question */
-    )
+    OSPT_DEST *ospvDest)        /* destination in question */
 {
-    OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
+    OSPT_CALL_ID *callid = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvCallId = ospvDest->ospmDestCallId;
+        callid = ospvDest->ospmDestCallId;
     }
 
-    return ospvCallId;
+    return callid;
 }
 
 /*
@@ -448,13 +447,13 @@ OSPT_CALL_ID *OSPPDestGetCallId(/* returns call ID pointer */
 OSPTBOOL OSPPDestHasToken(  /* returns non-zero if exists */
     OSPT_DEST *ospvDest)    /* destination in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = (OSPPListFirst(&(ospvDest->ospmDestTokens)) != OSPC_OSNULL);
+        has = (OSPPListFirst(&(ospvDest->ospmDestTokens)) != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -475,13 +474,13 @@ void OSPPDestAddToken(      /* nothing returned */
 OSPTTOKEN *OSPPDestFirstToken(  /* returns null if none */
     OSPT_DEST *ospvDest)
 {
-    OSPTTOKEN *ospvToken = OSPC_OSNULL;
+    OSPTTOKEN *token = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvToken = (OSPTTOKEN *)OSPPListFirst(&ospvDest->ospmDestTokens);
+        token = (OSPTTOKEN *)OSPPListFirst(&ospvDest->ospmDestTokens);
     }
 
-    return ospvToken;
+    return token;
 }
 
 /*
@@ -491,15 +490,15 @@ OSPTTOKEN *OSPPDestNextToken(   /* returns NULL if no more */
     OSPT_DEST *ospvDest,        /* destination in question */
     OSPTTOKEN *ospvToken)       /* current token */
 {
-    OSPTTOKEN *ospvNextToken = OSPC_OSNULL;
+    OSPTTOKEN *token = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) {
         if (ospvToken != OSPC_OSNULL) {
-            ospvToken = (OSPTTOKEN *)OSPPListNext(&ospvDest->ospmDestTokens, ospvToken);
+            token = (OSPTTOKEN *)OSPPListNext(&ospvDest->ospmDestTokens, ospvToken);
         }
     }
 
-    return ospvNextToken;
+    return token;
 }
 
 /*
@@ -508,13 +507,13 @@ OSPTTOKEN *OSPPDestNextToken(   /* returns NULL if no more */
 OSPTBOOL OSPPDestHasLimit(  /* returns non-zero if limit */
     OSPT_DEST *ospvDest)    /* destination in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = ospvDest->ospmDestHasLimit;
+        has = ospvDest->ospmDestHasLimit;
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -536,13 +535,13 @@ void OSPPDestSetLimit(      /* nothing returned */
 unsigned OSPPDestGetLimit(  /* returns usage limit */
     OSPT_DEST *ospvDest)    /* destination in question */
 {
-    unsigned ospvLimit = 0;
+    unsigned limit = 0;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvLimit = ospvDest->ospmDestLimit;
+        limit = ospvDest->ospmDestLimit;
     }
 
-    return ospvLimit;
+    return limit;
 }
 
 /*
@@ -552,13 +551,13 @@ OSPTBOOL OSPPDestHasTermCause(      /* returns non-zero if time */
     OSPT_DEST *ospvDest,            /* dest in question */
     OSPE_TERM_CAUSE ospvType)       /* Termiantion cause type */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = OSPPHasTermCause(&ospvDest->ospmDestTermCause, ospvType);
+        has = OSPPHasTermCause(&ospvDest->ospmDestTermCause, ospvType);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -567,13 +566,13 @@ OSPTBOOL OSPPDestHasTermCause(      /* returns non-zero if time */
 OSPTBOOL OSPPDestHasTermCauseAny(   /* returns non-zero if time */
     OSPT_DEST *ospvDest)            /* dest in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvHas = OSPPHasTermCauseAny(&ospvDest->ospmDestTermCause);
+        has = OSPPHasTermCauseAny(&ospvDest->ospmDestTermCause);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -596,13 +595,13 @@ void OSPPDestSetTermCause(  /* nothing returned */
 OSPT_TERM_CAUSE *OSPPDestGetTermCause(
     OSPT_DEST *ospvDest)    /* destination */
 {
-    OSPT_TERM_CAUSE *ospvTermCause = OSPC_OSNULL;
+    OSPT_TERM_CAUSE *cause = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvTermCause = &ospvDest->ospmDestTermCause;
+        cause = &ospvDest->ospmDestTermCause;
     }
 
-    return ospvTermCause;
+    return cause;
 }
 
 /*
@@ -612,13 +611,13 @@ unsigned OSPPDestGetTCCode(
     OSPT_DEST *ospvDest,        /* destination */
     OSPE_TERM_CAUSE ospvType)   /* fail reasion type */
 {
-    unsigned ospvTCCode = 0;
+    unsigned code = 0;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvTCCode = OSPPGetTCCode(&ospvDest->ospmDestTermCause, ospvType);
+        code = OSPPGetTCCode(&ospvDest->ospmDestTermCause, ospvType);
     }
 
-    return ospvTCCode;
+    return code;
 }
 
 /*
@@ -628,13 +627,13 @@ const char *OSPPDestGetTCDesc(
     OSPT_DEST *ospvDest,        /* destination */
     OSPE_TERM_CAUSE ospvType)   /* fail reasion type */
 {
-    const char *ospvTCDesc = OSPC_OSNULL;
+    const char *desc = OSPC_OSNULL;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvTCDesc = OSPPGetTCDesc(&ospvDest->ospmDestTermCause, ospvType);
+        desc = OSPPGetTCDesc(&ospvDest->ospmDestTermCause, ospvType);
     }
 
-    return ospvTCDesc;
+    return desc;
 }
 
 /*
@@ -642,26 +641,26 @@ const char *OSPPDestGetTCDesc(
  */
 OSPT_DEST *OSPPDestNew(void)    /* returns pointer or NULL */
 {
-    OSPT_DEST *ospvDest = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
 
-    OSPM_MALLOC(ospvDest, OSPT_DEST, sizeof(OSPT_DEST));
+    OSPM_MALLOC(dest, OSPT_DEST, sizeof(OSPT_DEST));
 
-    if (ospvDest != OSPC_OSNULL) {
+    if (dest != OSPC_OSNULL) {
         /* start with setting all to 0 */
-        OSPM_MEMSET(ospvDest, 0, sizeof(OSPT_DEST));
-        OSPPListLinkNew(&(ospvDest->ospmDestLink));
-        ospvDest->ospmDestValidAfter = OSPC_TIMEMIN;
-        ospvDest->ospmDestValidUntil = OSPC_TIMEMAX;
-        ospvDest->ospmDestProtocol = OSPC_DPROT_UNDEFINED;
-        ospvDest->ospmDestOSPVersion = OSPC_DOSP_UNDEFINED;
-        OSPPListNew(&(ospvDest->ospmDestTokens));
-        OSPPListNew(&(ospvDest->ospmUpdatedSourceAddr));
-        OSPPListNew(&(ospvDest->ospmUpdatedDeviceInfo));
-        ospvDest->ospmDestHasLimit = OSPC_FALSE;
-        ospvDest->ospmDestDestinationCount = 0;
+        OSPM_MEMSET(dest, 0, sizeof(OSPT_DEST));
+        OSPPListLinkNew(&(dest->ospmDestLink));
+        dest->ospmDestValidAfter = OSPC_TIMEMIN;
+        dest->ospmDestValidUntil = OSPC_TIMEMAX;
+        dest->ospmDestProtocol = OSPC_DPROT_UNDEFINED;
+        dest->ospmDestOSPVersion = OSPC_DOSP_UNDEFINED;
+        OSPPListNew(&(dest->ospmDestTokens));
+        OSPPListNew(&(dest->ospmUpdatedSourceAddr));
+        OSPPListNew(&(dest->ospmUpdatedDeviceInfo));
+        dest->ospmDestHasLimit = OSPC_FALSE;
+        dest->ospmDestDestinationCount = 0;
     }
 
-    return ospvDest;
+    return dest;
 }
 
 /*
@@ -670,7 +669,6 @@ OSPT_DEST *OSPPDestNew(void)    /* returns pointer or NULL */
 void OSPPDestDelete(
     OSPT_DEST **ospvDest)
 {
-    /*   OSPTTOKEN *token, *otoken = OSPC_OSNULL; */
     OSPTTOKEN *tmptoken = OSPC_OSNULL;
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
@@ -714,31 +712,30 @@ void OSPPDestDelete(
 /*
  * OSPPDestFromElement() - get destination from an XML element
  */
-unsigned OSPPDestFromElement(   /* returns error code */
+int OSPPDestFromElement(        /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* input is XML element */
     OSPT_DEST **ospvDest)       /* where to put destination pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    int error = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
     OSPTTOKEN *token = OSPC_OSNULL;
-    OSPT_CALL_ID *callId = OSPC_OSNULL;
-    unsigned limit = 0;
+    OSPT_CALL_ID *callid = OSPC_OSNULL;
     unsigned long failure = 0L;
     OSPTTIME t = 0L;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        error = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvDest == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_DATA_NO_DEST;
+        error = OSPC_ERR_DATA_NO_DEST;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (error == OSPC_ERR_NO_ERROR) {
         /* create the destination object */
         dest = OSPPDestNew();
         if (dest == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_DATA_NO_DEST;
+            error = OSPC_ERR_DATA_NO_DEST;
         }
 
         /*
@@ -746,11 +743,9 @@ unsigned OSPPDestFromElement(   /* returns error code */
          * elements. We'll run through what's there and pick out
          * the information we need.
          */
-
-        for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
-            (elem != OSPC_OSNULL) &&
-            (ospvErrCode == OSPC_ERR_NO_ERROR);
-            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem))
+        for (elem = OSPPXMLElemFirstChild(ospvElem);
+            (elem != OSPC_OSNULL) && (error == OSPC_ERR_NO_ERROR);
+            elem = OSPPXMLElemNextChild(ospvElem, elem))
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_DESTPROTOCOL:
@@ -774,53 +769,48 @@ unsigned OSPPDestFromElement(   /* returns error code */
                 OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_TOKEN:
-                ospvErrCode = OSPPTokenFromElement(elem, &token);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if ((error = OSPPTokenFromElement(elem, &token)) == OSPC_ERR_NO_ERROR) {
                     OSPPDestAddToken(dest, token);
                 }
                 break;
             case OSPC_MELEM_VALIDAFTER:
                 t = 0;
                 if (*(OSPPXMLElemGetValue(elem)) != 0) {
-                    ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
+                    error = OSPPMsgTimeFromElement(elem, &t);
                 } else {
                     t = OSPC_TIMEMIN;
                 }
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if (error == OSPC_ERR_NO_ERROR) {
                     OSPPDestSetValidAfter(dest, t);
                 }
                 break;
             case OSPC_MELEM_VALIDUNTIL:
                 t = 0;
                 if (*(OSPPXMLElemGetValue(elem)) != 0) {
-                    ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
+                    error = OSPPMsgTimeFromElement(elem, &t);
                 } else {
                     t = OSPC_TIMEMAX;
                 }
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if (error == OSPC_ERR_NO_ERROR) {
                     OSPPDestSetValidUntil(dest, t);
                 }
                 break;
             case OSPC_MELEM_USAGEDETAIL:
-                ospvErrCode = OSPPUsageFromElement(elem, &limit);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                    OSPPDestSetLimit(dest, limit);
-                }
+                error = OSPPUsageDetailFromElement(elem, dest);
                 break;
             case OSPC_MELEM_AUTHURL:
                 OSPPDestSetAuthority(dest, OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_CALLID:
-                ospvErrCode = OSPPCallIdFromElement(elem, &callId);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                    OSPPDestSetCallId(dest, callId->ospmCallIdVal, callId->ospmCallIdLen);
-                    OSPPCallIdDelete(&callId);
+                if ((error = OSPPCallIdFromElement(elem, &callid)) == OSPC_ERR_NO_ERROR) {
+                    OSPPDestSetCallId(dest, callid->ospmCallIdVal, callid->ospmCallIdLen);
+                    OSPPCallIdDelete(&callid);
                 }
                 break;
-// TODO
             case OSPC_MELEM_TERMCAUSE:
-                ospvErrCode = OSPPMsgNumFromElement(elem, &failure);
-                OSPPDestSetTermCause(dest, OSPC_TCAUSE_Q850, (unsigned)failure, OSPC_OSNULL);
+                if ((error = OSPPMsgNumFromElement(elem, &failure)) == OSPC_ERR_NO_ERROR) {
+                    OSPPDestSetTermCause(dest, OSPC_TCAUSE_Q850, (unsigned)failure, OSPC_OSNULL);
+                }
                 break;
             default:
                 /*
@@ -829,18 +819,18 @@ unsigned OSPPDestFromElement(   /* returns error code */
                  * Otherwise we can ignore it.
                  */
                 if (OSPPMsgElemIsCritical(elem)) {
-                    ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
+                    error = OSPC_ERR_XML_BAD_ELEMENT;
                 }
                 break;
             }
         }
 
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        if (error == OSPC_ERR_NO_ERROR) {
             *ospvDest = dest;
         }
     }
 
-    return ospvErrCode;
+    return error;
 }
 
 /*
@@ -870,39 +860,40 @@ void OSPPDestSetDestinationCount(
     }
 }
 
-unsigned OSPPDestGetDestinationCount(OSPT_DEST *ospvDest)
+unsigned OSPPDestGetDestinationCount(
+    OSPT_DEST *ospvDest)
 {
-    unsigned ospvTheValue = 0;
+    unsigned value = 0;
 
     if (ospvDest != OSPC_OSNULL) {
-        ospvTheValue = ospvDest->ospmDestDestinationCount;
+        value = ospvDest->ospmDestDestinationCount;
     }
 
-    return ospvTheValue;
+    return value;
 }
 
 OSPE_DEST_PROTOCOL OSPPDestProtocolGetPart(
     const char *ospvName)
 {
-    OSPE_DEST_PROTOCOL ospvPart = OSPC_DPROT_UNKNOWN;
+    OSPE_DEST_PROTOCOL part = OSPC_DPROT_UNKNOWN;
 
     if (ospvName != OSPC_OSNULL) {
-        ospvPart = (OSPE_DEST_PROTOCOL)OSPPMsgDescGetPart(ospvName, OSPV_DPROT_DESCS, OSPC_DPROT_NUMBER);
+        part = (OSPE_DEST_PROTOCOL)OSPPMsgDescGetPart(ospvName, OSPV_DPROT_DESCS, OSPC_DPROT_NUMBER);
     }
 
-    return ospvPart;
+    return part;
 }
 
 const char *OSPPDestProtocolGetName(
     OSPE_DEST_PROTOCOL ospvPart)
 {
-    const char *ospvName = OSPC_OSNULL;
+    const char *name = OSPC_OSNULL;
 
     if ((ospvPart >= OSPC_DPROT_START) && (ospvPart < OSPC_DPROT_NUMBER)) {
-        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_DPROT_DESCS, OSPC_DPROT_NUMBER);
+        name = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_DPROT_DESCS, OSPC_DPROT_NUMBER);
     }
 
-    return ospvName;
+    return name;
 }
 
 void OSPPDestInfoFromElement(
@@ -910,49 +901,154 @@ void OSPPDestInfoFromElement(
     OSPT_DEST *ospvDest)
 {
     OSPT_XML_ATTR* attr = OSPC_OSNULL;
-    const char* type;
 
     for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElem);
         (attr != OSPC_OSNULL);
         attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElem, attr))
     {
-        type = OSPPXMLAttrGetValue(attr);
-        if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_E164)) == 0) {
-            OSPM_STRNCPY(ospvDest->ospmDestNumber, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmDestNumber) - 1);
-        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_NPRN)) == 0) {
-            OSPM_STRNCPY(ospvDest->ospmNPRn, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPRn) - 1);
-        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_NPCIC)) == 0) {
-            OSPM_STRNCPY(ospvDest->ospmNPCic, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPCic) - 1);
-        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_NPDI)) == 0) {
-            if (OSPM_STRCASECMP(OSPPXMLElemGetValue(ospvElem), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE)) == 0) {
-                ospvDest->ospmNPNpdi = OSPC_TRUE;
-            } else {
-                ospvDest->ospmNPNpdi = OSPC_FALSE;
+        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_TYPE) {
+            switch (OSPPAltInfoTypeGetPart(OSPPXMLAttrGetValue(attr))) {
+            case OSPC_ALTINFO_E164:
+                OSPM_STRNCPY(ospvDest->ospmDestNumber, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmDestNumber) - 1);
+                break;
+            case OSPC_ALTINFO_NPRN:
+                OSPM_STRNCPY(ospvDest->ospmNPRn, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPRn) - 1);
+                break;
+            case OSPC_ALTINFO_NPCIC:
+                OSPM_STRNCPY(ospvDest->ospmNPCic, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmNPCic) - 1);
+                break;
+            case OSPC_ALTINFO_NPDI:
+                if (OSPM_STRCASECMP(OSPPXMLElemGetValue(ospvElem), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE)) == 0) {
+                    ospvDest->ospmNPNpdi = OSPC_TRUE;
+                } else {
+                    ospvDest->ospmNPNpdi = OSPC_FALSE;
+                }
+                break;
+            case OSPC_ALTINFO_SPID:
+                OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_SPID], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmOpName[OSPC_OPNAME_SPID]) - 1);
+                break;
+            case OSPC_ALTINFO_OCN:
+                OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_OCN], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmOpName[OSPC_OPNAME_OCN]) - 1);
+                break;
+            case OSPC_ALTINFO_SPN:
+                OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_SPN], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmOpName[OSPC_OPNAME_SPN]) - 1);
+                break;
+            case OSPC_ALTINFO_ALTSPN:
+                OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_ALTSPN], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmOpName[OSPC_OPNAME_ALTSPN]) - 1);
+                break;
+            case OSPC_ALTINFO_MCC:
+                OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_MCC], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmOpName[OSPC_OPNAME_MCC]) - 1);
+                break;
+            case OSPC_ALTINFO_MNC:
+                OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_MNC], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->ospmOpName[OSPC_OPNAME_MNC]) - 1);
+                break;
+            default:
+                break;
             }
-        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_SPID)) == 0) {
-            OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_SPID],
-                OSPPXMLElemGetValue(ospvElem),
-                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_SPID]) - 1);
-        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_OCN)) == 0) {
-            OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_OCN],
-                OSPPXMLElemGetValue(ospvElem),
-                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_OCN]) - 1);
-        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_SPN)) == 0) {
-            OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_SPN],
-                OSPPXMLElemGetValue(ospvElem),
-                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_SPN]) - 1);
-        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_ALTSPN)) == 0) {
-            OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_ALTSPN],
-                OSPPXMLElemGetValue(ospvElem),
-                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_ALTSPN]) - 1);
-        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_MCC)) == 0) {
-            OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_MCC],
-                OSPPXMLElemGetValue(ospvElem),
-                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_MCC]) - 1);
-        } else if (OSPM_STRCMP(type, OSPPAltInfoTypeGetName(OSPC_ALTINFO_MNC)) == 0) {
-            OSPM_STRNCPY(ospvDest->ospmOpName[OSPC_OPNAME_MNC],
-                OSPPXMLElemGetValue(ospvElem),
-                sizeof(ospvDest->ospmOpName[OSPC_OPNAME_MNC]) - 1);
+        }
+    }
+}
+
+int OSPPUsageDetailFromElement(
+    OSPT_XML_ELEM *ospvElem,
+    OSPT_DEST *ospvDest)
+{
+    int error = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPTBOOL hasamount = OSPC_FALSE;
+    OSPTBOOL hasincrement = OSPC_FALSE;
+    OSPTBOOL hasunit = OSPC_FALSE;
+    unsigned long amount = 0;
+    unsigned long increment = 0;
+
+    if (ospvElem == OSPC_OSNULL) {
+        error = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (error == OSPC_ERR_NO_ERROR) {
+        if (ospvDest == OSPC_OSNULL) {
+            error = OSPC_ERR_DATA_NO_DEST;
+        }
+    }
+
+    if (error == OSPC_ERR_NO_ERROR) {
+        for (elem = OSPPXMLElemFirstChild(ospvElem);
+            (elem != OSPC_OSNULL) && (error == OSPC_ERR_NO_ERROR);
+            elem = OSPPXMLElemNextChild(ospvElem, elem))
+        {
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
+            case OSPC_MELEM_AMOUNT:
+                if ((error = OSPPMsgNumFromElement(elem, &amount)) == OSPC_ERR_NO_ERROR) {
+                    hasamount = OSPC_TRUE;
+                }
+                break;
+            case OSPC_MELEM_INCREMENT:
+                if ((error = OSPPMsgNumFromElement(elem, &increment)) == OSPC_ERR_NO_ERROR) {
+                    hasincrement = OSPC_TRUE;
+                }
+                break;
+            case OSPC_MELEM_UNIT:
+                /* The only unit we support is seconds. If this is different, then we declare an error. */
+                if (OSPM_STRCMP(OSPPXMLElemGetValue(elem), "s") != 0) {
+                    error = OSPC_ERR_BAD_SERVICE;
+                } else {
+                    hasunit = OSPC_TRUE;
+                }
+                break;
+            case OSPC_MELEM_SERVICE:
+                OSPPServiceFromElement(elem, ospvDest);
+                break;
+            default:
+                /*
+                 * This is an element we don't understand. If it's
+                 * critical, then we have to report an error.
+                 * Otherwise we can ignore it.
+                 */
+                if (OSPPMsgElemIsCritical(elem)) {
+                    error = OSPC_ERR_XML_BAD_ELEMENT;
+                }
+                break;
+            }
+        }
+    }
+
+    if (error == OSPC_ERR_NO_ERROR) {
+        if (hasamount && hasincrement && hasunit) {
+            OSPPDestSetLimit(ospvDest, (unsigned)(increment * amount));
+        } else {
+            error = OSPC_ERR_XML_BAD_ELEMENT;
+        }
+    }
+
+    return error;
+}
+
+void OSPPServiceFromElement(
+    OSPT_XML_ELEM *ospvElem,
+    OSPT_DEST *ospvDest)
+{
+    int error = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPT_XML_ATTR* attr = OSPC_OSNULL;
+
+    for (elem = OSPPXMLElemFirstChild(ospvElem);
+        (elem != OSPC_OSNULL) && (error == OSPC_ERR_NO_ERROR);
+        elem = OSPPXMLElemNextChild(ospvElem, elem))
+    {
+        switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
+        case OSPC_MELEM_SERVICETYPE:
+            for (attr = OSPPXMLElemFirstAttr(elem); (attr != OSPC_OSNULL); attr = OSPPXMLElemNextAttr(elem, attr)) {
+                switch (OSPPServiceGetPart(OSPPXMLAttrGetName(attr))) {
+                case OSPC_SERVICE_NPQUERY:
+                    ospvDest->ospmIsNPQuery = OSPC_TRUE;
+                    break;
+                default:
+                    break;
+                }
+            }
+            break;
+        default:
+            break;
         }
     }
 }

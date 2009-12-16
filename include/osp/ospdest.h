@@ -100,6 +100,7 @@ typedef struct {
     char ospmNPCic[OSPC_SIZE_NORID];
     int ospmNPNpdi;
     char ospmOpName[OSPC_OPNAME_NUMBER][OSPC_SIZE_NORID];
+    OSPTBOOL ospmIsNPQuery;
 } OSPT_DEST;
 
 /* Function Prototypes */
@@ -109,7 +110,7 @@ extern "C" {
 
     OSPT_DEST *OSPPDestNew(void);
     void OSPPDestDelete(OSPT_DEST **);
-    unsigned OSPPDestFromElement(OSPT_XML_ELEM *, OSPT_DEST **);
+    int OSPPDestFromElement(OSPT_XML_ELEM *, OSPT_DEST **);
     void OSPPDestSetCallId(OSPT_DEST *, const unsigned char *, unsigned);
     void OSPPDestSetProtocol(OSPT_DEST *, const char *);
     void OSPPDestSetOSPVersion(OSPT_DEST *, const char *);
@@ -156,6 +157,8 @@ extern "C" {
     OSPE_DEST_PROTOCOL OSPPDestProtocolGetPart(const char *);
     const char *OSPPDestProtocolGetName(OSPE_DEST_PROTOCOL);
     void OSPPDestInfoFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
+    int OSPPUsageDetailFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
+    void OSPPServiceFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
 
 #ifdef __cplusplus
 }

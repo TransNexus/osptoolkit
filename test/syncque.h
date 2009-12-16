@@ -17,9 +17,9 @@
 
 /*
  *  syncque.h - Structures and prototypes for sync queue object.
- *  
+ *
  *  This module implements a MT Safe Queue.  It provides a non-blocking
- *  method - SyncQueueAddTransaction - for producers to add transactions 
+ *  method - SyncQueueAddTransaction - for producers to add transactions
  *  to the queue, and a blocking method - SyncQueueRemoveTransaction -
  *  for consumers to remove transactions from the queue.
  *  SyncQueueBlockWhileNotEmpty - allows the caller to wait while all

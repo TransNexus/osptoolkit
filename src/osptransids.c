@@ -155,7 +155,7 @@
 /* OSPPTransIdAdd - add a transaction ID to the ordered tree */
 OSPTBOOL OSPPTransIdAdd(        /* returns false if duplicate */
     OSPTTRANSID *ospvTransId,   /* transaction ID to add */
-    OSPTPROVIDER *ospvProvider) 
+    OSPTPROVIDER *ospvProvider)
 {
     OSPTTRANSID **root = OSPC_OSNULL;
 
@@ -230,7 +230,7 @@ OSPTBOOL OSPPTransIdAdd(        /* returns false if duplicate */
 OSPTBOOL OSPPTransIdCheckAndAdd(    /* returns false if addition fails */
     OSPTUINT64 ospvTransId,         /* transaction ID value */
     unsigned long ospvExpires,      /* expiration time in seconds */
-    OSPTPROVIDER *ospvProvider) 
+    OSPTPROVIDER *ospvProvider)
 {
     OSPTTRANSID *ptransid = OSPC_OSNULL;    /* pointer to Transaction ID */
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -518,7 +518,7 @@ unsigned long OSPPTransIdSecNow(void)   /* returns current time in seconds */
 /* OSPPTransIdTimeAdd - add transaction in time-ordered linked list */
 void  OSPPTransIdTimeAdd(       /* no return value */
     OSPTTRANSID *ospvTransId,   /* transaction ID to add */
-    OSPTPROVIDER *ospvProvider) 
+    OSPTPROVIDER *ospvProvider)
 {
     OSPTTRANSID *curr = OSPC_OSNULL;    /* current position on list */
     OSPTTRANSID *sentinel = OSPPProviderGetTransIdSentinel(ospvProvider);
@@ -613,7 +613,7 @@ void tnTransById(   /* no return value */
 
 #ifdef TN_TRANSDBG
 void tnPrintTree(
-    OSPTTRANSID *pTrans) 
+    OSPTTRANSID *pTrans)
 {
     char buf[30];
 

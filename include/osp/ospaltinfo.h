@@ -94,7 +94,8 @@ extern "C" {
     unsigned OSPPAltInfoGetSize(OSPT_ALTINFO *);
     const char *OSPPAltInfoGetValue(OSPT_ALTINFO *);
     unsigned OSPPAltInfoToElement(OSPT_ALTINFO *, OSPT_XML_ELEM **, OSPE_MSG_ELEM);
-    OSPE_ALTINFO OSPPAltInfoTypeGetPart(OSPT_ALTINFO *);
+    OSPE_ALTINFO OSPPAltInfoGetPart(OSPT_ALTINFO *);
+    OSPE_ALTINFO OSPPAltInfoTypeGetPart(const char *);
     const char *OSPPAltInfoTypeGetName(OSPE_ALTINFO);
 
 #ifdef __cplusplus

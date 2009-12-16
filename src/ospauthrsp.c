@@ -387,7 +387,7 @@ unsigned OSPPAuthRspFromElement(
     OSPT_XML_ELEM *ospvElem,        /* input is XML element */
     OSPT_AUTH_RSP **ospvAuthRsp)    /* where to put authorisation response pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned error = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM* elem = OSPC_OSNULL;
     OSPT_AUTH_RSP* authrsp = OSPC_OSNULL;
     OSPT_DEST* dest = OSPC_OSNULL;
@@ -401,14 +401,14 @@ unsigned OSPPAuthRspFromElement(
     OSPT_XML_ELEM *ospvParent = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        error = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (error == OSPC_ERR_NO_ERROR) {
         /* create the authorisation response object */
         authrsp = OSPPAuthRspNew();
         if (authrsp == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_DATA_NO_AUTHRSP;
+            error = OSPC_ERR_DATA_NO_AUTHRSP;
         } else {
             if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem))==OSPC_MELEM_MESSAGE) {
                 OSPPAuthRspMessageIdFromElement(ospvElem, &messageId);
@@ -436,9 +436,8 @@ unsigned OSPPAuthRspFromElement(
          * child elements. We'll run through what's there and pick out
          * the information we need.
          */
-
         for (elem = (OSPT_XML_ELEM*)OSPPXMLElemFirstChild(ospvElem);
-            (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            (elem != OSPC_OSNULL) && (error == OSPC_ERR_NO_ERROR);
             elem = (OSPT_XML_ELEM*)OSPPXMLElemNextChild(ospvElem, elem))
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
@@ -449,9 +448,7 @@ unsigned OSPPAuthRspFromElement(
                 }
                 break;
 
-            /*
-             * OSPC_MELEM_AUTHRZP -- OSP Stds spell Authorization not Authorisation
-             */
+            /* OSPC_MELEM_AUTHRZP -- OSP Stds spell Authorization not Authorisation */
             case OSPC_MELEM_AUTHRZP:
             case OSPC_MELEM_AUTHRSP:
                 OSPPAuthRspComponentIdFromElement(elem, &compid);
@@ -460,8 +457,7 @@ unsigned OSPPAuthRspFromElement(
                 }
                 break;
             case OSPC_MELEM_TIMESTAMP:
-                ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if ((error = OSPPMsgTimeFromElement(elem, &t)) == OSPC_ERR_NO_ERROR) {
                     OSPPAuthRspSetTimestamp(authrsp,t);
                 }
                 break;
@@ -469,30 +465,32 @@ unsigned OSPPAuthRspFromElement(
                 if (authrsp->ospmAuthRspStatus != OSPC_OSNULL) {
                     OSPPStatusDelete(&(authrsp->ospmAuthRspStatus));
                 }
-                ospvErrCode = OSPPStatusFromElement(elem, &(authrsp->ospmAuthRspStatus));
+                error = OSPPStatusFromElement(elem, &(authrsp->ospmAuthRspStatus));
                 break;
             case OSPC_MELEM_TRANSID:
                 len = sizeof(OSPTTRXID);
-                ospvErrCode = OSPPMsgTXFromElement(elem, &transid);
-                OSPPAuthRspSetTrxId(authrsp, transid);
+                if ((error = OSPPMsgTXFromElement(elem, &transid)) == OSPC_ERR_NO_ERROR) {
+                    OSPPAuthRspSetTrxId(authrsp, transid);
+                }
                 break;
             case OSPC_MELEM_DELAYLIMIT:
-                ospvErrCode = OSPPMsgNumFromElement(elem, &delaylimit);
-                OSPPAuthRspSetDelayLimit(authrsp, (unsigned)delaylimit);
+                if ((error = OSPPMsgNumFromElement(elem, &delaylimit)) == OSPC_ERR_NO_ERROR) {
+                    OSPPAuthRspSetDelayLimit(authrsp, (unsigned)delaylimit);
+                }
                 break;
             case OSPC_MELEM_AUDIT:
-                ospvErrCode = OSPPTNAuditFromElement(elem, &(authrsp->ospmAuthRspTNAudit));
+                error = OSPPTNAuditFromElement(elem, &(authrsp->ospmAuthRspTNAudit));
                 break;
             case OSPC_MELEM_CSAUDITTRIGGER:
-                ospvErrCode = OSPPCSAuditFromElement(elem, &(authrsp->ospmAuthRspCSAudit));
+                error = OSPPCSAuditFromElement(elem, &(authrsp->ospmAuthRspCSAudit));
                 break;
             case OSPC_MELEM_DELAYPREF:
-                ospvErrCode = OSPPMsgNumFromElement(elem, &delaypref);
-                OSPPAuthRspSetDelayPref(authrsp, (unsigned)delaypref);
+                if ((error = OSPPMsgNumFromElement(elem, &delaypref)) == OSPC_ERR_NO_ERROR) {
+                    OSPPAuthRspSetDelayPref(authrsp, (unsigned)delaypref);
+                }
                 break;
             case OSPC_MELEM_DEST:
-                ospvErrCode = OSPPDestFromElement(elem, &dest);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if ((error = OSPPDestFromElement(elem, &dest)) == OSPC_ERR_NO_ERROR) {
                     if (dest != OSPC_OSNULL) {
                         OSPPAuthRspAddDest(authrsp,dest);
                         OSPPAuthRspIncNumDests(authrsp);
@@ -507,18 +505,18 @@ unsigned OSPPAuthRspFromElement(
                  * Otherwise we can ignore it.
                  */
                 if (OSPPMsgElemIsCritical(elem)) {
-                    ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
+                    error = OSPC_ERR_XML_BAD_ELEMENT;
                 }
                 break;
             }
         }
 
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        if (error == OSPC_ERR_NO_ERROR) {
             *ospvAuthRsp = authrsp;
         }
     }
 
-    return ospvErrCode;
+    return error;
 }
 
 OSPTCSAUDIT* OSPPAuthRspGetCSAudit(

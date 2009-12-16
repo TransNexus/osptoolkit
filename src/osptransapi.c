@@ -2544,8 +2544,8 @@ int OSPPTransactionReinitializeAtDevice(
                 OSPPDestSetTermCause(trans->CurrentDest, OSPC_TCAUSE_Q850, ospvFailureReason, OSPC_OSNULL);
                 /* now build new dest */
                 errorcode = OSPPTransactionResponseBuild(trans,
-                                                         ospvDestination, ospvCallingNumber, ospvSizeOfCallId,
-                                                         ospvCallId, ospvSizeOfToken, ospvToken);
+                    ospvDestination, ospvCallingNumber, ospvSizeOfCallId,
+                    ospvCallId, ospvSizeOfToken, ospvToken);
             } else {
                 errorcode = OSPC_ERR_TRAN_NOT_IMPLEMENTED;
                 OSPM_DBGERRORLOG(errorcode, "Invalid system type.");
@@ -2996,7 +2996,7 @@ int OSPPTransactionRequestAuthorisation(
     unsigned *ospvSizeOfDetailLog,              /* In/Out - Max size of detail log Actual size of detail log */
     void *ospvDetailLog)                        /* In/Out - Location of detail log storage */
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int error = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
     OSPT_MSG_INFO *msginfo = OSPC_OSNULL;
     unsigned char *xmldoc = OSPC_OSNULL;
@@ -3004,7 +3004,7 @@ int OSPPTransactionRequestAuthorisation(
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
     OSPT_TN_PROBE *probelist = OSPC_OSNULL, *tmpprobe = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
-    register unsigned probecnt = 0;
+    unsigned probecnt = 0;
     OSPTSVCPT *svcpt = OSPC_OSNULL;
     unsigned tmpNumberOfCallIds = 0;
     OSPT_CALL_ID **tmpCallIds = OSPC_OSNULL;
@@ -3015,12 +3015,14 @@ int OSPPTransactionRequestAuthorisation(
         (ospvCalledNumber == OSPC_OSNULL) ||
         ((ospvNumberOfCallIds != 0) && ((ospvCallIds == OSPC_OSNULL) || (ospvCallIds[0] == OSPC_OSNULL))) ||
         ((ospvCallingNumberFormat < OSPC_NFORMAT_START) || (ospvCallingNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
-        ((ospvCalledNumberFormat < OSPC_NFORMAT_START) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) || (ospvNumberOfDestinations == 0)) {
-        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+        ((ospvCalledNumberFormat < OSPC_NFORMAT_START) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
+        (ospvNumberOfDestinations == 0))
+    {
+        error = OSPC_ERR_TRAN_INVALID_ENTRY;
         OSPM_DBGERRORLOG(errorcode, "Invalid input for RequestAuthorisation");
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR) {
+    if (error == OSPC_ERR_NO_ERROR) {
         if (ospvNumberOfCallIds == 0) {
             tmpNumberOfCallIds = OSPC_UNDEFINED_CALLID_NUM;
             tmpCallIds = undefinedCallIds;
@@ -3029,59 +3031,53 @@ int OSPPTransactionRequestAuthorisation(
             tmpCallIds = ospvCallIds;
 
 /* Relax the number of call ids check for Emergent's two call ids solution */
-/*
+#if 0
             if ((ospvNumberOfCallIds > 1) && (ospvNumberOfCallIds != *ospvNumberOfDestinations)) {
                 errorcode = OSPC_ERR_TRAN_CALLID_DEST_MISMATCH;
                 OSPM_DBGERRORLOG(errorcode, "number of callids != number of dests sent in.");
             }
-*/
+#endif
         }
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    if (error == OSPC_ERR_NO_ERROR) {
+        trans = OSPPTransactionGetContext(ospvTransaction, &error);
 
         /* Check Callids */
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (error == OSPC_ERR_NO_ERROR) {
 
             /* if there is an authreq here already, we have an error */
             if (trans->AuthReq == OSPC_OSNULL) {
 
                 /* Build Auth request */
-                errorcode = OSPPTransactionRequestNew(trans,
+                error = OSPPTransactionRequestNew(trans,
                     ospvSource, ospvSourceDevice, ospvCallingNumber,
                     ospvCalledNumber, ospvUser, tmpNumberOfCallIds,
                     tmpCallIds, ospvPreferredDestinations,
                     ospvNumberOfDestinations, ospvSizeOfDetailLog, ospvDetailLog);
-
-                if (errorcode == OSPC_ERR_NO_ERROR) {
+                if (error == OSPC_ERR_NO_ERROR) {
                     trans->CallingNumberFormat = ospvCallingNumberFormat;
                     trans->CalledNumberFormat = ospvCalledNumberFormat;
 
-                    errorcode = OSPPXMLMessageCreate(OSPC_MSG_AREQ, &xmldoc, &sizeofxmldoc, trans->AuthReq, trans);
-                    if (errorcode == OSPC_ERR_NO_ERROR) {
-
-                        errorcode = OSPPMsgInfoNew(&msginfo);
-
-                        if (errorcode == OSPC_ERR_NO_ERROR) {
+                    error = OSPPXMLMessageCreate(OSPC_MSG_AREQ, &xmldoc, &sizeofxmldoc, trans->AuthReq, trans);
+                    if (error == OSPC_ERR_NO_ERROR) {
+                        if ((error = OSPPMsgInfoNew(&msginfo)) == OSPC_ERR_NO_ERROR) {
                             /* Set transaction state */
                             OSPPTransactionSetState(trans, OSPC_AUTH_REQUEST_BLOCK);
 
-                            errorcode = OSPPTransactionPrepareAndQueMessage(trans, xmldoc, sizeofxmldoc, &msginfo);
-
-                            if (errorcode == OSPC_ERR_NO_ERROR) {
-                                errorcode = OSPPTransactionProcessReturn(trans, msginfo);
-
-                                if ((errorcode == OSPC_ERR_NO_ERROR) && (trans->AuthRsp != OSPC_OSNULL)) {
+                            error = OSPPTransactionPrepareAndQueMessage(trans, xmldoc, sizeofxmldoc, &msginfo);
+                            if (error == OSPC_ERR_NO_ERROR) {
+                                error = OSPPTransactionProcessReturn(trans, msginfo);
+                                if ((error == OSPC_ERR_NO_ERROR) && (trans->AuthRsp != OSPC_OSNULL)) {
                                     /* Set num destinations */
                                     *ospvNumberOfDestinations = OSPPAuthRspGetNumDests(trans->AuthRsp);
 
                                     /* Check status code */
                                     if (trans->AuthRsp->ospmAuthRspStatus->ospmStatusCode > 299) {
-                                        errorcode = OSPPUtilGetErrorFromStatus(trans->AuthRsp->ospmAuthRspStatus->ospmStatusCode);
+                                        error = OSPPUtilGetErrorFromStatus(trans->AuthRsp->ospmAuthRspStatus->ospmStatusCode);
                                     }
 
-                                    if ((*ospvNumberOfDestinations > 0) && (errorcode == OSPC_ERR_NO_ERROR)) {
+                                    if ((*ospvNumberOfDestinations > 0) && (error == OSPC_ERR_NO_ERROR)) {
                                         /* Do we need to run probe? */
                                         if ((*ospvNumberOfDestinations > 1) &&
                                             (OSPPAuthRspHasDelayLimit(trans->AuthRsp) || OSPPAuthRspHasDelayPref(trans->AuthRsp))) {
@@ -3089,22 +3085,22 @@ int OSPPTransactionRequestAuthorisation(
                                             /* build probe list */
                                             OSPM_MALLOC(probelist, OSPT_TN_PROBE, sizeof(OSPT_TN_PROBE) * *ospvNumberOfDestinations);
                                             if (probelist == OSPC_OSNULL) {
-                                                errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
+                                                error = OSPC_ERR_TRAN_MALLOC_FAILED;
                                             }
 
-                                            if (errorcode == OSPC_ERR_NO_ERROR) {
+                                            if (error == OSPC_ERR_NO_ERROR) {
                                                 OSPM_MEMSET(probelist, 0, sizeof(OSPT_TN_PROBE) * *ospvNumberOfDestinations);
 
                                                 tmpprobe = probelist;
-                                                for (probecnt = 0, dest = (OSPT_DEST *)OSPPAuthRspFirstDest(trans->AuthRsp);
+                                                for (probecnt = 0, dest = OSPPAuthRspFirstDest(trans->AuthRsp);
                                                      probecnt < *ospvNumberOfDestinations;
-                                                     dest = (OSPT_DEST *)OSPPAuthRspNextDest(trans->AuthRsp, dest)) {
-
+                                                     dest = OSPPAuthRspNextDest(trans->AuthRsp, dest))
+                                                {
                                                     if (dest != OSPC_OSNULL) {
-                                                        errorcode = OSPPCommParseSvcPt(OSPPDestGetAddr(dest), &svcpt, 0);
+                                                        error = OSPPCommParseSvcPt(OSPPDestGetAddr(dest), &svcpt, 0);
                                                     }
 
-                                                    if (errorcode == OSPC_ERR_NO_ERROR) {
+                                                    if (error == OSPC_ERR_NO_ERROR) {
                                                         if (svcpt != OSPC_OSNULL) {
                                                             tmpprobe[probecnt].ospmipaddr = svcpt->IpAddr;
 
@@ -3129,17 +3125,15 @@ int OSPPTransactionRequestAuthorisation(
                                                 delay = OSPPAuthRspGetDelayLimit(trans->AuthRsp);
                                             }
 
-                                            errorcode = OSPPTNProbe(probelist, probecnt, delay);
-
-                                            if (errorcode == OSPC_ERR_NO_ERROR) {
+                                            if ((error = OSPPTNProbe(probelist, probecnt, delay)) == OSPC_ERR_NO_ERROR) {
                                                 if (OSPPAuthRspHasDelayLimit(trans->AuthRsp)) {
                                                     OSPPTNProbePruneList(&(trans->AuthRsp->ospmAuthRspDest),
                                                         probelist,
-                                                        OSPPAuthRspGetDelayLimit(trans->AuthRsp), ospvNumberOfDestinations);
+                                                        OSPPAuthRspGetDelayLimit(trans->AuthRsp),
+                                                        ospvNumberOfDestinations);
                                                 }
 
                                                 if ((OSPPAuthRspHasDelayPref(trans->AuthRsp)) && (*ospvNumberOfDestinations > 1)) {
-
                                                     OSPPTNProbeArrangeList(&(trans->AuthRsp->ospmAuthRspDest),
                                                         probelist, *ospvNumberOfDestinations);
                                                 }
@@ -3172,7 +3166,7 @@ int OSPPTransactionRequestAuthorisation(
                     }
                 }
             } else {
-                errorcode = OSPC_ERR_TRAN_NO_NEW_AUTHREQ;
+                error = OSPC_ERR_TRAN_NO_NEW_AUTHREQ;
                 OSPM_DBGERRORLOG(errorcode, "Unfinished AuthReq found.");
             }
 
@@ -3185,13 +3179,13 @@ int OSPPTransactionRequestAuthorisation(
 
     /* end else (valid data) */
     /* Set transaction state */
-    if ((errorcode == OSPC_ERR_NO_ERROR) || (errorcode == OSPC_ERR_TRAN_NO_NEW_AUTHREQ)) {
+    if ((error == OSPC_ERR_NO_ERROR) || (error == OSPC_ERR_TRAN_NO_NEW_AUTHREQ)) {
         OSPPTransactionSetState(trans, OSPC_AUTH_REQUEST_SUCCESS);
     } else {
         OSPPTransactionSetState(trans, OSPC_AUTH_REQUEST_FAIL);
     }
 
-    return errorcode;
+    return error;
 }
 
 /*
@@ -3344,7 +3338,6 @@ int OSPPTransactionRequestReauthorisation(
                         OSPM_DBGERRORLOG(errorcode, "null pointer for token.");
                     } else {
                         if (*ospvSizeOfToken < (unsigned)OSPPTokenGetSize(token)) {
-
                             errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
                             OSPM_DBGERRORLOG(errorcode, "not enough space for token");
                         } else {

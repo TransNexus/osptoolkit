@@ -24,7 +24,7 @@
 #include "osptnepinit.h"
 #include "osp/ospcryptowrap.h"
 
-/* 
+/*
  * Initialize the Enrollment Parameter object sent in. All of the
  * structures will have to be malloced in this case.
  *
@@ -40,7 +40,7 @@ int OSPPInitEnrollParams(OSPTENROLLPARAMS *ospvEnrollParamsIn)
 
     OSPM_DBGENTER(("ENTER: OSPPInitEnrollParams\n"));
 
-    /* 
+    /*
      * If ( the pointer to the enrollment parameter list is ok ) then
      *  o allocate memory for every string in the enrollment parameter list
      *    using default lengths. If a string is too short, too long, or needs
@@ -80,15 +80,15 @@ int OSPPInitEnrollParams(OSPTENROLLPARAMS *ospvEnrollParamsIn)
     return retVal;
 }
 
-/* 
+/*
  * This function is called for freeing up all the memory taken up
  * by an enrollment parameter object.
  *
- * Input: 
+ * Input:
  *     o pointer to an OSPTENROLLPARAMS;
  *
  * Errors:
- *     o if the input variable is null ( OSPC_ERR_ENROLL_ENROLL_PARAMS_FREE ) 
+ *     o if the input variable is null ( OSPC_ERR_ENROLL_ENROLL_PARAMS_FREE )
  */
 int OSPPFreeEnrollParams(OSPTENROLLPARAMS *ospvEnrollParamsIn)
 {
@@ -101,7 +101,7 @@ int OSPPFreeEnrollParams(OSPTENROLLPARAMS *ospvEnrollParamsIn)
         OSPM_DBGERRORLOG(retVal, "The enrollment parameter list being freed was null.\n");
     }
 
-    /* 
+    /*
      * Free all of the parameters in the enrollment list, just so long as
      * they're valid ( and the enrollment list itself isn't null, either ):
      */
@@ -161,7 +161,7 @@ int OSPPFreeEnrollParams(OSPTENROLLPARAMS *ospvEnrollParamsIn)
     return retVal;
 }
 
-/* 
+/*
  * This function will take a list of enrollment parameters and communications
  * parameters that specify how a communications manager will be set up.
  * The communications manager will first be created and then initialized
@@ -169,12 +169,12 @@ int OSPPFreeEnrollParams(OSPTENROLLPARAMS *ospvEnrollParamsIn)
  * SSL-related parameters.
  *
  * Input: a pointer to the enrollment server parameters ( for the enrollment
- *        server's url ); a pointer to the communication parameters; and a 
+ *        server's url ); a pointer to the communication parameters; and a
  *        pointer to the reference to the communication manager to be initialized.
  *        *ospvCommOut should be null ( but ospvCommOut should not. )
  *
  * Output: *ospvCommMgrOut should be initialized as a communications manager.
- *         If it can't be initialized, then it should be null and the 
+ *         If it can't be initialized, then it should be null and the
  *         return value will be non-zero. Otherwise, the return value should
  *         be zero.
  */
@@ -187,19 +187,19 @@ int OSPPInitSecureCommMgr(OSPTENROLLPARAMS *ospvEnrollParamsIn,
 
     OSPM_DBGENTER(("ENTER: OSPPInitSecureCommMgr\n"));
 
-    /* 
-     * If ( any of the parameters are null or 
+    /*
+     * If ( any of the parameters are null or
      *      if the url for the CA is null ) then
      *  o set an error code and complain.
      */
     if ((ospvEnrollParamsIn == OSPC_OSNULL) || (ospvCommParamsIn == OSPC_OSNULL) || (ospvCommOut == OSPC_OSNULL) ||
-        (ospvEnrollParamsIn->SSLUrl == OSPC_OSNULL)) 
+        (ospvEnrollParamsIn->SSLUrl == OSPC_OSNULL))
     {
         retVal = OSPC_ERR_ENROLL_INVALID_ARG;
         OSPM_DBGERRORLOG(retVal, "The parameters for initializing the secure comm manager are invalid.\n");
     }
 
-    /* 
+    /*
      * Now create the communications manager. We should check the
      * pointer returned for the communications manager even if the return
      * value says otherwise.
@@ -240,10 +240,10 @@ int OSPPInitSecureCommMgr(OSPTENROLLPARAMS *ospvEnrollParamsIn,
     return retVal;
 }
 
-/* 
+/*
  * This is just a minimal wrapper for calling OSPPInitNonSecureCommMgrParams;
- * it just extracts the service point for the CA from the enrollment 
- * parameters and passes it along as the service point to be explicitly 
+ * it just extracts the service point for the CA from the enrollment
+ * parameters and passes it along as the service point to be explicitly
  * contacted by the communications manager.
  *
  * Input: a pointer to the enrollment server parameters ( for the CA's
@@ -251,7 +251,7 @@ int OSPPInitSecureCommMgr(OSPTENROLLPARAMS *ospvEnrollParamsIn,
  *        to the reference to the communication manager to be initialized.
  *
  * Output: *ospvCommMgrOut should be initialized as a communications manager.
- *         If it can't be initialized, then it should be null and the 
+ *         If it can't be initialized, then it should be null and the
  *         return value will be non-zero. Otherwise, the return value should
  *         be zero.
  */
@@ -263,13 +263,13 @@ int OSPPInitNonSecureCommMgr(OSPTENROLLPARAMS *ospvEnrollParamsIn,
 
     OSPM_DBGENTER(("OSPPInitNonSecureCommMgr\n"));
 
-    /* 
-     * If ( any of the parameters are null or 
+    /*
+     * If ( any of the parameters are null or
      *      if the url for the CA is null ) then
      *  o set an error code and complain.
      */
     if ((ospvEnrollParamsIn == OSPC_OSNULL) || (ospvCommParamsIn == OSPC_OSNULL) || (ospvCommOut == OSPC_OSNULL) ||
-        (ospvEnrollParamsIn->CAUrl == OSPC_OSNULL)) 
+        (ospvEnrollParamsIn->CAUrl == OSPC_OSNULL))
     {
         retVal = OSPC_ERR_ENROLL_INVALID_ARG;
         OSPM_DBGERRORLOG(retVal, "The parameters for initializing the CA's communications manager are invalid.\n");
@@ -282,8 +282,8 @@ int OSPPInitNonSecureCommMgr(OSPTENROLLPARAMS *ospvEnrollParamsIn,
         if (retVal != OSPC_ERR_NO_ERROR) {
             OSPM_DBGERRORLOG(retVal, "Unable to create communications manager\n");
         }
-        /* 
-         * For some reason we got a valid return value but an invalid 
+        /*
+         * For some reason we got a valid return value but an invalid
          * communications manager; set an error code and complain:
          */
         else if (*ospvCommOut == OSPC_OSNULL) {
@@ -292,7 +292,7 @@ int OSPPInitNonSecureCommMgr(OSPTENROLLPARAMS *ospvEnrollParamsIn,
         }
     }
 
-    /* 
+    /*
      * Now that the communications manager has been created, initialize
      * its basic parameters. We'll use the CAUrl from the enrollment
      * parameters as the service point:
@@ -346,20 +346,20 @@ int OSPPInitSSLCommMgrParams(OSPTENROLLPARAMS *ospvEnrollParamsIn,
      * service point, so we'll need to check that as well:
      */
     if ((ospvEnrollParamsIn == OSPC_OSNULL) || (ospvEnrollParamsIn->SSLUrl == OSPC_OSNULL) ||
-        (ospvCommParamsIn == OSPC_OSNULL) || (ospvCommOut == OSPC_OSNULL)) 
+        (ospvCommParamsIn == OSPC_OSNULL) || (ospvCommOut == OSPC_OSNULL))
     {
         retVal = OSPC_ERR_ENROLL_INVALID_ARG;
         OSPM_DBGERRORLOG(retVal, "The parameters for initializing the enrollment server communications were invalid.\n");
     }
 
-    /* 
+    /*
      * If ( there were no problems ) then
      *  o set all of the communication manager's parameters, including
-     *    connectivity parameters and the CA certificate. 
+     *    connectivity parameters and the CA certificate.
      *    The CA certificate will be retrieved if necessary.
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
-        /* 
+        /*
          * Create a new security object. Note that we need the address
          * of the communication's manager's security object pointer, so
          * we need to dereference the ospvCommOut, access its security
@@ -372,10 +372,10 @@ int OSPPInitSSLCommMgrParams(OSPTENROLLPARAMS *ospvEnrollParamsIn,
         }
     }
 
-    /* 
+    /*
      * If ( there weren't any problems ) then
      *  o set the SSL lifetime and max number of connections
-     *  o record any errors. 
+     *  o record any errors.
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
         OSPPSecSetSSLLifetime(ospvCommOut->Security, ospvCommParamsIn->SSLLifetime);
@@ -393,7 +393,7 @@ int OSPPInitSSLCommMgrParams(OSPTENROLLPARAMS *ospvEnrollParamsIn,
         }
     }
 
-    /* 
+    /*
      * Initialize the SSL context for the communication manager.
      * If we fail, then report the error and set an error code.
      */
@@ -411,7 +411,7 @@ int OSPPInitSSLCommMgrParams(OSPTENROLLPARAMS *ospvEnrollParamsIn,
     return retVal;
 }
 
-/* 
+/*
  * Initialize all of the non-SSL related parameters; we'll set the
  * retry delay, http timeout, persistence values, and so on. All of
  * the SSL-related parameters are set in the OSPPInitSSLCommMgrParams,
@@ -421,12 +421,12 @@ int OSPPInitSSLCommMgrParams(OSPTENROLLPARAMS *ospvEnrollParamsIn,
  * We'll be using this function for establishing basic parameters that
  * aren't dependent on the use of the communications manager, so we'll
  * need a generic service point specification, instead of assuming that
- * it will be in the CAUrl or SSLUrl fields of an OSPTENROLLPARAM* 
+ * it will be in the CAUrl or SSLUrl fields of an OSPTENROLLPARAM*
  * structure. Doing the service point initialization here just eliminates
  * duplication of effort.
  *
  * Input: pointers to the communications parameters and the service point's
- *        url, as well as the outgoing communications manager. 
+ *        url, as well as the outgoing communications manager.
  *
  * Output: The communication manager's parameters should be set up.
  *         A return value of OSPC_ERR_NO_ERROR is returned if everything
@@ -446,10 +446,10 @@ int OSPPInitNonSSLCommMgrParams(unsigned char *ospvServicePtUrlIn,
         OSPM_DBGERRORLOG(retVal, "At least one parameter is invalid (null)\n");
     }
 
-    /* 
+    /*
      * If ( there weren't any problems ) then
-     *  o set the HTTP persistence 
-     *  o record any errors. 
+     *  o set the HTTP persistence
+     *  o record any errors.
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
         retVal = OSPPCommSetPersistence(ospvCommOut, ospvCommParamsIn->HTTPPersistence);
@@ -459,10 +459,10 @@ int OSPPInitNonSSLCommMgrParams(unsigned char *ospvServicePtUrlIn,
         }
     }
 
-    /* 
+    /*
      * If ( there weren't any problems ) then
-     *  o set the http retry delay 
-     *  o record any errors. 
+     *  o set the http retry delay
+     *  o record any errors.
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
         retVal = OSPPCommSetRetryDelay(ospvCommOut, ospvCommParamsIn->HTTPRetryDelay);
@@ -472,10 +472,10 @@ int OSPPInitNonSSLCommMgrParams(unsigned char *ospvServicePtUrlIn,
         }
     }
 
-    /* 
+    /*
      * If ( there weren't any problems ) then
-     *  o set the http retry limit 
-     *  o record any errors. 
+     *  o set the http retry limit
+     *  o record any errors.
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
         retVal = OSPPCommSetRetryLimit(ospvCommOut, ospvCommParamsIn->HTTPRetryLimit);
@@ -485,10 +485,10 @@ int OSPPInitNonSSLCommMgrParams(unsigned char *ospvServicePtUrlIn,
         }
     }
 
-    /* 
+    /*
      * If ( there weren't any problems ) then
-     *  o set the http max connections 
-     *  o record any errors. 
+     *  o set the http max connections
+     *  o record any errors.
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
         retVal = OSPPCommSetMaxConnections(ospvCommOut, ospvCommParamsIn->HTTPMaxConnections);
@@ -498,10 +498,10 @@ int OSPPInitNonSSLCommMgrParams(unsigned char *ospvServicePtUrlIn,
         }
     }
 
-    /* 
+    /*
      * If ( there weren't any problems ) then
      *  o set the http timeout
-     *  o record any errors. 
+     *  o record any errors.
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
         retVal = OSPPCommSetTimeout(ospvCommOut, ospvCommParamsIn->HTTPTimeout);
@@ -541,7 +541,7 @@ int OSPPInitNonSSLCommMgrParams(unsigned char *ospvServicePtUrlIn,
  * so that we know which CA to contact for  a certificate, and we'll
  * need the communications parameters for initializing the communications
  * manager. The enrollment parameters will also be used to store the
- * CA certificate that is returned ( accessed by 
+ * CA certificate that is returned ( accessed by
  * ospvEnrollParamsInOut->CACert ).
  *
  * Input: a pointer to the enrollment parameter list and a pointer to the
@@ -559,13 +559,13 @@ int OSPPRetrieveCACert(OSPTENROLLPARAMS *ospvEnrollParamsInOut,
     /* The structure used for encapsulating the request and response: */
     OSPT_MSG_INFO *certReqMsg = OSPC_OSNULL;
 
-    /* 
+    /*
      * The request that we'll be building and sending to the CA via the
      * certReqMsg ( which will also hold the response. )
      */
     unsigned char *caRequest = OSPC_OSNULL;
 
-    /* 
+    /*
      * The communications manager used for contacting the enrollment server
      * ( or its CA ) and requesting the CA certificate:
      */
@@ -591,7 +591,7 @@ int OSPPRetrieveCACert(OSPTENROLLPARAMS *ospvEnrollParamsInOut,
         }
     }
 
-    /* 
+    /*
      * If ( the parameters were ok ) then
      *  o initialize the memory for the outbound message.
      *  o if ( we coldn't initialize it ) then
@@ -607,7 +607,7 @@ int OSPPRetrieveCACert(OSPTENROLLPARAMS *ospvEnrollParamsInOut,
         }
     }
 
-    /* 
+    /*
      * If ( we could create the message info structure ) then
      *  o create the retrieval request to be sent
      */
@@ -620,10 +620,10 @@ int OSPPRetrieveCACert(OSPTENROLLPARAMS *ospvEnrollParamsInOut,
         }
     }
 
-    /* 
+    /*
      * If ( the request could be created ) then
      *  o set the request message and its size for the MessageInfo:
-     *  o add the MessageInfo to the queue; the request should be 
+     *  o add the MessageInfo to the queue; the request should be
      *    transmitted to the enrollment server and a request received.
      *  o if ( sending the request failed ) then write an error message.
      */
@@ -641,7 +641,7 @@ int OSPPRetrieveCACert(OSPTENROLLPARAMS *ospvEnrollParamsInOut,
         }
     }
 
-    /* 
+    /*
      * If ( sending the request was successful ) then
      *  o Get the CA certificate out of the response.
      *  o if ( there were problems getting it out ) then
@@ -654,7 +654,7 @@ int OSPPRetrieveCACert(OSPTENROLLPARAMS *ospvEnrollParamsInOut,
         }
     }
 
-    /* 
+    /*
      * If ( the return value was ok ) then
      *  o check the error code returned as well; it's possible that the
      *    error code from the enrollment server ( at the HTTP level; this
@@ -682,7 +682,7 @@ int OSPPRetrieveCACert(OSPTENROLLPARAMS *ospvEnrollParamsInOut,
         }
     }
 
-    /* 
+    /*
      * Everything looks alright with the response so far, so now let's get
      * the CA certificate ( base64 decoded ) from the response:
      */
@@ -758,9 +758,9 @@ int OSPPCreateCARetrievalRequest(OSPTENROLLPARAMS *ospvEnrollParamsIn,
 
     if (retVal == OSPC_ERR_NO_ERROR)
 
-        /* 
+        /*
          * If ( everything has gone ok so far ) then
-         *  o calculate the length of the request: the length of 
+         *  o calculate the length of the request: the length of
          *    "operation=GetCACert".
          *  o allocate that much memory, plus one byte ( for null )
          *  o if ( we couldn't malloc memory ) then
@@ -778,7 +778,7 @@ int OSPPCreateCARetrievalRequest(OSPTENROLLPARAMS *ospvEnrollParamsIn,
             }
         }
 
-    /* 
+    /*
      * If ( the parameters and the memory setting were ok ) then
      *   o copy the request parameters into the request
      *   o set the CA certificate request to be the string that gets built.
@@ -796,13 +796,13 @@ int OSPPCreateCARetrievalRequest(OSPTENROLLPARAMS *ospvEnrollParamsIn,
     return retVal;
 }
 
-/* 
+/*
  * Extract the CA certificate from the response and base64-decode it.
  * We'll also use the base64-encoded certificate to be passed back to
  * the user so that they can use it again on input ( instead of having
  * to redo the base64 encoding. )
  *
- * Input: a character string representing the response to be scanned, 
+ * Input: a character string representing the response to be scanned,
  *        along with outgoing parameters for the binary BER-encoding
  *        of the CA certificate, its length, the base64 encoding of the
  *        certificate, and its length as well.
@@ -827,15 +827,15 @@ int OSPPExtractCACertFromResponse(unsigned char *ospvResponseIn,
 
     /* Check the input parameters first: */
     if ((ospvResponseIn == OSPC_OSNULL) || (ospvCACertOut == OSPC_OSNULL) || (ospvCACertLenOut == OSPC_OSNULL) ||
-        (ospvCACertB64Out == OSPC_OSNULL) || (ospvCACertB64LenOut == OSPC_OSNULL)) 
+        (ospvCACertB64Out == OSPC_OSNULL) || (ospvCACertB64LenOut == OSPC_OSNULL))
     {
         retVal = OSPC_ERR_ENROLL_INVALID_ARG;
         OSPM_DBGERRORLOG(retVal, "The arguments for extracting a CA certificate are invalid.\n");
     }
 
-    /* 
+    /*
      * Retrieve the base64-encoded CA certificate from the response;
-     * the memory should be allocated for the caCertB64 inside of 
+     * the memory should be allocated for the caCertB64 inside of
      * OSPPExtractFieldFromResponse.
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
@@ -853,7 +853,7 @@ int OSPPExtractCACertFromResponse(unsigned char *ospvResponseIn,
         }
     }
 
-    /* 
+    /*
      * If ( we could find the CA certificate ) then
      *  o get its length
      *  o set an error code and complain if it's empty
@@ -865,7 +865,7 @@ int OSPPExtractCACertFromResponse(unsigned char *ospvResponseIn,
         }
     }
 
-    /* 
+    /*
      * IF ( it looks like the CA certificate might be ok ) then
      *  o allocate memory for the BER-encoded CA certificate ( that is, the
      *    one that's been base64-decoded ); we'll use the pointer returned
@@ -881,13 +881,13 @@ int OSPPExtractCACertFromResponse(unsigned char *ospvResponseIn,
         }
     }
 
-    /* 
+    /*
      * If ( the memory could be allocated ) then
      *  o initialize it
      *  o set the maximum size of the base64-decoded cert to be twice the
-     *    length of the base64-encoded cert. This isn't a very tight 
+     *    length of the base64-encoded cert. This isn't a very tight
      *    space allocation ( in fact, the decoding of a base64-encoded message
-     *    is 4 * ceil( caCertB64Len/3 ) ), but it's required for the 
+     *    is 4 * ceil( caCertB64Len/3 ) ), but it's required for the
      *    base64 decoding mechanism.
      *  o complain if we couldn't get it
      */
@@ -902,7 +902,7 @@ int OSPPExtractCACertFromResponse(unsigned char *ospvResponseIn,
         }
     }
 
-    /* 
+    /*
      * If ( we could successfully base64-decode the certificate ) then
      *  o copy the base64-encoded CA certificate and set its length.
      */
@@ -916,20 +916,20 @@ int OSPPExtractCACertFromResponse(unsigned char *ospvResponseIn,
     return retVal;
 }
 
-/* 
+/*
  * Now take the enrollment parameter's CA certificate fingerprint in hex
- * ( which should have been taken from a secure channel, such as paper 
+ * ( which should have been taken from a secure channel, such as paper
  * [ if ubiquity can be considered security ] or an SSL session with the
- * enrollment server's accompanying web site ( if available. ) If the 
+ * enrollment server's accompanying web site ( if available. ) If the
  * fingerprint is missing, then an error will not be generated; we'll assume
- * for now ( although this is debatable ) that the fingerprint isn't 
+ * for now ( although this is debatable ) that the fingerprint isn't
  * necessary. If any of the other parameters are otherwise null, then
  * this function will fail. If the CA certificate is missing, then this
  * function will fail regardless of whether or not we care about checking
  * for the fingerprint. This may be changed too ( just rearrange the ordering
  * of the statements for checking the null values. )
  *
- * Input: a pointer to the enrollment parameters, which contains the CA 
+ * Input: a pointer to the enrollment parameters, which contains the CA
  *        certificate and the CA's intended fingerprint.
  *
  * Output: an error code if anything is null or if the fingerprint cannot be
@@ -946,7 +946,7 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
     unsigned char *inputFprintBin = OSPC_OSNULL;
     int inputFprintBinLen = 0;
 
-    /* 
+    /*
      * This is the index of the CA certificate's parent ( itself ) within the
      * given list. It's ignored because it should be self-signed.
      */
@@ -962,7 +962,7 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
         OSPM_DBGERRORLOG(retVal, "Invalid enrollment parameters passed in.\n");
     }
 
-    /* 
+    /*
      * Now check the CA certificate's value; if the CA certificate is null
      * or empty, then we can't check it. In this case, set an errorcode
      * and complain.
@@ -984,7 +984,7 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
         }
     }
 
-    /* 
+    /*
      * Then we successfully parsed the CA certificate's structure; now let's
      * check the signature. The signature must be self-signed; if it isn't,
      * then we'll need some other way of authenticating the certificate
@@ -1000,11 +1000,11 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
         }
     }
 
-    /* 
-     * If the fingerprint passed in was null, then we're done; we don't 
-     * care about the CA fingerprint. The security policy here may be 
-     * changed if we absolutely require the CA's fingerprint. We won't 
-     * return right away if there's no other processing to be done, 
+    /*
+     * If the fingerprint passed in was null, then we're done; we don't
+     * care about the CA fingerprint. The security policy here may be
+     * changed if we absolutely require the CA's fingerprint. We won't
+     * return right away if there's no other processing to be done,
      * simply for the sake of having a single entry/exit point.
      */
     if ((ospvEnrollParams->CAFprint != OSPC_OSNULL) &&
@@ -1023,7 +1023,7 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
 
             OSPM_MALLOC(inputFprintBin, unsigned char, 2 * OSPC_ENROLL_MAX_FPRINT_SIZE + 1);
 
-            /* 
+            /*
              * If ( the memory allocation didn't work ) then
              *  o set an error code and complain; we'll clean up any
              *    memory allocated at the end of this block anyway.
@@ -1034,14 +1034,14 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
             }
         }
 
-        /* 
+        /*
          * Now turn the hexadecimal ASCII into binary; this is better than
          * comparing two hex encodings that may have different capitalization
          * schemes.
          */
         if (retVal == OSPC_ERR_NO_ERROR) {
             inputFprintBinLen = 2 * OSPC_ENROLL_MAX_FPRINT_SIZE;
-            retVal = OSPPHexToBinary(ospvEnrollParams->CAFprint, OSPM_STRLEN((char *)(ospvEnrollParams-> CAFprint)), inputFprintBin, 
+            retVal = OSPPHexToBinary(ospvEnrollParams->CAFprint, OSPM_STRLEN((char *)(ospvEnrollParams-> CAFprint)), inputFprintBin,
                 (unsigned *)(&inputFprintBinLen));
 
             if (retVal != OSPC_ERR_NO_ERROR) {
@@ -1050,7 +1050,7 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
             }
         }
 
-        /* 
+        /*
          * If ( we could initialize for the hash ) then
          *  o initialize the memory;
          *  o take the hash;
@@ -1060,10 +1060,10 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
             OSPM_MEMSET(caFprint, 0, OSPC_ENROLL_MAX_FPRINT_SIZE + 1);
             OSPPDumpHex(caCertASN1Object->ElementInfo->Content, caCertASN1Object->ElementInfo->ContentLength);
 
-            /* 
+            /*
              * Use the CA certificate and its length as the parameters for
              * the fingerprint/digest; put the digest in caFprint and its
-             * length in caFprintLen. We'll use SHA 1 for the digesting 
+             * length in caFprintLen. We'll use SHA 1 for the digesting
              * algorithm; the other two paramters( OSPC_OSNULL and 0 ) are
              * superfluous values; ignore them and their green curtain.
              */
@@ -1077,7 +1077,7 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
             }
         }
 
-        /* 
+        /*
          * Now check the fingerprint against what we were given. Translate
          * the fingerprint that was taken into hex and compare it against the
          * hex fingerprint given on input.
@@ -1123,7 +1123,7 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
     return retVal;
 }
 
-/* 
+/*
  * Translate the given hex string into binary. We'll be given the
  * length of the hex string and the length of the binary string as
  * well. We'll expect that the binary string already has enough
@@ -1132,7 +1132,7 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
  * The length of the hex string dictates how much memory will be copied.
  * For example, if the length of the hex string is 200 bytes ( or 100 bytes
  * in its full binary representation ), then the number of octets to
- * be copied from the hex string can be anywhere from 2 to 200. 
+ * be copied from the hex string can be anywhere from 2 to 200.
  *
  * The length of the binary string initially refers to the amount of
  * space that the binary string can contain. It will be set to the
@@ -1142,13 +1142,13 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams)
  *        representation, and the length of the binary representation
  *
  * Output: the binary representation and its length will be output.
- *         A return code of OSPC_ERR_NO_ERRRO ( 0 ) will be returned 
+ *         A return code of OSPC_ERR_NO_ERRRO ( 0 ) will be returned
  *         if everything went alright; otherwise, a non-zero code
  *         will be returned.
  */
 int OSPPHexToBinary(unsigned char *ospvHexStr,
     unsigned ospvHexStrLen,
-    unsigned char *ospvBinaryStr, 
+    unsigned char *ospvBinaryStr,
     unsigned *ospvBinaryStrLen)
 {
     int retVal = OSPC_ERR_NO_ERROR;
@@ -1169,7 +1169,7 @@ int OSPPHexToBinary(unsigned char *ospvHexStr,
         OSPM_DBGERRORLOG(retVal, "A null pointer was passed in.\n");
     }
 
-    /* 
+    /*
      * If ( the hex string is not as long as what the caller wants
      *      to copy from it ) then
      *  o set an error code and complain.
@@ -1181,7 +1181,7 @@ int OSPPHexToBinary(unsigned char *ospvHexStr,
         }
     }
 
-    /* 
+    /*
      * If ( the caller wants more bytes from the binary string than are
      *      allocated to it or if the binary string is empty ) then
      *  o set an error code and complain.
@@ -1195,8 +1195,8 @@ int OSPPHexToBinary(unsigned char *ospvHexStr,
         }
     }
 
-    /* 
-     * For ( each character ) 
+    /*
+     * For ( each character )
      *  o if ( the character isn't a hex digit ) then
      *      - set an error code and return.
      */
@@ -1208,9 +1208,9 @@ int OSPPHexToBinary(unsigned char *ospvHexStr,
         }
     }
 
-    /* 
+    /*
      * Try to allocate memory for the chunk of data that will be used for
-     * translating the hex to binary. Set an error code and complain 
+     * translating the hex to binary. Set an error code and complain
      * if we can't.
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
@@ -1221,7 +1221,7 @@ int OSPPHexToBinary(unsigned char *ospvHexStr,
         }
     }
 
-    /* 
+    /*
      * If ( all of the parameters are ok ) then
      *  o reset the length of the binary output string.
      *  o initialize the memory for the binary string.
@@ -1243,7 +1243,7 @@ int OSPPHexToBinary(unsigned char *ospvHexStr,
             OSPM_DBGMISC(("nextWord: %ld, %d\n", nextWord, (nextWord && OSPC_LONG_TO_BYTE_MASK)));
 
             ospvBinaryStr[(*ospvBinaryStrLen)++] = (unsigned char)(nextWord & OSPC_LONG_TO_BYTE_MASK);
-               
+
         }
         OSPM_DBGMISC(("final binary encoding:\n"));
         OSPPDumpHex(ospvBinaryStr, *ospvBinaryStrLen);
@@ -1257,13 +1257,13 @@ int OSPPHexToBinary(unsigned char *ospvHexStr,
     return retVal;
 }
 
-/* 
+/*
  * Given the response to scan and the field to search for, extract the
  * contents of that field into the outgoing value. We'll be careful
  * not to accidentally use names that look similar but which have different
  * lengths. For example, if we're looking for the field "def" and we're
  * given "abcdef=ghi&def=jkl", then we want to return "jkl" and not
- * "ghi". If we find an appropriate field, then we'll save it in 
+ * "ghi". If we find an appropriate field, then we'll save it in
  * the outgoing pointer ( which we'll also allocate. )
  *
  * Input: the response to be scanned, the field to look for, and a pointer
@@ -1293,7 +1293,7 @@ int OSPPExtractFieldFromResponse(unsigned char *ospvResponse,
 
     OSPM_DBGENTER(("ENTER: OSPPExtractFieldFromResponse\n"));
 
-    /* 
+    /*
      * Check for any null or empty parameters passed in first.
      * We'll be allocating *ospvValueOut, so don't check its contents
      * ( just check that ospvValueOut isn't null. )
@@ -1305,7 +1305,7 @@ int OSPPExtractFieldFromResponse(unsigned char *ospvResponse,
         OSPM_DBGERRORLOG(retVal, "Invalid arguments for searching for a field\n");
     }
 
-    /* 
+    /*
      * We know that the parameters are valid, so allocate enough memory
      * to store the value that we find. The maximum possible size is
      * OSPM_STRLEN( ospvResponse ) - 2, which would happen if the response
@@ -1321,7 +1321,7 @@ int OSPPExtractFieldFromResponse(unsigned char *ospvResponse,
         }
     }
 
-    /* 
+    /*
      * If ( we could allocate the memory ) then
      *  o get the beginning of the string
      *  o do:
@@ -1340,16 +1340,16 @@ int OSPPExtractFieldFromResponse(unsigned char *ospvResponse,
      *              - else if ( the name was at the beginning of the response )
      *                     OR ( the previous character is the field delimiter )
      *                  o then we know that we've actually found the name
-     *                    and hence the correct value. We know that we 
+     *                    and hence the correct value. We know that we
      *                    haven't matched on "abcd=efgh" if we're looking
      *                    for the name "bc", since we compare the name we
      *                    found to the beginning of the string. Likewise,
      *                    cases like "abcd=efgh&ijkl=mnop" will fall through
-     *                    the cracks if we're looking for "jk" ( since 
+     *                    the cracks if we're looking for "jk" ( since
      *                    'i' != '&' )
      *       - if ( we didn't find anything on this iteration ) then
      *           o increment the pointer so that we don't get the same case.
-     *     while ( we haven't found anything ) and 
+     *     while ( we haven't found anything ) and
      *           ( we haven't run into any problems )
      */
     if (retVal == OSPC_ERR_NO_ERROR) {
@@ -1409,7 +1409,7 @@ int OSPPExtractFieldFromResponse(unsigned char *ospvResponse,
     return retVal;
 }
 
-/* 
+/*
  * copy the source string to the destination string; allocate and initialize
  * enough space in the destination string that we can fit everything in
  * the source string.
@@ -1425,10 +1425,10 @@ int OSPPCopyString(unsigned char **ospvDestStr, unsigned char *ospvSrcStr)
 {
     int retVal = OSPC_ERR_NO_ERROR;
 
-    /* 
-     * Don't assign the source string to the destination string 
-     * until the end; we'll perform all of our operations on this 
-     * string instead: 
+    /*
+     * Don't assign the source string to the destination string
+     * until the end; we'll perform all of our operations on this
+     * string instead:
      */
     unsigned char *tmpDestStr = OSPC_OSNULL;
 
@@ -1443,7 +1443,7 @@ int OSPPCopyString(unsigned char **ospvDestStr, unsigned char *ospvSrcStr)
         OSPM_DBGERRORLOG(retVal, "The parameters for copying a string were invalid.\n");
     }
 
-    /* 
+    /*
      * if ( the parameters look ok ) then
      *  o get the length of the source string
      *  o if ( the source is empty ) then
@@ -1457,7 +1457,7 @@ int OSPPCopyString(unsigned char **ospvDestStr, unsigned char *ospvSrcStr)
         }
     }
 
-    /* 
+    /*
      * If ( the source string is ok ) then
      *  o allocate enough memory for the output string
      *  o if ( we couldn't do it ) then
@@ -1472,7 +1472,7 @@ int OSPPCopyString(unsigned char **ospvDestStr, unsigned char *ospvSrcStr)
         }
     }
 
-    /* 
+    /*
      * If ( we could allocate the memory ) then
      *  o initialize the memory
      *  o copy the strings

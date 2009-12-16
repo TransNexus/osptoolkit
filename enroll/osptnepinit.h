@@ -32,18 +32,18 @@ extern "C" {
 #define OSPC_ENROLL_MAX_CACERT_SIZE         2048
 #define OSPC_ENROLL_MAX_URL_SIZE            2048
 
-/* 
+/*
  * An SHA-1 fingerprint is 20 bytes long, so expect at most
  * 40 bytes of hex characters ( since an MD5 digest is 16 bytes
  * long ):
  */
 #define OSPC_ENROLL_MAX_FPRINT_SIZE         40
 
-/* 
+/*
  * This template will be used for finding the value of a field being
  * searched for in a string. Here's what it does:
  *
- * %*[^=]     matches on the beginning of the string up to an "="; this 
+ * %*[^=]     matches on the beginning of the string up to an "="; this
  *            field's value is discarded.
  *
  * =          matches on the "=" itself
@@ -53,7 +53,7 @@ extern "C" {
  */
 #define OSPC_ENROLL_SEARCH_PATTERN          "%*[^=]=%[^& ]"
 
-/* 
+/*
  * These are the only characters that may precede a field name in a URL.
  * The '&' comes up when the field follows another field ( as in
  * a=b&c=d, where 'c' is the field name being searched for. ) The
@@ -65,7 +65,7 @@ extern "C" {
  */
 #define OSPC_ENROLL_URL_FIELD_DELIMITERS    "&\n "
 
-/* 
+/*
  * Initialize the Enrollment Parameter object sent in. All of the
  * structures will have to be malloced in this case.
  *
@@ -77,19 +77,19 @@ extern "C" {
  */
 int OSPPInitEnrollParams(OSPTENROLLPARAMS *ospvEnrollParamsIn);
 
-/* 
+/*
  * This function is called for freeing up all the memory taken up
  * by an enrollment parameter object.
  *
- * Input: 
+ * Input:
  *     o pointer to an OSPTENROLLPARAMS;
  *
  * Errors:
- *     o if the input variable is null ( OSPC_ERR_ENROLL_ENROLL_PARAMS_FREE ) 
+ *     o if the input variable is null ( OSPC_ERR_ENROLL_ENROLL_PARAMS_FREE )
  */
 int OSPPFreeEnrollParams(OSPTENROLLPARAMS *ospvEnrollParamsIn);
 
-/* 
+/*
  * This function will take a list of enrollment parameters and communications
  * parameters that specify how a communications manager will be set up.
  * The communications manager will first be created and then initialized
@@ -97,21 +97,21 @@ int OSPPFreeEnrollParams(OSPTENROLLPARAMS *ospvEnrollParamsIn);
  * SSL-related parameters.
  *
  * Input: a pointer to the enrollment server parameters ( for the enrollment
- *        server's url ); a pointer to the communication parameters; and a 
+ *        server's url ); a pointer to the communication parameters; and a
  *        pointer to the reference to the communication manager to be initialized.
  *        *ospvCommOut should be null ( but ospvCommOut should not. )
  *
  * Output: *ospvCommMgrOut should be initialized as a communications manager.
- *         If it can't be initialized, then it should be null and the 
+ *         If it can't be initialized, then it should be null and the
  *         return value will be non-zero. Otherwise, the return value should
  *         be zero.
  */
 int OSPPInitSecureCommMgr(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPTCOMMPARAMS *ospvCommParamsIn, OSPTCOMM **ospvCommOut);
 
-/* 
+/*
  * This is just a minimal wrapper for calling OSPPInitCommMgr;
- * it just extracts the service point for the CA from the enrollment 
- * parameters and passes it along as the service point to be explicitly 
+ * it just extracts the service point for the CA from the enrollment
+ * parameters and passes it along as the service point to be explicitly
  * contacted.
  *
  * Input: a pointer to the enrollment server parameters ( for the CA's
@@ -119,7 +119,7 @@ int OSPPInitSecureCommMgr(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPTCOMMPARAMS *
  *        to the reference to the communication manager to be initialized.
  *
  * Output: *ospvCommMgrOut should be initialized as a communications manager.
- *         If it can't be initialized, then it should be null and the 
+ *         If it can't be initialized, then it should be null and the
  *         return value will be non-zero. Otherwise, the return value should
  *         be zero.
  */
@@ -127,14 +127,14 @@ int OSPPInitCACommMgr(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPTCOMMPARAMS *ospv
 
 /*
  * Initialize the communications manager. First a service point for the
- * given ospvServicePointURL will be generated. Then, if the 
+ * given ospvServicePointURL will be generated. Then, if the
  * ospvNumberofAuthoirtyCertificates is less than or equal to 0, then
  * the CA certificate will be retrieved from the enrollment server defined
  * in the OSPTSVCPT that was just created. OSPPCommNew will be called to
  * create a new communications manager ( OSPTCOMM ); which will then have
  * various connection-oriented parameters ( denoted by ospvSSLLifetime,
  * ospvHTTPMaxConnections, ospvHTTPPersistance, ospvHTTPRetryDelay,
- * ospvHTTPRetryLimit, and ospvHTTPTimeout in the OSPTCOMMPARAMS parameter ) 
+ * ospvHTTPRetryLimit, and ospvHTTPTimeout in the OSPTCOMMPARAMS parameter )
  * set.
  */
 int OSPPInitCommMgr(unsigned char *ospvServicePtUrlIn, OSPTCOMMPARAMS *ospvCommParamsIn, OSPTCOMM **ospvCommOut);
@@ -159,7 +159,7 @@ int OSPPInitCommMgr(unsigned char *ospvServicePtUrlIn, OSPTCOMMPARAMS *ospvCommP
  */
 int OSPPInitSSLCommMgrParams(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPTCOMMPARAMS *ospvCommParamsIn, OSPTCOMM *ospvCommOut);
 
-/* 
+/*
  * Initialize all of the non-SSL related parameters; we'll set the
  * retry delay, http timeout, persistence values, and so on. All of
  * the SSL-related parameters are set in the OSPPInitSSLCommMgrParams,
@@ -167,7 +167,7 @@ int OSPPInitSSLCommMgrParams(OSPTENROLLPARAMS *ospvEnrollParamsIn, OSPTCOMMPARAM
  * CA certificate, which is currently done without SSL. )
  *
  * Input: pointers to the communications parameters and the service point's
- *        url, as well as the outgoing communications manager. 
+ *        url, as well as the outgoing communications manager.
  *
  * Output: The communication manager's parameters should be set up.
  *         A return value of OSPC_ERR_NO_ERROR is returned if everything
@@ -182,7 +182,7 @@ int OSPPInitNonSSLCommMgrParams(unsigned char *ospvServicePtUrlIn, OSPTCOMMPARAM
  * so that we know which CA to contact for  a certificate, and we'll
  * need the communications parameters for initializing the communications
  * manager. The enrollment parameters will also be used to store the
- * CA certificate that is returned ( accessed by 
+ * CA certificate that is returned ( accessed by
  * ospvEnrollParamsInOut->CACert ).
  *
  * Input: a pointer to the enrollment parameter list and a pointer to the
@@ -201,13 +201,13 @@ int OSPPRetrieveCACert(OSPTENROLLPARAMS *ospvEnrollParamsInOut, OSPTCOMMPARAMS *
  */
 int OSPPCreateCARetrievalRequest(OSPTENROLLPARAMS *ospvEnrollParamsIn, unsigned char **ospvCARequestOut);
 
-/* 
+/*
  * Extract the CA certificate from the response and base64-decode it.
  * We'll also use the base64-encoded certificate to be passed back to
  * the user so that they can use it again on input ( instead of having
  * to redo the base64 encoding. )
  *
- * Input: a character string representing the response to be scanned, 
+ * Input: a character string representing the response to be scanned,
  *        along with outgoing parameters for the binary BER-encoding
  *        of the CA certificate, its length, the base64 encoding of the
  *        certificate, and its length as well.
@@ -220,20 +220,20 @@ int OSPPCreateCARetrievalRequest(OSPTENROLLPARAMS *ospvEnrollParamsIn, unsigned 
 int OSPPExtractCACertFromResponse(unsigned char *ospvResponseIn, unsigned ospvResponseLenIn, unsigned char **ospvCACertOut,
             unsigned *ospvCACertLenOut, unsigned char **ospvCACertB64Out, unsigned *ospvCACertB64LenOut);
 
-/* 
+/*
  * Now take the enrollment parameter's CA certificate fingerprint in hex
- * ( which should have been taken from a secure channel, such as paper 
+ * ( which should have been taken from a secure channel, such as paper
  * [ if ubiquity can be considered security ] or an SSL session with the
- * enrollment server's accompanying web site ( if available. ) If the 
+ * enrollment server's accompanying web site ( if available. ) If the
  * fingerprint is missing, then an error will not be generated; we'll assume
- * for now ( although this is debatable ) that the fingerprint isn't 
+ * for now ( although this is debatable ) that the fingerprint isn't
  * necessary. If any of the other parameters are otherwise null, then
  * this function will fail. If the CA certificate is missing, then this
  * function will fail regardless of whether or not we care about checking
  * for the fingerprint. This may be changed too ( just rearrange the ordering
  * of the statements for checking the null values. )
  *
- * Input: a pointer to the enrollment parameters, which contains the CA 
+ * Input: a pointer to the enrollment parameters, which contains the CA
  *        certificate and the CA's intended fingerprint.
  *
  * Output: an error code if anything is null or if the fingerprint cannot be
@@ -244,13 +244,13 @@ int OSPPValidateCACertificate(OSPTENROLLPARAMS *ospvEnrollParams);
 /* Translate the given hex string into binary, if possible. */
 int OSPPHexToBinary(unsigned char *ospvHexStr, unsigned ospvHexStrLen, unsigned char *ospvBinaryStr, unsigned *ospvBinaryStrLen);
 
-/* 
+/*
  * Given the response to scan and the field to search for, extract the
  * contents of that field into the outgoing value. We'll be careful
  * not to accidentally use names that look similar but which have different
  * lengths. For example, if we're looking for the field "def" and we're
  * given "abcdef=ghi&def=jkl", then we want to return "jkl" and not
- * "ghi". If we find an appropriate field, then we'll save it in 
+ * "ghi". If we find an appropriate field, then we'll save it in
  * the outgoing pointer ( which we'll also allocate. )
  *
  * Input: the response to be scanned, the field to look for, and a pointer
@@ -264,7 +264,7 @@ int OSPPHexToBinary(unsigned char *ospvHexStr, unsigned ospvHexStrLen, unsigned 
  */
 int OSPPExtractFieldFromResponse(unsigned char *ospvResponse, unsigned ospvResponseLen, unsigned char *ospvSearchField, unsigned char **ospvValueOut);
 
-/* 
+/*
  * copy the source string to the destination string; allocate and initialize
  * enough space in the destination string that we can fit everything in
  * the source string.

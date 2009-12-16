@@ -163,9 +163,9 @@ unsigned OSPPAltInfoGetSize(
 }
 
 /*
- * OSPPAltInfoTypeGetPart() - returns altinfo type
+ * OSPPAltInfoGetPart() - returns altinfo type
  */
-OSPE_ALTINFO OSPPAltInfoTypeGetPart(
+OSPE_ALTINFO OSPPAltInfoGetPart(
     OSPT_ALTINFO *ospvAltInfo)
 {
     OSPE_ALTINFO ospvType = OSPC_ALTINFO_UNKNOWN;
@@ -229,7 +229,22 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
 }
 
 /*
- * OSPPAltInfoTypeGetName() - get type name from an altinfo
+ * OSPPAltInfoTypeGetPart() - get type from an altinfo name
+ */
+OSPE_ALTINFO OSPPAltInfoTypeGetPart(
+    const char *ospvName)
+{
+    OSPE_ALTINFO ospvPart = OSPC_ALTINFO_UNKNOWN;
+
+    if (ospvName != OSPC_OSNULL) {
+        ospvPart = (OSPE_ALTINFO)OSPPMsgDescGetPart(ospvName, OSPV_ATYPE_DESCS, OSPC_ALTINFO_NUMBER);
+    }
+
+    return ospvPart;
+}
+
+/*
+ * OSPPAltInfoTypeGetName() - get type name from an altinfo type
  */
 const char *OSPPAltInfoTypeGetName( /* Returns a pointer to the name */
     OSPE_ALTINFO ospvPart)
@@ -242,3 +257,4 @@ const char *OSPPAltInfoTypeGetName( /* Returns a pointer to the name */
 
     return ospvName;
 }
+
