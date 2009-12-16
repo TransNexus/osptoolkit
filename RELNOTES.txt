@@ -500,17 +500,21 @@ Version 3.5.2
 ---------------------------------------------------------------------------
 
 Version 3.5.3
-* Added number portability support.
-* Added diversion header support.
----------------------------------------------------------------------------
-
-Version 3.5.4
-* Added ICPIF support.
-* Added round trip delay setting support.
-* Added support for new protocols.
-* Fixed destdev issue of OSPPTransactionGetDestination.
-* Added SPID & OCN support.
-* Added new ServiceType.
+* Added reporting number portability rn, cic and npid in AuthReq
+* Added retrieving  number portability rn, cic and npid from AuthRsp
+* Added reporting Diversion header in AuthReq and UsageInd
 ---------------------------------------------------------------------------
 
 Version 3.6.0
+* Added SMS destination protocol
+* Added spn, altspm, mcc and mnc in AuthReq and AuthRsp
+* Removed asserted ID from AuthReq and UsageInd
+* Added setting ServiceType function
+* Added setting PricingInfo function
+* Added ported number query ServiceType
+* Added retrieving OCN from AuthRsp
+* Added retrieving SPID from AuthRsp
+* Added max for one way/round trip delay statistics
+* Added T.37, T.38, Skype and SMPP destination protocols
+* Added reporting ICPIF in UsageInd
+* Added setting round trip delay function for reporting
