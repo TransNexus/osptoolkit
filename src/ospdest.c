@@ -1038,12 +1038,14 @@ void OSPPServiceFromElement(
         switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
         case OSPC_MELEM_SERVICETYPE:
             for (attr = OSPPXMLElemFirstAttr(elem); (attr != OSPC_OSNULL); attr = OSPPXMLElemNextAttr(elem, attr)) {
-                switch (OSPPServiceGetPart(OSPPXMLAttrGetName(attr))) {
-                case OSPC_SERVICE_NPQUERY:
-                    ospvDest->ospmIsNPQuery = OSPC_TRUE;
-                    break;
-                default:
-                    break;
+                if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_TYPE) {
+                    switch (OSPPServiceGetPart(OSPPXMLAttrGetValue(attr))) {
+                    case OSPC_SERVICE_NPQUERY:
+                        ospvDest->ospmIsNPQuery = OSPC_TRUE;
+                        break;
+                    default:
+                        break;
+                    }
                 }
             }
             break;
