@@ -1433,54 +1433,49 @@ int OSPPTransactionGetFirstDestination(
     unsigned *ospvSizeOfToken,              /* In/Out - Max size of token string Actual size of token string */
     void *ospvToken)                        /* Out - Token string */
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int error = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-    if ((trans != (OSPTTRANS *)NULL) && (errorcode == OSPC_ERR_NO_ERROR)) {
-        errorcode = OSPPTransactionGetDestAllowed(trans);
+    trans = OSPPTransactionGetContext(ospvTransaction, &error);
+    if ((error == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+        error = OSPPTransactionGetDestAllowed(trans);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR) {
+    if (error == OSPC_ERR_NO_ERROR) {
         /* Make sure we have a response */
-        if (trans->AuthRsp == (OSPT_AUTH_RSP *)NULL) {
-            errorcode = OSPC_ERR_TRAN_RESPONSE_NOT_FOUND;
-        }
-
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            /* if no errors have occurred, get the destination information */
-            if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPAuthRspHasDest(trans->AuthRsp) == OSPC_FALSE) {
-                errorcode = OSPC_ERR_TRAN_DEST_INVALID;
-                OSPM_DBGERRORLOG(errorcode, "destination not found");
-            } else {
-                errorcode = OSPPTransactionGetDestination(trans,
-                    OSPC_FAIL_NONE,
-                    ospvSizeOfTimestamp,
-                    ospvValidAfter,
-                    ospvValidUntil,
-                    ospvTimeLimit,
-                    ospvSizeOfCallId,
-                    ospvCallId,
-                    ospvSizeOfCalledNumber,
-                    ospvCalledNumber,
-                    ospvSizeOfCallingNumber,
-                    ospvCallingNumber,
-                    ospvSizeOfDestination,
-                    ospvDestination,
-                    ospvSizeOfDestinationDevice, ospvDestinationDevice, ospvSizeOfToken, ospvToken);
-            }
-
-            /* Set transaction state */
-            if (errorcode == OSPC_ERR_NO_ERROR) {
-                OSPPTransactionSetState(trans, OSPC_GET_DEST_SUCCESS);
-                trans->HasGetDestSucceeded = OSPC_TRUE;
-            } else {
-                OSPPTransactionSetState(trans, OSPC_GET_DEST_FAIL);
-            }
+        if (trans->AuthRsp == OSPC_OSNULL) {
+            error = OSPC_ERR_TRAN_RESPONSE_NOT_FOUND;
         }
     }
 
-    return errorcode;
+    if (error == OSPC_ERR_NO_ERROR) {
+        /* if no errors have occurred, get the destination information */
+        if (OSPPAuthRspHasDest(trans->AuthRsp) == OSPC_FALSE) {
+            error = OSPC_ERR_TRAN_DEST_INVALID;
+            OSPM_DBGERRORLOG(error, "destination not found");
+        } else {
+            error = OSPPTransactionGetDestination(trans,
+               OSPC_FAIL_NONE,
+               ospvSizeOfTimestamp, ospvValidAfter, ospvValidUntil,
+               ospvTimeLimit,
+               ospvSizeOfCallId, ospvCallId,
+               ospvSizeOfCalledNumber, ospvCalledNumber,
+               ospvSizeOfCallingNumber, ospvCallingNumber,
+               ospvSizeOfDestination, ospvDestination,
+               ospvSizeOfDestinationDevice, ospvDestinationDevice,
+               ospvSizeOfToken, ospvToken);
+        }
+    }
+
+    /* Set transaction state */
+    if (error == OSPC_ERR_NO_ERROR) {
+        OSPPTransactionSetState(trans, OSPC_GET_DEST_SUCCESS);
+        trans->HasGetDestSucceeded = OSPC_TRUE;
+    } else {
+        OSPPTransactionSetState(trans, OSPC_GET_DEST_FAIL);
+    }
+
+    return error;
 }
 
 /*
@@ -1591,21 +1586,18 @@ int OSPPTransactionGetNextDestination(
     unsigned *ospvSizeOfToken,              /* In/Out - Max size of token string Actual size of token string */
     void *ospvToken)                        /* Out - Token string */
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans = NULL;
+    int error = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
 
-    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPTransactionGetDestAllowed(trans);
+    trans = OSPPTransactionGetContext(ospvTransaction, &error);
+    if ((error == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+        error = OSPPTransactionGetDestAllowed(trans);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        /*
-         * In ver2.9.3, we have removed the check to not accept 0 as a TC Code.
-         * The toolkit now accepts 0.
-         */
+    if (error == OSPC_ERR_NO_ERROR) {
+        /* In ver2.9.3, we have removed the check to not accept 0 as a TC Code. The toolkit now accepts 0. */
         /* Now check for acceptable failure code */
-        errorcode = OSPPFailReasonFind(ospvFailureReason);
+        error = OSPPFailReasonFind(ospvFailureReason);
 
         /*
          * If the FailureReason = 0, change it to DEFAULT_GETNEXTDEST_NO_ERROR, which is a NONNULL value.
@@ -1619,46 +1611,41 @@ int OSPPTransactionGetNextDestination(
         if (ospvFailureReason == OSPC_FAIL_NONE) {
             ospvFailureReason = DEFAULT_GETNEXTDEST_NO_ERROR;
         }
+    }
 
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            if (trans->CurrentDest == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_TRAN_NO_MORE_RESPONSES;
-                OSPM_DBGERRORLOG(errorcode, "No more destinations.");
-            }
-        }
-
-        if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != (OSPTTRANS *)NULL)) {
-            errorcode = OSPPTransactionGetDestination(trans,
-                ospvFailureReason,
-                ospvSizeOfTimestamp,
-                ospvValidAfter,
-                ospvValidUntil,
-                ospvTimeLimit,
-                ospvSizeOfCallId,
-                ospvCallId,
-                ospvSizeOfCalledNumber,
-                ospvCalledNumber,
-                ospvSizeOfCallingNumber,
-                ospvCallingNumber,
-                ospvSizeOfDestination,
-                ospvDestination,
-                ospvSizeOfDestinationDevice, ospvDestinationDevice, ospvSizeOfToken, ospvToken);
-        }
-
-        /* Set transaction state */
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPTransactionSetState(trans, OSPC_GET_DEST_SUCCESS);
-            trans->HasGetDestSucceeded = OSPC_TRUE;
-        } else {
-            OSPPTransactionSetState(trans, OSPC_GET_DEST_FAIL);
-        }
-
-        if (errorcode == OSPC_ERR_TRAN_DEST_INVALID) {
-            errorcode = OSPC_ERR_TRAN_NO_MORE_RESPONSES;
+    if (error == OSPC_ERR_NO_ERROR) {
+        if (trans->CurrentDest == OSPC_OSNULL) {
+            error = OSPC_ERR_TRAN_NO_MORE_RESPONSES;
+            OSPM_DBGERRORLOG(error, "No more destinations.");
         }
     }
 
-    return errorcode;
+    if (error == OSPC_ERR_NO_ERROR) {
+        error = OSPPTransactionGetDestination(trans,
+            ospvFailureReason,
+            ospvSizeOfTimestamp, ospvValidAfter, ospvValidUntil,
+            ospvTimeLimit,
+            ospvSizeOfCallId, ospvCallId,
+            ospvSizeOfCalledNumber, ospvCalledNumber,
+            ospvSizeOfCallingNumber, ospvCallingNumber,
+            ospvSizeOfDestination, ospvDestination,
+            ospvSizeOfDestinationDevice, ospvDestinationDevice,
+            ospvSizeOfToken, ospvToken);
+    }
+
+    /* Set transaction state */
+    if (error == OSPC_ERR_NO_ERROR) {
+        OSPPTransactionSetState(trans, OSPC_GET_DEST_SUCCESS);
+        trans->HasGetDestSucceeded = OSPC_TRUE;
+    } else {
+        OSPPTransactionSetState(trans, OSPC_GET_DEST_FAIL);
+    }
+
+    if (error == OSPC_ERR_TRAN_DEST_INVALID) {
+        error = OSPC_ERR_TRAN_NO_MORE_RESPONSES;
+    }
+
+    return error;
 }
 
 /*
