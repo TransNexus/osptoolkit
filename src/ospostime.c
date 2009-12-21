@@ -96,6 +96,7 @@ unsigned OSPPOSTimeCalToString( /* returns error code (0 if no error) */
      * a pointer to the struct tm).
      */
 #ifndef _WIN32
+    OSPM_MEMSET(&t, 0, sizeof(struct tm));
     gmtime_r(&ospvCalTime, &t);
 #else
     t = gmtime(&ospvCalTime);
