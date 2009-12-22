@@ -51,11 +51,27 @@ typedef enum {
     OSPC_CLEG_NUMBER
 } OSPE_CALL_LEG;
 
+typedef enum {
+    OSPC_SERVICE_UNKNOWN = OSPC_MPART_UNKNOWN,
+    OSPC_SERVICE_UNDEFINED,
+    /* Message attribute start */
+    OSPC_SERVICE_START = 0,
+    OSPC_SERVICE_VOICE = OSPC_SERVICE_START,
+    OSPC_SERVICE_VIDEO,
+    OSPC_SERVICE_DATA,
+    OSPC_SERVICE_NPQUERY,
+    /* Number of service types */
+    OSPC_SERVICE_NUMBER
+} OSPE_SERVICE;
+
 /* externally declared global variables */
 extern const OSPT_MSG_DESC OSPV_MATTR_DESCS[];
+extern const OSPT_MSG_DESC OSPV_STYPE_DESCS[];
 
 /* Function Prototypes */
 OSPE_MSG_ATTR OSPPMsgAttrGetPart(const char *);
 const char *OSPPMsgAttrGetName(OSPE_MSG_ATTR);
+OSPE_SERVICE OSPPServiceGetPart(const char *);
+const char *OSPPServiceGetName(OSPE_SERVICE);
 
 #endif /* _OSPMSGATTR_H */

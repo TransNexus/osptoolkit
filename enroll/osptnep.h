@@ -46,7 +46,7 @@ extern "C" {
 /* Denotes the failure of a function to perform some task: */
 #define OSPC_ENROLL_FAILURE_DEFAULT 0xFFFF
 
-/* 
+/*
  * The character string that denotes a function for creating enrollment
  * parameters; this should be passed in through the command line or whatever
  * input method is being used:
@@ -87,34 +87,34 @@ extern "C" {
 
 #define OSPM_STRTOL(ptr,endptr,base)        strtol( ptr, endptr, base )
 
-/* 
+/*
  * The number of characters that will be on each line of base64-encoded
  * text that is printed out:
  */
 #define OSPC_ENROLL_B64_COLUMNS_PER_LINE    64
 
 
-/* 
+/*
  * Define how to extract one byte from a long; if the long is 64-bit, then
  * this will have to be expanded to 14 "0"s.
  */
 #define OSPC_LONG_TO_BYTE_MASK              0x000000FF
 
-/* 
+/*
  * Define what the command executed is named as a default. We'll only
  * use this if we can't determine what was entered on the command line
  * for executing this program:
  */
 #define OSPC_ENROLL_DEFAULT_CMD             "enroll"
 
-/* 
+/*
  * Define the help message that gets displayed when no parameters or
  * incorrect parameters are passed in on input:
  */
 #define OSPC_ENROLL_HELP_MSG " \
 -function { getcacert | request | retrieve } [params]\n\
 \n\
-  getcacert get Certificate Authority information \n\
+  getcacert get Certificate Authority information\n\
   request   start enrollment by issuing an enrollment request\n\
   retrieve  retrieve a certificate (if available)\n\
 \n\
@@ -142,7 +142,7 @@ extern "C" {
 /*************************************************************************
  * Function prototypes:
  *************************************************************************/
-/* 
+/*
  * This is a convenience function for checking arguments. For each
  * character in the input string, change the character to lowercase
  * if it's A-Z. OSPM_TOLOWER will be used for the sake of compatibility.
@@ -152,22 +152,22 @@ extern "C" {
  */
 int OSPPEnrollStringLowercase(const char *ospvStringIn, char *ospvStringLowercaseOut);
 
-/* 
- * This function will parse the parameters that are sent on the command line. 
+/*
+ * This function will parse the parameters that are sent on the command line.
  */
 int OSPPEnrollParseParameters(int ospvArgc, char *ospvArgv[], OSPTENROLLPARAMS *enrollParams);
 
-/* 
+/*
  * Given the binary of a BER-encoded certificate, print out its base64
  * encoding to STDOUT. We'll need the length of the certificate just as
  * a convenience for knowing where to stop printing.
  *
- * Input: the certificate and its length ( minus the terminating null. ) 
+ * Input: the certificate and its length ( minus the terminating null. )
  */
 int OSPPPrintCert(unsigned char *ospvCert, unsigned ospvCertLen);
 
-/* 
- * Print a block of base64-encoded text, given the text and the length 
+/*
+ * Print a block of base64-encoded text, given the text and the length
  * to print. We'll separate each line with a newline and a carriage return
  * so that this function will write truly base64-encoded text.
  *
@@ -175,7 +175,7 @@ int OSPPPrintCert(unsigned char *ospvCert, unsigned ospvCertLen);
  */
 int OSPPPrintB64Text(unsigned char *ospvTextBlock, unsigned ospvTextBlockLen);
 
-/* 
+/*
  * Given a certificate ( which may be null ), its length ( which may be
  * less than or equal to zero ), and the status of an enrollment request,
  * report the enrollment request's status and certificate ( if available )
@@ -186,7 +186,7 @@ int OSPPPrintB64Text(unsigned char *ospvTextBlock, unsigned ospvTextBlockLen);
  */
 void OSPPPrintCertAndStatus(unsigned char *ospvCert, unsigned ospvCertLen, unsigned ospvEnrollStatus);
 
-/* 
+/*
  * Print the usage for the enrollment command. The first string in
  * is what the user typed in for the command; it may not necessarily
  * be "enroll". The second string is the help message that the user

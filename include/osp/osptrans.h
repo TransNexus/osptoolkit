@@ -101,9 +101,9 @@ typedef struct _OSPTTRANS {
     char NPRn[OSPC_SIZE_E164NUM];
     char NPCic[OSPC_SIZE_NORID];
     int NPNpdi;
-    char DiversionSrcInfo[OSPC_SIZE_E164NUM];
-    char DiversionDevInfo[OSPC_SIZE_SIGNALADDR];
-    char AssertedId[OSPC_SIZE_NORID];
+    char OpName[OSPC_OPNAME_NUMBER][OSPC_SIZE_NORID];
+    char DivSrcInfo[OSPC_SIZE_E164NUM];
+    char DivDevInfo[OSPC_SIZE_SIGNALADDR];
     OSPE_DEST_PROTOCOL DestProtocol;
     char ForwardCodec[OSPC_SIZE_CODEC];
     char ReverseCodec[OSPC_SIZE_CODEC];

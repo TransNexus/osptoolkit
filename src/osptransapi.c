@@ -42,7 +42,7 @@
  * OSPPTransactionSetServiceAndPricingInfo
  * The API sets the Service Type and Pricing Information
  * in the transaction structure
- * TODO: is deprecated, will be removed from 3.6
+ * TODO: is deprecated, will be removed from 3.7
  */
 int OSPPTransactionSetServiceAndPricingInfo(
     OSPTTRANHANDLE ospvTransaction,         /* In - Transaction handle */
@@ -58,24 +58,25 @@ int OSPPTransactionSetServiceAndPricingInfo(
         OSPPTransactionGetState(trans, &state);
         if (state != OSPC_TRANSNEW) {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Set the service type information */
-    	switch (ospvServiceType) {
-    	case OSPC_SERVICE_VOICE:
-    	case OSPC_SERVICE_DATA:
-    	case OSPC_SERVICE_NPQUERY:
+        switch (ospvServiceType) {
+        case OSPC_SERVICE_VOICE:
+        case OSPC_SERVICE_VIDEO:
+        case OSPC_SERVICE_DATA:
+        case OSPC_SERVICE_NPQUERY:
             trans->HasServiceInfo = OSPC_TRUE;
             trans->ServiceType = ospvServiceType;
             break;
-    	default:
+        default:
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
             OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionSetServiceAndPricingInfo");
             break;
-    	}
+        }
 
         /* Set the pricing info */
         for (i = 0; i < MAX_PRICING_INFO_ALLOWED; i++) {
@@ -114,24 +115,25 @@ int OSPPTransactionSetServiceType(
         OSPPTransactionGetState(trans, &state);
         if (state != OSPC_TRANSNEW) {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Set the service type information */
-    	switch (ospvType) {
-    	case OSPC_SERVICE_VOICE:
-    	case OSPC_SERVICE_DATA:
-    	case OSPC_SERVICE_NPQUERY:
+        switch (ospvType) {
+        case OSPC_SERVICE_VOICE:
+        case OSPC_SERVICE_VIDEO:
+        case OSPC_SERVICE_DATA:
+        case OSPC_SERVICE_NPQUERY:
             trans->HasServiceInfo = OSPC_TRUE;
             trans->ServiceType = ospvType;
             break;
-    	default:
+        default:
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
             OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionSetService");
             break;
-    	}
+        }
     }
 
     return errorcode;
@@ -154,7 +156,7 @@ int OSPPTransactionSetPricingInfo(
         OSPPTransactionGetState(trans, &state);
         if (state != OSPC_TRANSNEW) {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
@@ -543,7 +545,7 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
  * Reports the destination Network Id as returned in
  * either the (1) AuthRsp or the (2) Token
  * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
- * TODO: This function is deprecated and will be removed from the next major release (3.6) because of without buffer size check.
+ * TODO: This function is deprecated and will be removed from the next major release (3.7) because of without buffer size check.
  */
 int OSPPTransactionGetDestNetworkId(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
@@ -570,18 +572,18 @@ int OSPPTransactionGetDestNetworkId(
             if (trans->State == OSPC_GET_DEST_SUCCESS) {
                 if (dest == (OSPT_DEST *)NULL) {
                     errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                 } else {
                     if (OSPPDestHasNetworkAddr(dest) && OSPPDestGetNetworkAddr(dest)) {
                         sprintf(ospvNetworkId, OSPPDestGetNetworkAddr(dest));
                     } else {
                         errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
                     }
                 }
             } else {
                 errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
             }
         } else if (trans->AuthInd != OSPC_OSNULL) {
             /*
@@ -598,7 +600,7 @@ int OSPPTransactionGetDestNetworkId(
                         sprintf(ospvNetworkId, destval);
                     } else {
                         errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
                     }
                     break;
                 } else {
@@ -608,7 +610,7 @@ int OSPPTransactionGetDestNetworkId(
 
             if (found == OSPC_FALSE) {
                 errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
             }
         } else {
             errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -651,7 +653,7 @@ int OSPPTransactionGetDestinationNetworkId(
                 if (trans->State == OSPC_GET_DEST_SUCCESS) {
                     if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
                         errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                     } else if (OSPPDestHasNetworkAddr(dest)) {
                         nid = OSPPDestGetNetworkAddr(dest);
                         if (ospvSizeOfNetworkId > OSPM_STRLEN(nid)) {
@@ -662,11 +664,11 @@ int OSPPTransactionGetDestinationNetworkId(
                         }
                     } else {
                         errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
                     }
                 } else {
                     errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
                 }
             } else if (trans->AuthInd != OSPC_OSNULL) {
                 /* We are the destination. Get the information from the AuthInd structure. */
@@ -685,7 +687,7 @@ int OSPPTransactionGetDestinationNetworkId(
                             }
                         } else {
                             errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                            OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                            OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
                         }
                         break;
                     } else {
@@ -695,7 +697,7 @@ int OSPPTransactionGetDestinationNetworkId(
 
                 if (found == OSPC_FALSE) {
                     errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                    OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id \n");
+                    OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
                 }
             } else {
                 errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -736,13 +738,13 @@ int OSPPTransactionGetDestProtocol(
         if (trans->State == OSPC_GET_DEST_SUCCESS) {
             if (dest == (OSPT_DEST *)NULL) {
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
             } else {
                 *ospvDestProtocol = dest->ospmDestProtocol;
             }
         } else {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
@@ -776,13 +778,13 @@ int OSPPTransactionIsDestOSPEnabled(
         if (trans->State == OSPC_GET_DEST_SUCCESS) {
             if (dest == (OSPT_DEST *)NULL) {
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
             } else {
                 *ospvDestinationOSPStatus = dest->ospmDestOSPVersion;
             }
         } else {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
@@ -1431,54 +1433,49 @@ int OSPPTransactionGetFirstDestination(
     unsigned *ospvSizeOfToken,              /* In/Out - Max size of token string Actual size of token string */
     void *ospvToken)                        /* Out - Token string */
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int error = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-    if ((trans != (OSPTTRANS *)NULL) && (errorcode == OSPC_ERR_NO_ERROR)) {
-        errorcode = OSPPTransactionGetDestAllowed(trans);
+    trans = OSPPTransactionGetContext(ospvTransaction, &error);
+    if ((error == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+        error = OSPPTransactionGetDestAllowed(trans);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR) {
+    if (error == OSPC_ERR_NO_ERROR) {
         /* Make sure we have a response */
-        if (trans->AuthRsp == (OSPT_AUTH_RSP *)NULL) {
-            errorcode = OSPC_ERR_TRAN_RESPONSE_NOT_FOUND;
-        }
-
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            /* if no errors have occurred, get the destination information */
-            if ((errorcode == OSPC_ERR_NO_ERROR) && OSPPAuthRspHasDest(trans->AuthRsp) == OSPC_FALSE) {
-                errorcode = OSPC_ERR_TRAN_DEST_INVALID;
-                OSPM_DBGERRORLOG(errorcode, "destination not found");
-            } else {
-                errorcode = OSPPTransactionGetDestination(trans,
-                    OSPC_FAIL_NONE,
-                    ospvSizeOfTimestamp,
-                    ospvValidAfter,
-                    ospvValidUntil,
-                    ospvTimeLimit,
-                    ospvSizeOfCallId,
-                    ospvCallId,
-                    ospvSizeOfCalledNumber,
-                    ospvCalledNumber,
-                    ospvSizeOfCallingNumber,
-                    ospvCallingNumber,
-                    ospvSizeOfDestination,
-                    ospvDestination,
-                    ospvSizeOfDestinationDevice, ospvDestinationDevice, ospvSizeOfToken, ospvToken);
-            }
-
-            /* Set transaction state */
-            if (errorcode == OSPC_ERR_NO_ERROR) {
-                OSPPTransactionSetState(trans, OSPC_GET_DEST_SUCCESS);
-                trans->HasGetDestSucceeded = OSPC_TRUE;
-            } else {
-                OSPPTransactionSetState(trans, OSPC_GET_DEST_FAIL);
-            }
+        if (trans->AuthRsp == OSPC_OSNULL) {
+            error = OSPC_ERR_TRAN_RESPONSE_NOT_FOUND;
         }
     }
 
-    return errorcode;
+    if (error == OSPC_ERR_NO_ERROR) {
+        /* if no errors have occurred, get the destination information */
+        if (OSPPAuthRspHasDest(trans->AuthRsp) == OSPC_FALSE) {
+            error = OSPC_ERR_TRAN_DEST_INVALID;
+            OSPM_DBGERRORLOG(error, "destination not found");
+        } else {
+            error = OSPPTransactionGetDestination(trans,
+               OSPC_FAIL_NONE,
+               ospvSizeOfTimestamp, ospvValidAfter, ospvValidUntil,
+               ospvTimeLimit,
+               ospvSizeOfCallId, ospvCallId,
+               ospvSizeOfCalledNumber, ospvCalledNumber,
+               ospvSizeOfCallingNumber, ospvCallingNumber,
+               ospvSizeOfDestination, ospvDestination,
+               ospvSizeOfDestinationDevice, ospvDestinationDevice,
+               ospvSizeOfToken, ospvToken);
+        }
+    }
+
+    /* Set transaction state */
+    if (error == OSPC_ERR_NO_ERROR) {
+        OSPPTransactionSetState(trans, OSPC_GET_DEST_SUCCESS);
+        trans->HasGetDestSucceeded = OSPC_TRUE;
+    } else {
+        OSPPTransactionSetState(trans, OSPC_GET_DEST_FAIL);
+    }
+
+    return error;
 }
 
 /*
@@ -1589,21 +1586,18 @@ int OSPPTransactionGetNextDestination(
     unsigned *ospvSizeOfToken,              /* In/Out - Max size of token string Actual size of token string */
     void *ospvToken)                        /* Out - Token string */
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans = NULL;
+    int error = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
 
-    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        errorcode = OSPPTransactionGetDestAllowed(trans);
+    trans = OSPPTransactionGetContext(ospvTransaction, &error);
+    if ((error == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+        error = OSPPTransactionGetDestAllowed(trans);
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        /*
-         * In ver2.9.3, we have removed the check to not accept 0 as a TC Code.
-         * The toolkit now accepts 0.
-         */
+    if (error == OSPC_ERR_NO_ERROR) {
+        /* In ver2.9.3, we have removed the check to not accept 0 as a TC Code. The toolkit now accepts 0. */
         /* Now check for acceptable failure code */
-        errorcode = OSPPFailReasonFind(ospvFailureReason);
+        error = OSPPFailReasonFind(ospvFailureReason);
 
         /*
          * If the FailureReason = 0, change it to DEFAULT_GETNEXTDEST_NO_ERROR, which is a NONNULL value.
@@ -1617,46 +1611,41 @@ int OSPPTransactionGetNextDestination(
         if (ospvFailureReason == OSPC_FAIL_NONE) {
             ospvFailureReason = DEFAULT_GETNEXTDEST_NO_ERROR;
         }
+    }
 
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            if (trans->CurrentDest == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_TRAN_NO_MORE_RESPONSES;
-                OSPM_DBGERRORLOG(errorcode, "No more destinations.");
-            }
-        }
-
-        if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != (OSPTTRANS *)NULL)) {
-            errorcode = OSPPTransactionGetDestination(trans,
-                ospvFailureReason,
-                ospvSizeOfTimestamp,
-                ospvValidAfter,
-                ospvValidUntil,
-                ospvTimeLimit,
-                ospvSizeOfCallId,
-                ospvCallId,
-                ospvSizeOfCalledNumber,
-                ospvCalledNumber,
-                ospvSizeOfCallingNumber,
-                ospvCallingNumber,
-                ospvSizeOfDestination,
-                ospvDestination,
-                ospvSizeOfDestinationDevice, ospvDestinationDevice, ospvSizeOfToken, ospvToken);
-        }
-
-        /* Set transaction state */
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPTransactionSetState(trans, OSPC_GET_DEST_SUCCESS);
-            trans->HasGetDestSucceeded = OSPC_TRUE;
-        } else {
-            OSPPTransactionSetState(trans, OSPC_GET_DEST_FAIL);
-        }
-
-        if (errorcode == OSPC_ERR_TRAN_DEST_INVALID) {
-            errorcode = OSPC_ERR_TRAN_NO_MORE_RESPONSES;
+    if (error == OSPC_ERR_NO_ERROR) {
+        if (trans->CurrentDest == OSPC_OSNULL) {
+            error = OSPC_ERR_TRAN_NO_MORE_RESPONSES;
+            OSPM_DBGERRORLOG(error, "No more destinations.");
         }
     }
 
-    return errorcode;
+    if (error == OSPC_ERR_NO_ERROR) {
+        error = OSPPTransactionGetDestination(trans,
+            ospvFailureReason,
+            ospvSizeOfTimestamp, ospvValidAfter, ospvValidUntil,
+            ospvTimeLimit,
+            ospvSizeOfCallId, ospvCallId,
+            ospvSizeOfCalledNumber, ospvCalledNumber,
+            ospvSizeOfCallingNumber, ospvCallingNumber,
+            ospvSizeOfDestination, ospvDestination,
+            ospvSizeOfDestinationDevice, ospvDestinationDevice,
+            ospvSizeOfToken, ospvToken);
+    }
+
+    /* Set transaction state */
+    if (error == OSPC_ERR_NO_ERROR) {
+        OSPPTransactionSetState(trans, OSPC_GET_DEST_SUCCESS);
+        trans->HasGetDestSucceeded = OSPC_TRUE;
+    } else {
+        OSPPTransactionSetState(trans, OSPC_GET_DEST_FAIL);
+    }
+
+    if (error == OSPC_ERR_TRAN_DEST_INVALID) {
+        error = OSPC_ERR_TRAN_NO_MORE_RESPONSES;
+    }
+
+    return error;
 }
 
 /*
@@ -1975,7 +1964,7 @@ int OSPPTransactionBuildUsageFromScratch(
                             errorcode = OSPC_ERR_TRAN_DEST_INVALID;
                         }
                     } /* end  if (errorcode == OSPC_ERR_NO_ERROR) */
-                   
+
                     /* Populate Transaction Id */
                     trans->TransactionID = ospvServerTransactionId;
                     trans->HasTransactionID = OSPC_TRUE;
@@ -2309,7 +2298,6 @@ int OSPPTransactionNew(
         trans->NPRn[0] = '\0';
         trans->NPCic[0] = '\0';
         trans->NPNpdi = OSPC_FALSE;
-        trans->AssertedId[0] = '\0';
         trans->DestProtocol = OSPC_DPROT_UNKNOWN;
         trans->ForwardCodec[0] = '\0';
         trans->ReverseCodec[0] = '\0';
@@ -2321,6 +2309,9 @@ int OSPPTransactionNew(
         }
         trans->UsageSrcNetworkId[0] = '\0';
         trans->UsageDestNetworkId[0] = '\0';
+        for (cnt = 0; cnt < OSPC_OPNAME_NUMBER; cnt++) {
+            trans->OpName[cnt][0] = '\0';
+        }
     }
 
     return errorcode;
@@ -2540,8 +2531,8 @@ int OSPPTransactionReinitializeAtDevice(
                 OSPPDestSetTermCause(trans->CurrentDest, OSPC_TCAUSE_Q850, ospvFailureReason, OSPC_OSNULL);
                 /* now build new dest */
                 errorcode = OSPPTransactionResponseBuild(trans,
-                                                         ospvDestination, ospvCallingNumber, ospvSizeOfCallId,
-                                                         ospvCallId, ospvSizeOfToken, ospvToken);
+                    ospvDestination, ospvCallingNumber, ospvSizeOfCallId,
+                    ospvCallId, ospvSizeOfToken, ospvToken);
             } else {
                 errorcode = OSPC_ERR_TRAN_NOT_IMPLEMENTED;
                 OSPM_DBGERRORLOG(errorcode, "Invalid system type.");
@@ -2750,10 +2741,6 @@ int OSPPTransactionReportUsage(
                             if (OSPPTransactionHasStatistics(trans)) {
                                 OSPPTransactionGetStatistics(trans, &stats);
                                 OSPPUsageIndSetStatistics(usage, &stats);
-                            }
-
-                            if (trans->AssertedId[0] != '\0') {
-                                OSPPUsageIndSetAssertedId(usage, trans->AssertedId);
                             }
 
                             if ((trans->DestProtocol >= OSPC_DPROT_START) && (trans->DestProtocol < OSPC_DPROT_NUMBER)) {
@@ -2996,7 +2983,7 @@ int OSPPTransactionRequestAuthorisation(
     unsigned *ospvSizeOfDetailLog,              /* In/Out - Max size of detail log Actual size of detail log */
     void *ospvDetailLog)                        /* In/Out - Location of detail log storage */
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int error = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
     OSPT_MSG_INFO *msginfo = OSPC_OSNULL;
     unsigned char *xmldoc = OSPC_OSNULL;
@@ -3004,7 +2991,7 @@ int OSPPTransactionRequestAuthorisation(
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
     OSPT_TN_PROBE *probelist = OSPC_OSNULL, *tmpprobe = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
-    register unsigned probecnt = 0;
+    unsigned probecnt = 0;
     OSPTSVCPT *svcpt = OSPC_OSNULL;
     unsigned tmpNumberOfCallIds = 0;
     OSPT_CALL_ID **tmpCallIds = OSPC_OSNULL;
@@ -3015,12 +3002,14 @@ int OSPPTransactionRequestAuthorisation(
         (ospvCalledNumber == OSPC_OSNULL) ||
         ((ospvNumberOfCallIds != 0) && ((ospvCallIds == OSPC_OSNULL) || (ospvCallIds[0] == OSPC_OSNULL))) ||
         ((ospvCallingNumberFormat < OSPC_NFORMAT_START) || (ospvCallingNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
-        ((ospvCalledNumberFormat < OSPC_NFORMAT_START) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) || (ospvNumberOfDestinations == 0)) {
-        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+        ((ospvCalledNumberFormat < OSPC_NFORMAT_START) || (ospvCalledNumberFormat >= OSPC_NFORMAT_NUMBER)) ||
+        (ospvNumberOfDestinations == 0))
+    {
+        error = OSPC_ERR_TRAN_INVALID_ENTRY;
         OSPM_DBGERRORLOG(errorcode, "Invalid input for RequestAuthorisation");
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR) {
+    if (error == OSPC_ERR_NO_ERROR) {
         if (ospvNumberOfCallIds == 0) {
             tmpNumberOfCallIds = OSPC_UNDEFINED_CALLID_NUM;
             tmpCallIds = undefinedCallIds;
@@ -3029,59 +3018,53 @@ int OSPPTransactionRequestAuthorisation(
             tmpCallIds = ospvCallIds;
 
 /* Relax the number of call ids check for Emergent's two call ids solution */
-/*
+#if 0
             if ((ospvNumberOfCallIds > 1) && (ospvNumberOfCallIds != *ospvNumberOfDestinations)) {
                 errorcode = OSPC_ERR_TRAN_CALLID_DEST_MISMATCH;
                 OSPM_DBGERRORLOG(errorcode, "number of callids != number of dests sent in.");
             }
-*/
+#endif
         }
     }
 
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    if (error == OSPC_ERR_NO_ERROR) {
+        trans = OSPPTransactionGetContext(ospvTransaction, &error);
 
         /* Check Callids */
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (error == OSPC_ERR_NO_ERROR) {
 
             /* if there is an authreq here already, we have an error */
             if (trans->AuthReq == OSPC_OSNULL) {
 
                 /* Build Auth request */
-                errorcode = OSPPTransactionRequestNew(trans,
+                error = OSPPTransactionRequestNew(trans,
                     ospvSource, ospvSourceDevice, ospvCallingNumber,
                     ospvCalledNumber, ospvUser, tmpNumberOfCallIds,
                     tmpCallIds, ospvPreferredDestinations,
                     ospvNumberOfDestinations, ospvSizeOfDetailLog, ospvDetailLog);
-
-                if (errorcode == OSPC_ERR_NO_ERROR) {
+                if (error == OSPC_ERR_NO_ERROR) {
                     trans->CallingNumberFormat = ospvCallingNumberFormat;
                     trans->CalledNumberFormat = ospvCalledNumberFormat;
 
-                    errorcode = OSPPXMLMessageCreate(OSPC_MSG_AREQ, &xmldoc, &sizeofxmldoc, trans->AuthReq, trans);
-                    if (errorcode == OSPC_ERR_NO_ERROR) {
-
-                        errorcode = OSPPMsgInfoNew(&msginfo);
-
-                        if (errorcode == OSPC_ERR_NO_ERROR) {
+                    error = OSPPXMLMessageCreate(OSPC_MSG_AREQ, &xmldoc, &sizeofxmldoc, trans->AuthReq, trans);
+                    if (error == OSPC_ERR_NO_ERROR) {
+                        if ((error = OSPPMsgInfoNew(&msginfo)) == OSPC_ERR_NO_ERROR) {
                             /* Set transaction state */
                             OSPPTransactionSetState(trans, OSPC_AUTH_REQUEST_BLOCK);
 
-                            errorcode = OSPPTransactionPrepareAndQueMessage(trans, xmldoc, sizeofxmldoc, &msginfo);
-
-                            if (errorcode == OSPC_ERR_NO_ERROR) {
-                                errorcode = OSPPTransactionProcessReturn(trans, msginfo);
-
-                                if ((errorcode == OSPC_ERR_NO_ERROR) && (trans->AuthRsp != OSPC_OSNULL)) {
+                            error = OSPPTransactionPrepareAndQueMessage(trans, xmldoc, sizeofxmldoc, &msginfo);
+                            if (error == OSPC_ERR_NO_ERROR) {
+                                error = OSPPTransactionProcessReturn(trans, msginfo);
+                                if ((error == OSPC_ERR_NO_ERROR) && (trans->AuthRsp != OSPC_OSNULL)) {
                                     /* Set num destinations */
                                     *ospvNumberOfDestinations = OSPPAuthRspGetNumDests(trans->AuthRsp);
 
                                     /* Check status code */
                                     if (trans->AuthRsp->ospmAuthRspStatus->ospmStatusCode > 299) {
-                                        errorcode = OSPPUtilGetErrorFromStatus(trans->AuthRsp->ospmAuthRspStatus->ospmStatusCode);
+                                        error = OSPPUtilGetErrorFromStatus(trans->AuthRsp->ospmAuthRspStatus->ospmStatusCode);
                                     }
 
-                                    if ((*ospvNumberOfDestinations > 0) && (errorcode == OSPC_ERR_NO_ERROR)) {
+                                    if ((*ospvNumberOfDestinations > 0) && (error == OSPC_ERR_NO_ERROR)) {
                                         /* Do we need to run probe? */
                                         if ((*ospvNumberOfDestinations > 1) &&
                                             (OSPPAuthRspHasDelayLimit(trans->AuthRsp) || OSPPAuthRspHasDelayPref(trans->AuthRsp))) {
@@ -3089,22 +3072,22 @@ int OSPPTransactionRequestAuthorisation(
                                             /* build probe list */
                                             OSPM_MALLOC(probelist, OSPT_TN_PROBE, sizeof(OSPT_TN_PROBE) * *ospvNumberOfDestinations);
                                             if (probelist == OSPC_OSNULL) {
-                                                errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
+                                                error = OSPC_ERR_TRAN_MALLOC_FAILED;
                                             }
 
-                                            if (errorcode == OSPC_ERR_NO_ERROR) {
+                                            if (error == OSPC_ERR_NO_ERROR) {
                                                 OSPM_MEMSET(probelist, 0, sizeof(OSPT_TN_PROBE) * *ospvNumberOfDestinations);
 
                                                 tmpprobe = probelist;
-                                                for (probecnt = 0, dest = (OSPT_DEST *)OSPPAuthRspFirstDest(trans->AuthRsp);
+                                                for (probecnt = 0, dest = OSPPAuthRspFirstDest(trans->AuthRsp);
                                                      probecnt < *ospvNumberOfDestinations;
-                                                     dest = (OSPT_DEST *)OSPPAuthRspNextDest(trans->AuthRsp, dest)) {
-
+                                                     dest = OSPPAuthRspNextDest(trans->AuthRsp, dest))
+                                                {
                                                     if (dest != OSPC_OSNULL) {
-                                                        errorcode = OSPPCommParseSvcPt(OSPPDestGetAddr(dest), &svcpt, 0);
+                                                        error = OSPPCommParseSvcPt(OSPPDestGetAddr(dest), &svcpt, 0);
                                                     }
 
-                                                    if (errorcode == OSPC_ERR_NO_ERROR) {
+                                                    if (error == OSPC_ERR_NO_ERROR) {
                                                         if (svcpt != OSPC_OSNULL) {
                                                             tmpprobe[probecnt].ospmipaddr = svcpt->IpAddr;
 
@@ -3129,17 +3112,15 @@ int OSPPTransactionRequestAuthorisation(
                                                 delay = OSPPAuthRspGetDelayLimit(trans->AuthRsp);
                                             }
 
-                                            errorcode = OSPPTNProbe(probelist, probecnt, delay);
-
-                                            if (errorcode == OSPC_ERR_NO_ERROR) {
+                                            if ((error = OSPPTNProbe(probelist, probecnt, delay)) == OSPC_ERR_NO_ERROR) {
                                                 if (OSPPAuthRspHasDelayLimit(trans->AuthRsp)) {
                                                     OSPPTNProbePruneList(&(trans->AuthRsp->ospmAuthRspDest),
                                                         probelist,
-                                                        OSPPAuthRspGetDelayLimit(trans->AuthRsp), ospvNumberOfDestinations);
+                                                        OSPPAuthRspGetDelayLimit(trans->AuthRsp),
+                                                        ospvNumberOfDestinations);
                                                 }
 
                                                 if ((OSPPAuthRspHasDelayPref(trans->AuthRsp)) && (*ospvNumberOfDestinations > 1)) {
-
                                                     OSPPTNProbeArrangeList(&(trans->AuthRsp->ospmAuthRspDest),
                                                         probelist, *ospvNumberOfDestinations);
                                                 }
@@ -3172,7 +3153,7 @@ int OSPPTransactionRequestAuthorisation(
                     }
                 }
             } else {
-                errorcode = OSPC_ERR_TRAN_NO_NEW_AUTHREQ;
+                error = OSPC_ERR_TRAN_NO_NEW_AUTHREQ;
                 OSPM_DBGERRORLOG(errorcode, "Unfinished AuthReq found.");
             }
 
@@ -3185,13 +3166,13 @@ int OSPPTransactionRequestAuthorisation(
 
     /* end else (valid data) */
     /* Set transaction state */
-    if ((errorcode == OSPC_ERR_NO_ERROR) || (errorcode == OSPC_ERR_TRAN_NO_NEW_AUTHREQ)) {
+    if ((error == OSPC_ERR_NO_ERROR) || (error == OSPC_ERR_TRAN_NO_NEW_AUTHREQ)) {
         OSPPTransactionSetState(trans, OSPC_AUTH_REQUEST_SUCCESS);
     } else {
         OSPPTransactionSetState(trans, OSPC_AUTH_REQUEST_FAIL);
     }
 
-    return errorcode;
+    return error;
 }
 
 /*
@@ -3344,7 +3325,6 @@ int OSPPTransactionRequestReauthorisation(
                         OSPM_DBGERRORLOG(errorcode, "null pointer for token.");
                     } else {
                         if (*ospvSizeOfToken < (unsigned)OSPPTokenGetSize(token)) {
-
                             errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
                             OSPM_DBGERRORLOG(errorcode, "not enough space for token");
                         } else {
@@ -4103,7 +4083,7 @@ int OSPPTransactionIndicateCapabilities(
             OSPM_DBGERRORLOG(errorcode, "Duplicate Call To OSPPTransactionIndicateCapabilities");
         } else if (trans->AuthRsp != OSPC_OSNULL || trans->AuthInd != OSPC_OSNULL) {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
         }
     }
 
@@ -4186,7 +4166,7 @@ int OSPPTransactionIndicateCapabilities(
  *   ospvTransaction: handle of the transaction object.
  *   ospvRoutingNum: the routing number specific information to be reported to the server.
  * returns OSPC_ERR_NO_ERROR if successful, else error code.
- * TODO: This function is deprecated and will be removed from the next major release (3.6).
+ * TODO: This function is deprecated and will be removed from the next major release (3.7).
  */
 int OSPPTransactionSetRoutingNumber(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
@@ -4337,27 +4317,8 @@ int OSPPTransactionSetDiversion(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            OSPM_STRNCPY(trans->DiversionSrcInfo, ospvNumber, sizeof(trans->DiversionSrcInfo) - 1);
-            OSPM_STRNCPY(trans->DiversionDevInfo, ospvDomain, sizeof(trans->DiversionDevInfo) - 1);
-        }
-    }
-
-    return errorcode;
-}
-
-int OSPPTransactionSetAssertedId(
-    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    const char *ospvAssertedId)     /* In - Assterted ID */
-{
-    int errorcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans = OSPC_OSNULL;
-
-    if ((ospvAssertedId == OSPC_OSNULL) || (ospvAssertedId[0] == '\0')) {
-        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-    } else {
-        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-        if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            OSPM_STRNCPY(trans->AssertedId, ospvAssertedId, sizeof(trans->AssertedId) - 1);
+            OSPM_STRNCPY(trans->DivSrcInfo, ospvNumber, sizeof(trans->DivSrcInfo) - 1);
+            OSPM_STRNCPY(trans->DivDevInfo, ospvDomain, sizeof(trans->DivDevInfo) - 1);
         }
     }
 
@@ -4784,7 +4745,7 @@ int OSPPTransactionSetICPIF(
  * OSPPTransactionGetNumberPortability() :
  * Reports number portability parameters returned in AuthRsp
  * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
- * TODO: This function is deprecated and will be removed from the next major release (3.6) because of without buffer size check.
+ * TODO: This function is deprecated and will be removed from the next major release (3.7) because of without buffer size check.
  */
 int OSPPTransactionGetNumberPortability(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
@@ -4812,7 +4773,7 @@ int OSPPTransactionGetNumberPortability(
                 dest = trans->CurrentDest;
                 if (dest == (OSPT_DEST *)OSPC_OSNULL) {
                     errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                 } else {
                     OSPM_STRCPY(ospvNPRn, dest->ospmNPRn);
                     OSPM_STRCPY(ospvNPCic, dest->ospmNPCic);
@@ -4820,7 +4781,7 @@ int OSPPTransactionGetNumberPortability(
                 }
             } else {
                 errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
             }
         } else if (trans->AuthInd != OSPC_OSNULL) {
             /*
@@ -4830,7 +4791,7 @@ int OSPPTransactionGetNumberPortability(
             dest = trans->AuthInd->ospmAuthIndDest;
             if (dest == (OSPT_DEST *)OSPC_OSNULL) {
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
             } else {
                 OSPM_STRCPY(ospvNPRn, dest->ospmNPRn);
                 OSPM_STRCPY(ospvNPCic, dest->ospmNPCic);
@@ -4878,7 +4839,7 @@ int OSPPTransactionGetNumberPortabilityParameters(
             if (trans->State == OSPC_GET_DEST_SUCCESS) {
                 if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
                     errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                 } else {
                     if (ospvSizeOfNPRn != 0) {
                         if (ospvSizeOfNPRn > OSPM_STRLEN(dest->ospmNPRn)) {
@@ -4902,13 +4863,13 @@ int OSPPTransactionGetNumberPortabilityParameters(
                 }
             } else {
                 errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
             }
         } else if (trans->AuthInd != OSPC_OSNULL) {
             /* We are the destination.  Get the information from the AuthInd structure. */
             if ((dest = trans->AuthInd->ospmAuthIndDest) == OSPC_OSNULL) {
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
+                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
             } else {
                 if (ospvSizeOfNPRn != 0) {
                     if (ospvSizeOfNPRn > OSPM_STRLEN(dest->ospmNPRn)) {
@@ -4940,108 +4901,93 @@ int OSPPTransactionGetNumberPortabilityParameters(
 }
 
 /*
- * OSPPTransactionGetServiceProviderId() :
- * Reports SPID returned in AuthRsp
- * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
+ * OSPPTransactionSetOperatorName() :
+ * The API sets the operator names in the transaction structure
  */
-int OSPPTransactionGetServiceProviderId(
+int OSPPTransactionSetOperatorName(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    unsigned ospvSizeOfSpid,        /* In - Max size of SPID */
-    char *ospvSpid)                 /* Out - Service provider ID */
+    OSPE_OPERATOR_NAME ospvType,    /* In - Operator name type */
+    const char *ospvName)           /* In - Operator name */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
-    OSPT_DEST *dest = OSPC_OSNULL;
 
-    if (ospvSizeOfSpid == 0) {
-        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy SPID.");
-    } else {
-        ospvSpid[0] = '\0';
-        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errorcode)) != OSPC_OSNULL) {
-            if (trans->AuthReq != OSPC_OSNULL) {
-                /* We are the source.  Get the information from the destination structure. */
-                if (trans->State == OSPC_GET_DEST_SUCCESS) {
-                    if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
-                        errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
-                    } else if (ospvSizeOfSpid > OSPM_STRLEN(dest->ospmNPSpid)) {
-                        OSPM_STRNCPY(ospvSpid, dest->ospmNPSpid, ospvSizeOfSpid);
-                    } else {
-                        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy SPID.");
-                    }
-                } else {
-                    errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
-                }
-            } else if (trans->AuthInd != OSPC_OSNULL) {
-                /* We are the destination.  Get the information from the AuthInd structure. */
-                if ((dest = trans->AuthInd->ospmAuthIndDest) == OSPC_OSNULL) {
-                    errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
-                } else if (ospvSizeOfSpid > OSPM_STRLEN(dest->ospmNPSpid)) {
-                    OSPM_STRNCPY(ospvSpid, dest->ospmNPSpid, ospvSizeOfSpid);
-                } else {
-                    errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                    OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy SPID.");
-                }
-            } else {
-                errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-                OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");
-            }
+    if (((ospvType >= OSPC_OPNAME_START) && (ospvType < OSPC_OPNAME_NUMBER)) &&
+        (ospvName != OSPC_OSNULL) && (*ospvName != '\0'))
+    {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            OSPM_STRNCPY(trans->OpName[ospvType], ospvName, sizeof(trans->OpName[ospvType]) - 1);
         }
+    } else {
+        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+        OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionSetOperatorName");
     }
 
     return errorcode;
 }
 
 /*
- * OSPPTransactionGetOperatingCompanyNumber() :
- * Reports OCN returned in AuthRsp
+ * OSPPTransactionGetOperatorName() :
+ * Reports operator names returned in AuthRsp
  * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
  */
-int OSPPTransactionGetOperatingCompanyNumber(
+int OSPPTransactionGetOperatorName(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    unsigned ospvSizeOfOcn,         /* In - Max size of OCN */
-    char *ospvOcn)                  /* Out - Operating Company Number */
+    OSPE_OPERATOR_NAME ospvType,    /* In - Operator name type */
+    unsigned ospvSizeOfName,        /* In - Max size of name */
+    char *ospvName)                 /* Out - Operator name */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
 
-    if (ospvSizeOfOcn == 0) {
+    if (ospvSizeOfName == 0) {
         errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy OCN.");
+        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy operator name.");
     } else {
-        ospvOcn[0] = '\0';
+        ospvName[0] = '\0';
         if ((trans = OSPPTransactionGetContext(ospvTransaction, &errorcode)) != OSPC_OSNULL) {
             if (trans->AuthReq != OSPC_OSNULL) {
                 /* We are the source.  Get the information from the destination structure. */
                 if (trans->State == OSPC_GET_DEST_SUCCESS) {
                     if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
                         errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
-                    } else if (ospvSizeOfOcn > OSPM_STRLEN(dest->ospmNPOcn)) {
-                        OSPM_STRNCPY(ospvOcn, dest->ospmNPOcn, ospvSizeOfOcn);
+                        OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                     } else {
-                        errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                        OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy OCN.");
+                        if ((ospvType >= OSPC_OPNAME_START) && (ospvType < OSPC_OPNAME_NUMBER)) {
+                            if (ospvSizeOfName > OSPM_STRLEN(dest->ospmOpName[ospvType])) {
+                                OSPM_STRNCPY(ospvName, dest->ospmOpName[ospvType], ospvSizeOfName);
+                            } else {
+                                errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                                OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy operator name.");
+                            }
+                        } else {
+                            errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                            OSPM_DBGERRORLOG(errorcode, "Invalid operator name type.");
+                        }
                     }
                 } else {
                     errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence \n");
+                    OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
                 }
             } else if (trans->AuthInd != OSPC_OSNULL) {
                 /* We are the destination.  Get the information from the AuthInd structure. */
                 if ((dest = trans->AuthInd->ospmAuthIndDest) == OSPC_OSNULL) {
                     errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction \n");
-                } else if (ospvSizeOfOcn > OSPM_STRLEN(dest->ospmNPOcn)) {
-                    OSPM_STRNCPY(ospvOcn, dest->ospmNPOcn, ospvSizeOfOcn);
+                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
                 } else {
-                    errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                    OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy OCN.");
+                    if ((ospvType >= OSPC_OPNAME_START) && (ospvType < OSPC_OPNAME_NUMBER)) {
+                        if (ospvSizeOfName > OSPM_STRLEN(dest->ospmOpName[ospvType])) {
+                            OSPM_STRNCPY(ospvName, dest->ospmOpName[ospvType], ospvSizeOfName);
+                        } else {
+                            errorcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errorcode, "No enough buffer to copy operater name.");
+                        }
+                    } else {
+                        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                        OSPM_DBGERRORLOG(errorcode, "Invalid operator name type.");
+                    }
                 }
             } else {
                 errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;

@@ -37,9 +37,10 @@ typedef enum {
     OSPC_DPROT_IAX,                             /* Destination Protocol - IAX */
     OSPC_DPROT_T37,                             /* Destination Protocol - Fax T.37 */
     OSPC_DPROT_T38,                             /* Destination Protocol - Fax T.38 */
-    OSPC_DPROT_SKYPE,
+    OSPC_DPROT_SKYPE,                           /* Destination Protocol - Skype */
     OSPC_DPROT_SMPP,                            /* Destination Protocol - SMPP */
     OSPC_DPROT_XMPP,                            /* Destination Protocol - XMPP */
+    OSPC_DPROT_SMS,                             /* Destination Protocol - SMS */
     /* Number of destiantion protocol types */
     OSPC_DPROT_NUMBER
 } OSPE_DEST_PROTOCOL;
@@ -57,6 +58,21 @@ typedef enum {
 
 #define DEST_OSP_DIABLED                "0.0.0"
 #define DEST_OSP_UNKNOWN                ""
+
+/* Operator Name Type */
+typedef enum {
+    OSPC_OPNAME_UNKNOWN = OSPC_MPART_UNKNOWN,   /* Could not be understood by the Client as Sent by the Server */
+    OSPC_OPNAME_UNDEFINED,                      /* Not Configured at Server */
+    OSPC_OPNAME_START = 0,                      /* Operator Name start */
+    OSPC_OPNAME_SPID = OSPC_OPNAME_START,       /* Service Provider ID */
+    OSPC_OPNAME_OCN,                            /* Operating Company Number */
+    OSPC_OPNAME_SPN,                            /* Service Provider Name */
+    OSPC_OPNAME_ALTSPN,                         /* Alternate SPN */
+    OSPC_OPNAME_MCC,                            /* Mobile Country Code */
+    OSPC_OPNAME_MNC,                            /* Mobile Network Code */
+    /* Number of operator name types */
+    OSPC_OPNAME_NUMBER
+} OSPE_OPERATOR_NAME;
 
 #define DEFAULT_GETNEXTDEST_NO_ERROR    99999
 
@@ -83,8 +99,8 @@ typedef struct {
     char ospmNPRn[OSPC_SIZE_E164NUM];
     char ospmNPCic[OSPC_SIZE_NORID];
     int ospmNPNpdi;
-    char ospmNPSpid[OSPC_SIZE_NORID];
-    char ospmNPOcn[OSPC_SIZE_NORID];
+    char ospmOpName[OSPC_OPNAME_NUMBER][OSPC_SIZE_NORID];
+    OSPTBOOL ospmIsNPQuery;
 } OSPT_DEST;
 
 /* Function Prototypes */
@@ -94,7 +110,7 @@ extern "C" {
 
     OSPT_DEST *OSPPDestNew(void);
     void OSPPDestDelete(OSPT_DEST **);
-    unsigned OSPPDestFromElement(OSPT_XML_ELEM *, OSPT_DEST **);
+    int OSPPDestFromElement(OSPT_XML_ELEM *, OSPT_DEST **);
     void OSPPDestSetCallId(OSPT_DEST *, const unsigned char *, unsigned);
     void OSPPDestSetProtocol(OSPT_DEST *, const char *);
     void OSPPDestSetOSPVersion(OSPT_DEST *, const char *);
@@ -141,6 +157,8 @@ extern "C" {
     OSPE_DEST_PROTOCOL OSPPDestProtocolGetPart(const char *);
     const char *OSPPDestProtocolGetName(OSPE_DEST_PROTOCOL);
     void OSPPDestInfoFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
+    int OSPPUsageDetailFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
+    void OSPPServiceFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
 
 #ifdef __cplusplus
 }

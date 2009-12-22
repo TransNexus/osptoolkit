@@ -33,11 +33,6 @@ typedef struct {
     OSPTLIST ospmAuthReqCallId;
     char ospmAuthReqSourceNumber[OSPC_SIZE_E164NUM];
     char ospmAuthReqDestNumber[OSPC_SIZE_E164NUM];
-    char ospmAuthReqNPRn[OSPC_SIZE_E164NUM];
-    char ospmAuthReqNPCic[OSPC_SIZE_NORID];
-    int ospmAuthReqNPNpdi;
-    char ospmAuthReqDiversionSrcInfo[OSPC_SIZE_E164NUM];
-    char ospmAuthReqDiversionDevInfo[OSPC_SIZE_SIGNALADDR];
     OSPTLIST ospmAuthReqSourceAlternate;
     OSPTLIST ospmAuthReqDestinationAlternate;
     unsigned ospmAuthReqMaxDest;
@@ -82,21 +77,12 @@ extern "C" {
     OSPTBOOL OSPPAuthReqHasDeviceId(OSPT_AUTH_REQ *ospvAuthReq);
     void OSPPAuthReqSetDeviceId(OSPT_AUTH_REQ *, unsigned long);
     unsigned long OSPPAuthReqGetDeviceId(OSPT_AUTH_REQ *);
-    void OSPPAuthReqSetNumberPortability(OSPT_AUTH_REQ *, const char *, const char *, int);
-    OSPTBOOL OSPPAuthReqHasNPRn(OSPT_AUTH_REQ *);
-    const char *OSPPAuthReqGetNPRn(OSPT_AUTH_REQ *);
-    unsigned OSPPNPRnToElement(const char *, OSPT_XML_ELEM **);
-    OSPTBOOL OSPPAuthReqHasNPCic(OSPT_AUTH_REQ *);
-    const char *OSPPAuthReqGetNPCic(OSPT_AUTH_REQ *);
-    unsigned OSPPNPCicToElement(const char *, OSPT_XML_ELEM **);
-    OSPTBOOL OSPPAuthReqHasNPNpdi(OSPT_AUTH_REQ *);
-    int OSPPAuthReqGetNPNpdi(OSPT_AUTH_REQ *);
-    unsigned OSPPNPNpdiToElement(int, OSPT_XML_ELEM **);
-    OSPTBOOL OSPPAuthReqHasDiversion(OSPT_AUTH_REQ *);
-    void OSPPAuthReqSetDiversion(OSPT_AUTH_REQ *, const char *, const char *);
-    void OSPPAuthReqGetDiversion(OSPT_AUTH_REQ *, char **, char **);
-    unsigned OSPPServiceTypeToElement(OSPE_SERVICE, OSPT_XML_ELEM **);
-    unsigned OSPPPricingInfoToElement(OSPT_PRICING_INFO, OSPT_XML_ELEM **);
+    int OSPPNPRnToElement(const char *, OSPT_XML_ELEM **);
+    int OSPPNPCicToElement(const char *, OSPT_XML_ELEM **);
+    int OSPPNPNpdiToElement(int, OSPT_XML_ELEM **);
+    int OSPPOperatorNameToElement(OSPE_OPERATOR_NAME, const char *, OSPT_XML_ELEM **);
+    int OSPPServiceTypeToElement(OSPE_SERVICE, OSPT_XML_ELEM **);
+    int OSPPPricingInfoToElement(OSPT_PRICING_INFO, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

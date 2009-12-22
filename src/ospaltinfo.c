@@ -42,12 +42,15 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_XMPP,            "xmpp" },
     { OSPC_ALTINFO_Q850,            "q850" },
     { OSPC_ALTINFO_DEVICEID,        "deviceId" },
-    { OSPC_ALTINFO_ASSERTEDID,      "assertedId" },
     { OSPC_ALTINFO_NPRN,            "routingnumber" },
     { OSPC_ALTINFO_NPCIC,           "cic" },
     { OSPC_ALTINFO_NPDI,            "npdi" },
     { OSPC_ALTINFO_SPID,            "spid" },
     { OSPC_ALTINFO_OCN,             "ocn" },
+    { OSPC_ALTINFO_SPN,             "spn" },
+    { OSPC_ALTINFO_ALTSPN,          "altspn" },
+    { OSPC_ALTINFO_MCC,             "mcc" },
+    { OSPC_ALTINFO_MNC,             "mnc" },
     /* For other attributes */
     { OSPC_ALTINFO_TRUE,            "true" },
     { OSPC_ALTINFO_FALSE,           "false" },
@@ -160,9 +163,9 @@ unsigned OSPPAltInfoGetSize(
 }
 
 /*
- * OSPPAltInfoTypeGetPart() - returns altinfo type
+ * OSPPAltInfoGetPart() - returns altinfo type
  */
-OSPE_ALTINFO OSPPAltInfoTypeGetPart(
+OSPE_ALTINFO OSPPAltInfoGetPart(
     OSPT_ALTINFO *ospvAltInfo)
 {
     OSPE_ALTINFO ospvType = OSPC_ALTINFO_UNKNOWN;
@@ -226,7 +229,22 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
 }
 
 /*
- * OSPPAltInfoTypeGetName() - get type name from an altinfo
+ * OSPPAltInfoTypeGetPart() - get type from an altinfo name
+ */
+OSPE_ALTINFO OSPPAltInfoTypeGetPart(
+    const char *ospvName)
+{
+    OSPE_ALTINFO ospvPart = OSPC_ALTINFO_UNKNOWN;
+
+    if (ospvName != OSPC_OSNULL) {
+        ospvPart = (OSPE_ALTINFO)OSPPMsgDescGetPart(ospvName, OSPV_ATYPE_DESCS, OSPC_ALTINFO_NUMBER);
+    }
+
+    return ospvPart;
+}
+
+/*
+ * OSPPAltInfoTypeGetName() - get type name from an altinfo type
  */
 const char *OSPPAltInfoTypeGetName( /* Returns a pointer to the name */
     OSPE_ALTINFO ospvPart)
@@ -239,3 +257,4 @@ const char *OSPPAltInfoTypeGetName( /* Returns a pointer to the name */
 
     return ospvName;
 }
+

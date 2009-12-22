@@ -23,7 +23,7 @@
 #include "osptneputil.h"
 #include "osptnep.h"
 
-/* 
+/*
  * Given a string of characters, print out their hex and alphanumeric encoding.
  *
  * Input: the string to be printed and the length of that string.
@@ -50,7 +50,7 @@ void OSPPDumpHex(unsigned char *ospvDumpee, unsigned ospvDumpeeLen)
     }
 }
 
-/* 
+/*
  * Dump a line of hex characters. Pad the end with spaces if there aren't
  * enough characters.
  *
@@ -62,7 +62,7 @@ void OSPPDumpHexLine(unsigned char *ospvDumpeeLine,
     unsigned charIndex = 0;
 
     if ((ospvDumpeeLine != OSPC_OSNULL) && (ospvDumpeeLineLen > 0)) {
-        /* 
+        /*
          * For ( each character in the line )
          *  o print out a character from the line if the index is within
          *    the length of the string
@@ -82,7 +82,7 @@ void OSPPDumpHexLine(unsigned char *ospvDumpeeLine,
             }
         }
 
-        /* 
+        /*
          * For ( every character in the line )
          *  o print it out at the end of the line if it's alphanumeric
          *  o print out a period to represent a non-alphanumeric character

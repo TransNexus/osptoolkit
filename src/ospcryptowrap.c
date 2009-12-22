@@ -36,9 +36,9 @@ int OSPPCryptoWrapDigest(
     unsigned char *ospvDigest,
     unsigned *ospvDigestLength,
     unsigned char *ospvBERAlgorithm,
-    unsigned ospvBERAlgorithmLength, 
-    unsigned char *ospvData, 
-    unsigned ospvDataLength, 
+    unsigned ospvBERAlgorithmLength,
+    unsigned char *ospvData,
+    unsigned ospvDataLength,
     unsigned char ospvFlags)
 {
     int errorcode = OSPC_ERR_CRYPTO_IMPLEMENTATION_SPECIFIC_ERROR;
@@ -100,9 +100,9 @@ int OSPPCryptoWrapEncrypt(
     unsigned char *ospvBERAlgorithm,
     unsigned ospvBERAlgorithmLength,
     unsigned char *ospvData,
-    unsigned ospvDataLength, 
-    unsigned char *ospvBERSignerKey, 
-    unsigned ospvBERSignerKeyLength, 
+    unsigned ospvDataLength,
+    unsigned char *ospvBERSignerKey,
+    unsigned ospvBERSignerKeyLength,
     unsigned char ospvFlags)
 {
     int errorcode = OSPC_ERR_CRYPTO_IMPLEMENTATION_SPECIFIC_ERROR;
@@ -118,9 +118,9 @@ int OSPPCryptoWrapDecrypt(
     unsigned char *ospvBERAlgorithm,
     unsigned ospvBERAlgorithmLength,
     unsigned char *ospvEncryptedData,
-    unsigned ospvEncryptedDataLength, 
-    unsigned char *ospvBERReaderKey, 
-    unsigned ospvBERReaderKeyLength, 
+    unsigned ospvEncryptedDataLength,
+    unsigned char *ospvBERReaderKey,
+    unsigned ospvBERReaderKeyLength,
     unsigned char ospvFlags)
 {
     int errorcode = OSPC_ERR_CRYPTO_IMPLEMENTATION_SPECIFIC_ERROR;
@@ -194,9 +194,9 @@ int OSPPCryptoWrapVerify(
     unsigned char *ospvData,
     unsigned ospvDataLength,
     unsigned char *ospvSignature,
-    unsigned ospvSignatureLength, 
-    unsigned char *ospvBERReaderKey, 
-    unsigned ospvBERReaderKeyLength, 
+    unsigned ospvSignatureLength,
+    unsigned char *ospvBERReaderKey,
+    unsigned ospvBERReaderKeyLength,
     unsigned char ospvFlags)
 {
     int errorcode = OSPC_ERR_CRYPTO_IMPLEMENTATION_SPECIFIC_ERROR;

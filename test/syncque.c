@@ -183,7 +183,7 @@ int SyncQueueRemoveTransaction(SYNCQUEUE *syncQueue, void **transaction)
             *transaction = OSPPListRemove(&(syncQueue->PayloadList));
             SyncQueueDecrementNumberOfTransactions(syncQueue);
 
-            /* 
+            /*
              * Are there any more transactions on the queue ?
              */
             if (0 == syncQueue->NumberOfTransactions) {

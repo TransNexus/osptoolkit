@@ -270,7 +270,7 @@
     if ((pHost = gethostbyname((const char *)h)) == (struct hostent *)NULL) \
     { \
         e = GetLastError(); \
-        OSPM_DBG(e,("%s failed for %s. \n", "gethostbyname", h)); \
+        OSPM_DBG(e,("%s failed for %s.\n", "gethostbyname", h)); \
         ip = 0; \
     } \
     else \

@@ -65,7 +65,7 @@ unsigned OSPPUsageFromElement(  /* returns error code */
                 gotIncrement = OSPC_TRUE;
                 break;
             case OSPC_MELEM_SERVICE:
-                /* we don't do anything with service at this point */
+// TODO: Added ServiceType
                 break;
             case OSPC_MELEM_UNIT:
                 gotUnit = OSPC_TRUE;
@@ -78,7 +78,7 @@ unsigned OSPPUsageFromElement(  /* returns error code */
                 }
                 break;
             case OSPC_MELEM_TERMCAUSE:
-// SDS TODO
+// TODO: Handle TCCode
                 break;
             default:
                 /*
@@ -348,7 +348,7 @@ unsigned OSPPCallPartyNumToElement(
         switch (ElemType) {
         case OSPC_MELEM_SRCINFO:
         case OSPC_MELEM_DESTINFO:
-        case OSPC_MELEM_DIVERSIONSRCINFO:
+        case OSPC_MELEM_DIVSRCINFO:
             *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ElemType), CallPartyNum);
             if (*ospvElem == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -540,4 +540,3 @@ unsigned OSPPCustomInfoToElement(
 
     return ospvErrCode;
 }
-
