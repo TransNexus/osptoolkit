@@ -505,16 +505,16 @@ Version 3.5.3
 * Added reporting Diversion header in AuthReq and UsageInd
 ---------------------------------------------------------------------------
 
-Version 3.6.0
-* Added SMS destination protocol
-* Added spn, altspm, mcc and mnc in AuthReq and AuthRsp
-* Removed asserted ID from AuthReq and UsageInd
-* Added setting ServiceType function
-* Added setting PricingInfo function
-* Added ported number query ServiceType
-* Added retrieving OCN from AuthRsp
-* Added retrieving SPID from AuthRsp
-* Added max for one way/round trip delay statistics
-* Added T.37, T.38, Skype and SMPP destination protocols
-* Added reporting ICPIF in UsageInd
+Version 3.6.0 - 2009-12-22
 * Added setting round trip delay function for reporting
+* Added reporting ICPIF in UsageInd
+* Added T.37, T.38, Skype and SMPP destination protocols
+* Added max for one way/round trip delay statistics
+* Added retrieving SPID and OCN from AuthRsp
+* Added ported number query ServiceType
+* Added setting PricingInfo function
+* Added setting ServiceType function
+* Removed asserted ID from AuthReq and UsageInd
+* Added spn, altspm, mcc and mnc in AuthReq and AuthRsp
+* Added SMS destination protocol
+* Fixed UMR issue reported by Purify
