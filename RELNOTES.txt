@@ -518,3 +518,6 @@ Version 3.6.0 - 2009-12-22
 * Added spn, altspm, mcc and mnc in AuthReq and AuthRsp
 * Added SMS destination protocol
 * Fixed UMR issue reported by Purify
+---------------------------------------------------------------------------
+
+Version 3.6.1
