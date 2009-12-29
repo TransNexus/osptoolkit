@@ -1307,7 +1307,7 @@ int testOSPPTransactionRequestSuggestedAuthorisation()
 {
     int errorcode = 0;
     unsigned detaillogsize = 0;
-    const char *preferredDest[] = { "172.16.4.10", "172.16.4.10", NULL };
+    const char *preferredDest[] = { "[172.16.4.10]:5060", "[172.16.4.10]:5061", NULL };
 
     errorcode = testInitializeCallIds();
 
@@ -1322,7 +1322,7 @@ int testOSPPTransactionRequestSuggestedAuthorisation()
             CalledNumFormat,
             "919404556#4444",
             NUM_CALL_IDS, callids,
-            (const char **)preferredDest,
+            preferredDest,
             &numdestinations,
             &detaillogsize,
             (void *)NULL);
