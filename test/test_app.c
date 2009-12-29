@@ -915,8 +915,9 @@ int testOSPPTransactionGetFirstDestination()
 
     if (errorcode == 0 && !quietmode) {
         printf("callid size = %d value = %.*s\n", callidsize, callidsize, (char *)callid);
-        OSPM_SPRINTF(msg, "DEST = %s", dest);
         printf("%s\n", dest);
+        printf("timelimit = %u\n", timelimit);
+        OSPM_SPRINTF(msg, "DEST = %s", dest);
         OSPTNLOGDUMP(token, tokensize, msg);
     }
     return errorcode;
@@ -947,8 +948,9 @@ int testOSPPTransactionGetNextDestination()
 
     if (errorcode == 0 && !quietmode) {
         printf("callid size = %d value = %.*s\n", callidsize, callidsize, (char *)callid);
-        OSPM_SPRINTF(msg, "DEST = %s", dest);
         printf("%s\n", dest);
+        printf("timelimit = %u\n", timelimit);
+        OSPM_SPRINTF(msg, "DEST = %s", dest);
         OSPTNLOGDUMP(token, tokensize, msg);
     }
     return errorcode;
@@ -1157,8 +1159,7 @@ int testSetServiceType()
 int testOSPPTransactionInitializeAtDevice(int IsSource)
 {
     int errorcode = 0;
-    unsigned detaillogsize = 0,
-        authorised = OSPC_TRAN_NOT_AUTHORISED, timelimit = 0;
+    unsigned detaillogsize = 0, authorised = OSPC_TRAN_NOT_AUTHORISED, timelimit = 0;
     unsigned char token2[TOKEN_SZ];
     OSPT_PRICING_INFO PricingInfo;
     OSPT_PRICING_INFO *ospvPricingInfo[MAX_PRICING_INFO_ALLOWED];
@@ -1251,9 +1252,8 @@ int testOSPPTransactionRecordFailure()
 int testOSPPTransactionReinitializeAtDevice()
 {
     int errorcode = 0;
-    unsigned IsSource = OSPC_ROLE_SOURCE,
-        detaillogsize = 0,
-        authorised = OSPC_TRAN_NOT_AUTHORISED, timelimit = 0;
+    unsigned IsSource = OSPC_ROLE_SOURCE;
+    unsigned detaillogsize = 0, authorised = OSPC_TRAN_NOT_AUTHORISED, timelimit = 0;
     unsigned char token2[TOKEN_SZ];
 
     OSPM_MEMSET(token2, 0, TOKEN_SZ);
