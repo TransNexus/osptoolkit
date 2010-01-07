@@ -521,3 +521,8 @@ Version 3.6.0 - 2009-12-22
 ---------------------------------------------------------------------------
 
 Version 3.6.1
+* Added port test case for suggested route test function.
+* Made AuthRsp->UsageDetail->Amount/Increment/Unit optional for service type ported number query.
+* Added showing time limit for GetDestination test functions.
+---------------------------------------------------------------------------
+
