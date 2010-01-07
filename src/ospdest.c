@@ -1016,7 +1016,11 @@ int OSPPUsageDetailFromElement(
         if (hasamount && hasincrement && hasunit) {
             OSPPDestSetLimit(ospvDest, (unsigned)(increment * amount));
         } else {
-            error = OSPC_ERR_XML_BAD_ELEMENT;
+            if (ospvDest->ospmIsNPQuery) {
+                OSPPDestSetLimit(ospvDest, 0);
+            } else {
+                error = OSPC_ERR_XML_BAD_ELEMENT;
+            }
         }
     }
 
