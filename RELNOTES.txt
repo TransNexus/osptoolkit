@@ -526,3 +526,4 @@ Version 3.6.1
 * Added showing time limit for GetDestination test functions.
 ---------------------------------------------------------------------------
 
+Version 3.6.2
