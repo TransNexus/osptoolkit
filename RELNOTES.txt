@@ -520,10 +520,12 @@ Version 3.6.0 - 2009-12-22
 * Fixed UMR issue reported by Purify
 ---------------------------------------------------------------------------
 
-Version 3.6.1
+Version 3.6.1 - 2010-01-07
 * Added port test case for suggested route test function.
 * Made AuthRsp->UsageDetail->Amount/Increment/Unit optional for service type ported number query.
 * Added showing time limit for GetDestination test functions.
 ---------------------------------------------------------------------------
 
 Version 3.6.2
+* Changed the OSP TCP port from 1080 to 5045.
+

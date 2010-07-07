@@ -98,7 +98,7 @@ char destdev[DESTINATION_SZ] = { "" };
 unsigned tokensize = TOKEN_SZ;
 char c_token[TOKEN_SZ] = { "" };
 void *token = NULL;
-const char *New_ServicePoint = { "http://osptestserver.transnexus.com:1080/osp" };
+const char *New_ServicePoint = { "http://osptestserver.transnexus.com:5045/osp" };
 static OSPT_CALL_ID *callids[NUM_CALL_IDS];
 token_algo_t tokenalgo = TOKEN_ALGO_SIGNED;
 char *SourceIP = NULL, *SourceDevIP = NULL, *DestIP = NULL, *DestDevIP = NULL;
