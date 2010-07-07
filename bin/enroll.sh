@@ -26,7 +26,7 @@ echo "Request Failed"
 exit 127
 fi
 
-enroll -function getcacert -caurl http://$1:1080/tep > cacert_0.pem
+enroll -function getcacert -caurl http://$1:5045/tep > cacert_0.pem
 ret_val=$?
 export ret_val
 echo "[SP: $1]Error Code returned from getcacert command :" $ret_val
@@ -47,7 +47,7 @@ fi
 i=1
 shift
 while [ $# -ge 1 ]; do
-enroll -function getcacert -caurl http://$1:1080/tep > cacert_$i.pem
+enroll -function getcacert -caurl http://$1:5045/tep > cacert_$i.pem
 ret_val=$?
 export ret_val
 echo "[SP: $1]Error Code returned from getcacert command :" $ret_val
