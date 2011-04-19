@@ -88,14 +88,9 @@ extern "C" {
         const char *ospvSourceDevice,                                           /* In - optional */
         const char *ospvDestination,                                            /* In - optional */
         const char *ospvDestinationDevice);                                     /* In - optional */
-    int OSPPTransactionGetDestNetworkId(OSPTTRANHANDLE, char *); /* TODO: is deprecated, will be removed from 3.7 */
     int OSPPTransactionGetDestinationNetworkId(OSPTTRANHANDLE, unsigned, char *);
-    int OSPPTransactionSetServiceAndPricingInfo(OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-        OSPE_SERVICE ospvServiceType,                                           /* In - Service type */
-        OSPT_PRICING_INFO *ospvPricingInfo[]);                                  /* In - Pricing Info */ /* TODO: is deprecated, will be removed from 3.7 */
     int OSPPTransactionSetServiceType(OSPTTRANHANDLE, OSPE_SERVICE);
     int OSPPTransactionSetPricingInfo(OSPTTRANHANDLE, OSPT_PRICING_INFO **);
-    int OSPPTransactionSetRoutingNumber(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetNumberPortability(OSPTTRANHANDLE, const char *, const char *, int);
     int OSPPTransactionSetTermCause(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned, const char *);
     int OSPPTransactionSetDiversion(OSPTTRANHANDLE, const char *, const char *);
@@ -115,7 +110,6 @@ extern "C" {
     int OSPPTransactionSetMOSCQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
     int OSPPTransactionSetMOSLQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_FLOW, float);
     int OSPPTransactionSetICPIF(OSPTTRANHANDLE, OSPE_STATS_FLOW, int);
-    int OSPPTransactionGetNumberPortability(OSPTTRANHANDLE, char *, char *, int *);  /* TODO: is deprecated, will be removed from 3.7 */
     int OSPPTransactionGetNumberPortabilityParameters(OSPTTRANHANDLE, unsigned, char *, unsigned, char *, int *);
     int OSPPTransactionSetOperatorName(OSPTTRANHANDLE, OSPE_OPERATOR_NAME, const char *);
     int OSPPTransactionGetOperatorName(OSPTTRANHANDLE, OSPE_OPERATOR_NAME, unsigned, char *);

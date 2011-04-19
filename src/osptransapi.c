@@ -39,66 +39,6 @@
 #define OSPC_UNDEFINED_CALLID_SIZE  ((unsigned)9)   /* size of OSPC_UNDEFINED_CALLID_STR */
 
 /*
- * OSPPTransactionSetServiceAndPricingInfo
- * The API sets the Service Type and Pricing Information
- * in the transaction structure
- * TODO: is deprecated, will be removed from 3.7
- */
-int OSPPTransactionSetServiceAndPricingInfo(
-    OSPTTRANHANDLE ospvTransaction,         /* In - Transaction handle */
-    OSPE_SERVICE ospvServiceType,           /* In - Service type */
-    OSPT_PRICING_INFO *ospvPricingInfo[])   /* In - Pricing Info */
-{
-    int errorcode = OSPC_ERR_NO_ERROR, i;
-    OSPTTRANS *trans = NULL;
-    OSPE_TRANS_STATE state;
-
-    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPPTransactionGetState(trans, &state);
-        if (state != OSPC_TRANSNEW) {
-            errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
-        }
-    }
-
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        /* Set the service type information */
-        switch (ospvServiceType) {
-        case OSPC_SERVICE_VOICE:
-        case OSPC_SERVICE_VIDEO:
-        case OSPC_SERVICE_DATA:
-        case OSPC_SERVICE_NPQUERY:
-            trans->HasServiceInfo = OSPC_TRUE;
-            trans->ServiceType = ospvServiceType;
-            break;
-        default:
-            errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-            OSPM_DBGERRORLOG(errorcode, "Invalid input for OSPPTransactionSetServiceAndPricingInfo");
-            break;
-        }
-
-        /* Set the pricing info */
-        for (i = 0; i < MAX_PRICING_INFO_ALLOWED; i++) {
-            if ((errorcode == OSPC_ERR_NO_ERROR) && ospvPricingInfo[i] &&
-                ospvPricingInfo[i]->unit && ospvPricingInfo[i]->currency &&
-                (OSPM_STRLEN(ospvPricingInfo[i]->unit) < OSPC_SIZE_UNIT) && (OSPM_STRLEN(ospvPricingInfo[i]->currency) < OSPC_SIZE_CONFID)) {
-                trans->HasPricingInfo = OSPC_TRUE;
-                trans->PricingInfo[i].amount = ospvPricingInfo[i]->amount;
-                trans->PricingInfo[i].increment = ospvPricingInfo[i]->increment;
-                OSPM_STRCPY(trans->PricingInfo[i].unit, (const char *)ospvPricingInfo[i]->unit);
-                OSPM_STRCPY(trans->PricingInfo[i].currency, (const char *)ospvPricingInfo[i]->currency);
-            } else {
-                trans->NumOfPricingInfoElements = i;
-                break;
-            }
-        }
-    }
-
-    return errorcode;
-}
-
-/*
  * OSPPTransactionSetServiceType
  * The API sets the Service Type in the transaction structure
  */
@@ -541,92 +481,10 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
 }
 
 /*
- * OSPPTransactionGetDestNetworkId() :
- * Reports the destination Network Id as returned in
- * either the (1) AuthRsp or the (2) Token
- * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
- * TODO: This function is deprecated and will be removed from the next major release (3.7) because of without buffer size check.
- */
-int OSPPTransactionGetDestNetworkId(
-    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    char *ospvNetworkId)            /* In - network specific information */
-{
-    int errorcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans = OSPC_OSNULL;
-    OSPT_DEST *dest = OSPC_OSNULL;
-    OSPT_ALTINFO *altinfo = OSPC_OSNULL;
-    const char *destval = NULL;
-    OSPTBOOL found;
-
-    ospvNetworkId[0] = '\0';
-
-    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-    if (trans != (OSPTTRANS *)NULL) {
-        if (trans->AuthReq != OSPC_OSNULL) {
-            /*
-             * We are the source.
-             * Get the information from the destination
-             * structure.
-             */
-            dest = trans->CurrentDest;
-            if (trans->State == OSPC_GET_DEST_SUCCESS) {
-                if (dest == (OSPT_DEST *)NULL) {
-                    errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
-                } else {
-                    if (OSPPDestHasNetworkAddr(dest) && OSPPDestGetNetworkAddr(dest)) {
-                        sprintf(ospvNetworkId, OSPPDestGetNetworkAddr(dest));
-                    } else {
-                        errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
-                    }
-                }
-            } else {
-                errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
-            }
-        } else if (trans->AuthInd != OSPC_OSNULL) {
-            /*
-             * We are the destination.
-             * Get the information from the AuthInd structure.
-             */
-            found = OSPC_FALSE;
-            altinfo = (OSPT_ALTINFO *)OSPPAuthIndFirstDestinationAlt(trans->AuthInd);
-            while (altinfo != OSPC_OSNULL) {
-                if (altinfo->ospmAltInfoType == OSPC_ALTINFO_NETWORK) {
-                    found = OSPC_TRUE;
-                    destval = OSPPAuthIndGetDestinationAltValue(altinfo);
-                    if (destval != NULL) {
-                        sprintf(ospvNetworkId, destval);
-                    } else {
-                        errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                        OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
-                    }
-                    break;
-                } else {
-                    altinfo = (OSPT_ALTINFO *)OSPPAuthIndNextDestinationAlt(trans->AuthInd, altinfo);
-                }
-            }
-
-            if (found == OSPC_FALSE) {
-                errorcode = OSPC_ERR_TRAN_NO_NETWORK_ID_IN_DEST;
-                OSPM_DBGERRORLOG(errorcode, "Destination does not contain network Id\n");
-            }
-        } else {
-            errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-            OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");
-        }
-    }
-
-    return errorcode;
-}
-
-/*
  * OSPPTransactionGetDestinationNetworkId() :
  * Reports the destination Network Id as returned in
  * either the (1) AuthRsp or the (2) Token
  * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
- * TODO: This function is used to replace OSPPTransactionGetDestNetworkId.
  */
 int OSPPTransactionGetDestinationNetworkId(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
@@ -4158,50 +4016,6 @@ int OSPPTransactionIndicateCapabilities(
 }
 
 /*
- * OSPPTransactionSetRoutingNumber()
- *
- * Reports the routing number for a particular transaction
- * This function can be used to report routing number specific
- * information to the server.
- *   ospvTransaction: handle of the transaction object.
- *   ospvRoutingNum: the routing number specific information to be reported to the server.
- * returns OSPC_ERR_NO_ERROR if successful, else error code.
- * TODO: This function is deprecated and will be removed from the next major release (3.7).
- */
-int OSPPTransactionSetRoutingNumber(
-    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    const char *ospvRoutingNumber)  /* In - Routingnumber specific information */
-{
-    int errorcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans = OSPC_OSNULL;
-
-    if ((ospvRoutingNumber == OSPC_OSNULL) || (ospvRoutingNumber[0] == '\0')) {
-        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-    } else {
-        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-        if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            if (trans->State == OSPC_REPORT_USAGE_SUCCESS) {
-                errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            } else {
-                if (trans->NPRn[0] != '\0') {
-                    errorcode = OSPC_ERR_TRAN_DUPLICATE_REQUEST;
-                } else if (trans->AuthReq == OSPC_OSNULL) {
-                    /* Authorization Request has not been called. */
-                    OSPM_STRNCPY(trans->NPRn, ospvRoutingNumber, sizeof(trans->NPRn) - 1);
-                } else {
-                    /*
-                     * it is calling the function out of sequence as it has already called AuthReq, return an error
-                     */
-                    errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                }
-            }
-        }
-    }
-
-    return errorcode;
-}
-
-/*
  * OSPPTransactionSetNumberPortability()
  *
  * Reports number portability parameters for a particular transaction
@@ -4742,75 +4556,9 @@ int OSPPTransactionSetICPIF(
 }
 
 /*
- * OSPPTransactionGetNumberPortability() :
- * Reports number portability parameters returned in AuthRsp
- * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
- * TODO: This function is deprecated and will be removed from the next major release (3.7) because of without buffer size check.
- */
-int OSPPTransactionGetNumberPortability(
-    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    char *ospvNPRn,                 /* Out - routing number */
-    char *ospvNPCic,                /* Out - carrier identification code */
-    int *ospvNPNpdi)                /* Out - npdi */
-{
-    int errorcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans = OSPC_OSNULL;
-    OSPT_DEST *dest = OSPC_OSNULL;
-
-    ospvNPRn[0] = '\0';
-    ospvNPCic[0] = '\0';
-    *ospvNPNpdi = OSPC_FALSE;
-
-    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-    if (trans != (OSPTTRANS *)OSPC_OSNULL) {
-        if (trans->AuthReq != OSPC_OSNULL) {
-            /*
-             * We are the source.
-             * Get the information from the destination
-             * structure.
-             */
-            if (trans->State == OSPC_GET_DEST_SUCCESS) {
-                dest = trans->CurrentDest;
-                if (dest == (OSPT_DEST *)OSPC_OSNULL) {
-                    errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
-                } else {
-                    OSPM_STRCPY(ospvNPRn, dest->ospmNPRn);
-                    OSPM_STRCPY(ospvNPCic, dest->ospmNPCic);
-                    *ospvNPNpdi = dest->ospmNPNpdi;
-                }
-            } else {
-                errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                OSPM_DBGERRORLOG(errorcode, "Called API Not In Sequence\n");
-            }
-        } else if (trans->AuthInd != OSPC_OSNULL) {
-            /*
-             * We are the destination.
-             * Get the information from the AuthInd structure.
-             */
-            dest = trans->AuthInd->ospmAuthIndDest;
-            if (dest == (OSPT_DEST *)OSPC_OSNULL) {
-                errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
-            } else {
-                OSPM_STRCPY(ospvNPRn, dest->ospmNPRn);
-                OSPM_STRCPY(ospvNPCic, dest->ospmNPCic);
-                *ospvNPNpdi = dest->ospmNPNpdi;
-            }
-        } else {
-            errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-            OSPM_DBGERRORLOG(errorcode, "No information available to process this report.");
-        }
-    }
-
-    return errorcode;
-}
-
-/*
  * OSPPTransactionGetNumberPortabilityParameters() :
  * Reports number portability parameters returned in AuthRsp
  * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
- * TODO: This function is used to replace OSPPTransactionGetNumberPortibility.
  */
 int OSPPTransactionGetNumberPortabilityParameters(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
