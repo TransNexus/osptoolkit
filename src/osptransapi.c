@@ -4289,7 +4289,7 @@ int OSPPTransactionSetDestNetworkId(
 int OSPPTransactionSetLost(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
-    OSPE_STATS_FLOW ospvFlow,       /* In - Statistics flow */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     int ospvPackets,                /* In - Packets, -1 means unavailable */
     int ospvFraction)               /* In - Fraction, -1 means unavailable */
 {
@@ -4307,7 +4307,7 @@ int OSPPTransactionSetLost(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetPacket(trans->Statistics, OSPC_STATS_LOST, ospvMetric, ospvFlow, ospvPackets, ospvFraction);
+            OSPPStatsSetPacket(trans->Statistics, OSPC_STATS_LOST, ospvMetric, ospvDir, ospvPackets, ospvFraction);
         }
     }
 
@@ -4317,7 +4317,7 @@ int OSPPTransactionSetLost(
 int OSPPTransactionSetJitter(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
-    OSPE_STATS_FLOW ospvFlow,       /* In - Statistics flow */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     int ospvSamples,                /* In - Samples of Jitter, -1 means unavailable */
     int ospvMin,                    /* In - Minimum of Jitter in milliseconds, -1 means unavailable */
     int ospvMax,                    /* In - Maximum of Jitter in milliseconds, -1 means unavailable */
@@ -4342,7 +4342,7 @@ int OSPPTransactionSetJitter(
                 trans->Statistics,
                 OSPC_STATS_JITTER,
                 ospvMetric,
-                ospvFlow,
+                ospvDir,
                 ospvSamples,
                 ospvMin,
                 ospvMax,
@@ -4357,7 +4357,7 @@ int OSPPTransactionSetJitter(
 int OSPPTransactionSetDelay(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
-    OSPE_STATS_FLOW ospvFlow,       /* In - Statistics flow */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     int ospvSamples,                /* In - Samples of Delay, -1 means unavailable */
     int ospvMin,                    /* In - Minimum of Delay in milliseconds, -1 means unavailable */
     int ospvMax,                    /* In - Maximum of Delay in milliseconds, -1 means unavailable */
@@ -4382,7 +4382,7 @@ int OSPPTransactionSetDelay(
                 trans->Statistics,
                 OSPC_STATS_DELAY,
                 ospvMetric,
-                ospvFlow,
+                ospvDir,
                 ospvSamples,
                 ospvMin,
                 ospvMax,
@@ -4397,7 +4397,7 @@ int OSPPTransactionSetDelay(
 int OSPPTransactionSetOctets(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
-    OSPE_STATS_FLOW ospvFlow,       /* In - Statistics flow */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     int ospvOctets)                 /* In - Octets, -1 means unavailable */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -4414,7 +4414,7 @@ int OSPPTransactionSetOctets(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_OCTETS, ospvMetric, ospvFlow, ospvOctets);
+            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_OCTETS, ospvMetric, ospvDir, ospvOctets);
         }
     }
 
@@ -4424,7 +4424,7 @@ int OSPPTransactionSetOctets(
 int OSPPTransactionSetPackets(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
-    OSPE_STATS_FLOW ospvFlow,       /* In - Statistics flow */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     int ospvPackets)                /* In - Packets, -1 means unavailable */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -4441,7 +4441,7 @@ int OSPPTransactionSetPackets(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_PACKETS, ospvMetric, ospvFlow, ospvPackets);
+            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_PACKETS, ospvMetric, ospvDir, ospvPackets);
         }
     }
 
@@ -4451,7 +4451,7 @@ int OSPPTransactionSetPackets(
 int OSPPTransactionSetRFactor(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
-    OSPE_STATS_FLOW ospvFlow,       /* In - Statistics flow */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     float ospvRFactor)              /* In - R-Factor, -1 means unavailable */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -4468,7 +4468,7 @@ int OSPPTransactionSetRFactor(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_RFACTOR, ospvMetric, ospvFlow, ospvRFactor);
+            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_RFACTOR, ospvMetric, ospvDir, ospvRFactor);
         }
     }
 
@@ -4478,7 +4478,7 @@ int OSPPTransactionSetRFactor(
 int OSPPTransactionSetMOSCQ(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
-    OSPE_STATS_FLOW ospvFlow,       /* In - Statistics flow */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     float ospvMOSCQ)                /* In - MOS-CQ, -1 means unavailable */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -4495,7 +4495,7 @@ int OSPPTransactionSetMOSCQ(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_MOSCQ, ospvMetric, ospvFlow, ospvMOSCQ);
+            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_MOSCQ, ospvMetric, ospvDir, ospvMOSCQ);
         }
     }
 
@@ -4505,7 +4505,7 @@ int OSPPTransactionSetMOSCQ(
 int OSPPTransactionSetMOSLQ(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
-    OSPE_STATS_FLOW ospvFlow,       /* In - Statistics flow */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     float ospvMOSLQ)                /* In - MOS-LQ, -1 means unavailable */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -4522,7 +4522,7 @@ int OSPPTransactionSetMOSLQ(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_MOSLQ, ospvMetric, ospvFlow, ospvMOSLQ);
+            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_MOSLQ, ospvMetric, ospvDir, ospvMOSLQ);
         }
     }
 
@@ -4531,7 +4531,7 @@ int OSPPTransactionSetMOSLQ(
 
 int OSPPTransactionSetICPIF(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    OSPE_STATS_FLOW ospvFlow,       /* In - Statistics flow */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     int ospvICPIF)                  /* In - ICPIF, -1 means unavailable */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -4548,7 +4548,7 @@ int OSPPTransactionSetICPIF(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_ICPIF, OSPC_SMETRIC_UNDEFINED, ospvFlow, ospvICPIF);
+            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_ICPIF, OSPC_SMETRIC_UNDEFINED, ospvDir, ospvICPIF);
         }
     }
 

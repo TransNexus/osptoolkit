@@ -31,6 +31,7 @@ const OSPT_MSG_DESC OSPV_MATTR_DESCS[OSPC_MATTR_NUMBER] = {
     { OSPC_MATTR_CRITICAL,      "critical" },
     { OSPC_MATTR_ENCODING,      "encoding" },
     { OSPC_MATTR_TYPE,          "type" },
+    { OSPC_MATTR_DIR,           "direction" },
     { OSPC_MATTR_VERSION,       "version" },
     { OSPC_MATTR_INDEX,         "index" },
     { OSPC_MATTR_REPORTER,      "reporter" }

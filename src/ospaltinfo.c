@@ -62,8 +62,12 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_OUTBOUND,        "outbound" },
     { OSPC_ALTINFO_RTP,             "rtp" },
     { OSPC_ALTINFO_RTCP,            "rtcp" },
-    { OSPC_ALTINFO_DOWNSTREAM,      "downstream" },
-    { OSPC_ALTINFO_UPSTREAM,        "upstream" },
+    { OSPC_ALTINFO_SRCREP,          "source-to-reporter" },
+    { OSPC_ALTINFO_REPSRC,          "reporter-to-source" },
+    { OSPC_ALTINFO_REPDEST,         "reporter-to-destination" },
+    { OSPC_ALTINFO_DESTREP,         "destination-to-reporter" },
+    { OSPC_ALTINFO_SRCDEST,         "source-to-destination" },
+    { OSPC_ALTINFO_DESTSRC,         "destination-to-source" },
 };
 
 /*
