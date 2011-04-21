@@ -2157,8 +2157,9 @@ int OSPPTransactionNew(
         trans->NPCic[0] = '\0';
         trans->NPNpdi = OSPC_FALSE;
         trans->DestProtocol = OSPC_DPROT_UNKNOWN;
-        trans->ForwardCodec[0] = '\0';
-        trans->ReverseCodec[0] = '\0';
+        for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
+            trans->Codec[cnt][0] = '\0';
+        }
         for (cnt = 0; cnt < OSPC_CLEG_NUMBER; cnt++) {
             trans->SessionId[cnt] = OSPC_OSNULL;
         }
@@ -2605,12 +2606,10 @@ int OSPPTransactionReportUsage(
                                 OSPPUsageIndSetDestProtocol(usage, trans->DestProtocol);
                             }
 
-                            if (trans->ForwardCodec[0] != '\0') {
-                                OSPPUsageIndSetForwardCodec(usage, trans->ForwardCodec);
-                            }
-
-                            if (trans->ReverseCodec[0] != '\0') {
-                                OSPPUsageIndSetReverseCodec(usage, trans->ReverseCodec);
+                            for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
+                                if (trans->Codec[cnt][0] != '\0') {
+                                    OSPPUsageIndSetCodec(usage, cnt, trans->Codec[cnt]);
+                                }
                             }
 
                             for (cnt = 0; cnt < OSPC_CLEG_NUMBER; cnt++) {
@@ -4158,38 +4157,22 @@ int OSPPTransactionSetDestProtocol(
     return errorcode;
 }
 
-int OSPPTransactionSetForwardCodec(
+int OSPPTransactionSetCodec(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    const char *ospvForwardCodec)   /* In - Forward codec */
+    OSPE_CODEC_TYPE ospvType,       /* In - Codec type */
+    const char *ospvCodec)          /* In - Codec */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    if ((ospvForwardCodec == OSPC_OSNULL) || (ospvForwardCodec[0] == '\0')) {
+    if (((ospvType < OSPC_CODEC_START) || (ospvType > OSPC_CODEC_NUMBER)) ||
+        ((ospvCodec == OSPC_OSNULL) || (ospvCodec[0] == '\0')))
+    {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            OSPM_STRNCPY(trans->ForwardCodec, ospvForwardCodec, sizeof(trans->ForwardCodec));
-        }
-    }
-
-    return errorcode;
-}
-
-int OSPPTransactionSetReverseCodec(
-    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    const char *ospvReverseCodec)   /* In - Reverse codec */
-{
-    int errorcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans = OSPC_OSNULL;
-
-    if ((ospvReverseCodec == OSPC_OSNULL) || (ospvReverseCodec[0] == '\0')) {
-        errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-    } else {
-        trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-        if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            OSPM_STRNCPY(trans->ReverseCodec, ospvReverseCodec, sizeof(trans->ReverseCodec) - 1);
+            OSPM_STRNCPY(trans->Codec[ospvType], ospvCodec, sizeof(trans->Codec[ospvType]));
         }
     }
 

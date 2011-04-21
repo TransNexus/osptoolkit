@@ -1859,8 +1859,8 @@ int testSetCodec()
 {
     int errorcode = 0;
 
-    errorcode = OSPPTransactionSetForwardCodec(OSPVTransactionHandle, "g729");
-    errorcode = OSPPTransactionSetReverseCodec(OSPVTransactionHandle, "g723");
+    errorcode = OSPPTransactionSetCodec(OSPVTransactionHandle, OSPC_CODEC_SRC, "g729");
+    errorcode = OSPPTransactionSetCodec(OSPVTransactionHandle, OSPC_CODEC_DEST, "g723");
 
     return errorcode;
 }

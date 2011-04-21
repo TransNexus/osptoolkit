@@ -1066,8 +1066,9 @@ OSPT_USAGEIND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         ospvUsageInd->ospmUsageIndDestinationCount = OSPC_OSNULL;
 
         ospvUsageInd->ospmUsageIndDestProtocol = OSPC_DPROT_UNKNOWN;
-        ospvUsageInd->ospmUsageIndForwardCodec[0] = '\0';
-        ospvUsageInd->ospmUsageIndReverseCodec[0] = '\0';
+        for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
+            ospvUsageInd->ospmUsageIndCodec[cnt][0] = '\0';
+        }
         for (cnt = 0; cnt < OSPC_CLEG_NUMBER; cnt++) {
             ospvUsageInd->ospmUsageIndSessionId[cnt] = OSPC_OSNULL;
         }
@@ -1509,31 +1510,27 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
-            /* Forward codec */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndHasForwardCodec(usage))) {
-                attrtype = OSPC_MATTR_TYPE;
-                attrvalue = OSPC_ALTINFO_FORWARD;
-                ospvErrCode = OSPPStringToElement(OSPC_MELEM_CODEC,
-                    OSPPUsageIndGetForwardCodec(usage),
-                    1, &attrtype, &attrvalue,
-                    &subelem);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(usagedetailelem, subelem);
-                    subelem = OSPC_OSNULL;
-                }
-            }
-
-            /* Reverse codec */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndHasReverseCodec(usage))) {
-                attrtype = OSPC_MATTR_TYPE;
-                attrvalue = OSPC_ALTINFO_REVERSE;
-                ospvErrCode = OSPPStringToElement(OSPC_MELEM_CODEC,
-                    OSPPUsageIndGetReverseCodec(usage),
-                    1, &attrtype, &attrvalue,
-                    &subelem);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(usagedetailelem, subelem);
-                    subelem = OSPC_OSNULL;
+            /* Codecs */
+            for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
+                if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndHasCodec(usage, cnt))) {
+                    attrtype = OSPC_MATTR_TYPE;
+                    switch (cnt) {
+                    case OSPC_CODEC_DEST:
+                    	attrvalue = OSPC_ALTINFO_DEST;
+                    	break;
+                    case OSPC_CODEC_SRC:
+                    default:
+                    	attrvalue = OSPC_ALTINFO_SRC;
+                    	break;
+                    }
+                    ospvErrCode = OSPPStringToElement(OSPC_MELEM_CODEC,
+                        OSPPUsageIndGetCodec(usage, cnt),
+                        1, &attrtype, &attrvalue,
+                        &subelem);
+                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                        OSPPXMLElemAddChild(usagedetailelem, subelem);
+                        subelem = OSPC_OSNULL;
+                    }
                 }
             }
 
@@ -1776,71 +1773,47 @@ void OSPPUsageIndSetDestProtocol(
     }
 }
 
-OSPTBOOL OSPPUsageIndHasForwardCodec(
-    OSPT_USAGEIND *ospvUsageInd)
+OSPTBOOL OSPPUsageIndHasCodec(
+    OSPT_USAGEIND *ospvUsageInd,
+    OSPE_CODEC_TYPE ospvType)
 {
     OSPTBOOL ospvHas = OSPC_FALSE;
 
-    if (ospvUsageInd != OSPC_OSNULL) {
-        ospvHas = (ospvUsageInd->ospmUsageIndForwardCodec[0] != '\0');
+    if ((ospvUsageInd != OSPC_OSNULL) &&
+    	((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)))
+    {
+        ospvHas = (ospvUsageInd->ospmUsageIndCodec[ospvType][0] != '\0');
     }
 
     return ospvHas;
 }
 
-const char *OSPPUsageIndGetForwardCodec(
-    OSPT_USAGEIND *ospvUsageInd)
-{
-    const char *ospvForwardCodec = OSPC_OSNULL;
-
-    if (ospvUsageInd != OSPC_OSNULL) {
-        ospvForwardCodec = ospvUsageInd->ospmUsageIndForwardCodec;
-    }
-
-    return ospvForwardCodec;
-}
-
-void OSPPUsageIndSetForwardCodec(
+const char *OSPPUsageIndGetCodec(
     OSPT_USAGEIND *ospvUsageInd,
-    const char *ospvForwardCodec)
+    OSPE_CODEC_TYPE ospvType)
 {
-    if ((ospvUsageInd != OSPC_OSNULL) && (ospvForwardCodec != OSPC_OSNULL)) {
-        OSPM_STRNCPY(ospvUsageInd->ospmUsageIndForwardCodec,
-            ospvForwardCodec, sizeof(ospvUsageInd->ospmUsageIndForwardCodec));
-    }
-}
+    const char *ospvCodec = OSPC_OSNULL;
 
-OSPTBOOL OSPPUsageIndHasReverseCodec(
-    OSPT_USAGEIND *ospvUsageInd)
-{
-    OSPTBOOL ospvHas = OSPC_FALSE;
-
-    if (ospvUsageInd != OSPC_OSNULL) {
-        ospvHas = (ospvUsageInd->ospmUsageIndReverseCodec[0] != '\0');
+    if ((ospvUsageInd != OSPC_OSNULL) &&
+    	((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)))
+    {
+        ospvCodec = ospvUsageInd->ospmUsageIndCodec[ospvType];
     }
 
-    return ospvHas;
+    return ospvCodec;
 }
 
-const char *OSPPUsageIndGetReverseCodec(
-    OSPT_USAGEIND *ospvUsageInd)
-{
-    const char *ospvReverseCodec = OSPC_OSNULL;
-
-    if (ospvUsageInd != OSPC_OSNULL) {
-        ospvReverseCodec = ospvUsageInd->ospmUsageIndReverseCodec;
-    }
-
-    return ospvReverseCodec;
-}
-
-void OSPPUsageIndSetReverseCodec(
+void OSPPUsageIndSetCodec(
     OSPT_USAGEIND *ospvUsageInd,
-    const char *ospvReverseCodec)
+    OSPE_CODEC_TYPE ospvType,
+    const char *ospvCodec)
 {
-    if ((ospvUsageInd != OSPC_OSNULL) && (ospvReverseCodec != OSPC_OSNULL)) {
-        OSPM_STRNCPY(ospvUsageInd->ospmUsageIndReverseCodec,
-            ospvReverseCodec, sizeof(ospvUsageInd->ospmUsageIndReverseCodec));
+    if ((ospvUsageInd != OSPC_OSNULL) &&
+    	((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)) &&
+        (ospvCodec != OSPC_OSNULL))
+    {
+        OSPM_STRNCPY(ospvUsageInd->ospmUsageIndCodec[ospvType],
+            ospvCodec, sizeof(ospvUsageInd->ospmUsageIndCodec[ospvType]));
     }
 }
 

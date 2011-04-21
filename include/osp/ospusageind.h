@@ -59,8 +59,7 @@ typedef struct {
     OSPE_SERVICE osmpUsageIndServiceType;
     OSPT_ALTINFO *ospmUsageIndDestinationCount;
     OSPE_DEST_PROTOCOL ospmUsageIndDestProtocol;
-    char ospmUsageIndForwardCodec[OSPC_SIZE_CODEC];
-    char ospmUsageIndReverseCodec[OSPC_SIZE_CODEC];
+    char ospmUsageIndCodec[OSPC_CODEC_NUMBER][OSPC_SIZE_CODEC];
     OSPT_CALL_ID *ospmUsageIndSessionId[OSPC_CLEG_NUMBER];
 } OSPT_USAGEIND;
 
@@ -146,12 +145,9 @@ extern "C" {
     OSPTBOOL OSPPUsageIndHasDestProtocol(OSPT_USAGEIND *);
     OSPE_DEST_PROTOCOL OSPPUsageIndGetDestProtocol(OSPT_USAGEIND *);
     void OSPPUsageIndSetDestProtocol(OSPT_USAGEIND *, OSPE_DEST_PROTOCOL);
-    OSPTBOOL OSPPUsageIndHasForwardCodec(OSPT_USAGEIND *);
-    const char *OSPPUsageIndGetForwardCodec(OSPT_USAGEIND *);
-    void OSPPUsageIndSetForwardCodec(OSPT_USAGEIND *, const char *);
-    OSPTBOOL OSPPUsageIndHasReverseCodec(OSPT_USAGEIND *);
-    const char *OSPPUsageIndGetReverseCodec(OSPT_USAGEIND *);
-    void OSPPUsageIndSetReverseCodec(OSPT_USAGEIND *, const char *);
+    OSPTBOOL OSPPUsageIndHasCodec(OSPT_USAGEIND *, OSPE_CODEC_TYPE);
+    const char *OSPPUsageIndGetCodec(OSPT_USAGEIND *, OSPE_CODEC_TYPE);
+    void OSPPUsageIndSetCodec(OSPT_USAGEIND *, OSPE_CODEC_TYPE, const char *);
     OSPTBOOL OSPPUsageIndHasSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG);
     OSPT_CALL_ID *OSPPUsageIndGetSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG);
     void OSPPUsageIndSetSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG, OSPT_CALL_ID *);

@@ -76,7 +76,7 @@ extern const OSPT_MSG_DESC OSPV_RTYPE_DESCS[];
 #define OSPC_SIZE_ROLESTR       16  /* max characters in role string */
 #define OSPC_SIZE_NORSTR        128 /* max characters in normal string */
 #define OSPC_SIZE_NORID         128 /* max characters in normal ID */
-#define OSPC_SIZE_CODEC         8   /* max characters in codec */
+#define OSPC_SIZE_CODEC         16  /* max characters in codec */
 #define OSPC_SIZE_CUSTINFO      256 /* max characters in user-defined info */
 
 /* Function Prototypes */

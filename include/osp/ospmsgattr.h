@@ -44,6 +44,18 @@ typedef enum {
 
 #define OSPC_MAX_INDEX  32
 
+/* Codec types */
+typedef enum {
+    OSPC_CODEC_UNKNOWN = OSPC_MPART_UNKNOWN,
+    OSPC_CODEC_UNDEFINED,
+    /* Message attribute start */
+	OSPC_CODEC_START = 0,
+	OSPC_CODEC_SRC = OSPC_CODEC_START,
+	OSPC_CODEC_DEST,
+	/* Number of codec types */
+	OSPC_CODEC_NUMBER
+} OSPE_CODEC_TYPE;
+
 /* Call leg types */
 typedef enum {
     OSPC_CLEG_INBOUND = 0,
