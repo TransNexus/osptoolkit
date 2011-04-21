@@ -96,7 +96,7 @@ extern "C" {
     int OSPPTransactionSetDiversion(OSPTTRANHANDLE, const char *, const char *);
     int OSPPTransactionSetDestProtocol(OSPTTRANHANDLE, OSPE_DEST_PROTOCOL);
     int OSPPTransactionSetCodec(OSPTTRANHANDLE, OSPE_CODEC_TYPE, const char *);
-    int OSPPTransactionSetSessionId(OSPTTRANHANDLE, OSPE_CALL_LEG, OSPT_CALL_ID *);
+    int OSPPTransactionSetSessionId(OSPTTRANHANDLE, OSPE_SESSION_ID, OSPT_CALL_ID *);
     int OSPPTransactionSetCustomInfo(OSPTTRANHANDLE, unsigned, const char *);
     int OSPPTransactionSetSrcNetworkId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetDestNetworkId(OSPTTRANHANDLE, const char *);

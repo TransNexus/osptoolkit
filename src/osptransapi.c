@@ -1169,7 +1169,7 @@ int OSPPTransactionDelete(
                 OSPM_FREE(trans->DestNetworkId);
             }
 
-            for (cnt = 0; cnt < OSPC_CLEG_NUMBER; cnt++) {
+            for (cnt = OSPC_SESSIONID_START; cnt < OSPC_SESSIONID_NUMBER; cnt++) {
                 if (trans->SessionId[cnt] != OSPC_OSNULL) {
                     OSPPCallIdDelete(&trans->SessionId[cnt]);
                 }
@@ -2160,7 +2160,7 @@ int OSPPTransactionNew(
         for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
             trans->Codec[cnt][0] = '\0';
         }
-        for (cnt = 0; cnt < OSPC_CLEG_NUMBER; cnt++) {
+        for (cnt = OSPC_SESSIONID_START; cnt < OSPC_SESSIONID_NUMBER; cnt++) {
             trans->SessionId[cnt] = OSPC_OSNULL;
         }
         for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
@@ -2612,7 +2612,7 @@ int OSPPTransactionReportUsage(
                                 }
                             }
 
-                            for (cnt = 0; cnt < OSPC_CLEG_NUMBER; cnt++) {
+                            for (cnt = OSPC_SESSIONID_START; cnt < OSPC_SESSIONID_NUMBER; cnt++) {
                                 if (trans->SessionId[cnt] != OSPC_OSNULL) {
                                     OSPPUsageIndSetSessionId(usage, cnt, trans->SessionId[cnt]);
                                 }
@@ -4181,21 +4181,23 @@ int OSPPTransactionSetCodec(
 
 int OSPPTransactionSetSessionId(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    OSPE_CALL_LEG ospvCallLeg,      /* In - Call leg */
-    OSPT_CALL_ID *ospvSessionId)    /* In - Call ID */
+    OSPE_SESSION_ID ospvType,       /* In - Session ID type */
+    OSPT_CALL_ID *ospvSessionId)    /* In - Session ID */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    if (((ospvCallLeg != OSPC_CLEG_INBOUND) && (ospvCallLeg != OSPC_CLEG_OUTBOUND)) || (ospvSessionId == OSPC_OSNULL)) {
+    if (((ospvType < OSPC_SESSIONID_START) || (ospvType > OSPC_SESSIONID_NUMBER)) ||
+        (ospvSessionId == OSPC_OSNULL))
+    {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            if (trans->SessionId[ospvCallLeg] != OSPC_OSNULL) {
-                OSPPCallIdDelete(&(trans->SessionId[ospvCallLeg]));
+            if (trans->SessionId[ospvType] != OSPC_OSNULL) {
+                OSPPCallIdDelete(&(trans->SessionId[ospvType]));
             }
-            trans->SessionId[ospvCallLeg] = OSPPCallIdNew(ospvSessionId->ospmCallIdLen, ospvSessionId->ospmCallIdVal);
+            trans->SessionId[ospvType] = OSPPCallIdNew(ospvSessionId->ospmCallIdLen, ospvSessionId->ospmCallIdVal);
         }
     }
 

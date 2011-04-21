@@ -257,7 +257,7 @@ unsigned char *OSPPCallIdGetValue(
  */
 unsigned OSPPSessionIdToElement(    /* returns error code */
     OSPT_CALL_ID *ospvSessionId,    /* Session ID */
-    OSPE_CALL_LEG ospvType,         /* Call leg */
+    OSPE_SESSION_ID ospvType,       /* Session ID type */
     OSPTBOOL ospvIsBase64,          /* indicates base64 or cdata */
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
@@ -269,16 +269,22 @@ unsigned OSPPSessionIdToElement(    /* returns error code */
         ospvErrCode = OSPC_ERR_DATA_NOCALLID;
     } else {
         switch (ospvType) {
-        case OSPC_CLEG_INBOUND:
+        case OSPC_SESSIONID_SOURCE:
             ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
                 OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
-                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_INBOUND), ospvIsBase64,
+                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_SOURCE), ospvIsBase64,
                 ospvElem);
             break;
-        case OSPC_CLEG_OUTBOUND:
+        case OSPC_SESSIONID_DESTINATION:
             ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
                 OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
-                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_OUTBOUND), ospvIsBase64,
+                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_DESTINATION), ospvIsBase64,
+                ospvElem);
+            break;
+        case OSPC_SESSIONID_CORRELATION:
+            ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
+                OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
+                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_CORRELATION), ospvIsBase64,
                 ospvElem);
             break;
         default:

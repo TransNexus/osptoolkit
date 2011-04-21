@@ -1069,7 +1069,7 @@ OSPT_USAGEIND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
             ospvUsageInd->ospmUsageIndCodec[cnt][0] = '\0';
         }
-        for (cnt = 0; cnt < OSPC_CLEG_NUMBER; cnt++) {
+        for (cnt = OSPC_SESSIONID_START; cnt < OSPC_SESSIONID_NUMBER; cnt++) {
             ospvUsageInd->ospmUsageIndSessionId[cnt] = OSPC_OSNULL;
         }
     }
@@ -1135,7 +1135,7 @@ void OSPPUsageIndDelete(
 
         OSPPListDelete(&((*ospvUsageInd)->ospmUsageIndDestinationAlt));
 
-        for (cnt = 0; cnt < OSPC_CLEG_NUMBER; cnt++) {
+        for (cnt = OSPC_SESSIONID_START; cnt < OSPC_SESSIONID_NUMBER; cnt++) {
             if (OSPPUsageIndHasSessionId(*ospvUsageInd, cnt)) {
                 OSPPCallIdDelete(&((*ospvUsageInd)->ospmUsageIndSessionId[cnt]));
             }
@@ -1515,13 +1515,14 @@ int OSPPUsageIndToElement(      /* returns error code */
                 if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndHasCodec(usage, cnt))) {
                     attrtype = OSPC_MATTR_TYPE;
                     switch (cnt) {
-                    case OSPC_CODEC_DEST:
-                    	attrvalue = OSPC_ALTINFO_DEST;
-                    	break;
-                    case OSPC_CODEC_SRC:
+                    case OSPC_CODEC_SOURCE:
+                        attrvalue = OSPC_ALTINFO_SOURCE;
+                        break;
+                    case OSPC_CODEC_DESTINATION:
+                        attrvalue = OSPC_ALTINFO_DESTINATION;
+                        break;
                     default:
-                    	attrvalue = OSPC_ALTINFO_SRC;
-                    	break;
+                        continue;
                     }
                     ospvErrCode = OSPPStringToElement(OSPC_MELEM_CODEC,
                         OSPPUsageIndGetCodec(usage, cnt),
@@ -1534,23 +1535,15 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
-            /* Add inbound call ID */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasSessionId(usage, OSPC_CLEG_INBOUND)) {
-                ospvErrCode = OSPPSessionIdToElement(OSPPUsageIndGetSessionId(usage, OSPC_CLEG_INBOUND),
-                    OSPC_CLEG_INBOUND, isbase64, &subelem);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(usagedetailelem, subelem);
-                    subelem = OSPC_OSNULL;
-                }
-            }
-
-            /* Add outbound call ID */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasSessionId(usage, OSPC_CLEG_OUTBOUND)) {
-                ospvErrCode = OSPPSessionIdToElement(OSPPUsageIndGetSessionId(usage, OSPC_CLEG_OUTBOUND),
-                    OSPC_CLEG_OUTBOUND, isbase64, &subelem);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(usagedetailelem, subelem);
-                    subelem = OSPC_OSNULL;
+            /* Add Session IDs */
+            for (cnt = OSPC_SESSIONID_START; cnt < OSPC_SESSIONID_NUMBER; cnt ++) {
+                if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasSessionId(usage, cnt)) {
+                    ospvErrCode = OSPPSessionIdToElement(OSPPUsageIndGetSessionId(usage, cnt),
+                        cnt, isbase64, &subelem);
+                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                        OSPPXMLElemAddChild(usagedetailelem, subelem);
+                        subelem = OSPC_OSNULL;
+                    }
                 }
             }
 
@@ -1780,7 +1773,7 @@ OSPTBOOL OSPPUsageIndHasCodec(
     OSPTBOOL ospvHas = OSPC_FALSE;
 
     if ((ospvUsageInd != OSPC_OSNULL) &&
-    	((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)))
+        ((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)))
     {
         ospvHas = (ospvUsageInd->ospmUsageIndCodec[ospvType][0] != '\0');
     }
@@ -1795,7 +1788,7 @@ const char *OSPPUsageIndGetCodec(
     const char *ospvCodec = OSPC_OSNULL;
 
     if ((ospvUsageInd != OSPC_OSNULL) &&
-    	((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)))
+        ((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)))
     {
         ospvCodec = ospvUsageInd->ospmUsageIndCodec[ospvType];
     }
@@ -1809,7 +1802,7 @@ void OSPPUsageIndSetCodec(
     const char *ospvCodec)
 {
     if ((ospvUsageInd != OSPC_OSNULL) &&
-    	((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)) &&
+        ((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)) &&
         (ospvCodec != OSPC_OSNULL))
     {
         OSPM_STRNCPY(ospvUsageInd->ospmUsageIndCodec[ospvType],
@@ -1820,16 +1813,16 @@ void OSPPUsageIndSetCodec(
 /*
  * OSPPUsageIndHasSessionId() - does an usage indication have session ID?
  */
-OSPTBOOL OSPPUsageIndHasSessionId(  /* returns non-zero if exists */
-    OSPT_USAGEIND *ospvUsageInd,    /* usage indication */
-    OSPE_CALL_LEG ospvCallLeg)      /* call leg */
+OSPTBOOL OSPPUsageIndHasSessionId(  /* Returns non-zero if exists */
+    OSPT_USAGEIND *ospvUsageInd,    /* Usage indication */
+    OSPE_SESSION_ID ospvType)       /* Session id type */
 {
     OSPTBOOL ospvHas = OSPC_FALSE;
 
-    if (ospvUsageInd != OSPC_OSNULL) {
-        if ((ospvCallLeg == OSPC_CLEG_INBOUND) || (ospvCallLeg == OSPC_CLEG_OUTBOUND)) {
-            ospvHas = (ospvUsageInd->ospmUsageIndSessionId[ospvCallLeg] != OSPC_OSNULL);
-        }
+    if ((ospvUsageInd != OSPC_OSNULL) &&
+        ((ospvType >= OSPC_SESSIONID_START) && (ospvType < OSPC_SESSIONID_NUMBER)))
+    {
+        ospvHas = (ospvUsageInd->ospmUsageIndSessionId[ospvType] != OSPC_OSNULL);
     }
 
     return ospvHas;
@@ -1838,16 +1831,16 @@ OSPTBOOL OSPPUsageIndHasSessionId(  /* returns non-zero if exists */
 /*
  * OSPPUsageIndGetSessionId() - gets session ID for an usage indication
  */
-OSPT_CALL_ID *OSPPUsageIndGetSessionId( /* returns session ID pointer */
-    OSPT_USAGEIND *ospvUsageInd,        /* usage indication */
-    OSPE_CALL_LEG ospvCallLeg)          /* call leg */
+OSPT_CALL_ID *OSPPUsageIndGetSessionId( /* Returns session ID pointer */
+    OSPT_USAGEIND *ospvUsageInd,        /* Usage indication */
+    OSPE_SESSION_ID ospvType)           /* Session id type */
 {
     OSPT_CALL_ID *ospvSessionId = OSPC_OSNULL;
 
-    if (ospvUsageInd != OSPC_OSNULL) {
-        if ((ospvCallLeg == OSPC_CLEG_INBOUND) || (ospvCallLeg == OSPC_CLEG_OUTBOUND)) {
-            ospvSessionId = ospvUsageInd->ospmUsageIndSessionId[ospvCallLeg];
-        }
+    if ((ospvUsageInd != OSPC_OSNULL) &&
+        ((ospvType >= OSPC_SESSIONID_START) && (ospvType < OSPC_SESSIONID_NUMBER)))
+    {
+        ospvSessionId = ospvUsageInd->ospmUsageIndSessionId[ospvType];
     }
 
     return ospvSessionId;
@@ -1856,18 +1849,18 @@ OSPT_CALL_ID *OSPPUsageIndGetSessionId( /* returns session ID pointer */
 /*
  * OSPPUsageIndSetSessionId() - sets session ID for an usage
  */
-void OSPPUsageIndSetSessionId(      /* nothing returned */
-    OSPT_USAGEIND *ospvUsageInd,    /* usage indication */
-    OSPE_CALL_LEG ospvCallLeg,      /* call leg */
-    OSPT_CALL_ID *ospvSessionId)    /* call ID */
+void OSPPUsageIndSetSessionId(      /* Nothing returned */
+    OSPT_USAGEIND *ospvUsageInd,    /* Usage indication */
+    OSPE_SESSION_ID ospvType,       /* Session ID type */
+    OSPT_CALL_ID *ospvSessionId)    /* Session ID */
 {
     if ((ospvUsageInd != OSPC_OSNULL) &&
-        ((ospvCallLeg == OSPC_CLEG_INBOUND) || (ospvCallLeg == OSPC_CLEG_OUTBOUND)) &&
+        ((ospvType >= OSPC_SESSIONID_START) && (ospvType < OSPC_SESSIONID_NUMBER)) &&
         ((ospvSessionId) != OSPC_OSNULL))
     {
-        if (ospvUsageInd->ospmUsageIndSessionId[ospvCallLeg] != OSPC_OSNULL) {
-            OSPPCallIdDelete(&(ospvUsageInd->ospmUsageIndSessionId[ospvCallLeg]));
+        if (ospvUsageInd->ospmUsageIndSessionId[ospvType] != OSPC_OSNULL) {
+            OSPPCallIdDelete(&(ospvUsageInd->ospmUsageIndSessionId[ospvType]));
         }
-        ospvUsageInd->ospmUsageIndSessionId[ospvCallLeg] = OSPPCallIdNew(ospvSessionId->ospmCallIdLen, ospvSessionId->ospmCallIdVal);
+        ospvUsageInd->ospmUsageIndSessionId[ospvType] = OSPPCallIdNew(ospvSessionId->ospmCallIdLen, ospvSessionId->ospmCallIdVal);
     }
 }

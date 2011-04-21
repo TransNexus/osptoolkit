@@ -60,7 +60,7 @@ typedef struct {
     OSPT_ALTINFO *ospmUsageIndDestinationCount;
     OSPE_DEST_PROTOCOL ospmUsageIndDestProtocol;
     char ospmUsageIndCodec[OSPC_CODEC_NUMBER][OSPC_SIZE_CODEC];
-    OSPT_CALL_ID *ospmUsageIndSessionId[OSPC_CLEG_NUMBER];
+    OSPT_CALL_ID *ospmUsageIndSessionId[OSPC_SESSIONID_NUMBER];
 } OSPT_USAGEIND;
 
 /* Function Prototypes */
@@ -148,9 +148,9 @@ extern "C" {
     OSPTBOOL OSPPUsageIndHasCodec(OSPT_USAGEIND *, OSPE_CODEC_TYPE);
     const char *OSPPUsageIndGetCodec(OSPT_USAGEIND *, OSPE_CODEC_TYPE);
     void OSPPUsageIndSetCodec(OSPT_USAGEIND *, OSPE_CODEC_TYPE, const char *);
-    OSPTBOOL OSPPUsageIndHasSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG);
-    OSPT_CALL_ID *OSPPUsageIndGetSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG);
-    void OSPPUsageIndSetSessionId(OSPT_USAGEIND *, OSPE_CALL_LEG, OSPT_CALL_ID *);
+    OSPTBOOL OSPPUsageIndHasSessionId(OSPT_USAGEIND *, OSPE_SESSION_ID);
+    OSPT_CALL_ID *OSPPUsageIndGetSessionId(OSPT_USAGEIND *, OSPE_SESSION_ID);
+    void OSPPUsageIndSetSessionId(OSPT_USAGEIND *, OSPE_SESSION_ID, OSPT_CALL_ID *);
 
 #ifdef __cplusplus
 }

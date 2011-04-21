@@ -1859,8 +1859,8 @@ int testSetCodec()
 {
     int errorcode = 0;
 
-    errorcode = OSPPTransactionSetCodec(OSPVTransactionHandle, OSPC_CODEC_SRC, "g729");
-    errorcode = OSPPTransactionSetCodec(OSPVTransactionHandle, OSPC_CODEC_DEST, "g723");
+    errorcode = OSPPTransactionSetCodec(OSPVTransactionHandle, OSPC_CODEC_SOURCE, "g729");
+    errorcode = OSPPTransactionSetCodec(OSPVTransactionHandle, OSPC_CODEC_DESTINATION, "g723");
 
     return errorcode;
 }
@@ -1880,11 +1880,14 @@ int testSetSessionId()
     int errorcode = 0;
 
     OSPT_CALL_ID *callid;
-    callid = OSPPCallIdNew(8, (const unsigned char *)"incallid");
-    errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_CLEG_INBOUND, callid);
+    callid = OSPPCallIdNew(12, (const unsigned char *)"sourcecallid");
+    errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_SESSIONID_SOURCE, callid);
     OSPPCallIdDelete(&callid);
-    callid = OSPPCallIdNew(9, (const unsigned char *)"outcallid");
-    errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_CLEG_OUTBOUND, callid);
+    callid = OSPPCallIdNew(17, (const unsigned char *)"destinationcallid");
+    errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_SESSIONID_DESTINATION, callid);
+    OSPPCallIdDelete(&callid);
+    callid = OSPPCallIdNew(17, (const unsigned char *)"correlationcallid");
+    errorcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_SESSIONID_CORRELATION, callid);
     OSPPCallIdDelete(&callid);
 
     return errorcode;
