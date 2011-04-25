@@ -130,11 +130,11 @@ OSPT_ALTINFO *OSPPAltInfoNew(   /* returns ptr to altinfo or null */
                 OSPM_MEMCPY(valptr, ospvValue, ospvLen);
 
                 /* fill in the structure fields */
-                OSPPListLinkNew(&ospvAltInfo->ospmAltInfoLink);
-                ospvAltInfo->ospmAltInfoLen = ospvLen;
-                ospvAltInfo->ospmAltInfoType = ospvType;
-                ospvAltInfo->ospmAltInfoVal = valptr;
-                ospvAltInfo->ospmAltInfoVal[ospvLen] = '\0';
+                OSPPListLinkNew(&ospvAltInfo->link);
+                ospvAltInfo->length = ospvLen;
+                ospvAltInfo->type = ospvType;
+                ospvAltInfo->value = valptr;
+                ospvAltInfo->value[ospvLen] = '\0';
             }
         }
     }
@@ -160,13 +160,13 @@ void OSPPAltInfoDelete(
 unsigned OSPPAltInfoGetSize(
     OSPT_ALTINFO *ospvAltInfo)
 {
-    unsigned ospvSize = 0;
+    unsigned size = 0;
 
     if (ospvAltInfo != OSPC_OSNULL) {
-        ospvSize = ospvAltInfo->ospmAltInfoLen;
+        size = ospvAltInfo->length;
     }
 
-    return ospvSize;
+    return size;
 }
 
 /*
@@ -175,13 +175,13 @@ unsigned OSPPAltInfoGetSize(
 OSPE_ALTINFO OSPPAltInfoGetPart(
     OSPT_ALTINFO *ospvAltInfo)
 {
-    OSPE_ALTINFO ospvType = OSPC_ALTINFO_UNKNOWN;
+    OSPE_ALTINFO type = OSPC_ALTINFO_UNKNOWN;
 
     if (ospvAltInfo != OSPC_OSNULL) {
-        ospvType = (OSPE_ALTINFO)ospvAltInfo->ospmAltInfoType;
+        type = (OSPE_ALTINFO)ospvAltInfo->type;
     }
 
-    return ospvType;
+    return type;
 }
 
 /*
@@ -190,13 +190,13 @@ OSPE_ALTINFO OSPPAltInfoGetPart(
 const char *OSPPAltInfoGetValue(
     OSPT_ALTINFO *ospvAltInfo)
 {
-    const char *ospvVal = OSPC_OSNULL;
+    const char *value = OSPC_OSNULL;
 
     if (ospvAltInfo != OSPC_OSNULL) {
-        ospvVal = ospvAltInfo->ospmAltInfoVal;
+        value = ospvAltInfo->value;
     }
 
-    return ospvVal;
+    return value;
 }
 
 /*
@@ -223,7 +223,7 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
         if (ospvElem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->ospmAltInfoType));
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->type));
             if (attr == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ATTR;
             } else {

@@ -228,11 +228,8 @@ int OSPPTransactionModifyDeviceIdentifiers(
                         altinfoToKeep = NULL;
                         while (!OSPPListEmpty(&(trans->AuthInd->ospmAuthIndSourceAlternate))) {
                             altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndSourceAlternate));
-                            if (altinfo->ospmAltInfoType == OSPC_ALTINFO_NETWORK) {
-                                /*
-                                 * This node in the list corresponds to
-                                 * Network Id. Do not delete it.
-                                 */
+                            if (altinfo->type == OSPC_ALTINFO_NETWORK) {
+                                /* This node in the list corresponds to Network Id. Do not delete it. */
                                 altinfoToKeep = altinfo;
                             } else {
                                 OSPM_FREE(altinfo);
@@ -263,11 +260,8 @@ int OSPPTransactionModifyDeviceIdentifiers(
                         altinfoToKeep = NULL;
                         while (!OSPPListEmpty(&(trans->AuthInd->ospmAuthIndDeviceInfo))) {
                             altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndDeviceInfo));
-                            if (altinfo->ospmAltInfoType == OSPC_ALTINFO_NETWORK) {
-                                /*
-                                 * This node in the list corresponds to
-                                 * Network Id. Do not delete it.
-                                 */
+                            if (altinfo->type == OSPC_ALTINFO_NETWORK) {
+                                /* This node in the list corresponds to Network Id. Do not delete it. */
                                 altinfoToKeep = altinfo;
                             } else {
                                 OSPM_FREE(altinfo);
@@ -298,17 +292,11 @@ int OSPPTransactionModifyDeviceIdentifiers(
                     while (!OSPPListEmpty(&(trans->AuthInd->ospmAuthIndDestinationAlternate))) {
                         altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndDestinationAlternate));
                         if (altinfo != OSPC_OSNULL) {
-                            if (altinfo->ospmAltInfoType == OSPC_ALTINFO_H323) {
-                                /*
-                                 * This node in the list corresponds to
-                                 * DestinationDevice. Do not delete it.
-                                 */
+                            if (altinfo->type == OSPC_ALTINFO_H323) {
+                                /* This node in the list corresponds to DestinationDevice. Do not delete it. */
                                 altinfoToKeep = altinfo;
-                            } else if (altinfo->ospmAltInfoType == OSPC_ALTINFO_NETWORK) {
-                                /*
-                                 * This node in the list corresponds to
-                                 * Network Id. Do not delete it.
-                                 */
+                            } else if (altinfo->type == OSPC_ALTINFO_NETWORK) {
+                                /* This node in the list corresponds to Network Id. Do not delete it. */
                                 altinfoToKeep2 = altinfo;
                             } else {
                                 OSPM_FREE(altinfo);
@@ -348,17 +336,11 @@ int OSPPTransactionModifyDeviceIdentifiers(
                     while (!OSPPListEmpty(&(trans->AuthInd->ospmAuthIndDestinationAlternate))) {
                         altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(trans->AuthInd->ospmAuthIndDestinationAlternate));
                         if (altinfo != OSPC_OSNULL) {
-                            if (altinfo->ospmAltInfoType == OSPC_ALTINFO_TRANSPORT) {
-                                /*
-                                 * This node in the list corresponds to
-                                 * Destination. Do not delete it.
-                                 */
+                            if (altinfo->type == OSPC_ALTINFO_TRANSPORT) {
+                                /* This node in the list corresponds to Destination. Do not delete it. */
                                 altinfoToKeep = altinfo;
-                            } else if (altinfo->ospmAltInfoType == OSPC_ALTINFO_NETWORK) {
-                                /*
-                                 * This node in the list corresponds to
-                                 * NetworkId. Do not delete it.
-                                 */
+                            } else if (altinfo->type == OSPC_ALTINFO_NETWORK) {
+                                /* This node in the list corresponds to NetworkId. Do not delete it. */
                                 altinfoToKeep2 = altinfo;
                             } else {
                                 OSPM_FREE(altinfo);
@@ -446,11 +428,8 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
             while (!OSPPListEmpty(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate))) {
                 altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvAuthInd)->ospmAuthIndDestinationAlternate));
                 if (altinfo != OSPC_OSNULL) {
-                    if (altinfo->ospmAltInfoType == OSPC_ALTINFO_NETWORK) {
-                        /*
-                         * This node in the list corresponds to
-                         * Network Id. Do not delete it.
-                         */
+                    if (altinfo->type == OSPC_ALTINFO_NETWORK) {
+                        /* This node in the list corresponds to Network Id. Do not delete it. */
                         altinfoToKeep = altinfo;
                     } else {
                         OSPM_FREE(altinfo);
@@ -533,7 +512,7 @@ int OSPPTransactionGetDestinationNetworkId(
                 found = OSPC_FALSE;
                 altinfo = (OSPT_ALTINFO *)OSPPAuthIndFirstDestinationAlt(trans->AuthInd);
                 while (altinfo != OSPC_OSNULL) {
-                    if (altinfo->ospmAltInfoType == OSPC_ALTINFO_NETWORK) {
+                    if (altinfo->type == OSPC_ALTINFO_NETWORK) {
                         found = OSPC_TRUE;
                         destval = OSPPAuthIndGetDestinationAltValue(altinfo);
                         if (destval != NULL) {

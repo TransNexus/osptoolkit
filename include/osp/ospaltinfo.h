@@ -82,10 +82,10 @@ extern const OSPT_MSG_DESC OSPV_ATYPE_DESCS[];
 
 /* the basic altinfo structure */
 typedef struct {
-    OSPTLISTLINK ospmAltInfoLink;
-    unsigned ospmAltInfoLen;
-    OSPE_ALTINFO ospmAltInfoType;
-    char *ospmAltInfoVal;
+    OSPTLISTLINK link;
+    unsigned length;
+    OSPE_ALTINFO type;
+    char *value;
 } OSPT_ALTINFO;
 
 /* Function Prototypes */
