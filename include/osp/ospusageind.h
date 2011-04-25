@@ -58,7 +58,7 @@ typedef struct {
     OSPTBOOL osmpUsageIndHasServiceInfo;
     OSPE_SERVICE osmpUsageIndServiceType;
     OSPT_ALTINFO *ospmUsageIndDestinationCount;
-    OSPE_DEST_PROTOCOL ospmUsageIndDestProtocol;
+    OSPE_PROTOCOL_NAME ospmUsageIndProtocol[OSPC_PROTTYPE_NUMBER];
     char ospmUsageIndCodec[OSPC_CODEC_NUMBER][OSPC_SIZE_CODEC];
     OSPT_CALL_ID *ospmUsageIndSessionId[OSPC_SESSIONID_NUMBER];
 } OSPT_USAGEIND;
@@ -142,9 +142,9 @@ extern "C" {
     const char *OSPPUsageIndGetConferenceId(OSPT_USAGEIND *);
     void OSPPUsageIndSetDestinationCount(OSPT_USAGEIND *, unsigned ospvDestinationCount);
     OSPT_ALTINFO *OSPPUsageIndGetDestinationCount(OSPT_USAGEIND *);
-    OSPTBOOL OSPPUsageIndHasDestProtocol(OSPT_USAGEIND *);
-    OSPE_DEST_PROTOCOL OSPPUsageIndGetDestProtocol(OSPT_USAGEIND *);
-    void OSPPUsageIndSetDestProtocol(OSPT_USAGEIND *, OSPE_DEST_PROTOCOL);
+    OSPTBOOL OSPPUsageIndHasProtocol(OSPT_USAGEIND *, OSPE_PROTOCOL_TYPE);
+    OSPE_PROTOCOL_NAME OSPPUsageIndGetProtocol(OSPT_USAGEIND *, OSPE_PROTOCOL_TYPE);
+    void OSPPUsageIndSetProtocol(OSPT_USAGEIND *, OSPE_PROTOCOL_TYPE, OSPE_PROTOCOL_NAME);
     OSPTBOOL OSPPUsageIndHasCodec(OSPT_USAGEIND *, OSPE_CODEC_TYPE);
     const char *OSPPUsageIndGetCodec(OSPT_USAGEIND *, OSPE_CODEC_TYPE);
     void OSPPUsageIndSetCodec(OSPT_USAGEIND *, OSPE_CODEC_TYPE, const char *);

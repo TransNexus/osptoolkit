@@ -22,7 +22,7 @@
 #include "osp/ospmsgpart.h"
 #include "osp/ospmsgdesc.h"
 
-/* Document types defined by the Open Settlement Protocol */
+/* Document types defined by OSP */
 typedef enum {
     OSPC_MELEM_UNKNOWN = OSPC_MPART_UNKNOWN,
     OSPC_MELEM_UNDEFINED,
@@ -59,7 +59,6 @@ typedef enum {
     OSPC_MELEM_DESTALT,
     OSPC_MELEM_DESTINFO,
     OSPC_MELEM_DESTOSPVERSION,
-    OSPC_MELEM_DESTPROTOCOL,
     OSPC_MELEM_DESTSIGADDR,
     OSPC_MELEM_DEVICEID,
     OSPC_MELEM_DEVICEINFO,
@@ -89,6 +88,7 @@ typedef enum {
     OSPC_MELEM_POSTDIALDELAY,
     OSPC_MELEM_PRICINGCNF,
     OSPC_MELEM_PRICINGIND,
+    OSPC_MELEM_PROTOCOL,
     OSPC_MELEM_REAUTHREQ,
     OSPC_MELEM_REAUTHRSP,
     OSPC_MELEM_RELEASESOURCE,

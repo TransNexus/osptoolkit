@@ -33,7 +33,7 @@
 extern "C" {
 #endif
 
-    int OSPPTransactionGetDestProtocol(OSPTTRANHANDLE, OSPE_DEST_PROTOCOL *);
+    int OSPPTransactionGetDestProtocol(OSPTTRANHANDLE, OSPE_PROTOCOL_NAME *);
     int OSPPTransactionIsDestOSPEnabled(OSPTTRANHANDLE, OSPE_DEST_OSPENABLED *);
     int OSPPTransactionSetNetworkIds(OSPTTRANHANDLE, const char *, const char *);
     int OSPPTransactionAccumulateOneWayDelay(OSPTTRANHANDLE, unsigned, unsigned, unsigned, float);
@@ -76,12 +76,12 @@ extern "C" {
         OSPEFAILREASON ospvFailureReason,
         unsigned *ospvSizeOfDetailLog,                                      /* In/Out - Max size of detail log\ Actual size of detail log */
         void *ospvDetailLog);                                               /* In - Pointer to storage for detail log */
-    int OSPPTransactionSetDestinationCount(OSPTTRANHANDLE ospvTransaction,  /*In - Transaction handle */
-        unsigned ospvDestinationCount);                                     /*In - Optional Destination Count, 0 if n/a */
+    int OSPPTransactionSetDestinationCount(OSPTTRANHANDLE ospvTransaction,  /* In - Transaction handle */
+        unsigned ospvDestinationCount);                                     /* In - Optional Destination Count, 0 if n/a */
     int OSPPTransactionGetLookAheadInfoIfPresent(OSPTTRANHANDLE ospvTransaction,/* In - Transaction handle */
         OSPTBOOL *ospvHasLookAheadInfo,                                         /* Out */
         char *ospvLookAheadDestination,                                         /* Out */
-        OSPE_DEST_PROTOCOL *ospvLookAheadDestProt,                              /* Out */
+        OSPE_PROTOCOL_NAME *ospvLookAheadProt,                                  /* Out */
         OSPE_DEST_OSPENABLED *ospvLookAheadDestOSPStatus);                      /* Out */
     int OSPPTransactionModifyDeviceIdentifiers(OSPTTRANHANDLE ospvTransaction,  /* In - Transaction handle */
         const char *ospvSource,                                                 /* In - optional */
@@ -94,7 +94,7 @@ extern "C" {
     int OSPPTransactionSetNumberPortability(OSPTTRANHANDLE, const char *, const char *, int);
     int OSPPTransactionSetTermCause(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned, const char *);
     int OSPPTransactionSetDiversion(OSPTTRANHANDLE, const char *, const char *);
-    int OSPPTransactionSetDestProtocol(OSPTTRANHANDLE, OSPE_DEST_PROTOCOL);
+    int OSPPTransactionSetProtocol(OSPTTRANHANDLE, OSPE_PROTOCOL_TYPE, OSPE_PROTOCOL_NAME);
     int OSPPTransactionSetCodec(OSPTTRANHANDLE, OSPE_CODEC_TYPE, const char *);
     int OSPPTransactionSetSessionId(OSPTTRANHANDLE, OSPE_SESSION_ID, OSPT_CALL_ID *);
     int OSPPTransactionSetCustomInfo(OSPTTRANHANDLE, unsigned, const char *);

@@ -807,46 +807,46 @@ int testOSPPTransactionAccumulateRoundTripDelay()
 
 int testOSPPTransactionGetDestProtocol()
 {
-    OSPE_DEST_PROTOCOL dest_prot;
+    OSPE_PROTOCOL_NAME protocol;
     int errorcode = OSPC_ERR_NO_ERROR;
 
-    errorcode = OSPPTransactionGetDestProtocol(OSPVTransactionHandle, &dest_prot);
+    errorcode = OSPPTransactionGetDestProtocol(OSPVTransactionHandle, &protocol);
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        switch (dest_prot) {
-        case OSPC_DPROT_UNDEFINED:
+        switch (protocol) {
+        case OSPC_PROTNAME_UNDEFINED:
             printf("Destination Protocol is Not Configured at Server\n");
             break;
-        case OSPC_DPROT_SIP:
+        case OSPC_PROTNAME_SIP:
             printf("Destination Protocol is SIP\n");
             break;
-        case OSPC_DPROT_Q931:
+        case OSPC_PROTNAME_Q931:
             printf("Destination Protocol is H.323-Q931\n");
             break;
-        case OSPC_DPROT_LRQ:
+        case OSPC_PROTNAME_LRQ:
             printf("Destination Protocol is H.323-LRQ\n");
             break;
-        case OSPC_DPROT_IAX:
+        case OSPC_PROTNAME_IAX:
             printf("Destination Protocol is IAX\n");
             break;
-        case OSPC_DPROT_T37:
+        case OSPC_PROTNAME_T37:
             printf("Destination Protocol is Fax-T.37\n");
             break;
-        case OSPC_DPROT_T38:
+        case OSPC_PROTNAME_T38:
             printf("Destination Protocol is Fax-T.38\n");
             break;
-        case OSPC_DPROT_SKYPE:
+        case OSPC_PROTNAME_SKYPE:
             printf("Destination Protocol is Skype\n");
             break;
-        case OSPC_DPROT_SMPP:
+        case OSPC_PROTNAME_SMPP:
             printf("Destination Protocol is SMPP\n");
             break;
-        case OSPC_DPROT_XMPP:
+        case OSPC_PROTNAME_XMPP:
             printf("Destination Protocol is XMPP\n");
             break;
-        case OSPC_DPROT_SMS:
+        case OSPC_PROTNAME_SMS:
             printf("Destination Protocol is SMS\n");
             break;
-        case OSPC_DPROT_UNKNOWN:
+        case OSPC_PROTNAME_UNKNOWN:
             printf("Destination Protocol is Unknown\n");
             break;
         default:
@@ -1514,7 +1514,7 @@ int testOSPPTransactionModifyDeviceIdentifiers()
 int testOSPPTransactionGetLookAheadInfoIfPresent()
 {
     int errorcode = 0;
-    OSPE_DEST_PROTOCOL DestProt = OSPC_DPROT_UNDEFINED;
+    OSPE_PROTOCOL_NAME DestProt = OSPC_PROTNAME_UNDEFINED;
     OSPE_DEST_OSPENABLED DestOSPStatus = OSPC_DOSP_UNDEFINED;
     char LookAheadDest[DESTINATION_SZ] = { "" };
     OSPTBOOL HasLookAheadInfo = OSPC_FALSE;
@@ -1529,40 +1529,40 @@ int testOSPPTransactionGetLookAheadInfoIfPresent()
         if (errorcode == 0 && HasLookAheadInfo) {
             printf("Look Ahead Info Present ..\nLookAheadDest = %s\n", LookAheadDest);
             switch (DestProt) {
-            case OSPC_DPROT_UNDEFINED:
+            case OSPC_PROTNAME_UNDEFINED:
                 printf("Destination Protocol is Not Configured at Server\n");
                 break;
-            case OSPC_DPROT_SIP:
+            case OSPC_PROTNAME_SIP:
                 printf("Destination Protocol is SIP\n");
                 break;
-            case OSPC_DPROT_Q931:
+            case OSPC_PROTNAME_Q931:
                 printf("Destination Protocol is H.323-Q931\n");
                 break;
-            case OSPC_DPROT_LRQ:
+            case OSPC_PROTNAME_LRQ:
                 printf("Destination Protocol is H.323-LRQ\n");
                 break;
-            case OSPC_DPROT_IAX:
+            case OSPC_PROTNAME_IAX:
                 printf("Destination Protocol is IAX\n");
                 break;
-            case OSPC_DPROT_T37:
+            case OSPC_PROTNAME_T37:
                 printf("Destination Protocol is Fax-T.37\n");
                 break;
-            case OSPC_DPROT_T38:
+            case OSPC_PROTNAME_T38:
                 printf("Destination Protocol is Fax-T.38\n");
                 break;
-            case OSPC_DPROT_SKYPE:
+            case OSPC_PROTNAME_SKYPE:
                 printf("Destination Protocol is Skype\n");
                 break;
-            case OSPC_DPROT_SMPP:
+            case OSPC_PROTNAME_SMPP:
                 printf("Destination Protocol is SMPP\n");
                 break;
-            case OSPC_DPROT_XMPP:
+            case OSPC_PROTNAME_XMPP:
                 printf("Destination Protocol is XMPP\n");
                 break;
-            case OSPC_DPROT_SMS:
+            case OSPC_PROTNAME_SMS:
                 printf("Destination Protocol is SMS\n");
                 break;
-            case OSPC_DPROT_UNKNOWN:
+            case OSPC_PROTNAME_UNKNOWN:
                 printf("Destination Protocol is Unknown\n");
                 break;
             default:
@@ -1846,11 +1846,13 @@ int testSetDiversion()
     return errorcode;
 }
 
-int testSetDestProtocol()
+int testSetProtocol()
 {
     int errorcode = 0;
 
-    errorcode = OSPPTransactionSetDestProtocol(OSPVTransactionHandle, OSPPDestProtocolGetPart("h323-LRQ"));
+    errorcode = OSPPTransactionSetProtocol(OSPVTransactionHandle, OSPC_PROTTYPE_SOURCE, OSPPDestProtocolGetPart("h323-LRQ"));
+    errorcode = OSPPTransactionSetProtocol(OSPVTransactionHandle, OSPC_PROTTYPE_DESTINATION, OSPPDestProtocolGetPart("h323-Q931"));
+    errorcode = OSPPTransactionSetProtocol(OSPVTransactionHandle, OSPC_PROTTYPE_NA, OSPPDestProtocolGetPart("iax"));
 
     return errorcode;
 }
@@ -2312,7 +2314,7 @@ int testAPI(int apinumber)
         errorcode = testSetDiversion();
         break;
     case 220:
-        errorcode = testSetDestProtocol();
+        errorcode = testSetProtocol();
         break;
     case 221:
         errorcode = testSetCodec();
@@ -2459,7 +2461,7 @@ int testMenu()
         printf("200) Set Termination Cause\n");
         printf("210) Set NP Parameters                211) Set Operator Name\n");
         printf("212) Set Asserted ID                  213) Set Diversion\n");
-        printf("220) Set Destination Protocol         221) Set Codec\n");
+        printf("220) Set Signaling Protocol           221) Set Codec\n");
         printf("222) Set Network ID                   223) Set Session ID\n");
         printf("224) Set Custom Info\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");

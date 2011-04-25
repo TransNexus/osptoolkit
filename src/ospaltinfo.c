@@ -59,6 +59,7 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_SOURCE,          "source" },
     { OSPC_ALTINFO_DESTINATION,     "destination" },
     { OSPC_ALTINFO_CORRELATION,     "correlation" },
+    { OSPC_ALTINFO_NA,              "na" },
     { OSPC_ALTINFO_RTP,             "rtp" },
     { OSPC_ALTINFO_RTCP,            "rtcp" },
     { OSPC_ALTINFO_SRCREP,          "source-to-reporter" },
@@ -67,6 +68,9 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_DESTREP,         "destination-to-reporter" },
     { OSPC_ALTINFO_SRCDEST,         "source-to-destination" },
     { OSPC_ALTINFO_DESTSRC,         "destination-to-source" },
+    { OSPC_ALTINFO_CALLING,         "calling" },
+    { OSPC_ALTINFO_CALLED,          "called" },
+    { OSPC_ALTINFO_PROXY,           "proxy" }
 };
 
 /*

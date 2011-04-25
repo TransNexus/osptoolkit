@@ -26,27 +26,28 @@
 #include "osp/osptoken.h"
 #include "osp/ospmsgdesc.h"
 
-/* Destination Protocol Data Type */
+/* Signaling Protocol Names */
 typedef enum {
-    OSPC_DPROT_UNKNOWN = OSPC_MPART_UNKNOWN,    /* Could not be understood by the Client as Sent by the Server */
-    OSPC_DPROT_UNDEFINED,                       /* Not Configured at Server */
-    OSPC_DPROT_START = 0,                       /* Destination Protocol start */
-    OSPC_DPROT_SIP = OSPC_DPROT_START,          /* Destination Protocol - SIP */
-    OSPC_DPROT_Q931,                            /* Destination Protocol - H323, Send Setup to Complete Call */
-    OSPC_DPROT_LRQ,                             /* Destination Protocol - H323, Send LRQ to GK to Complete Call */
-    OSPC_DPROT_IAX,                             /* Destination Protocol - IAX */
-    OSPC_DPROT_T37,                             /* Destination Protocol - Fax T.37 */
-    OSPC_DPROT_T38,                             /* Destination Protocol - Fax T.38 */
-    OSPC_DPROT_SKYPE,                           /* Destination Protocol - Skype */
-    OSPC_DPROT_SMPP,                            /* Destination Protocol - SMPP */
-    OSPC_DPROT_XMPP,                            /* Destination Protocol - XMPP */
-    OSPC_DPROT_SMS,                             /* Destination Protocol - SMS */
-    /* Number of destiantion protocol types */
-    OSPC_DPROT_NUMBER
-} OSPE_DEST_PROTOCOL;
+    OSPC_PROTNAME_UNKNOWN = OSPC_MPART_UNKNOWN,    /* Could not be understood by the Client as Sent by the Server */
+    OSPC_PROTNAME_UNDEFINED,                       /* Not Configured at Server */
+    /* Message attribute start */
+    OSPC_PROTNAME_START = OSPC_MPART_START,        /* Start */
+    OSPC_PROTNAME_SIP = OSPC_PROTNAME_START,       /* SIP */
+    OSPC_PROTNAME_Q931,                            /* H323, Send Setup to Complete Call */
+    OSPC_PROTNAME_LRQ,                             /* H323, Send LRQ to GK to Complete Call */
+    OSPC_PROTNAME_IAX,                             /* IAX */
+    OSPC_PROTNAME_T37,                             /* Fax T.37 */
+    OSPC_PROTNAME_T38,                             /* Fax T.38 */
+    OSPC_PROTNAME_SKYPE,                           /* Skype */
+    OSPC_PROTNAME_SMPP,                            /* SMPP */
+    OSPC_PROTNAME_XMPP,                            /* XMPP */
+    OSPC_PROTNAME_SMS,                             /* SMS */
+    /* Number of signaling protocol types */
+    OSPC_PROTNAME_NUMBER
+} OSPE_PROTOCOL_NAME;
 
 /* externally declared global variables */
-extern const OSPT_MSG_DESC OSPV_DPROT_DESCS[];
+extern const OSPT_MSG_DESC OSPV_PROTNAME_DESCS[];
 
 /* Destination OSP Enabled Data Type */
 typedef enum {
@@ -92,7 +93,7 @@ typedef struct {
     unsigned ospmDestLimit;
     OSPT_CALL_ID *ospmDestCallId;
     OSPT_TERM_CAUSE ospmDestTermCause;
-    OSPE_DEST_PROTOCOL ospmDestProtocol;
+    OSPE_PROTOCOL_NAME ospmProtocol;
     OSPE_DEST_OSPENABLED ospmDestOSPVersion;
     char ospmDestNetworkId[OSPC_SIZE_NORID];
     unsigned ospmDestDestinationCount;
@@ -154,8 +155,9 @@ extern "C" {
     const char *OSPPDestGetTCDesc(OSPT_DEST *, OSPE_TERM_CAUSE);
     void OSPPDestSetDestinationCount(OSPT_DEST *, unsigned);
     unsigned OSPPDestGetDestinationCount(OSPT_DEST *);
-    OSPE_DEST_PROTOCOL OSPPDestProtocolGetPart(const char *);
-    const char *OSPPDestProtocolGetName(OSPE_DEST_PROTOCOL);
+    OSPE_PROTOCOL_NAME OSPPDestProtocolGetPart(const char *);
+    const char *OSPPDestProtocolGetName(OSPE_PROTOCOL_NAME);
+    void OSPPDestProtocolFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
     void OSPPDestInfoFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
     int OSPPUsageDetailFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
     void OSPPServiceFromElement(OSPT_XML_ELEM *, OSPT_DEST *);

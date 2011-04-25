@@ -922,7 +922,6 @@ int OSPPMimeVerifyParameters(
 
                 /* check protocol */
                 while ((pcount < ospvContent->NumParams) && (!pfound)) {
-
                     errorcode = OSPPUtilMemCaseCmp(ospvContent->Params[pcount]->ParamName->Content,
                         ospvContent->Params[pcount]->ParamName->Length, "protocol", OSPM_STRLEN("protocol"), &result);
 
@@ -935,7 +934,6 @@ int OSPPMimeVerifyParameters(
                 }
 
                 if (pfound) {
-
                     /* copy the protocol string somewhere to save it for SECURITY
                      * remember to strip off double quotes
                      */

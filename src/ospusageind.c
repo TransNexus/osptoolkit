@@ -1065,7 +1065,9 @@ OSPT_USAGEIND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         ospvUsageInd->osmpUsageIndHasServiceInfo = OSPC_FALSE;
         ospvUsageInd->ospmUsageIndDestinationCount = OSPC_OSNULL;
 
-        ospvUsageInd->ospmUsageIndDestProtocol = OSPC_DPROT_UNKNOWN;
+        for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
+            ospvUsageInd->ospmUsageIndProtocol[cnt] = OSPC_PROTNAME_UNKNOWN;
+        }
         for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
             ospvUsageInd->ospmUsageIndCodec[cnt][0] = '\0';
         }
@@ -1498,15 +1500,31 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
-            /* Destination protocol */
-            if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndHasDestProtocol(usage))) {
-                ospvErrCode = OSPPStringToElement(OSPC_MELEM_DESTPROTOCOL,
-                   OSPPDestProtocolGetName(OSPPUsageIndGetDestProtocol(usage)),
-                   0, OSPC_OSNULL, OSPC_OSNULL,
-                   &subelem);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(usagedetailelem, subelem);
-                    subelem = OSPC_OSNULL;
+            /* Protocol */
+            for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
+                if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndHasProtocol(usage, cnt))) {
+                    attrtype = OSPC_MATTR_TYPE;
+                    switch (cnt) {
+                    case OSPC_PROTTYPE_SOURCE:
+                        attrvalue = OSPC_ALTINFO_SOURCE;
+                        break;
+                    case OSPC_PROTTYPE_DESTINATION:
+                        attrvalue = OSPC_ALTINFO_DESTINATION;
+                        break;
+                    case OSPC_PROTTYPE_NA:
+                        attrvalue = OSPC_ALTINFO_NA;
+                        break;
+                    default:
+                        continue;
+                    }
+                    ospvErrCode = OSPPStringToElement(OSPC_MELEM_PROTOCOL,
+                       OSPPDestProtocolGetName(OSPPUsageIndGetProtocol(usage, cnt)),
+                       1, &attrtype, &attrvalue,
+                       &subelem);
+                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                        OSPPXMLElemAddChild(usagedetailelem, subelem);
+                        subelem = OSPC_OSNULL;
+                    }
                 }
             }
 
@@ -1727,42 +1745,49 @@ OSPT_ALTINFO *OSPPUsageIndGetDestinationCount(
     }
 }
 
-OSPTBOOL OSPPUsageIndHasDestProtocol(
-    OSPT_USAGEIND *ospvUsageInd)
-{
-    OSPTBOOL ospvHas = OSPC_FALSE;
-
-    if (ospvUsageInd != OSPC_OSNULL) {
-        if ((ospvUsageInd->ospmUsageIndDestProtocol >= OSPC_DPROT_START) &&
-            (ospvUsageInd->ospmUsageIndDestProtocol < OSPC_DPROT_NUMBER))
-        {
-            ospvHas = OSPC_TRUE;
-        }
-    }
-
-    return ospvHas;
-}
-
-OSPE_DEST_PROTOCOL OSPPUsageIndGetDestProtocol(
-    OSPT_USAGEIND *ospvUsageInd)
-{
-    OSPE_DEST_PROTOCOL ospvDestProtocol = OSPC_DPROT_UNKNOWN;
-
-    if (ospvUsageInd != OSPC_OSNULL) {
-        ospvDestProtocol = ospvUsageInd->ospmUsageIndDestProtocol;
-    }
-
-    return ospvDestProtocol;
-}
-
-void OSPPUsageIndSetDestProtocol(
+OSPTBOOL OSPPUsageIndHasProtocol(
     OSPT_USAGEIND *ospvUsageInd,
-    OSPE_DEST_PROTOCOL ospvProtocol)
+    OSPE_PROTOCOL_TYPE ospvType)
 {
+    OSPTBOOL has = OSPC_FALSE;
+
     if (ospvUsageInd != OSPC_OSNULL) {
-        if ((ospvProtocol >= OSPC_DPROT_START) && (ospvProtocol < OSPC_DPROT_NUMBER)) {
-            ospvUsageInd->ospmUsageIndDestProtocol = ospvProtocol;
+        if (((ospvType >= OSPC_PROTTYPE_START) && (ospvType < OSPC_PROTTYPE_NUMBER)) &&
+        	((ospvUsageInd->ospmUsageIndProtocol[ospvType] >= OSPC_PROTNAME_START) &&
+            (ospvUsageInd->ospmUsageIndProtocol[ospvType] < OSPC_PROTNAME_NUMBER)))
+        {
+            has = OSPC_TRUE;
         }
+    }
+
+    return has;
+}
+
+OSPE_PROTOCOL_NAME OSPPUsageIndGetProtocol(
+    OSPT_USAGEIND *ospvUsageInd,
+    OSPE_PROTOCOL_TYPE ospvType)
+{
+    OSPE_PROTOCOL_NAME protocol = OSPC_PROTNAME_UNKNOWN;
+
+    if ((ospvUsageInd != OSPC_OSNULL) &&
+        ((ospvType >= OSPC_PROTTYPE_START) && (ospvType < OSPC_PROTTYPE_NUMBER)))
+    {
+        protocol = ospvUsageInd->ospmUsageIndProtocol[ospvType];
+    }
+
+    return protocol;
+}
+
+void OSPPUsageIndSetProtocol(
+    OSPT_USAGEIND *ospvUsageInd,
+    OSPE_PROTOCOL_TYPE ospvType,
+    OSPE_PROTOCOL_NAME ospvName)
+{
+    if ((ospvUsageInd != OSPC_OSNULL) &&
+        ((ospvType >= OSPC_PROTTYPE_START) && (ospvType < OSPC_PROTTYPE_NUMBER)) &&
+        ((ospvName >= OSPC_PROTNAME_START) && (ospvName < OSPC_PROTNAME_NUMBER)))
+    {
+            ospvUsageInd->ospmUsageIndProtocol[ospvType] = ospvName;
     }
 }
 

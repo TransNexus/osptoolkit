@@ -32,17 +32,17 @@
 #include "osp/ospaltinfo.h"
 
 /* Array that associates protocols and names */
-const OSPT_MSG_DESC OSPV_DPROT_DESCS[OSPC_DPROT_NUMBER] = {
-    { OSPC_DPROT_SIP,   "sip" },
-    { OSPC_DPROT_Q931,  "h323-Q931" },
-    { OSPC_DPROT_LRQ,   "h323-LRQ" },
-    { OSPC_DPROT_IAX,   "iax" },
-    { OSPC_DPROT_T37,   "fax-T37" },
-    { OSPC_DPROT_T38,   "fax-T38" },
-    { OSPC_DPROT_SKYPE, "skype" },
-    { OSPC_DPROT_SMPP,  "smpp" },
-    { OSPC_DPROT_XMPP,  "xmpp" },
-    { OSPC_DPROT_SMS,   "sms" }
+const OSPT_MSG_DESC OSPV_PROTNAME_DESCS[OSPC_PROTNAME_NUMBER] = {
+    { OSPC_PROTNAME_SIP,   "sip" },
+    { OSPC_PROTNAME_Q931,  "h323-Q931" },
+    { OSPC_PROTNAME_LRQ,   "h323-LRQ" },
+    { OSPC_PROTNAME_IAX,   "iax" },
+    { OSPC_PROTNAME_T37,   "fax-T37" },
+    { OSPC_PROTNAME_T38,   "fax-T38" },
+    { OSPC_PROTNAME_SKYPE, "skype" },
+    { OSPC_PROTNAME_SMPP,  "smpp" },
+    { OSPC_PROTNAME_XMPP,  "xmpp" },
+    { OSPC_PROTNAME_SMS,   "sms" }
 };
 
 /*
@@ -66,14 +66,14 @@ void OSPPDestSetOSPVersion(     /* nothing returned */
 }
 
 /*
- * OSPPDestSetProtocol() - set the Protocol for a destination
+ * OSPPDestSetProtocol() - set the protocol for a destination
  */
-void OSPPDestSetProtocol(   /* nothing returned */
-    OSPT_DEST *ospvDest,    /* destination to set */
+void OSPPDestSetProtocol(   /* Nothing returned */
+    OSPT_DEST *ospvDest,    /* Destination to set */
     const char *ospvProt)   /* Protocol (as string) */
 {
     if (ospvDest != OSPC_OSNULL) {
-        ospvDest->ospmDestProtocol = OSPPDestProtocolGetPart(ospvProt);
+        ospvDest->ospmProtocol = OSPPDestProtocolGetPart(ospvProt);
     }
 }
 
@@ -651,7 +651,7 @@ OSPT_DEST *OSPPDestNew(void)    /* returns pointer or NULL */
         OSPPListLinkNew(&(dest->ospmDestLink));
         dest->ospmDestValidAfter = OSPC_TIMEMIN;
         dest->ospmDestValidUntil = OSPC_TIMEMAX;
-        dest->ospmDestProtocol = OSPC_DPROT_UNDEFINED;
+        dest->ospmProtocol = OSPC_PROTNAME_UNDEFINED;
         dest->ospmDestOSPVersion = OSPC_DOSP_UNDEFINED;
         OSPPListNew(&(dest->ospmDestTokens));
         OSPPListNew(&(dest->ospmUpdatedSourceAddr));
@@ -748,8 +748,8 @@ int OSPPDestFromElement(        /* returns error code */
             elem = OSPPXMLElemNextChild(ospvElem, elem))
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
-            case OSPC_MELEM_DESTPROTOCOL:
-                OSPPDestSetProtocol(dest, OSPPXMLElemGetValue(elem));
+            case OSPC_MELEM_PROTOCOL:
+                OSPPDestProtocolFromElement(elem, dest);
                 break;
             case OSPC_MELEM_DESTOSPVERSION:
                 OSPPDestSetOSPVersion(dest, OSPPXMLElemGetValue(elem));
@@ -761,11 +761,9 @@ int OSPPDestFromElement(        /* returns error code */
                 OSPPDestInfoFromElement(elem, dest);
                 break;
             case OSPC_MELEM_DESTALT:
-                /* OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem)); */
                 OSPPDestSetNetworkAddr(dest, OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_DESTSIGADDR:
-                /* OSPPDestDevSetAddr(dest, OSPPXMLElemGetValue(elem)); */
                 OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_TOKEN:
@@ -872,28 +870,54 @@ unsigned OSPPDestGetDestinationCount(
     return value;
 }
 
-OSPE_DEST_PROTOCOL OSPPDestProtocolGetPart(
+OSPE_PROTOCOL_NAME OSPPDestProtocolGetPart(
     const char *ospvName)
 {
-    OSPE_DEST_PROTOCOL part = OSPC_DPROT_UNKNOWN;
+    OSPE_PROTOCOL_NAME part = OSPC_PROTNAME_UNKNOWN;
 
     if (ospvName != OSPC_OSNULL) {
-        part = (OSPE_DEST_PROTOCOL)OSPPMsgDescGetPart(ospvName, OSPV_DPROT_DESCS, OSPC_DPROT_NUMBER);
+        part = (OSPE_PROTOCOL_NAME)OSPPMsgDescGetPart(ospvName, OSPV_PROTNAME_DESCS, OSPC_PROTNAME_NUMBER);
     }
 
     return part;
 }
 
 const char *OSPPDestProtocolGetName(
-    OSPE_DEST_PROTOCOL ospvPart)
+    OSPE_PROTOCOL_NAME ospvPart)
 {
     const char *name = OSPC_OSNULL;
 
-    if ((ospvPart >= OSPC_DPROT_START) && (ospvPart < OSPC_DPROT_NUMBER)) {
-        name = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_DPROT_DESCS, OSPC_DPROT_NUMBER);
+    if ((ospvPart >= OSPC_PROTNAME_START) && (ospvPart < OSPC_PROTNAME_NUMBER)) {
+        name = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_PROTNAME_DESCS, OSPC_PROTNAME_NUMBER);
     }
 
     return name;
+}
+
+void OSPPDestProtocolFromElement(
+    OSPT_XML_ELEM *ospvElem,
+    OSPT_DEST *ospvDest)
+{
+    OSPT_XML_ATTR* attr = OSPC_OSNULL;
+    OSPE_PROTOCOL_TYPE type = OSPC_ALTINFO_DESTINATION;
+
+    for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElem);
+        (attr != OSPC_OSNULL);
+        attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElem, attr))
+    {
+        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_TYPE) {
+        	type = OSPPAltInfoTypeGetPart(OSPPXMLAttrGetValue(attr));
+        }
+    }
+    switch (type) {
+    case OSPC_ALTINFO_DESTINATION:
+    case OSPC_ALTINFO_NA:
+        OSPPDestSetProtocol(ospvDest, OSPPXMLElemGetValue(ospvElem));
+        break;
+    case OSPC_ALTINFO_SOURCE:
+    default:
+        break;
+    }
 }
 
 void OSPPDestInfoFromElement(

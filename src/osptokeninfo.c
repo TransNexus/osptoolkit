@@ -49,40 +49,40 @@ void OSPPTokenInfoSetLookAheadDestAlt(              /* nothing returned */
 const char *OSPPTokenInfoGetLookAheadDestAlt(
     OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo)     /* token info */
 {
-    const char *ospvLookAheadDest = OSPC_OSNULL;
+    const char *destination = OSPC_OSNULL;
 
     if (ospvTokenLookAheadInfo != OSPC_OSNULL) {
-        ospvLookAheadDest = ospvTokenLookAheadInfo->lookAheadDest;
+        destination = ospvTokenLookAheadInfo->lookAheadDest;
     }
 
-    return ospvLookAheadDest;
+    return destination;
 }
 
 /*
- * OSPPTokenInfoSetLookAheadDestProtocol() - sets the destination protocol for the look ahead route.
+ * OSPPTokenInfoSetLookAheadProtocol() - sets the signaling protocol for the look ahead route.
  */
-void OSPPTokenInfoSetLookAheadDestProtocol(             /* nothing returned */
+void OSPPTokenInfoSetLookAheadProtocol(                 /* nothing returned */
     OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo,     /* token info to set */
-    const char *ospvDestProtocol)
+    const char *ospvProtocol)
 {
     if (ospvTokenLookAheadInfo != OSPC_OSNULL) {
-        ospvTokenLookAheadInfo->lookAheadDestProt = OSPPDestProtocolGetPart(ospvDestProtocol);
+        ospvTokenLookAheadInfo->lookAheadProt = OSPPDestProtocolGetPart(ospvProtocol);
     }
 }
 
 /*
- * OSPPTokenInfoGetLookAheadDestProtocol() - returns the destination Protocol for the look ahead route.
+ * OSPPTokenInfoGetLookAheadProtocol() - returns the signaling protocol for the look ahead route.
  */
-OSPE_DEST_PROTOCOL OSPPTokenInfoGetLookAheadDestProtocol(
+OSPE_PROTOCOL_NAME OSPPTokenInfoGetLookAheadProtocol(
     OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo)     /* token info */
 {
-    OSPE_DEST_PROTOCOL ospvLookAheadDestOSPProt = OSPC_DPROT_UNDEFINED;
+    OSPE_PROTOCOL_NAME protocol = OSPC_PROTNAME_UNDEFINED;
 
     if (ospvTokenLookAheadInfo != OSPC_OSNULL) {
-        ospvLookAheadDestOSPProt = ospvTokenLookAheadInfo->lookAheadDestProt;
+        protocol = ospvTokenLookAheadInfo->lookAheadProt;
     }
 
-    return ospvLookAheadDestOSPProt;
+    return protocol;
 }
 
 /*
@@ -109,13 +109,13 @@ void OSPPTokenInfoSetLookAheadOSPVersion(           /* nothing returned */
 OSPE_DEST_OSPENABLED OSPPTokenInfoGetLookAheadOSPVersion(
     OSPTTOKENLOOKAHEADINFO *ospvTokenLookAheadInfo)         /* token info */
 {
-    OSPE_DEST_OSPENABLED ospvLookAheadDestOSPStatus = OSPC_DOSP_UNDEFINED;
+    OSPE_DEST_OSPENABLED status = OSPC_DOSP_UNDEFINED;
 
     if (ospvTokenLookAheadInfo != OSPC_OSNULL) {
-        ospvLookAheadDestOSPStatus = ospvTokenLookAheadInfo->lookAheadDestOSPStatus;
+        status = ospvTokenLookAheadInfo->lookAheadDestOSPStatus;
     }
 
-    return ospvLookAheadDestOSPStatus;
+    return status;
 }
 
 /*
@@ -138,13 +138,13 @@ void OSPPTokenInfoSetSourceNumber(  /* nothing returned */
 const char *OSPPTokenInfoGetSourceNumber(
     OSPTTOKENINFO *ospvTokenInfo)   /* token info */
 {
-    const char *ospvSourceNumber = OSPC_OSNULL;
+    const char *number = OSPC_OSNULL;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvSourceNumber = ospvTokenInfo->ospmTokenInfoSourceNumber;
+        number = ospvTokenInfo->ospmTokenInfoSourceNumber;
     }
 
-    return ospvSourceNumber;
+    return number;
 }
 
 /*
@@ -167,13 +167,13 @@ void OSPPTokenInfoSetDestNumber(    /* nothing returned */
 const char *OSPPTokenInfoGetDestNumber(
     OSPTTOKENINFO *ospvTokenInfo)       /* token info */
 {
-    const char *ospvDestNumber = OSPC_OSNULL;
+    const char *number = OSPC_OSNULL;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvDestNumber = ospvTokenInfo->ospmTokenInfoDestNumber;
+        number = ospvTokenInfo->ospmTokenInfoDestNumber;
     }
 
-    return ospvDestNumber;
+    return number;
 }
 
 /*
@@ -196,13 +196,13 @@ void OSPPTokenInfoSetDestNetworkId( /* nothing returned */
 const char *OSPPTokenInfoGetDestNetworkId(
     OSPTTOKENINFO *ospvTokenInfo)           /* token info */
 {
-    const char *ospvDestId = OSPC_OSNULL;
+    const char *dnid = OSPC_OSNULL;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvDestId = ospvTokenInfo->dstNetworkId;
+        dnid = ospvTokenInfo->dstNetworkId;
     }
 
-    return ospvDestId;
+    return dnid;
 }
 
 /*
@@ -211,13 +211,13 @@ const char *OSPPTokenInfoGetDestNetworkId(
 OSPTBOOL OSPPTokenInfoHasCallId(    /* returns non-zero if number exists */
     OSPTTOKENINFO *ospvTokenInfo)   /* Token Info effected */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvHas = (ospvTokenInfo->ospmTokenInfoCallId != OSPC_OSNULL);
+        has = (ospvTokenInfo->ospmTokenInfoCallId != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -243,13 +243,13 @@ void OSPPTokenInfoSetCallId(        /* nothing returned */
 OSPT_CALL_ID *OSPPTokenInfoGetCallId(
     OSPTTOKENINFO *ospvTokenInfo)   /* token info */
 {
-    OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
+    OSPT_CALL_ID *callid = OSPC_OSNULL;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvCallId = ospvTokenInfo->ospmTokenInfoCallId;
+        callid = ospvTokenInfo->ospmTokenInfoCallId;
     }
 
-    return ospvCallId;
+    return callid;
 }
 
 /*
@@ -258,13 +258,13 @@ OSPT_CALL_ID *OSPPTokenInfoGetCallId(
 unsigned OSPPTokenInfoGetCallIdSize(
     OSPTTOKENINFO *ospvTokenInfo)   /* token info */
 {
-    unsigned ospvCallIdSize = 0;
+    unsigned size = 0;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvCallIdSize = OSPPCallIdGetSize(((ospvTokenInfo)->ospmTokenInfoCallId));
+        size = OSPPCallIdGetSize(((ospvTokenInfo)->ospmTokenInfoCallId));
     }
 
-    return ospvCallIdSize;
+    return size;
 }
 
 /*
@@ -273,13 +273,13 @@ unsigned OSPPTokenInfoGetCallIdSize(
 unsigned char *OSPPTokenInfoGetCallIdValue(
     OSPTTOKENINFO *ospvTokenInfo)           /* token info */
 {
-    unsigned char *ospvCallIdValue = OSPC_OSNULL;
+    unsigned char *value = OSPC_OSNULL;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvCallIdValue = OSPPCallIdGetValue(ospvTokenInfo->ospmTokenInfoCallId);
+        value = OSPPCallIdGetValue(ospvTokenInfo->ospmTokenInfoCallId);
     }
 
-    return ospvCallIdValue;
+    return value;
 }
 
 /*
@@ -288,13 +288,13 @@ unsigned char *OSPPTokenInfoGetCallIdValue(
 OSPTBOOL OSPPTokenInfoHasValidAfter(/* returns non-zero if time */
     OSPTTOKENINFO *ospvTokenInfo)   /* TokenInfo in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvHas = (ospvTokenInfo->ospmTokenInfoValidAfter != OSPC_TIMEMIN);
+        has = (ospvTokenInfo->ospmTokenInfoValidAfter != OSPC_TIMEMIN);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -315,13 +315,13 @@ void OSPPTokenInfoSetValidAfter(    /* nothing returned */
 OSPTTIME OSPPTokenInfoGetValidAfter(    /* returns the time value */
     OSPTTOKENINFO *ospvTokenInfo)       /* TokenInfo in question */
 {
-    OSPTTIME ospvValidAfter = 0;
+    OSPTTIME after = 0;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvValidAfter = ospvTokenInfo->ospmTokenInfoValidAfter;
+        after = ospvTokenInfo->ospmTokenInfoValidAfter;
     }
 
-    return ospvValidAfter;
+    return after;
 }
 
 /*
@@ -342,12 +342,12 @@ void OSPPTokenInfoSetValidUntil(    /* nothing returned */
 OSPTTIME OSPPTokenInfoGetValidUntil(/* returns time */
     OSPTTOKENINFO *ospvTokenInfo)   /* token in question */
 {
-    OSPTTIME ospvValidUntil = 0;
+    OSPTTIME until = 0;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvValidUntil = ospvTokenInfo->ospmTokenInfoValidUntil;
+        until = ospvTokenInfo->ospmTokenInfoValidUntil;
     }
-    return ospvValidUntil;
+    return until;
 }
 
 /*
@@ -370,13 +370,13 @@ void OSPPTokenInfoSetTrxId(         /* nothing returned */
 OSPTTRXID OSPPTokenInfoGetTrxId(
     OSPTTOKENINFO *ospvTokenInfo)   /* token info */
 {
-    OSPTTRXID ospvTrxId = 0;
+    OSPTTRXID trxid = 0;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvTrxId = ospvTokenInfo->ospmTokenInfoTrxId;
+        trxid = ospvTokenInfo->ospmTokenInfoTrxId;
     }
 
-    return ospvTrxId;
+    return trxid;
 }
 
 /*
@@ -399,13 +399,13 @@ void OSPPTokenInfoSetDuration(      /* nothing returned */
 int OSPPTokenInfoGetDuration(
     OSPTTOKENINFO *ospvTokenInfo)   /* token info */
 {
-    int ospvDuration = 0;
+    int duration = 0;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvDuration = ospvTokenInfo->ospmTokenInfoDuration;
+        duration = ospvTokenInfo->ospmTokenInfoDuration;
     }
 
-    return ospvDuration;
+    return duration;
 }
 
 /*
@@ -413,26 +413,26 @@ int OSPPTokenInfoGetDuration(
  */
 OSPTTOKENINFO *OSPPTokenInfoNew(void)   /* returns pointer or NULL */
 {
-    OSPTTOKENINFO *ospvTokenInfo;
+    OSPTTOKENINFO *tokeninfo;
 
-    OSPM_MALLOC(ospvTokenInfo, OSPTTOKENINFO, sizeof(OSPTTOKENINFO));
-    if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvTokenInfo->ospmTokenInfoSourceNumber[0] = '\0';
-        ospvTokenInfo->ospmTokenInfoDestNumber[0] = '\0';
-        ospvTokenInfo->ospmTokenInfoCallId = OSPC_OSNULL;
-        ospvTokenInfo->ospmTokenInfoValidAfter = OSPC_TIMEMIN;
-        ospvTokenInfo->ospmTokenInfoValidUntil = OSPC_TIMEMAX;
-        ospvTokenInfo->ospmTokenInfoTrxId = 0;
-        ospvTokenInfo->ospmTokenInfoDuration = -1;
-        ospvTokenInfo->ospmTokenInfoHasLookAheadInfo = OSPC_FALSE;
-        ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDestProt = OSPC_DPROT_UNDEFINED;
-        ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDestOSPStatus = OSPC_DOSP_UNDEFINED;
-        ospvTokenInfo->ospmTokenLookAheadInfo.lookAheadDest[0] = '\0';
-        ospvTokenInfo->ospmTokenInfoHasDestNetworkId = OSPC_FALSE;
-        ospvTokenInfo->dstNetworkId[0] = '\0';
+    OSPM_MALLOC(tokeninfo, OSPTTOKENINFO, sizeof(OSPTTOKENINFO));
+    if (tokeninfo != OSPC_OSNULL) {
+        tokeninfo->ospmTokenInfoSourceNumber[0] = '\0';
+        tokeninfo->ospmTokenInfoDestNumber[0] = '\0';
+        tokeninfo->ospmTokenInfoCallId = OSPC_OSNULL;
+        tokeninfo->ospmTokenInfoValidAfter = OSPC_TIMEMIN;
+        tokeninfo->ospmTokenInfoValidUntil = OSPC_TIMEMAX;
+        tokeninfo->ospmTokenInfoTrxId = 0;
+        tokeninfo->ospmTokenInfoDuration = -1;
+        tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_FALSE;
+        tokeninfo->ospmTokenLookAheadInfo.lookAheadProt = OSPC_PROTNAME_UNDEFINED;
+        tokeninfo->ospmTokenLookAheadInfo.lookAheadDestOSPStatus = OSPC_DOSP_UNDEFINED;
+        tokeninfo->ospmTokenLookAheadInfo.lookAheadDest[0] = '\0';
+        tokeninfo->ospmTokenInfoHasDestNetworkId = OSPC_FALSE;
+        tokeninfo->dstNetworkId[0] = '\0';
     }
 
-    return ospvTokenInfo;
+    return tokeninfo;
 }
 
 /*
@@ -457,27 +457,27 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
     OSPT_XML_ELEM *ospvElem,        /* input is XML element */
     OSPTTOKENINFO **ospvTokenInfo)  /* where to put token info pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
     OSPTTOKENINFO *tokeninfo = OSPC_OSNULL;
-    OSPT_CALL_ID *callId;
+    OSPT_CALL_ID *callid;
     OSPTTIME t;
     OSPTTRXID trxid;
     unsigned duration;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvTokenInfo == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_DATA_NO_TOKEN;
+        errcode = OSPC_ERR_DATA_NO_TOKEN;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* create the token info object */
         tokeninfo = OSPPTokenInfoNew();
 
         if (tokeninfo == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_DATA_NO_TOKENINFO;
+            errcode = OSPC_ERR_DATA_NO_TOKENINFO;
         }
     }
     /*
@@ -485,10 +485,10 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
      * elements. We'll run through what's there and pick out
      * the information we need.
      */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
              (elem != OSPC_OSNULL) &&
-             (ospvErrCode == OSPC_ERR_NO_ERROR);
+             (errcode == OSPC_ERR_NO_ERROR);
              elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_MESSAGE:
@@ -518,9 +518,9 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
                     }
                 }
                 break;
-            case OSPC_MELEM_DESTPROTOCOL:
+            case OSPC_MELEM_PROTOCOL:
                 tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
-                OSPPTokenInfoSetLookAheadDestProtocol(&(tokeninfo->ospmTokenLookAheadInfo), OSPPXMLElemGetValue(elem));
+                OSPPTokenInfoSetLookAheadProtocol(&(tokeninfo->ospmTokenLookAheadInfo), OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_DESTOSPVERSION:
                 tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
@@ -533,25 +533,25 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
                 OSPPTokenInfoSetDestNumber(tokeninfo, OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_CALLID:
-                ospvErrCode = OSPPCallIdFromElement(elem, &callId);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                    OSPPTokenInfoSetCallId(tokeninfo, callId);
-                    OSPPCallIdDelete(&callId);
+                errcode = OSPPCallIdFromElement(elem, &callid);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPTokenInfoSetCallId(tokeninfo, callid);
+                    OSPPCallIdDelete(&callid);
                 }
                 break;
             case OSPC_MELEM_TRANSID:
-                ospvErrCode = OSPPMsgTXFromElement(elem, &trxid);
+                errcode = OSPPMsgTXFromElement(elem, &trxid);
                 OSPPTokenInfoSetTrxId(tokeninfo, trxid);
                 break;
             case OSPC_MELEM_VALIDAFTER:
-                ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                errcode = OSPPMsgTimeFromElement(elem, &t);
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPTokenInfoSetValidAfter(tokeninfo, t);
                 }
                 break;
             case OSPC_MELEM_VALIDUNTIL:
-                ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                errcode = OSPPMsgTimeFromElement(elem, &t);
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPTokenInfoSetValidUntil(tokeninfo, t);
                 }
                 break;
@@ -566,18 +566,18 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
                  * Otherwise we can ignore it.
                  */
                 if (OSPPMsgElemIsCritical(elem)) {
-                    ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
+                    errcode = OSPC_ERR_XML_BAD_ELEMENT;
                 }
                 break;
             }
         }
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         *ospvTokenInfo = tokeninfo;
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -591,29 +591,29 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
     unsigned char val[200];     /* Assume that there wont be any field more than 200 bytes in length */
     unsigned char *ptr = NULL;
     OSPTTOKENINFO *tokeninfo = OSPC_OSNULL;
-    OSPT_CALL_ID *callId;
+    OSPT_CALL_ID *callid;
     OSPTTIME t;
     OSPTTRXID trxid;
     unsigned duration;
-    unsigned ospvErrCode = 0;
+    unsigned errcode = 0;
 
     if (ospvASCIIMessage == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_ASCII_NO_ELEMENT;
+        errcode = OSPC_ERR_ASCII_NO_ELEMENT;
     }
     if (ospvTokenInfo == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_DATA_NO_TOKEN;
+        errcode = OSPC_ERR_DATA_NO_TOKEN;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* create the token info object */
         tokeninfo = OSPPTokenInfoNew();
 
         if (tokeninfo == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_DATA_NO_TOKENINFO;
+            errcode = OSPC_ERR_DATA_NO_TOKENINFO;
         }
     }
 
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR)) {
+    if ((errcode == OSPC_ERR_NO_ERROR)) {
         ptr = ospvASCIIMessage;
 
         do {
@@ -638,10 +638,10 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
                 break;
             case 'i':
                 if (OSPM_STRLEN((const char *)val) > 2) {
-                    ospvErrCode = OSPPCallIdFromASCIIElement((unsigned char *)(val + 2), &callId);
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                        OSPPTokenInfoSetCallId(tokeninfo, callId);
-                        OSPPCallIdDelete(&callId);
+                    errcode = OSPPCallIdFromASCIIElement((unsigned char *)(val + 2), &callid);
+                    if (errcode == OSPC_ERR_NO_ERROR) {
+                        OSPPTokenInfoSetCallId(tokeninfo, callid);
+                        OSPPCallIdDelete(&callid);
                     }
                 }
                 break;
@@ -650,8 +650,8 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
                     /*
                      * Convert time string to value
                      */
-                    ospvErrCode = OSPPOSTimeStringToCal((const char *)(val + 2), &t);
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    errcode = OSPPOSTimeStringToCal((const char *)(val + 2), &t);
+                    if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPTokenInfoSetValidAfter(tokeninfo, t);
                     }
                 }
@@ -661,8 +661,8 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
                     /*
                      * Convert time string to value
                      */
-                    ospvErrCode = OSPPOSTimeStringToCal((const char *)(val + 2), &t);
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    errcode = OSPPOSTimeStringToCal((const char *)(val + 2), &t);
+                    if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPTokenInfoSetValidUntil(tokeninfo, t);
                     }
                 }
@@ -686,7 +686,7 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
             case 'D':
                 if (OSPM_STRLEN((const char *)val) > 2) {
                     tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
-                    OSPPTokenInfoSetLookAheadDestProtocol(&(tokeninfo->ospmTokenLookAheadInfo), (const char *)(val + 2));
+                    OSPPTokenInfoSetLookAheadProtocol(&(tokeninfo->ospmTokenLookAheadInfo), (const char *)(val + 2));
                 }
                 break;
             case 'o':
@@ -708,7 +708,7 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
                 }
                 break;
             default:
-                ospvErrCode = OSPC_ERR_ASCII_BAD_ELEMENT;
+                errcode = OSPC_ERR_ASCII_BAD_ELEMENT;
                 break;
             }
 
@@ -716,12 +716,12 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
             if (ptr[0] == '\n') {
                 ptr++;
             }
-        } while ((ptr[0] != '\0') && (ospvErrCode == OSPC_ERR_NO_ERROR));
+        } while ((ptr[0] != '\0') && (errcode == OSPC_ERR_NO_ERROR));
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         *ospvTokenInfo = tokeninfo;
     }
 
-    return ospvErrCode;
+    return errcode;
 }

@@ -412,7 +412,7 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
     OSPTTRANHANDLE ospvTransaction,                     /* In - Transaction handle */
     OSPTBOOL *ospvHasLookAheadInfo,                     /* Out */
     char *ospvLookAheadDestination,                     /* Out */
-    OSPE_DEST_PROTOCOL *ospvLookAheadDestProt,          /* Out */
+    OSPE_PROTOCOL_NAME *ospvLookAheadProt,              /* Out */
     OSPE_DEST_OSPENABLED *ospvLookAheadDestOSPStatus)   /* Out */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
@@ -433,7 +433,7 @@ int OSPPTransactionGetLookAheadInfoIfPresent(
             destinfo = OSPPTokenInfoGetLookAheadDestAlt(&(trans->TokenLookAheadInfo));
             OSPM_MEMCPY(ospvLookAheadDestination, destinfo, OSPM_STRLEN(destinfo) + 1);
 
-            *ospvLookAheadDestProt = OSPPTokenInfoGetLookAheadDestProtocol(&(trans->TokenLookAheadInfo));
+            *ospvLookAheadProt = OSPPTokenInfoGetLookAheadProtocol(&(trans->TokenLookAheadInfo));
 
             *ospvLookAheadDestOSPStatus = OSPPTokenInfoGetLookAheadOSPVersion(&(trans->TokenLookAheadInfo));
 
@@ -574,31 +574,31 @@ int OSPPTransactionGetDestinationNetworkId(
  * or should be called right after Calling GetNextDestination.
  * The parameters to the function are:
  *   ospvTransaction: handle of the transaction object.
- *   ospvDestinationProtocol: the memory location in which
- *                            the Toolkit puts the Destination Protocol.
- *                            The returned value is one of the types
- *                            defined in OSPE_DEST_PROTOCOL.
+ *   ospvType: Protocol type
+ *   ospvName: the memory location in which the Toolkit puts the
+ *     protocol. The returned value is one of the types defined in
+ *     OSPE_PROTOCOL_NAME.
  * returns OSPC_ERR_NO_ERROR if successful, else a 'Request out of Sequence' errorcode.
  */
 int OSPPTransactionGetDestProtocol(
-    OSPTTRANHANDLE ospvTransaction,         /* In - Transaction handle */
-    OSPE_DEST_PROTOCOL *ospvDestProtocol)   /* Out - Destination Protocol Info */
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_PROTOCOL_NAME *ospvName)   /* Out - Protocol name */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
 
-    *ospvDestProtocol = OSPC_DPROT_UNKNOWN;
+    *ospvName = OSPC_PROTNAME_UNKNOWN;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-    if (trans != (OSPTTRANS *)NULL) {
+    if (trans != NULL) {
         dest = trans->CurrentDest;
         if (trans->State == OSPC_GET_DEST_SUCCESS) {
-            if (dest == (OSPT_DEST *)NULL) {
+            if (dest == NULL) {
                 errorcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
                 OSPM_DBGERRORLOG(errorcode, "Could not find Destination for this Transaction\n");
             } else {
-                *ospvDestProtocol = dest->ospmDestProtocol;
+                *ospvName = dest->ospmProtocol;
             }
         } else {
             errorcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
@@ -2156,7 +2156,9 @@ int OSPPTransactionNew(
         trans->NPRn[0] = '\0';
         trans->NPCic[0] = '\0';
         trans->NPNpdi = OSPC_FALSE;
-        trans->DestProtocol = OSPC_DPROT_UNKNOWN;
+        for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
+            trans->Protocol[cnt] = OSPC_PROTNAME_UNKNOWN;
+        }
         for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
             trans->Codec[cnt][0] = '\0';
         }
@@ -2602,8 +2604,8 @@ int OSPPTransactionReportUsage(
                                 OSPPUsageIndSetStatistics(usage, &stats);
                             }
 
-                            if ((trans->DestProtocol >= OSPC_DPROT_START) && (trans->DestProtocol < OSPC_DPROT_NUMBER)) {
-                                OSPPUsageIndSetDestProtocol(usage, trans->DestProtocol);
+                            for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
+                                OSPPUsageIndSetProtocol(usage, cnt, trans->Protocol[cnt]);
                             }
 
                             for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
@@ -3338,7 +3340,7 @@ int OSPPTransactionValidateAuthorisation(
     token_algo_t tokenAlgo = (token_algo_t)ospvTokenAlgo;
     OSPTBOOL IsTokenSigned = OSPC_FALSE;
     OSPE_DEST_OSPENABLED dstOSPStatus;
-    OSPE_DEST_PROTOCOL dstProt;
+    OSPE_PROTOCOL_NAME protocol;
     unsigned char *CallIdValue = OSPC_OSNULL;
     unsigned CallIdSize = 0;
     OSPTBOOL callidundefined = OSPC_FALSE;
@@ -3676,8 +3678,8 @@ int OSPPTransactionValidateAuthorisation(
             OSPPTokenInfoSetLookAheadDestAlt(&(trans->TokenLookAheadInfo), OSPPTokenInfoGetLookAheadDestAlt(&(tokeninfo->ospmTokenLookAheadInfo)));
 
             /* Set the destination Protocol */
-            dstProt = OSPPTokenInfoGetLookAheadDestProtocol(&(tokeninfo->ospmTokenLookAheadInfo));
-            trans->TokenLookAheadInfo.lookAheadDestProt = dstProt;
+            protocol = OSPPTokenInfoGetLookAheadProtocol(&(tokeninfo->ospmTokenLookAheadInfo));
+            trans->TokenLookAheadInfo.lookAheadProt = protocol;
 
             /* Set the OSP Version */
             dstOSPStatus = OSPPTokenInfoGetLookAheadOSPVersion(&(tokeninfo->ospmTokenLookAheadInfo));
@@ -4138,19 +4140,22 @@ int OSPPTransactionSetDiversion(
     return errorcode;
 }
 
-int OSPPTransactionSetDestProtocol(
+int OSPPTransactionSetProtocol(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    OSPE_DEST_PROTOCOL ospvProtocol)/* In - Destination protocol */
+    OSPE_PROTOCOL_TYPE ospvType,    /* In - Protocol type */
+    OSPE_PROTOCOL_NAME ospvName)    /* In - Protocol name */
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    if ((ospvProtocol < OSPC_DPROT_START) || (ospvProtocol >= OSPC_DPROT_NUMBER)) {
+    if (((ospvType < OSPC_PROTTYPE_START) || (ospvType >= OSPC_PROTTYPE_NUMBER)) ||
+    	((ospvName < OSPC_PROTNAME_START) || (ospvName >= OSPC_PROTNAME_NUMBER)))
+    {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
         if ((errorcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            trans->DestProtocol = ospvProtocol;
+            trans->Protocol[ospvType] = ospvName;
         }
     }
 
@@ -4165,7 +4170,7 @@ int OSPPTransactionSetCodec(
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    if (((ospvType < OSPC_CODEC_START) || (ospvType > OSPC_CODEC_NUMBER)) ||
+    if (((ospvType < OSPC_CODEC_START) || (ospvType >= OSPC_CODEC_NUMBER)) ||
         ((ospvCodec == OSPC_OSNULL) || (ospvCodec[0] == '\0')))
     {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -4187,7 +4192,7 @@ int OSPPTransactionSetSessionId(
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    if (((ospvType < OSPC_SESSIONID_START) || (ospvType > OSPC_SESSIONID_NUMBER)) ||
+    if (((ospvType < OSPC_SESSIONID_START) || (ospvType >= OSPC_SESSIONID_NUMBER)) ||
         (ospvSessionId == OSPC_OSNULL))
     {
         errorcode = OSPC_ERR_TRAN_INVALID_ENTRY;

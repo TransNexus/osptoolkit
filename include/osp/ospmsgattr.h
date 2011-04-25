@@ -22,7 +22,7 @@
 #include "osp/ospmsgdesc.h"
 #include "osp/ospmsgpart.h"
 
-/* Attributes defined by the Open Settlement Protocol */
+/* Attributes defined by OSP */
 typedef enum {
     OSPC_MATTR_UNKNOWN = OSPC_MPART_UNKNOWN,
     OSPC_MATTR_UNDEFINED,
@@ -43,6 +43,19 @@ typedef enum {
 } OSPE_MSG_ATTR;
 
 #define OSPC_MAX_INDEX  32
+
+/* Signaling protocol types */
+typedef enum {
+    OSPC_PROTTYPE_UNKNOWN = OSPC_MPART_UNKNOWN,
+    OSPC_PROTTYPE_UNDEFINED,
+    /* Message attribute start */
+    OSPC_PROTTYPE_START = OSPC_MPART_START,
+    OSPC_PROTTYPE_SOURCE = OSPC_PROTTYPE_START,
+    OSPC_PROTTYPE_DESTINATION,
+    OSPC_PROTTYPE_NA,
+    /* Number of protocol types */
+    OSPC_PROTTYPE_NUMBER
+} OSPE_PROTOCOL_TYPE;
 
 /* Codec types */
 typedef enum {

@@ -480,7 +480,7 @@ unsigned OSPPStringToElement(
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
     } else {
-        if ((ElemType < OSPC_MELEM_START) || (ElemType > OSPC_MELEM_NUMBER)) {
+        if ((ElemType < OSPC_MELEM_START) || (ElemType >= OSPC_MELEM_NUMBER)) {
             ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
         } else {
             *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ElemType), ElemValue);
@@ -488,8 +488,8 @@ unsigned OSPPStringToElement(
                 ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
             } else {
                 for (cnt = 0; cnt < AttrNum; cnt++) {
-                    if (((AttrType[cnt] < OSPC_MATTR_START) || (AttrType[cnt] > OSPC_MATTR_NUMBER)) ||
-                        ((AttrValue[cnt] < OSPC_ALTINFO_START) || (AttrValue[cnt] > OSPC_ALTINFO_NUMBER)))
+                    if (((AttrType[cnt] < OSPC_MATTR_START) || (AttrType[cnt] >= OSPC_MATTR_NUMBER)) ||
+                        ((AttrValue[cnt] < OSPC_ALTINFO_START) || (AttrValue[cnt] >= OSPC_ALTINFO_NUMBER)))
                     {
                         OSPPXMLElemDelete(ospvElem);
                         ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
