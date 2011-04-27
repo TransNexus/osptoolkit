@@ -88,9 +88,9 @@ typedef struct _NBVALIDATEAUTH {
     unsigned ospvSizeOfCallId;                  /* In - Size of call id value */
     const void *ospvCallId;                     /* In - Call Id for this call */
     unsigned ospvSizeOfToken;                   /* In - Size of authorization token */
-    const void *ospvToken;                      /* In - Authorisation token */
-    unsigned *ospvAuthorised;                   /* Out - Call authorisation indicator */
-    unsigned *ospvTimeLimit;                    /* Out - Number of seconds call is authorised for */
+    const void *ospvToken;                      /* In - Authorization token */
+    unsigned *ospvAuthorised;                   /* Out - Call authorization indicator */
+    unsigned *ospvTimeLimit;                    /* Out - Number of seconds call is authorized for */
     unsigned *ospvSizeOfDetailLog;              /* In\Out - Max size of detail log \ Actual size of detail log */
     void *ospvDetailLog;                        /* In\Out - Location of detail log storage */
     unsigned ospvTokenAlgo;                     /* In - Algorithm to be used for Validating Token */
@@ -541,9 +541,9 @@ int OSPPTransactionValidateAuthorisation_nb(NBMONITOR *nbMonitor,   /* In - NBMo
     unsigned ospvSizeOfCallId,                                      /* In - Size of call id value */
     const void *ospvCallId,                                         /* In - Call Id for this call */
     unsigned ospvSizeOfToken,                                       /* In - Size of authorization token */
-    const void *ospvToken,                                          /* In - Authorisation token */
-    unsigned *ospvAuthorised,                                       /* Out - Call authorisation indicator */
-    unsigned *ospvTimeLimit,                                        /* Out - Number of seconds call is authorised for */
+    const void *ospvToken,                                          /* In - Authorization token */
+    unsigned *ospvAuthorised,                                       /* Out - Call authorization indicator */
+    unsigned *ospvTimeLimit,                                        /* Out - Number of seconds call is authorized for */
     unsigned *ospvSizeOfDetailLog,                                  /* In\Out - Max size of detail log \ Actual size of detail log */
     void *ospvDetailLog,                                            /* In\Out - Location of detail log storage */
     unsigned ospvTokenAlgo)                                         /* In - Algorithm to be used for Validating Token */

@@ -78,30 +78,30 @@ typedef enum {
 #define DEFAULT_GETNEXTDEST_NO_ERROR    99999
 
 typedef struct {
-    OSPTLISTLINK ospmDestLink;
-    char ospmDestNumber[OSPC_SIZE_E164NUM];
-    char ospmSrcNumber[OSPC_SIZE_E164NUM];
-    char ospmDestAddr[OSPC_SIZE_SIGNALADDR];
-    char ospmDestDevAddr[OSPC_SIZE_SIGNALADDR];
-    OSPTLIST ospmUpdatedSourceAddr;
-    OSPTLIST ospmUpdatedDeviceInfo;
-    OSPTTIME ospmDestValidAfter;
-    OSPTTIME ospmDestValidUntil;
-    OSPTLIST ospmDestTokens;
-    char ospmDestAuthority[OSPC_SIZE_URL];
-    OSPTBOOL ospmDestHasLimit;
-    unsigned ospmDestLimit;
-    OSPT_CALL_ID *ospmDestCallId;
-    OSPT_TERM_CAUSE ospmDestTermCause;
-    OSPE_PROTOCOL_NAME ospmProtocol;
-    OSPE_DEST_OSPENABLED ospmDestOSPVersion;
-    char ospmDestNetworkId[OSPC_SIZE_NORID];
-    unsigned ospmDestDestinationCount;
-    char ospmNPRn[OSPC_SIZE_E164NUM];
-    char ospmNPCic[OSPC_SIZE_NORID];
-    int ospmNPNpdi;
-    char ospmOpName[OSPC_OPNAME_NUMBER][OSPC_SIZE_NORID];
-    OSPTBOOL ospmIsNPQuery;
+    OSPTLISTLINK Link;
+    char SourceNumber[OSPC_SIZE_E164NUM];
+    char DestinationNumber[OSPC_SIZE_E164NUM];
+    char DestinationAddr[OSPC_SIZE_SIGNALADDR];
+    char DestinationDevAddr[OSPC_SIZE_SIGNALADDR];
+    OSPTLIST UpdatedSourceAddr;
+    OSPTLIST UpdatedDeviceInfo;
+    OSPTTIME ValidAfter;
+    OSPTTIME ValidUntil;
+    OSPTLIST Tokens;
+    char Authority[OSPC_SIZE_URL];
+    OSPTBOOL HasLimit;
+    unsigned Limit;
+    OSPT_CALL_ID *CallId;
+    OSPT_TERM_CAUSE TermCause;
+    OSPE_PROTOCOL_NAME Protocol;
+    OSPE_DEST_OSPENABLED OSPVersion;
+    char NetworkId[OSPC_SIZE_NORID];
+    unsigned Count;
+    char NPRn[OSPC_SIZE_E164NUM];
+    char NPCic[OSPC_SIZE_NORID];
+    int NPNpdi;
+    char OpName[OSPC_OPNAME_NUMBER][OSPC_SIZE_NORID];
+    OSPTBOOL IsNPQuery;
 } OSPT_DEST;
 
 /* Function Prototypes */
@@ -141,9 +141,9 @@ extern "C" {
     OSPTBOOL OSPPDestHasCallId(OSPT_DEST *);
     OSPT_CALL_ID *OSPPDestGetCallId(OSPT_DEST *);
     OSPTBOOL OSPPDestHasToken(OSPT_DEST *);
-    void OSPPDestAddToken(OSPT_DEST *, OSPTTOKEN *);
-    OSPTTOKEN *OSPPDestFirstToken(OSPT_DEST *);
-    OSPTTOKEN *OSPPDestNextToken(OSPT_DEST *, OSPTTOKEN *);
+    void OSPPDestAddToken(OSPT_DEST *, OSPT_TOKEN *);
+    OSPT_TOKEN *OSPPDestFirstToken(OSPT_DEST *);
+    OSPT_TOKEN *OSPPDestNextToken(OSPT_DEST *, OSPT_TOKEN *);
     OSPTBOOL OSPPDestHasLimit(OSPT_DEST *);
     unsigned OSPPDestGetLimit(OSPT_DEST *);
     void OSPPDestSetLimit(OSPT_DEST *, unsigned);

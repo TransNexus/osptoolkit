@@ -15,7 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/* ospauthcnf.c - OSP authorisation confirmation functions */
+/* ospauthcnf.c - OSP authorization confirmation functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"
@@ -36,7 +36,7 @@ void OSPPAuthCnfDelete(
 {
     if (*ospvAuthCnf != OSPC_OSNULL) {
         if (OSPPAuthCnfHasStatus(*ospvAuthCnf)) {
-            OSPPStatusDelete(&((*ospvAuthCnf)->ospmAuthCnfStatus));
+            OSPPStatusDelete(&((*ospvAuthCnf)->Status));
         }
         OSPM_FREE(*ospvAuthCnf);
         *ospvAuthCnf = OSPC_OSNULL;
@@ -44,16 +44,16 @@ void OSPPAuthCnfDelete(
 }
 
 /*
- * OSPPAuthCnfHasStatus() - does the authorisation confirmation have a status?
+ * OSPPAuthCnfHasStatus() - does the authorization confirmation have a status?
  */
 OSPTBOOL OSPPAuthCnfHasStatus(  /* returns non-zero if number exists */
-    OSPT_AUTH_CNF *ospvAuthCnf) /* authorisation confirmation effected */
+    OSPT_AUTH_CNF *ospvAuthCnf) /* authorization confirmation effected */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvAuthCnf != OSPC_OSNULL) {
-        ospvHas = (ospvAuthCnf->ospmAuthCnfStatus != OSPC_OSNULL);
+        has = (ospvAuthCnf->Status != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }

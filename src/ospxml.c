@@ -129,7 +129,7 @@ int OSPPXMLMessageCreate(
             errorcode = OSPPUsageIndToElement((OSPTLIST *)ospvInfo, &xmlelem, trans);
             break;
         case OSPC_MSG_REAREQ:
-            errorcode = OSPPReauthReqToElement((OSPTREAUTHREQ *)ospvInfo, &xmlelem, trans);
+            errorcode = OSPPReauthReqToElement((OSPT_REAUTH_REQ *)ospvInfo, &xmlelem, trans);
             break;
         case OSPC_MSG_CAPIND:
             errorcode = OSPPCapIndToElement((OSPT_CAP_IND *)ospvInfo, &xmlelem);
@@ -296,7 +296,7 @@ int OSPPXMLMessageParse(
                 if (OSPPMsgElemGetPart(OSPPXMLElemGetName(xmlelem)) ==
                     OSPC_MELEM_MESSAGE) {
                     tempxmlelem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(xmlelem);
-                    xmlelem->ospmXMLElemChild = OSPC_OSNULL;
+                    xmlelem->Children = OSPC_OSNULL;
                     OSPPXMLElemDelete(&xmlelem);
                     xmlelem = tempxmlelem;
                 }
@@ -332,10 +332,10 @@ int OSPPXMLMessageProcess(
         errorcode = OSPPUsageCnfFromElement(ospvElem, (OSPTLIST *)ospvStruct);
         break;
     case OSPC_MSG_TOKINFO:
-        errorcode = OSPPTokenInfoFromElement(ospvElem, (OSPTTOKENINFO **)ospvStruct);
+        errorcode = OSPPTokenInfoFromElement(ospvElem, (OSPT_TOKEN_INFO **)ospvStruct);
         break;
     case OSPC_MSG_REARESP:
-        errorcode = OSPPReauthRspFromElement(ospvElem, (OSPTREAUTHRSP **)ospvStruct);
+        errorcode = OSPPReauthRspFromElement(ospvElem, (OSPT_REAUTH_RSP **)ospvStruct);
         break;
     case OSPC_MSG_CAPCNF:
         errorcode = OSPPCapCnfFromElement(ospvElem, (OSPT_CAP_CNF **)ospvStruct);
@@ -348,7 +348,7 @@ int OSPPXMLMessageProcess(
         errorcode = OSPPUsageIndFromElement(ospvElem, (OSPTLIST *)ospvStruct);
         break;
     case OSPC_MSG_REAREQ:
-        errorcode = OSPPReauthReqFromElement(ospvElem, (OSPTREAUTHREQ **)ospvStruct);
+        errorcode = OSPPReauthReqFromElement(ospvElem, (OSPT_REAUTH_REQ **)ospvStruct);
         break;
 #endif
     default:

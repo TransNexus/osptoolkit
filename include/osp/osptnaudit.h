@@ -22,32 +22,32 @@
 #include "osp/osp.h"
 
 typedef struct {
-    unsigned ospmAuditState;
-    char *ospmAuditURL;
-    unsigned ospmAuditTimeLimit;
-    unsigned ospmAuditMaxMessages;
-} OSPTTNAUDIT;
+    unsigned State;
+    char *URL;
+    unsigned TimeLimit;
+    unsigned MaxMessages;
+} OSPT_TN_AUDIT;
 
 /* Function Prototypes */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    void OSPPTNAuditDelete(OSPTTNAUDIT **ospvTNAudit);
-    int OSPPTNAuditFromElement(OSPT_XML_ELEM *, OSPTTNAUDIT **);
-    unsigned OSPPTNAuditGetMaxMessages(OSPTTNAUDIT *);
-    OSPE_AUDIT_STATE OSPPTNAuditGetState(OSPTTNAUDIT *);
-    unsigned OSPPTNAuditGetTimeLimit(OSPTTNAUDIT *);
-    const char *OSPPTNAuditGetURL(OSPTTNAUDIT *);
-    OSPTBOOL OSPPTNAuditHasMaxMessages(OSPTTNAUDIT *);
-    OSPTBOOL OSPPTNAuditHasState(OSPTTNAUDIT *);
-    OSPTBOOL OSPPTNAuditHasTimeLimit(OSPTTNAUDIT *);
-    OSPTBOOL OSPPTNAuditHasURL(OSPTTNAUDIT *);
-    OSPTTNAUDIT *OSPPTNAuditNew(void);
-    void OSPPTNAuditSetMaxMessages(OSPTTNAUDIT *, unsigned);
-    void OSPPTNAuditSetState(OSPTTNAUDIT *, OSPE_AUDIT_STATE);
-    void OSPPTNAuditSetTimeLimit(OSPTTNAUDIT *, unsigned);
-    void OSPPTNAuditSetURL(OSPTTNAUDIT *, const char *);
+    void OSPPTNAuditDelete(OSPT_TN_AUDIT **ospvTNAudit);
+    int OSPPTNAuditFromElement(OSPT_XML_ELEM *, OSPT_TN_AUDIT **);
+    unsigned OSPPTNAuditGetMaxMessages(OSPT_TN_AUDIT *);
+    OSPE_AUDIT_STATE OSPPTNAuditGetState(OSPT_TN_AUDIT *);
+    unsigned OSPPTNAuditGetTimeLimit(OSPT_TN_AUDIT *);
+    const char *OSPPTNAuditGetURL(OSPT_TN_AUDIT *);
+    OSPTBOOL OSPPTNAuditHasMaxMessages(OSPT_TN_AUDIT *);
+    OSPTBOOL OSPPTNAuditHasState(OSPT_TN_AUDIT *);
+    OSPTBOOL OSPPTNAuditHasTimeLimit(OSPT_TN_AUDIT *);
+    OSPTBOOL OSPPTNAuditHasURL(OSPT_TN_AUDIT *);
+    OSPT_TN_AUDIT *OSPPTNAuditNew(void);
+    void OSPPTNAuditSetMaxMessages(OSPT_TN_AUDIT *, unsigned);
+    void OSPPTNAuditSetState(OSPT_TN_AUDIT *, OSPE_AUDIT_STATE);
+    void OSPPTNAuditSetTimeLimit(OSPT_TN_AUDIT *, unsigned);
+    void OSPPTNAuditSetURL(OSPT_TN_AUDIT *, const char *);
 
 #ifdef __cplusplus
 }

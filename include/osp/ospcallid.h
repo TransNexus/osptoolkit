@@ -27,9 +27,9 @@
 
 /* the basic call identifier structure */
 typedef struct {
-    OSPTLISTLINK ospmCallIdLink;
-    unsigned ospmCallIdLen;
-    unsigned char *ospmCallIdVal;
+    OSPTLISTLINK Link;
+    unsigned Length;
+    unsigned char *Value;
 } OSPT_CALL_ID;
 
 /* Function Prototypes */

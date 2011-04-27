@@ -122,12 +122,12 @@ OSPE_DEST_OSPENABLED OSPPTokenInfoGetLookAheadOSPVersion(
  * OSPPTokenInfoSetSourceNumber() - set the source number
  */
 void OSPPTokenInfoSetSourceNumber(  /* nothing returned */
-    OSPTTOKENINFO *ospvTokenInfo,   /* token info to set */
+    OSPT_TOKEN_INFO *ospvTokenInfo, /* token info to set */
     const char *ospvSourceNumber)   /* source number to set to */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
         if (ospvSourceNumber != OSPC_OSNULL) {
-            OSPM_STRNCPY(ospvTokenInfo->ospmTokenInfoSourceNumber, ospvSourceNumber, OSPC_SIZE_E164NUM - 1);
+            OSPM_STRNCPY(ospvTokenInfo->SourceNumber, ospvSourceNumber, OSPC_SIZE_E164NUM - 1);
         }
     }
 }
@@ -136,12 +136,12 @@ void OSPPTokenInfoSetSourceNumber(  /* nothing returned */
  * OSPPTokenInfoGetSourceNumber() - returns the source number for token info
  */
 const char *OSPPTokenInfoGetSourceNumber(
-    OSPTTOKENINFO *ospvTokenInfo)   /* token info */
+    OSPT_TOKEN_INFO *ospvTokenInfo) /* token info */
 {
     const char *number = OSPC_OSNULL;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        number = ospvTokenInfo->ospmTokenInfoSourceNumber;
+        number = ospvTokenInfo->SourceNumber;
     }
 
     return number;
@@ -151,12 +151,12 @@ const char *OSPPTokenInfoGetSourceNumber(
  * OSPPTokenInfoSetDestNumber() - set the destination number
  */
 void OSPPTokenInfoSetDestNumber(    /* nothing returned */
-    OSPTTOKENINFO *ospvTokenInfo,   /* token info to set */
+    OSPT_TOKEN_INFO *ospvTokenInfo, /* token info to set */
     const char *ospvDestNumber)     /* destination number to set to */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
         if (ospvDestNumber != OSPC_OSNULL) {
-            OSPM_STRNCPY(ospvTokenInfo->ospmTokenInfoDestNumber, ospvDestNumber, OSPC_SIZE_E164NUM - 1);
+            OSPM_STRNCPY(ospvTokenInfo->DestinationNumber, ospvDestNumber, OSPC_SIZE_E164NUM - 1);
         }
     }
 }
@@ -165,12 +165,12 @@ void OSPPTokenInfoSetDestNumber(    /* nothing returned */
  * OSPPTokenInfoGetDestNumber() - returns the destination number for a token info
  */
 const char *OSPPTokenInfoGetDestNumber(
-    OSPTTOKENINFO *ospvTokenInfo)       /* token info */
+    OSPT_TOKEN_INFO *ospvTokenInfo)     /* token info */
 {
     const char *number = OSPC_OSNULL;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        number = ospvTokenInfo->ospmTokenInfoDestNumber;
+        number = ospvTokenInfo->DestinationNumber;
     }
 
     return number;
@@ -180,12 +180,12 @@ const char *OSPPTokenInfoGetDestNumber(
  * OSPPTokenInfoSetDestNetworkId() - set the destination network id
  */
 void OSPPTokenInfoSetDestNetworkId( /* nothing returned */
-    OSPTTOKENINFO *ospvTokenInfo,   /* token info to set */
+    OSPT_TOKEN_INFO *ospvTokenInfo, /* token info to set */
     const char *ospvDestId)         /* destination id to set to */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
         if (ospvDestId != OSPC_OSNULL) {
-            OSPM_STRNCPY(ospvTokenInfo->dstNetworkId, ospvDestId, OSPC_SIZE_E164NUM - 1);
+            OSPM_STRNCPY(ospvTokenInfo->DestinationNetworkId, ospvDestId, OSPC_SIZE_E164NUM - 1);
         }
     }
 }
@@ -194,12 +194,12 @@ void OSPPTokenInfoSetDestNetworkId( /* nothing returned */
  * OSPPTokenInfoGetDestNetworkId() - returns the destination network id for a token info
  */
 const char *OSPPTokenInfoGetDestNetworkId(
-    OSPTTOKENINFO *ospvTokenInfo)           /* token info */
+    OSPT_TOKEN_INFO *ospvTokenInfo)     /* token info */
 {
     const char *dnid = OSPC_OSNULL;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        dnid = ospvTokenInfo->dstNetworkId;
+        dnid = ospvTokenInfo->DestinationNetworkId;
     }
 
     return dnid;
@@ -209,12 +209,12 @@ const char *OSPPTokenInfoGetDestNetworkId(
  * OSPPTokenInfoHasCallId() - is the call id set ?
  */
 OSPTBOOL OSPPTokenInfoHasCallId(    /* returns non-zero if number exists */
-    OSPTTOKENINFO *ospvTokenInfo)   /* Token Info effected */
+    OSPT_TOKEN_INFO *ospvTokenInfo) /* Token Info effected */
 {
     OSPTBOOL has = OSPC_FALSE;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        has = (ospvTokenInfo->ospmTokenInfoCallId != OSPC_OSNULL);
+        has = (ospvTokenInfo->CallId != OSPC_OSNULL);
     }
 
     return has;
@@ -224,15 +224,15 @@ OSPTBOOL OSPPTokenInfoHasCallId(    /* returns non-zero if number exists */
  * OSPPTokenInfoSetCallId() - set the call id
  */
 void OSPPTokenInfoSetCallId(        /* nothing returned */
-    OSPTTOKENINFO *ospvTokenInfo,   /* token info to set */
+    OSPT_TOKEN_INFO *ospvTokenInfo, /* token info to set */
     OSPT_CALL_ID *ospvCallId)       /* call id to set to */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
         if ((ospvCallId) != OSPC_OSNULL) {
-            if ((ospvTokenInfo)->ospmTokenInfoCallId != OSPC_OSNULL) {
-                OSPPCallIdDelete(&((ospvTokenInfo)->ospmTokenInfoCallId));
+            if ((ospvTokenInfo)->CallId != OSPC_OSNULL) {
+                OSPPCallIdDelete(&(ospvTokenInfo->CallId));
             }
-            ospvTokenInfo->ospmTokenInfoCallId = OSPPCallIdNew(ospvCallId->ospmCallIdLen, ospvCallId->ospmCallIdVal);
+            ospvTokenInfo->CallId = OSPPCallIdNew(ospvCallId->Length, ospvCallId->Value);
         }
     }
 }
@@ -241,12 +241,12 @@ void OSPPTokenInfoSetCallId(        /* nothing returned */
  * OSPPTokenInfoGetCallId() - returns the call id for a token info
  */
 OSPT_CALL_ID *OSPPTokenInfoGetCallId(
-    OSPTTOKENINFO *ospvTokenInfo)   /* token info */
+    OSPT_TOKEN_INFO *ospvTokenInfo) /* token info */
 {
     OSPT_CALL_ID *callid = OSPC_OSNULL;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        callid = ospvTokenInfo->ospmTokenInfoCallId;
+        callid = ospvTokenInfo->CallId;
     }
 
     return callid;
@@ -256,12 +256,12 @@ OSPT_CALL_ID *OSPPTokenInfoGetCallId(
  * OSPPTokenInfoGetCallIdSize() - returns the call id size for a token info
  */
 unsigned OSPPTokenInfoGetCallIdSize(
-    OSPTTOKENINFO *ospvTokenInfo)   /* token info */
+    OSPT_TOKEN_INFO *ospvTokenInfo) /* token info */
 {
     unsigned size = 0;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        size = OSPPCallIdGetSize(((ospvTokenInfo)->ospmTokenInfoCallId));
+        size = OSPPCallIdGetSize(ospvTokenInfo->CallId);
     }
 
     return size;
@@ -271,12 +271,12 @@ unsigned OSPPTokenInfoGetCallIdSize(
  * OSPPTokenInfoGetCallIdValue() - returns the call id for a token info
  */
 unsigned char *OSPPTokenInfoGetCallIdValue(
-    OSPTTOKENINFO *ospvTokenInfo)           /* token info */
+    OSPT_TOKEN_INFO *ospvTokenInfo) /* token info */
 {
     unsigned char *value = OSPC_OSNULL;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        value = OSPPCallIdGetValue(ospvTokenInfo->ospmTokenInfoCallId);
+        value = OSPPCallIdGetValue(ospvTokenInfo->CallId);
     }
 
     return value;
@@ -286,12 +286,12 @@ unsigned char *OSPPTokenInfoGetCallIdValue(
  * OSPPTokenInfoHasValidAfter() - Does TokenInfo have a valid after time?
  */
 OSPTBOOL OSPPTokenInfoHasValidAfter(/* returns non-zero if time */
-    OSPTTOKENINFO *ospvTokenInfo)   /* TokenInfo in question */
+    OSPT_TOKEN_INFO *ospvTokenInfo) /* TokenInfo in question */
 {
     OSPTBOOL has = OSPC_FALSE;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        has = (ospvTokenInfo->ospmTokenInfoValidAfter != OSPC_TIMEMIN);
+        has = (ospvTokenInfo->ValidAfter != OSPC_TIMEMIN);
     }
 
     return has;
@@ -301,11 +301,11 @@ OSPTBOOL OSPPTokenInfoHasValidAfter(/* returns non-zero if time */
  * OSPPTokenInfoSetValidAfter() - sets the valid after time
  */
 void OSPPTokenInfoSetValidAfter(    /* nothing returned */
-    OSPTTOKENINFO *ospvTokenInfo,
+    OSPT_TOKEN_INFO *ospvTokenInfo,
     OSPTTIME ospvTime)
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvTokenInfo->ospmTokenInfoValidAfter = ospvTime;
+        ospvTokenInfo->ValidAfter = ospvTime;
     }
 }
 
@@ -313,12 +313,12 @@ void OSPPTokenInfoSetValidAfter(    /* nothing returned */
  * OSPPTokenInfoGetValidAfter() - returns valid after time
  */
 OSPTTIME OSPPTokenInfoGetValidAfter(    /* returns the time value */
-    OSPTTOKENINFO *ospvTokenInfo)       /* TokenInfo in question */
+    OSPT_TOKEN_INFO *ospvTokenInfo)     /* TokenInfo in question */
 {
     OSPTTIME after = 0;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        after = ospvTokenInfo->ospmTokenInfoValidAfter;
+        after = ospvTokenInfo->ValidAfter;
     }
 
     return after;
@@ -328,11 +328,11 @@ OSPTTIME OSPPTokenInfoGetValidAfter(    /* returns the time value */
  * OSPPTokenInfoSetValidUntil() - sets valid until time
  */
 void OSPPTokenInfoSetValidUntil(    /* nothing returned */
-    OSPTTOKENINFO *ospvTokenInfo,   /* TokenInfo in question */
+    OSPT_TOKEN_INFO *ospvTokenInfo, /* TokenInfo in question */
     OSPTTIME ospvTime)              /* time to set */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
-        ospvTokenInfo->ospmTokenInfoValidUntil = ospvTime;
+        ospvTokenInfo->ValidUntil = ospvTime;
     }
 }
 
@@ -340,12 +340,12 @@ void OSPPTokenInfoSetValidUntil(    /* nothing returned */
  * OSPPTokenInfoGetValidUntil() - returns valid until time
  */
 OSPTTIME OSPPTokenInfoGetValidUntil(/* returns time */
-    OSPTTOKENINFO *ospvTokenInfo)   /* token in question */
+    OSPT_TOKEN_INFO *ospvTokenInfo) /* token in question */
 {
     OSPTTIME until = 0;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        until = ospvTokenInfo->ospmTokenInfoValidUntil;
+        until = ospvTokenInfo->ValidUntil;
     }
     return until;
 }
@@ -354,12 +354,12 @@ OSPTTIME OSPPTokenInfoGetValidUntil(/* returns time */
  * OSPPTokenInfoSetTrxId() - set the transaction id
  */
 void OSPPTokenInfoSetTrxId(         /* nothing returned */
-    OSPTTOKENINFO *ospvTokenInfo,   /* token info to set */
+    OSPT_TOKEN_INFO *ospvTokenInfo, /* token info to set */
     OSPTTRXID ospvTrxId)            /* transaction id to set to */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
         if (ospvTrxId != 0) {
-            ospvTokenInfo->ospmTokenInfoTrxId = ospvTrxId;
+            ospvTokenInfo->TrxId = ospvTrxId;
         }
     }
 }
@@ -368,12 +368,12 @@ void OSPPTokenInfoSetTrxId(         /* nothing returned */
  * OSPPTokenInfoGetTrxId() - returns the trans id for a token info
  */
 OSPTTRXID OSPPTokenInfoGetTrxId(
-    OSPTTOKENINFO *ospvTokenInfo)   /* token info */
+    OSPT_TOKEN_INFO *ospvTokenInfo) /* token info */
 {
     OSPTTRXID trxid = 0;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        trxid = ospvTokenInfo->ospmTokenInfoTrxId;
+        trxid = ospvTokenInfo->TrxId;
     }
 
     return trxid;
@@ -383,12 +383,12 @@ OSPTTRXID OSPPTokenInfoGetTrxId(
  * OSPPTokenInfoSetDuration() - set the duration
  */
 void OSPPTokenInfoSetDuration(      /* nothing returned */
-    OSPTTOKENINFO *ospvTokenInfo,   /* token info to set */
+    OSPT_TOKEN_INFO *ospvTokenInfo, /* token info to set */
     int ospvDuration)               /* duration to set to */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
         if (ospvDuration >= 0) {
-            ospvTokenInfo->ospmTokenInfoDuration = ospvDuration;
+            ospvTokenInfo->Duration = ospvDuration;
         }
     }
 }
@@ -397,12 +397,12 @@ void OSPPTokenInfoSetDuration(      /* nothing returned */
  * OSPPTokenInfoGetDuration() - returns the duration for a token info
  */
 int OSPPTokenInfoGetDuration(
-    OSPTTOKENINFO *ospvTokenInfo)   /* token info */
+    OSPT_TOKEN_INFO *ospvTokenInfo) /* token info */
 {
     int duration = 0;
 
     if (ospvTokenInfo != OSPC_OSNULL) {
-        duration = ospvTokenInfo->ospmTokenInfoDuration;
+        duration = ospvTokenInfo->Duration;
     }
 
     return duration;
@@ -411,25 +411,25 @@ int OSPPTokenInfoGetDuration(
 /*
  * OSPPTokenInfoNew() - creates a new (empty) token info object
  */
-OSPTTOKENINFO *OSPPTokenInfoNew(void)   /* returns pointer or NULL */
+OSPT_TOKEN_INFO *OSPPTokenInfoNew(void) /* returns pointer or NULL */
 {
-    OSPTTOKENINFO *tokeninfo;
+    OSPT_TOKEN_INFO *tokeninfo;
 
-    OSPM_MALLOC(tokeninfo, OSPTTOKENINFO, sizeof(OSPTTOKENINFO));
+    OSPM_MALLOC(tokeninfo, OSPT_TOKEN_INFO, sizeof(OSPT_TOKEN_INFO));
     if (tokeninfo != OSPC_OSNULL) {
-        tokeninfo->ospmTokenInfoSourceNumber[0] = '\0';
-        tokeninfo->ospmTokenInfoDestNumber[0] = '\0';
-        tokeninfo->ospmTokenInfoCallId = OSPC_OSNULL;
-        tokeninfo->ospmTokenInfoValidAfter = OSPC_TIMEMIN;
-        tokeninfo->ospmTokenInfoValidUntil = OSPC_TIMEMAX;
-        tokeninfo->ospmTokenInfoTrxId = 0;
-        tokeninfo->ospmTokenInfoDuration = -1;
-        tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_FALSE;
-        tokeninfo->ospmTokenLookAheadInfo.lookAheadProt = OSPC_PROTNAME_UNDEFINED;
-        tokeninfo->ospmTokenLookAheadInfo.lookAheadDestOSPStatus = OSPC_DOSP_UNDEFINED;
-        tokeninfo->ospmTokenLookAheadInfo.lookAheadDest[0] = '\0';
-        tokeninfo->ospmTokenInfoHasDestNetworkId = OSPC_FALSE;
-        tokeninfo->dstNetworkId[0] = '\0';
+        tokeninfo->SourceNumber[0] = '\0';
+        tokeninfo->DestinationNumber[0] = '\0';
+        tokeninfo->CallId = OSPC_OSNULL;
+        tokeninfo->ValidAfter = OSPC_TIMEMIN;
+        tokeninfo->ValidUntil = OSPC_TIMEMAX;
+        tokeninfo->TrxId = 0;
+        tokeninfo->Duration = -1;
+        tokeninfo->HasLookAheadInfo = OSPC_FALSE;
+        tokeninfo->LookAheadInfo.lookAheadProt = OSPC_PROTNAME_UNDEFINED;
+        tokeninfo->LookAheadInfo.lookAheadDestOSPStatus = OSPC_DOSP_UNDEFINED;
+        tokeninfo->LookAheadInfo.lookAheadDest[0] = '\0';
+        tokeninfo->HasDestinationNetworkId = OSPC_FALSE;
+        tokeninfo->DestinationNetworkId[0] = '\0';
     }
 
     return tokeninfo;
@@ -439,11 +439,11 @@ OSPTTOKENINFO *OSPPTokenInfoNew(void)   /* returns pointer or NULL */
  * OSPPTokenInfoDelete() - deletes a token info object
  */
 void OSPPTokenInfoDelete(
-    OSPTTOKENINFO **ospvTokenInfo)
+    OSPT_TOKEN_INFO **ospvTokenInfo)
 {
     if (*ospvTokenInfo) {
         if (OSPPTokenInfoHasCallId(*ospvTokenInfo)) {
-            OSPPCallIdDelete(&((*ospvTokenInfo)->ospmTokenInfoCallId));
+            OSPPCallIdDelete(&((*ospvTokenInfo)->CallId));
         }
         OSPM_FREE(*ospvTokenInfo);
         *ospvTokenInfo = OSPC_OSNULL;
@@ -455,11 +455,11 @@ void OSPPTokenInfoDelete(
  */
 unsigned OSPPTokenInfoFromElement(  /* returns error code */
     OSPT_XML_ELEM *ospvElem,        /* input is XML element */
-    OSPTTOKENINFO **ospvTokenInfo)  /* where to put token info pointer */
+    OSPT_TOKEN_INFO **ospvTokenInfo)/* where to put token info pointer */
 {
     unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
-    OSPTTOKENINFO *tokeninfo = OSPC_OSNULL;
+    OSPT_TOKEN_INFO *tokeninfo = OSPC_OSNULL;
     OSPT_CALL_ID *callid;
     OSPTTIME t;
     OSPTTRXID trxid;
@@ -502,29 +502,29 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
                  * address or the network addr
                  */
                 if (OSPPXMLAttrGetValue
-                    ((OSPT_XML_ATTR *)elem->ospmXMLElemAttrs)) {
-                    if (!OSPM_STRCMP("network", OSPPXMLAttrGetValue((OSPT_XML_ATTR *)OSPPListFirst(&elem->ospmXMLElemAttrs)))) {
+                    ((OSPT_XML_ATTR *)elem->Attributes)) {
+                    if (!OSPM_STRCMP("network", OSPPXMLAttrGetValue((OSPT_XML_ATTR *)OSPPListFirst(&elem->Attributes)))) {
                         /*
                          * This is network information
                          */
-                        tokeninfo->ospmTokenInfoHasDestNetworkId = OSPC_TRUE;
+                        tokeninfo->HasDestinationNetworkId = OSPC_TRUE;
                         OSPPTokenInfoSetDestNetworkId(tokeninfo, OSPPXMLElemGetValue(elem));
                     } else {
                         /*
                          * This must be the IP Address
                          */
-                        tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
-                        OSPPTokenInfoSetLookAheadDestAlt(&(tokeninfo->ospmTokenLookAheadInfo), OSPPXMLElemGetValue(elem));
+                        tokeninfo->HasLookAheadInfo = OSPC_TRUE;
+                        OSPPTokenInfoSetLookAheadDestAlt(&(tokeninfo->LookAheadInfo), OSPPXMLElemGetValue(elem));
                     }
                 }
                 break;
             case OSPC_MELEM_PROTOCOL:
-                tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
-                OSPPTokenInfoSetLookAheadProtocol(&(tokeninfo->ospmTokenLookAheadInfo), OSPPXMLElemGetValue(elem));
+                tokeninfo->HasLookAheadInfo = OSPC_TRUE;
+                OSPPTokenInfoSetLookAheadProtocol(&(tokeninfo->LookAheadInfo), OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_DESTOSPVERSION:
-                tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
-                OSPPTokenInfoSetLookAheadOSPVersion(&(tokeninfo->ospmTokenLookAheadInfo), OSPPXMLElemGetValue(elem));
+                tokeninfo->HasLookAheadInfo = OSPC_TRUE;
+                OSPPTokenInfoSetLookAheadOSPVersion(&(tokeninfo->LookAheadInfo), OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_SRCINFO:
                 OSPPTokenInfoSetSourceNumber(tokeninfo, OSPPXMLElemGetValue(elem));
@@ -586,11 +586,11 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
 unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
     unsigned char *ospvASCIIMessage,        /* In - ASCII message */
     unsigned ospvSizeOfMessage,             /* In - size of message */
-    OSPTTOKENINFO **ospvTokenInfo)          /* where to put token info pointer */
+    OSPT_TOKEN_INFO **ospvTokenInfo)        /* where to put token info pointer */
 {
     unsigned char val[200];     /* Assume that there wont be any field more than 200 bytes in length */
     unsigned char *ptr = NULL;
-    OSPTTOKENINFO *tokeninfo = OSPC_OSNULL;
+    OSPT_TOKEN_INFO *tokeninfo = OSPC_OSNULL;
     OSPT_CALL_ID *callid;
     OSPTTIME t;
     OSPTTRXID trxid;
@@ -679,25 +679,25 @@ unsigned OSPPParseTokenInfoFromASCIIToken(  /* returns error code */
                 break;
             case 'd':
                 if (OSPM_STRLEN((const char *)val) > 2) {
-                    tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
-                    OSPPTokenInfoSetLookAheadDestAlt(&(tokeninfo->ospmTokenLookAheadInfo), (const char *)(val + 2));
+                    tokeninfo->HasLookAheadInfo = OSPC_TRUE;
+                    OSPPTokenInfoSetLookAheadDestAlt(&(tokeninfo->LookAheadInfo), (const char *)(val + 2));
                 }
                 break;
             case 'D':
                 if (OSPM_STRLEN((const char *)val) > 2) {
-                    tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
-                    OSPPTokenInfoSetLookAheadProtocol(&(tokeninfo->ospmTokenLookAheadInfo), (const char *)(val + 2));
+                    tokeninfo->HasLookAheadInfo = OSPC_TRUE;
+                    OSPPTokenInfoSetLookAheadProtocol(&(tokeninfo->LookAheadInfo), (const char *)(val + 2));
                 }
                 break;
             case 'o':
                 if (OSPM_STRLEN((const char *)val) > 2) {
-                    tokeninfo->ospmTokenInfoHasLookAheadInfo = OSPC_TRUE;
-                    OSPPTokenInfoSetLookAheadOSPVersion(&(tokeninfo->ospmTokenLookAheadInfo), (const char *)(val + 2));
+                    tokeninfo->HasLookAheadInfo = OSPC_TRUE;
+                    OSPPTokenInfoSetLookAheadOSPVersion(&(tokeninfo->LookAheadInfo), (const char *)(val + 2));
                 }
                 break;
             case 'e':
                 if (OSPM_STRLEN((const char *)val) > 2) {
-                    tokeninfo->ospmTokenInfoHasDestNetworkId = OSPC_TRUE;
+                    tokeninfo->HasDestinationNetworkId = OSPC_TRUE;
                     OSPPTokenInfoSetDestNetworkId(tokeninfo, (const char *)(val + 2));
                 }
                 break;

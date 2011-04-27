@@ -29,10 +29,10 @@
 
 /* the basic token structure */
 typedef struct {
-    OSPTLISTLINK ospmTokenLink;
-    unsigned ospmTokenLen;
-    unsigned char *ospmTokenVal;
-} OSPTTOKEN;
+    OSPTLISTLINK Link;
+    unsigned Length;
+    unsigned char *Value;
+} OSPT_TOKEN;
 
 typedef enum {
     TOKEN_ALGO_SIGNED,
@@ -45,12 +45,12 @@ typedef enum {
 extern "C" {
 #endif
 
-    OSPTTOKEN *OSPPTokenNew(unsigned, const unsigned char *);
-    unsigned OSPPTokenFromElement(OSPT_XML_ELEM *, OSPTTOKEN **);
-    unsigned OSPPTokenGetSize(OSPTTOKEN *);
-    const unsigned char *OSPPTokenGetValue(OSPTTOKEN *);
-    void OSPPTokenDelete(OSPTTOKEN **);
-    unsigned OSPPTokenToElement(OSPTTOKEN *, OSPT_XML_ELEM **);
+    OSPT_TOKEN *OSPPTokenNew(unsigned, const unsigned char *);
+    unsigned OSPPTokenFromElement(OSPT_XML_ELEM *, OSPT_TOKEN **);
+    unsigned OSPPTokenGetSize(OSPT_TOKEN *);
+    const unsigned char *OSPPTokenGetValue(OSPT_TOKEN *);
+    void OSPPTokenDelete(OSPT_TOKEN **);
+    unsigned OSPPTokenToElement(OSPT_TOKEN *, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

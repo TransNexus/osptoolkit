@@ -24,11 +24,11 @@
 #include "osp/ospmsg.h"
 
 typedef struct {
-    unsigned ospmStatusCode;
-    char *ospmStatusDesc;
-    OSPTBOOL ospmHasCode;
-    OSPTBOOL ospmHasDesc;
-} OSPTSTATUS;
+    unsigned Code;
+    char *Description;
+    OSPTBOOL HasCode;
+    OSPTBOOL HasDescription;
+} OSPT_STATUS;
 
 /* general macros */
 #define OSPM_STATUSCODE_SUCCESSFUL(s)       (((s) > 199) &&( (s) < 300))
@@ -38,13 +38,13 @@ typedef struct {
 extern "C" {
 #endif
 
-    OSPTSTATUS *OSPPStatusNew(void);
-    void OSPPStatusDelete(OSPTSTATUS **ospvStatus);
-    unsigned OSPPStatusFromElement(OSPT_XML_ELEM *, OSPTSTATUS **);
-    void OSPPStatusSetDesc(OSPTSTATUS *, const char *);
-    void OSPPStatusSetCode(OSPTSTATUS *, unsigned);
-    OSPTBOOL OSPPStatusHasCode(OSPTSTATUS *);
-    unsigned OSPPStatusGetCode(OSPTSTATUS *);
+    OSPT_STATUS *OSPPStatusNew(void);
+    void OSPPStatusDelete(OSPT_STATUS **ospvStatus);
+    unsigned OSPPStatusFromElement(OSPT_XML_ELEM *, OSPT_STATUS **);
+    void OSPPStatusSetDesc(OSPT_STATUS *, const char *);
+    void OSPPStatusSetCode(OSPT_STATUS *, unsigned);
+    OSPTBOOL OSPPStatusHasCode(OSPT_STATUS *);
+    unsigned OSPPStatusGetCode(OSPT_STATUS *);
 
 #ifdef __cplusplus
 }

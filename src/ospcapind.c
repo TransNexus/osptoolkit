@@ -47,37 +47,37 @@ void OSPPCapIndDelete(
         pTmp = (*ospvCapInd);
 
         /* Release Message Id */
-        if (pTmp->ospmMessageId != OSPC_OSNULL) {
-            OSPM_FREE(pTmp->ospmMessageId);
+        if (pTmp->MessageId != OSPC_OSNULL) {
+            OSPM_FREE(pTmp->MessageId);
         }
 
         /* Release Component Id */
-        if (pTmp->ospmComponentId != OSPC_OSNULL) {
-            OSPM_FREE(pTmp->ospmComponentId);
+        if (pTmp->ComponentId != OSPC_OSNULL) {
+            OSPM_FREE(pTmp->ComponentId);
         }
 
         /* Release Source Alterntaes */
-        if (pTmp->ospmDeviceInfo != OSPC_OSNULL) {
-            while (!OSPPListEmpty(&(pTmp->ospmDeviceInfo))) {
-                altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(pTmp->ospmDeviceInfo));
+        if (pTmp->DeviceInfo != OSPC_OSNULL) {
+            while (!OSPPListEmpty(&(pTmp->DeviceInfo))) {
+                altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(pTmp->DeviceInfo));
                 if (altinfo != OSPC_OSNULL) {
                     OSPPAltInfoDelete(&altinfo);
                 }
             }
 
-            OSPPListDelete(&(pTmp->ospmDeviceInfo));
+            OSPPListDelete(&(pTmp->DeviceInfo));
         }
 
         /* Release Source Alterntaes */
-        if (pTmp->ospmSrcAlternate != OSPC_OSNULL) {
-            while (!OSPPListEmpty(&(pTmp->ospmSrcAlternate))) {
-                altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(pTmp->ospmSrcAlternate));
+        if (pTmp->SourceAlternate != OSPC_OSNULL) {
+            while (!OSPPListEmpty(&(pTmp->SourceAlternate))) {
+                altinfo = (OSPT_ALTINFO *)OSPPListRemove(&(pTmp->SourceAlternate));
                 if (altinfo != OSPC_OSNULL) {
                     OSPPAltInfoDelete(&altinfo);
                 }
             }
 
-            OSPPListDelete(&(pTmp->ospmSrcAlternate));
+            OSPPListDelete(&(pTmp->SourceAlternate));
         }
 
         /* Release the structure itself */
@@ -108,7 +108,7 @@ unsigned OSPPCapIndNew(
     OSPT_CAP_IND *capInd = OSPC_OSNULL;
 
     /*
-     * create the authorisation request object
+     * create the authorization request object
      */
     OSPM_MALLOC(*ospvCapInd, OSPT_CAP_IND, sizeof(OSPT_CAP_IND));
 
@@ -124,21 +124,21 @@ unsigned OSPPCapIndNew(
      * Set Time Stamp
      */
     if (OSPC_ERR_NO_ERROR == errorcode) {
-        capInd->ospmTimestamp = time(OSPC_OSNULL);
+        capInd->Timestamp = time(OSPC_OSNULL);
     }
 
     /*
      * Set Component Id
      */
     if (OSPC_ERR_NO_ERROR == errorcode) {
-        errorcode = OSPPGenerateUniqueId(ospvTrans, &(capInd->ospmComponentId));
+        errorcode = OSPPGenerateUniqueId(ospvTrans, &(capInd->ComponentId));
     }
 
     /*
      * Set Message Id - same as component Id
      */
     if (OSPC_ERR_NO_ERROR == errorcode) {
-        errorcode = OSPPGenerateUniqueId(ospvTrans, &(capInd->ospmMessageId));
+        errorcode = OSPPGenerateUniqueId(ospvTrans, &(capInd->MessageId));
     }
 
     /*
@@ -148,19 +148,19 @@ unsigned OSPPCapIndNew(
         /* Add Source if it is present */
         if (ospvSource != OSPC_OSNULL && OSPM_STRLEN(ospvSource) > 0) {
             /* Initialize the list */
-            OSPPListNew(&(capInd->ospmSrcAlternate));
+            OSPPListNew(&(capInd->SourceAlternate));
             altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ALTINFO_TRANSPORT);
             if (altinfo != OSPC_OSNULL) {
-                OSPPListAppend((OSPTLIST *)&(capInd->ospmSrcAlternate), altinfo);
+                OSPPListAppend((OSPTLIST *)&(capInd->SourceAlternate), altinfo);
             }
         }
 
         /* Add SourceDevice if it is present */
         if (ospvSourceDevice != OSPC_OSNULL && OSPM_STRLEN(ospvSourceDevice) > 0) {
-            OSPPListNew(&(capInd->ospmDeviceInfo));
+            OSPPListNew(&(capInd->DeviceInfo));
             altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ALTINFO_TRANSPORT);
             if (altinfo != OSPC_OSNULL) {
-                OSPPListAppend((OSPTLIST *)&(capInd->ospmDeviceInfo), altinfo);
+                OSPPListAppend((OSPTLIST *)&(capInd->DeviceInfo), altinfo);
             }
         }
 
@@ -168,11 +168,11 @@ unsigned OSPPCapIndNew(
         if (ospvSourceNetworkId != OSPC_OSNULL && OSPM_STRLEN(ospvSourceNetworkId) > 0) {
             /* Initialize the list only if the list has not been initialized above */
             if (OSPM_STRLEN(ospvSource) == 0) {
-                OSPPListNew(&(capInd->ospmSrcAlternate));
+                OSPPListNew(&(capInd->SourceAlternate));
             }
             altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceNetworkId), ospvSourceNetworkId, OSPC_ALTINFO_NETWORK);
             if (altinfo != OSPC_OSNULL) {
-                OSPPListAppend((OSPTLIST *)&(capInd->ospmSrcAlternate), altinfo);
+                OSPPListAppend((OSPTLIST *)&(capInd->SourceAlternate), altinfo);
             }
         }
     }
@@ -181,7 +181,7 @@ unsigned OSPPCapIndNew(
      * Initialize the resource indicator
      */
     if (OSPC_ERR_NO_ERROR == errorcode) {
-        capInd->ospmAlmostOutOfResources = ospvAlmostOutOfResources;
+        capInd->AlmostOutOfResources = ospvAlmostOutOfResources;
     }
 
     /*
@@ -257,7 +257,7 @@ unsigned OSPPGenerateUniqueId(
 }
 
 /*
- * OSPPCapIndToElement() - create an XML element from an authorisation request
+ * OSPPCapIndToElement() - create an XML element from an authorization request
  */
 int OSPPCapIndToElement(        /* returns error code */
     OSPT_CAP_IND *ospvCapInd,   /* capability indication value */
@@ -279,7 +279,7 @@ int OSPPCapIndToElement(        /* returns error code */
     /*
      * Create/Add messageId attribute
      */
-    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID), (const char *)ospvCapInd->ospmMessageId);
+    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID), (const char *)ospvCapInd->MessageId);
     OSPPXMLElemAddAttr(*ospvElem, attr);
 
     /*
@@ -297,7 +297,7 @@ int OSPPCapIndToElement(        /* returns error code */
     /*
      * Create/Add componentId attribute
      */
-    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_COMPONENTID), (const char *)ospvCapInd->ospmComponentId);
+    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_COMPONENTID), (const char *)ospvCapInd->ComponentId);
     OSPPXMLElemAddAttr(capindelem, attr);
 
     /*
@@ -308,8 +308,8 @@ int OSPPCapIndToElement(        /* returns error code */
     /*
      * Create/Add DeviceInfo elements
      */
-    for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvCapInd->ospmDeviceInfo));
-         altinfo != OSPC_OSNULL; altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvCapInd->ospmDeviceInfo), altinfo)) {
+    for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvCapInd->DeviceInfo));
+         altinfo != OSPC_OSNULL; altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvCapInd->DeviceInfo), altinfo)) {
         OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
         OSPPXMLElemAddChild(capindelem, elem);
     }
@@ -317,8 +317,8 @@ int OSPPCapIndToElement(        /* returns error code */
     /*
      * Create/Add SrcAltTransport elements
      */
-    for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvCapInd->ospmSrcAlternate));
-         altinfo != OSPC_OSNULL; altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvCapInd->ospmSrcAlternate), altinfo)) {
+    for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvCapInd->SourceAlternate));
+         altinfo != OSPC_OSNULL; altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvCapInd->SourceAlternate), altinfo)) {
         OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
         OSPPXMLElemAddChild(capindelem, elem);
     }
@@ -338,7 +338,7 @@ int OSPPCapIndToElement(        /* returns error code */
     /*
      * Create/Add AlmostOutOfResources sub-element
      */
-    subelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ALMOSTOUTOFRESOURCES), ospvCapInd->ospmAlmostOutOfResources == 0 ? OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE) : OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE));
+    subelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ALMOSTOUTOFRESOURCES), ospvCapInd->AlmostOutOfResources == 0 ? OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE) : OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE));
     OSPPXMLElemAddChild(elem, subelem);
 
     return ospvErrCode;

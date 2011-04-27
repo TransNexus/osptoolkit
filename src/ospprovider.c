@@ -137,10 +137,10 @@ int OSPPProviderGetTransactionCollection(
 /*
  * Get the **root node for the transaction Id tree.
  */
-OSPTTRANSID **OSPPProviderGetTransIdRoot(
+OSPT_TRANS_ID **OSPPProviderGetTransIdRoot(
     OSPTPROVIDER *ospvProvider)
 {
-    OSPTTRANSID **transid = OSPC_OSNULL;
+    OSPT_TRANS_ID **transid = OSPC_OSNULL;
 
     if (ospvProvider != OSPC_OSNULL) {
         return (&(ospvProvider->TreeRoot));
@@ -151,7 +151,7 @@ OSPTTRANSID **OSPPProviderGetTransIdRoot(
 
 /* Get the transid tree sentinel node.
  */
-OSPTTRANSID *OSPPProviderGetTransIdSentinel(
+OSPT_TRANS_ID *OSPPProviderGetTransIdSentinel(
     OSPTPROVIDER *ospvProvider)
 {
     if (ospvProvider != OSPC_OSNULL) {

@@ -35,27 +35,27 @@
  * OSPPUsageCnfDelete() - destroy specified UsageCnf object
  */
 void OSPPUsageCnfDelete(
-    OSPTUSAGECNF **ospvUsageCnf)
+    OSPT_USAGE_CNF **ospvUsageCnf)
 {
     if (*ospvUsageCnf != OSPC_OSNULL) {
         if (OSPPUsageCnfHasStatus(*ospvUsageCnf)) {
-            OSPPStatusDelete(&((*ospvUsageCnf)->ospmUsageCnfStatus));
+            OSPPStatusDelete(&((*ospvUsageCnf)->Status));
         }
 
-        if ((*ospvUsageCnf)->ospmUsageCnfTNAudit != OSPC_OSNULL) {
-            OSPPTNAuditDelete(&((*ospvUsageCnf)->ospmUsageCnfTNAudit));
+        if ((*ospvUsageCnf)->TNAudit != OSPC_OSNULL) {
+            OSPPTNAuditDelete(&((*ospvUsageCnf)->TNAudit));
         }
 
-        if ((*ospvUsageCnf)->ospmUsageCnfCSAudit != OSPC_OSNULL) {
-            OSPPCSAuditDelete(&((*ospvUsageCnf)->ospmUsageCnfCSAudit));
+        if ((*ospvUsageCnf)->CSAudit != OSPC_OSNULL) {
+            OSPPCSAuditDelete(&((*ospvUsageCnf)->CSAudit));
         }
 
-        if ((*ospvUsageCnf)->ospmUsageCnfComponentId != OSPC_OSNULL) {
-            OSPM_FREE((*ospvUsageCnf)->ospmUsageCnfComponentId);
+        if ((*ospvUsageCnf)->ComponentId != OSPC_OSNULL) {
+            OSPM_FREE((*ospvUsageCnf)->ComponentId);
         }
 
-        if ((*ospvUsageCnf)->ospmUsageCnfMessageId != OSPC_OSNULL) {
-            OSPM_FREE((*ospvUsageCnf)->ospmUsageCnfMessageId);
+        if ((*ospvUsageCnf)->MessageId != OSPC_OSNULL) {
+            OSPM_FREE((*ospvUsageCnf)->MessageId);
         }
 
         OSPM_FREE(*ospvUsageCnf);
@@ -67,12 +67,12 @@ void OSPPUsageCnfDelete(
  * OSPPUsageCnfSetTimestamp() - set the timestamp
  */
 void OSPPUsageCnfSetTimestamp(      /* nothing returned */
-    OSPTUSAGECNF *ospvUsageCnf,     /* usage cnfication to set */
+    OSPT_USAGE_CNF *ospvUsageCnf,   /* usage cnfication to set */
     OSPTTIME ospvTimestamp)         /* timestamp to set to */
 {
     if (ospvUsageCnf != OSPC_OSNULL) {
         if (ospvTimestamp != 0) {
-            ospvUsageCnf->ospmUsageCnfTimestamp = ospvTimestamp;
+            ospvUsageCnf->Timestamp = ospvTimestamp;
         }
     }
 }
@@ -80,56 +80,56 @@ void OSPPUsageCnfSetTimestamp(      /* nothing returned */
 /*
  * OSPPUsageCnfHasStatus() - does the usage confirmation have a status?
  */
-OSPTBOOL OSPPUsageCnfHasStatus( /* returns non-zero if number exists */
-    OSPTUSAGECNF *ospvUsageCnf) /* usage confirmation effected */
+OSPTBOOL OSPPUsageCnfHasStatus(     /* returns non-zero if number exists */
+    OSPT_USAGE_CNF *ospvUsageCnf)   /* usage confirmation effected */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvUsageCnf != OSPC_OSNULL) {
-        ospvHas = (ospvUsageCnf->ospmUsageCnfStatus != OSPC_OSNULL);
+        has = (ospvUsageCnf->Status != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPUsageCnfGetStatus() - returns the status for an usage confirmation
  */
-OSPTSTATUS *OSPPUsageCnfGetStatus(  /* returns pointer to dest */
-    OSPTUSAGECNF *ospvUsageCnf)     /* usage confirmation */
+OSPT_STATUS *OSPPUsageCnfGetStatus( /* returns pointer to dest */
+    OSPT_USAGE_CNF *ospvUsageCnf)   /* usage confirmation */
 {
-    OSPTSTATUS *ospvStatus = OSPC_OSNULL;
+    OSPT_STATUS *status = OSPC_OSNULL;
 
     if (ospvUsageCnf != OSPC_OSNULL) {
-        ospvStatus = ospvUsageCnf->ospmUsageCnfStatus;
+        status = ospvUsageCnf->Status;
     }
 
-    return ospvStatus;
+    return status;
 }
 
 /*
  * OSPPUsageCnfHasComponentId() - is the component id set ?
  */
 OSPTBOOL OSPPUsageCnfHasComponentId(    /* returns non-zero if component id is set */
-    OSPTUSAGECNF *ospvUsageCnf)
+    OSPT_USAGE_CNF *ospvUsageCnf)
 {
-    return(ospvUsageCnf->ospmUsageCnfComponentId != OSPC_OSNULL);
+    return(ospvUsageCnf->ComponentId != OSPC_OSNULL);
 }
 
 /*
  * OSPPUsageCnfGetComponentId() - returns a new copy of the component id.
  */
 const char *OSPPUsageCnfGetComponentId(
-    OSPTUSAGECNF *ospvUsageCnf)
+    OSPT_USAGE_CNF *ospvUsageCnf)
 {
     const char *componentstring = OSPC_OSNULL;
     int len = 0;
 
     if (OSPPUsageCnfHasComponentId(ospvUsageCnf)) {
-        len = OSPM_STRLEN(ospvUsageCnf->ospmUsageCnfComponentId);
+        len = OSPM_STRLEN(ospvUsageCnf->ComponentId);
         OSPM_MALLOC(componentstring, char, len + 1);
         OSPM_MEMSET(componentstring, 0, len + 1);
-        OSPM_MEMCPY(componentstring, ospvUsageCnf->ospmUsageCnfComponentId, len);
+        OSPM_MEMCPY(componentstring, ospvUsageCnf->ComponentId, len);
     }
 
     return componentstring;
@@ -139,19 +139,19 @@ const char *OSPPUsageCnfGetComponentId(
  * OSPPUsageCnfSetComponentId() - creates space and copies in the string.
  */
 void OSPPUsageCnfSetComponentId(
-    OSPTUSAGECNF *ospvUsageCnf,     /* In - pointer to Usage Confirm struct */
+    OSPT_USAGE_CNF *ospvUsageCnf,   /* In - pointer to Usage Confirm struct */
     const char *ospvComponentId)    /* In - pointer to component id string */
 {
     int len = OSPM_STRLEN(ospvComponentId);
 
     if (ospvUsageCnf != OSPC_OSNULL) {
-        if (ospvUsageCnf->ospmUsageCnfComponentId != OSPC_OSNULL) {
-            OSPM_FREE(ospvUsageCnf->ospmUsageCnfComponentId);
+        if (ospvUsageCnf->ComponentId != OSPC_OSNULL) {
+            OSPM_FREE(ospvUsageCnf->ComponentId);
         }
 
-        OSPM_MALLOC(ospvUsageCnf->ospmUsageCnfComponentId, char, len + 1);
-        OSPM_MEMSET(ospvUsageCnf->ospmUsageCnfComponentId, 0, len + 1);
-        OSPM_MEMCPY(ospvUsageCnf->ospmUsageCnfComponentId, ospvComponentId, len);
+        OSPM_MALLOC(ospvUsageCnf->ComponentId, char, len + 1);
+        OSPM_MEMSET(ospvUsageCnf->ComponentId, 0, len + 1);
+        OSPM_MEMCPY(ospvUsageCnf->ComponentId, ospvComponentId, len);
     }
 }
 
@@ -159,40 +159,40 @@ void OSPPUsageCnfSetComponentId(
 /*
  * OSPPUsageCnfNew() - creates a new (empty) usage confirmation
  */
-OSPTUSAGECNF *OSPPUsageCnfNew(void)     /* returns pointer or NULL */
+OSPT_USAGE_CNF *OSPPUsageCnfNew(void)   /* returns pointer or NULL */
 {
-    OSPTUSAGECNF *usagecnf;
+    OSPT_USAGE_CNF *usagecnf;
 
-    OSPM_MALLOC(usagecnf, OSPTUSAGECNF, sizeof(OSPTUSAGECNF));
+    OSPM_MALLOC(usagecnf, OSPT_USAGE_CNF, sizeof(OSPT_USAGE_CNF));
     if (usagecnf != OSPC_OSNULL) {
-        OSPM_MEMSET(usagecnf, 0, sizeof(OSPTUSAGECNF));
-        OSPPListLinkNew(&(usagecnf->ospmUsageCnfLink));
-        usagecnf->ospmUsageCnfTimestamp = (OSPTTIME) 0;
-        usagecnf->ospmUsageCnfStatus = OSPC_OSNULL;
-        usagecnf->ospmUsageCnfCSAudit = OSPC_OSNULL;
-        usagecnf->ospmUsageCnfTNAudit = OSPC_OSNULL;
-        usagecnf->ospmUsageCnfComponentId = OSPC_OSNULL;
-        usagecnf->ospmUsageCnfMessageId = OSPC_OSNULL;
+        OSPM_MEMSET(usagecnf, 0, sizeof(OSPT_USAGE_CNF));
+        OSPPListLinkNew(&(usagecnf->Link));
+        usagecnf->Timestamp = (OSPTTIME) 0;
+        usagecnf->Status = OSPC_OSNULL;
+        usagecnf->CSAudit = OSPC_OSNULL;
+        usagecnf->TNAudit = OSPC_OSNULL;
+        usagecnf->ComponentId = OSPC_OSNULL;
+        usagecnf->MessageId = OSPC_OSNULL;
     }
 
     return usagecnf;
 }
 
 OSPTCSAUDIT *OSPPUsageCnfGetCSAudit(
-    OSPTUSAGECNF *ospvUsageCnf)
+    OSPT_USAGE_CNF *ospvUsageCnf)
 {
     if (ospvUsageCnf != OSPC_OSNULL) {
-        return ospvUsageCnf->ospmUsageCnfCSAudit;
+        return ospvUsageCnf->CSAudit;
     } else {
         return OSPC_OSNULL;
     }
 }
 
-OSPTTNAUDIT *OSPPUsageCnfGetTNAudit(
-    OSPTUSAGECNF *ospvUsageCnf)
+OSPT_TN_AUDIT *OSPPUsageCnfGetTNAudit(
+    OSPT_USAGE_CNF *ospvUsageCnf)
 {
     if (ospvUsageCnf != OSPC_OSNULL) {
-        return ospvUsageCnf->ospmUsageCnfTNAudit;
+        return ospvUsageCnf->TNAudit;
     } else {
         return OSPC_OSNULL;
     }
@@ -229,11 +229,11 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
     unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
     OSPT_XML_ELEM *elem1 = OSPC_OSNULL;
-    OSPTUSAGECNF *usagecnf = OSPC_OSNULL;
+    OSPT_USAGE_CNF *usagecnf = OSPC_OSNULL;
     OSPTTIME t = 0;
     const char *compid = OSPC_OSNULL;
     const char *messageId = OSPC_OSNULL;
-    OSPT_XML_ELEM *ospvParent = OSPC_OSNULL;
+    OSPT_XML_ELEM *parent = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
         ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
@@ -255,8 +255,8 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
                  * The following two lines of code change ospvElem from
                  * pointing to the Message element to the Component element.
                  */
-                ospvParent = ospvElem;
-                ospvElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvParent);
+                parent = ospvElem;
+                ospvElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(parent);
             }
 
             for (elem1 = (OSPT_XML_ELEM *)OSPPListFirst((OSPTLIST *)ospvElem);
@@ -315,16 +315,16 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
                                 }
                                 break;
                             case OSPC_MELEM_STATUS:
-                                if (usagecnf->ospmUsageCnfStatus == OSPC_OSNULL) {
+                                if (usagecnf->Status == OSPC_OSNULL) {
                                     /* usagecnf->ospmUsageCnfStatus = OSPPStatusNew(); */
-                                    ospvErrCode = OSPPStatusFromElement(elem, &(usagecnf->ospmUsageCnfStatus));
+                                    ospvErrCode = OSPPStatusFromElement(elem, &(usagecnf->Status));
                                 }
                                 break;
                             case OSPC_MELEM_AUDIT:
-                                ospvErrCode = OSPPTNAuditFromElement(elem, &(usagecnf->ospmUsageCnfTNAudit));
+                                ospvErrCode = OSPPTNAuditFromElement(elem, &(usagecnf->TNAudit));
                                 break;
                             case OSPC_MELEM_CSAUDITTRIGGER:
-                                ospvErrCode = OSPPCSAuditFromElement(elem, &(usagecnf->ospmUsageCnfCSAudit));
+                                ospvErrCode = OSPPCSAuditFromElement(elem, &(usagecnf->CSAudit));
                                 break;
                             default:
                                 /*
@@ -355,7 +355,7 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
     if (ospvErrCode != OSPC_ERR_NO_ERROR) {
         if (ospvUsageCnf != OSPC_OSNULL) {
             while (!OSPPListEmpty(ospvUsageCnf)) {
-                usagecnf = (OSPTUSAGECNF *)OSPPListRemove(ospvUsageCnf);
+                usagecnf = (OSPT_USAGE_CNF *)OSPPListRemove(ospvUsageCnf);
                 if (usagecnf != OSPC_OSNULL) {
                     OSPPUsageCnfDelete(&(usagecnf));
                 }
@@ -376,28 +376,28 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
  * OSPPUsageCnfHasMessageId() - is the message id set ?
  */
 OSPTBOOL OSPPUsageCnfHasMessageId(  /* returns non-zero if message id is set */
-    OSPTUSAGECNF *ospvUsageCnf)
+    OSPT_USAGE_CNF *ospvUsageCnf)
 {
-    return(ospvUsageCnf->ospmUsageCnfMessageId != OSPC_OSNULL);
+    return(ospvUsageCnf->MessageId != OSPC_OSNULL);
 }
 
 /*
  * OSPPUsageCnfSetMessageId() - creates space and copies in the string.
  */
 void OSPPUsageCnfSetMessageId(
-    OSPTUSAGECNF *ospvUsageCnf,     /* In - pointer to Usage Indication struct */
+    OSPT_USAGE_CNF *ospvUsageCnf,   /* In - pointer to Usage Indication struct */
     const char *ospvMessageId)      /* In - pointer to message id string */
 {
     int len = OSPM_STRLEN(ospvMessageId);
 
     if (ospvUsageCnf != OSPC_OSNULL) {
-        if (ospvUsageCnf->ospmUsageCnfMessageId != OSPC_OSNULL) {
-            OSPM_FREE(ospvUsageCnf->ospmUsageCnfMessageId);
+        if (ospvUsageCnf->MessageId != OSPC_OSNULL) {
+            OSPM_FREE(ospvUsageCnf->MessageId);
         }
 
-        OSPM_MALLOC(ospvUsageCnf->ospmUsageCnfMessageId, char, len + 1);
-        OSPM_MEMSET(ospvUsageCnf->ospmUsageCnfMessageId, 0, len + 1);
-        OSPM_MEMCPY(ospvUsageCnf->ospmUsageCnfMessageId, ospvMessageId, len);
+        OSPM_MALLOC(ospvUsageCnf->MessageId, char, len + 1);
+        OSPM_MEMSET(ospvUsageCnf->MessageId, 0, len + 1);
+        OSPM_MEMCPY(ospvUsageCnf->MessageId, ospvMessageId, len);
     }
 }
 

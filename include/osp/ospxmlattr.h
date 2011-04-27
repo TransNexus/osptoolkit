@@ -32,9 +32,9 @@
  */
 
 typedef struct {
-    OSPTLISTLINK ospmXMLAttrLink;
-    const char *ospmXMLAttrName;
-    const char *ospmXMLAttrValue;
+    OSPTLISTLINK Link;
+    const char *Name;
+    const char *Value;
 } OSPT_XML_ATTR;
 
 #define OSPC_MAX_ID_LEN     25

@@ -36,16 +36,16 @@ OSPT_STATS *OSPPStatsNew(void)
 
         for (metric = OSPC_SMETRIC_RTP; metric < OSPC_SMETRIC_NUMBER; metric++) {
             for (dir = OSPC_SDIR_START; dir < OSPC_SDIR_NUMBER; dir++) {
-                ospvStats->ospmOctets[metric][dir] = -1;
-                ospvStats->ospmPackets[metric][dir] = -1;
-                ospvStats->ospmRFactor[metric][dir] = -1.0;
-                ospvStats->ospmMOSCQ[metric][dir] = -1.0;
-                ospvStats->ospmMOSLQ[metric][dir] = -1.0;
+                ospvStats->Octets[metric][dir] = -1;
+                ospvStats->Packets[metric][dir] = -1;
+                ospvStats->RFactor[metric][dir] = -1.0;
+                ospvStats->MOSCQ[metric][dir] = -1.0;
+                ospvStats->MOSLQ[metric][dir] = -1.0;
             }
         }
 
         for (dir = OSPC_SDIR_START; dir < OSPC_SDIR_NUMBER; dir++) {
-            ospvStats->ospmICPIF[dir] = -1;
+            ospvStats->ICPIF[dir] = -1;
         }
     }
 
@@ -190,7 +190,7 @@ OSPTBOOL OSPPStatsHasOneWay(
     unsigned ospvValueFlags)
 {
     if (ospvStats != OSPC_OSNULL) {
-        return ((ospvStats->ospmOneWay.hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
+        return ((ospvStats->OneWay.hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
     } else {
         return OSPC_FALSE;
     }
@@ -202,7 +202,7 @@ OSPTBOOL OSPPStatsHasRoundTrip(
     unsigned ospvValueFlags)
 {
     if (ospvStats != OSPC_OSNULL) {
-        return ((ospvStats->ospmRoundTrip.hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
+        return ((ospvStats->RoundTrip.hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
     } else {
         return OSPC_FALSE;
     }
@@ -214,7 +214,7 @@ OSPTBOOL OSPPStatsHasLossSent(
     unsigned ospvValueFlags)
 {
     if (ospvStats != OSPC_OSNULL) {
-        return ((ospvStats->ospmLossSent.hasvalue & ospvValueFlags & OSPC_SVALUE_PACKET) != 0);
+        return ((ospvStats->LossSent.hasvalue & ospvValueFlags & OSPC_SVALUE_PACKET) != 0);
     } else {
         return OSPC_FALSE;
     }
@@ -226,7 +226,7 @@ OSPTBOOL OSPPStatsHasLossReceived(
     unsigned ospvValueFlags)
 {
     if (ospvStats != OSPC_OSNULL) {
-        return ((ospvStats->ospmLossReceived.hasvalue & ospvValueFlags & OSPC_SVALUE_PACKET) != 0);
+        return ((ospvStats->LossReceived.hasvalue & ospvValueFlags & OSPC_SVALUE_PACKET) != 0);
     } else {
         return OSPC_FALSE;
     }
@@ -287,12 +287,12 @@ void OSPPStatsSetSentStatistics(
 {
     if (ospvStats != OSPC_OSNULL) {
         if (ospvLossPacketsSent >= 0) {
-            ospvStats->ospmLossSent.hasvalue |= OSPC_SVALUE_PACKETS;
-            ospvStats->ospmLossSent.packets = ospvLossPacketsSent;
+            ospvStats->LossSent.hasvalue |= OSPC_SVALUE_PACKETS;
+            ospvStats->LossSent.packets = ospvLossPacketsSent;
         }
         if (ospvLossFractionSent >= 0) {
-            ospvStats->ospmLossSent.hasvalue |= OSPC_SVALUE_FRACTION;
-            ospvStats->ospmLossSent.fraction = ospvLossFractionSent;
+            ospvStats->LossSent.hasvalue |= OSPC_SVALUE_FRACTION;
+            ospvStats->LossSent.fraction = ospvLossFractionSent;
         }
     }
 }
@@ -305,12 +305,12 @@ void OSPPStatsSetReceivedStatistics(
 {
     if (ospvStats != OSPC_OSNULL) {
         if (ospvLossPacketsReceived >= 0) {
-            ospvStats->ospmLossReceived.hasvalue |= OSPC_SVALUE_PACKETS;
-            ospvStats->ospmLossReceived.packets = ospvLossPacketsReceived;
+            ospvStats->LossReceived.hasvalue |= OSPC_SVALUE_PACKETS;
+            ospvStats->LossReceived.packets = ospvLossPacketsReceived;
         }
         if (ospvLossFractionReceived >= 0) {
-            ospvStats->ospmLossReceived.hasvalue |= OSPC_SVALUE_FRACTION;
-            ospvStats->ospmLossReceived.fraction = ospvLossFractionReceived;
+            ospvStats->LossReceived.hasvalue |= OSPC_SVALUE_FRACTION;
+            ospvStats->LossReceived.fraction = ospvLossFractionReceived;
         }
     }
 }
@@ -322,7 +322,7 @@ unsigned OSPPStatsGetOneWaySamples(
     unsigned samp = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        samp = ospvStats->ospmOneWay.samples;
+        samp = ospvStats->OneWay.samples;
     }
 
     return samp;
@@ -335,7 +335,7 @@ unsigned OSPPStatsGetOneWayMinimum(
     unsigned min = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        min = ospvStats->ospmOneWay.minimum;
+        min = ospvStats->OneWay.minimum;
     }
 
     return min;
@@ -348,7 +348,7 @@ unsigned OSPPStatsGetOneWayMaximum(
     unsigned max = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        max = ospvStats->ospmOneWay.maximum;
+        max = ospvStats->OneWay.maximum;
     }
 
     return max;
@@ -361,7 +361,7 @@ unsigned OSPPStatsGetOneWayMean(
     unsigned mean = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        mean = ospvStats->ospmOneWay.mean;
+        mean = ospvStats->OneWay.mean;
     }
 
     return mean;
@@ -374,7 +374,7 @@ float OSPPStatsGetOneWayVariance(
     float var = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        var = ospvStats->ospmOneWay.variance;
+        var = ospvStats->OneWay.variance;
     }
 
     return var;
@@ -387,7 +387,7 @@ unsigned OSPPStatsGetRoundTripSamples(
     unsigned samp = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        samp = ospvStats->ospmRoundTrip.samples;
+        samp = ospvStats->RoundTrip.samples;
     }
 
     return samp;
@@ -400,7 +400,7 @@ unsigned OSPPStatsGetRoundTripMinimum(
     unsigned min = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        min = ospvStats->ospmRoundTrip.minimum;
+        min = ospvStats->RoundTrip.minimum;
     }
 
     return min;
@@ -413,7 +413,7 @@ unsigned OSPPStatsGetRoundTripMaximum(
     unsigned max = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        max = ospvStats->ospmRoundTrip.maximum;
+        max = ospvStats->RoundTrip.maximum;
     }
 
     return max;
@@ -426,7 +426,7 @@ unsigned OSPPStatsGetRoundTripMean(
     unsigned mean = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        mean = ospvStats->ospmRoundTrip.mean;
+        mean = ospvStats->RoundTrip.mean;
     }
 
     return mean;
@@ -439,7 +439,7 @@ float OSPPStatsGetRoundTripVariance(
     float var = 0;
 
     if (ospvStats != OSPC_OSNULL) {
-        var = ospvStats->ospmRoundTrip.variance;
+        var = ospvStats->RoundTrip.variance;
     }
 
     return var;
@@ -451,8 +451,8 @@ unsigned OSPPStatsGetPktReceived(
 {
     unsigned pktsrecvd = 0;
 
-    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->ospmLossReceived.hasvalue & OSPC_SVALUE_PACKETS) != 0)) {
-        pktsrecvd = ospvStats->ospmLossReceived.packets;
+    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->LossReceived.hasvalue & OSPC_SVALUE_PACKETS) != 0)) {
+        pktsrecvd = ospvStats->LossReceived.packets;
     }
 
     return pktsrecvd;
@@ -464,8 +464,8 @@ unsigned OSPPStatsGetFracReceived(
 {
     unsigned fracrecvd = 0;
 
-    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->ospmLossReceived.hasvalue & OSPC_SVALUE_FRACTION) != 0)) {
-        fracrecvd = ospvStats->ospmLossReceived.fraction;
+    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->LossReceived.hasvalue & OSPC_SVALUE_FRACTION) != 0)) {
+        fracrecvd = ospvStats->LossReceived.fraction;
     }
 
     return fracrecvd;
@@ -477,8 +477,8 @@ unsigned OSPPStatsGetPktSent(
 {
     unsigned pktssent = 0;
 
-    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->ospmLossSent.hasvalue & OSPC_SVALUE_PACKETS) != 0)) {
-        pktssent = ospvStats->ospmLossSent.packets;
+    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->LossSent.hasvalue & OSPC_SVALUE_PACKETS) != 0)) {
+        pktssent = ospvStats->LossSent.packets;
     }
 
     return pktssent;
@@ -490,8 +490,8 @@ unsigned OSPPStatsGetFracSent(
 {
     unsigned fracsent = 0;
 
-    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->ospmLossSent.hasvalue & OSPC_SVALUE_FRACTION) != 0)) {
-        fracsent = ospvStats->ospmLossSent.fraction;
+    if ((ospvStats != OSPC_OSNULL) && ((ospvStats->LossSent.hasvalue & OSPC_SVALUE_FRACTION) != 0)) {
+        fracsent = ospvStats->LossSent.fraction;
     }
 
     return fracsent;
@@ -943,7 +943,7 @@ OSPTBOOL OSPPStatsHasValue(
     OSPE_STATS_DIR ospvDir,
     unsigned ospvValueFlags)
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if ((ospvStats != OSPC_OSNULL) &&
         ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)))
@@ -951,47 +951,47 @@ OSPTBOOL OSPPStatsHasValue(
         switch (ospvType) {
         case OSPC_STATS_LOST:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvHas = ((ospvStats->ospmLost[ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_PACKET) != 0);
+                has = ((ospvStats->Lost[ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_PACKET) != 0);
             }
             break;
         case OSPC_STATS_JITTER:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvHas = ((ospvStats->ospmJitter[ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
+                has = ((ospvStats->Jitter[ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
             }
             break;
         case OSPC_STATS_DELAY:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvHas = ((ospvStats->ospmDelay[ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
+                has = ((ospvStats->Delay[ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
             }
             break;
         case OSPC_STATS_OCTETS:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvHas = (ospvStats->ospmOctets[ospvMetric][ospvDir] >= 0);
+                has = (ospvStats->Octets[ospvMetric][ospvDir] >= 0);
             }
             break;
         case OSPC_STATS_PACKETS:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvHas = (ospvStats->ospmPackets[ospvMetric][ospvDir] >= 0);
+                has = (ospvStats->Packets[ospvMetric][ospvDir] >= 0);
             }
             break;
         case OSPC_STATS_RFACTOR:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvHas = (ospvStats->ospmRFactor[ospvMetric][ospvDir] >= 0);
+                has = (ospvStats->RFactor[ospvMetric][ospvDir] >= 0);
             }
             break;
         case OSPC_STATS_MOSCQ:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvHas = (ospvStats->ospmMOSCQ[ospvMetric][ospvDir] >= 0);
+                has = (ospvStats->MOSCQ[ospvMetric][ospvDir] >= 0);
             }
             break;
         case OSPC_STATS_MOSLQ:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvHas = (ospvStats->ospmMOSLQ[ospvMetric][ospvDir] >= 0);
+                has = (ospvStats->MOSLQ[ospvMetric][ospvDir] >= 0);
             }
             break;
         case OSPC_STATS_ICPIF:
             if (ospvMetric == OSPC_SMETRIC_UNDEFINED) {
-                ospvHas = (ospvStats->ospmICPIF[ospvDir] >= 0);
+                has = (ospvStats->ICPIF[ospvDir] >= 0);
             }
             break;
         default:
@@ -999,7 +999,7 @@ OSPTBOOL OSPPStatsHasValue(
         }
     }
 
-    return ospvHas;
+    return has;
 }
 
 void OSPPStatsSetPacket(
@@ -1018,7 +1018,7 @@ void OSPPStatsSetPacket(
     {
         switch (ospvType) {
         case OSPC_STATS_LOST:
-            ospvPacket = &ospvStats->ospmLost[ospvMetric][ospvDir];
+            ospvPacket = &ospvStats->Lost[ospvMetric][ospvDir];
             break;
         default:
             return;
@@ -1053,10 +1053,10 @@ void OSPPStatsSetMetrics(
     {
         switch (ospvType) {
         case OSPC_STATS_JITTER:
-            metrics = &ospvStats->ospmJitter[ospvMetric][ospvDir];
+            metrics = &ospvStats->Jitter[ospvMetric][ospvDir];
             break;
         case OSPC_STATS_DELAY:
-            metrics = &ospvStats->ospmDelay[ospvMetric][ospvDir];
+            metrics = &ospvStats->Delay[ospvMetric][ospvDir];
             break;
         default:
             return;
@@ -1097,17 +1097,17 @@ void OSPPStatsSetInteger(
         switch (ospvType) {
         case OSPC_STATS_OCTETS:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvStats->ospmOctets[ospvMetric][ospvDir] = ospvValue;
+                ospvStats->Octets[ospvMetric][ospvDir] = ospvValue;
             }
             break;
         case OSPC_STATS_PACKETS:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvStats->ospmPackets[ospvMetric][ospvDir] = ospvValue;
+                ospvStats->Packets[ospvMetric][ospvDir] = ospvValue;
             }
             break;
         case OSPC_STATS_ICPIF:
             if (ospvMetric == OSPC_SMETRIC_UNDEFINED) {
-                ospvStats->ospmICPIF[ospvDir] = ospvValue;
+                ospvStats->ICPIF[ospvDir] = ospvValue;
             }
             break;
         default:
@@ -1129,13 +1129,13 @@ void OSPPStatsSetFloat(
     {
         switch (ospvType) {
         case OSPC_STATS_RFACTOR:
-            ospvStats->ospmRFactor[ospvMetric][ospvDir] = ospvValue;
+            ospvStats->RFactor[ospvMetric][ospvDir] = ospvValue;
             break;
         case OSPC_STATS_MOSCQ:
-            ospvStats->ospmMOSCQ[ospvMetric][ospvDir] = ospvValue;
+            ospvStats->MOSCQ[ospvMetric][ospvDir] = ospvValue;
             break;
         case OSPC_STATS_MOSLQ:
-            ospvStats->ospmMOSLQ[ospvMetric][ospvDir] = ospvValue;
+            ospvStats->MOSLQ[ospvMetric][ospvDir] = ospvValue;
             break;
         default:
             break;
@@ -1162,7 +1162,7 @@ void OSPPStatsGetPacket(
     {
         switch (ospvType) {
         case OSPC_STATS_LOST:
-            ospvPacket = &ospvStats->ospmLost[ospvMetric][ospvDir];
+            ospvPacket = &ospvStats->Lost[ospvMetric][ospvDir];
             break;
         default:
             return;
@@ -1201,10 +1201,10 @@ void OSPPStatsGetMetrics(
     {
         switch (ospvType) {
         case OSPC_STATS_JITTER:
-            metrics = &ospvStats->ospmJitter[ospvMetric][ospvDir];
+            metrics = &ospvStats->Jitter[ospvMetric][ospvDir];
             break;
         case OSPC_STATS_DELAY:
-            metrics = &ospvStats->ospmDelay[ospvMetric][ospvDir];
+            metrics = &ospvStats->Delay[ospvMetric][ospvDir];
             break;
         default:
             return;
@@ -1241,17 +1241,17 @@ int OSPPStatsGetInteger(
         switch (ospvType) {
         case OSPC_STATS_OCTETS:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvValue = ospvStats->ospmOctets[ospvMetric][ospvDir];
+                ospvValue = ospvStats->Octets[ospvMetric][ospvDir];
             }
             break;
         case OSPC_STATS_PACKETS:
             if ((ospvMetric == OSPC_SMETRIC_RTP) || (ospvMetric == OSPC_SMETRIC_RTCP)) {
-                ospvValue = ospvStats->ospmPackets[ospvMetric][ospvDir];
+                ospvValue = ospvStats->Packets[ospvMetric][ospvDir];
             }
             break;
         case OSPC_STATS_ICPIF:
             if (ospvMetric == OSPC_SMETRIC_UNDEFINED) {
-                ospvValue = ospvStats->ospmICPIF[ospvDir];
+                ospvValue = ospvStats->ICPIF[ospvDir];
             }
             break;
         default:
@@ -1276,13 +1276,13 @@ float OSPPStatsGetFloat(
     {
         switch (ospvType) {
         case OSPC_STATS_RFACTOR:
-            ospvValue = ospvStats->ospmRFactor[ospvMetric][ospvDir];
+            ospvValue = ospvStats->RFactor[ospvMetric][ospvDir];
             break;
         case OSPC_STATS_MOSCQ:
-            ospvValue = ospvStats->ospmMOSCQ[ospvMetric][ospvDir];
+            ospvValue = ospvStats->MOSCQ[ospvMetric][ospvDir];
             break;
         case OSPC_STATS_MOSLQ:
-            ospvValue = ospvStats->ospmMOSLQ[ospvMetric][ospvDir];
+            ospvValue = ospvStats->MOSLQ[ospvMetric][ospvDir];
             break;
         default:
             break;

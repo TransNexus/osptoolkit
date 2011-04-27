@@ -15,7 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/* ospreauthreq.c - OSP authorisation request functions */
+/* ospreauthreq.c - OSP authorization request functions */
 
 #include <assert.h>
 
@@ -37,88 +37,88 @@
 #include "osp/osptrans.h"
 
 /*
- * OSPPReauthReqHasTimestamp() - Does authorisation request have a valid timestamp?
+ * OSPPReauthReqHasTimestamp() - Does authorization request have a valid timestamp?
  */
 OSPTBOOL OSPPReauthReqHasTimestamp(     /* returns non-zero if time */
-    OSPTREAUTHREQ *ospvReauthReq)       /* authorisation request in question */
+    OSPT_REAUTH_REQ *ospvReauthReq)     /* authorization request in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHas = (ospvReauthReq->ospmReauthReqTimestamp != OSPC_TIMEMIN);
+        has = (ospvReauthReq->Timestamp != OSPC_TIMEMIN);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
- * OSPPReauthReqSetTimestamp() - sets the timestamp for an authorisation request
+ * OSPPReauthReqSetTimestamp() - sets the timestamp for an authorization request
  */
 void OSPPReauthReqSetTimestamp(     /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq,
+    OSPT_REAUTH_REQ *ospvReauthReq,
     OSPTTIME ospvTime)
 {
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvReauthReq->ospmReauthReqTimestamp = ospvTime;
+        ospvReauthReq->Timestamp = ospvTime;
     }
 }
 
 /*
- * OSPPReauthReqGetTimestamp() - returns timestamp for an authorisation request
+ * OSPPReauthReqGetTimestamp() - returns timestamp for an authorization request
  */
 OSPTTIME OSPPReauthReqGetTimestamp( /* returns the time value */
-    OSPTREAUTHREQ *ospvReauthReq)   /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq) /* authorization request */
 {
     OSPTTIME ospvTime = 0;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvTime = ospvReauthReq->ospmReauthReqTimestamp;
+        ospvTime = ospvReauthReq->Timestamp;
     }
 
     return ospvTime;
 }
 
 /*
- * OSPPReauthReqHasCallId() - does an authorisation request have a Call ID?
+ * OSPPReauthReqHasCallId() - does an authorization request have a Call ID?
  */
 OSPTBOOL OSPPReauthReqHasCallId(    /* returns non-zero if exists */
-    OSPTREAUTHREQ *ospvReauthReq)   /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq) /* authorization request */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHas = (ospvReauthReq->ospmReauthReqCallId != OSPC_OSNULL);
+        has = (ospvReauthReq->CallId != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
- * OSPPReauthReqGetCallId() - gets the call ID for an authorisation request
+ * OSPPReauthReqGetCallId() - gets the call ID for an authorization request
  */
 OSPT_CALL_ID *OSPPReauthReqGetCallId(   /* returns call ID pointer */
-    OSPTREAUTHREQ *ospvReauthReq)       /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq)     /* authorization request */
 {
-    OSPT_CALL_ID *ospvCallId = OSPC_OSNULL;
+    OSPT_CALL_ID *callid = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvCallId = ospvReauthReq->ospmReauthReqCallId;
+        callid = ospvReauthReq->CallId;
     }
 
-    return ospvCallId;
+    return callid;
 }
 
 /*
- * OSPPReauthReqSetSourceNumber() - set the source number for an authorisation request
+ * OSPPReauthReqSetSourceNumber() - set the source number for an authorization request
  */
 void OSPPReauthReqSetSourceNumber(  /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq,   /* authorisation request  to set */
+    OSPT_REAUTH_REQ *ospvReauthReq, /* authorization request  to set */
     const char *ospvNum)            /* source number (as string) */
 {
     if (ospvReauthReq != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
             if (OSPM_STRLEN(ospvNum) < OSPC_SIZE_E164NUM) {
-                OSPM_STRNCPY(ospvReauthReq->ospmReauthReqSourceNumber, ospvNum, OSPC_SIZE_E164NUM - 1);
+                OSPM_STRNCPY(ospvReauthReq->SourceNumber, ospvNum, OSPC_SIZE_E164NUM - 1);
             }
         }
     }
@@ -126,15 +126,15 @@ void OSPPReauthReqSetSourceNumber(  /* nothing returned */
 
 /*
  * OSPPReauthReqGetSourceNumber() - returns the source number for an
- * authorisation request
+ * authorization request
  */
 const char *OSPPReauthReqGetSourceNumber(   /* returns number as string */
-    OSPTREAUTHREQ *ospvReauthReq)           /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq)         /* authorization request */
 {
     const char *ospvNum = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvNum = ospvReauthReq->ospmReauthReqSourceNumber;
+        ospvNum = ospvReauthReq->SourceNumber;
     }
 
     return ospvNum;
@@ -142,16 +142,16 @@ const char *OSPPReauthReqGetSourceNumber(   /* returns number as string */
 
 /*
  * OSPPReauthReqSetDestNumber() - set the destination number for an
- * authorisation request
+ * authorization request
  */
 void OSPPReauthReqSetDestNumber(    /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq,   /* authorisation request to set */
+    OSPT_REAUTH_REQ *ospvReauthReq, /* authorization request to set */
     const char *ospvNum)            /* destination number (as string) */
 {
     if (ospvReauthReq != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
             if (OSPM_STRLEN(ospvNum) < OSPC_SIZE_E164NUM) {
-                OSPM_STRNCPY(ospvReauthReq->ospmReauthReqDestNumber, ospvNum, OSPC_SIZE_E164NUM - 1);
+                OSPM_STRNCPY(ospvReauthReq->DestinationNumber, ospvNum, OSPC_SIZE_E164NUM - 1);
             }
         }
     }
@@ -159,158 +159,158 @@ void OSPPReauthReqSetDestNumber(    /* nothing returned */
 
 /*
  * OSPPReauthReqGetDestNumber() - returns the destination number for an
- * authorisation request
+ * authorization request
  */
 const char *OSPPReauthReqGetDestNumber( /* returns number as string */
-    OSPTREAUTHREQ *ospvReauthReq)       /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq)     /* authorization request */
 {
-    const char *ospvNum = OSPC_OSNULL;
+    const char *num = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvNum = ospvReauthReq->ospmReauthReqDestNumber;
+        num = ospvReauthReq->DestinationNumber;
     }
 
-    return ospvNum;
+    return num;
 }
 
 /*
- * OSPPReauthReqHasTrxId() - does an authorisation request have a Transaction ID?
+ * OSPPReauthReqHasTrxId() - does an authorization request have a Transaction ID?
  */
 OSPTBOOL OSPPReauthReqHasTrxId(     /* returns non-zero if exists */
-    OSPTREAUTHREQ *ospvReauthReq)   /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq) /* authorization request */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHas = (ospvReauthReq->ospmReauthReqTrxId != 0);
+        has = (ospvReauthReq->TrxId != 0);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
- * OSPPReauthReqSetTrxId() - sets the transaction ID for an authorisation
+ * OSPPReauthReqSetTrxId() - sets the transaction ID for an authorization
  */
 void OSPPReauthReqSetTrxId(         /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq,   /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq, /* authorization request */
     OSPTTRXID ospvTrxId)            /* transaction ID to set */
 {
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvReauthReq->ospmReauthReqTrxId = ospvTrxId;
+        ospvReauthReq->TrxId = ospvTrxId;
     }
 }
 
 /*
- * OSPPReauthReqGetTrxId() - gets the transaction ID for an authorisation request
+ * OSPPReauthReqGetTrxId() - gets the transaction ID for an authorization request
  */
 OSPTTRXID OSPPReauthReqGetTrxId(    /* returns transaction ID pointer */
-    OSPTREAUTHREQ *ospvReauthReq)   /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq) /* authorization request */
 {
-    OSPTTRXID ospvTrxId = 0;
+    OSPTTRXID trxid = 0;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvTrxId = ospvReauthReq->ospmReauthReqTrxId;
+        trxid = ospvReauthReq->TrxId;
     }
 
-    return ospvTrxId;
+    return trxid;
 }
 
 /*
  * OSPPReauthReqHasDuration() - is the duration set ?
  */
 OSPTBOOL OSPPReauthReqHasDuration(  /* returns non-zero if number exists */
-    OSPTREAUTHREQ *ospvReauthReq)   /* Usage Indication effected */
+    OSPT_REAUTH_REQ *ospvReauthReq) /* Usage Indication effected */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHas = (ospvReauthReq->ospmReauthReqDuration >= 0);
+        has = (ospvReauthReq->Duration >= 0);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPReauthReqSetDuration() - set the duration
  */
 void OSPPReauthReqSetDuration(      /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq,   /* usage indication to set */
+    OSPT_REAUTH_REQ *ospvReauthReq, /* usage indication to set */
     int ospvDuration)               /* duration to set to */
 {
     if (ospvReauthReq != OSPC_OSNULL) {
         if (ospvDuration >= 0) {
-            ospvReauthReq->ospmReauthReqDuration = ospvDuration;
+            ospvReauthReq->Duration = ospvDuration;
         }
     }
 }
 
 /*
- * OSPPReauthReqGetDuration() - returns the duration for a usage ind
+ * OSPPReauthReqGetDuration() - returns the duration for a usage
  */
 int OSPPReauthReqGetDuration(
-    OSPTREAUTHREQ *ospvReauthReq)   /* usage ind */
+    OSPT_REAUTH_REQ *ospvReauthReq)   /* usage */
 {
-    int ospvDuration = 0;
+    int duration = 0;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvDuration = ospvReauthReq->ospmReauthReqDuration;
+        duration = ospvReauthReq->Duration;
     }
-    return ospvDuration;
+    return duration;
 }
 
 /*
- * OSPPReauthReqAddToken() - adds a token to an authorisation indication
+ * OSPPReauthReqAddToken() - adds a token to an authorization indication
  */
 void OSPPReauthReqAddToken(         /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq,   /* authorisation indication */
-    OSPTTOKEN *ospvToken)           /* token to add */
+    OSPT_REAUTH_REQ *ospvReauthReq, /* authorization indication */
+    OSPT_TOKEN *ospvToken)          /* token to add */
 {
     if (ospvReauthReq != OSPC_OSNULL) {
-        OSPPListAppend(&(ospvReauthReq->ospmReauthReqTokens), ospvToken);
+        OSPPListAppend(&(ospvReauthReq->Tokens), ospvToken);
     }
 }
 
 /*
- * OSPPReauthReqFirstToken() - gets first token for authorisation indication
+ * OSPPReauthReqFirstToken() - gets first token for authorization indication
  */
-OSPTTOKEN *OSPPReauthReqFirstToken( /* returns null if none */
-    OSPTREAUTHREQ *ospvReauthReq)
+OSPT_TOKEN *OSPPReauthReqFirstToken(/* returns null if none */
+    OSPT_REAUTH_REQ *ospvReauthReq)
 {
-    OSPTTOKEN *ospvToken = OSPC_OSNULL;
+    OSPT_TOKEN *token = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvToken = (OSPTTOKEN *)OSPPListFirst(&(ospvReauthReq->ospmReauthReqTokens));
+        token = (OSPT_TOKEN *)OSPPListFirst(&(ospvReauthReq->Tokens));
     }
 
-    return ospvToken;
+    return token;
 }
 
 /*
- * OSPPReauthReqNextToken() - gets next token (in list) for authorisation indication
+ * OSPPReauthReqNextToken() - gets next token (in list) for authorization indication
  */
-OSPTTOKEN *OSPPReauthReqNextToken(  /* returns NULL if no more */
-    OSPTREAUTHREQ *ospvReauthReq,   /* authorisation indication */
-    OSPTTOKEN *ospvToken)           /* current token */
+OSPT_TOKEN *OSPPReauthReqNextToken( /* returns NULL if no more */
+    OSPT_REAUTH_REQ *ospvReauthReq, /* authorization indication */
+    OSPT_TOKEN *ospvToken)          /* current token */
 {
-    OSPTTOKEN *ospvNextToken = OSPC_OSNULL;
+    OSPT_TOKEN *nexttoken = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL) {
         if (ospvToken != OSPC_OSNULL) {
-            ospvNextToken = (OSPTTOKEN *)OSPPListNext(&(ospvReauthReq->ospmReauthReqTokens), ospvToken);
+            nexttoken = (OSPT_TOKEN *)OSPPListNext(&(ospvReauthReq->Tokens), ospvToken);
         }
     }
 
-    return ospvNextToken;
+    return nexttoken;
 }
 
 /*
  * OSPPReauthReqHasComponentId() - is the component id set ?
  */
 OSPTBOOL OSPPReauthReqHasComponentId(   /* returns non-zero if component id is set */
-    OSPTREAUTHREQ *ospvReauthReq)
+    OSPT_REAUTH_REQ *ospvReauthReq)
 {
     if (ospvReauthReq != OSPC_OSNULL) {
-        return (ospvReauthReq->ospmReauthReqComponentId != OSPC_OSNULL);
+        return (ospvReauthReq->ComponentId != OSPC_OSNULL);
     } else {
         return OSPC_FALSE;
     }
@@ -320,95 +320,95 @@ OSPTBOOL OSPPReauthReqHasComponentId(   /* returns non-zero if component id is s
  * OSPPReauthReqGetComponentId() - returns a new copy of the component id.
  */
 const char *OSPPReauthReqGetComponentId(
-    OSPTREAUTHREQ *ospvReauthReq)
+    OSPT_REAUTH_REQ *ospvReauthReq)
 {
     const char *componentstring = OSPC_OSNULL;
     int len;
 
     if (OSPPReauthReqHasComponentId(ospvReauthReq)) {
-        len = OSPM_STRLEN(ospvReauthReq->ospmReauthReqComponentId);
+        len = OSPM_STRLEN(ospvReauthReq->ComponentId);
         OSPM_MALLOC(componentstring, char, len + 1);
         OSPM_MEMSET(componentstring, 0, len + 1);
-        OSPM_MEMCPY(componentstring, ospvReauthReq->ospmReauthReqComponentId, len);
+        OSPM_MEMCPY(componentstring, ospvReauthReq->ComponentId, len);
     }
 
     return componentstring;
 }
 
 /*
- * OSPPReauthReqSetCallId() - sets the call ID for a reauthorisation
+ * OSPPReauthReqSetCallId() - sets the call ID for a reauthorization
  */
 void OSPPReauthReqSetCallId(        /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq,   /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq, /* authorization request */
     OSPT_CALL_ID *ospvCallId)       /* call ID to set */
 {
     if (ospvReauthReq != OSPC_OSNULL) {
         if (ospvCallId != OSPC_OSNULL) {
-            if (ospvReauthReq->ospmReauthReqCallId != OSPC_OSNULL) {
-                OSPPCallIdDelete(&(ospvReauthReq->ospmReauthReqCallId));
+            if (ospvReauthReq->CallId != OSPC_OSNULL) {
+                OSPPCallIdDelete(&(ospvReauthReq->CallId));
             }
-            ospvReauthReq->ospmReauthReqCallId = OSPPCallIdNew(ospvCallId->ospmCallIdLen, ospvCallId->ospmCallIdVal);
+            ospvReauthReq->CallId = OSPPCallIdNew(ospvCallId->Length, ospvCallId->Value);
         }
     }
 }
 
 /*
  * OSPPReauthReqAddSourceAlt() - add a source alternate to an
- * authorisation request
+ * authorization request
  */
 void OSPPReauthReqAddSourceAlt(
-    OSPTREAUTHREQ *ospvReauthReq,   /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq, /* authorization request */
     OSPT_ALTINFO *ospvAltInfo)      /* altinfo to add */
 {
     if ((ospvReauthReq != OSPC_OSNULL) && (ospvAltInfo != OSPC_OSNULL)) {
-        OSPPListAppend(&(ospvReauthReq->ospmReauthReqSourceAlternate), ospvAltInfo);
+        OSPPListAppend(&(ospvReauthReq->SourceAlternate), ospvAltInfo);
     }
 }
 
 /*
- * OSPPReauthReqHasSourceAlt() - does an authorisation request have a
+ * OSPPReauthReqHasSourceAlt() - does an authorization request have a
  * Source Alternate?
  */
 OSPTBOOL OSPPReauthReqHasSourceAlt(     /* returns non-zero if exists */
-    OSPTREAUTHREQ *ospvReauthReq)       /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq)     /* authorization request */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHas = (OSPPReauthReqFirstSourceAlt(ospvReauthReq) != OSPC_OSNULL);
+        has = (OSPPReauthReqFirstSourceAlt(ospvReauthReq) != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPReauthReqFirstSourceAlt() - gets the First Source alternate for an
- * authorisation request
+ * authorization request
  */
-OSPT_ALTINFO *OSPPReauthReqFirstSourceAlt(  /* returns alt info pointer */
-    OSPTREAUTHREQ *ospvReauthReq)           /* authorisation request */
+OSPT_ALTINFO *OSPPReauthReqFirstSourceAlt(  /* returns altinfo pointer */
+    OSPT_REAUTH_REQ *ospvReauthReq)         /* authorization request */
 {
-    OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
+    OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvAltInfo = (OSPT_ALTINFO *)OSPPListFirst(&((ospvReauthReq)->ospmReauthReqSourceAlternate));
+        altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvReauthReq->SourceAlternate));
     }
 
-    return ospvAltInfo;
+    return altinfo;
 }
 
 /*
  * OSPPReauthReqNextSourceAlt() - gets the next source alternate for an
- * authorisation request
+ * authorization request
  */
-OSPT_ALTINFO *OSPPReauthReqNextSourceAlt(   /* returns alt info pointer */
-    OSPTREAUTHREQ *ospvReauthReq,           /* authorisation request */
+OSPT_ALTINFO *OSPPReauthReqNextSourceAlt(   /* returns altinfo pointer */
+    OSPT_REAUTH_REQ *ospvReauthReq,         /* authorization request */
     OSPT_ALTINFO *ospvAltInfo)
 {
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        altinfo = (OSPT_ALTINFO *)OSPPListNext(&((ospvReauthReq)->ospmReauthReqSourceAlternate), ospvAltInfo);
+        altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvReauthReq->SourceAlternate), ospvAltInfo);
     }
 
     return altinfo;
@@ -416,72 +416,72 @@ OSPT_ALTINFO *OSPPReauthReqNextSourceAlt(   /* returns alt info pointer */
 
 /*
  * OSPPReauthReqAddDestinationAlt() - add a destination alternate to an
- * authorisation request
+ * authorization request
  */
 void OSPPReauthReqAddDestinationAlt(
-    OSPTREAUTHREQ *ospvReauthReq,   /* authorisation request */
-    OSPT_ALTINFO *ospvAltInfo)      /* altinfo struct */
+    OSPT_REAUTH_REQ *ospvReauthReq, /* authorization request */
+    OSPT_ALTINFO *ospvAltInfo)      /* altinfo structure */
 {
 
     if ((ospvReauthReq != OSPC_OSNULL) && (ospvAltInfo != OSPC_OSNULL)) {
-        OSPPListAppend(&(ospvReauthReq->ospmReauthReqDestinationAlternate), (ospvAltInfo));
+        OSPPListAppend(&(ospvReauthReq->DestinationAlternate), ospvAltInfo);
     }
 }
 
 /*
- * OSPPReauthReqHasDestinationAlt() - does an authorisation request have a
+ * OSPPReauthReqHasDestinationAlt() - does an authorization request have a
  * Destination Alternate?
  */
 OSPTBOOL OSPPReauthReqHasDestinationAlt(/* returns non-zero if exists */
-    OSPTREAUTHREQ *ospvReauthReq)       /* authorisation request */
+    OSPT_REAUTH_REQ *ospvReauthReq)     /* authorization request */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHas = (OSPPReauthReqFirstDestinationAlt(ospvReauthReq) != OSPC_OSNULL);
+        has = (OSPPReauthReqFirstDestinationAlt(ospvReauthReq) != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPReauthReqFirstDestinationAlt() - gets the First Destination alternate for an
- * authorisation request
+ * authorization request
  */
-OSPT_ALTINFO *OSPPReauthReqFirstDestinationAlt(     /* returns alt info pointer */
-    OSPTREAUTHREQ *ospvReauthReq)                   /* authorisation request */
-{
-    OSPT_ALTINFO *ospvAltInfo = OSPC_OSNULL;
-
-    if (ospvReauthReq != OSPC_OSNULL) {
-        ospvAltInfo = (OSPT_ALTINFO *)OSPPListFirst(&((ospvReauthReq)->ospmReauthReqDestinationAlternate));
-    }
-
-    return ospvAltInfo;
-}
-
-/*
- * OSPPReauthReqNextDestinationAlt() - gets the next Destination alternate for an
- * authorisation request
- */
-OSPT_ALTINFO *OSPPReauthReqNextDestinationAlt(  /* returns alt info pointer */
-    OSPTREAUTHREQ *ospvReauthReq,               /* authorisation request */
-    OSPT_ALTINFO *ospvAltInfo)
+OSPT_ALTINFO *OSPPReauthReqFirstDestinationAlt(     /* returns altinfo pointer */
+    OSPT_REAUTH_REQ *ospvReauthReq)                 /* authorization request */
 {
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        altinfo = (OSPT_ALTINFO *)OSPPListNext(&((ospvReauthReq)->ospmReauthReqDestinationAlternate), ospvAltInfo);
+        altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvReauthReq->DestinationAlternate));
     }
 
     return altinfo;
 }
 
 /*
- * OSPPReauthReqGetDestinationAltValue() - gets the Destination alternate value for an authorisation request
+ * OSPPReauthReqNextDestinationAlt() - gets the next Destination alternate for an
+ * authorization request
+ */
+OSPT_ALTINFO *OSPPReauthReqNextDestinationAlt(  /* returns altinfo pointer */
+    OSPT_REAUTH_REQ *ospvReauthReq,             /* authorization request */
+    OSPT_ALTINFO *ospvAltInfo)
+{
+    OSPT_ALTINFO *altinfo = OSPC_OSNULL;
+
+    if (ospvReauthReq != OSPC_OSNULL) {
+        altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvReauthReq->DestinationAlternate), ospvAltInfo);
+    }
+
+    return altinfo;
+}
+
+/*
+ * OSPPReauthReqGetDestinationAltValue() - gets the Destination alternate value for an authorization request
  */
 const char *OSPPReauthReqGetDestinationAltValue(    /* returns alt info value */
-    OSPT_ALTINFO *ospvAltInfo)                      /* Alt info ptr */
+    OSPT_ALTINFO *ospvAltInfo)                      /* altinfo ptr */
 {
     const char *ospvAltInfoValue = OSPC_OSNULL;
 
@@ -493,65 +493,65 @@ const char *OSPPReauthReqGetDestinationAltValue(    /* returns alt info value */
 }
 
 /*
- * OSPPReauthReqDelete() - deletes an authorisation request structure
+ * OSPPReauthReqDelete() - deletes an authorization request structure
  */
 void OSPPReauthReqDelete(
-    OSPTREAUTHREQ **ospvReauthReq)
+    OSPT_REAUTH_REQ **ospvReauthReq)
 {
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
-    OSPTTOKEN *token = OSPC_OSNULL;
+    OSPT_TOKEN *token = OSPC_OSNULL;
 
     if (*ospvReauthReq) {
-        if ((*ospvReauthReq)->ospmReauthReqCallId != OSPC_OSNULL) {
-            OSPPCallIdDelete(&((*ospvReauthReq)->ospmReauthReqCallId));
+        if ((*ospvReauthReq)->CallId != OSPC_OSNULL) {
+            OSPPCallIdDelete(&((*ospvReauthReq)->CallId));
         }
 
-        while (!OSPPListEmpty(&((*ospvReauthReq)->ospmReauthReqSourceAlternate))) {
-            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvReauthReq)->ospmReauthReqSourceAlternate));
+        while (!OSPPListEmpty(&((*ospvReauthReq)->SourceAlternate))) {
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvReauthReq)->SourceAlternate));
             if (altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
             }
         }
 
-        OSPPListDelete(&((*ospvReauthReq)->ospmReauthReqSourceAlternate));
+        OSPPListDelete(&((*ospvReauthReq)->SourceAlternate));
 
-        while (!OSPPListEmpty(&((*ospvReauthReq)->ospmReauthReqDevInfo))) {
-            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvReauthReq)->ospmReauthReqDevInfo));
+        while (!OSPPListEmpty(&((*ospvReauthReq)->DeviceInfo))) {
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvReauthReq)->DeviceInfo));
             if (altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
             }
         }
 
-        OSPPListDelete(&((*ospvReauthReq)->ospmReauthReqDevInfo));
+        OSPPListDelete(&((*ospvReauthReq)->DeviceInfo));
 
-        while (!OSPPListEmpty(&((*ospvReauthReq)->ospmReauthReqDestinationAlternate))) {
-            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvReauthReq)->ospmReauthReqDestinationAlternate));
+        while (!OSPPListEmpty(&((*ospvReauthReq)->DestinationAlternate))) {
+            altinfo = (OSPT_ALTINFO *)OSPPListRemove(&((*ospvReauthReq)->DestinationAlternate));
             if (altinfo != OSPC_OSNULL) {
                 OSPM_FREE(altinfo);
                 altinfo = OSPC_OSNULL;
             }
         }
 
-        OSPPListDelete(&((*ospvReauthReq)->ospmReauthReqDestinationAlternate));
+        OSPPListDelete(&((*ospvReauthReq)->DestinationAlternate));
 
-        while (!OSPPListEmpty(&((*ospvReauthReq)->ospmReauthReqTokens))) {
-            token = (OSPTTOKEN *)OSPPListRemove(&((*ospvReauthReq)->ospmReauthReqTokens));
+        while (!OSPPListEmpty(&((*ospvReauthReq)->Tokens))) {
+            token = (OSPT_TOKEN *)OSPPListRemove(&((*ospvReauthReq)->Tokens));
             if (token != OSPC_OSNULL) {
                 OSPPTokenDelete(&token);
             }
         }
 
         if (OSPPReauthReqHasMessageId(*ospvReauthReq)) {
-            OSPM_FREE((*ospvReauthReq)->ospmReauthReqMessageId);
+            OSPM_FREE((*ospvReauthReq)->MessageId);
         }
 
         if (OSPPReauthReqHasComponentId(*ospvReauthReq)) {
-            OSPM_FREE((*ospvReauthReq)->ospmReauthReqComponentId);
+            OSPM_FREE((*ospvReauthReq)->ComponentId);
         }
 
-        OSPPListDelete(&((*ospvReauthReq)->ospmReauthReqTokens));
+        OSPPListDelete(&((*ospvReauthReq)->Tokens));
 
         OSPM_FREE(*ospvReauthReq);
         *ospvReauthReq = OSPC_OSNULL;
@@ -559,48 +559,48 @@ void OSPPReauthReqDelete(
 }
 
 /*
- * OSPPReauthReqNew() - creates a new (empty) authorisation request
+ * OSPPReauthReqNew() - creates a new (empty) authorization request
  */
-OSPTREAUTHREQ *OSPPReauthReqNew(void)   /* returns pointer or NULL */
+OSPT_REAUTH_REQ *OSPPReauthReqNew(void)   /* returns pointer or NULL */
 
 {
-    OSPTREAUTHREQ *ospvReauthReq = OSPC_OSNULL;
+    OSPT_REAUTH_REQ *reauthreq = OSPC_OSNULL;
 
-    OSPM_MALLOC(ospvReauthReq, OSPTREAUTHREQ, sizeof(OSPTREAUTHREQ));
-    if (ospvReauthReq != OSPC_OSNULL) {
-        ospvReauthReq->ospmReauthReqTimestamp = OSPC_TIMEMIN;
-        ospvReauthReq->ospmReauthReqHasRole = OSPC_FALSE;
-        ospvReauthReq->ospmReauthReqCallId = OSPC_OSNULL;
-        ospvReauthReq->ospmReauthReqSourceNumber[0] = '\0';
-        ospvReauthReq->ospmReauthReqDestNumber[0] = '\0';
-        OSPPListNew(&ospvReauthReq->ospmReauthReqSourceAlternate);
-        OSPPListNew(&ospvReauthReq->ospmReauthReqDevInfo);
-        OSPPListNew(&ospvReauthReq->ospmReauthReqDestinationAlternate);
-        ospvReauthReq->ospmReauthReqTrxId = 0;
-        ospvReauthReq->ospmReauthReqDuration = -1;
-        OSPPListNew(&ospvReauthReq->ospmReauthReqTokens);
-        ospvReauthReq->ospmReauthReqCustId = 0;
-        ospvReauthReq->ospmReauthReqDeviceId = 0;
-        ospvReauthReq->ospmReauthReqComponentId = OSPC_OSNULL;
-        ospvReauthReq->ospmReauthReqMessageId = OSPC_OSNULL;
+    OSPM_MALLOC(reauthreq, OSPT_REAUTH_REQ, sizeof(OSPT_REAUTH_REQ));
+    if (reauthreq != OSPC_OSNULL) {
+        reauthreq->Timestamp = OSPC_TIMEMIN;
+        reauthreq->HasRole = OSPC_FALSE;
+        reauthreq->CallId = OSPC_OSNULL;
+        reauthreq->SourceNumber[0] = '\0';
+        reauthreq->DestinationNumber[0] = '\0';
+        OSPPListNew(&reauthreq->SourceAlternate);
+        OSPPListNew(&reauthreq->DeviceInfo);
+        OSPPListNew(&reauthreq->DestinationAlternate);
+        reauthreq->TrxId = 0;
+        reauthreq->Duration = -1;
+        OSPPListNew(&reauthreq->Tokens);
+        reauthreq->CustomerId = 0;
+        reauthreq->DeviceId = 0;
+        reauthreq->ComponentId = OSPC_OSNULL;
+        reauthreq->MessageId = OSPC_OSNULL;
     }
 
-    return ospvReauthReq;
+    return reauthreq;
 }
 
 /*
- * OSPPReauthReqToElement() - create an XML element from a reauthorisation
+ * OSPPReauthReqToElement() - create an XML element from a reauthorization
  * request
  */
 int OSPPReauthReqToElement(         /* returns error code */
-    OSPTREAUTHREQ *ospvReauthReq,   /* authorisation request value */
+    OSPT_REAUTH_REQ *ospvReauthReq, /* authorization request value */
     OSPT_XML_ELEM **ospvElem,       /* where to put XML element pointer */
     void *ospvtrans)
 {
-    int ospvErrCode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL, *reauthelem = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
-    OSPTTOKEN *token = OSPC_OSNULL;
+    OSPT_TOKEN *token = OSPC_OSNULL;
     OSPTTRXID trxid = 0L;
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
     char random[OSPC_MAX_RANDOM];
@@ -611,34 +611,34 @@ int OSPPReauthReqToElement(         /* returns error code */
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     } else {
         *ospvElem = OSPC_OSNULL;
     }
     if (ospvReauthReq == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_DATA_NO_REAUTHREQ;
+        errcode = OSPC_ERR_DATA_NO_REAUTHREQ;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* create the "Message" element as the parent */
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_MESSAGE), "");
         if (*ospvElem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID),
-                OSPPReauthReqHasMessageId(ospvReauthReq) ? (const char *)(ospvReauthReq->ospmReauthReqMessageId) : "NULL");
+                OSPPReauthReqHasMessageId(ospvReauthReq) ? (const char *)(ospvReauthReq->MessageId) : "NULL");
             if (attr == OSPC_OSNULL) {
-                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                errcode = OSPC_ERR_XML_NO_ATTR;
             } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
             }
 
             /* random */
-            if ((OSPPUtilGetRandom(random, 0) > 0) && (ospvErrCode == OSPC_ERR_NO_ERROR)) {
+            if ((OSPPUtilGetRandom(random, 0) > 0) && (errcode == OSPC_ERR_NO_ERROR)) {
                 attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_RANDOM), (const char *)random);
                 if (attr == OSPC_OSNULL) {
-                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                    errcode = OSPC_ERR_XML_NO_ATTR;
                 } else {
                     OSPPXMLElemAddAttr(*ospvElem, attr);
                     attr = OSPC_OSNULL;
@@ -647,21 +647,21 @@ int OSPPReauthReqToElement(         /* returns error code */
         }
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* now the message type element */
         reauthelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_REAUTHREQ), "");
         if (*ospvElem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         }
     }
     /*
      * now add the attributes to the type element -- in this case the component id
      */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_COMPONENTID),
-            OSPPReauthReqHasComponentId(ospvReauthReq) ? (const char *)(ospvReauthReq->ospmReauthReqComponentId) : "NULL");
+            OSPPReauthReqHasComponentId(ospvReauthReq) ? (const char *)(ospvReauthReq->ComponentId) : "NULL");
         if (attr == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+            errcode = OSPC_ERR_XML_NO_ATTR;
         } else {
             OSPPXMLElemAddAttr(reauthelem, attr);
         }
@@ -669,46 +669,46 @@ int OSPPReauthReqToElement(         /* returns error code */
 
     /* now add the children */
     /* add timestamp  */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasTimestamp(ospvReauthReq)) {
-        ospvErrCode = OSPPMsgTimeToElement(OSPPReauthReqGetTimestamp(ospvReauthReq), OSPPMsgElemGetName(OSPC_MELEM_TIMESTAMP), &elem);
+    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasTimestamp(ospvReauthReq)) {
+        errcode = OSPPMsgTimeToElement(OSPPReauthReqGetTimestamp(ospvReauthReq), OSPPMsgElemGetName(OSPC_MELEM_TIMESTAMP), &elem);
     }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         OSPPXMLElemAddChild(reauthelem, elem);
     }
 
     /* add role  */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasRole(ospvReauthReq)) {
-        ospvErrCode = OSPPStringToElement(OSPC_MELEM_ROLE, OSPPRoleGetName(OSPPReauthReqGetRole(ospvReauthReq)), 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasRole(ospvReauthReq)) {
+        errcode = OSPPStringToElement(OSPC_MELEM_ROLE, OSPPRoleGetName(OSPPReauthReqGetRole(ospvReauthReq)), 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(reauthelem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
     /* add the call ID */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasCallId(ospvReauthReq)) {
-        ospvErrCode = OSPPCallIdToElement(OSPPReauthReqGetCallId(ospvReauthReq), &elem, isbase64);
+    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasCallId(ospvReauthReq)) {
+        errcode = OSPPCallIdToElement(OSPPReauthReqGetCallId(ospvReauthReq), &elem, isbase64);
     }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         OSPPXMLElemAddChild(reauthelem, elem);
     }
 
     /* add the source number */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPCallPartyNumToElement(OSPC_MELEM_SRCINFO, OSPPReauthReqGetSourceNumber(ospvReauthReq), trans->CallingNumberFormat, &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPCallPartyNumToElement(OSPC_MELEM_SRCINFO, OSPPReauthReqGetSourceNumber(ospvReauthReq), trans->CallingNumberFormat, &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(reauthelem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
     /* add the device info element */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvReauthReq->ospmReauthReqDevInfo != NULL)) {
-        for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvReauthReq->ospmReauthReqDevInfo));
-             ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR));
-             altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvReauthReq->ospmReauthReqDevInfo), altinfo)) {
-            ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && (ospvReauthReq->DeviceInfo != NULL)) {
+        for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvReauthReq->DeviceInfo));
+             ((altinfo != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR));
+             altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvReauthReq->DeviceInfo), altinfo)) {
+            errcode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(reauthelem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -716,11 +716,11 @@ int OSPPReauthReqToElement(         /* returns error code */
     }
 
     /* add the source alternates */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasSourceAlt(ospvReauthReq)) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasSourceAlt(ospvReauthReq)) {
         for (altinfo = OSPPReauthReqFirstSourceAlt(ospvReauthReq);
-             ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR)); altinfo = OSPPReauthReqNextSourceAlt(ospvReauthReq, altinfo)) {
-            ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+             ((altinfo != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR)); altinfo = OSPPReauthReqNextSourceAlt(ospvReauthReq, altinfo)) {
+            errcode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(reauthelem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -728,20 +728,20 @@ int OSPPReauthReqToElement(         /* returns error code */
     }
 
     /* add the dest number */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPCallPartyNumToElement(OSPC_MELEM_DESTINFO, OSPPReauthReqGetDestNumber(ospvReauthReq), trans->CalledNumberFormat, &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPCallPartyNumToElement(OSPC_MELEM_DESTINFO, OSPPReauthReqGetDestNumber(ospvReauthReq), trans->CalledNumberFormat, &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(reauthelem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
     /* add the destination alternates */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasDestinationAlt(ospvReauthReq)) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasDestinationAlt(ospvReauthReq)) {
         for (altinfo = OSPPReauthReqFirstDestinationAlt(ospvReauthReq);
-             ((altinfo != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR)); altinfo = OSPPReauthReqNextDestinationAlt(ospvReauthReq, altinfo)) {
-            ospvErrCode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DESTALT);
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+             ((altinfo != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR)); altinfo = OSPPReauthReqNextDestinationAlt(ospvReauthReq, altinfo)) {
+            errcode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DESTALT);
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(reauthelem, elem);
                 elem = OSPC_OSNULL;
             }
@@ -749,56 +749,56 @@ int OSPPReauthReqToElement(         /* returns error code */
     }
 
     /* add the transaction ID */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasTrxId(ospvReauthReq)) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasTrxId(ospvReauthReq)) {
         trxid = OSPPReauthReqGetTrxId(ospvReauthReq);
-        ospvErrCode = OSPPMsgTXToElement(trxid, OSPPMsgElemGetName(OSPC_MELEM_TRANSID), &elem);
+        errcode = OSPPMsgTXToElement(trxid, OSPPMsgElemGetName(OSPC_MELEM_TRANSID), &elem);
     }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         OSPPXMLElemAddChild(reauthelem, elem);
     }
 
     /* add usage detail (if appropriate) */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasDuration(ospvReauthReq)) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasDuration(ospvReauthReq)) {
         /* Create usage detail element */
         elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_USAGEDETAIL), "");
         if (elem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
-            ospvErrCode = OSPPUsageToElement((unsigned)OSPPReauthReqGetDuration(ospvReauthReq), 0, 0, 0, 0, 0, 0, 0, elem);
+            errcode = OSPPUsageToElement((unsigned)OSPPReauthReqGetDuration(ospvReauthReq), 0, 0, 0, 0, 0, 0, 0, elem);
         }
 
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(reauthelem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* add any tokens */
-        for (token = (OSPTTOKEN *)OSPPReauthReqFirstToken(ospvReauthReq);
-             ((token != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR)); token =
-             (OSPTTOKEN *)OSPPReauthReqNextToken(ospvReauthReq, token))
+        for (token = (OSPT_TOKEN *)OSPPReauthReqFirstToken(ospvReauthReq);
+             ((token != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR)); token =
+             (OSPT_TOKEN *)OSPPReauthReqNextToken(ospvReauthReq, token))
         {
-            ospvErrCode = OSPPTokenToElement(token, &elem);
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            errcode = OSPPTokenToElement(token, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(reauthelem, elem);
             }
         }
     }
 
     /* now add the transnexus extensions (if available) */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if (OSPPReauthReqHasCustId(ospvReauthReq)) {
-            ospvErrCode = OSPPMsgNumToElement(OSPPReauthReqGetCustId(ospvReauthReq), OSPPMsgElemGetName(OSPC_MELEM_CUSTID), &elem);
+            errcode = OSPPMsgNumToElement(OSPPReauthReqGetCustId(ospvReauthReq), OSPPMsgElemGetName(OSPC_MELEM_CUSTID), &elem);
 
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(reauthelem, elem);
                 elem = OSPC_OSNULL;
 
                 if (OSPPReauthReqHasDeviceId(ospvReauthReq)) {
-                    ospvErrCode = OSPPMsgNumToElement(OSPPReauthReqGetDeviceId(ospvReauthReq), OSPPMsgElemGetName(OSPC_MELEM_DEVICEID), &elem);
+                    errcode = OSPPMsgNumToElement(OSPPReauthReqGetDeviceId(ospvReauthReq), OSPPMsgElemGetName(OSPC_MELEM_DEVICEID), &elem);
 
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(reauthelem, elem);
                         elem = OSPC_OSNULL;
                     }
@@ -809,23 +809,23 @@ int OSPPReauthReqToElement(         /* returns error code */
 
     /* Add user-defined info */
     for (i = 0; i < OSPC_MAX_INDEX; i++) {
-        if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (trans->CustomInfo[i] != OSPC_OSNULL) && (trans->CustomInfo[i][0] != '\0')) {
-            ospvErrCode = OSPPCustomInfoToElement(i, trans->CustomInfo[i], &elem);
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->CustomInfo[i] != OSPC_OSNULL) && (trans->CustomInfo[i][0] != '\0')) {
+            errcode = OSPPCustomInfoToElement(i, trans->CustomInfo[i], &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(reauthelem, elem);
                 elem = OSPC_OSNULL;
             }
         }
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* Now add the reauthelem to the main elem */
         OSPPXMLElemAddChild(*ospvElem, reauthelem);
         reauthelem = OSPC_OSNULL;
     }
 
     /* if for any reason we found an error - destroy any elements created */
-    if (ospvErrCode != OSPC_ERR_NO_ERROR) {
+    if (errcode != OSPC_ERR_NO_ERROR) {
         if (*ospvElem != OSPC_OSNULL) {
             OSPPXMLElemDelete(ospvElem);
         }
@@ -843,47 +843,47 @@ int OSPPReauthReqToElement(         /* returns error code */
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
  * OSPPReauthReqHasRole() - Does reauthrequest have role set?
  */
 OSPTBOOL OSPPReauthReqHasRole(      /* returns non-zero if time */
-    OSPTREAUTHREQ *ospvReauthReq)   /* reauth request in question */
+    OSPT_REAUTH_REQ *ospvReauthReq)   /* reauth request in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHas = (ospvReauthReq->ospmReauthReqHasRole != OSPC_FALSE);
+        has = (ospvReauthReq->HasRole != OSPC_FALSE);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPReauthReqGetRole() - returns role for an reauth request
  */
 OSPE_ROLE OSPPReauthReqGetRole(     /* returns the role (OGW/TGW) */
-    OSPTREAUTHREQ *ospvReauthReq)   /* reauth request */
+    OSPT_REAUTH_REQ *ospvReauthReq) /* reauth request */
 {
-    OSPE_ROLE ospvRole = OSPC_ROLE_UNDEFINED;
+    OSPE_ROLE role = OSPC_ROLE_UNDEFINED;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvRole = (OSPE_ROLE)ospvReauthReq->ospmReauthReqRole;
+        role = (OSPE_ROLE)ospvReauthReq->Role;
     }
 
-    return ospvRole;
+    return role;
 }
 
 /*
- * OSPPReauthReqSetRole() - sets value for role in reauthorisation request
+ * OSPPReauthReqSetRole() - sets value for role in reauthorization request
  */
-void OSPPReauthReqSetRole(OSPTREAUTHREQ *ospvReauthReq, OSPE_ROLE ospvRole)
+void OSPPReauthReqSetRole(OSPT_REAUTH_REQ *ospvReauthReq, OSPE_ROLE ospvRole)
 {
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvReauthReq->ospmReauthReqHasRole = OSPC_TRUE;
-        ospvReauthReq->ospmReauthReqRole = ospvRole;
+        ospvReauthReq->HasRole = OSPC_TRUE;
+        ospvReauthReq->Role = ospvRole;
     }
 }
 
@@ -891,26 +891,26 @@ void OSPPReauthReqSetRole(OSPTREAUTHREQ *ospvReauthReq, OSPE_ROLE ospvRole)
  * OSPPReauthReqHasCustId() - Does reauthreq have a Customer Id?
  */
 OSPTBOOL OSPPReauthReqHasCustId(    /* returns non-zero if true */
-    OSPTREAUTHREQ *ospvReauthReq)   /* reauthreq in question */
+    OSPT_REAUTH_REQ *ospvReauthReq) /* reauthreq in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHas = (ospvReauthReq->ospmReauthReqCustId != 0L);
+        has = (ospvReauthReq->CustomerId != 0L);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPReauthReqSetCustId() - Set Customer Id
  */
 void OSPPReauthReqSetCustId(    /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq,
+    OSPT_REAUTH_REQ *ospvReauthReq,
     unsigned long ospvCustId)
 {
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvReauthReq->ospmReauthReqCustId = ospvCustId;
+        ospvReauthReq->CustomerId = ospvCustId;
     }
 }
 
@@ -918,41 +918,41 @@ void OSPPReauthReqSetCustId(    /* nothing returned */
  * OSPPReauthReqGetCustId() - returns Customer Id for a reauthreq
  */
 unsigned long OSPPReauthReqGetCustId(   /* returns the cust id */
-    OSPTREAUTHREQ *ospvReauthReq)       /* usage request */
+    OSPT_REAUTH_REQ *ospvReauthReq)     /* usage request */
 {
-    unsigned long ospvCustId = 0L;
+    unsigned long customerid = 0L;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvCustId = ospvReauthReq->ospmReauthReqCustId;
+        customerid = ospvReauthReq->CustomerId;
     }
 
-    return ospvCustId;
+    return customerid;
 }
 
 /*
  * OSPPReauthReqHasDeviceId() - Does request have a Device Id?
  */
 OSPTBOOL OSPPReauthReqHasDeviceId(      /* returns non-zero if true */
-    OSPTREAUTHREQ *ospvReauthReq)       /* reauthrequest in question */
+    OSPT_REAUTH_REQ *ospvReauthReq)     /* reauthrequest in question */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvHas = (ospvReauthReq->ospmReauthReqDeviceId != 0L);
+        has = (ospvReauthReq->DeviceId != 0L);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPReauthReqSetTNDeviceId() - Set Device Id
  */
 void OSPPReauthReqSetDeviceId(  /* nothing returned */
-    OSPTREAUTHREQ *ospvReauthReq,
+    OSPT_REAUTH_REQ *ospvReauthReq,
     unsigned long ospvDeviceId)
 {
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvReauthReq->ospmReauthReqDeviceId = ospvDeviceId;
+        ospvReauthReq->DeviceId = ospvDeviceId;
     }
 }
 
@@ -960,25 +960,25 @@ void OSPPReauthReqSetDeviceId(  /* nothing returned */
  * OSPPReauthReqGetDeviceId() - returns Device Id for an reauth request
  */
 unsigned long OSPPReauthReqGetDeviceId( /* returns the device id */
-    OSPTREAUTHREQ *ospvReauthReq)       /* reauth request */
+    OSPT_REAUTH_REQ *ospvReauthReq)     /* reauth request */
 {
-    unsigned long ospvDeviceId = 0L;
+    unsigned long deviceid = 0L;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        ospvDeviceId = (ospvReauthReq)->ospmReauthReqDeviceId;
+        deviceid = (ospvReauthReq)->DeviceId;
     }
 
-    return ospvDeviceId;
+    return deviceid;
 }
 
 /*
  * OSPPReauthReqHasMessageId() - is the message id set ?
  */
 OSPTBOOL OSPPReauthReqHasMessageId( /* returns non-zero if message id is set */
-    OSPTREAUTHREQ *ospvReauthReq)
+    OSPT_REAUTH_REQ *ospvReauthReq)
 {
     if (ospvReauthReq != OSPC_OSNULL) {
-        return (ospvReauthReq->ospmReauthReqMessageId != OSPC_OSNULL);
+        return (ospvReauthReq->MessageId != OSPC_OSNULL);
     } else {
         return OSPC_FALSE;
     }

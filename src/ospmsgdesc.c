@@ -33,8 +33,8 @@ OSPT_MSG_PART OSPPMsgDescGetPart(
 
     if (ospvName != OSPC_OSNULL) {
         for (cnt = 0; cnt < ospvNumDesc; cnt++) {
-            if (OSPM_STRCMP(ospvDesc[cnt].ospmMsgDescName, ospvName) == 0) {
-                ospvPart = ospvDesc[cnt].ospmMsgDescPart;
+            if (OSPM_STRCMP(ospvDesc[cnt].Name, ospvName) == 0) {
+                ospvPart = ospvDesc[cnt].Part;
                 break;
             }
         }
@@ -55,8 +55,8 @@ const char *OSPPMsgDescGetName(     /* returns the name found or NULL */
     unsigned cnt;
 
     for (cnt = 0; cnt < ospvNumDesc; cnt++) {
-        if (ospvDesc[cnt].ospmMsgDescPart == ospvPart) {
-            ospvName = ospvDesc[cnt].ospmMsgDescName;
+        if (ospvDesc[cnt].Part == ospvPart) {
+            ospvName = ospvDesc[cnt].Name;
             break;
         }
     }

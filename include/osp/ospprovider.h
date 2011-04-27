@@ -45,8 +45,8 @@ typedef struct _OSPTPROVIDER {
     unsigned char Flags;
     unsigned long CustId;
     unsigned long DeviceId;
-    OSPTTRANSID *TreeRoot;
-    OSPTTRANSID Sentinel;
+    OSPT_TRANS_ID *TreeRoot;
+    OSPT_TRANS_ID Sentinel;
     OSPTMUTEX TransIdMutex;
 } OSPTPROVIDER;
 
@@ -64,8 +64,8 @@ extern "C" {
     int OSPPProviderGetNewCollectionItem(OSPTPROVHANDLE *);
     void OSPPProviderGetNewTransactionAllowed(OSPTPROVIDER *, unsigned char *);
     int OSPPProviderGetTransactionCollection(OSPTPROVIDER *, struct _OSPTTRANCOLLECTION **);
-    OSPTTRANSID **OSPPProviderGetTransIdRoot(OSPTPROVIDER *);
-    OSPTTRANSID *OSPPProviderGetTransIdSentinel(OSPTPROVIDER *);
+    OSPT_TRANS_ID **OSPPProviderGetTransIdRoot(OSPTPROVIDER *);
+    OSPT_TRANS_ID *OSPPProviderGetTransIdSentinel(OSPTPROVIDER *);
     int OSPPProviderLockTransIdMutex(OSPTPROVIDER *);
     int OSPPProviderUnLockTransIdMutex(OSPTPROVIDER *);
     void OSPPProviderSetNewTransactionAllowed(OSPTPROVIDER *, unsigned char);

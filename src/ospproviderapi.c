@@ -315,7 +315,7 @@ int OSPPProviderGetLocalKeys(
  * Indicates whether to validate tokens locally or via a protocol exchange.
  *
  * The OSPPProviderGetLocalValidation function returns an indication of
- * whether or not ospvProvider is currently set to validate authorisation
+ * whether or not ospvProvider is currently set to validate authorization
  * tokens locally (i.e. by verifying their digital signature) or via a
  * protocol exchange. The return value is stored in the location pointed
  * to by ospvLocalValidation.
@@ -520,7 +520,7 @@ int OSPPProviderGetSSLLifetime(
  * authenticate the settlement provider server during the initial SSL exchange.
  *
  * ospvLocalValidation: a Boolean value to indicate whether or not the SDK
- * should validation authorisation tokens locally (i.e. by verifying digital
+ * should validation authorization tokens locally (i.e. by verifying digital
  * signatures) or via a protocol exchange.
  *
  * ospvSSLLifetime: the lifetime, in seconds, of a single SSL session key.
@@ -1063,7 +1063,7 @@ int OSPPProviderSetLocalKeys(
  * Set local validation on or off.
  *
  * The OSPPProviderSetLocalValidation funcitonindicates to opsvProvider
- * whether authorisation tokens should be validated locally (i.e. by
+ * whether authorization tokens should be validated locally (i.e. by
  * verifying their digital signature) or via a protocol exchange. The
  * parameter ospvLocalValidation is non-zero for local validation or zero
  * for remote validation.

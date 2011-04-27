@@ -15,7 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/* ospauthrsp.h - OSP authorisation response objects */
+/* ospauthrsp.h - OSP authorization response objects */
 #ifndef _OSPAUTHRSP_H
 #define _OSPAUTHRSP_H
 
@@ -31,19 +31,19 @@
 #include "osp/ospciscoext.h"
 
 typedef struct {
-    OSPTTIME ospmAuthRspTimestamp;
-    char *ospmAuthRspMessageId;
-    char *ospmAuthRspComponentId;
-    OSPTSTATUS *ospmAuthRspStatus;
-    OSPTTNAUDIT *ospmAuthRspTNAudit;
-    OSPTTRXID ospmAuthRspTrxId;
-    OSPTLIST ospmAuthRspDest;
-    unsigned ospmAuthRspDelayLimit;
-    unsigned ospmAuthRspDelayPref;
-    unsigned ospmNumDests;
-    OSPTCSAUDIT *ospmAuthRspCSAudit;
-    OSPE_ROLE ospmAuthRspRole;
-    OSPTBOOL ospmAuthRspHasRole;
+    OSPTTIME Timestamp;
+    char *MessageId;
+    char *ComponentId;
+    OSPT_STATUS *Status;
+    OSPT_TN_AUDIT *TNAudit;
+    OSPTTRXID TrxId;
+    OSPTLIST Destination;
+    unsigned DelayLimit;
+    unsigned DelayPref;
+    unsigned NumDestination;
+    OSPTCSAUDIT *CSAudit;
+    OSPE_ROLE Role;
+    OSPTBOOL HasRole;
 } OSPT_AUTH_RSP;
 
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)
@@ -96,7 +96,7 @@ extern "C" {
     const char *OSPPAuthRspGetMessageId(OSPT_AUTH_RSP *);
     void OSPPAuthRspSetTimestamp(OSPT_AUTH_RSP *, OSPTTIME);
     OSPTBOOL OSPPAuthRspHasStatus(OSPT_AUTH_RSP *);
-    OSPTSTATUS *OSPPAuthRspGetStatus(OSPT_AUTH_RSP *);
+    OSPT_STATUS *OSPPAuthRspGetStatus(OSPT_AUTH_RSP *);
     void OSPPAuthRspSetTrxId(OSPT_AUTH_RSP *, OSPTTRXID);
     OSPTBOOL OSPPAuthRspHasDelayLimit(OSPT_AUTH_RSP *);
     void OSPPAuthRspSetDelayLimit(OSPT_AUTH_RSP *, unsigned);
@@ -106,7 +106,7 @@ extern "C" {
     OSPTBOOL OSPPAuthRspHasNumDests(OSPT_AUTH_RSP *);
     void OSPPAuthRspIncNumDests(OSPT_AUTH_RSP *);
     unsigned OSPPAuthRspGetNumDests(OSPT_AUTH_RSP *);
-    OSPTTNAUDIT *OSPPAuthRspGetTNAudit(OSPT_AUTH_RSP *);
+    OSPT_TN_AUDIT *OSPPAuthRspGetTNAudit(OSPT_AUTH_RSP *);
     OSPTBOOL OSPPAuthRspHasCSAudit(OSPT_AUTH_RSP *);
     OSPTCSAUDIT *OSPPAuthRspGetCSAudit(OSPT_AUTH_RSP *);
     OSPTBOOL OSPPAuthRspHasRole(OSPT_AUTH_RSP *);

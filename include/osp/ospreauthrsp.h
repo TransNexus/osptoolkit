@@ -15,7 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/* ospreauthrsp.h - OSP reauthorisation response objects */
+/* ospreauthrsp.h - OSP reauthorization response objects */
 #ifndef _OSPREAUTHRSP_H
 #define _OSPREAUTHRSP_H
 
@@ -29,36 +29,36 @@
 #include "osp/osptnaudit.h"
 
 typedef struct {
-    OSPTTIME ospmReauthRspTimestamp;
-    char *ospmReauthRspMessageId;
-    char *ospmReauthRspComponentId;
-    OSPTSTATUS *ospmReauthRspStatus;
-    OSPTTRXID ospmReauthRspTrxId;
-    OSPT_DEST *ospmReauthRspDest;
-    OSPTTNAUDIT *ospmReauthRspTNAudit;
-} OSPTREAUTHRSP;
+    OSPTTIME Timestamp;
+    char *MessageId;
+    char *ComponentId;
+    OSPT_STATUS *Status;
+    OSPTTRXID TrxId;
+    OSPT_DEST *Destination;
+    OSPT_TN_AUDIT *TNAudit;
+} OSPT_REAUTH_RSP;
 
 /* Function Prototypes */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    OSPTREAUTHRSP *OSPPReauthRspNew(void);
-    void OSPPReauthRspDelete(OSPTREAUTHRSP **);
-    int OSPPReauthRspFromElement(OSPT_XML_ELEM *, OSPTREAUTHRSP **);
-    void OSPPReauthRspSetComponentId(OSPTREAUTHRSP *, const char *);
-    OSPTBOOL OSPPReauthRspHasMessageId(OSPTREAUTHRSP *);
-    void OSPPReauthRspSetMessageId(OSPTREAUTHRSP *, const char *);
+    OSPT_REAUTH_RSP *OSPPReauthRspNew(void);
+    void OSPPReauthRspDelete(OSPT_REAUTH_RSP **);
+    int OSPPReauthRspFromElement(OSPT_XML_ELEM *, OSPT_REAUTH_RSP **);
+    void OSPPReauthRspSetComponentId(OSPT_REAUTH_RSP *, const char *);
+    OSPTBOOL OSPPReauthRspHasMessageId(OSPT_REAUTH_RSP *);
+    void OSPPReauthRspSetMessageId(OSPT_REAUTH_RSP *, const char *);
     void OSPPReauthRspMessageIdFromElement(OSPT_XML_ELEM *, const char **);
     void OSPPReauthRspComponentIdFromElement(OSPT_XML_ELEM *, const char **);
-    void OSPPReauthRspSetTimestamp(OSPTREAUTHRSP *, OSPTTIME);
-    OSPTBOOL OSPPReauthRspHasComponentId(OSPTREAUTHRSP *);
-    OSPTBOOL OSPPReauthRspHasStatus(OSPTREAUTHRSP *ospvReauthRsp);
-    OSPTSTATUS *OSPPReauthRspGetStatus(OSPTREAUTHRSP *);
-    void OSPPReauthRspSetTrxId(OSPTREAUTHRSP *, OSPTTRXID);
-    OSPTBOOL OSPPReauthRspHasDest(OSPTREAUTHRSP *ospvReauthRsp);
-    void OSPPReauthRspSetDest(OSPTREAUTHRSP *, OSPT_DEST *);
-    OSPTTNAUDIT *OSPPReauthRspGetTNAudit(OSPTREAUTHRSP *);
+    void OSPPReauthRspSetTimestamp(OSPT_REAUTH_RSP *, OSPTTIME);
+    OSPTBOOL OSPPReauthRspHasComponentId(OSPT_REAUTH_RSP *);
+    OSPTBOOL OSPPReauthRspHasStatus(OSPT_REAUTH_RSP *ospvReauthRsp);
+    OSPT_STATUS *OSPPReauthRspGetStatus(OSPT_REAUTH_RSP *);
+    void OSPPReauthRspSetTrxId(OSPT_REAUTH_RSP *, OSPTTRXID);
+    OSPTBOOL OSPPReauthRspHasDest(OSPT_REAUTH_RSP *ospvReauthRsp);
+    void OSPPReauthRspSetDest(OSPT_REAUTH_RSP *, OSPT_DEST *);
+    OSPT_TN_AUDIT *OSPPReauthRspGetTNAudit(OSPT_REAUTH_RSP *);
 
 #ifdef __cplusplus
 }

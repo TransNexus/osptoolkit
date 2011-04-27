@@ -20,8 +20,8 @@
 #define _OSPCODE_H
 
 typedef struct {
-    unsigned ospmCode;
-    char *ospmDesc;
+    unsigned Code;
+    char *Description;
 } OSPT_STATE;
 
 #define OSPC_MAX_STATS   23

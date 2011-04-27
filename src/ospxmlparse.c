@@ -231,8 +231,8 @@ unsigned OSPPXMLDocParseElem(       /* returns error code */
          */
         elem = OSPPXMLElemNew((const char *)OSPPBfrLinearPtr(nameBfr), (const char *)OSPPBfrLinearPtr(valBfr));
         if (elem != OSPC_OSNULL) {
-            OSPPListMove(&elem->ospmXMLElemAttrs, &attrList);
-            OSPPListMove(&elem->ospmXMLElemChild, &childList);
+            OSPPListMove(&elem->Attributes, &attrList);
+            OSPPListMove(&elem->Children, &childList);
         }
         *ospvElemAddr = elem;
     }

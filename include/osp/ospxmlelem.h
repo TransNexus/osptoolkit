@@ -32,11 +32,11 @@
  */
 
 typedef struct {
-    OSPTLISTLINK ospmXMLElemLink;
-    OSPTLIST ospmXMLElemChild;
-    OSPTLIST ospmXMLElemAttrs;
-    char *ospmXMLElemName;
-    char *ospmXMLElemValue;
+    OSPTLISTLINK Link;
+    OSPTLIST Children;
+    OSPTLIST Attributes;
+    char *Name;
+    char *Value;
 } OSPT_XML_ELEM;
 
 /* Function Prototypes */

@@ -39,8 +39,8 @@
  */
 
 typedef struct {
-    OSPT_MSG_PART ospmMsgDescPart;
-    const char *ospmMsgDescName;
+    OSPT_MSG_PART Part;
+    const char *Name;
 } OSPT_MSG_DESC;
 
 /* Function Prototypes */

@@ -27,35 +27,35 @@
 #include "osp/ospciscoext.h"
 
 typedef struct {
-    OSPTLISTLINK ospmUsageCnfLink;
-    OSPTTIME ospmUsageCnfTimestamp;
-    char *ospmUsageCnfMessageId;
-    char *ospmUsageCnfComponentId;
-    OSPTSTATUS *ospmUsageCnfStatus;
-    OSPTTNAUDIT *ospmUsageCnfTNAudit;
-    OSPTCSAUDIT *ospmUsageCnfCSAudit;
-} OSPTUSAGECNF;
+    OSPTLISTLINK Link;
+    OSPTTIME Timestamp;
+    char *MessageId;
+    char *ComponentId;
+    OSPT_STATUS *Status;
+    OSPT_TN_AUDIT *TNAudit;
+    OSPTCSAUDIT *CSAudit;
+} OSPT_USAGE_CNF;
 
 /* Function Prototypes */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    OSPTUSAGECNF *OSPPUsageCnfNew(void);
+    OSPT_USAGE_CNF *OSPPUsageCnfNew(void);
     unsigned OSPPUsageCnfFromElement(OSPT_XML_ELEM *, OSPTLIST *);
-    void OSPPUsageCnfDelete(OSPTUSAGECNF **);
-    const char *OSPPUsageCnfGetComponentId(OSPTUSAGECNF *);
-    OSPTBOOL OSPPUsageCnfHasComponentId(OSPTUSAGECNF *);
-    void OSPPUsageCnfSetComponentId(OSPTUSAGECNF *, const char *);
+    void OSPPUsageCnfDelete(OSPT_USAGE_CNF **);
+    const char *OSPPUsageCnfGetComponentId(OSPT_USAGE_CNF *);
+    OSPTBOOL OSPPUsageCnfHasComponentId(OSPT_USAGE_CNF *);
+    void OSPPUsageCnfSetComponentId(OSPT_USAGE_CNF *, const char *);
     void OSPPUsageCnfComponentIdFromElement(OSPT_XML_ELEM *, const char **);
     void OSPPUsageCnfMessageIdFromElement(OSPT_XML_ELEM *, const char **);
-    OSPTBOOL OSPPUsageCnfHasMessageId(OSPTUSAGECNF *);
-    void OSPPUsageCnfSetMessageId(OSPTUSAGECNF *, const char *);
-    void OSPPUsageCnfSetTimestamp(OSPTUSAGECNF *, OSPTTIME);
-    OSPTBOOL OSPPUsageCnfHasStatus(OSPTUSAGECNF *ospvUsageCnf);
-    OSPTSTATUS *OSPPUsageCnfGetStatus(OSPTUSAGECNF *);
-    OSPTTNAUDIT *OSPPUsageCnfGetTNAudit(OSPTUSAGECNF *);
-    OSPTCSAUDIT *OSPPUsageCnfGetCSAudit(OSPTUSAGECNF *);
+    OSPTBOOL OSPPUsageCnfHasMessageId(OSPT_USAGE_CNF *);
+    void OSPPUsageCnfSetMessageId(OSPT_USAGE_CNF *, const char *);
+    void OSPPUsageCnfSetTimestamp(OSPT_USAGE_CNF *, OSPTTIME);
+    OSPTBOOL OSPPUsageCnfHasStatus(OSPT_USAGE_CNF *ospvUsageCnf);
+    OSPT_STATUS *OSPPUsageCnfGetStatus(OSPT_USAGE_CNF *);
+    OSPT_TN_AUDIT *OSPPUsageCnfGetTNAudit(OSPT_USAGE_CNF *);
+    OSPTCSAUDIT *OSPPUsageCnfGetCSAudit(OSPT_USAGE_CNF *);
 
 #ifdef __cplusplus
 }

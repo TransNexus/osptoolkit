@@ -26,7 +26,7 @@
 #include "osp/osptrans.h"
 
 typedef struct {
-    OSPTSTATUS *ospmStatus;
+    OSPT_STATUS *ospmStatus;
 } OSPT_CAP_CNF;
 
 /* Function Prototypes */

@@ -20,9 +20,9 @@
  *             response time to different systems
  */
 /*
- * To call OSPPTNProbe, fill in the ospmipaddr field of an array of OSPT_TN_PROBE
+ * To call OSPPTNProbe, fill in the IpAddr field of an array of OSPT_TN_PROBE
  * structures and indicating the size of the array. The function will
- * return by filling in the ospmTime field for each element with the
+ * return by filling in the Time field for each element with the
  * number of milliseconds the system took to respond to a message sent
  * to its echo/udp service.
  *
@@ -57,12 +57,12 @@
 
 #include "osp/osp.h"
 
-typedef struct {                /* structure to pass probe information */
-    OSPTIPADDR ospmipaddr;
-    unsigned long ospmTime;     /* 0xFFFFFFFF = unreachable */
-    int ospmSocket;             /* only used internally */
-    unsigned ospmPrStatus;      /* only used internally */
-    unsigned ospmPrRef;         /* Initial order in list */
+typedef struct {        /* structure to pass probe information */
+    OSPTIPADDR IpAddr;
+    unsigned long Time; /* 0xFFFFFFFF = unreachable */
+    int Socket;         /* only used internally */
+    unsigned Status;    /* only used internally */
+    unsigned Ref;       /* Initial order in list */
 } OSPT_TN_PROBE;
 
 #define OSPC_TN_PROBE_UNREACHABLE 0xFFFFFFFF

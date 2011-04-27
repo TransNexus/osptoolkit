@@ -530,4 +530,9 @@ Version 4.0.0
 * Changed the OSP TCP port from 1080 to 5045.
 * Removed 4 deprecated functions.
 * Replaced QoS up/downstream by direction values.
+* Changed codec type values.
+* Added session ID types.
+* Added singaling protocol types.
+* Simplified structure element names.
+
 

@@ -31,9 +31,9 @@
         each server is captured and returned to the caller.
 
 
-        To call OSPPTNProbe, fill in the ospmipaddr field of an array of OSPT_TN_PROBE
+        To call OSPPTNProbe, fill in the IpAddr field of an array of OSPT_TN_PROBE
         structures and indicating the size of the array. The function will
-        return by filling in the ospmTime field for each element with the
+        return by filling in the Time field for each element with the
         number of milliseconds the system took to respond to a message sent
         to its echo/udp service.
 
@@ -202,16 +202,16 @@ int OSPPTNProbeInit(            /* returns maxFD (< 0 on error) */
          * the for loop.
          */
 
-        pProbeList[uCnt].ospmPrStatus = OSPE_PRINIT;
+        pProbeList[uCnt].Status = OSPE_PRINIT;
 
         /* open a socket to each remote host */
-        fdSocket = OSPPTNProbeConnect(pProbeList[uCnt].ospmipaddr);
+        fdSocket = OSPPTNProbeConnect(pProbeList[uCnt].IpAddr);
 
-        pProbeList[uCnt].ospmSocket = fdSocket;
+        pProbeList[uCnt].Socket = fdSocket;
 
         if (fdSocket >= 0) {    /* negative socket is an error */
             /* if no errors, update the status to connected */
-            pProbeList[uCnt].ospmPrStatus = OSPE_PRCONN;
+            pProbeList[uCnt].Status = OSPE_PRCONN;
 
             /* remember the socket */
             OSPM_BLOCKIO(fdSocket, one, errorcode);
@@ -278,13 +278,13 @@ void OSPPTNProbeCleanup(
 
     for (uCnt = 0; uCnt < uNumHosts; uCnt++) {
         /* if we were able to open a socket, close it */
-        if (pProbeList[uCnt].ospmPrStatus > OSPE_PRINIT) {
-            OSPM_CLOSE(pProbeList[uCnt].ospmSocket, errorcode);
+        if (pProbeList[uCnt].Status > OSPE_PRINIT) {
+            OSPM_CLOSE(pProbeList[uCnt].Socket, errorcode);
         }
 
         /* if an error, set the response time to infinite */
-        if (pProbeList[uCnt].ospmPrStatus < OSPE_PRDONE) {
-            pProbeList[uCnt].ospmTime = (unsigned long)(-1);
+        if (pProbeList[uCnt].Status < OSPE_PRDONE) {
+            pProbeList[uCnt].Time = (unsigned long)(-1);
         }
     }
 }
@@ -332,18 +332,18 @@ void OSPPTNProbeEcho(
 
         /* start the echo on each socket */
         for (uHost = 0; uHost < uNumHosts; uHost++) {
-            if (pProbeList[uHost].ospmSocket >= 0) {
+            if (pProbeList[uHost].Socket >= 0) {
                 /* transmit the datagram */
-                OSPM_SEND(pProbeList[uHost].ospmSocket, uSent, tnBuffer, sizeof(tnBuffer), uErr);
+                OSPM_SEND(pProbeList[uHost].Socket, uSent, tnBuffer, sizeof(tnBuffer), uErr);
                 if (uSent != sizeof(tnBuffer)) {
                     /* if the send didn't succeed, ... */
                     uHostsLeft--;   /* there's one less host that will respond */
                 } else {
-                    pProbeList[uHost].ospmPrStatus = OSPE_PRSENT;
+                    pProbeList[uHost].Status = OSPE_PRSENT;
                 }
 
                 /* remember the current time */
-                pProbeList[uHost].ospmTime = OSPPTNProbeTimerMS();
+                pProbeList[uHost].Time = OSPPTNProbeTimerMS();
 
                 /* reset uSent */
                 uSent = 0;
@@ -412,14 +412,14 @@ void OSPPTNProbeEcho(
                 if (FD_ISSET(fdSocket, &fdReadSet)) {
                     /* which host responded? */
                     for (uHost = 0; uHost < uNumHosts; uHost++) {
-                        if (pProbeList[uHost].ospmSocket == (fdSocket)) {
+                        if (pProbeList[uHost].Socket == (fdSocket)) {
                             break;
                         }
                     }
 
                     /* make sure we found a host */
                     if (uHost < uNumHosts) {
-                        if (!(pProbeList[uHost].ospmPrStatus == OSPE_PRSENT)) {
+                        if (!(pProbeList[uHost].Status == OSPE_PRSENT)) {
                             break;
                         }
 
@@ -432,10 +432,10 @@ void OSPPTNProbeEcho(
                         }
 
                         /* calculate how long it took */
-                        pProbeList[uHost].ospmTime = uTime2 - pProbeList[uHost].ospmTime;
+                        pProbeList[uHost].Time = uTime2 - pProbeList[uHost].Time;
 
                         /* update the status of the current socket */
-                        pProbeList[uHost].ospmPrStatus = OSPE_PRDONE;
+                        pProbeList[uHost].Status = OSPE_PRDONE;
                     }
 
                     /*
@@ -511,7 +511,7 @@ void OSPPTNProbePruneList(
     OSPTSVCPT *svcpt = OSPC_OSNULL;
 
     while (probecnt < *ospvNumDests) {
-        if (tmpprobelist->ospmTime > ospvDelayLimit) {
+        if (tmpprobelist->Time > ospvDelayLimit) {
 
             /* find specific node in destlist that matches ipaddr
              * in probelist and remove it
@@ -522,7 +522,7 @@ void OSPPTNProbePruneList(
 
                 if (svcpt != OSPC_OSNULL) {
 
-                    if (svcpt->IpAddr == tmpprobelist->ospmipaddr) {
+                    if (svcpt->IpAddr == tmpprobelist->IpAddr) {
                         OSPPListRemoveSpecificItem(ospvDests, dest);
 
                         if (svcpt->HostName)
@@ -571,7 +571,7 @@ int OSPPTNProbeCompare(
     const void *probeptr1,
     const void *probeptr2)
 {
-    return ((OSPT_TN_PROBE *)probeptr1)->ospmTime - ((OSPT_TN_PROBE *)probeptr2)->ospmTime;
+    return ((OSPT_TN_PROBE *)probeptr1)->Time - ((OSPT_TN_PROBE *)probeptr2)->Time;
 }
 
 void OSPPTNProbeArrangeList(
@@ -597,7 +597,7 @@ void OSPPTNProbeArrangeList(
 
             OSPPCommParseSvcPt(OSPPDestGetAddr(dest), &svcpt, 0);
             if (svcpt != OSPC_OSNULL) {
-                if (svcpt->IpAddr == ospvProbes[probecnt].ospmipaddr) {
+                if (svcpt->IpAddr == ospvProbes[probecnt].IpAddr) {
                     OSPPListRemoveSpecificItem(ospvDests, dest);
                     OSPPListAppend(&newlist, dest);
                     dest = OSPC_OSNULL;

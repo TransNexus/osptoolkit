@@ -15,7 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/* ospauthcnf.h - OSP authorisation confirmation objects */
+/* ospauthcnf.h - OSP authorization confirmation objects */
 #ifndef _OSPAUTHCNF_H
 #define _OSPAUTHCNF_H
 
@@ -25,10 +25,10 @@
 #include "osp/ospstatus.h"
 
 typedef struct {
-    OSPTTIME ospmAuthCnfTimestamp;
-    OSPTSTATUS *ospmAuthCnfStatus;
-    OSPTTIME ospmAuthCnfValidAfter;
-    OSPTTIME ospmAuthCnfValidUntil;
+    OSPTTIME Timestamp;
+    OSPT_STATUS *Status;
+    OSPTTIME ValidAfter;
+    OSPTTIME ValidUntil;
 } OSPT_AUTH_CNF;
 
 /* Function Prototypes */

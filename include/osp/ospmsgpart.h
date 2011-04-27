@@ -16,7 +16,6 @@
 **************************************************************************/
 
 /* ospmsgpart.h - Structures and prototypes for generic OSP message parts */
-
 #ifndef _OSPMSGPART_H
 #define _OSPMSGPART_H
 

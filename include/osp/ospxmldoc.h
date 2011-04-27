@@ -118,8 +118,8 @@ typedef enum {
 
 /* structure used to store entity references */
 typedef struct {
-    unsigned char ospmXMLEntValue;
-    unsigned char *ospmXMLEntName;
+    unsigned char Value;
+    unsigned char *Name;
 } OSPT_XML_ENTITY;
 
 /* Function Prototypes */

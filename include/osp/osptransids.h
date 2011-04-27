@@ -26,15 +26,15 @@
  * #define tnListOldest (tnSentinel.tidNewerPtr)
  * #define tnListEnd    (&tnSentinel)
  */
-typedef struct _OSPTTRANSID {                           /* info about a transaction ID */
-    OSPTUINT64 ospmTransactionId;                       /* the actual transaction ID value */
-    unsigned long ospmTransactionIdExpires;             /* expiration time */
-    struct _OSPTTRANSID *ospmTransactionIdLessPtr;      /* lower valued ID in tree */
-    struct _OSPTTRANSID *ospmTransactionIdMorePtr;      /* greater valued ID in tree */
-    struct _OSPTTRANSID **ospmTransactionIdParent;      /* parent pointer (for removes) */
-    struct _OSPTTRANSID *ospmTransactionIdOlderPtr;     /* older in list */
-    struct _OSPTTRANSID *ospmTransactionIdNewerPtr;     /* more recent in list */
-} OSPTTRANSID;
+typedef struct _OSPTTRANSID {       /* info about a transaction ID */
+    OSPTUINT64 Id;                  /* the actual transaction ID value */
+    unsigned long Expires;          /* expiration time */
+    struct _OSPTTRANSID *LessPtr;   /* lower valued ID in tree */
+    struct _OSPTTRANSID *MorePtr;   /* greater valued ID in tree */
+    struct _OSPTTRANSID **Parent;   /* parent pointer (for removes) */
+    struct _OSPTTRANSID *OlderPtr;  /* older in list */
+    struct _OSPTTRANSID *NewerPtr;  /* more recent in list */
+} OSPT_TRANS_ID;
 
 #include "osp/ospprovider.h"
 
@@ -43,19 +43,19 @@ typedef struct _OSPTTRANSID {                           /* info about a transact
 extern "C" {
 #endif
 
-    OSPTBOOL OSPPTransIdAdd(OSPTTRANSID *, struct _OSPTPROVIDER *);
+    OSPTBOOL OSPPTransIdAdd(OSPT_TRANS_ID *, struct _OSPTPROVIDER *);
     OSPTBOOL OSPPTransIdCheckAndAdd(OSPTUINT64, unsigned long, struct _OSPTPROVIDER *);
-    void OSPPTransIdDelete(OSPTTRANSID *);
+    void OSPPTransIdDelete(OSPT_TRANS_ID *);
     void OSPPTransIdInit(struct _OSPTPROVIDER *);
-    OSPTTRANSID *OSPPTransIdNew(OSPTUINT64, unsigned long);
-    void OSPPTransIdPurge(OSPTTRANSID *);
-    void OSPPTransIdRemove(OSPTTRANSID *);
+    OSPT_TRANS_ID *OSPPTransIdNew(OSPTUINT64, unsigned long);
+    void OSPPTransIdPurge(OSPT_TRANS_ID *);
+    void OSPPTransIdRemove(OSPT_TRANS_ID *);
     unsigned long OSPPTransIdSecNow(void);
-    void OSPPTransIdTimeAdd(OSPTTRANSID *, struct _OSPTPROVIDER *);
+    void OSPPTransIdTimeAdd(OSPT_TRANS_ID *, struct _OSPTPROVIDER *);
     void OSPPTransIDTreeDelete(struct _OSPTPROVIDER *);
 
 #ifdef TN_TRANSDBG
-    void tnPrintTree(OSPTTRANSID *pTrans);
+    void tnPrintTree(OSPT_TRANS_ID *pTrans);
     void tnTransById(OSPTPROVIDER *);   /* print by transaction ID */
     void tnTransByTime(OSPTPROVIDER *); /* print by expiration time */
 #endif

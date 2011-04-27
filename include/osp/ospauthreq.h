@@ -15,7 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/* ospauthreq.h - OSP authorisation request objects */
+/* ospauthreq.h - OSP authorization request objects */
 #ifndef _OSPAUTHREQ_H
 #define _OSPAUTHREQ_H
 
@@ -27,18 +27,18 @@
 #include "osp/ospaltinfo.h"
 
 typedef struct {
-    OSPTTIME ospmAuthReqTimestamp;
-    char *ospmAuthReqMessageId;
-    char *ospmAuthReqComponentId;
-    OSPTLIST ospmAuthReqCallId;
-    char ospmAuthReqSourceNumber[OSPC_SIZE_E164NUM];
-    char ospmAuthReqDestNumber[OSPC_SIZE_E164NUM];
-    OSPTLIST ospmAuthReqSourceAlternate;
-    OSPTLIST ospmAuthReqDestinationAlternate;
-    unsigned ospmAuthReqMaxDest;
-    unsigned long ospmAuthReqCustId;
-    unsigned long ospmAuthReqDeviceId;
-    OSPTLIST ospmAuthReqDeviceInfo;
+    OSPTTIME Timestamp;
+    char *MessageId;
+    char *ComponentId;
+    OSPTLIST CallId;
+    char SourceNumber[OSPC_SIZE_E164NUM];
+    char DestinationNumber[OSPC_SIZE_E164NUM];
+    OSPTLIST SourceAlternate;
+    OSPTLIST DestinationAlternate;
+    unsigned MaxDestination;
+    unsigned long CustomerId;
+    unsigned long DeviceId;
+    OSPTLIST DeviceInfo;
 } OSPT_AUTH_REQ;
 
 /* Function Prototypes */

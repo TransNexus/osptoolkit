@@ -85,48 +85,47 @@
 /*
  * request info globals
  */
-char validafter[TIMESTAMP_SZ], validuntil[TIMESTAMP_SZ];
-unsigned timelimit = 0;
-unsigned callidsize = CALL_ID_SZ;
-void *callid = NULL;
-unsigned char ret_cid[CALL_ID_SZ];
-unsigned char c_id[CALL_ID_SZ + 1] = { "1234567890123456" };
-char callednumber[CALLED_NUM_SZ];
-char callingnumber[CALLING_NUM_SZ];
-char dest[DESTINATION_SZ] = { "" };
-char destdev[DESTINATION_SZ] = { "" };
-unsigned tokensize = TOKEN_SZ;
-char c_token[TOKEN_SZ] = { "" };
-void *token = NULL;
-const char *New_ServicePoint = { "http://osptestserver.transnexus.com:5045/osp" };
+static char validafter[TIMESTAMP_SZ], validuntil[TIMESTAMP_SZ];
+static unsigned timelimit = 0;
+static unsigned callidsize = CALL_ID_SZ;
+static void *callid = NULL;
+static unsigned char ret_cid[CALL_ID_SZ];
+static unsigned char c_id[CALL_ID_SZ + 1] = { "1234567890123456" };
+static char callednumber[CALLED_NUM_SZ];
+static char callingnumber[CALLING_NUM_SZ];
+static char dest[DESTINATION_SZ] = { "" };
+static char destdev[DESTINATION_SZ] = { "" };
+static unsigned tokensize = TOKEN_SZ;
+static char c_token[TOKEN_SZ] = { "" };
+static void *token = NULL;
+static const char *New_ServicePoint = { "http://osptestserver.transnexus.com:5045/osp" };
 static OSPT_CALL_ID *callids[NUM_CALL_IDS];
-token_algo_t tokenalgo = TOKEN_ALGO_SIGNED;
-char *SourceIP = NULL, *SourceDevIP = NULL, *DestIP = NULL, *DestDevIP = NULL;
-char *ModifiedSourceIP = NULL, *ModifiedSourceDevIP = NULL, *ModifiedDestIP = NULL, *ModifiedDestDevIP = NULL;
-unsigned almostOutOfResources = 0;
-unsigned hardwareSupport = 0;
-unsigned TCcode = 0;
-unsigned duration = 30;
-time_t call_start_time = 0;
-time_t call_end_time = 0;
-time_t call_alert_time = 0;
-time_t call_connect_time = 0;
-NBMONITOR *nbMonitor = NULL;
-int WORK_THREAD_NUM = 30;        /* make sure that this number does not exceed DEF_HTTP_MAXCONN */
+static token_algo_t tokenalgo = TOKEN_ALGO_SIGNED;
+static char *SourceIP = NULL, *SourceDevIP = NULL, *DestIP = NULL, *DestDevIP = NULL;
+static char *ModifiedSourceIP = NULL, *ModifiedSourceDevIP = NULL, *ModifiedDestIP = NULL, *ModifiedDestDevIP = NULL;
+static unsigned almostOutOfResources = 0;
+static unsigned hardwareSupport = 0;
+static unsigned TCcode = 0;
+static unsigned duration = 30;
+static time_t call_start_time = 0;
+static time_t call_end_time = 0;
+static time_t call_alert_time = 0;
+static time_t call_connect_time = 0;
+static NBMONITOR *nbMonitor = NULL;
+static int WORK_THREAD_NUM = 30;        /* make sure that this number does not exceed DEF_HTTP_MAXCONN */
 
 #define TOKEN_SIZE          2000
 #define TEST_ERROR          1
 #define MAX_QUEUE_SIZE      10000
 
-int TEST_NUM = 0;
-char **Tokens;
-OSPE_NUMBER_FORMAT CallingNumFormat, CalledNumFormat;
-unsigned long SPMsgCount[50];
-unsigned long *MsgCount = SPMsgCount;
-int DEF_HTTP_MAXCONN = 30;
-unsigned IS_PDD_INFO_AVAILABLE = 0;
-unsigned long CapSPMsgCount[50];
-unsigned long *CapMsgCount = CapSPMsgCount;
+static int TEST_NUM = 0;
+static OSPE_NUMBER_FORMAT CallingNumFormat, CalledNumFormat;
+static unsigned long SPMsgCount[50];
+static unsigned long *MsgCount = SPMsgCount;
+static int DEF_HTTP_MAXCONN = 30;
+static unsigned IS_PDD_INFO_AVAILABLE = 0;
+static unsigned long CapSPMsgCount[50];
+static unsigned long *CapMsgCount = CapSPMsgCount;
 
 /*
  * service point globals
@@ -134,24 +133,24 @@ unsigned long *CapMsgCount = CapSPMsgCount;
 #define CONFIG_FILENAME     "test.cfg"
 #define MAX_SERVICE_POINTS  10
 
-char *auditurl = NULL;
-char *servicepoints[MAX_SERVICE_POINTS];
-char *capURLs[MAX_SERVICE_POINTS];
+static char *auditurl = NULL;
+static char *servicepoints[MAX_SERVICE_POINTS];
+static char *capURLs[MAX_SERVICE_POINTS];
 
-int num_serv_points = 0;
-int num_capURLs = 0;
+static int num_serv_points = 0;
+static int num_capURLs = 0;
 
-long custid = DEF_CUST_ID;
-long devid = DEF_DEVICE_ID;
+static long custid = DEF_CUST_ID;
+static long devid = DEF_DEVICE_ID;
 
 /*
  * certificate globals
  */
 static unsigned NUM_CA_CERTS = 0;
 
-int quietmode = 0;
-unsigned numdestinations = NUM_CALL_IDS;
-int num_test_calls = 500;
+static int quietmode = 0;
+static unsigned numdestinations = NUM_CALL_IDS;
+static int num_test_calls = 500;
 
 /* Local prototypes */
 int testTestCalls(void);
@@ -168,7 +167,7 @@ typedef struct _ACCUM {
     float Variance;
 } ACCUM;
 
-ACCUM accumtable10[10] = {
+static ACCUM accumtable10[10] = {
     { 1, 3335, 3335, 0.0f },
     { 1, 822, 822, 0.0f },
     { 1, 268, 268, 0.0f },
@@ -181,7 +180,7 @@ ACCUM accumtable10[10] = {
     { 1, 958, 958, 0.0f }
 };
 
-ACCUM accumtable2[2] = {
+static ACCUM accumtable2[2] = {
     { 10, 6, 718, 485206.00f },
     { 20, 1, 141, 39733.00f }
 };
@@ -2974,8 +2973,8 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
             CallingNumFormat,
             Localcallednumber,
             CalledNumFormat,
-            CallIds[i]->ospmCallIdLen,
-            CallIds[i]->ospmCallIdVal,
+            CallIds[i]->Length,
+            CallIds[i]->Value,
             TokenSizes[i],
             Tokens[i],
             &authorised[i],

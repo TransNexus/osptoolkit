@@ -15,7 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/* ospreauthrsp.c - OSP reauthorisation response functions */
+/* ospreauthrsp.c - OSP reauthorization response functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"
@@ -31,86 +31,87 @@
 #include "osp/osputils.h"
 
 /*
- * OSPPReauthRspSetTimestamp() - sets the timestamp for an reauthorisation response
+ * OSPPReauthRspSetTimestamp() - sets the timestamp for an reauthorization response
  */
 void OSPPReauthRspSetTimestamp( /* nothing returned */
-    OSPTREAUTHRSP *ospvReauthRsp, OSPTTIME ospvTime)
+    OSPT_REAUTH_RSP *ospvReauthRsp,
+    OSPTTIME ospvTime)
 {
     if (ospvReauthRsp != OSPC_OSNULL) {
-        ospvReauthRsp->ospmReauthRspTimestamp = ospvTime;
+        ospvReauthRsp->Timestamp = ospvTime;
     }
 }
 
 /*
- * OSPPReauthRspHasStatus() - does the reauthorisation response have a status?
+ * OSPPReauthRspHasStatus() - does the reauthorization response have a status?
  */
 OSPTBOOL OSPPReauthRspHasStatus(    /* returns non-zero if number exists */
-    OSPTREAUTHRSP *ospvReauthRsp)   /* reauthorisation response effected */
+    OSPT_REAUTH_RSP *ospvReauthRsp) /* reauthorization response effected */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvReauthRsp != OSPC_OSNULL) {
-        ospvHas = (ospvReauthRsp->ospmReauthRspStatus != OSPC_OSNULL);
+        has = (ospvReauthRsp->Status != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPReauthRspGetStatus() - returns the status for an
- * reauthorisation response
+ * reauthorization response
  */
-OSPTSTATUS *OSPPReauthRspGetStatus( /* returns pointer to dest */
-    OSPTREAUTHRSP *ospvReauthRsp    /* reauthorisation response */
+OSPT_STATUS *OSPPReauthRspGetStatus(/* returns pointer to dest */
+    OSPT_REAUTH_RSP *ospvReauthRsp  /* reauthorization response */
     )
 {
-    OSPTSTATUS *ospvStatus = OSPC_OSNULL;
+    OSPT_STATUS *status = OSPC_OSNULL;
 
     if (ospvReauthRsp != OSPC_OSNULL) {
-        ospvStatus = ospvReauthRsp->ospmReauthRspStatus;
+        status = ospvReauthRsp->Status;
     }
 
-    return ospvStatus;
+    return status;
 }
 
 /*
- * OSPPReauthRspSetTrxId() - sets the transaction ID for an reauthorisation
+ * OSPPReauthRspSetTrxId() - sets the transaction ID for an reauthorization
  */
 void OSPPReauthRspSetTrxId(         /* nothing returned */
-    OSPTREAUTHRSP *ospvReauthRsp,   /* reauthorisation response */
+    OSPT_REAUTH_RSP *ospvReauthRsp, /* reauthorization response */
     OSPTTRXID ospvTrxId)            /* transaction ID to set */
 {
     if (ospvReauthRsp != OSPC_OSNULL) {
-        ospvReauthRsp->ospmReauthRspTrxId = ospvTrxId;
+        ospvReauthRsp->TrxId = ospvTrxId;
     }
 }
 
 /*
- * OSPPReauthRspHasDest() - does the reauthorisation response have a destination?
+ * OSPPReauthRspHasDest() - does the reauthorization response have a destination?
  */
 OSPTBOOL OSPPReauthRspHasDest(      /* returns non-zero if number exists */
-    OSPTREAUTHRSP *ospvReauthRsp)   /* reauthorisation response effected */
+    OSPT_REAUTH_RSP *ospvReauthRsp) /* reauthorization response effected */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvReauthRsp != OSPC_OSNULL) {
-        ospvHas = (ospvReauthRsp->ospmReauthRspDest != OSPC_OSNULL);
+        has = (ospvReauthRsp->Destination != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPReauthRspSetDest() - set the destination for an
- * reauthorisation response
+ * reauthorization response
  */
 void OSPPReauthRspSetDest(          /* nothing returned */
-    OSPTREAUTHRSP *ospvReauthRsp,   /* reauthorisation response  to set */
+    OSPT_REAUTH_RSP *ospvReauthRsp, /* reauthorization response  to set */
     OSPT_DEST *ospvDest)            /* destination */
 {
     if (ospvReauthRsp != OSPC_OSNULL) {
         if (ospvDest != OSPC_OSNULL) {
-            ospvReauthRsp->ospmReauthRspDest = ospvDest;
+            ospvReauthRsp->Destination = ospvDest;
         }
     }
 }
@@ -119,73 +120,73 @@ void OSPPReauthRspSetDest(          /* nothing returned */
  * OSPPReauthRspHasComponentId() - is the component id set ?
  */
 OSPTBOOL OSPPReauthRspHasComponentId(   /* returns non-zero if component id is set */
-    OSPTREAUTHRSP *ospvReauthRsp)
+    OSPT_REAUTH_RSP *ospvReauthRsp)
 {
     if (ospvReauthRsp != OSPC_OSNULL) {
-        return (ospvReauthRsp->ospmReauthRspComponentId != OSPC_OSNULL);
+        return (ospvReauthRsp->ComponentId != OSPC_OSNULL);
     } else {
         return OSPC_FALSE;
     }
 }
 
-OSPTTNAUDIT *OSPPReauthRspGetTNAudit(
-    OSPTREAUTHRSP *ospvReauthRsp)
+OSPT_TN_AUDIT *OSPPReauthRspGetTNAudit(
+    OSPT_REAUTH_RSP *ospvReauthRsp)
 {
     if (ospvReauthRsp != OSPC_OSNULL) {
-        return ospvReauthRsp->ospmReauthRspTNAudit;
+        return ospvReauthRsp->TNAudit;
     } else {
         return OSPC_OSNULL;
     }
 }
 
 /*
- * OSPPReauthRspNew() - creates a new (empty) reauthorisation response
+ * OSPPReauthRspNew() - creates a new (empty) reauthorization response
  */
-OSPTREAUTHRSP *OSPPReauthRspNew(void)   /* returns pointer or NULL */
+OSPT_REAUTH_RSP *OSPPReauthRspNew(void) /* returns pointer or NULL */
 {
-    OSPTREAUTHRSP *ospvReauthRsp;
+    OSPT_REAUTH_RSP *ospvReauthRsp;
 
-    OSPM_MALLOC(ospvReauthRsp, OSPTREAUTHRSP, sizeof(OSPTREAUTHRSP));
+    OSPM_MALLOC(ospvReauthRsp, OSPT_REAUTH_RSP, sizeof(OSPT_REAUTH_RSP));
     OSPM_MEMSET(ospvReauthRsp, 0, sizeof(ospvReauthRsp));
 
     if (ospvReauthRsp != OSPC_OSNULL) {
-        ospvReauthRsp->ospmReauthRspTimestamp = OSPC_TIMEMIN;
-        ospvReauthRsp->ospmReauthRspStatus = OSPC_OSNULL;
-        ospvReauthRsp->ospmReauthRspTrxId = 0;
-        ospvReauthRsp->ospmReauthRspDest = OSPC_OSNULL;
-        ospvReauthRsp->ospmReauthRspTNAudit = OSPC_OSNULL;
-        ospvReauthRsp->ospmReauthRspComponentId = OSPC_OSNULL;
-        ospvReauthRsp->ospmReauthRspMessageId = OSPC_OSNULL;
+        ospvReauthRsp->Timestamp = OSPC_TIMEMIN;
+        ospvReauthRsp->Status = OSPC_OSNULL;
+        ospvReauthRsp->TrxId = 0;
+        ospvReauthRsp->Destination = OSPC_OSNULL;
+        ospvReauthRsp->TNAudit = OSPC_OSNULL;
+        ospvReauthRsp->ComponentId = OSPC_OSNULL;
+        ospvReauthRsp->MessageId = OSPC_OSNULL;
     }
 
     return ospvReauthRsp;
 }
 
 /*
- * OSPPReauthRspFromElement() - get reauthorisation response from an XML element
+ * OSPPReauthRspFromElement() - get reauthorization response from an XML element
  */
 int OSPPReauthRspFromElement(       /* returns error code */
     OSPT_XML_ELEM *ospvElem,        /* input is XML element */
-    OSPTREAUTHRSP **ospvReauthRsp)  /* where to put reauthorisation response pointer */
+    OSPT_REAUTH_RSP **ospvReauthRsp)/* where to put reauthorization response pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
-    OSPTREAUTHRSP *reauthrsp = OSPC_OSNULL;
+    OSPT_REAUTH_RSP *reauthrsp = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
     OSPTTIME t = 0L;
     OSPTTRXID transid = 0L;
-    OSPT_XML_ELEM *ospvParent = OSPC_OSNULL;
+    OSPT_XML_ELEM *parent = OSPC_OSNULL;
     const char *messageId = OSPC_OSNULL;
     const char *compid = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvReauthRsp == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_DATA_NO_REAUTHRSP;
+        errcode = OSPC_ERR_DATA_NO_REAUTHRSP;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
 
         if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_MESSAGE) {
             OSPPReauthRspMessageIdFromElement(ospvElem, &messageId);
@@ -196,16 +197,16 @@ int OSPPReauthRspFromElement(       /* returns error code */
              * The following two lines of code change ospvElem from
              * pointing to the Message element to the Component element.
              */
-            ospvParent = ospvElem;
-            ospvElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvParent);
+            parent = ospvElem;
+            ospvElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(parent);
         }
 
-        /* create the reauthorisation response object */
+        /* create the reauthorization response object */
         reauthrsp = OSPPReauthRspNew();
 
         if (reauthrsp == OSPC_OSNULL) {
 
-            ospvErrCode = OSPC_ERR_DATA_NO_REAUTHRSP;
+            errcode = OSPC_ERR_DATA_NO_REAUTHRSP;
         } else {
             /* Have to get ComponentId here */
             if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_REAUTHREQ) {
@@ -217,13 +218,13 @@ int OSPPReauthRspFromElement(       /* returns error code */
         }
     }
     /*
-     * The Reauthorisation Response element should consist of several
+     * The Reauthorization Response element should consist of several
      * child elements. We'll run through what's there and pick out
      * the information we need.
      */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
-             (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR); elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) {
+             (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR); elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_MESSAGE:
                 if (messageId != OSPC_OSNULL) {
@@ -238,30 +239,30 @@ int OSPPReauthRspFromElement(       /* returns error code */
                 break;
 
             case OSPC_MELEM_TIMESTAMP:
-                ospvErrCode = OSPPMsgTimeFromElement(elem, &t);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                errcode = OSPPMsgTimeFromElement(elem, &t);
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPReauthRspSetTimestamp(reauthrsp, t);
                 }
                 break;
 
             case OSPC_MELEM_STATUS:
-                if (reauthrsp->ospmReauthRspStatus == OSPC_OSNULL) {
-                    ospvErrCode = OSPPStatusFromElement(elem, &(reauthrsp->ospmReauthRspStatus));
+                if (reauthrsp->Status == OSPC_OSNULL) {
+                    errcode = OSPPStatusFromElement(elem, &(reauthrsp->Status));
                 }
                 break;
 
             case OSPC_MELEM_TRANSID:
-                ospvErrCode = OSPPMsgTXFromElement(elem, &transid);
+                errcode = OSPPMsgTXFromElement(elem, &transid);
                 OSPPReauthRspSetTrxId(reauthrsp, transid);
                 break;
 
             case OSPC_MELEM_AUDIT:
-                ospvErrCode = OSPPTNAuditFromElement(elem, &(reauthrsp->ospmReauthRspTNAudit));
+                errcode = OSPPTNAuditFromElement(elem, &(reauthrsp->TNAudit));
                 break;
 
             case OSPC_MELEM_DEST:
-                ospvErrCode = OSPPDestFromElement(elem, &dest);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                errcode = OSPPDestFromElement(elem, &dest);
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPReauthRspSetDest(reauthrsp, dest);
                 }
                 break;
@@ -273,50 +274,50 @@ int OSPPReauthRspFromElement(       /* returns error code */
                  * Otherwise we can ignore it.
                  */
                 if (OSPPMsgElemIsCritical(elem)) {
-                    ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
+                    errcode = OSPC_ERR_XML_BAD_ELEMENT;
                 }
                 break;
             }
         }
 
-        if (ospvParent != OSPC_OSNULL) {
-            ospvElem = ospvParent;
+        if (parent != OSPC_OSNULL) {
+            ospvElem = parent;
         }
     }
 
-    if (ospvErrCode != OSPC_ERR_DATA_NO_REAUTHRSP) {
+    if (errcode != OSPC_ERR_DATA_NO_REAUTHRSP) {
         *ospvReauthRsp = reauthrsp;
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
- * OSPPReauthRspDelete() - deletes a reauthorisation response structure
+ * OSPPReauthRspDelete() - deletes a reauthorization response structure
  */
 void OSPPReauthRspDelete(
-    OSPTREAUTHRSP **ospvReauthRsp)
+    OSPT_REAUTH_RSP **ospvReauthRsp)
 {
     if (*ospvReauthRsp != OSPC_OSNULL) {
         /* first remove the status */
-        if ((*ospvReauthRsp)->ospmReauthRspStatus != OSPC_OSNULL) {
-            OSPPStatusDelete(&((*ospvReauthRsp)->ospmReauthRspStatus));
+        if ((*ospvReauthRsp)->Status != OSPC_OSNULL) {
+            OSPPStatusDelete(&((*ospvReauthRsp)->Status));
         }
 
         /* now remove dest */
         if (OSPPReauthRspHasDest(*ospvReauthRsp)) {
-            OSPPDestDelete(&((*ospvReauthRsp)->ospmReauthRspDest));
+            OSPPDestDelete(&((*ospvReauthRsp)->Destination));
         }
 
         /* delete ComponentId and MessageId */
         if (OSPPReauthRspHasComponentId(*ospvReauthRsp)) {
-            OSPM_FREE((*ospvReauthRsp)->ospmReauthRspComponentId);
-            (*ospvReauthRsp)->ospmReauthRspComponentId = OSPC_OSNULL;
+            OSPM_FREE((*ospvReauthRsp)->ComponentId);
+            (*ospvReauthRsp)->ComponentId = OSPC_OSNULL;
         }
 
         if (OSPPReauthRspHasMessageId(*ospvReauthRsp)) {
-            OSPM_FREE((*ospvReauthRsp)->ospmReauthRspMessageId);
-            (*ospvReauthRsp)->ospmReauthRspMessageId = OSPC_OSNULL;
+            OSPM_FREE((*ospvReauthRsp)->MessageId);
+            (*ospvReauthRsp)->MessageId = OSPC_OSNULL;
         }
 
         /* now delete the authrsp itself */
@@ -329,10 +330,10 @@ void OSPPReauthRspDelete(
  * OSPPReauthRspHasMessageId() - is the message id set ?
  */
 OSPTBOOL OSPPReauthRspHasMessageId(     /* returns non-zero if message id is set */
-    OSPTREAUTHRSP *ospvReauthRsp)
+    OSPT_REAUTH_RSP *ospvReauthRsp)
 {
     if (ospvReauthRsp != OSPC_OSNULL) {
-        return (ospvReauthRsp->ospmReauthRspMessageId != OSPC_OSNULL);
+        return (ospvReauthRsp->MessageId != OSPC_OSNULL);
     } else {
         return OSPC_FALSE;
     }
@@ -342,19 +343,19 @@ OSPTBOOL OSPPReauthRspHasMessageId(     /* returns non-zero if message id is set
  * OSPPReauthRspSetMessageId() - creates space and copies in the string.
  */
 void OSPPReauthRspSetMessageId(
-    OSPTREAUTHRSP *ospvReauthRsp,   /* In - pointer to Usage Indication struct */
+    OSPT_REAUTH_RSP *ospvReauthRsp, /* In - pointer to Usage Indication struct */
     const char *ospvMessageId)      /* In - pointer to message id string */
 {
     int len = OSPM_STRLEN(ospvMessageId);
 
     if (ospvReauthRsp != OSPC_OSNULL) {
-        if (ospvReauthRsp->ospmReauthRspMessageId != OSPC_OSNULL) {
-            OSPM_FREE(ospvReauthRsp->ospmReauthRspMessageId);
+        if (ospvReauthRsp->MessageId != OSPC_OSNULL) {
+            OSPM_FREE(ospvReauthRsp->MessageId);
         }
 
-        OSPM_MALLOC(ospvReauthRsp->ospmReauthRspMessageId, char, len + 1);
-        OSPM_MEMSET(ospvReauthRsp->ospmReauthRspMessageId, 0, len + 1);
-        OSPM_MEMCPY(ospvReauthRsp->ospmReauthRspMessageId, ospvMessageId, len);
+        OSPM_MALLOC(ospvReauthRsp->MessageId, char, len + 1);
+        OSPM_MEMSET(ospvReauthRsp->MessageId, 0, len + 1);
+        OSPM_MEMCPY(ospvReauthRsp->MessageId, ospvMessageId, len);
     }
 }
 
@@ -404,18 +405,18 @@ void OSPPReauthRspComponentIdFromElement(
  * OSPPReauthRspSetComponentId() - creates space and copies in the string.
  */
 void OSPPReauthRspSetComponentId(
-    OSPTREAUTHRSP *ospvReauthRsp,   /* In - pointer to Usage Indication struct */
+    OSPT_REAUTH_RSP *ospvReauthRsp, /* In - pointer to Usage Indication struct */
     const char *ospvComponentId)    /* In - pointer to component id string */
 {
     int len = OSPM_STRLEN(ospvComponentId);
 
     if (ospvReauthRsp != OSPC_OSNULL) {
-        if (ospvReauthRsp->ospmReauthRspComponentId != OSPC_OSNULL) {
-            OSPM_FREE(ospvReauthRsp->ospmReauthRspComponentId);
+        if (ospvReauthRsp->ComponentId != OSPC_OSNULL) {
+            OSPM_FREE(ospvReauthRsp->ComponentId);
         }
 
-        OSPM_MALLOC(ospvReauthRsp->ospmReauthRspComponentId, char, len + 1);
-        OSPM_MEMSET(ospvReauthRsp->ospmReauthRspComponentId, 0, len + 1);
-        OSPM_MEMCPY(ospvReauthRsp->ospmReauthRspComponentId, ospvComponentId, len);
+        OSPM_MALLOC(ospvReauthRsp->ComponentId, char, len + 1);
+        OSPM_MEMSET(ospvReauthRsp->ComponentId, 0, len + 1);
+        OSPM_MEMCPY(ospvReauthRsp->ComponentId, ospvComponentId, len);
     }
 }

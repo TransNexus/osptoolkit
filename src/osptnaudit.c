@@ -23,12 +23,12 @@
 #include "osp/ospmsgattr.h"
 
 void OSPPTNAuditDelete(
-    OSPTTNAUDIT **ospvTNAudit)
+    OSPT_TN_AUDIT **ospvTNAudit)
 {
     if (*ospvTNAudit != OSPC_OSNULL) {
-        if ((*ospvTNAudit)->ospmAuditURL != OSPC_OSNULL) {
-            OSPM_FREE((*ospvTNAudit)->ospmAuditURL);
-            (*ospvTNAudit)->ospmAuditURL = OSPC_OSNULL;
+        if ((*ospvTNAudit)->URL != OSPC_OSNULL) {
+            OSPM_FREE((*ospvTNAudit)->URL);
+            (*ospvTNAudit)->URL = OSPC_OSNULL;
         }
         OSPM_FREE(*ospvTNAudit);
         *ospvTNAudit = OSPC_OSNULL;
@@ -37,7 +37,7 @@ void OSPPTNAuditDelete(
 
 int OSPPTNAuditFromElement(
     OSPT_XML_ELEM *ospvElem,
-    OSPTTNAUDIT **ospvTNAudit)
+    OSPT_TN_AUDIT **ospvTNAudit)
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
@@ -127,141 +127,141 @@ int OSPPTNAuditFromElement(
 }
 
 unsigned OSPPTNAuditGetMaxMessages(
-    OSPTTNAUDIT *ospvTNAudit)
+    OSPT_TN_AUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return ospvTNAudit->ospmAuditMaxMessages;
+        return ospvTNAudit->MaxMessages;
     } else {
         return 0;
     }
 }
 
 OSPE_AUDIT_STATE OSPPTNAuditGetState(
-    OSPTTNAUDIT *ospvTNAudit)
+    OSPT_TN_AUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return (OSPE_AUDIT_STATE)ospvTNAudit->ospmAuditState;
+        return (OSPE_AUDIT_STATE)ospvTNAudit->State;
     } else {
         return (OSPE_AUDIT_STATE)0;
     }
 }
 
 unsigned OSPPTNAuditGetTimeLimit(
-    OSPTTNAUDIT *ospvTNAudit)
+    OSPT_TN_AUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return ospvTNAudit->ospmAuditTimeLimit;
+        return ospvTNAudit->TimeLimit;
     } else {
         return 0;
     }
 }
 
 const char *OSPPTNAuditGetURL(
-    OSPTTNAUDIT *ospvTNAudit)
+    OSPT_TN_AUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return ospvTNAudit->ospmAuditURL;
+        return ospvTNAudit->URL;
     } else {
         return OSPC_OSNULL;
     }
 }
 
 OSPTBOOL OSPPTNAuditHasMaxMessages(
-    OSPTTNAUDIT *ospvTNAudit)
+    OSPT_TN_AUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return(ospvTNAudit->ospmAuditMaxMessages > 0);
+        return(ospvTNAudit->MaxMessages > 0);
     } else {
         return OSPC_FALSE;
     }
 }
 
 OSPTBOOL OSPPTNAuditHasState(
-    OSPTTNAUDIT *ospvTNAudit)
+    OSPT_TN_AUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return(ospvTNAudit->ospmAuditState > 0);
+        return(ospvTNAudit->State > 0);
     } else {
         return OSPC_FALSE;
     }
 }
 
 OSPTBOOL OSPPTNAuditHasTimeLimit(
-    OSPTTNAUDIT *ospvTNAudit)
+    OSPT_TN_AUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return(ospvTNAudit->ospmAuditTimeLimit > 0);
+        return(ospvTNAudit->TimeLimit > 0);
     } else {
         return OSPC_FALSE;
     }
 }
 
 OSPTBOOL OSPPTNAuditHasURL(
-    OSPTTNAUDIT *ospvTNAudit)
+    OSPT_TN_AUDIT *ospvTNAudit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        return(ospvTNAudit->ospmAuditURL != OSPC_OSNULL);
+        return(ospvTNAudit->URL != OSPC_OSNULL);
     } else {
         return OSPC_FALSE;
     }
 }
 
-OSPTTNAUDIT *OSPPTNAuditNew(void)
+OSPT_TN_AUDIT *OSPPTNAuditNew(void)
 {
-    OSPTTNAUDIT *ospvTNAudit = OSPC_OSNULL;
+    OSPT_TN_AUDIT *tnaudit = OSPC_OSNULL;
 
     /* try to allocate the memory for the entire object */
-    OSPM_MALLOC(ospvTNAudit, OSPTTNAUDIT, sizeof(OSPTTNAUDIT));
-    if (ospvTNAudit != OSPC_OSNULL) {
+    OSPM_MALLOC(tnaudit, OSPT_TN_AUDIT, sizeof(OSPT_TN_AUDIT));
+    if (tnaudit != OSPC_OSNULL) {
         /* Initialize it */
-        OSPM_MEMSET(ospvTNAudit, 0, sizeof(OSPTTNAUDIT));
-        ospvTNAudit->ospmAuditURL = OSPC_OSNULL;
+        OSPM_MEMSET(tnaudit, 0, sizeof(OSPT_TN_AUDIT));
+        tnaudit->URL = OSPC_OSNULL;
     }
 
-    return ospvTNAudit;
+    return tnaudit;
 }
 
 void OSPPTNAuditSetMaxMessages(
-    OSPTTNAUDIT *ospvTNAudit,
+    OSPT_TN_AUDIT *ospvTNAudit,
     unsigned ospvMaxMessages)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        ospvTNAudit->ospmAuditMaxMessages = ospvMaxMessages;
+        ospvTNAudit->MaxMessages = ospvMaxMessages;
     }
 }
 
 void OSPPTNAuditSetState(
-    OSPTTNAUDIT *ospvTNAudit,
+    OSPT_TN_AUDIT *ospvTNAudit,
     OSPE_AUDIT_STATE ospvAuditState)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        ospvTNAudit->ospmAuditState = ospvAuditState;
+        ospvTNAudit->State = ospvAuditState;
     }
 }
 
 void OSPPTNAuditSetTimeLimit(
-    OSPTTNAUDIT *ospvTNAudit,
+    OSPT_TN_AUDIT *ospvTNAudit,
     unsigned ospvTimeLimit)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
-        ospvTNAudit->ospmAuditTimeLimit = ospvTimeLimit;
+        ospvTNAudit->TimeLimit = ospvTimeLimit;
     }
 }
 
 void OSPPTNAuditSetURL(
-    OSPTTNAUDIT *ospvTNAudit,
+    OSPT_TN_AUDIT *ospvTNAudit,
     const char *ospvAuditURL)
 {
     if (ospvTNAudit != OSPC_OSNULL) {
         if (ospvAuditURL != OSPC_OSNULL) {
-            if (ospvTNAudit->ospmAuditURL != OSPC_OSNULL) {
-                OSPM_FREE(ospvTNAudit->ospmAuditURL);
-                ospvTNAudit->ospmAuditURL = OSPC_OSNULL;
+            if (ospvTNAudit->URL != OSPC_OSNULL) {
+                OSPM_FREE(ospvTNAudit->URL);
+                ospvTNAudit->URL = OSPC_OSNULL;
             }
 
-            OSPM_MALLOC(ospvTNAudit->ospmAuditURL, char, OSPM_STRLEN(ospvAuditURL) + 1);
-            if (ospvTNAudit->ospmAuditURL != OSPC_OSNULL) {
-                OSPM_MEMCPY(ospvTNAudit->ospmAuditURL, ospvAuditURL, OSPM_STRLEN(ospvAuditURL) + 1);
+            OSPM_MALLOC(ospvTNAudit->URL, char, OSPM_STRLEN(ospvAuditURL) + 1);
+            if (ospvTNAudit->URL != OSPC_OSNULL) {
+                OSPM_MEMCPY(ospvTNAudit->URL, ospvAuditURL, OSPM_STRLEN(ospvAuditURL) + 1);
             }
         }
     }

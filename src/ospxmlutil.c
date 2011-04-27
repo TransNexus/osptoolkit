@@ -353,14 +353,14 @@ unsigned OSPPXMLDocTranslateEntity( /* returns error code */
         } else {
             /* not a character reference - check for predefined name */
             for (cnt = 0; cnt < OSPVXMLDocEntitiesSize; cnt++) {
-                if (OSPM_MEMCMP((const char *)ospvName, (const char *)OSPVXMLDocEntities[cnt].ospmXMLEntName,
-                    OSPM_STRLEN((const char *)OSPVXMLDocEntities[cnt].ospmXMLEntName)) == 0)
+                if (OSPM_MEMCMP((const char *)ospvName, (const char *)OSPVXMLDocEntities[cnt].Name,
+                    OSPM_STRLEN((const char *)OSPVXMLDocEntities[cnt].Name)) == 0)
                 {
                     break;
                 }
             }
             if (cnt < OSPVXMLDocEntitiesSize) {
-                *ospvChar = OSPVXMLDocEntities[cnt].ospmXMLEntValue;
+                *ospvChar = OSPVXMLDocEntities[cnt].Value;
             } else {
                 ospvErrCode = OSPC_ERR_XML_BAD_ENTITY;
             }

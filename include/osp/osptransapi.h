@@ -23,7 +23,7 @@
 #include "osp/ospdest.h"
 #include "osp/ospstatistics.h"
 
-/* Authorisation Indicators */
+/* Authorization Indicators */
 #define OSPC_TRAN_AUTHORISED        0x0001
 #define OSPC_TRAN_REAUTHORISED      0x0002
 #define OSPC_TRAN_NOT_AUTHORISED    0xefff

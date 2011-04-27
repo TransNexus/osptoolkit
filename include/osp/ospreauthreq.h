@@ -15,7 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/* ospreauthreq.h - OSP reauthorisation request objects */
+/* ospreauthreq.h - OSP reauthorization request objects */
 #ifndef _OSPREAUTHREQ_H
 #define _OSPREAUTHREQ_H
 
@@ -28,73 +28,73 @@
 #include "osp/ospaltinfo.h"
 
 typedef struct {
-    OSPTTIME ospmReauthReqTimestamp;
-    char *ospmReauthReqMessageId;
-    char *ospmReauthReqComponentId;
-    unsigned ospmReauthReqRole;
-    OSPTBOOL ospmReauthReqHasRole;
-    OSPT_CALL_ID *ospmReauthReqCallId;
-    char ospmReauthReqSourceNumber[OSPC_SIZE_E164NUM];
-    char ospmReauthReqDestNumber[OSPC_SIZE_E164NUM];
-    OSPTLIST ospmReauthReqSourceAlternate;
-    OSPTLIST ospmReauthReqDestinationAlternate;
-    OSPTTRXID ospmReauthReqTrxId;
-    int ospmReauthReqDuration;
-    OSPTLIST ospmReauthReqTokens;
-    unsigned long ospmReauthReqCustId;
-    unsigned long ospmReauthReqDeviceId;
-    OSPTLIST ospmReauthReqDevInfo;
-} OSPTREAUTHREQ;
+    OSPTTIME Timestamp;
+    char *MessageId;
+    char *ComponentId;
+    unsigned Role;
+    OSPTBOOL HasRole;
+    OSPT_CALL_ID *CallId;
+    char SourceNumber[OSPC_SIZE_E164NUM];
+    char DestinationNumber[OSPC_SIZE_E164NUM];
+    OSPTLIST SourceAlternate;
+    OSPTLIST DestinationAlternate;
+    OSPTTRXID TrxId;
+    int Duration;
+    OSPTLIST Tokens;
+    unsigned long CustomerId;
+    unsigned long DeviceId;
+    OSPTLIST DeviceInfo;
+} OSPT_REAUTH_REQ;
 
 /* Function Prototypes */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    OSPTREAUTHREQ *OSPPReauthReqNew(void);
-    void OSPPReauthReqDelete(OSPTREAUTHREQ **);
-    int OSPPReauthReqToElement(OSPTREAUTHREQ *, OSPT_XML_ELEM **, void *);
-    void OSPPReauthReqSetRole(OSPTREAUTHREQ *, OSPE_ROLE);
-    OSPTBOOL OSPPReauthReqHasRole(OSPTREAUTHREQ *);
-    OSPE_ROLE OSPPReauthReqGetRole(OSPTREAUTHREQ *);
-    void OSPPReauthReqAddSourceAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
-    void OSPPReauthReqAddDestinationAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
-    void OSPPReauthReqSetCallId(OSPTREAUTHREQ *, OSPT_CALL_ID *);
-    OSPTBOOL OSPPReauthReqHasMessageId(OSPTREAUTHREQ *);
-    const char *OSPPReauthReqGetMessageId(OSPTREAUTHREQ *);
-    OSPTBOOL OSPPReauthReqHasTimestamp(OSPTREAUTHREQ *);
-    void OSPPReauthReqSetTimestamp(OSPTREAUTHREQ *, OSPTTIME);
-    OSPTTIME OSPPReauthReqGetTimestamp(OSPTREAUTHREQ *);
-    OSPTBOOL OSPPReauthReqHasComponentId(OSPTREAUTHREQ *);
-    const char *OSPPReauthReqGetComponentId(OSPTREAUTHREQ *);
-    OSPTBOOL OSPPReauthReqHasCallId(OSPTREAUTHREQ *);
-    OSPT_CALL_ID *OSPPReauthReqGetCallId(OSPTREAUTHREQ *);
-    void OSPPReauthReqSetSourceNumber(OSPTREAUTHREQ *, const char *);
-    const char *OSPPReauthReqGetSourceNumber(OSPTREAUTHREQ *);
-    void OSPPReauthReqSetDestNumber(OSPTREAUTHREQ *, const char *);
-    const char *OSPPReauthReqGetDestNumber(OSPTREAUTHREQ *);
-    OSPTBOOL OSPPReauthReqHasTrxId(OSPTREAUTHREQ *);
-    void OSPPReauthReqSetTrxId(OSPTREAUTHREQ *, OSPTTRXID);
-    OSPTTRXID OSPPReauthReqGetTrxId(OSPTREAUTHREQ *);
-    OSPTBOOL OSPPReauthReqHasDuration(OSPTREAUTHREQ *);
-    void OSPPReauthReqSetDuration(OSPTREAUTHREQ *, int ospvDuration);
-    int OSPPReauthReqGetDuration(OSPTREAUTHREQ *);
-    void OSPPReauthReqAddToken(OSPTREAUTHREQ *, OSPTTOKEN *);
-    OSPTTOKEN *OSPPReauthReqFirstToken(OSPTREAUTHREQ *);
-    OSPTTOKEN *OSPPReauthReqNextToken(OSPTREAUTHREQ *, OSPTTOKEN *);
-    OSPTBOOL OSPPReauthReqHasDestinationAlt(OSPTREAUTHREQ *);
-    OSPT_ALTINFO *OSPPReauthReqFirstDestinationAlt(OSPTREAUTHREQ *);
-    OSPT_ALTINFO *OSPPReauthReqNextDestinationAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
+    OSPT_REAUTH_REQ *OSPPReauthReqNew(void);
+    void OSPPReauthReqDelete(OSPT_REAUTH_REQ **);
+    int OSPPReauthReqToElement(OSPT_REAUTH_REQ *, OSPT_XML_ELEM **, void *);
+    void OSPPReauthReqSetRole(OSPT_REAUTH_REQ *, OSPE_ROLE);
+    OSPTBOOL OSPPReauthReqHasRole(OSPT_REAUTH_REQ *);
+    OSPE_ROLE OSPPReauthReqGetRole(OSPT_REAUTH_REQ *);
+    void OSPPReauthReqAddSourceAlt(OSPT_REAUTH_REQ *, OSPT_ALTINFO *);
+    void OSPPReauthReqAddDestinationAlt(OSPT_REAUTH_REQ *, OSPT_ALTINFO *);
+    void OSPPReauthReqSetCallId(OSPT_REAUTH_REQ *, OSPT_CALL_ID *);
+    OSPTBOOL OSPPReauthReqHasMessageId(OSPT_REAUTH_REQ *);
+    const char *OSPPReauthReqGetMessageId(OSPT_REAUTH_REQ *);
+    OSPTBOOL OSPPReauthReqHasTimestamp(OSPT_REAUTH_REQ *);
+    void OSPPReauthReqSetTimestamp(OSPT_REAUTH_REQ *, OSPTTIME);
+    OSPTTIME OSPPReauthReqGetTimestamp(OSPT_REAUTH_REQ *);
+    OSPTBOOL OSPPReauthReqHasComponentId(OSPT_REAUTH_REQ *);
+    const char *OSPPReauthReqGetComponentId(OSPT_REAUTH_REQ *);
+    OSPTBOOL OSPPReauthReqHasCallId(OSPT_REAUTH_REQ *);
+    OSPT_CALL_ID *OSPPReauthReqGetCallId(OSPT_REAUTH_REQ *);
+    void OSPPReauthReqSetSourceNumber(OSPT_REAUTH_REQ *, const char *);
+    const char *OSPPReauthReqGetSourceNumber(OSPT_REAUTH_REQ *);
+    void OSPPReauthReqSetDestNumber(OSPT_REAUTH_REQ *, const char *);
+    const char *OSPPReauthReqGetDestNumber(OSPT_REAUTH_REQ *);
+    OSPTBOOL OSPPReauthReqHasTrxId(OSPT_REAUTH_REQ *);
+    void OSPPReauthReqSetTrxId(OSPT_REAUTH_REQ *, OSPTTRXID);
+    OSPTTRXID OSPPReauthReqGetTrxId(OSPT_REAUTH_REQ *);
+    OSPTBOOL OSPPReauthReqHasDuration(OSPT_REAUTH_REQ *);
+    void OSPPReauthReqSetDuration(OSPT_REAUTH_REQ *, int ospvDuration);
+    int OSPPReauthReqGetDuration(OSPT_REAUTH_REQ *);
+    void OSPPReauthReqAddToken(OSPT_REAUTH_REQ *, OSPT_TOKEN *);
+    OSPT_TOKEN *OSPPReauthReqFirstToken(OSPT_REAUTH_REQ *);
+    OSPT_TOKEN *OSPPReauthReqNextToken(OSPT_REAUTH_REQ *, OSPT_TOKEN *);
+    OSPTBOOL OSPPReauthReqHasDestinationAlt(OSPT_REAUTH_REQ *);
+    OSPT_ALTINFO *OSPPReauthReqFirstDestinationAlt(OSPT_REAUTH_REQ *);
+    OSPT_ALTINFO *OSPPReauthReqNextDestinationAlt(OSPT_REAUTH_REQ *, OSPT_ALTINFO *);
     const char *OSPPReauthReqGetDestinationAltValue(OSPT_ALTINFO *);
-    OSPTBOOL OSPPReauthReqHasSourceAlt(OSPTREAUTHREQ *);
-    OSPT_ALTINFO *OSPPReauthReqFirstSourceAlt(OSPTREAUTHREQ *);
-    OSPT_ALTINFO *OSPPReauthReqNextSourceAlt(OSPTREAUTHREQ *, OSPT_ALTINFO *);
-    OSPTBOOL OSPPReauthReqHasCustId(OSPTREAUTHREQ *);
-    void OSPPReauthReqSetCustId(OSPTREAUTHREQ *, unsigned long);
-    unsigned long OSPPReauthReqGetCustId(OSPTREAUTHREQ *);
-    OSPTBOOL OSPPReauthReqHasDeviceId(OSPTREAUTHREQ *);
-    void OSPPReauthReqSetDeviceId(OSPTREAUTHREQ *, unsigned long);
-    unsigned long OSPPReauthReqGetDeviceId(OSPTREAUTHREQ *);
+    OSPTBOOL OSPPReauthReqHasSourceAlt(OSPT_REAUTH_REQ *);
+    OSPT_ALTINFO *OSPPReauthReqFirstSourceAlt(OSPT_REAUTH_REQ *);
+    OSPT_ALTINFO *OSPPReauthReqNextSourceAlt(OSPT_REAUTH_REQ *, OSPT_ALTINFO *);
+    OSPTBOOL OSPPReauthReqHasCustId(OSPT_REAUTH_REQ *);
+    void OSPPReauthReqSetCustId(OSPT_REAUTH_REQ *, unsigned long);
+    unsigned long OSPPReauthReqGetCustId(OSPT_REAUTH_REQ *);
+    OSPTBOOL OSPPReauthReqHasDeviceId(OSPT_REAUTH_REQ *);
+    void OSPPReauthReqSetDeviceId(OSPT_REAUTH_REQ *, unsigned long);
+    unsigned long OSPPReauthReqGetDeviceId(OSPT_REAUTH_REQ *);
 
 #ifdef __cplusplus
 }

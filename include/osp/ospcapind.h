@@ -26,12 +26,12 @@
 #include "osp/osptrans.h"
 
 typedef struct {
-    OSPTTIME ospmTimestamp;
-    char *ospmMessageId;
-    char *ospmComponentId;
-    OSPTLIST ospmDeviceInfo;
-    unsigned ospmAlmostOutOfResources;
-    OSPTLIST ospmSrcAlternate;
+    OSPTTIME Timestamp;
+    char *MessageId;
+    char *ComponentId;
+    OSPTLIST DeviceInfo;
+    unsigned AlmostOutOfResources;
+    OSPTLIST SourceAlternate;
 } OSPT_CAP_IND;
 
 /* Function Prototypes */

@@ -25,35 +25,35 @@
 #include "osp/ospsecurity.h"
 
 typedef struct {
-    OSPTMUTEX ospmAuditWorkerMutex;
-    OSPTBOOL ospmAuditWorkerHasMutex;
-    OSPTMUTEX ospmAuditAccessMutex;
-    OSPTBOOL ospmAuditAccessHasMutex;
-    OSPTTHREADID ospmAuditThreadId;
-    OSPTCOMM *ospmAuditComm;
-    OSPTCONDVAR ospmAuditWorkerCondVar;
-    OSPTCONDVAR ospmAuditAccessCondVar;
-    OSPTSEC *ospmAuditSecurity;
-    unsigned ospmAuditUsedSpace;
-    unsigned ospmAuditMaxSpace;
-    unsigned ospmAuditNumMessages;
-    unsigned ospmAuditMaxMessages;
-    OSPTBFR *ospmAuditStorage;
-    unsigned long ospmAuditStartTime;
-    unsigned long ospmAuditMaxTime;
-    char *ospmAuditURL;
+    OSPTMUTEX WorkerMutex;
+    OSPTBOOL WorkerHasMutex;
+    OSPTMUTEX AccessMutex;
+    OSPTBOOL AccessHasMutex;
+    OSPTTHREADID ThreadId;
+    OSPTCOMM *Comm;
+    OSPTCONDVAR WorkerCondVar;
+    OSPTCONDVAR AccessCondVar;
+    OSPTSEC *Security;
+    unsigned UsedSpace;
+    unsigned MaxSpace;
+    unsigned NumMessages;
+    unsigned MaxMessages;
+    OSPTBFR *Storage;
+    unsigned StartTime;
+    unsigned long MaxTime;
+    char *URL;
     /*
      * bit 1 - Flush Buffer - 0x01
      * bit 2 - Buffer Empty - 0x02
      */
-    unsigned char ospmAuditFlags;
-    OSPTLIST ospmAuditComponentIdList;
+    unsigned char Flags;
+    OSPTLIST ComponentIdList;
 } OSPT_AUDIT;
 
 /* ComponentId list item */
 typedef struct {
-    OSPTLISTLINK ospmComponentIdLink;
-    char *ospmComponentId;
+    OSPTLISTLINK Link;
+    char *Id;
 } OSPT_COMPONENT_ID;
 
 #define OSPC_AUDIT_FLUSH_BUFFER_NOW     0x01
@@ -106,7 +106,7 @@ extern "C" {
     void OSPPAuditSetURL(OSPT_AUDIT *ospvAudit, const char *ospvAuditURL);
     void OSPPAuditSetUsedSpace(OSPT_AUDIT *ospvAudit, unsigned ospvUsedSpace);
     int OSPPAuditStartWorker(OSPT_AUDIT *ospvAudit);
-    void OSPPAuditVerifyUsageCnf(OSPTUSAGECNF *ospvUsageCnf, OSPT_AUDIT *ospvAudit);
+    void OSPPAuditVerifyUsageCnf(OSPT_USAGE_CNF *ospvUsageCnf, OSPT_AUDIT *ospvAudit);
 
 #ifdef __cplusplus
 }

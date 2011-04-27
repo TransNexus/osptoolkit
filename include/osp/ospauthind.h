@@ -15,7 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/* ospauthind.h - OSP authorisation indication objects */
+/* ospauthind.h - OSP authorization indication objects */
 #ifndef _OSPAUTHIND_H
 #define _OSPAUTHIND_H
 
@@ -29,20 +29,20 @@
 #include "osp/ospdest.h"
 
 typedef struct {
-    OSPTTIME ospmAuthIndTimestamp;
-    OSPE_ROLE ospmAuthIndRole;
-    OSPTBOOL ospmAuthIndHasRole;
-    OSPT_CALL_ID *ospmAuthIndCallId;
-    char ospmAuthIndSourceNumber[OSPC_SIZE_E164NUM];
-    char ospmAuthIndDestNumber[OSPC_SIZE_E164NUM];
-    OSPTLIST ospmAuthIndSourceAlternate;
-    OSPTLIST ospmAuthIndDeviceInfo;
-    OSPTLIST ospmAuthIndDestinationAlternate;
-    OSPTLIST ospmAuthIndTokens;
-    OSPTBOOL ospmAuthIndHasTimeLimit;
-    unsigned ospmAuthIndTimeLimit;
-    OSPT_DEST *ospmAuthIndDest;
-    OSPTBOOL ospmAuthIndHasDestNetworkIdInToken;
+    OSPTTIME Timestamp;
+    OSPE_ROLE Role;
+    OSPTBOOL HasRole;
+    OSPT_CALL_ID *CallId;
+    char SourceNumber[OSPC_SIZE_E164NUM];
+    char DestinationNumber[OSPC_SIZE_E164NUM];
+    OSPTLIST SourceAlternate;
+    OSPTLIST DeviceInfo;
+    OSPTLIST DestinationAlternate;
+    OSPTLIST Tokens;
+    OSPTBOOL HasTimeLimit;
+    unsigned TimeLimit;
+    OSPT_DEST *Destination;
+    OSPTBOOL HasDestNetworkIdInToken;
 } OSPT_AUTH_IND;
 
 #define OSPPAuthIndTokenGetSize(ospvToken) OSPPTokenGetSize(ospvToken);

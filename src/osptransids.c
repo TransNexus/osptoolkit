@@ -154,13 +154,13 @@
 
 /* OSPPTransIdAdd - add a transaction ID to the ordered tree */
 OSPTBOOL OSPPTransIdAdd(        /* returns false if duplicate */
-    OSPTTRANSID *ospvTransId,   /* transaction ID to add */
+    OSPT_TRANS_ID *ospvTransId, /* transaction ID to add */
     OSPTPROVIDER *ospvProvider)
 {
-    OSPTTRANSID **root = OSPC_OSNULL;
+    OSPT_TRANS_ID **root = OSPC_OSNULL;
 
     /* check to make sure the transaction ID structure is clean */
-    if (!(ospvTransId->ospmTransactionIdLessPtr == 0) || !(ospvTransId->ospmTransactionIdMorePtr == 0)) {
+    if (!(ospvTransId->LessPtr == 0) || !(ospvTransId->MorePtr == 0)) {
         return OSPC_FALSE;
     }
 
@@ -176,7 +176,7 @@ OSPTBOOL OSPPTransIdAdd(        /* returns false if duplicate */
 
     while (*root != 0) {
 
-        if (ospvTransId->ospmTransactionId < (*root)->ospmTransactionId) {
+        if (ospvTransId->Id < (*root)->Id) {
             /*
              * We're not at the end of the tree yet, so we have to
              * keep searching. In this case, the node to be added
@@ -185,8 +185,8 @@ OSPTBOOL OSPPTransIdAdd(        /* returns false if duplicate */
              * of the tree.
              */
 
-            root = &((*root)->ospmTransactionIdLessPtr);
-        } else if (ospvTransId->ospmTransactionId > (*root)->ospmTransactionId) {
+            root = &((*root)->LessPtr);
+        } else if (ospvTransId->Id > (*root)->Id) {
             /*
              * This is the same as the previous case, except that
              * the node being added is numerically greater than the
@@ -194,7 +194,7 @@ OSPTBOOL OSPPTransIdAdd(        /* returns false if duplicate */
              * "More" side of the tree.
              */
 
-            root = &((*root)->ospmTransactionIdMorePtr);
+            root = &((*root)->MorePtr);
         } else {
             /*
              * This isn't *supposed* to happen, but we've found a duplicate
@@ -218,7 +218,7 @@ OSPTBOOL OSPPTransIdAdd(        /* returns false if duplicate */
      */
 
     *root = ospvTransId;
-    ospvTransId->ospmTransactionIdParent = root;
+    ospvTransId->Parent = root;
 
     /* since everything's okay, return true */
     return OSPC_TRUE;
@@ -232,7 +232,7 @@ OSPTBOOL OSPPTransIdCheckAndAdd(    /* returns false if addition fails */
     unsigned long ospvExpires,      /* expiration time in seconds */
     OSPTPROVIDER *ospvProvider)
 {
-    OSPTTRANSID *ptransid = OSPC_OSNULL;    /* pointer to Transaction ID */
+    OSPT_TRANS_ID *ptransid = OSPC_OSNULL;  /* pointer to Transaction ID */
     int errorcode = OSPC_ERR_NO_ERROR;
 
     /* LOCK GLOBAL DATA NOW */
@@ -302,7 +302,7 @@ OSPTBOOL OSPPTransIdCheckAndAdd(    /* returns false if addition fails */
 
 /* OSPPTransIdDelete - free a transaction ID structure */
 void  OSPPTransIdDelete(        /* no return value */
-    OSPTTRANSID *ospvTransId)   /* structure to free */
+    OSPT_TRANS_ID *ospvTransId) /* structure to free */
 {
     OSPM_FREE(ospvTransId);
 }
@@ -315,12 +315,12 @@ void OSPPTransIdInit(
 
     /*initialize transaction tracking
      * initialize the doubly-linked list sentinel */
-    OSPTTRANSID *sentinel = OSPPProviderGetTransIdSentinel(ospvProvider);
-    OSPTTRANSID **treeroot = OSPPProviderGetTransIdRoot(ospvProvider);
+    OSPT_TRANS_ID *sentinel = OSPPProviderGetTransIdSentinel(ospvProvider);
+    OSPT_TRANS_ID **treeroot = OSPPProviderGetTransIdRoot(ospvProvider);
 
-    OSPM_MEMSET(sentinel, 0, sizeof(OSPTTRANSID));
-    sentinel->ospmTransactionIdOlderPtr = sentinel;
-    sentinel->ospmTransactionIdNewerPtr = sentinel;
+    OSPM_MEMSET(sentinel, 0, sizeof(OSPT_TRANS_ID));
+    sentinel->OlderPtr = sentinel;
+    sentinel->NewerPtr = sentinel;
 
     OSPM_MUTEX_INIT(ospvProvider->TransIdMutex, 0, errorcode);
 
@@ -334,17 +334,17 @@ void OSPPTransIdInit(
 }
 
 /* OSPPTransIdNew - allocate and initialize a new transaction ID structure */
-OSPTTRANSID *  OSPPTransIdNew(  /* returns null on failure */
+OSPT_TRANS_ID *  OSPPTransIdNew(/* returns null on failure */
     OSPTUINT64 ospvTransIdVal,  /* transaction ID value */
     unsigned long ospvExpires)  /* expiration time in seconds */
 {
-    OSPTTRANSID *transid = OSPC_OSNULL;     /* pointer to Transaction ID */
+    OSPT_TRANS_ID *transid = OSPC_OSNULL;   /* pointer to Transaction ID */
 
-    OSPM_MALLOC(transid, OSPTTRANSID, sizeof(OSPTTRANSID));
+    OSPM_MALLOC(transid, OSPT_TRANS_ID, sizeof(OSPT_TRANS_ID));
     if (transid) {
-        OSPM_MEMSET(transid, 0, sizeof(OSPTTRANSID));
-        transid->ospmTransactionId = ospvTransIdVal;
-        transid->ospmTransactionIdExpires = ospvExpires;
+        OSPM_MEMSET(transid, 0, sizeof(OSPT_TRANS_ID));
+        transid->Id = ospvTransIdVal;
+        transid->Expires = ospvExpires;
     }
 
     return transid;
@@ -352,19 +352,19 @@ OSPTTRANSID *  OSPPTransIdNew(  /* returns null on failure */
 
 /* OSPPTransIdPurge - remove expired transaction IDs */
 void OSPPTransIdPurge(      /* returns nothing */
-    OSPTTRANSID *ospvSentinel)
+    OSPT_TRANS_ID *ospvSentinel)
 {
-    OSPTTRANSID *ptransid = OSPC_OSNULL;
+    OSPT_TRANS_ID *ptransid = OSPC_OSNULL;
     unsigned long now = 0;
 
     /* Get the current time. Anything older will be deleted. */
     now = OSPPTransIdSecNow();
 
-    for (ptransid = ospvSentinel->ospmTransactionIdOlderPtr;
-         (ptransid != ospvSentinel) && (ptransid->ospmTransactionIdExpires < now); ptransid = ospvSentinel->ospmTransactionIdNewerPtr) {
+    for (ptransid = ospvSentinel->OlderPtr;
+         (ptransid != ospvSentinel) && (ptransid->Expires < now); ptransid = ospvSentinel->NewerPtr) {
         /* this one's expired, remove it from the list */
-        ptransid->ospmTransactionIdOlderPtr->ospmTransactionIdNewerPtr = ptransid->ospmTransactionIdNewerPtr;
-        ptransid->ospmTransactionIdNewerPtr->ospmTransactionIdOlderPtr = ptransid->ospmTransactionIdOlderPtr;
+        ptransid->OlderPtr->NewerPtr = ptransid->NewerPtr;
+        ptransid->NewerPtr->OlderPtr = ptransid->OlderPtr;
 
         /* and then delete it completely */
         OSPPTransIdRemove(ptransid);
@@ -374,10 +374,10 @@ void OSPPTransIdPurge(      /* returns nothing */
 
 /* OSPPTransIdRemove - remove a transaction ID from the ordered tree */
 void OSPPTransIdRemove(         /* no return value */
-    OSPTTRANSID *ospvTransId)   /* transaction ID to remove */
+    OSPT_TRANS_ID *ospvTransId) /* transaction ID to remove */
 {
-    OSPTTRANSID *splice = OSPC_OSNULL;  /* node to be spliced */
-    OSPTTRANSID *child = OSPC_OSNULL;   /* child of spliced node */
+    OSPT_TRANS_ID *splice = OSPC_OSNULL;/* node to be spliced */
+    OSPT_TRANS_ID *child = OSPC_OSNULL; /* child of spliced node */
     int errorcode = OSPC_ERR_NO_ERROR;
 
     /*
@@ -401,7 +401,7 @@ void OSPPTransIdRemove(         /* no return value */
 
     /* figure out which node to splice out */
 
-    if ((ospvTransId->ospmTransactionIdLessPtr == 0) || (ospvTransId->ospmTransactionIdMorePtr == 0)) {
+    if ((ospvTransId->LessPtr == 0) || (ospvTransId->MorePtr == 0)) {
         /*
          * If the node has no more than one child, then it is
          * itself the one to remove from the tree. This actually
@@ -424,9 +424,9 @@ void OSPPTransIdRemove(         /* no return value */
          * in the right (the "tidMorePtr" path) subtree.
          */
 
-        splice = ospvTransId->ospmTransactionIdMorePtr;
-        while (splice->ospmTransactionIdLessPtr) {
-            splice = splice->ospmTransactionIdLessPtr;
+        splice = ospvTransId->MorePtr;
+        while (splice->LessPtr) {
+            splice = splice->LessPtr;
         }
     }
 
@@ -435,15 +435,15 @@ void OSPPTransIdRemove(         /* no return value */
      * of that node's children is going to get "promoted".
      */
 
-    if (splice->ospmTransactionIdLessPtr) {
-        child = splice->ospmTransactionIdLessPtr;
+    if (splice->LessPtr) {
+        child = splice->LessPtr;
     } else {
         /*
          * This handles case 1 in the introduction. If the node
          * had no children, the pChild will end up being null.
          */
 
-        child = splice->ospmTransactionIdMorePtr;
+        child = splice->MorePtr;
     }
 
     /*
@@ -452,13 +452,13 @@ void OSPPTransIdRemove(         /* no return value */
      */
 
     if (child) {
-        if (!(*(child->ospmTransactionIdParent) == splice->ospmTransactionIdLessPtr) &&
-            !(*(child->ospmTransactionIdParent) == splice->ospmTransactionIdMorePtr)) {
+        if (!(*(child->Parent) == splice->LessPtr) &&
+            !(*(child->Parent) == splice->MorePtr)) {
             errorcode = OSPC_ERR_TRANSID;
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            child->ospmTransactionIdParent = splice->ospmTransactionIdParent;
+            child->Parent = splice->Parent;
         }
     }
 
@@ -468,7 +468,7 @@ void OSPPTransIdRemove(         /* no return value */
      */
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
-        *(splice->ospmTransactionIdParent) = child;
+        *(splice->Parent) = child;
 
         /*
          * Final cleanup, if the node we spliced out wasn't the actual
@@ -478,23 +478,23 @@ void OSPPTransIdRemove(         /* no return value */
 
         if (splice != ospvTransId) {
             /* good place for some checks */
-            if (!(splice->ospmTransactionIdOlderPtr->ospmTransactionIdNewerPtr == splice) ||
-                !(splice->ospmTransactionIdNewerPtr->ospmTransactionIdOlderPtr == splice)) {
+            if (!(splice->OlderPtr->NewerPtr == splice) ||
+                !(splice->NewerPtr->OlderPtr == splice)) {
                 errorcode = OSPC_ERR_TRANSID;
             }
 
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 /* first extract the spliced node from the linked list */
-                splice->ospmTransactionIdOlderPtr->ospmTransactionIdNewerPtr = ospvTransId;
-                splice->ospmTransactionIdNewerPtr->ospmTransactionIdOlderPtr = ospvTransId;
+                splice->OlderPtr->NewerPtr = ospvTransId;
+                splice->NewerPtr->OlderPtr = ospvTransId;
 
                 /* now insert the existing node into the linked list */
-                ospvTransId->ospmTransactionIdOlderPtr = splice->ospmTransactionIdOlderPtr;
-                ospvTransId->ospmTransactionIdNewerPtr = splice->ospmTransactionIdNewerPtr;
+                ospvTransId->OlderPtr = splice->OlderPtr;
+                ospvTransId->NewerPtr = splice->NewerPtr;
 
                 /* finally, update the existing node's actual data */
-                ospvTransId->ospmTransactionId = splice->ospmTransactionId;
-                ospvTransId->ospmTransactionIdExpires = splice->ospmTransactionIdExpires;
+                ospvTransId->Id = splice->Id;
+                ospvTransId->Expires = splice->Expires;
             }
         }
     }
@@ -517,11 +517,11 @@ unsigned long OSPPTransIdSecNow(void)   /* returns current time in seconds */
 
 /* OSPPTransIdTimeAdd - add transaction in time-ordered linked list */
 void  OSPPTransIdTimeAdd(       /* no return value */
-    OSPTTRANSID *ospvTransId,   /* transaction ID to add */
+    OSPT_TRANS_ID *ospvTransId, /* transaction ID to add */
     OSPTPROVIDER *ospvProvider)
 {
-    OSPTTRANSID *curr = OSPC_OSNULL;    /* current position on list */
-    OSPTTRANSID *sentinel = OSPPProviderGetTransIdSentinel(ospvProvider);
+    OSPT_TRANS_ID *curr = OSPC_OSNULL;    /* current position on list */
+    OSPT_TRANS_ID *sentinel = OSPPProviderGetTransIdSentinel(ospvProvider);
     int errorcode = OSPC_ERR_NO_ERROR;
     /*
      * We put this transaction on the list in sorted order. To
@@ -531,8 +531,8 @@ void  OSPPTransIdTimeAdd(       /* no return value */
      */
 
     if (sentinel != OSPC_OSNULL) {
-        for (curr = sentinel->ospmTransactionIdOlderPtr;
-             ((curr != sentinel) && (curr->ospmTransactionIdExpires > ospvTransId->ospmTransactionIdExpires));) {
+        for (curr = sentinel->OlderPtr;
+             ((curr != sentinel) && (curr->Expires > ospvTransId->Expires));) {
             /*
              * The loop iteration could be moved into the for statement,
              * but we wanted to go ahead and use the for loop to check
@@ -543,11 +543,10 @@ void  OSPPTransIdTimeAdd(       /* no return value */
              * then, we've moved the iteration statement inside the
              * body of the for statement.
              */
-            curr = curr->ospmTransactionIdOlderPtr;
+            curr = curr->OlderPtr;
 
             /* now do the checks we were just talking about */
-            if (!(curr->ospmTransactionIdOlderPtr->ospmTransactionIdNewerPtr == curr) &&
-                !(curr->ospmTransactionIdOlderPtr->ospmTransactionIdOlderPtr == curr)) {
+            if (!(curr->OlderPtr->NewerPtr == curr) && !(curr->OlderPtr->OlderPtr == curr)) {
                 errorcode = OSPC_ERR_TRANSID;
                 break;
             }
@@ -555,10 +554,10 @@ void  OSPPTransIdTimeAdd(       /* no return value */
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             /* Now just plop the new transaction in the list */
-            ospvTransId->ospmTransactionIdOlderPtr = curr;
-            ospvTransId->ospmTransactionIdNewerPtr = curr->ospmTransactionIdNewerPtr;
-            curr->ospmTransactionIdNewerPtr->ospmTransactionIdOlderPtr = ospvTransId;
-            curr->ospmTransactionIdNewerPtr = ospvTransId;
+            ospvTransId->OlderPtr = curr;
+            ospvTransId->NewerPtr = curr->NewerPtr;
+            curr->NewerPtr->OlderPtr = ospvTransId;
+            curr->NewerPtr = ospvTransId;
         }
     }
 }
@@ -569,17 +568,17 @@ void  OSPPTransIdTimeAdd(       /* no return value */
 void OSPPTransIDTreeDelete(
     OSPTPROVIDER *ospvProvider)
 {
-    OSPTTRANSID *ptransid = OSPC_OSNULL;
-    OSPTTRANSID *sentinel = OSPPProviderGetTransIdSentinel(ospvProvider);
+    OSPT_TRANS_ID *ptransid = OSPC_OSNULL;
+    OSPT_TRANS_ID *sentinel = OSPPProviderGetTransIdSentinel(ospvProvider);
 
     /* LOCK GLOBAL DATA NOW */
     OSPPProviderLockTransIdMutex(ospvProvider);
 
     if (sentinel != OSPC_OSNULL) {
-        for (ptransid = sentinel->ospmTransactionIdOlderPtr; (ptransid != sentinel); ptransid = sentinel->ospmTransactionIdOlderPtr) {
+        for (ptransid = sentinel->OlderPtr; (ptransid != sentinel); ptransid = sentinel->OlderPtr) {
             /* remove it from the list */
-            ptransid->ospmTransactionIdOlderPtr->ospmTransactionIdNewerPtr = ptransid->ospmTransactionIdNewerPtr;
-            ptransid->ospmTransactionIdNewerPtr->ospmTransactionIdOlderPtr = ptransid->ospmTransactionIdOlderPtr;
+            ptransid->OlderPtr->NewerPtr = ptransid->NewerPtr;
+            ptransid->NewerPtr->OlderPtr = ptransid->OlderPtr;
 
             /* and then delete it completely */
             OSPPTransIdRemove(ptransid);

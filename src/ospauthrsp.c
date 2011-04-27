@@ -15,7 +15,7 @@
 ***                                                                     ***
 **************************************************************************/
 
-/* ospauthrsp.c - OSP authorisation response functions */
+/* ospauthrsp.c - OSP authorization response functions */
 
 #include "osp/osp.h"
 #include "osp/osperrno.h"
@@ -38,7 +38,7 @@ void OSPPAuthRspSetTimestamp(
     OSPTTIME ospvTime)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvAuthRsp->ospmAuthRspTimestamp = ospvTime;
+        ospvAuthRsp->Timestamp = ospvTime;
     }
 }
 
@@ -46,41 +46,41 @@ void OSPPAuthRspSetTimestamp(
  * OSPPAuthRspHasStatus() - does the AuthResponse have a status?
  */
 OSPTBOOL OSPPAuthRspHasStatus(
-    OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response effected */
+    OSPT_AUTH_RSP *ospvAuthRsp) /* authorization response effected */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvHas = (ospvAuthRsp->ospmAuthRspStatus != OSPC_OSNULL);
+        has = (ospvAuthRsp->Status != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPAuthRspGetStatus() - returns the status for an AuthResponse
  */
-OSPTSTATUS* OSPPAuthRspGetStatus(
-    OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response */
+OSPT_STATUS* OSPPAuthRspGetStatus(
+    OSPT_AUTH_RSP *ospvAuthRsp) /* authorization response */
 {
-    OSPTSTATUS *ospvStatus = OSPC_OSNULL;
+    OSPT_STATUS *status = OSPC_OSNULL;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvStatus = ospvAuthRsp->ospmAuthRspStatus;
+        status = ospvAuthRsp->Status;
     }
 
-    return ospvStatus;
+    return status;
 }
 
 /*
- * OSPPAuthRspSetTrxId() - sets the transaction ID for an authorisation
+ * OSPPAuthRspSetTrxId() - sets the transaction ID for an authorization
  */
 void OSPPAuthRspSetTrxId(
-    OSPT_AUTH_RSP *ospvAuthRsp, /* authorisation response */
+    OSPT_AUTH_RSP *ospvAuthRsp, /* authorization response */
     OSPTTRXID ospvTrxId)        /* transaction ID to set */
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvAuthRsp->ospmAuthRspTrxId = ospvTrxId;
+        ospvAuthRsp->TrxId = ospvTrxId;
     }
 }
 
@@ -88,27 +88,27 @@ void OSPPAuthRspSetTrxId(
  * OSPPAuthRspHasDest() - does the AuthResponse have a destination?
  */
 OSPTBOOL OSPPAuthRspHasDest(
-    OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response effected */
+    OSPT_AUTH_RSP *ospvAuthRsp) /* authorization response effected */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvHas = (ospvAuthRsp->ospmAuthRspDest != OSPC_OSNULL);
+        has = (ospvAuthRsp->Destination != OSPC_OSNULL);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
  * OSPPAuthRspFirstDest() - returns the first destination for an AuthResponse
  */
 OSPT_DEST* OSPPAuthRspFirstDest(
-    OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response */
+    OSPT_AUTH_RSP *ospvAuthRsp) /* authorization response */
 {
     OSPT_DEST* dest = OSPC_OSNULL;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        dest = (OSPT_DEST*)OSPPListFirst(&(ospvAuthRsp->ospmAuthRspDest));
+        dest = (OSPT_DEST*)OSPPListFirst(&(ospvAuthRsp->Destination));
     }
 
     return dest;
@@ -118,13 +118,13 @@ OSPT_DEST* OSPPAuthRspFirstDest(
  * OSPPAuthRspNextDest() - returns the next destination for an AuthResponse
  */
 OSPT_DEST* OSPPAuthRspNextDest(
-    OSPT_AUTH_RSP *ospvAuthRsp, /* authorisation response */
+    OSPT_AUTH_RSP *ospvAuthRsp, /* authorization response */
     OSPT_DEST *ospvDest)
 {
     OSPT_DEST* dest = OSPC_OSNULL;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        dest = (OSPT_DEST*)OSPPListNext(&(ospvAuthRsp->ospmAuthRspDest), ospvDest);
+        dest = (OSPT_DEST*)OSPPListNext(&(ospvAuthRsp->Destination), ospvDest);
     }
 
     return dest;
@@ -134,26 +134,26 @@ OSPT_DEST* OSPPAuthRspNextDest(
  * OSPPAuthRspHasDelayLimit() - does an AuthResponse have delay limit?
  */
 OSPTBOOL OSPPAuthRspHasDelayLimit(
-    OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response */
+    OSPT_AUTH_RSP *ospvAuthRsp) /* authorization response */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvHas = (ospvAuthRsp->ospmAuthRspDelayLimit > 0);
+        has = (ospvAuthRsp->DelayLimit > 0);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
- * OSPPAuthRspSetDelayLimit() - sets the delay limit for an authorisation
+ * OSPPAuthRspSetDelayLimit() - sets the delay limit for an authorization
  */
 void OSPPAuthRspSetDelayLimit(
-    OSPT_AUTH_RSP *ospvAuthRsp, /* authorisation response */
+    OSPT_AUTH_RSP *ospvAuthRsp, /* authorization response */
     unsigned ospvDelayLimit)    /* delay limit to set */
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvAuthRsp->ospmAuthRspDelayLimit = ospvDelayLimit;
+        ospvAuthRsp->DelayLimit = ospvDelayLimit;
     }
 }
 
@@ -161,41 +161,41 @@ void OSPPAuthRspSetDelayLimit(
  * OSPPAuthRspGetDelayLimit() - gets the delay limit for an AuthResponse
  */
 unsigned OSPPAuthRspGetDelayLimit(
-    OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response */
+    OSPT_AUTH_RSP *ospvAuthRsp) /* authorization response */
 {
-    unsigned ospvDelayLimit = 0;
+    unsigned limit = 0;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvDelayLimit = ospvAuthRsp->ospmAuthRspDelayLimit;
+        limit = ospvAuthRsp->DelayLimit;
     }
 
-    return ospvDelayLimit;
+    return limit;
 }
 
 /*
  * OSPPAuthRspHasDelayPref() - does an AuthResponse have delay pref?
  */
 OSPTBOOL OSPPAuthRspHasDelayPref(
-    OSPT_AUTH_RSP *ospvAuthRsp) /* authorisation response */
+    OSPT_AUTH_RSP *ospvAuthRsp) /* authorization response */
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvHas = (ospvAuthRsp->ospmAuthRspDelayPref > 0);
+        has = (ospvAuthRsp->DelayPref > 0);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
- * OSPPAuthRspSetDelayPref() - sets the delay pref for an authorisation
+ * OSPPAuthRspSetDelayPref() - sets the delay pref for an authorization
  */
 void OSPPAuthRspSetDelayPref(
-    OSPT_AUTH_RSP *ospvAuthRsp, /* authorisation response */
+    OSPT_AUTH_RSP *ospvAuthRsp, /* authorization response */
     unsigned ospvDelayPref)     /* delay pref to set */
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvAuthRsp->ospmAuthRspDelayPref = ospvDelayPref;
+        ospvAuthRsp->DelayPref = ospvDelayPref;
     }
 }
 
@@ -203,7 +203,7 @@ OSPTBOOL OSPPAuthRspHasNumDests(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        return ospvAuthRsp->ospmNumDests;
+        return ospvAuthRsp->NumDestination;
     } else {
         return OSPC_FALSE;
     }
@@ -213,7 +213,7 @@ void OSPPAuthRspIncNumDests(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvAuthRsp->ospmNumDests++;
+        ospvAuthRsp->NumDestination++;
     }
 }
 
@@ -221,7 +221,7 @@ unsigned OSPPAuthRspGetNumDests(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        return ospvAuthRsp->ospmNumDests;
+        return ospvAuthRsp->NumDestination;
     } else {
         return 0;
     }
@@ -234,7 +234,7 @@ OSPTBOOL OSPPAuthRspHasComponentId(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        return(ospvAuthRsp->ospmAuthRspComponentId != OSPC_OSNULL);
+        return(ospvAuthRsp->ComponentId != OSPC_OSNULL);
     } else {
         return OSPC_FALSE;
     }
@@ -250,49 +250,49 @@ void OSPPAuthRspSetComponentId(
     int len = OSPM_STRLEN(ospvComponentId);
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        if (ospvAuthRsp->ospmAuthRspComponentId != OSPC_OSNULL) {
-            OSPM_FREE(ospvAuthRsp->ospmAuthRspComponentId);
+        if (ospvAuthRsp->ComponentId != OSPC_OSNULL) {
+            OSPM_FREE(ospvAuthRsp->ComponentId);
         }
 
-        OSPM_MALLOC(ospvAuthRsp->ospmAuthRspComponentId, char, len + 1);
-        OSPM_MEMSET(ospvAuthRsp->ospmAuthRspComponentId, 0, len + 1);
-        OSPM_MEMCPY(ospvAuthRsp->ospmAuthRspComponentId, ospvComponentId, len);
+        OSPM_MALLOC(ospvAuthRsp->ComponentId, char, len + 1);
+        OSPM_MEMSET(ospvAuthRsp->ComponentId, 0, len + 1);
+        OSPM_MEMCPY(ospvAuthRsp->ComponentId, ospvComponentId, len);
     }
 }
 
-OSPTTNAUDIT* OSPPAuthRspGetTNAudit(
+OSPT_TN_AUDIT* OSPPAuthRspGetTNAudit(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        return ospvAuthRsp->ospmAuthRspTNAudit;
+        return ospvAuthRsp->TNAudit;
     } else {
         return OSPC_OSNULL;
     }
 }
 
 /*
- * OSPPAuthRspNew() - creates a new (empty) authorisation response
+ * OSPPAuthRspNew() - creates a new (empty) authorization response
  */
 OSPT_AUTH_RSP* OSPPAuthRspNew(void)
 {
-    OSPT_AUTH_RSP *ospvAuthRsp;
+    OSPT_AUTH_RSP *authrsp;
 
-    OSPM_MALLOC(ospvAuthRsp, OSPT_AUTH_RSP,sizeof(OSPT_AUTH_RSP));
-    if (ospvAuthRsp != OSPC_OSNULL) {
-        OSPM_MEMSET(ospvAuthRsp, 0, sizeof(OSPT_AUTH_RSP));
+    OSPM_MALLOC(authrsp, OSPT_AUTH_RSP,sizeof(OSPT_AUTH_RSP));
+    if (authrsp != OSPC_OSNULL) {
+        OSPM_MEMSET(authrsp, 0, sizeof(OSPT_AUTH_RSP));
 
-        ospvAuthRsp->ospmAuthRspTimestamp = OSPC_TIMEMIN;
-        ospvAuthRsp->ospmAuthRspStatus = OSPC_OSNULL;
-        ospvAuthRsp->ospmAuthRspTrxId = 0;
-        ospvAuthRsp->ospmAuthRspCSAudit = OSPC_OSNULL;
-        OSPPListNew(&(ospvAuthRsp->ospmAuthRspDest));
+        authrsp->Timestamp = OSPC_TIMEMIN;
+        authrsp->Status = OSPC_OSNULL;
+        authrsp->TrxId = 0;
+        authrsp->CSAudit = OSPC_OSNULL;
+        OSPPListNew(&(authrsp->Destination));
     }
 
-    return ospvAuthRsp;
+    return authrsp;
 }
 
 /*
- * OSPPAuthRspDelete() - deletes an authorisation response structure
+ * OSPPAuthRspDelete() - deletes an authorization response structure
  */
 void OSPPAuthRspDelete(
     OSPT_AUTH_RSP **ospvAuthRsp)
@@ -301,35 +301,35 @@ void OSPPAuthRspDelete(
 
     if (*ospvAuthRsp != OSPC_OSNULL) {
         /* first remove the status */
-        if ((*ospvAuthRsp)->ospmAuthRspStatus != OSPC_OSNULL) {
-            OSPPStatusDelete(&((*ospvAuthRsp)->ospmAuthRspStatus));
+        if ((*ospvAuthRsp)->Status != OSPC_OSNULL) {
+            OSPPStatusDelete(&((*ospvAuthRsp)->Status));
         }
 
         /* remove tnaudit */
-        if ((*ospvAuthRsp)->ospmAuthRspTNAudit != OSPC_OSNULL) {
-            OSPPTNAuditDelete(&((*ospvAuthRsp)->ospmAuthRspTNAudit));
+        if ((*ospvAuthRsp)->TNAudit != OSPC_OSNULL) {
+            OSPPTNAuditDelete(&((*ospvAuthRsp)->TNAudit));
         }
 
         /* remove csaudit */
-        if ((*ospvAuthRsp)->ospmAuthRspCSAudit != OSPC_OSNULL) {
-            OSPPCSAuditDelete(&((*ospvAuthRsp)->ospmAuthRspCSAudit));
+        if ((*ospvAuthRsp)->CSAudit != OSPC_OSNULL) {
+            OSPPCSAuditDelete(&((*ospvAuthRsp)->CSAudit));
         }
 
         /* remove messageId */
         if (OSPPAuthRspHasMessageId(*ospvAuthRsp)) {
-            OSPM_FREE((*ospvAuthRsp)->ospmAuthRspMessageId);
-            (*ospvAuthRsp)->ospmAuthRspMessageId = OSPC_OSNULL;
+            OSPM_FREE((*ospvAuthRsp)->MessageId);
+            (*ospvAuthRsp)->MessageId = OSPC_OSNULL;
         }
 
         /* remove componentId */
         if (OSPPAuthRspHasComponentId(*ospvAuthRsp)) {
-            OSPM_FREE((*ospvAuthRsp)->ospmAuthRspComponentId);
-            (*ospvAuthRsp)->ospmAuthRspComponentId = OSPC_OSNULL;
+            OSPM_FREE((*ospvAuthRsp)->ComponentId);
+            (*ospvAuthRsp)->ComponentId = OSPC_OSNULL;
         }
 
         /* now remove any attached dests -- this means following the chain */
-        while (!OSPPListEmpty(&((*ospvAuthRsp)->ospmAuthRspDest))) {
-            dest = (OSPT_DEST*)OSPPListRemove(&((*ospvAuthRsp)->ospmAuthRspDest));
+        while (!OSPPListEmpty(&((*ospvAuthRsp)->Destination))) {
+            dest = (OSPT_DEST*)OSPPListRemove(&((*ospvAuthRsp)->Destination));
             if (dest != OSPC_OSNULL) {
                 OSPPDestDelete(&dest);
                 dest = OSPC_OSNULL;
@@ -373,7 +373,7 @@ OSPT_DEST* OSPPAuthRspAddDest(
                  OSPPCallIdGetValue(ospvDest->ospmDestCallId));
             */
 
-            OSPPListAppend(&(ospvAuthRsp->ospmAuthRspDest), ospvAddedDest);
+            OSPPListAppend(&(ospvAuthRsp->Destination), ospvAddedDest);
         }
     }
 
@@ -381,11 +381,11 @@ OSPT_DEST* OSPPAuthRspAddDest(
 }
 
 /*
- * OSPPAuthRspFromElement() - get authorisation response from an XML element
+ * OSPPAuthRspFromElement() - get authorization response from an XML element
  */
 unsigned OSPPAuthRspFromElement(
     OSPT_XML_ELEM *ospvElem,        /* input is XML element */
-    OSPT_AUTH_RSP **ospvAuthRsp)    /* where to put authorisation response pointer */
+    OSPT_AUTH_RSP **ospvAuthRsp)    /* where to put authorization response pointer */
 {
     unsigned error = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM* elem = OSPC_OSNULL;
@@ -405,7 +405,7 @@ unsigned OSPPAuthRspFromElement(
     }
 
     if (error == OSPC_ERR_NO_ERROR) {
-        /* create the authorisation response object */
+        /* create the authorization response object */
         authrsp = OSPPAuthRspNew();
         if (authrsp == OSPC_OSNULL) {
             error = OSPC_ERR_DATA_NO_AUTHRSP;
@@ -432,7 +432,7 @@ unsigned OSPPAuthRspFromElement(
         }
 
         /*
-         * The Authorisation Rsp element should consist of several
+         * The Authorization Rsp element should consist of several
          * child elements. We'll run through what's there and pick out
          * the information we need.
          */
@@ -448,7 +448,7 @@ unsigned OSPPAuthRspFromElement(
                 }
                 break;
 
-            /* OSPC_MELEM_AUTHRZP -- OSP Stds spell Authorization not Authorisation */
+            /* OSPC_MELEM_AUTHRZP -- OSP Stds spell Authorization not Authorization */
             case OSPC_MELEM_AUTHRZP:
             case OSPC_MELEM_AUTHRSP:
                 OSPPAuthRspComponentIdFromElement(elem, &compid);
@@ -462,10 +462,10 @@ unsigned OSPPAuthRspFromElement(
                 }
                 break;
             case OSPC_MELEM_STATUS:
-                if (authrsp->ospmAuthRspStatus != OSPC_OSNULL) {
-                    OSPPStatusDelete(&(authrsp->ospmAuthRspStatus));
+                if (authrsp->Status != OSPC_OSNULL) {
+                    OSPPStatusDelete(&(authrsp->Status));
                 }
-                error = OSPPStatusFromElement(elem, &(authrsp->ospmAuthRspStatus));
+                error = OSPPStatusFromElement(elem, &(authrsp->Status));
                 break;
             case OSPC_MELEM_TRANSID:
                 len = sizeof(OSPTTRXID);
@@ -479,10 +479,10 @@ unsigned OSPPAuthRspFromElement(
                 }
                 break;
             case OSPC_MELEM_AUDIT:
-                error = OSPPTNAuditFromElement(elem, &(authrsp->ospmAuthRspTNAudit));
+                error = OSPPTNAuditFromElement(elem, &(authrsp->TNAudit));
                 break;
             case OSPC_MELEM_CSAUDITTRIGGER:
-                error = OSPPCSAuditFromElement(elem, &(authrsp->ospmAuthRspCSAudit));
+                error = OSPPCSAuditFromElement(elem, &(authrsp->CSAudit));
                 break;
             case OSPC_MELEM_DELAYPREF:
                 if ((error = OSPPMsgNumFromElement(elem, &delaypref)) == OSPC_ERR_NO_ERROR) {
@@ -523,8 +523,8 @@ OSPTCSAUDIT* OSPPAuthRspGetCSAudit(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        if (ospvAuthRsp->ospmAuthRspCSAudit != OSPC_OSNULL) {
-            return ospvAuthRsp->ospmAuthRspCSAudit;
+        if (ospvAuthRsp->CSAudit != OSPC_OSNULL) {
+            return ospvAuthRsp->CSAudit;
         }
     }
     return OSPC_OSNULL;
@@ -534,7 +534,7 @@ OSPTBOOL OSPPAuthRspHasCSAudit(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        return ospvAuthRsp->ospmAuthRspCSAudit != OSPC_OSNULL;
+        return ospvAuthRsp->CSAudit != OSPC_OSNULL;
     } else {
         return OSPC_FALSE;
     }
@@ -547,7 +547,7 @@ OSPTBOOL OSPPAuthRspHasMessageId(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        return(ospvAuthRsp->ospmAuthRspMessageId != OSPC_OSNULL);
+        return(ospvAuthRsp->MessageId != OSPC_OSNULL);
     } else {
         return OSPC_FALSE;
     }
@@ -563,13 +563,13 @@ void OSPPAuthRspSetMessageId(
     unsigned len = OSPM_STRLEN(ospvMessageId);
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        if (ospvAuthRsp->ospmAuthRspMessageId != OSPC_OSNULL) {
-            OSPM_FREE(ospvAuthRsp->ospmAuthRspMessageId);
+        if (ospvAuthRsp->MessageId != OSPC_OSNULL) {
+            OSPM_FREE(ospvAuthRsp->MessageId);
         }
 
-        OSPM_MALLOC(ospvAuthRsp->ospmAuthRspMessageId, char, len + 1);
-        OSPM_MEMSET(ospvAuthRsp->ospmAuthRspMessageId, 0, len + 1);
-        OSPM_MEMCPY(ospvAuthRsp->ospmAuthRspMessageId, ospvMessageId, len);
+        OSPM_MALLOC(ospvAuthRsp->MessageId, char, len + 1);
+        OSPM_MEMSET(ospvAuthRsp->MessageId, 0, len + 1);
+        OSPM_MEMCPY(ospvAuthRsp->MessageId, ospvMessageId, len);
     }
 }
 
@@ -624,13 +624,13 @@ void OSPPAuthRspComponentIdFromElement(
 OSPTBOOL OSPPAuthRspHasRole(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
-    OSPTBOOL ospvHas = OSPC_FALSE;
+    OSPTBOOL has = OSPC_FALSE;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvHas = (ospvAuthRsp->ospmAuthRspHasRole != OSPC_FALSE);
+        has = (ospvAuthRsp->Role != OSPC_FALSE);
     }
 
-    return ospvHas;
+    return has;
 }
 
 /*
@@ -641,8 +641,8 @@ void OSPPAuthRspSetRole(
     OSPE_ROLE ospvRole)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvAuthRsp->ospmAuthRspRole = ospvRole;
-        ospvAuthRsp->ospmAuthRspHasRole = OSPC_TRUE;
+        ospvAuthRsp->Role = ospvRole;
+        ospvAuthRsp->HasRole = OSPC_TRUE;
     }
 }
 
@@ -655,7 +655,7 @@ OSPE_ROLE OSPPAuthRspGetRole(
     OSPE_ROLE ospvRole = OSPC_ROLE_UNDEFINED;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvRole = (OSPE_ROLE)ospvAuthRsp->ospmAuthRspRole;
+        ospvRole = (OSPE_ROLE)ospvAuthRsp->Role;
     }
 
     return ospvRole;

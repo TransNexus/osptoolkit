@@ -88,11 +88,11 @@ OSPT_XML_ELEM *OSPPXMLElemNew(  /* returns the new element (or NULL) */
                 OSPM_MEMCPY(valptr, ospvValue, vallen);
 
                 /* fill in the structure fields */
-                OSPPListLinkNew(&ospvElem->ospmXMLElemLink);
-                OSPPListNew(&ospvElem->ospmXMLElemChild);
-                OSPPListNew(&ospvElem->ospmXMLElemAttrs);
-                ospvElem->ospmXMLElemName = nameptr;
-                ospvElem->ospmXMLElemValue = valptr;
+                OSPPListLinkNew(&ospvElem->Link);
+                OSPPListNew(&ospvElem->Children);
+                OSPPListNew(&ospvElem->Attributes);
+                ospvElem->Name = nameptr;
+                ospvElem->Value = valptr;
             }
         }
     }
@@ -111,12 +111,12 @@ void OSPPXMLElemDelete(         /* no return value */
 
     if (*ospvElem != OSPC_OSNULL) {
         /* destroy any attributes */
-        while ((attr = (OSPT_XML_ATTR *)OSPPListRemove(&((*ospvElem)->ospmXMLElemAttrs))) != OSPC_OSNULL) {
+        while ((attr = (OSPT_XML_ATTR *)OSPPListRemove(&((*ospvElem)->Attributes))) != OSPC_OSNULL) {
             OSPPXMLAttrDelete(&attr);
         }
 
         /* destroy any child elements */
-        while ((elem = (OSPT_XML_ELEM *)OSPPListRemove(&((*ospvElem)->ospmXMLElemChild))) != OSPC_OSNULL) {
+        while ((elem = (OSPT_XML_ELEM *)OSPPListRemove(&((*ospvElem)->Children))) != OSPC_OSNULL) {
             OSPPXMLElemDelete(&elem);
         }
 
@@ -133,13 +133,13 @@ void OSPPXMLElemDelete(         /* no return value */
 const char *OSPPXMLElemGetName( /* returns pointer to name */
     OSPT_XML_ELEM *ospvElem)    /* element being querried */
 {
-    const char *ospvName = OSPC_OSNULL;
+    const char *name = OSPC_OSNULL;
 
     if (ospvElem != OSPC_OSNULL) {
-        ospvName = ospvElem->ospmXMLElemName;
+        name = ospvElem->Name;
     }
 
-    return ospvName;
+    return name;
 }
 
 /*
@@ -149,13 +149,13 @@ const char *OSPPXMLElemGetName( /* returns pointer to name */
 const char *OSPPXMLElemGetValue(    /* returns pointer to character value */
     OSPT_XML_ELEM *ospvElem)        /* element in question */
 {
-    const char *ospvValue = OSPC_OSNULL;
+    const char *value = OSPC_OSNULL;
 
     if (ospvElem != OSPC_OSNULL) {
-        ospvValue = ospvElem->ospmXMLElemValue;
+        value = ospvElem->Value;
     }
 
-    return ospvValue;
+    return value;
 }
 
 /*
@@ -168,7 +168,7 @@ void OSPPXMLElemAddChild(       /* no return value */
 {
     if (ospvElem != OSPC_OSNULL) {
         if (ospvChild != OSPC_OSNULL) {
-            OSPPListAppend(&ospvElem->ospmXMLElemChild, ospvChild);
+            OSPPListAppend(&ospvElem->Children, ospvChild);
         }
     }
 }
@@ -183,7 +183,7 @@ OSPT_XML_ELEM *OSPPXMLElemFirstChild(   /* returns pointer to child or NULL */
     OSPT_XML_ELEM *ospvChild = OSPC_OSNULL;
 
     if (ospvElem != OSPC_OSNULL) {
-        ospvChild = (OSPT_XML_ELEM *)OSPPListFirst(&(ospvElem->ospmXMLElemChild));
+        ospvChild = (OSPT_XML_ELEM *)OSPPListFirst(&(ospvElem->Children));
     }
 
     return ospvChild;
@@ -201,7 +201,7 @@ OSPT_XML_ELEM *OSPPXMLElemNextChild(    /* returns pointer to child or NULL */
 
     if (ospvElem != OSPC_OSNULL) {
         if (ospvChild != OSPC_OSNULL) {
-            ospvNext = (OSPT_XML_ELEM *)OSPPListNext(&(ospvElem->ospmXMLElemChild), ospvChild);
+            ospvNext = (OSPT_XML_ELEM *)OSPPListNext(&(ospvElem->Children), ospvChild);
         }
     }
 
@@ -218,7 +218,7 @@ void OSPPXMLElemAddAttr(        /* no return value */
 {
     if (ospvElem != OSPC_OSNULL) {
         if (ospvAttr != OSPC_OSNULL) {
-            OSPPListAppend(&ospvElem->ospmXMLElemAttrs, ospvAttr);
+            OSPPListAppend(&ospvElem->Attributes, ospvAttr);
         }
     }
 }
@@ -233,7 +233,7 @@ OSPT_XML_ATTR *OSPPXMLElemFirstAttr(    /* returns pointer to attribute or NULL 
     OSPT_XML_ATTR *ospvAttr = OSPC_OSNULL;
 
     if (ospvElem != OSPC_OSNULL) {
-        ospvAttr = (OSPT_XML_ATTR *)OSPPListFirst(&(ospvElem->ospmXMLElemAttrs));
+        ospvAttr = (OSPT_XML_ATTR *)OSPPListFirst(&(ospvElem->Attributes));
     }
     return ospvAttr;
 }
@@ -250,7 +250,7 @@ OSPT_XML_ATTR *OSPPXMLElemNextAttr(     /* returns pointer to attribute or NULL 
 
     if (ospvElem != OSPC_OSNULL) {
         if (ospvAttr != OSPC_OSNULL) {
-            ospvNext = (OSPT_XML_ATTR *)OSPPListNext(&(ospvElem->ospmXMLElemAttrs), ospvAttr);
+            ospvNext = (OSPT_XML_ATTR *)OSPPListNext(&(ospvElem->Attributes), ospvAttr);
         }
     }
 

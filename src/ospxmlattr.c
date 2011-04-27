@@ -88,9 +88,9 @@ OSPT_XML_ATTR *OSPPXMLAttrNew(  /* returns the new attribute (or NULL) */
                 OSPM_MEMCPY(valptr, ospvValue, vallen);
 
                 /* fill in the structure fields */
-                OSPPListLinkNew(&ospvAttr->ospmXMLAttrLink);
-                ospvAttr->ospmXMLAttrName = nameptr;
-                ospvAttr->ospmXMLAttrValue = valptr;
+                OSPPListLinkNew(&ospvAttr->Link);
+                ospvAttr->Name = nameptr;
+                ospvAttr->Value = valptr;
             }
         }
     }
@@ -121,7 +121,7 @@ const char *OSPPXMLAttrGetName(
     const char *ospvName = OSPC_OSNULL;
 
     if (ospvAttr != OSPC_OSNULL) {
-        ospvName = ospvAttr->ospmXMLAttrName;
+        ospvName = ospvAttr->Name;
     }
 
     return ospvName;
@@ -137,7 +137,7 @@ const char *OSPPXMLAttrGetValue(
     const char *ospvValue = OSPC_OSNULL;
 
     if (ospvAttr != OSPC_OSNULL) {
-        ospvValue = ospvAttr->ospmXMLAttrValue;
+        ospvValue = ospvAttr->Value;
     }
 
     return ospvValue;

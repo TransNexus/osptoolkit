@@ -130,11 +130,11 @@ OSPT_ALTINFO *OSPPAltInfoNew(   /* returns ptr to altinfo or null */
                 OSPM_MEMCPY(valptr, ospvValue, ospvLen);
 
                 /* fill in the structure fields */
-                OSPPListLinkNew(&ospvAltInfo->link);
-                ospvAltInfo->length = ospvLen;
-                ospvAltInfo->type = ospvType;
-                ospvAltInfo->value = valptr;
-                ospvAltInfo->value[ospvLen] = '\0';
+                OSPPListLinkNew(&ospvAltInfo->Link);
+                ospvAltInfo->Length = ospvLen;
+                ospvAltInfo->Type = ospvType;
+                ospvAltInfo->Value = valptr;
+                ospvAltInfo->Value[ospvLen] = '\0';
             }
         }
     }
@@ -163,7 +163,7 @@ unsigned OSPPAltInfoGetSize(
     unsigned size = 0;
 
     if (ospvAltInfo != OSPC_OSNULL) {
-        size = ospvAltInfo->length;
+        size = ospvAltInfo->Length;
     }
 
     return size;
@@ -178,7 +178,7 @@ OSPE_ALTINFO OSPPAltInfoGetPart(
     OSPE_ALTINFO type = OSPC_ALTINFO_UNKNOWN;
 
     if (ospvAltInfo != OSPC_OSNULL) {
-        type = (OSPE_ALTINFO)ospvAltInfo->type;
+        type = (OSPE_ALTINFO)ospvAltInfo->Type;
     }
 
     return type;
@@ -193,7 +193,7 @@ const char *OSPPAltInfoGetValue(
     const char *value = OSPC_OSNULL;
 
     if (ospvAltInfo != OSPC_OSNULL) {
-        value = ospvAltInfo->value;
+        value = ospvAltInfo->Value;
     }
 
     return value;
@@ -223,7 +223,7 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
         if (ospvElem == OSPC_OSNULL) {
             ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->type));
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->Type));
             if (attr == OSPC_OSNULL) {
                 ospvErrCode = OSPC_ERR_XML_NO_ATTR;
             } else {
