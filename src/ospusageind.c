@@ -434,29 +434,27 @@ unsigned OSPPUsageIndGetReleaseSource(
  */
 void OSPPUsageIndSetPostDialDelay(  /* nothing returned */
     OSPT_USAGE_IND *ospvUsageInd,   /* usage indication to set */
-    int ospvPostDialDelay)          /* PDD to set to */
+    unsigned ospvPostDialDelay)     /* PDD in milliseconds */
 {
     if (ospvUsageInd != OSPC_OSNULL) {
-        if (ospvPostDialDelay >= 0) {
-            ospvUsageInd->PostDialDelay = ospvPostDialDelay;
-            ospvUsageInd->HasPDD = OSPC_TRUE;
-        }
+        ospvUsageInd->PostDialDelay = ospvPostDialDelay;
+        ospvUsageInd->HasPDD = OSPC_TRUE;
     }
 }
 
 /*
- * OSPPUsageIndGetPostDialDelay() - returns the PDD for a usage ind
+ * OSPPUsageIndGetPostDialDelay() - returns the PDD for a usage ind in milliseconds
  */
-int OSPPUsageIndGetPostDialDelay(
+unsigned OSPPUsageIndGetPostDialDelay(
     OSPT_USAGE_IND *ospvUsageInd)   /* usage ind */
 {
-    int ospvPostDialDelay = 0;
+    int pdd = 0;
 
     if (ospvUsageInd != OSPC_OSNULL) {
-        ospvPostDialDelay = ospvUsageInd->PostDialDelay;
+        pdd = ospvUsageInd->PostDialDelay;
     }
 
-    return ospvPostDialDelay;
+    return pdd;
 }
 
 /*

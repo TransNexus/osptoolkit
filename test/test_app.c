@@ -1645,7 +1645,8 @@ int testOSPPTransactionReportUsage()
             printf("Reporting Usage for OSPVTransactionHandle %d\n", (int)OSPVTransactionHandle);
 
         errcode = OSPPTransactionReportUsage(OSPVTransactionHandle,
-            duration, call_start_time, call_end_time, call_alert_time, call_connect_time, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
+            duration, call_start_time, call_end_time, call_alert_time, call_connect_time,
+            IS_PDD_INFO_AVAILABLE, 1010,    /* PDD */
             0,    /* Release Source */
             "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
             1,
@@ -1660,7 +1661,8 @@ int testOSPPTransactionReportUsage()
         printf("Reporting Usage for tranhandle2\n");
 
         errcode = OSPPTransactionReportUsage(tranhandle2,
-            duration, call_start_time, call_end_time, call_alert_time, call_connect_time, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
+            duration, call_start_time, call_end_time, call_alert_time, call_connect_time,
+            IS_PDD_INFO_AVAILABLE, 1020,    /* PDD */
             0,    /* Release Source */
             "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
             1,
@@ -3110,7 +3112,8 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
         errcode = OSPPTransactionReportUsage_nb(nbMonitor, 0,    /* DON'T BLOCK */
             &OErrorCodes[i],
             OTransactionHandles[i],
-            duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
+            duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8,
+            IS_PDD_INFO_AVAILABLE, 1030,    /* PDD */
             3,    /* Release Source */
             "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
             1,
@@ -3127,7 +3130,8 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
         errcode = OSPPTransactionReportUsage_nb(nbMonitor, 0,    /* DON'T BLOCK */
             &TErrorCodes[i],
             TTransactionHandles[i],
-            duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8, IS_PDD_INFO_AVAILABLE, 1,    /* PDD */
+            duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8,
+            IS_PDD_INFO_AVAILABLE, 1040,    /* PDD */
             3,    /* Release Source */
             "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
             1,

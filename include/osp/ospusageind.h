@@ -33,7 +33,7 @@ typedef struct {
     OSPTTIME EndTime;
     OSPTTIME AlertTime;
     OSPTTIME ConnectTime;
-    OSPTTIME PostDialDelay;
+    unsigned PostDialDelay;                 /* In milliseconds */
     OSPTBOOL HasPDD;
     unsigned ReleaseSource;
     char ConferenceId[OSPC_SIZE_CONFID];    /* This is in chararcters */
@@ -133,8 +133,8 @@ extern "C" {
     OSPTTIME OSPPUsageIndGetConnectTime(OSPT_USAGE_IND *);
     void OSPPUsageIndSetAlertTime(OSPT_USAGE_IND *, OSPTTIME ospvEndTime);
     OSPTTIME OSPPUsageIndGetAlertTime(OSPT_USAGE_IND *);
-    void OSPPUsageIndSetPostDialDelay(OSPT_USAGE_IND *, int ospvPostDialDelay);
-    int OSPPUsageIndGetPostDialDelay(OSPT_USAGE_IND *);
+    void OSPPUsageIndSetPostDialDelay(OSPT_USAGE_IND *, unsigned ospvPostDialDelay);
+    unsigned OSPPUsageIndGetPostDialDelay(OSPT_USAGE_IND *);
     OSPTBOOL OSPPUsageIndHasPDD(OSPT_USAGE_IND *);
     void OSPPUsageIndSetReleaseSource(OSPT_USAGE_IND *, unsigned ospvReleaseSource);
     unsigned OSPPUsageIndGetReleaseSource(OSPT_USAGE_IND *);

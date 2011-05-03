@@ -2446,7 +2446,7 @@ int OSPPTransactionReportUsage(
     OSPTTIME ospvAlertTime,             /* In - Call alert time */
     OSPTTIME ospvConnectTime,           /* In - Call connect time */
     OSPTBOOL ospvHasPDDInfo,            /* In - Is PDD Info present */
-    unsigned ospvPostDialDelay,         /* In - Post Dial Delay */
+    unsigned ospvPostDialDelay,         /* In - Post Dial Delay, in milliseconds */
     unsigned ospvReleaseSource,         /* In - EP that released the call */
     const char *ospvConferenceId,       /* In - conference Id. Max 100 char long */
     int ospvLossPacketsSent,            /* In - Packets not received by peer */
@@ -2567,7 +2567,7 @@ int OSPPTransactionReportUsage(
                             OSPPUsageIndSetAlertTime(usage, ospvAlertTime);
                             OSPPUsageIndSetConnectTime(usage, ospvConnectTime);
                             if (ospvHasPDDInfo) {
-                                OSPPUsageIndSetPostDialDelay(usage, (int)ospvPostDialDelay);
+                                OSPPUsageIndSetPostDialDelay(usage, ospvPostDialDelay);
                             }
                             OSPPUsageIndSetReleaseSource(usage, ospvReleaseSource);
 
@@ -2644,7 +2644,7 @@ int OSPPTransactionReportUsage(
                 OSPPUsageIndSetAlertTime(usage, ospvAlertTime);
                 OSPPUsageIndSetConnectTime(usage, ospvConnectTime);
                 if (ospvHasPDDInfo) {
-                    OSPPUsageIndSetPostDialDelay(usage, (int)ospvPostDialDelay);
+                    OSPPUsageIndSetPostDialDelay(usage, ospvPostDialDelay);
                 }
                 OSPPUsageIndSetReleaseSource(usage, ospvReleaseSource);
                 if ((ospvConferenceId) && (ospvConferenceId[0] != '\0') && (OSPM_STRLEN(ospvConferenceId) < OSPC_SIZE_CONFID)) {

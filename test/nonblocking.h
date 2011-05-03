@@ -130,7 +130,7 @@ extern "C" {
         OSPTTIME ospvAlertTime,         /* In - AlertTime of call */
         OSPTTIME ospvConnectTime,       /* In - ConnectTime of call */
         OSPTBOOL ospvHasPDDInfo,        /* In - Is PDD present */
-        unsigned ospvPostDialDelay,     /* In - PDD */
+        unsigned ospvPostDialDelay,     /* In - PDD in milliseconds */
         unsigned ospvReleaseSource,     /* In - Rel Src */
         const char *ospvConferenceId,   /* In - Conference Id */
         int ospvLossPacketsSent,        /* In - Packets not received by peer */

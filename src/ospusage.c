@@ -223,7 +223,7 @@ unsigned OSPPUsageToElement(        /* returns error code */
     OSPTTIME ospvAlertTime,         /* optional, if not 0, call alert time */
     OSPTTIME ospvConnectTime,       /* optional, if not 0, call connect time */
     OSPTBOOL ospvHasPDDInfo,        /* Is PDD info present variable */
-    unsigned ospvPostDialDelay,     /* PDD value */
+    unsigned ospvPostDialDelay,     /* PDD value, in milliseconds */
     unsigned ospvReleaseSource,     /* Release source value */
     OSPT_XML_ELEM *ospvElem)        /* where to put XML element pointer */
 {
@@ -301,7 +301,7 @@ unsigned OSPPUsageToElement(        /* returns error code */
 
     /* now add the PDD */
     if ((errcode == OSPC_ERR_NO_ERROR) && (ospvHasPDDInfo)) {
-        errcode = OSPPMsgNumToElement(ospvPostDialDelay, OSPPMsgElemGetName(OSPC_MELEM_POSTDIALDELAY), &elem);
+        errcode = OSPPMsgFloatToElement((float)ospvPostDialDelay / 1000, OSPPMsgElemGetName(OSPC_MELEM_POSTDIALDELAY), &elem);
         if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;
