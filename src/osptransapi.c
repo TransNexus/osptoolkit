@@ -4462,7 +4462,6 @@ int OSPPTransactionSetPackets(
 
 int OSPPTransactionSetRFactor(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
     OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     float ospvRFactor)              /* In - R-Factor, -1 means unavailable */
 {
@@ -4480,7 +4479,7 @@ int OSPPTransactionSetRFactor(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_RFACTOR, ospvMetric, ospvDir, ospvRFactor);
+            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_RFACTOR, ospvDir, ospvRFactor);
         }
     }
 
@@ -4489,7 +4488,6 @@ int OSPPTransactionSetRFactor(
 
 int OSPPTransactionSetMOSCQ(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
     OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     float ospvMOSCQ)                /* In - MOS-CQ, -1 means unavailable */
 {
@@ -4507,7 +4505,7 @@ int OSPPTransactionSetMOSCQ(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_MOSCQ, ospvMetric, ospvDir, ospvMOSCQ);
+            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_MOSCQ, ospvDir, ospvMOSCQ);
         }
     }
 
@@ -4516,7 +4514,6 @@ int OSPPTransactionSetMOSCQ(
 
 int OSPPTransactionSetMOSLQ(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
     OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     float ospvMOSLQ)                /* In - MOS-LQ, -1 means unavailable */
 {
@@ -4534,7 +4531,7 @@ int OSPPTransactionSetMOSLQ(
         }
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_MOSLQ, ospvMetric, ospvDir, ospvMOSLQ);
+            OSPPStatsSetFloat(trans->Statistics, OSPC_STATS_MOSLQ, ospvDir, ospvMOSLQ);
         }
     }
 

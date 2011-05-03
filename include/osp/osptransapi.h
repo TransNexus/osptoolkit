@@ -106,9 +106,9 @@ extern "C" {
     int OSPPTransactionSetRTDelay(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_SESSION_LEG, int, int, int, int, float);
     int OSPPTransactionSetOctets(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int);
     int OSPPTransactionSetPackets(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int);
-    int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, float);
-    int OSPPTransactionSetMOSCQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, float);
-    int OSPPTransactionSetMOSLQ(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, float);
+    int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_STATS_DIR, float);
+    int OSPPTransactionSetMOSCQ(OSPTTRANHANDLE, OSPE_STATS_DIR, float);
+    int OSPPTransactionSetMOSLQ(OSPTTRANHANDLE, OSPE_STATS_DIR, float);
     int OSPPTransactionSetICPIF(OSPTTRANHANDLE, OSPE_STATS_DIR, int);
     int OSPPTransactionGetNumberPortabilityParameters(OSPTTRANHANDLE, unsigned, char *, unsigned, char *, int *);
     int OSPPTransactionSetOperatorName(OSPTTRANHANDLE, OSPE_OPERATOR_NAME, const char *);
