@@ -1266,7 +1266,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             (usage != OSPC_OSNULL);
             usage = (OSPT_USAGE_IND *)OSPPListNext(ospvUsageInd, usage))
         {
-        	/* create the usage element */
+            /* create the usage element */
             usageindelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_USAGEIND), "");
             if (usageindelem == OSPC_OSNULL) {
                 errcode = OSPC_ERR_XML_NO_ELEMENT;

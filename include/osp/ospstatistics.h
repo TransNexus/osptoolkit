@@ -70,7 +70,7 @@ typedef enum {
 /* Statistics, value types */
 typedef enum {
     OSPC_STATS_UNDEFINED = -1,
-	OSPC_STATS_START = 0,
+    OSPC_STATS_START = 0,
     OSPC_STATS_LOST = OSPC_STATS_START,
     OSPC_STATS_JITTER,
     OSPC_STATS_DELAY,
