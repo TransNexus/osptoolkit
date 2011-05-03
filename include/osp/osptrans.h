@@ -111,6 +111,8 @@ typedef struct _OSPTTRANS {
     /* These two network ID's are only used to report usage */
     char UsageSrcNetworkId[OSPC_SIZE_NORID];
     char UsageDestNetworkId[OSPC_SIZE_NORID];
+    char SrcRealm[OSPC_SIZE_NORSTR];
+    char DestRealm[OSPC_SIZE_NORSTR];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

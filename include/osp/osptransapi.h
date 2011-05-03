@@ -113,6 +113,8 @@ extern "C" {
     int OSPPTransactionGetNumberPortabilityParameters(OSPTTRANHANDLE, unsigned, char *, unsigned, char *, int *);
     int OSPPTransactionSetOperatorName(OSPTTRANHANDLE, OSPE_OPERATOR_NAME, const char *);
     int OSPPTransactionGetOperatorName(OSPTTRANHANDLE, OSPE_OPERATOR_NAME, unsigned, char *);
+    int OSPPTransactionSetSrcRealm(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetDestRealm(OSPTTRANHANDLE, const char *);
 
 #ifdef __cplusplus
 }

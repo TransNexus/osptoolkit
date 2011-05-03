@@ -810,6 +810,24 @@ int OSPPAuthReqToElement(       /* returns error code */
             }
         }
 
+        /* Add source realm info */
+        if ((error == OSPC_ERR_NO_ERROR) && (trans->SrcRealm != OSPC_OSNULL) && (trans->SrcRealm[0] != '\0')) {
+            error = OSPPStringToElement(OSPC_MELEM_SRCREALM, trans->SrcRealm, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+            if (error == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
+        /* Add destination realm info */
+        if ((error == OSPC_ERR_NO_ERROR) && (trans->DestRealm != OSPC_OSNULL) && (trans->DestRealm[0] != '\0')) {
+            error = OSPPStringToElement(OSPC_MELEM_DESTREALM, trans->DestRealm, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+            if (error == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
         if (error == OSPC_ERR_NO_ERROR) {
             /* Now add the authreqelem to the main elem */
             OSPPXMLElemAddChild(*ospvElem, authreqelem);

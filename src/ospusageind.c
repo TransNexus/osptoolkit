@@ -1625,6 +1625,25 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
+            /* Add source realm info */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->SrcRealm != OSPC_OSNULL) && (trans->SrcRealm[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_SRCREALM, trans->SrcRealm, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add destination realm info */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->DestRealm != OSPC_OSNULL) && (trans->DestRealm[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_DESTREALM, trans->DestRealm, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, usageindelem);
                 usageindelem = OSPC_OSNULL;

@@ -2058,6 +2058,16 @@ int testStatsICPIF()
     return errcode;
 }
 
+int testSetRealm()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetSrcRealm(OSPVTransactionHandle, "SourceRealm");
+    errcode = OSPPTransactionSetDestRealm(OSPVTransactionHandle, "DestinationRealm");
+
+    return errcode;
+}
+
 int testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
@@ -2315,6 +2325,9 @@ int testAPI(int apinumber)
     case 213:
         errcode = testSetDiversion();
         break;
+    case 214:
+        errcode = testSetRealm();
+        break;
     case 220:
         errcode = testSetProtocol();
         break;
@@ -2386,6 +2399,9 @@ int testAPI(int apinumber)
             errcode = testSetDiversion();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetRealm();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetProtocol();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
@@ -2439,7 +2455,7 @@ int testAPI(int apinumber)
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPProviderDelete();
         }
-   	    break;
+        break;
     default:
         errcode = -1;
     }
@@ -2535,8 +2551,9 @@ int testMenu()
         printf("Other tests\n");
         printf("---------------------------------------------------------------------\n");
         printf("200) Set Termination Cause\n");
-        printf("210) Set NP Parameters                211) Set Operator Name\n");
+        printf("210) Set NP Parameters                211) Set Operator Names\n");
         printf("212) Set Asserted ID                  213) Set Diversion\n");
+        printf("214) Set Realms\n");
         printf("220) Set Signaling Protocol           221) Set Codec\n");
         printf("222) Set Network ID                   223) Set Session ID\n");
         printf("224) Set Custom Info\n");
