@@ -33,16 +33,17 @@
 #define OSPC_SVALUE_PACKET      ((unsigned)(OSPC_SVALUE_PACKETS | OSPC_SVALUE_FRACTION))
 #define OSPC_SVALUE_METRICS     ((unsigned)(OSPC_SVALUE_SAMPLES | OSPC_SVALUE_MINIMUM | OSPC_SVALUE_MAXIMUM | OSPC_SVALUE_MEAN | OSPC_SVALUE_VARIANCE | OSPC_SVALUE_SQUARES))
 
-/* Statistcs, metric types */
+/* Statistics, metric types */
 typedef enum {
     OSPC_SMETRIC_UNDEFINED = -1,
-    OSPC_SMETRIC_RTP = 0,
+    OSPC_SMETRIC_START = 0,
+    OSPC_SMETRIC_RTP = OSPC_SMETRIC_START,
     OSPC_SMETRIC_RTCP,
     /* Number of metric types */
     OSPC_SMETRIC_NUMBER
 } OSPE_STATS_METRIC;
 
-/* Statistcs, direction types */
+/* Statistics, direction types */
 typedef enum {
     OSPC_SDIR_UNDEFINED = -1,
     OSPC_SDIR_START = 0,
@@ -56,11 +57,24 @@ typedef enum {
     OSPC_SDIR_NUMBER
 } OSPE_STATS_DIR;
 
+/* Statistics, session leg types */
+typedef enum {
+    OSPC_SLEG_UNDEFINED = -1,
+    OSPC_SLEG_START = 0,
+    OSPC_SLEG_SOURCE = OSPC_SLEG_START,
+    OSPC_SLEG_DESTINATION,
+    /* Number of session leg types */
+    OSPC_SLEG_NUMBER
+} OSPE_SESSION_LEG;
+
 /* Statistics, value types */
 typedef enum {
-    OSPC_STATS_LOST = 0,
+    OSPC_STATS_UNDEFINED = -1,
+	OSPC_STATS_START = 0,
+    OSPC_STATS_LOST = OSPC_STATS_START,
     OSPC_STATS_JITTER,
     OSPC_STATS_DELAY,
+    OSPC_STATS_RTDELAY,
     OSPC_STATS_OCTETS,
     OSPC_STATS_PACKETS,
     OSPC_STATS_RFACTOR,
@@ -78,7 +92,7 @@ typedef struct {
     unsigned fraction;
 } OSPT_STATS_PACKET;
 
-/* Statistics value structure for Jitter, delay */
+/* Statistics value structure for Jitter, delay, round trip delay */
 typedef struct {
     OSPTBOOL hasvalue;
     unsigned samples;
@@ -104,10 +118,11 @@ typedef struct {
     OSPT_STATS_PACKET LossSent;
     OSPT_STATS_PACKET LossReceived;
     OSPT_STATS_METRICS OneWay;
-    OSPT_STATS_METRICS RoundTrip;
+    OSPT_STATS_METRICS TwoWay;
     OSPT_STATS_PACKET Lost[OSPC_SMETRIC_NUMBER][OSPC_SDIR_NUMBER];
     OSPT_STATS_METRICS Jitter[OSPC_SMETRIC_NUMBER][OSPC_SDIR_NUMBER];
     OSPT_STATS_METRICS Delay[OSPC_SMETRIC_NUMBER][OSPC_SDIR_NUMBER];
+    OSPT_STATS_METRICS RTDelay[OSPC_SMETRIC_NUMBER][OSPC_SLEG_NUMBER];
     int Octets[OSPC_SMETRIC_NUMBER][OSPC_SDIR_NUMBER];
     int Packets[OSPC_SMETRIC_NUMBER][OSPC_SDIR_NUMBER];
     float RFactor[OSPC_SMETRIC_NUMBER][OSPC_SDIR_NUMBER];
@@ -126,7 +141,7 @@ extern "C" {
     int OSPPStatsToElement(OSPT_STATS *, OSPT_XML_ELEM **);
 
     OSPTBOOL OSPPStatsHasOneWay(OSPT_STATS *, unsigned);
-    OSPTBOOL OSPPStatsHasRoundTrip(OSPT_STATS *, unsigned);
+    OSPTBOOL OSPPStatsHasTwoWay(OSPT_STATS *, unsigned);
     OSPTBOOL OSPPStatsHasLossSent(OSPT_STATS *, unsigned);
     OSPTBOOL OSPPStatsHasLossReceived(OSPT_STATS *, unsigned);
 
@@ -140,11 +155,11 @@ extern "C" {
     unsigned OSPPStatsGetOneWayMean(OSPT_STATS *);
     float OSPPStatsGetOneWayVariance(OSPT_STATS *);
 
-    unsigned OSPPStatsGetRoundTripSamples(OSPT_STATS *);
-    unsigned OSPPStatsGetRoundTripMinimum(OSPT_STATS *);
-    unsigned OSPPStatsGetRoundTripMaximum(OSPT_STATS *);
-    unsigned OSPPStatsGetRoundTripMean(OSPT_STATS *);
-    float OSPPStatsGetRoundTripVariance(OSPT_STATS *);
+    unsigned OSPPStatsGetTwoWaySamples(OSPT_STATS *);
+    unsigned OSPPStatsGetTwoWayMinimum(OSPT_STATS *);
+    unsigned OSPPStatsGetTwoWayMaximum(OSPT_STATS *);
+    unsigned OSPPStatsGetTwoWayMean(OSPT_STATS *);
+    float OSPPStatsGetTwoWayVariance(OSPT_STATS *);
 
     unsigned OSPPStatsGetPktSent(OSPT_STATS *);
     unsigned OSPPStatsGetFracSent(OSPT_STATS *);
@@ -152,20 +167,20 @@ extern "C" {
     unsigned OSPPStatsGetFracReceived(OSPT_STATS *);
 
     int OSPPStatsOneWayToElement(OSPT_STATS *, OSPT_XML_ELEM **);
-    int OSPPStatsRoundTripToElement(OSPT_STATS *, OSPT_XML_ELEM **);
+    int OSPPStatsTwoWayToElement(OSPT_STATS *, OSPT_XML_ELEM **);
     int OSPPStatsLossSentToElement(OSPT_STATS *, OSPT_XML_ELEM **);
     int OSPPStatsLossReceivedToElement(OSPT_STATS *, OSPT_XML_ELEM **);
 
-    OSPTBOOL OSPPStatsHasValue(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, unsigned);
+    OSPTBOOL OSPPStatsHasValue(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, OSPE_SESSION_LEG, unsigned);
     void OSPPStatsSetPacket(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, int, int);
-    void OSPPStatsSetMetrics(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, int, int, int, int, float);
+    void OSPPStatsSetMetrics(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, OSPE_SESSION_LEG, int, int, int, int, float);
     void OSPPStatsSetInteger(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, int);
     void OSPPStatsSetFloat(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, float);
     void OSPPStatsGetPacket(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, int *, int *);
-    void OSPPStatsGetMetrics(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, int *, int *, int *, int *, float *);
+    void OSPPStatsGetMetrics(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, OSPE_SESSION_LEG, int *, int *, int *, int *, float *);
     int OSPPStatsGetInteger(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR);
     float OSPPStatsGetFloat(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR);
-    int OSPPStatsValueToElement(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, OSPT_XML_ELEM **);
+    int OSPPStatsValueToElement(OSPT_STATS *, OSPE_STATS, OSPE_STATS_METRIC, OSPE_STATS_DIR, OSPE_SESSION_LEG, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

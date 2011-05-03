@@ -184,19 +184,19 @@ unsigned OSPPTokenToElement(    /* returns error code */
     OSPT_TOKEN *ospvToken,      /* token */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvToken == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_DATA_NO_TOKEN;
+        errcode = OSPC_ERR_DATA_NO_TOKEN;
     }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_TOKEN),
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_TOKEN),
             OSPPTokenGetSize(ospvToken), (unsigned char *)OSPPTokenGetValue(ospvToken),
             OSPC_OSNULL, OSPC_OSNULL, OSPC_TRUE,
             ospvElem);
     }
-    return ospvErrCode;
+    return errcode;
 }

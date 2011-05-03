@@ -45,30 +45,30 @@ unsigned OSPPXMLDocIsMatch(             /* returns error code */
     unsigned char ospvScratch[],        /* place to store characters  */
     unsigned *ospvIsMatch)              /* place to put answer        */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     int tmpErrCode = OSPC_ERR_NO_ERROR;
     unsigned cnt = 0;
 
     if (ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (*ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (ospvEncoding == OSPC_XENC_UNKNOW) {
-        ospvErrCode = OSPC_ERR_XML_BAD_ENC;
+        errcode = OSPC_ERR_XML_BAD_ENC;
     }
     if (ospvString == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
     if (ospvScratch == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
     if (ospvIsMatch == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* assume it's not a match for safety (in case of error break) */
         *ospvIsMatch = OSPC_FALSE;
         /*
@@ -99,7 +99,7 @@ unsigned OSPPXMLDocIsMatch(             /* returns error code */
             ospvScratch[cnt] = 0;
 
             /* now that we've extracted the tag characters, see what we've got */
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 if (OSPM_MEMCMP((const char *)ospvScratch, (const char *)ospvString, ospvStringLen) == 0) {
                     *ospvIsMatch = OSPC_TRUE;
                 }
@@ -107,7 +107,7 @@ unsigned OSPPXMLDocIsMatch(             /* returns error code */
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -120,24 +120,24 @@ unsigned OSPPXMLDocSkipPast(            /* returns error code */
     const unsigned char *ospvString,    /* string to skip past */
     unsigned char ospvScratch[])        /* place to store characters */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     unsigned cnt;
     unsigned len = 0;
 
     if (ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (*ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (ospvEncoding == OSPC_XENC_UNKNOW) {
-        ospvErrCode = OSPC_ERR_XML_BAD_ENC;
+        errcode = OSPC_ERR_XML_BAD_ENC;
     }
     if (ospvString == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
     if (ospvScratch == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
     /*
@@ -148,11 +148,11 @@ unsigned OSPPXMLDocSkipPast(            /* returns error code */
      * But that's okay, since the caller presumably knows how big it
      * needs to be. (Hint: It should be the same size as the match string.)
      */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         for (cnt = 0, len = OSPM_STRLEN((const char *)ospvString);
-            ((cnt < len) && (ospvErrCode == OSPC_ERR_NO_ERROR)); cnt++)
+            ((cnt < len) && (errcode == OSPC_ERR_NO_ERROR)); cnt++)
         {
-            ospvErrCode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &ospvScratch[cnt]);
+            errcode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &ospvScratch[cnt]);
         }
 
         /* be sure to null terminate the scratch string */
@@ -163,7 +163,7 @@ unsigned OSPPXMLDocSkipPast(            /* returns error code */
      * for a match and we continue reading characters until we find one.
      */
 
-    while (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    while (errcode == OSPC_ERR_NO_ERROR) {
         if (OSPM_MEMCMP((const char *)ospvScratch, (const char *)ospvString, len) == 0) {
             /* we've found the match, so we're done */
             break;
@@ -178,10 +178,10 @@ unsigned OSPPXMLDocSkipPast(            /* returns error code */
         for (cnt = 0; cnt < (len - 1); cnt++) {
             ospvScratch[cnt] = ospvScratch[cnt + 1];
         }
-        ospvErrCode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &ospvScratch[len - 1]);
+        errcode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &ospvScratch[len - 1]);
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -193,28 +193,28 @@ unsigned OSPPXMLDocSkipPastChar(    /* returns error code */
     OSPE_XML_ENC ospvEncoding,      /* character encoding for the document */
     unsigned char ospvChar)         /* character to skip past */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     unsigned char readChar;
 
     if (ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (*ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (ospvEncoding == OSPC_XENC_UNKNOW) {
-        ospvErrCode = OSPC_ERR_XML_BAD_ENC;
+        errcode = OSPC_ERR_XML_BAD_ENC;
     }
 
     /* loop looking for the character */
-    while (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &readChar);
+    while (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &readChar);
         if (readChar == ospvChar) {
             break;
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -226,16 +226,16 @@ unsigned OSPPXMLDocGetEncoding( /* returns error code */
     OSPE_XML_ENC *ospvEncoding  /* place to store encoding type */
     )
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     int readChar;
     unsigned char char1 = '\0';
     unsigned char char2 = '\0';
 
     if (ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (*ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     *ospvEncoding = OSPC_XENC_UNKNOW;
 
@@ -243,20 +243,20 @@ unsigned OSPPXMLDocGetEncoding( /* returns error code */
      * First have a look at the first two bytes in the buffer. From
      * these, we can deduce the character encoding.
      */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         readChar = OSPPBfrPeekByte(*ospvBfrAddr);
         if (readChar != -1) {
             char1 = (char) readChar;
         } else {
-            ospvErrCode = OSPC_ERR_BUF_INCOMPLETE;
+            errcode = OSPC_ERR_BUF_INCOMPLETE;
         }
     }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         readChar = OSPPBfrPeekByteN(*ospvBfrAddr, 1);
         if (readChar != -1) {
             char2 = (char) readChar;
         } else {
-            ospvErrCode = OSPC_ERR_XML_INCOMPLETE;
+            errcode = OSPC_ERR_XML_INCOMPLETE;
         }
     }
 
@@ -265,7 +265,7 @@ unsigned OSPPXMLDocGetEncoding( /* returns error code */
      * straight from the XML specification.
      */
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if ((char1 == OSPC_XMLDOC_UTF16MSB) && (char2 == OSPC_XMLDOC_UTF16LSB)) {
             /* we found the UTF-16 byte order mark, it's big-endian */
             *ospvEncoding = OSPC_XENC_UTF16B;
@@ -294,7 +294,7 @@ unsigned OSPPXMLDocGetEncoding( /* returns error code */
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -305,17 +305,17 @@ unsigned OSPPXMLDocTranslateEntity( /* returns error code */
     unsigned char *ospvName,
     unsigned char *ospvChar)        /* place to store character */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     unsigned cnt;
 
     if (ospvName == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
     if (ospvChar == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* is this a character reference */
         if (*ospvName == OSPC_XMLDOC_CHARREF) {
             ospvName++;
@@ -335,7 +335,7 @@ unsigned OSPPXMLDocTranslateEntity( /* returns error code */
                         unsigned char x = *ospvChar;
                         *ospvChar = (unsigned char)(x + ((unsigned char)*ospvName - (unsigned char)'A') + 10);
                     } else {
-                        ospvErrCode = OSPC_ERR_XML_BAD_ENTITY;
+                        errcode = OSPC_ERR_XML_BAD_ENTITY;
                     }
                 }
             } else {
@@ -346,7 +346,7 @@ unsigned OSPPXMLDocTranslateEntity( /* returns error code */
                         unsigned char x = *ospvChar;
                         *ospvChar = (unsigned char)(x + ((unsigned char)*ospvName - (unsigned char)'0'));
                     } else {
-                        ospvErrCode = OSPC_ERR_XML_BAD_ENTITY;
+                        errcode = OSPC_ERR_XML_BAD_ENTITY;
                     }
                 }
             }
@@ -362,12 +362,12 @@ unsigned OSPPXMLDocTranslateEntity( /* returns error code */
             if (cnt < OSPVXMLDocEntitiesSize) {
                 *ospvChar = OSPVXMLDocEntities[cnt].Value;
             } else {
-                ospvErrCode = OSPC_ERR_XML_BAD_ENTITY;
+                errcode = OSPC_ERR_XML_BAD_ENTITY;
             }
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -379,32 +379,32 @@ unsigned OSPPXMLDocReadChar(    /* returns error code */
     OSPE_XML_ENC ospvEncoding,  /* character encoding for document */
     unsigned char *ospvChar)    /* place to store read character */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     int readChar = '\0';
 
     if (ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (*ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (ospvEncoding == OSPC_XENC_UNKNOW) {
-        ospvErrCode = OSPC_ERR_XML_BAD_ENC;
+        errcode = OSPC_ERR_XML_BAD_ENC;
     }
     if (ospvChar == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* read the first byte */
         readChar = OSPPBfrReadByte(*ospvBfrAddr);
         if (readChar == -1) {
-            ospvErrCode = OSPC_ERR_BUF_INCOMPLETE;
+            errcode = OSPC_ERR_BUF_INCOMPLETE;
         }
     }
 
     /* what we do next depends on the encoding */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* UTF-8 is pretty easy -- we're done */
         if (ospvEncoding == OSPC_XENC_UTF8) {
             *ospvChar = (unsigned char)readChar;
@@ -413,19 +413,19 @@ unsigned OSPPXMLDocReadChar(    /* returns error code */
                 *ospvChar = (unsigned char)readChar;
                 readChar = OSPPBfrReadByte(*ospvBfrAddr);
                 if (readChar == -1) {
-                    ospvErrCode = OSPC_ERR_BUF_INCOMPLETE;
+                    errcode = OSPC_ERR_BUF_INCOMPLETE;
                 } else if (readChar != OSPC_XMLDOC_UTF16NULL) {
-                    ospvErrCode = OSPC_ERR_XML_BAD_ENC;
+                    errcode = OSPC_ERR_XML_BAD_ENC;
                 }
             } else {
                 if (ospvEncoding == OSPC_XENC_UTF16B) {
                     readChar = OSPPBfrReadByte(*ospvBfrAddr);
                     if (readChar == -1) {
-                        ospvErrCode = OSPC_ERR_BUF_INCOMPLETE;
+                        errcode = OSPC_ERR_BUF_INCOMPLETE;
                     } else if (readChar != OSPC_XMLDOC_UTF16NULL) {
-                        ospvErrCode = OSPC_ERR_XML_BAD_ENC;
+                        errcode = OSPC_ERR_XML_BAD_ENC;
                     }
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    if (errcode == OSPC_ERR_NO_ERROR) {
                         *ospvChar = (unsigned char)readChar;
                     }
                 }
@@ -433,7 +433,7 @@ unsigned OSPPXMLDocReadChar(    /* returns error code */
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -496,31 +496,31 @@ unsigned OSPPXMLDocSkipWhite(   /* returns error code */
     OSPTBFR **ospvBfrAddr,      /* buffer containing document */
     OSPE_XML_ENC ospvEncoding)  /* character encoding for the document */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     unsigned char readChar = 0;
 
     if (ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (*ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (ospvEncoding == OSPC_XENC_UNKNOW) {
-        ospvErrCode = OSPC_ERR_XML_BAD_ENC;
+        errcode = OSPC_ERR_XML_BAD_ENC;
     }
 
-    while (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLDocPeekCharN(ospvBfrAddr, ospvEncoding, 0, &readChar, (int *)&ospvErrCode);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    while (errcode == OSPC_ERR_NO_ERROR) {
+        OSPPXMLDocPeekCharN(ospvBfrAddr, ospvEncoding, 0, &readChar, (int *)&errcode);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             if (OSPPXMLIsSpace(readChar)) {
-                ospvErrCode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &readChar);
+                errcode = OSPPXMLDocReadChar(ospvBfrAddr, ospvEncoding, &readChar);
             } else {
                 break;
             }
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -532,23 +532,23 @@ unsigned OSPPXMLAddReference(           /* returns error code */
     unsigned ospvDataSize,              /* number of bytes of data */
     OSPTBFR **ospvBfrAddr)              /* buffer to stuff output */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     unsigned dataCnt;
     unsigned char ch;
 
     if (ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (*ospvBfrAddr == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+        errcode = OSPC_ERR_BUF_EMPTY;
     }
     if (ospvRawData == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         for (dataCnt = 0;
-             (dataCnt < ospvDataSize) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+             (dataCnt < ospvDataSize) && (errcode == OSPC_ERR_NO_ERROR);
              dataCnt++, ospvRawData++)
         {
             /*
@@ -564,51 +564,51 @@ unsigned OSPPXMLAddReference(           /* returns error code */
                 (*ospvRawData != OSPC_XMLDOC_CLOSE)) {
                 /* this character's okay as is */
                 if (OSPPBfrWriteByte(ospvBfrAddr, *ospvRawData) != 1) {
-                    ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                    errcode = OSPC_ERR_BUF_EMPTY;
                 }
             } else {
                 /* this one needs to be referenced */
                 if (OSPPBfrWriteByte(ospvBfrAddr, OSPC_XMLDOC_REF) != 1) {
-                    ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                    errcode = OSPC_ERR_BUF_EMPTY;
                 }
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     if (OSPPBfrWriteByte(ospvBfrAddr, OSPC_XMLDOC_CHARREF) != 1) {
-                        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                        errcode = OSPC_ERR_BUF_EMPTY;
                     }
                 }
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     if (OSPPBfrWriteByte(ospvBfrAddr, OSPC_XMLDOC_HEXREF) != 1) {
-                        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                        errcode = OSPC_ERR_BUF_EMPTY;
                     }
                 }
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     ch = (char) ('0' + (*ospvRawData) / 16);
                     if (ch > '9') {
                         ch += 'a' - '0' - 10;
                     }
                     if (OSPPBfrWriteByte(ospvBfrAddr, ch) != 1) {
-                        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                        errcode = OSPC_ERR_BUF_EMPTY;
                     }
                 }
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     ch = (char) ('0' + ((*ospvRawData) % 16));
                     if (ch > '9') {
                         ch += 'a' - '0' - 10;
                     }
                     if (OSPPBfrWriteByte(ospvBfrAddr, ch) != 1) {
-                        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                        errcode = OSPC_ERR_BUF_EMPTY;
                     }
                 }
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     if (OSPPBfrWriteByte(ospvBfrAddr, OSPC_XMLDOC_REFEND) != 1) {
-                        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                        errcode = OSPC_ERR_BUF_EMPTY;
                     }
                 }
             }
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -620,7 +620,7 @@ unsigned OSPPXMLDereference(            /* returns error code */
     unsigned *ospvDataSize,             /* input: max, output: actual */
     unsigned char *ospvRawData)         /* place to put output */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     unsigned dataCnt;
     unsigned charCnt;
     unsigned char entity[OSPC_XMLDOC_ENTITYSIZE];
@@ -638,24 +638,24 @@ unsigned OSPPXMLDereference(            /* returns error code */
     unsigned char translatedEntity[OSPC_XMLDOC_ENTITYSIZE];
 
     if (ospvCharData == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
     if (ospvDataSize == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
     if (ospvRawData == OSPC_OSNULL) {
         if (*ospvDataSize == 0) {
             flag = OSPC_FALSE;
         } else {
-            ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
         }
     } else {
         if (*ospvDataSize > 0) {
             flag = OSPC_TRUE;
         } else {
-            ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
         }
     }
 
@@ -678,7 +678,7 @@ unsigned OSPPXMLDereference(            /* returns error code */
     dataCnt = 0;
 
     /* and go into our loop */
-    while ((ospvErrCode == OSPC_ERR_NO_ERROR) && (*ospvCharData != '\0')) {
+    while ((errcode == OSPC_ERR_NO_ERROR) && (*ospvCharData != '\0')) {
         /* is the byte a reference instead of a raw character? */
         if (*ospvCharData == OSPC_XMLDOC_REF) {
             /* this is an entity reference, get the whole entity name */
@@ -690,7 +690,7 @@ unsigned OSPPXMLDereference(            /* returns error code */
                 /* are we at the end of the reference? */
                 if (*ospvCharData == '\0') {
                     /* yes, but we didn't finish! */
-                    ospvErrCode = OSPC_ERR_XML_BAD_ENTITY;
+                    errcode = OSPC_ERR_XML_BAD_ENTITY;
                     break;
                 } else if (*ospvCharData == OSPC_XMLDOC_REFEND) {
                     /*
@@ -705,10 +705,10 @@ unsigned OSPPXMLDereference(            /* returns error code */
                 }
             }
             /* we got to the end of the reference, make sure no errors */
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 entity[charCnt] = '\0';
                 if (flag == OSPC_TRUE) {
-                    ospvErrCode = OSPPXMLDocTranslateEntity(entity, ospvRawData);
+                    errcode = OSPPXMLDocTranslateEntity(entity, ospvRawData);
                     ospvRawData++;
                     dataCnt++;
                 } else {
@@ -719,7 +719,7 @@ unsigned OSPPXMLDereference(            /* returns error code */
                     }
 
                     /* Get the entity */
-                    ospvErrCode = OSPPXMLDocTranslateEntity(entity, translatedEntity);
+                    errcode = OSPPXMLDocTranslateEntity(entity, translatedEntity);
 
                     /* Determine the size of the entity and add it to dataCnt *
                        dataCnt += OSPM_STRLEN((const char *)translatedEntity); */
@@ -738,7 +738,7 @@ unsigned OSPPXMLDereference(            /* returns error code */
 
         /* make sure there's still room in the data area */
         if ((flag == OSPC_TRUE) && (dataCnt > *ospvDataSize)) {
-            ospvErrCode = (unsigned)OSPC_ERR_OS_FAILURE;
+            errcode = (unsigned)OSPC_ERR_OS_FAILURE;
             break;
         }
     }
@@ -749,5 +749,5 @@ unsigned OSPPXMLDereference(            /* returns error code */
         ospvRawData = start;
     }
 
-    return ospvErrCode;
+    return errcode;
 }

@@ -38,15 +38,15 @@ unsigned OSPPMsgBinFromASCIIElement(    /* returns error code */
     unsigned *ospvDataLen,              /* in: max size  out: actual size */
     unsigned char **ospvData)           /* where to put binary data */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     unsigned outlen = 0;
     unsigned char *encodeddata = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_ASCII_NO_ELEMENT;
+        errcode = OSPC_ERR_ASCII_NO_ELEMENT;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* as long as there's no error, we know the encoding to use */
         encodeddata = ospvElem;
 
@@ -61,12 +61,12 @@ unsigned OSPPMsgBinFromASCIIElement(    /* returns error code */
         OSPM_MEMSET(*ospvData, 0, outlen + 1);
 
         /* decode the base64 */
-        ospvErrCode = OSPPBase64Decode((const char *)encodeddata, OSPM_STRLEN((char *)encodeddata), *ospvData, &outlen);
+        errcode = OSPPBase64Decode((const char *)encodeddata, OSPM_STRLEN((char *)encodeddata), *ospvData, &outlen);
 
         *ospvDataLen = outlen;
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -77,22 +77,22 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
     unsigned *ospvDataLen,      /* in: max size  out: actual size */
     unsigned char **ospvData)   /* where to put binary data */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ATTR *attr;
     unsigned isBase64;
     unsigned verifyDataLen = 0;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* assume default CDATA encoding (not base64) */
         isBase64 = OSPC_FALSE;
 
         /* look for a type attribute that will identify the encoding */
         for (attr = (OSPT_XML_ATTR *)OSPPXMLElemFirstAttr(ospvElem);
-            (attr != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            (attr != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
             attr = (OSPT_XML_ATTR *)OSPPXMLElemNextAttr(ospvElem, attr))
         {
             if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_ENCODING) {
@@ -107,13 +107,13 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
                     /* again, keep looking in case a later version is there */
                 } else {
                     /* if it's not CDATA or base64, we can't interpret it */
-                    ospvErrCode = OSPC_ERR_XML_BADCID_ENC;
+                    errcode = OSPC_ERR_XML_BADCID_ENC;
                 }
             }
         }
 
         /* as long as there's no error, we know the encoding to use */
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        if (errcode == OSPC_ERR_NO_ERROR) {
             if (isBase64) {
                 unsigned outlen = 0;
                 unsigned char *encodeddata = OSPC_OSNULL;
@@ -132,7 +132,7 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
                 OSPM_MEMSET(*ospvData, 0, outlen + 1);
 
                 /* decode the base64 */
-                ospvErrCode = OSPPBase64Decode((const char *)encodeddata, OSPM_STRLEN((char *)encodeddata), *ospvData, &outlen);
+                errcode = OSPPBase64Decode((const char *)encodeddata, OSPM_STRLEN((char *)encodeddata), *ospvData, &outlen);
 
                 *ospvDataLen = outlen;
             } else {
@@ -143,8 +143,8 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
                  * references in the data.
                  */
 
-                ospvErrCode = OSPPXMLDereference((const unsigned char *)OSPPXMLElemGetValue(ospvElem), ospvDataLen, OSPC_OSNULL);
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                errcode = OSPPXMLDereference((const unsigned char *)OSPPXMLElemGetValue(ospvElem), ospvDataLen, OSPC_OSNULL);
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     /* Now that we know the size of the data, allocate memory for the data */
                     OSPM_MALLOC(*ospvData, unsigned char, *ospvDataLen + 1);
 
@@ -161,7 +161,7 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
                          * in ospvData, and a value greater than zero to verifyDataLen, we are
                          * telling OSPPXMLDereference that we want the data--not just the length.
                          */
-                        ospvErrCode = OSPPXMLDereference((const unsigned char *)OSPPXMLElemGetValue(ospvElem), &verifyDataLen, *ospvData);
+                        errcode = OSPPXMLDereference((const unsigned char *)OSPPXMLElemGetValue(ospvElem), &verifyDataLen, *ospvData);
 
                         /* Verify that the lengths are what we expect */
                         if (*ospvDataLen != verifyDataLen) {
@@ -174,7 +174,7 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
                              */
 
                             /* Generate an error! */
-                            ospvErrCode = OSPC_ERR_XML_BADCID_ENC;
+                            errcode = OSPC_ERR_XML_BADCID_ENC;
 
                             /* Free the pointer we recently created */
                             OSPM_FREE(*ospvData);
@@ -186,13 +186,13 @@ unsigned OSPPMsgBinFromElement( /* returns error code */
                      * indicate this.
                      */
 
-                    ospvErrCode = OSPC_ERR_XML_BADCID_ENC;
+                    errcode = OSPC_ERR_XML_BADCID_ENC;
                 }
             }
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -207,7 +207,7 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
     OSPTBOOL ospvUseBase64,         /* base64 (1) or CDATA (0) encoding */
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPTBFR *bfr = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
@@ -215,16 +215,16 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
         ((ospvDataLen == 0) || (ospvData == OSPC_OSNULL)) ||
         (((ospvAttrType != OSPC_OSNULL) && (ospvAttrType[0] != '\0')) && ((ospvAttrValue == OSPC_OSNULL) || (ospvAttrValue[0] == '\0'))))
     {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     } else if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
 #ifdef OSPC_USE_CDATA_ONLY
     ospvUseBase64 = OSPC_FALSE;
 #endif
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* start with no element */
         *ospvElem = OSPC_OSNULL;
 
@@ -241,25 +241,25 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
              */
             bfr = OSPPBfrNew(ospvDataLen + OSPC_XMLDOC_CDATABEGLEN + OSPC_XMLDOC_CDATAENDLEN);
             if (bfr == OSPC_OSNULL) {
-                ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                errcode = OSPC_ERR_BUF_EMPTY;
             }
 
             /* start with the CDATA header */
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 if (OSPPBfrWriteBlock(&bfr, (void *)OSPC_XMLDOC_CDATABEG, OSPC_XMLDOC_CDATABEGLEN) != OSPC_XMLDOC_CDATABEGLEN) {
-                    ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                    errcode = OSPC_ERR_BUF_EMPTY;
                 }
             }
 
             /* encode as CDATA */
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-                ospvErrCode = OSPPXMLAddReference(ospvData, ospvDataLen, &bfr);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                errcode = OSPPXMLAddReference(ospvData, ospvDataLen, &bfr);
             }
 
             /* add the CDATA trailer */
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 if (OSPPBfrWriteBlock(&bfr, (void *)OSPC_XMLDOC_CDATAEND, OSPC_XMLDOC_CDATAENDLEN) != OSPC_XMLDOC_CDATAENDLEN) {
-                    ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                    errcode = OSPC_ERR_BUF_EMPTY;
                 }
             }
         } else {
@@ -274,25 +274,25 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
 
             OSPM_MALLOC(base64buf, unsigned char, base64bufsz);
             if (base64buf != OSPC_OSNULL) {
-                ospvErrCode = OSPPBase64Encode(ospvData, ospvDataLen, base64buf, &base64bufsz);
+                errcode = OSPPBase64Encode(ospvData, ospvDataLen, base64buf, &base64bufsz);
 
 #ifdef OSPC_VERIFY_BUILDTOKEN
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     unsigned char tmpbuf[5000];
                     unsigned tmpbufsize = sizeof(tmpbuf);
-                    ospvErrCode = OSPPBase64Decode((const char *)base64buf, base64bufsz, tmpbuf, &tmpbufsize);
+                    errcode = OSPPBase64Decode((const char *)base64buf, base64bufsz, tmpbuf, &tmpbufsize);
                     OSPTNLOGDUMP(ospvData, ospvDataLen, "DATA IN");
                     OSPTNLOGDUMP(tmpbuf, tmpbufsize, "DATA IN");
 
-                    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                    if (errcode == OSPC_ERR_NO_ERROR) {
                         if (OSPM_MEMCMP(tmpbuf, ospvData, tmpbufsize) || (tmpbufsize != ospvDataLen)) {
-                            ospvErrCode = 666;
+                            errcode = 666;
                         }
                     }
                 }
 #endif
 
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     /*
                      * Possible Optimization -
                      * Instead of allocating buffer for the below mentioned size,
@@ -304,45 +304,45 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
                     bfr = OSPPBfrNew(base64bufsz);
                     if (bfr != OSPC_OSNULL) {
                         if (OSPPBfrWriteBlock(&bfr, base64buf, base64bufsz) != base64bufsz) {
-                            ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                            errcode = OSPC_ERR_BUF_EMPTY;
                         }
                     } else {
-                        ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                        errcode = OSPC_ERR_BUF_EMPTY;
                     }
                 }
                 OSPM_FREE(base64buf);
             } else {
-                ospvErrCode = OSPC_ERR_XML_MALLOC_FAILED;
+                errcode = OSPC_ERR_XML_MALLOC_FAILED;
             }
         }
 
         /* and finally the terminating 0 */
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        if (errcode == OSPC_ERR_NO_ERROR) {
             if (OSPPBfrWriteByte(&bfr, '\0') != 1) {
-                ospvErrCode = OSPC_ERR_BUF_EMPTY;
+                errcode = OSPC_ERR_BUF_EMPTY;
             }
         }
 
         /* create the element */
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        if (errcode == OSPC_ERR_NO_ERROR) {
             *ospvElem = OSPPXMLElemNew(ospvName, (const char *)OSPPBfrLinearPtr(bfr));
             if (*ospvElem == OSPC_OSNULL) {
-                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
             } else {
                 if ((ospvAttrType != OSPC_OSNULL) && (ospvAttrType[0] != '\0')) {
                     attr = OSPPXMLAttrNew(ospvAttrType, ospvAttrValue);
                     if (attr == OSPC_OSNULL) {
                         OSPPXMLElemDelete(ospvElem);
-                        ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                        errcode = OSPC_ERR_XML_NO_ATTR;
                     } else {
                         OSPPXMLElemAddAttr(*ospvElem, attr);
                     }
                 }
-                if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvUseBase64 == OSPC_TRUE)) {
+                if ((errcode == OSPC_ERR_NO_ERROR) && (ospvUseBase64 == OSPC_TRUE)) {
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_ENCODING), OSPPAltInfoTypeGetName(OSPC_ALTINFO_BASE64));
                     if (attr == OSPC_OSNULL) {
                         OSPPXMLElemDelete(ospvElem);
-                        ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                        errcode = OSPC_ERR_XML_NO_ATTR;
                     } else {
                         OSPPXMLElemAddAttr(*ospvElem, attr);
                    }
@@ -356,7 +356,7 @@ unsigned OSPPMsgBinToElement(       /* returns error code */
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -366,27 +366,27 @@ unsigned OSPPMsgNumFromElement( /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* input is XML element */
     unsigned long *ospvNumber)  /* where to put number */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     char *cptr;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvNumber == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* get the number - must be decimal */
         *ospvNumber = OSPM_STRTOUL(OSPPXMLElemGetValue(ospvElem), &cptr, 10);
 
         /* check for errors */
         if (cptr == OSPPXMLElemGetValue(ospvElem)) {
-            ospvErrCode = OSPC_ERR_DATA_BAD_NUMBER;
+            errcode = OSPC_ERR_DATA_BAD_NUMBER;
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -397,18 +397,18 @@ unsigned OSPPMsgNumToElement(   /* returns error code */
     const char *ospvName,       /* name of element */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     char val[41];   /* 39 digits will accomodate 2^128 */   /*!!!PS added 1 */
     char *cptr;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvName == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* start with no element */
         *ospvElem = OSPC_OSNULL;
 
@@ -425,17 +425,17 @@ unsigned OSPPMsgNumToElement(   /* returns error code */
 
         if (ospvNumber != 0) {
             /* error - we ran out of space before completing the number */
-            ospvErrCode = OSPC_ERR_DATA_BAD_NUMBER;
+            errcode = OSPC_ERR_DATA_BAD_NUMBER;
         } else {
             /* create the element */
             *ospvElem = OSPPXMLElemNew(ospvName, &val[cptr - &val[0] + 1]);
             if (*ospvElem == OSPC_OSNULL) {
-                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
             }
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -445,21 +445,21 @@ int OSPPMsgFloatFromElement(    /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* input is XML element */
     float *ospvNumber)          /* where to put number */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvNumber == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* get the number  */
         *ospvNumber = (float)OSPM_ATOF(OSPPXMLElemGetValue(ospvElem));
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -471,17 +471,17 @@ int OSPPMsgFloatToElement(      /* returns error code */
     const char *ospvName,       /* name of element */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     char val[41];               /* 39 digits will accomodate 2^128 *//*!!!PS added 1 */
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvName == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* start with no element */
         *ospvElem = OSPC_OSNULL;
 
@@ -491,11 +491,11 @@ int OSPPMsgFloatToElement(      /* returns error code */
         /* create the element */
         *ospvElem = OSPPXMLElemNew(ospvName, val);
         if (*ospvElem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -516,17 +516,17 @@ unsigned OSPPMsgCodeToElement(  /* returns error code */
     const char *ospvName,       /* name of element */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     char val[4];                /* 39 digits will accomodate 2^128 *//*!!!PS added 1 */
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvName == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* start with no element */
         *ospvElem = OSPC_OSNULL;
 
@@ -535,11 +535,11 @@ unsigned OSPPMsgCodeToElement(  /* returns error code */
         /* create the element */
         *ospvElem = OSPPXMLElemNew(ospvName, (const char *)val);
         if (*ospvElem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -549,24 +549,24 @@ unsigned OSPPMsgTXFromElement(  /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* input is XML element */
     OSPTTRXID *ospvTX)          /* where to put transaction ID */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     char *cptr = OSPC_OSNULL;
     unsigned pos;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvTX == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* check for errors */
         if ((cptr = (char *)OSPPXMLElemGetValue(ospvElem)) == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_DATA_BAD_NUMBER;
+            errcode = OSPC_ERR_DATA_BAD_NUMBER;
         }
     }
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* get the number - must be decimal */
         *ospvTX = 0;
         for (pos = 0; pos < OSPM_STRLEN(cptr); pos++) {
@@ -575,7 +575,7 @@ unsigned OSPPMsgTXFromElement(  /* returns error code */
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -586,18 +586,18 @@ unsigned OSPPMsgTXToElement(    /* returns error code */
     const char *ospvName,       /* name of element */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     char val[41];               /* 39 digits will accomodate 2^128 *//*!!!PS added 1 */
     char *cptr;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvName == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* start with no element */
         *ospvElem = OSPC_OSNULL;
 
@@ -614,17 +614,17 @@ unsigned OSPPMsgTXToElement(    /* returns error code */
 
         if (ospvNumber != 0) {
             /* error - we ran out of space before completing the number */
-            ospvErrCode = OSPC_ERR_DATA_BAD_NUMBER;
+            errcode = OSPC_ERR_DATA_BAD_NUMBER;
         } else {
             /* create the element */
             *ospvElem = OSPPXMLElemNew(ospvName, &val[cptr - &val[0] + 1]);
             if (*ospvElem == OSPC_OSNULL) {
-                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
             }
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -634,20 +634,20 @@ unsigned OSPPMsgTimeFromElement(/* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* input is XML element */
     OSPTTIME *ospvTime)         /* where to put time */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvTime == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPOSTimeStringToCal(OSPPXMLElemGetValue(ospvElem), ospvTime);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPOSTimeStringToCal(OSPPXMLElemGetValue(ospvElem), ospvTime);
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -658,32 +658,32 @@ unsigned OSPPMsgTimeToElement(  /* returns error code */
     const char *ospvName,       /* name of element */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     char tstr[OSPC_SIZE_TIMESTRING];
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvName == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_INVALID_ARGS;
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* start with no element */
         *ospvElem = OSPC_OSNULL;
 
-        ospvErrCode = OSPPOSTimeCalToString(ospvTime, tstr);
+        errcode = OSPPOSTimeCalToString(ospvTime, tstr);
 
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+        if (errcode == OSPC_ERR_NO_ERROR) {
             /* create the element */
             *ospvElem = OSPPXMLElemNew(ospvName, tstr);
             if (*ospvElem == OSPC_OSNULL) {
-                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
             }
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*

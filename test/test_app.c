@@ -787,18 +787,18 @@ int testOSPPTransactionAccumulateOneWayDelay()
     return errorcode;
 }
 
-int testOSPPTransactionAccumulateRoundTripDelay()
+int testOSPPTransactionAccumulateTwoWayDelay()
 {
     int errorcode = OSPC_ERR_NO_ERROR, i = 0;
 
     for (i = 0; i < 2; i++) {
-        errorcode = OSPPTransactionAccumulateRoundTripDelay(OSPVTransactionHandle,
+        errorcode = OSPPTransactionAccumulateTwoWayDelay(OSPVTransactionHandle,
             accumtable2[i].Number,
             accumtable2[i].Min,
             accumtable2[i].Mean,
             accumtable2[i].Variance);
 
-        printf("OSPPTransactionAccumulateRoundTripDelay errorcode = %d\n", errorcode);
+        printf("OSPPTransactionAccumulateTwoWayDelay errorcode = %d\n", errorcode);
     }
 
     return errorcode;
@@ -1976,6 +1976,18 @@ int testStatsDelay()
     return errorcode;
 }
 
+int testStatsRTDelay()
+{
+    int errorcode = 0;
+
+    errorcode = OSPPTransactionSetRTDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SLEG_SOURCE, 1, 2, 3, 4, 5);
+    errorcode = OSPPTransactionSetRTDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SLEG_DESTINATION, -1, 6, 7, 8, 9);
+    errorcode = OSPPTransactionSetRTDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SLEG_SOURCE, 10, -1, 11, 12, 13);
+    errorcode = OSPPTransactionSetRTDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SLEG_DESTINATION, 14, 15, -1, 16, 17);
+
+    return errorcode;
+}
+
 int testStatsOctets()
 {
     int errorcode = 0;
@@ -2046,216 +2058,207 @@ int testStatsICPIF()
     return errorcode;
 }
 
-int testStatsRoundTrip()
-{
-    int errorcode = 0;
-
-    errorcode = OSPPTransactionSetRoundTripDelay(OSPVTransactionHandle, 1, 2, 3, 4, 5);
-
-    return errorcode;
-}
-
 int testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
-    int i, errorcode = 0;
+    int i, errcode = 0;
     int trans_to_run, num_providers;
     int build_new_trans = 0;
 
     switch (apinumber) {
 
     case 1:
-        errorcode = testOSPPProviderNew(&OSPVProviderHandle);
+        errcode = testOSPPProviderNew(&OSPVProviderHandle);
         break;
     case 2:
-        errorcode = testOSPPProviderDelete();
+        errcode = testOSPPProviderDelete();
         break;
     case 3:
-        errorcode = testNotImplemented();
+        errcode = testNotImplemented();
         /*errorcode = testOSPPProviderGetAuthorityCertificates(); */
         break;
     case 4:
-        errorcode = testOSPPProviderSetServicePoints();
+        errcode = testOSPPProviderSetServicePoints();
         break;
     case 5:
-        errorcode = testOSPPProviderGetHTTPMaxConnections();
+        errcode = testOSPPProviderGetHTTPMaxConnections();
         break;
     case 6:
-        errorcode = testOSPPProviderSetHTTPMaxConnections();
+        errcode = testOSPPProviderSetHTTPMaxConnections();
         break;
     case 7:
-        errorcode = testOSPPProviderGetHTTPPersistence();
+        errcode = testOSPPProviderGetHTTPPersistence();
         break;
     case 8:
-        errorcode = testOSPPProviderSetHTTPPersistence();
+        errcode = testOSPPProviderSetHTTPPersistence();
         break;
     case 9:
-        errorcode = testOSPPProviderGetHTTPRetryDelay();
+        errcode = testOSPPProviderGetHTTPRetryDelay();
         break;
     case 10:
-        errorcode = testOSPPProviderSetHTTPRetryDelay();
+        errcode = testOSPPProviderSetHTTPRetryDelay();
         break;
     case 11:
-        errorcode = testOSPPProviderGetHTTPTimeout();
+        errcode = testOSPPProviderGetHTTPTimeout();
         break;
     case 12:
-        errorcode = testOSPPProviderSetHTTPTimeout();
+        errcode = testOSPPProviderSetHTTPTimeout();
         break;
     case 13:
-        errorcode = testNotImplemented();
+        errcode = testNotImplemented();
         break;
     case 14:
-        errorcode = testOSPPProviderSetCapabilitiesURLs();
+        errcode = testOSPPProviderSetCapabilitiesURLs();
         break;
     case 15:
-        errorcode = testOSPPProviderGetLocalValidation();
+        errcode = testOSPPProviderGetLocalValidation();
         break;
     case 16:
-        errorcode = testOSPPProviderSetLocalValidation();
+        errcode = testOSPPProviderSetLocalValidation();
         break;
     case 17:
-        errorcode = testOSPPProviderGetServicePoints();
+        errcode = testOSPPProviderGetServicePoints();
         break;
     case 18:
-        errorcode = testOSPPSetServicePoints();
+        errcode = testOSPPSetServicePoints();
         break;
     case 19:
-        errorcode = testOSPPProviderGetSSLLifetime();
+        errcode = testOSPPProviderGetSSLLifetime();
         break;
     case 20:
-        errorcode = testOSPPProviderSetSSLLifetime();
+        errcode = testOSPPProviderSetSSLLifetime();
         break;
     case 21:
-        errorcode = testOSPPProviderGetNumberOfAuthorityCertificates();
+        errcode = testOSPPProviderGetNumberOfAuthorityCertificates();
         break;
     case 22:
-        errorcode = testOSPPProviderGetNumberOfServicePoints();
+        errcode = testOSPPProviderGetNumberOfServicePoints();
         break;
     case 23:
-        errorcode = testOSPPTransactionNew();
+        errcode = testOSPPTransactionNew();
         break;
     case 24:
-        errorcode = testOSPPTransactionDelete();
+        errcode = testOSPPTransactionDelete();
         break;
     case 25:
-        errorcode = testOSPPTransactionAccumulateOneWayDelay();
+        errcode = testOSPPTransactionAccumulateOneWayDelay();
         break;
     case 26:
-        errorcode = testOSPPTransactionAccumulateRoundTripDelay();
+        errcode = testOSPPTransactionAccumulateTwoWayDelay();
         break;
     case 27:
-        errorcode = testOSPPTransactionGetFirstDestination();
+        errcode = testOSPPTransactionGetFirstDestination();
         break;
     case 28:
-        errorcode = testOSPPTransactionGetNextDestination();
+        errcode = testOSPPTransactionGetNextDestination();
         break;
     case 29:
-        errorcode = testOSPPTransactionRequestAuthorisation();
+        errcode = testOSPPTransactionRequestAuthorisation();
         break;
     case 30:
-        errorcode = testOSPPTransactionRequestSuggestedAuthorisation();
+        errcode = testOSPPTransactionRequestSuggestedAuthorisation();
         break;
     case 31:
-        errorcode = testOSPPTransactionValidateAuthorisation();
+        errcode = testOSPPTransactionValidateAuthorisation();
         break;
     case 32:
-        errorcode = testOSPPTransactionReportUsage();
+        errcode = testOSPPTransactionReportUsage();
         break;
     case 99:
         OSPM_SLEEP(2);
         break;
     case 33:
-        errorcode = testOSPPTransactionInitializeAtDevice(OSPC_ROLE_SOURCE);
+        errcode = testOSPPTransactionInitializeAtDevice(OSPC_ROLE_SOURCE);
         break;
     case 34:
-        errorcode = testOSPPTransactionInitializeAtDevice(OSPC_ROLE_DESTINATION);
+        errcode = testOSPPTransactionInitializeAtDevice(OSPC_ROLE_DESTINATION);
         break;
     case 35:
-        errorcode = testOSPPTransactionSetNetworkId();
+        errcode = testOSPPTransactionSetNetworkId();
         break;
     case 36:
-        errorcode = testOSPPTransactionRecordFailure();
+        errcode = testOSPPTransactionRecordFailure();
         break;
     case 37:
-        errorcode = testOSPPTransactionIndicateCapabilities();
+        errcode = testOSPPTransactionIndicateCapabilities();
         break;
     case 38:
-        errorcode = testOSPPTransactionRequestReauthorisation();
+        errcode = testOSPPTransactionRequestReauthorisation();
         break;
     case 39:
-        errorcode = testOSPPTransactionGetDestProtocol();
+        errcode = testOSPPTransactionGetDestProtocol();
         break;
     case 40:
-        errorcode = testOSPPTransactionIsDestOSPEnabled();
+        errcode = testOSPPTransactionIsDestOSPEnabled();
         break;
     case 41:
-        errorcode = testTestCalls();
+        errcode = testTestCalls();
         break;
     case 42:
-        errorcode = testOSPToolkitVersion();
+        errcode = testOSPToolkitVersion();
         break;
     case 43:
         printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
         scanf("%d", &build_new_trans);
         getchar();
-        errorcode = testBuildUsageFromScratch(OSPC_ROLE_SOURCE, build_new_trans);
+        errcode = testBuildUsageFromScratch(OSPC_ROLE_SOURCE, build_new_trans);
         break;
     case 44:
         printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
         scanf("%d", &build_new_trans);
         getchar();
-        errorcode =
+        errcode =
             testBuildUsageFromScratch(OSPC_ROLE_DESTINATION, build_new_trans);
         break;
     case 45:
-        errorcode = testOSPPTransactionGetLookAheadInfoIfPresent();
+        errcode = testOSPPTransactionGetLookAheadInfoIfPresent();
         break;
     case 46:
-        errorcode = testOSPPTransactionModifyDeviceIdentifiers();
+        errcode = testOSPPTransactionModifyDeviceIdentifiers();
         break;
     case 47:
-        errorcode = testOSPPTransactionModifyDeviceIdentifiersAgain();
+        errcode = testOSPPTransactionModifyDeviceIdentifiersAgain();
         break;
     case 48:
-        errorcode = testSetDestinationCount();
+        errcode = testSetDestinationCount();
         break;
     case 50:
-        errorcode = testSetCallingNumber();
+        errcode = testSetCallingNumber();
         break;
     case 51:
-        errorcode = testSetCalledNumber();
+        errcode = testSetCalledNumber();
         break;
     case 52:
-        errorcode = testGetCallingNumber();
+        errcode = testGetCallingNumber();
         break;
     case 53:
-        errorcode = testGetCalledNumber();
+        errcode = testGetCalledNumber();
         break;
     case 54:
-        errorcode = testSetCallId();
+        errcode = testSetCallId();
     case 55:
-        errorcode = testOSPPTransactionSetPricingInfo();
+        errcode = testOSPPTransactionSetPricingInfo();
         break;
     case 56:
-        errorcode = testSetDuration();
+        errcode = testSetDuration();
         break;
     case 57:
-        errorcode = testSetTCCode();
+        errcode = testSetTCCode();
         break;
     case 58:
-        errorcode = testSetStartTime();
+        errcode = testSetStartTime();
         break;
     case 59:
-        errorcode = testSetEndTime();
+        errcode = testSetEndTime();
         break;
     case 60:
-        errorcode = testSetAlertTime();
+        errcode = testSetAlertTime();
         break;
     case 61:
-        errorcode = testSetConnectTime();
+        errcode = testSetConnectTime();
         break;
     case 62:
-        errorcode = testSetServiceType();
+        errcode = testSetServiceType();
         break;
     case 100:
         printf("Enter the number of Providers to be created .. ");
@@ -2263,17 +2266,17 @@ int testAPI(int apinumber)
         getchar();
         if (num_providers > OSPC_MAX_PROVIDERS) {
             printf("Cannot run the test. The entered value is greater than the maximum providers allowed\n");
-            errorcode = OSPC_ERR_PROV_MAX_PROVIDERS;
+            errcode = OSPC_ERR_PROV_MAX_PROVIDERS;
         } else {
             printf("Enter the number of Transactions to be run .. ");
             scanf("%d", &trans_to_run);
             getchar();
             if (2 * trans_to_run > OSPC_MAX_TRANS) {
-                errorcode = OSPC_ERR_TRAN_NO_TRANS_SPACE;
+                errcode = OSPC_ERR_TRAN_NO_TRANS_SPACE;
                 printf("Cannot run the test. The entered value is greater than the maximum transactions allowed\n");
             }
 
-            if ((errorcode == 0) && (trans_to_run > MAX_QUEUE_SIZE)) {
+            if ((errcode == 0) && (trans_to_run > MAX_QUEUE_SIZE)) {
                 printf("Warning !!! The toolkit may not be able to process - %d calls because the maximum queue size is - %d\n",
                      trans_to_run, MAX_QUEUE_SIZE);
             }
@@ -2281,12 +2284,12 @@ int testAPI(int apinumber)
             /*
              * Launch the threads
              */
-            if (errorcode == 0) {
+            if (errcode == 0) {
                 for (i = 0; i < num_providers; i++) {
                     OSPM_CREATE_THREAD(MultProviderThrId[i],
                         NULL,
                         testNonBlockingPerformanceTest,
-                        (void *)&trans_to_run, errorcode);
+                        (void *)&trans_to_run, errcode);
 
                     printf("Created Thread [%d] with thread id: [%lu]\n", i, (unsigned long int)MultProviderThrId[i]);
                 }
@@ -2297,77 +2300,151 @@ int testAPI(int apinumber)
         }
         break;
     case 101:
-        errorcode = testNonBlockingPerformanceTestForCapabilities();
+        errcode = testNonBlockingPerformanceTestForCapabilities();
         break;
     case 200:
-        errorcode = testSetTermCause();
+        errcode = testSetTermCause();
         break;
     case 210:
-        errorcode = testSetNumberPortability();
+        errcode = testSetNumberPortability();
         break;
     case 211:
-        errorcode = testSetOperatorName();
+        errcode = testSetOperatorName();
     case 212:
         break;
     case 213:
-        errorcode = testSetDiversion();
+        errcode = testSetDiversion();
         break;
     case 220:
-        errorcode = testSetProtocol();
+        errcode = testSetProtocol();
         break;
     case 221:
-        errorcode = testSetCodec();
+        errcode = testSetCodec();
         break;
     case 222:
-        errorcode = testSetNetworkId();
+        errcode = testSetNetworkId();
         break;
     case 223:
-        errorcode = testSetSessionId();
+        errcode = testSetSessionId();
         break;
     case 224:
-        errorcode = testSetCustomInfo();
+        errcode = testSetCustomInfo();
         break;
     case 250:
-        errorcode = testGetNumberPortability();
+        errcode = testGetNumberPortability();
         break;
     case 251:
-        errorcode = testGetOperatorName();
+        errcode = testGetOperatorName();
         break;
     case 300:
-        errorcode = testStatsLost();
+        errcode = testStatsLost();
         break;
     case 301:
-        errorcode = testStatsJitter();
+        errcode = testStatsJitter();
         break;
     case 302:
-        errorcode = testStatsDelay();
+        errcode = testStatsDelay();
         break;
     case 303:
-        errorcode = testStatsOctets();
+        errcode = testStatsRTDelay();
         break;
     case 304:
-        errorcode = testStatsPackets();
+        errcode = testStatsOctets();
         break;
     case 305:
-        errorcode = testStatsRFactor();
+        errcode = testStatsPackets();
         break;
     case 306:
-        errorcode = testStatsMOSCQ();
+        errcode = testStatsRFactor();
         break;
     case 307:
-        errorcode = testStatsMOSLQ();
+        errcode = testStatsMOSCQ();
         break;
     case 308:
-        errorcode = testStatsICPIF();
+        errcode = testStatsMOSLQ();
         break;
     case 309:
-        errorcode = testStatsRoundTrip();
+        errcode = testStatsICPIF();
         break;
+    case 999:
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testOSPPProviderNew(&OSPVProviderHandle);
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testOSPPTransactionNew();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testOSPPTransactionRequestAuthorisation();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testOSPPTransactionGetFirstDestination();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetTermCause();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetDiversion();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetProtocol();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetCodec();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetNetworkId();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetSessionId();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetCustomInfo();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testStatsLost();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testStatsJitter();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testStatsDelay();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testStatsRTDelay();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testStatsOctets();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testStatsPackets();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testStatsRFactor();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testStatsMOSCQ();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testStatsMOSLQ();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testStatsICPIF();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testOSPPTransactionReportUsage();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testOSPPTransactionDelete();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testOSPPProviderDelete();
+        }
+   	    break;
     default:
-        errorcode = -1;
+        errcode = -1;
     }
 
-    return errorcode;
+    return errcode;
 }
 
 int testTestCalls()
@@ -2422,7 +2499,7 @@ int testMenu()
         printf("Transaction API functions\n");
         printf("---------------------------------------------------------------------\n");
         printf("23) New                               24) Delete\n");
-        printf("25) AccumulateOneWayDelay             26) AccumulateRoundTripDelay\n");
+        printf("25) AccumulateOneWayDelay             26) AccumulateTwoWayDelay\n");
         printf("27) GetFirstDestination               28) GetNextDestination\n");
         printf("29) RequestAuthorisation              30) RequestSuggestedAuthorization\n");
         printf("31) ValidateAuthorisation             32) ReportUsage\n");
@@ -2465,10 +2542,10 @@ int testMenu()
         printf("224) Set Custom Info\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("300) Set Lost                         301) Set Jitter\n");
-        printf("302) Set Delay                        303) Set Octets\n");
-        printf("304) Set Packets                      305) Set R-Factor\n");
-        printf("306) Set MOS-CQ                       307) Set MOS-LQ\n");
-        printf("308) Set ICPIF                        309) Set Round Trip Delay\n");
+        printf("302) Set Delay                        303) Set Round Trip Delay\n");
+        printf("304) Set Octets                       305) Set Packets\n");
+        printf("306) Set R-Factor                     307) Set MOS-CQ\n");
+        printf("308) Set MOS-LQ                       309) Set ICPIF\n");
         printf("---------------------------------------------------------------------\n");
         printf("Enter function number or 'q' to quit => ");
     }

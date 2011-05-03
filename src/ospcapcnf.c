@@ -37,18 +37,18 @@
 unsigned OSPPCapCnfNew(
     OSPT_CAP_CNF **ospvCapCnf)
 {
-    unsigned errorcode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
 
     OSPM_MALLOC(*ospvCapCnf, OSPT_CAP_CNF, sizeof(OSPT_CAP_CNF));
 
     if (*ospvCapCnf != OSPC_OSNULL) {
         OSPM_MEMSET(*ospvCapCnf, 0, sizeof(OSPT_CAP_CNF));
     } else {
-        errorcode = OSPC_ERR_TRAN_MALLOC_FAILED;
-        OSPM_DBGERRORLOG(errorcode, "CapCnf struct not created.");
+        errcode = OSPC_ERR_TRAN_MALLOC_FAILED;
+        OSPM_DBGERRORLOG(errcode, "CapCnf struct not created.");
     }
 
-    return errorcode;
+    return errcode;
 }
 
 void OSPPCapCnfDelete(
@@ -67,7 +67,7 @@ unsigned OSPPCapCnfFromElement( /* returns error code */
     OSPT_XML_ELEM *ospvParent,  /* input is XML element */
     OSPT_CAP_CNF **ospvCapCnf)  /* where to put capability confirmation pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
     OSPT_XML_ELEM *capCnfElem = OSPC_OSNULL;
     OSPT_CAP_CNF *capcnf = OSPC_OSNULL;
@@ -76,17 +76,17 @@ unsigned OSPPCapCnfFromElement( /* returns error code */
      * Check input data
      */
     if (OSPC_OSNULL == ospvParent) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
     /*
      * Create new confirmation object
      */
-    if (OSPC_ERR_NO_ERROR == ospvErrCode) {
-        ospvErrCode = OSPPCapCnfNew(&capcnf);
+    if (OSPC_ERR_NO_ERROR == errcode) {
+        errcode = OSPPCapCnfNew(&capcnf);
     }
 
-    if (OSPC_ERR_NO_ERROR == ospvErrCode) {
+    if (OSPC_ERR_NO_ERROR == errcode) {
         /*
          * The Parent points to Message, its 1st child is
          * CapabilityConfirmation
@@ -99,7 +99,7 @@ unsigned OSPPCapCnfFromElement( /* returns error code */
          * the information we need.
          */
         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(capCnfElem);
-             (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR); elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(capCnfElem, elem)) {
+             (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR); elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(capCnfElem, elem)) {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_TIMESTAMP:
             case OSPC_MELEM_DESTOSPVERSION:
@@ -107,7 +107,7 @@ unsigned OSPPCapCnfFromElement( /* returns error code */
                 break;
 
             case OSPC_MELEM_STATUS:
-                ospvErrCode = OSPPStatusFromElement(elem, &(capcnf->ospmStatus));
+                errcode = OSPPStatusFromElement(elem, &(capcnf->ospmStatus));
                 break;
 
             default:
@@ -117,16 +117,16 @@ unsigned OSPPCapCnfFromElement( /* returns error code */
                  * Otherwise we can ignore it.
                  */
                 if (OSPPMsgElemIsCritical(elem)) {
-                    ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
+                    errcode = OSPC_ERR_XML_BAD_ELEMENT;
                 }
                 break;
             }
         }   /* For each child element of CapabilitiesConfirmation */
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         *ospvCapCnf = capcnf;
     }
 
-    return ospvErrCode;
+    return errcode;
 }

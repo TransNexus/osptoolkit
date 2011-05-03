@@ -932,11 +932,11 @@ int OSPPTransactionAccumulateOneWayDelay(
 }
 
 /*
- * OSPPTransactionAccumulateRoundTripDelay()
+ * OSPPTransactionAccumulateTwoWayDelay()
  *
  * Accumulates round trip delay for transaction.
  *
- * The OSPPTransactionAccumulateRoundTripDelay function accumulates round trip
+ * The OSPPTransactionAccumulateTwoWayDelay function accumulates round trip
  * delay statistics for the call. These measurements can be made using, for
  * example, H.245 round trip delay requests during the call. Applications may
  * call this function an unlimited number of times during a transaction, but
@@ -946,7 +946,7 @@ int OSPPTransactionAccumulateOneWayDelay(
  * OSPPTransactionValidateAuthorisation and before calling the function
  * OSPPTransactionReportUsage). Also, each call to this function must report
  * statistics for a separate and distinct set of measurements. In other words,
- * once OSPPTransactionAccumulateRoundTripDelay is successfully called,
+ * once OSPPTransactionAccumulateTwoWayDelay is successfully called,
  * the application should discard (at least for subsequent calls to the function)
  * the data and start calculating minimum, mean, variance measures anew.
  * Applications may use this function to report a single sample, or they may
@@ -971,7 +971,7 @@ int OSPPTransactionAccumulateOneWayDelay(
  *
  * returns OSPC_ERR_NO_ERROR if successful, else error code.
  */
-int OSPPTransactionAccumulateRoundTripDelay(
+int OSPPTransactionAccumulateTwoWayDelay(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     unsigned ospvSamples,           /* In - Number of samples included */
     unsigned ospvMinimum,           /* In - Minimum delay in milliseconds */
@@ -1003,7 +1003,7 @@ int OSPPTransactionAccumulateRoundTripDelay(
         OSPPTransactionGetAccumAllowed(trans, &accumallowed);
         if (!accumallowed) {
             errorcode = OSPC_ERR_TRAN_ACCUMULATE_NOT_ALLOWED;
-            OSPM_DBGERRORLOG(errorcode, "AccumulateRoundTrip not allowed in this transaction state.");
+            OSPM_DBGERRORLOG(errorcode, "AccumulateTwoWay not allowed in this transaction state.");
         }
     }
 
@@ -1020,7 +1020,7 @@ int OSPPTransactionAccumulateRoundTripDelay(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             /* make temporary copy so we don't corrupt our accumulator */
-            OSPM_MEMCPY(&metrics, &(trans->Statistics->RoundTrip), sizeof(metrics));
+            OSPM_MEMCPY(&metrics, &(trans->Statistics->TwoWay), sizeof(metrics));
 
             /* number of measurements */
             currnumber = metrics.samples;
@@ -1074,7 +1074,7 @@ int OSPPTransactionAccumulateRoundTripDelay(
             if (errorcode == OSPC_ERR_NO_ERROR) {
                 metrics.hasvalue = OSPC_TRUE;
                 /* now copy values back to permanent accumulator */
-                OSPM_MEMCPY(&(trans->Statistics->RoundTrip), &metrics, sizeof(trans->Statistics->RoundTrip));
+                OSPM_MEMCPY(&(trans->Statistics->TwoWay), &metrics, sizeof(trans->Statistics->TwoWay));
                 OSPPTransactionSetState(trans, OSPC_ACCUMULATE_SUCCESS);
             } else {
                 OSPPTransactionSetState(trans, OSPC_ACCUMULATE_FAIL);
@@ -4262,25 +4262,25 @@ int OSPPTransactionSetLost(
     int ospvPackets,                /* In - Packets, -1 means unavailable */
     int ospvFraction)               /* In - Fraction, -1 means unavailable */
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR) {
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* if no statistics structure, make one */
         if (trans->Statistics == OSPC_OSNULL) {
             trans->Statistics = OSPPStatsNew();
             if (trans->Statistics == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_TRAN_STATS_NEW_FAIL;
+                errcode = OSPC_ERR_TRAN_STATS_NEW_FAIL;
             }
         }
 
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPStatsSetPacket(trans->Statistics, OSPC_STATS_LOST, ospvMetric, ospvDir, ospvPackets, ospvFraction);
         }
     }
 
-    return errorcode;
+    return errcode;
 }
 
 int OSPPTransactionSetJitter(
@@ -4312,6 +4312,7 @@ int OSPPTransactionSetJitter(
                 OSPC_STATS_JITTER,
                 ospvMetric,
                 ospvDir,
+                OSPC_SLEG_UNDEFINED,
                 ospvSamples,
                 ospvMin,
                 ospvMax,
@@ -4352,6 +4353,48 @@ int OSPPTransactionSetDelay(
                 OSPC_STATS_DELAY,
                 ospvMetric,
                 ospvDir,
+                OSPC_SLEG_UNDEFINED,
+                ospvSamples,
+                ospvMin,
+                ospvMax,
+                ospvMean,
+                ospvVariance);
+        }
+    }
+
+    return errorcode;
+}
+
+int OSPPTransactionSetRTDelay(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_SESSION_LEG ospvLeg,       /* In - Session leg */
+    int ospvSamples,                /* In - Samples of RTDelay, -1 means unavailable */
+    int ospvMin,                    /* In - Minimum of RTDelay in milliseconds, -1 means unavailable */
+    int ospvMax,                    /* In - Maximum of RTDelay in milliseconds, -1 means unavailable */
+    int ospvMean,                   /* In - Mean of RTDelay in milliseconds, -1 means unavailable */
+    float ospvVariance)             /* In - Variance of round trip delay, -1 means unavailable */
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errorcode);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        /* if no statistics structure, make one */
+        if (trans->Statistics == OSPC_OSNULL) {
+            trans->Statistics = OSPPStatsNew();
+            if (trans->Statistics == OSPC_OSNULL) {
+                errorcode = OSPC_ERR_TRAN_STATS_NEW_FAIL;
+            }
+        }
+
+        if (errorcode == OSPC_ERR_NO_ERROR) {
+            OSPPStatsSetMetrics(
+                trans->Statistics,
+                OSPC_STATS_RTDELAY,
+                ospvMetric,
+                OSPC_SDIR_UNDEFINED,
+                ospvLeg,
                 ospvSamples,
                 ospvMin,
                 ospvMax,
@@ -4716,7 +4759,7 @@ int OSPPTransactionGetOperatorName(
     return errorcode;
 }
 
-int OSPPTransactionSetRoundTripDelay(
+int OSPPTransactionSetTwoWayDelay(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     int ospvSamples,                /* In - Samples of Round Trip Delay, -1 means unavailable */
     int ospvMin,                    /* In - Minimum of Round Trip Delay in milliseconds, -1 means unavailable */
@@ -4739,24 +4782,24 @@ int OSPPTransactionSetRoundTripDelay(
 
         if (errorcode == OSPC_ERR_NO_ERROR) {
             if (ospvSamples >= 0) {
-                trans->Statistics->RoundTrip.hasvalue |= OSPC_SVALUE_SAMPLES;
-                trans->Statistics->RoundTrip.samples = ospvSamples;
+                trans->Statistics->TwoWay.hasvalue |= OSPC_SVALUE_SAMPLES;
+                trans->Statistics->TwoWay.samples = ospvSamples;
             }
             if (ospvMin >= 0) {
-                trans->Statistics->RoundTrip.hasvalue |= OSPC_SVALUE_MINIMUM;
-                trans->Statistics->RoundTrip.minimum = ospvMin;
+                trans->Statistics->TwoWay.hasvalue |= OSPC_SVALUE_MINIMUM;
+                trans->Statistics->TwoWay.minimum = ospvMin;
             }
             if (ospvMax >= 0) {
-                trans->Statistics->RoundTrip.hasvalue |= OSPC_SVALUE_MAXIMUM;
-                trans->Statistics->RoundTrip.maximum = ospvMax;
+                trans->Statistics->TwoWay.hasvalue |= OSPC_SVALUE_MAXIMUM;
+                trans->Statistics->TwoWay.maximum = ospvMax;
             }
             if (ospvMean >= 0) {
-                trans->Statistics->RoundTrip.hasvalue |= OSPC_SVALUE_MEAN;
-                trans->Statistics->RoundTrip.mean = ospvMean;
+                trans->Statistics->TwoWay.hasvalue |= OSPC_SVALUE_MEAN;
+                trans->Statistics->TwoWay.mean = ospvMean;
             }
             if (ospvVariance >= 0) {
-                trans->Statistics->RoundTrip.hasvalue |= OSPC_SVALUE_VARIANCE;
-                trans->Statistics->RoundTrip.variance = ospvVariance;
+                trans->Statistics->TwoWay.hasvalue |= OSPC_SVALUE_VARIANCE;
+                trans->Statistics->TwoWay.variance = ospvVariance;
             }
         }
     }

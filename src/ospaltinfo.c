@@ -207,32 +207,32 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
     OSPT_XML_ELEM **ospvElem,       /* Out - XML element pointer */
     OSPE_MSG_ELEM ospvPart)         /* In -source or dest alternate */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
     if (ospvAltInfo == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_DATA_NO_ALTINFO;
+        errcode = OSPC_ERR_DATA_NO_ALTINFO;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ospvPart), OSPPAltInfoGetValue(ospvAltInfo));
         if (ospvElem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->Type));
             if (attr == OSPC_OSNULL) {
-                ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                errcode = OSPC_ERR_XML_NO_ATTR;
             } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
             }
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*

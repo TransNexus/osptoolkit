@@ -35,7 +35,7 @@ unsigned OSPPUsageFromElement(  /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* input is XML element */
     unsigned *ospvUsage)        /* where to put usage value */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
     unsigned gotAmount = OSPC_FALSE;
     unsigned gotIncrement = OSPC_FALSE;
@@ -44,24 +44,24 @@ unsigned OSPPUsageFromElement(  /* returns error code */
     unsigned long increment = 0;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
     if (ospvUsage == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_DATA_NO_USAGE;
+        errcode = OSPC_ERR_DATA_NO_USAGE;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
-            (elem != OSPC_OSNULL) && (ospvErrCode == OSPC_ERR_NO_ERROR);
+            (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem))
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_AMOUNT:
                 gotAmount = OSPC_TRUE;
-                ospvErrCode = OSPPMsgNumFromElement(elem, &amount);
+                errcode = OSPPMsgNumFromElement(elem, &amount);
                 break;
             case OSPC_MELEM_INCREMENT:
-                ospvErrCode = OSPPMsgNumFromElement(elem, &increment);
+                errcode = OSPPMsgNumFromElement(elem, &increment);
                 gotIncrement = OSPC_TRUE;
                 break;
             case OSPC_MELEM_SERVICE:
@@ -74,7 +74,7 @@ unsigned OSPPUsageFromElement(  /* returns error code */
                  * different, then we declare an error.
                  */
                 if (OSPM_STRCMP(OSPPXMLElemGetValue(elem), "s") != 0) {
-                    ospvErrCode = OSPC_ERR_BAD_SERVICE;
+                    errcode = OSPC_ERR_BAD_SERVICE;
                 }
                 break;
             case OSPC_MELEM_TERMCAUSE:
@@ -87,22 +87,22 @@ unsigned OSPPUsageFromElement(  /* returns error code */
                  * Otherwise we can ignore it.
                  */
                 if (OSPPMsgElemIsCritical(elem)) {
-                    ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
+                    errcode = OSPC_ERR_XML_BAD_ELEMENT;
                 }
                 break;
             }
         }
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if (gotAmount && gotIncrement && gotUnit) {
             *ospvUsage = (unsigned)increment * (unsigned)amount;
         } else {
-            ospvErrCode = OSPC_ERR_XML_BAD_ELEMENT;
+            errcode = OSPC_ERR_XML_BAD_ELEMENT;
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -112,62 +112,62 @@ unsigned OSPPAddPricingInfoToUsageElement(
     OSPT_PRICING_INFO PricingInfo,
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* create the parent element */
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_PRICINGIND), "");
         if (*ospvElem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         }
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgFloatToElement(PricingInfo.amount, OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPMsgFloatToElement(PricingInfo.amount, OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(*ospvElem, elem);
         }
     }
 
     /* now add the increment */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgNumToElement(PricingInfo.increment, OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPMsgNumToElement(PricingInfo.increment, OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(*ospvElem, elem);
         }
     }
 
     /* now we need to add units */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_UNIT), (const char *)PricingInfo.unit);
         if (elem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             OSPPXMLElemAddChild(*ospvElem, elem);
         }
     }
 
     /* add currency */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CURRENCY), (const char *)PricingInfo.currency);
         if (elem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             OSPPXMLElemAddChild(*ospvElem, elem);
         }
     }
 
     /* if for any reason we found an error - destroy any elements created */
-    if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
+    if ((errcode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
         OSPPXMLElemDelete(ospvElem);
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -177,40 +177,40 @@ unsigned OSPPAddConfIdToUsageElement(
     const char *ospvConferenceId,
     OSPT_XML_ELEM **ospvElem)           /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* create the parent element */
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_GROUP), "");
         if (*ospvElem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         }
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if (ospvConferenceId && ospvConferenceId[0] != '\0') {
             elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_GROUPID), (const char *)ospvConferenceId);
             if (elem == OSPC_OSNULL) {
-                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
             }
         }
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         OSPPXMLElemAddChild(*ospvElem, elem);
     }
 
     /* if for any reason we found an error - destroy any elements created */
-    if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
+    if ((errcode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
         OSPPXMLElemDelete(ospvElem);
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -227,36 +227,36 @@ unsigned OSPPUsageToElement(        /* returns error code */
     unsigned ospvReleaseSource,     /* Release source value */
     OSPT_XML_ELEM *ospvElem)        /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
     /* now add the amount (which is the usage) */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgNumToElement(ospvUsage, OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPMsgNumToElement(ospvUsage, OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
     /* now add the increment - for us always 1 */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgNumToElement(1, OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPMsgNumToElement(1, OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
     /* the units are seconds */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_UNIT), "s");
         if (elem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;
@@ -264,61 +264,61 @@ unsigned OSPPUsageToElement(        /* returns error code */
     }
 
     /* optional (if not null) call start time */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvStartTime != 0)) {
-        ospvErrCode = OSPPMsgTimeToElement(ospvStartTime, OSPPMsgElemGetName(OSPC_MELEM_STARTTIME), &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && (ospvStartTime != 0)) {
+        errcode = OSPPMsgTimeToElement(ospvStartTime, OSPPMsgElemGetName(OSPC_MELEM_STARTTIME), &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
     /* optional (if not null) call end time */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvEndTime != 0)) {
-        ospvErrCode = OSPPMsgTimeToElement(ospvEndTime, OSPPMsgElemGetName(OSPC_MELEM_ENDTIME), &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && (ospvEndTime != 0)) {
+        errcode = OSPPMsgTimeToElement(ospvEndTime, OSPPMsgElemGetName(OSPC_MELEM_ENDTIME), &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
     /* optional (if not null) call alert time */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvAlertTime != 0)) {
-        ospvErrCode = OSPPMsgTimeToElement(ospvAlertTime, OSPPMsgElemGetName(OSPC_MELEM_ALERTTIME), &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && (ospvAlertTime != 0)) {
+        errcode = OSPPMsgTimeToElement(ospvAlertTime, OSPPMsgElemGetName(OSPC_MELEM_ALERTTIME), &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
     /* optional (if not null) call connect time */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvConnectTime != 0)) {
-        ospvErrCode = OSPPMsgTimeToElement(ospvConnectTime, OSPPMsgElemGetName(OSPC_MELEM_CONNECTTIME), &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && (ospvConnectTime != 0)) {
+        errcode = OSPPMsgTimeToElement(ospvConnectTime, OSPPMsgElemGetName(OSPC_MELEM_CONNECTTIME), &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
     /* now add the PDD */
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (ospvHasPDDInfo)) {
-        ospvErrCode = OSPPMsgNumToElement(ospvPostDialDelay, OSPPMsgElemGetName(OSPC_MELEM_POSTDIALDELAY), &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && (ospvHasPDDInfo)) {
+        errcode = OSPPMsgNumToElement(ospvPostDialDelay, OSPPMsgElemGetName(OSPC_MELEM_POSTDIALDELAY), &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
     /* now add the Rel src */
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgNumToElement(ospvReleaseSource, OSPPMsgElemGetName(OSPC_MELEM_RELEASESOURCE), &elem);
-        if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPMsgNumToElement(ospvReleaseSource, OSPPMsgElemGetName(OSPC_MELEM_RELEASESOURCE), &elem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
     /* if for any reason we found an error - destroy any elements created */
-    if (ospvErrCode != OSPC_ERR_NO_ERROR) {
+    if (errcode != OSPC_ERR_NO_ERROR) {
         if (elem != OSPC_OSNULL) {
             OSPPXMLElemDelete(&elem);
         }
@@ -327,7 +327,7 @@ unsigned OSPPUsageToElement(        /* returns error code */
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -339,11 +339,11 @@ unsigned OSPPCallPartyNumToElement(
     OSPE_NUMBER_FORMAT CallPartyFormat, /* Number format */
     OSPT_XML_ELEM **ospvElem)           /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     } else {
         switch (ElemType) {
         case OSPC_MELEM_SRCINFO:
@@ -351,7 +351,7 @@ unsigned OSPPCallPartyNumToElement(
         case OSPC_MELEM_DIVSRCINFO:
             *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ElemType), CallPartyNum);
             if (*ospvElem == OSPC_OSNULL) {
-                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
             } else {
                 switch (CallPartyFormat) {
                 case OSPC_NFORMAT_E164:
@@ -364,13 +364,13 @@ unsigned OSPPCallPartyNumToElement(
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_URL));
                     break;
                 default:
-                    ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+                    errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
                     break;
                 }
-                if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     if (attr == OSPC_OSNULL) {
                         OSPPXMLElemDelete(ospvElem);
-                        ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                        errcode = OSPC_ERR_XML_NO_ATTR;
                     } else {
                         OSPPXMLElemAddAttr(*ospvElem, attr);
                     }
@@ -378,12 +378,12 @@ unsigned OSPPCallPartyNumToElement(
             }
             break;
         default:
-            ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+            errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
             break;
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -395,19 +395,19 @@ unsigned OSPPTermCauseToElement(
     const char *TCDesc,         /* Termination cause description */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* create the parent element */
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TERMCAUSE), "");
         if (*ospvElem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             switch (TCType) {
             case OSPC_TCAUSE_Q850:
@@ -423,12 +423,12 @@ unsigned OSPPTermCauseToElement(
                 attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_XMPP));
                 break;
             default:
-                ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+                errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
                 break;
             }
-            if (ospvErrCode == OSPC_ERR_NO_ERROR) {
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 if (attr == OSPC_OSNULL) {
-                    ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                    errcode = OSPC_ERR_XML_NO_ATTR;
                 } else {
                     OSPPXMLElemAddAttr(*ospvElem, attr);
                 }
@@ -436,30 +436,30 @@ unsigned OSPPTermCauseToElement(
         }
     }
 
-    if (ospvErrCode == OSPC_ERR_NO_ERROR) {
-        ospvErrCode = OSPPMsgNumToElement(TCCode, OSPPMsgElemGetName(OSPC_MELEM_TCCODE), &elem);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPMsgNumToElement(TCCode, OSPPMsgElemGetName(OSPC_MELEM_TCCODE), &elem);
         if (elem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             OSPPXMLElemAddChild(*ospvElem, elem);
         }
     }
 
-    if ((ospvErrCode == OSPC_ERR_NO_ERROR) && (TCDesc != OSPC_OSNULL) && (TCDesc[0] != '\0')) {
+    if ((errcode == OSPC_ERR_NO_ERROR) && (TCDesc != OSPC_OSNULL) && (TCDesc[0] != '\0')) {
         elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DESC), TCDesc);
         if (elem == OSPC_OSNULL) {
-            ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             OSPPXMLElemAddChild(*ospvElem, elem);
         }
     }
 
     /* if for any reason we found an error - destroy any elements created */
-    if ((ospvErrCode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
+    if ((errcode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
         OSPPXMLElemDelete(ospvElem);
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -473,32 +473,32 @@ unsigned OSPPStringToElement(
     OSPE_ALTINFO AttrValue[],       /* Attribute value */
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
     unsigned cnt;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     } else {
         if ((ElemType < OSPC_MELEM_START) || (ElemType >= OSPC_MELEM_NUMBER)) {
-            ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+            errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
         } else {
             *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ElemType), ElemValue);
             if (*ospvElem == OSPC_OSNULL) {
-                ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
             } else {
                 for (cnt = 0; cnt < AttrNum; cnt++) {
                     if (((AttrType[cnt] < OSPC_MATTR_START) || (AttrType[cnt] >= OSPC_MATTR_NUMBER)) ||
                         ((AttrValue[cnt] < OSPC_ALTINFO_START) || (AttrValue[cnt] >= OSPC_ALTINFO_NUMBER)))
                     {
                         OSPPXMLElemDelete(ospvElem);
-                        ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+                        errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
                         break;
                     } else {
                         attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(AttrType[cnt]), OSPPAltInfoTypeGetName(AttrValue[cnt]));
                         if (attr == OSPC_OSNULL) {
                             OSPPXMLElemDelete(ospvElem);
-                            ospvErrCode = OSPC_ERR_XML_NO_ATTR;
+                            errcode = OSPC_ERR_XML_NO_ATTR;
                             break;
                         } else {
                            OSPPXMLElemAddAttr(*ospvElem, attr);
@@ -509,7 +509,7 @@ unsigned OSPPStringToElement(
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -520,23 +520,23 @@ unsigned OSPPCustomInfoToElement(
     const char *CustomInfo,     /* User-defined info */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     char buffer[OSPC_SIZE_NORSTR];
     OSPTBOOL isbase64 = OSPC_TRUE;
 
     if (ospvElem == OSPC_OSNULL) {
-        ospvErrCode = OSPC_ERR_XML_NO_ELEMENT;
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
     } else {
         if ((Index > OSPC_MAX_INDEX) || (CustomInfo == OSPC_OSNULL) || (CustomInfo[0] == '\0')) {
-            ospvErrCode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+            errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
         } else {
             snprintf(buffer, sizeof(buffer), "%d", Index + 1);
-            ospvErrCode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO),
+            errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO),
                 OSPM_STRLEN(CustomInfo), (unsigned char *)CustomInfo,
                 OSPPMsgAttrGetName(OSPC_MATTR_INDEX), buffer, isbase64,
                 ospvElem);
         }
     }
 
-    return ospvErrCode;
+    return errcode;
 }

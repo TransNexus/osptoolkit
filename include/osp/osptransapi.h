@@ -37,7 +37,7 @@ extern "C" {
     int OSPPTransactionIsDestOSPEnabled(OSPTTRANHANDLE, OSPE_DEST_OSPENABLED *);
     int OSPPTransactionSetNetworkIds(OSPTTRANHANDLE, const char *, const char *);
     int OSPPTransactionAccumulateOneWayDelay(OSPTTRANHANDLE, unsigned, unsigned, unsigned, float);
-    int OSPPTransactionAccumulateRoundTripDelay(OSPTTRANHANDLE, unsigned, unsigned, unsigned, float);
+    int OSPPTransactionAccumulateTwoWayDelay(OSPTTRANHANDLE, unsigned, unsigned, unsigned, float);
     int OSPPTransactionDelete(OSPTTRANHANDLE);
     int OSPPTransactionGetFirstDestination(OSPTTRANHANDLE, unsigned, char *, char *, unsigned *, unsigned *, void *,
             unsigned, char *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned *, void *);
@@ -103,6 +103,7 @@ extern "C" {
     int OSPPTransactionSetLost(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int, int);
     int OSPPTransactionSetJitter(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int, int, int, int, float);
     int OSPPTransactionSetDelay(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int, int, int, int, float);
+    int OSPPTransactionSetRTDelay(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_SESSION_LEG, int, int, int, int, float);
     int OSPPTransactionSetOctets(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int);
     int OSPPTransactionSetPackets(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int);
     int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, float);
@@ -112,7 +113,6 @@ extern "C" {
     int OSPPTransactionGetNumberPortabilityParameters(OSPTTRANHANDLE, unsigned, char *, unsigned, char *, int *);
     int OSPPTransactionSetOperatorName(OSPTTRANHANDLE, OSPE_OPERATOR_NAME, const char *);
     int OSPPTransactionGetOperatorName(OSPTTRANHANDLE, OSPE_OPERATOR_NAME, unsigned, char *);
-    int OSPPTransactionSetRoundTripDelay(OSPTTRANHANDLE, int, int, int, int, float);
 
 #ifdef __cplusplus
 }

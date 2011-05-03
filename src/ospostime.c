@@ -83,7 +83,7 @@ unsigned OSPPOSTimeCalToString( /* returns error code (0 if no error) */
     struct tm *t;
 #endif
 
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     size_t chars;
 
     /*
@@ -112,12 +112,12 @@ unsigned OSPPOSTimeCalToString( /* returns error code (0 if no error) */
 
     /* make sure the strftime() call was okay */
     if (chars == OSPC_SIZE_TIMESTRING) {
-        ospvErrCode = (unsigned)OSPC_ERR_OS_FAILURE;
+        errcode = (unsigned)OSPC_ERR_OS_FAILURE;
     } else {
-        ospvErrCode = OSPC_ERR_NO_ERROR;
+        errcode = OSPC_ERR_NO_ERROR;
     }
 
-    return ospvErrCode;
+    return errcode;
 }
 
 /*
@@ -127,7 +127,7 @@ unsigned OSPPOSTimeStringToCal( /* returns error code (0 if no error) */
     const char *ospvTimeString, /* time string */
     OSPTTIME *ospvCalTime)      /* where to put calendar time */
 {
-    unsigned ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     int year, month, day, hour, minute, second;
 
     /*
@@ -151,9 +151,9 @@ unsigned OSPPOSTimeStringToCal( /* returns error code (0 if no error) */
 
     *ospvCalTime = OSPPOSTimeConvertToGMT(month + 1, day, year - 1900, hour, minute, second);
 
-    ospvErrCode = OSPC_ERR_NO_ERROR;
+    errcode = OSPC_ERR_NO_ERROR;
 
-    return ospvErrCode;
+    return errcode;
 }
 
 int OSPPOSTimeGetTime(

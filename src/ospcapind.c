@@ -263,7 +263,7 @@ int OSPPCapIndToElement(        /* returns error code */
     OSPT_CAP_IND *ospvCapInd,   /* capability indication value */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
-    int ospvErrCode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL, *subelem = OSPC_OSNULL, *capindelem = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
@@ -341,5 +341,5 @@ int OSPPCapIndToElement(        /* returns error code */
     subelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ALMOSTOUTOFRESOURCES), ospvCapInd->AlmostOutOfResources == 0 ? OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE) : OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE));
     OSPPXMLElemAddChild(elem, subelem);
 
-    return ospvErrCode;
+    return errcode;
 }

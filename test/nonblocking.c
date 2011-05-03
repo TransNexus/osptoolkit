@@ -293,34 +293,34 @@ int NonBlockingQueueMonitorDelete(NBMONITOR **nbMonitor)
 
 void NonBlockingQueueMonitorIncrementActiveWorkThreadCounter(NBMONITOR *nbMonitor)
 {
-    unsigned errorcode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
 
-    OSPM_MUTEX_LOCK(nbMonitor->Mutex, errorcode);
-    assert(errorcode == OSPC_ERR_NO_ERROR);
+    OSPM_MUTEX_LOCK(nbMonitor->Mutex, errcode);
+    assert(errcode == OSPC_ERR_NO_ERROR);
 
     nbMonitor->NumberOfActiveWorkThreads++;
 
-    OSPM_MUTEX_UNLOCK(nbMonitor->Mutex, errorcode);
-    assert(errorcode == OSPC_ERR_NO_ERROR);
+    OSPM_MUTEX_UNLOCK(nbMonitor->Mutex, errcode);
+    assert(errcode == OSPC_ERR_NO_ERROR);
 }
 
 void NonBlockingQueueMonitorDecrementActiveWorkThreadCounter(NBMONITOR *nbMonitor)
 {
-    unsigned errorcode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
 
-    OSPM_MUTEX_LOCK(nbMonitor->Mutex, errorcode);
-    assert(errorcode == OSPC_ERR_NO_ERROR);
+    OSPM_MUTEX_LOCK(nbMonitor->Mutex, errcode);
+    assert(errcode == OSPC_ERR_NO_ERROR);
 
     nbMonitor->NumberOfActiveWorkThreads--;
 
     // there are no more active work threads
     if (nbMonitor->NumberOfActiveWorkThreads == 0) {
-        OSPM_CONDVAR_SIGNAL(nbMonitor->CondVarNoActiveWorkThreads, errorcode);
-        assert(errorcode == OSPC_ERR_NO_ERROR);
+        OSPM_CONDVAR_SIGNAL(nbMonitor->CondVarNoActiveWorkThreads, errcode);
+        assert(errcode == OSPC_ERR_NO_ERROR);
     }
 
-    OSPM_MUTEX_UNLOCK(nbMonitor->Mutex, errorcode);
-    assert(errorcode == OSPC_ERR_NO_ERROR);
+    OSPM_MUTEX_UNLOCK(nbMonitor->Mutex, errcode);
+    assert(errcode == OSPC_ERR_NO_ERROR);
 }
 
 unsigned NonBlockingQueueMonitorGetActiveWorkThreadCounter(NBMONITOR *nbMonitor)
@@ -330,26 +330,26 @@ unsigned NonBlockingQueueMonitorGetActiveWorkThreadCounter(NBMONITOR *nbMonitor)
 
 int NonBlockingQueueMonitorBlockWhileQueueNotEmpty(NBMONITOR *nbMonitor)
 {
-    unsigned errorcode = OSPC_ERR_NO_ERROR;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
 
-    errorcode = SyncQueueBlockWhileNotEmpty(nbMonitor->SyncQue);
+    errcode = SyncQueueBlockWhileNotEmpty(nbMonitor->SyncQue);
 
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPM_MUTEX_LOCK(nbMonitor->Mutex, errorcode);
-        assert(errorcode == OSPC_ERR_NO_ERROR);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        OSPM_MUTEX_LOCK(nbMonitor->Mutex, errcode);
+        assert(errcode == OSPC_ERR_NO_ERROR);
 
         while (NonBlockingQueueMonitorGetActiveWorkThreadCounter(nbMonitor) >
                0) {
             OSPM_CONDVAR_WAIT(nbMonitor->CondVarNoActiveWorkThreads,
-                              nbMonitor->Mutex, errorcode);
-            assert(errorcode == OSPC_ERR_NO_ERROR);
+                              nbMonitor->Mutex, errcode);
+            assert(errcode == OSPC_ERR_NO_ERROR);
         }
 
-        OSPM_MUTEX_UNLOCK(nbMonitor->Mutex, errorcode);
-        assert(errorcode == OSPC_ERR_NO_ERROR);
+        OSPM_MUTEX_UNLOCK(nbMonitor->Mutex, errcode);
+        assert(errcode == OSPC_ERR_NO_ERROR);
     }
 
-    return errorcode;
+    return errcode;
 }
 
 OSPTTHREADRETURN WorkThread(void *arg)
