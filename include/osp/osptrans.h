@@ -113,6 +113,10 @@ typedef struct _OSPTTRANS {
     char UsageDestNetworkId[OSPC_SIZE_NORID];
     char SrcRealm[OSPC_SIZE_NORSTR];
     char DestRealm[OSPC_SIZE_NORSTR];
+    OSPE_NUMBER_FORMAT AssertedIdFormat;
+    char AssertedId[OSPC_SIZE_URL];
+    OSPE_NUMBER_FORMAT RemotePartyIdFormat;
+    char RemotePartyId[OSPC_SIZE_URL];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

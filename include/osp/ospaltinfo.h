@@ -55,6 +55,7 @@ typedef enum {
     OSPC_ALTINFO_MNC,
     OSPC_ALTINFO_SMS,
     OSPC_ALTINFO_MMS,
+    OSPC_ALTINFO_DISPLAYNAME,
     /* For other attributes */
     OSPC_ALTINFO_TRUE,
     OSPC_ALTINFO_FALSE,

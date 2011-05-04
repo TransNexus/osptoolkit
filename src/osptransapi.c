@@ -4899,4 +4899,50 @@ int OSPPTransactionGetURL(
     return errcode;
 }
 
+int OSPPTransactionSetAssertedId(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_NUMBER_FORMAT ospvFormat,  /* In - Asserted ID format */
+    const char *ospvAssertedId)     /* In - Asserted ID */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if (((ospvFormat < OSPC_NFORMAT_START) || (ospvFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvAssertedId == NULL) || (ospvAssertedId[0] == '\0')))
+    {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            trans->AssertedIdFormat = ospvFormat;
+            OSPM_STRNCPY(trans->AssertedId, ospvAssertedId, sizeof(trans->AssertedId) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetRemotePartyId(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_NUMBER_FORMAT ospvFormat,  /* In - Remote party ID format */
+    const char *ospvRPId)           /* In - Remote party ID */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if (((ospvFormat < OSPC_NFORMAT_START) || (ospvFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvRPId == NULL) || (ospvRPId[0] == '\0')))
+    {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            trans->RemotePartyIdFormat = ospvFormat;
+            OSPM_STRNCPY(trans->RemotePartyId, ospvRPId, sizeof(trans->RemotePartyId) - 1);
+        }
+    }
+
+    return errcode;
+}
+
 

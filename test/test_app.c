@@ -1838,6 +1838,24 @@ int testSetOperatorName()
     return errcode;
 }
 
+int testSetAssertedId()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetAssertedId(OSPVTransactionHandle, OSPC_NFORMAT_DISPLAYNAME, "AssertedId");
+
+    return errcode;
+}
+
+int testSetRPId()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetRemotePartyId(OSPVTransactionHandle, OSPC_NFORMAT_URL, "RemotePartyId");
+
+    return errcode;
+}
+
 int testSetDiversion()
 {
     int errcode = 0;
@@ -2337,12 +2355,17 @@ int testAPI(int apinumber)
         break;
     case 211:
         errcode = testSetOperatorName();
+        break;
     case 212:
+        errcode = testSetAssertedId();
         break;
     case 213:
-        errcode = testSetDiversion();
+        errcode = testSetRPId();
         break;
     case 214:
+        errcode = testSetDiversion();
+        break;
+    case 215:
         errcode = testSetRealm();
         break;
     case 220:
@@ -2405,6 +2428,18 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionNew();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetAssertedId();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetRPId();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetDiversion();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetRealm();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionRequestAuthorisation();
@@ -2572,8 +2607,8 @@ int testMenu()
         printf("---------------------------------------------------------------------\n");
         printf("200) Set Termination Cause\n");
         printf("210) Set NP Parameters                211) Set Operator Names\n");
-        printf("212) Set Asserted ID                  213) Set Diversion\n");
-        printf("214) Set Realms\n");
+        printf("212) Set Asserted ID                  213) Set Remote Party ID\n");
+        printf("214) Set Diversion                    215) Set Realms\n");
         printf("220) Set Signaling Protocol           221) Set Codec\n");
         printf("222) Set Network ID                   223) Set Session ID\n");
         printf("224) Set Custom Info\n");

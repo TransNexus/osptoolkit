@@ -828,6 +828,24 @@ int OSPPAuthReqToElement(       /* returns error code */
             }
         }
 
+        /* Add asserted ID */
+        if ((error == OSPC_ERR_NO_ERROR) && (trans->AssertedId != OSPC_OSNULL) && (trans->AssertedId[0] != '\0')) {
+            error = OSPPCallPartyNumToElement(OSPC_MELEM_ASSERTEDID, trans->AssertedId, trans->AssertedIdFormat, &elem);
+            if (error == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
+        /* Add remote party ID */
+        if ((error == OSPC_ERR_NO_ERROR) && (trans->RemotePartyId != OSPC_OSNULL) && (trans->RemotePartyId[0] != '\0')) {
+            error = OSPPCallPartyNumToElement(OSPC_MELEM_RPID, trans->RemotePartyId, trans->RemotePartyIdFormat, &elem);
+            if (error == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
         if (error == OSPC_ERR_NO_ERROR) {
             /* Now add the authreqelem to the main elem */
             OSPPXMLElemAddChild(*ospvElem, authreqelem);
