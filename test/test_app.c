@@ -1865,6 +1865,15 @@ int testSetDiversion()
     return errcode;
 }
 
+int testSetApplicationId()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetApplicationId(OSPVTransactionHandle, "ApplicationId");
+
+    return errcode;
+}
+
 int testSetProtocol()
 {
     int errcode = 0;
@@ -2368,6 +2377,9 @@ int testAPI(int apinumber)
     case 215:
         errcode = testSetRealm();
         break;
+    case 216:
+        errcode = testSetApplicationId();
+        break;
     case 220:
         errcode = testSetProtocol();
         break;
@@ -2440,6 +2452,9 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetRealm();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetApplicationId();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionRequestAuthorisation();
@@ -2609,6 +2624,7 @@ int testMenu()
         printf("210) Set NP Parameters                211) Set Operator Names\n");
         printf("212) Set Asserted ID                  213) Set Remote Party ID\n");
         printf("214) Set Diversion                    215) Set Realms\n");
+        printf("216) Set Application ID\n");
         printf("220) Set Signaling Protocol           221) Set Codec\n");
         printf("222) Set Network ID                   223) Set Session ID\n");
         printf("224) Set Custom Info\n");

@@ -118,6 +118,7 @@ extern "C" {
     int OSPPTransactionGetURL(OSPTTRANHANDLE, OSPE_URL_TYPE, unsigned, char *);
     int OSPPTransactionSetAssertedId(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
     int OSPPTransactionSetRemotePartyId(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
+    int OSPPTransactionSetApplicationId(OSPTTRANHANDLE, const char *);
 
 #ifdef __cplusplus
 }

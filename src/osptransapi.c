@@ -4945,4 +4945,23 @@ int OSPPTransactionSetRemotePartyId(
     return errcode;
 }
 
+int OSPPTransactionSetApplicationId(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvApplId)         /* In - Application ID */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvApplId == OSPC_OSNULL) || (ospvApplId[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+               OSPM_STRNCPY(trans->ApplicationId, ospvApplId, sizeof(trans->ApplicationId) - 1);
+        }
+    }
+
+    return errcode;
+}
+
 

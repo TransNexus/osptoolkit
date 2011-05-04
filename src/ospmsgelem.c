@@ -28,6 +28,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_ALMOSTOUTOFRESOURCES, "AlmostOutOfResources" },
     { OSPC_MELEM_ALERTTIME,            "AlertTime" },
     { OSPC_MELEM_AMOUNT,               "Amount" },
+    { OSPC_MELEM_APPLID,               "ApplicationId" },
     { OSPC_MELEM_ASSERTEDID,           "AssertedIdSourceInfo" },
     { OSPC_MELEM_AUDIT,                "Audit" },
     { OSPC_MELEM_AUDITMAXMESSAGES,     "AuditMaxMessages" },

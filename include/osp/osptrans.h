@@ -117,6 +117,7 @@ typedef struct _OSPTTRANS {
     char AssertedId[OSPC_SIZE_URL];
     OSPE_NUMBER_FORMAT RemotePartyIdFormat;
     char RemotePartyId[OSPC_SIZE_URL];
+    char ApplicationId[OSPC_SIZE_NORSTR];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000
