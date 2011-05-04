@@ -115,6 +115,7 @@ extern "C" {
     int OSPPTransactionGetOperatorName(OSPTTRANHANDLE, OSPE_OPERATOR_NAME, unsigned, char *);
     int OSPPTransactionSetSrcRealm(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetDestRealm(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionGetURL(OSPTTRANHANDLE, OSPE_URL_TYPE, unsigned, char *);
 
 #ifdef __cplusplus
 }

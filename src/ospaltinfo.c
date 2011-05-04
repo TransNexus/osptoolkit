@@ -51,6 +51,8 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_ALTSPN,          "altspn" },
     { OSPC_ALTINFO_MCC,             "mcc" },
     { OSPC_ALTINFO_MNC,             "mnc" },
+    { OSPC_ALTINFO_SMS,             "sms" },
+    { OSPC_ALTINFO_MMS,             "mms" },
     /* For other attributes */
     { OSPC_ALTINFO_TRUE,            "true" },
     { OSPC_ALTINFO_FALSE,           "false" },

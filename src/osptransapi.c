@@ -4699,38 +4699,12 @@ int OSPPTransactionGetOperatorName(
     OSPTTRANS *trans = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
 
-    if (ospvSizeOfName == 0) {
-        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy operator name.");
-    } else {
-        ospvName[0] = '\0';
-        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
-            if (trans->AuthReq != OSPC_OSNULL) {
-                /* We are the source.  Get the information from the destination structure. */
-                if (trans->State == OSPC_GET_DEST_SUCCESS) {
-                    if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
-                        errcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
-                        OSPM_DBGERRORLOG(errcode, "Could not find Destination for this Transaction\n");
-                    } else {
-                        if ((ospvType >= OSPC_OPNAME_START) && (ospvType < OSPC_OPNAME_NUMBER)) {
-                            if (ospvSizeOfName > OSPM_STRLEN(dest->OpName[ospvType])) {
-                                OSPM_STRNCPY(ospvName, dest->OpName[ospvType], ospvSizeOfName);
-                            } else {
-                                errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                                OSPM_DBGERRORLOG(errcode, "No enough buffer to copy operator name.");
-                            }
-                        } else {
-                            errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-                            OSPM_DBGERRORLOG(errcode, "Invalid operator name type.");
-                        }
-                    }
-                } else {
-                    errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                    OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
-                }
-            } else if (trans->AuthInd != OSPC_OSNULL) {
-                /* We are the destination.  Get the information from the AuthInd structure. */
-                if ((dest = trans->AuthInd->Destination) == OSPC_OSNULL) {
+    ospvName[0] = '\0';
+    if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+        if (trans->AuthReq != OSPC_OSNULL) {
+            /* We are the source.  Get the information from the destination structure. */
+            if (trans->State == OSPC_GET_DEST_SUCCESS) {
+                if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
                     errcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
                     OSPM_DBGERRORLOG(errcode, "Could not find Destination for this Transaction\n");
                 } else {
@@ -4739,7 +4713,7 @@ int OSPPTransactionGetOperatorName(
                             OSPM_STRNCPY(ospvName, dest->OpName[ospvType], ospvSizeOfName);
                         } else {
                             errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                            OSPM_DBGERRORLOG(errcode, "No enough buffer to copy operater name.");
+                            OSPM_DBGERRORLOG(errcode, "No enough buffer to copy operator name.");
                         }
                     } else {
                         errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -4747,9 +4721,30 @@ int OSPPTransactionGetOperatorName(
                     }
                 }
             } else {
-                errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-                OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+                errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
             }
+        } else if (trans->AuthInd != OSPC_OSNULL) {
+            /* We are the destination.  Get the information from the AuthInd structure. */
+            if ((dest = trans->AuthInd->Destination) == OSPC_OSNULL) {
+                errcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                OSPM_DBGERRORLOG(errcode, "Could not find Destination for this Transaction\n");
+            } else {
+                if ((ospvType >= OSPC_OPNAME_START) && (ospvType < OSPC_OPNAME_NUMBER)) {
+                    if (ospvSizeOfName > OSPM_STRLEN(dest->OpName[ospvType])) {
+                        OSPM_STRNCPY(ospvName, dest->OpName[ospvType], ospvSizeOfName);
+                    } else {
+                        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy operator name.");
+                    }
+                } else {
+                    errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                    OSPM_DBGERRORLOG(errcode, "Invalid operator name type.");
+                }
+            }
+        } else {
+            errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
         }
     }
 
@@ -4841,4 +4836,67 @@ int OSPPTransactionSetDestRealm(
 
     return errcode;
 }
+
+int OSPPTransactionGetURL(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_URL_TYPE ospvType,         /* In - URL type */
+    unsigned ospvSizeOfURL,         /* In - Max size of name */
+    char *ospvURL)                  /* Out - URL */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    ospvURL[0] = '\0';
+    if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+        if (trans->AuthReq != OSPC_OSNULL) {
+            /* We are the source.  Get the information from the destination structure. */
+            if (trans->State == OSPC_GET_DEST_SUCCESS) {
+                if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
+                    errcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                    OSPM_DBGERRORLOG(errcode, "Could not find Destination for this Transaction\n");
+                } else {
+                    if ((ospvType >= OSPC_URL_START) && (ospvType < OSPC_URL_NUMBER)) {
+                        if (ospvSizeOfURL > OSPM_STRLEN(dest->URL[ospvType])) {
+                            OSPM_STRNCPY(ospvURL, dest->URL[ospvType], ospvSizeOfURL);
+                        } else {
+                            errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errcode, "No enough buffer to copy URL.");
+                        }
+                    } else {
+                        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                        OSPM_DBGERRORLOG(errcode, "Invalid URL type.");
+                    }
+                }
+            } else {
+                errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
+            }
+        } else if (trans->AuthInd != OSPC_OSNULL) {
+            /* We are the destination.  Get the information from the AuthInd structure. */
+            if ((dest = trans->AuthInd->Destination) == OSPC_OSNULL) {
+                errcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                OSPM_DBGERRORLOG(errcode, "Could not find Destination for this Transaction\n");
+            } else {
+                if ((ospvType >= OSPC_URL_START) && (ospvType < OSPC_URL_NUMBER)) {
+                    if (ospvSizeOfURL > OSPM_STRLEN(dest->URL[ospvType])) {
+                        OSPM_STRNCPY(ospvURL, dest->URL[ospvType], ospvSizeOfURL);
+                    } else {
+                        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy URL.");
+                    }
+                } else {
+                    errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                    OSPM_DBGERRORLOG(errcode, "Invalid URL type.");
+                }
+            }
+        } else {
+            errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+        }
+    }
+
+    return errcode;
+}
+
 

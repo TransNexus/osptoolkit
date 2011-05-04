@@ -53,6 +53,8 @@ typedef enum {
     OSPC_ALTINFO_ALTSPN,
     OSPC_ALTINFO_MCC,
     OSPC_ALTINFO_MNC,
+    OSPC_ALTINFO_SMS,
+    OSPC_ALTINFO_MMS,
     /* For other attributes */
     OSPC_ALTINFO_TRUE,
     OSPC_ALTINFO_FALSE,

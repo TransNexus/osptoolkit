@@ -1942,6 +1942,21 @@ int testGetOperatorName()
     return errcode;
 }
 
+int testGetURL()
+{
+    int errcode = 0;
+    char url[OSPC_SIZE_NORID];
+
+    errcode = OSPPTransactionGetURL(OSPVTransactionHandle, OSPC_URL_SIP, sizeof(url), url);
+    printf("sip = '%s'\n", url);
+    errcode = OSPPTransactionGetURL(OSPVTransactionHandle, OSPC_URL_SMS, sizeof(url), url);
+    printf("sms = '%s'\n", url);
+    errcode = OSPPTransactionGetURL(OSPVTransactionHandle, OSPC_URL_MMS, sizeof(url), url);
+    printf("mms = '%s'\n", url);
+
+    return errcode;
+}
+
 int testStatsLost()
 {
     int errcode = 0;
@@ -2351,6 +2366,9 @@ int testAPI(int apinumber)
     case 251:
         errcode = testGetOperatorName();
         break;
+    case 252:
+        errcode = testGetURL();
+        break;
     case 300:
         errcode = testStatsLost();
         break;
@@ -2560,6 +2578,7 @@ int testMenu()
         printf("222) Set Network ID                   223) Set Session ID\n");
         printf("224) Set Custom Info\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
+        printf("252) Get URLs\n");
         printf("300) Set Lost                         301) Set Jitter\n");
         printf("302) Set Delay                        303) Set Round Trip Delay\n");
         printf("304) Set Octets                       305) Set Packets\n");

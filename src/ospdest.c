@@ -966,6 +966,15 @@ void OSPPDestInfoFromElement(
             case OSPC_ALTINFO_MNC:
                 OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_MNC], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_MNC]) - 1);
                 break;
+            case OSPC_ALTINFO_SIP:
+                OSPM_STRNCPY(ospvDest->URL[OSPC_URL_SIP], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->URL[OSPC_URL_SIP]) - 1);
+                break;
+            case OSPC_ALTINFO_SMS:
+                OSPM_STRNCPY(ospvDest->URL[OSPC_URL_SMS], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->URL[OSPC_URL_SMS]) - 1);
+                break;
+            case OSPC_ALTINFO_MMS:
+                OSPM_STRNCPY(ospvDest->URL[OSPC_URL_MMS], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->URL[OSPC_URL_MMS]) - 1);
+                break;
             default:
                 break;
             }

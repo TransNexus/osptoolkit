@@ -75,6 +75,18 @@ typedef enum {
     OSPC_OPNAME_NUMBER
 } OSPE_OPERATOR_NAME;
 
+/* URL types */
+typedef enum {
+    OSPC_URL_UNKNOWN = OSPC_MPART_UNKNOWN,  /* Could not be understood by the Client as Sent by the Server */
+    OSPC_URL_UNDEFINED,                     /* Not Configured at Server */
+    OSPC_URL_START = 0,                     /* URL start */
+    OSPC_URL_SIP = OSPC_URL_START,          /* SIP */
+    OSPC_URL_SMS,                           /* SMS */
+    OSPC_URL_MMS,                           /* MMS */
+    /* Number of URL types */
+    OSPC_URL_NUMBER
+} OSPE_URL_TYPE;
+
 #define DEFAULT_GETNEXTDEST_NO_ERROR    99999
 
 typedef struct {
@@ -102,6 +114,7 @@ typedef struct {
     int NPNpdi;
     char OpName[OSPC_OPNAME_NUMBER][OSPC_SIZE_NORID];
     OSPTBOOL IsNPQuery;
+    char URL[OSPC_URL_NUMBER][OSPC_SIZE_URL];
 } OSPT_DEST;
 
 /* Function Prototypes */
