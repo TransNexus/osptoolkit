@@ -76,13 +76,13 @@ void OSPPAuthIndSetRole(
 OSPE_ROLE OSPPAuthIndGetRole(
     OSPT_AUTH_IND *ospvAuthInd)
 {
-    OSPE_ROLE ospvRole = OSPC_ROLE_UNDEFINED;
+    OSPE_ROLE role = OSPC_ROLE_UNDEFINED;
 
     if (ospvAuthInd != OSPC_OSNULL) {
-        ospvRole = (OSPE_ROLE)ospvAuthInd->Role;
+        role = ospvAuthInd->Role;
     }
 
-    return ospvRole;
+    return role;
 }
 
 /*

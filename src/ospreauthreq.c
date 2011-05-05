@@ -870,7 +870,7 @@ OSPE_ROLE OSPPReauthReqGetRole(     /* returns the role (OGW/TGW) */
     OSPE_ROLE role = OSPC_ROLE_UNDEFINED;
 
     if (ospvReauthReq != OSPC_OSNULL) {
-        role = (OSPE_ROLE)ospvReauthReq->Role;
+        role = ospvReauthReq->Role;
     }
 
     return role;
@@ -879,7 +879,9 @@ OSPE_ROLE OSPPReauthReqGetRole(     /* returns the role (OGW/TGW) */
 /*
  * OSPPReauthReqSetRole() - sets value for role in reauthorization request
  */
-void OSPPReauthReqSetRole(OSPT_REAUTH_REQ *ospvReauthReq, OSPE_ROLE ospvRole)
+void OSPPReauthReqSetRole(
+    OSPT_REAUTH_REQ *ospvReauthReq,
+    OSPE_ROLE ospvRole)
 {
     if (ospvReauthReq != OSPC_OSNULL) {
         ospvReauthReq->HasRole = OSPC_TRUE;

@@ -1604,9 +1604,7 @@ int OSPPTransactionBuildUsageFromScratch(
      * point to it.
      */
     if (errcode == OSPC_ERR_NO_ERROR) {
-        if ((ospvRole == OSPC_ROLE_SOURCE) ||
-            (ospvRole == OSPC_ROLE_RADSRCSTART) || (ospvRole == OSPC_ROLE_RADSRCSTOP) || (ospvRole == OSPC_ROLE_RADSRCINTERIM))
-        {
+        if ((ospvRole >= OSPC_ROLE_START) && (ospvRole < OSPC_ROLE_NUMBER)) {
             if (trans->AuthReq != OSPC_OSNULL) {
                 /*
                  * This is the 2nd time that the API is being called.
@@ -1669,9 +1667,7 @@ int OSPPTransactionBuildUsageFromScratch(
                     OSPPAuthRspSetRole(trans->AuthRsp, ospvRole);
                 }
             }
-        } else if ((ospvRole == OSPC_ROLE_DESTINATION) ||
-            (ospvRole == OSPC_ROLE_RADDESTSTART) || (ospvRole == OSPC_ROLE_RADDESTSTOP) || (ospvRole == OSPC_ROLE_RADDESTINTERIM))
-        {
+        } else if ((ospvRole >= OSPC_ROLE_START) && (ospvRole < OSPC_ROLE_NUMBER)) {
             if (trans->AuthInd != OSPC_OSNULL) {
                 errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
                 OSPM_DBGERRORLOG(errcode, "Transaction already initialized");
@@ -2135,6 +2131,9 @@ int OSPPTransactionNew(
         trans->NPRn[0] = '\0';
         trans->NPCic[0] = '\0';
         trans->NPNpdi = OSPC_FALSE;
+        for (cnt = 0; cnt < OSPC_OPNAME_NUMBER; cnt++) {
+            trans->OpName[cnt][0] = '\0';
+        }
         for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
             trans->Protocol[cnt] = OSPC_PROTNAME_UNKNOWN;
         }
@@ -2149,9 +2148,14 @@ int OSPPTransactionNew(
         }
         trans->UsageSrcNetworkId[0] = '\0';
         trans->UsageDestNetworkId[0] = '\0';
-        for (cnt = 0; cnt < OSPC_OPNAME_NUMBER; cnt++) {
-            trans->OpName[cnt][0] = '\0';
-        }
+        trans->SrcRealm[0] = '\0';
+        trans->DestRealm[0] = '\0';
+        trans->AssertedIdFormat = OSPC_NFORMAT_E164;
+        trans->AssertedId[0] = '\0';
+        trans->RemotePartyIdFormat = OSPC_NFORMAT_E164;
+        trans->RemotePartyId[0] = '\0';
+        trans->ApplicationId[0] = '\0';
+        trans->RoleInfo = OSPC_RINFO_UNKNOWN;
     }
 
     return errcode;
@@ -4957,7 +4961,26 @@ int OSPPTransactionSetApplicationId(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-               OSPM_STRNCPY(trans->ApplicationId, ospvApplId, sizeof(trans->ApplicationId) - 1);
+           OSPM_STRNCPY(trans->ApplicationId, ospvApplId, sizeof(trans->ApplicationId) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetRoleInfo(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_ROLE_INFO ospvInfo)        /* In - Role additional info */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvInfo < OSPC_RINFO_START) || (ospvInfo >= OSPC_RINFO_NUMBER)) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            trans->RoleInfo = ospvInfo;
         }
     }
 

@@ -95,6 +95,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_RESOURCES,            "Resources" },
     { OSPC_MELEM_RFACTOR,              "RFactor" },
     { OSPC_MELEM_ROLE,                 "Role" },
+    { OSPC_MELEM_ROLEINFO,             "RoleInfo" },
     { OSPC_MELEM_RPID,                 "RemotePartyIdSourceInfo" },
     { OSPC_MELEM_RTDELAY,              "RoundTripDelay" },
     { OSPC_MELEM_SAMPLES,              "Samples" },

@@ -652,12 +652,12 @@ void OSPPAuthRspSetRole(
 OSPE_ROLE OSPPAuthRspGetRole(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
-    OSPE_ROLE ospvRole = OSPC_ROLE_UNDEFINED;
+    OSPE_ROLE role = OSPC_ROLE_UNDEFINED;
 
     if (ospvAuthRsp != OSPC_OSNULL) {
-        ospvRole = (OSPE_ROLE)ospvAuthRsp->Role;
+        role = ospvAuthRsp->Role;
     }
 
-    return ospvRole;
+    return role;
 }
 

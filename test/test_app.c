@@ -1803,6 +1803,15 @@ int testOSPToolkitVersion()
     return 0;
 }
 
+int testSetRoleInfo()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetRoleInfo(OSPVTransactionHandle, OSPC_RINFO_GENBANDS3CDRHUNT1);
+
+    return errcode;
+}
+
 int testSetTermCause()
 {
     int errcode = 0;
@@ -2357,6 +2366,9 @@ int testAPI(int apinumber)
         errcode = testNonBlockingPerformanceTestForCapabilities();
         break;
     case 200:
+        errcode = testSetRoleInfo();
+        break;
+    case 201:
         errcode = testSetTermCause();
         break;
     case 210:
@@ -2461,6 +2473,9 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionGetFirstDestination();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetRoleInfo();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetTermCause();
@@ -2620,7 +2635,7 @@ int testMenu()
         printf("---------------------------------------------------------------------\n");
         printf("Other tests\n");
         printf("---------------------------------------------------------------------\n");
-        printf("200) Set Termination Cause\n");
+        printf("200) Set Role Info                    201) Termination Cause\n");
         printf("210) Set NP Parameters                211) Set Operator Names\n");
         printf("212) Set Asserted ID                  213) Set Remote Party ID\n");
         printf("214) Set Diversion                    215) Set Realms\n");

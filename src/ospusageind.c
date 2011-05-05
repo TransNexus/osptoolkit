@@ -1624,9 +1624,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Add source realm info */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&
-                ((trans->SrcRealm != OSPC_OSNULL) && (trans->SrcRealm[0] != '\0')))
-            {
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->SrcRealm[0] != '\0')) {
                 errcode = OSPPStringToElement(OSPC_MELEM_SRCREALM, trans->SrcRealm, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
@@ -1635,9 +1633,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Add destination realm info */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&
-                ((trans->DestRealm != OSPC_OSNULL) && (trans->DestRealm[0] != '\0')))
-            {
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->DestRealm[0] != '\0')) {
                 errcode = OSPPStringToElement(OSPC_MELEM_DESTREALM, trans->DestRealm, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
@@ -1646,9 +1642,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Add asserted ID */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&
-                ((trans->AssertedId != OSPC_OSNULL) && (trans->AssertedId[0] != '\0')))
-            {
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->AssertedId[0] != '\0')) {
                 errcode = OSPPCallPartyNumToElement(OSPC_MELEM_ASSERTEDID, trans->AssertedId, trans->AssertedIdFormat, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
@@ -1657,9 +1651,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Add remote party ID */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&
-                ((trans->RemotePartyId != OSPC_OSNULL) && (trans->RemotePartyId[0] != '\0')))
-            {
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->RemotePartyId[0] != '\0')) {
                 errcode = OSPPCallPartyNumToElement(OSPC_MELEM_RPID, trans->RemotePartyId, trans->RemotePartyIdFormat, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
@@ -1668,10 +1660,19 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Add application ID */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&
-                ((trans->ApplicationId != OSPC_OSNULL) && (trans->ApplicationId[0] != '\0')))
-            {
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->ApplicationId[0] != '\0')) {
                 errcode = OSPPStringToElement(OSPC_MELEM_APPLID, trans->ApplicationId, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add role additional info */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&
+                ((trans->RoleInfo >= OSPC_RINFO_START) && (trans->RoleInfo < OSPC_RINFO_NUMBER)))
+            {
+                errcode = OSPPStringToElement(OSPC_MELEM_ROLEINFO, OSPPRoleInfoGetName(trans->RoleInfo), 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;

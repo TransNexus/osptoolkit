@@ -813,9 +813,7 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
 
         /* Add source realm info */
-        if ((error == OSPC_ERR_NO_ERROR) &&
-            ((trans->SrcRealm != OSPC_OSNULL) && (trans->SrcRealm[0] != '\0')))
-        {
+        if ((error == OSPC_ERR_NO_ERROR) && (trans->SrcRealm[0] != '\0')) {
             error = OSPPStringToElement(OSPC_MELEM_SRCREALM, trans->SrcRealm, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
             if (error == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(authreqelem, elem);
@@ -824,9 +822,7 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
 
         /* Add destination realm info */
-        if ((error == OSPC_ERR_NO_ERROR) &&
-            ((trans->DestRealm != OSPC_OSNULL) && (trans->DestRealm[0] != '\0')))
-        {
+        if ((error == OSPC_ERR_NO_ERROR) && (trans->DestRealm[0] != '\0')) {
             error = OSPPStringToElement(OSPC_MELEM_DESTREALM, trans->DestRealm, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
             if (error == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(authreqelem, elem);
@@ -835,9 +831,7 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
 
         /* Add asserted ID */
-        if ((error == OSPC_ERR_NO_ERROR) &&
-            ((trans->AssertedId != OSPC_OSNULL) && (trans->AssertedId[0] != '\0')))
-        {
+        if ((error == OSPC_ERR_NO_ERROR) && (trans->AssertedId[0] != '\0')) {
             error = OSPPCallPartyNumToElement(OSPC_MELEM_ASSERTEDID, trans->AssertedId, trans->AssertedIdFormat, &elem);
             if (error == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(authreqelem, elem);
@@ -846,8 +840,7 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
 
         /* Add remote party ID */
-        if ((error == OSPC_ERR_NO_ERROR) &&
-            ((trans->RemotePartyId != OSPC_OSNULL) && (trans->RemotePartyId[0] != '\0')))
+        if ((error == OSPC_ERR_NO_ERROR) && (trans->RemotePartyId[0] != '\0'))
         {
             error = OSPPCallPartyNumToElement(OSPC_MELEM_RPID, trans->RemotePartyId, trans->RemotePartyIdFormat, &elem);
             if (error == OSPC_ERR_NO_ERROR) {
@@ -857,9 +850,7 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
 
         /* Add application ID */
-        if ((error == OSPC_ERR_NO_ERROR) &&
-            ((trans->ApplicationId != OSPC_OSNULL) && (trans->ApplicationId[0] != '\0')))
-        {
+        if ((error == OSPC_ERR_NO_ERROR) && (trans->ApplicationId[0] != '\0')) {
             error = OSPPStringToElement(OSPC_MELEM_APPLID, trans->ApplicationId, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
             if (error == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(authreqelem, elem);

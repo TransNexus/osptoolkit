@@ -37,17 +37,35 @@ const OSPT_MSG_DESC OSPV_MATTR_DESCS[OSPC_MATTR_NUMBER] = {
     { OSPC_MATTR_REPORTER,      "reporter" }
 };
 
-/* Array that associates role and names */
+/* Array that associates role names */
 const OSPT_MSG_DESC OSPV_RTYPE_DESCS[OSPC_ROLE_NUMBER] = {
-    { OSPC_ROLE_DESTINATION,   "destination" },
     { OSPC_ROLE_SOURCE,        "source" },
+    { OSPC_ROLE_DESTINATION,   "destination" },
     { OSPC_ROLE_OTHER,         "other" },
-    { OSPC_ROLE_RADSRCSTART,   "radsrcstart" },
-    { OSPC_ROLE_RADDESTSTART,  "raddeststart" },
-    { OSPC_ROLE_RADSRCSTOP,    "radsrcstop" },
-    { OSPC_ROLE_RADDESTSTOP,   "raddeststop" },
-    { OSPC_ROLE_RADSRCINTERIM, "radsrcinterim" },
-    { OSPC_ROLE_RADDESTINTERIM,"raddestinterim" }
+};
+
+/* Array that associates role info */
+const OSPT_MSG_DESC OSPV_RINFO_DESCS[OSPC_RINFO_NUMBER] = {
+    { OSPC_RINFO_ACMERADSTART,          "acmeradstart" },
+    { OSPC_RINFO_ACMERADSTOP,           "acmeradstop" },
+    { OSPC_RINFO_ACMERADINTERIM,        "acmeradinterim" },
+    { OSPC_RINFO_ACMECDRSTART,          "acmecdrstart" },
+    { OSPC_RINFO_ACMECDRSTOP,           "acmecdrstop" },
+    { OSPC_RINFO_ACMECDRINTERIM,        "acmecdrimterim" },
+    { OSPC_RINFO_ACMECDRINTERIMFAILED,  "acmecdrinterimfailed" },
+    { OSPC_RINFO_GENBANDS3RADSTART1,    "genbands3radstart1" },
+    { OSPC_RINFO_GENBANDS3RADSTART2,    "genbands3radstart2" },
+    { OSPC_RINFO_GENBANDS3RADSTOP1,     "genbands3radstop1" },
+    { OSPC_RINFO_GENBANDS3RADSTOP2,     "genbands3radstop2" },
+    { OSPC_RINFO_GENBANDS3RADINTERIM1,  "genbands3radinterim1" },
+    { OSPC_RINFO_GENBANDS3RADINTERIM2,  "genbands3radinterim2" },
+    { OSPC_RINFO_GENBANDS3CDRSTART1,    "genbands3cdrstart1" },
+    { OSPC_RINFO_GENBANDS3CDRSTART2,    "genbands3cdrstart2" },
+    { OSPC_RINFO_GENBANDS3CDREND1,      "genbands3cdrend1" },
+    { OSPC_RINFO_GENBANDS3CDREND2,      "genbands3cdrend2" },
+    { OSPC_RINFO_GENBANDS3CDRHUNT1,     "genbands3cdrhunt1" },
+    { OSPC_RINFO_GENBANDS3CDRHUNT2,     "genbands3cdrhunt2" },
+    { OSPC_RINFO_GENBANDS3CDRINTERIM,   "genbands3cdrinterim" }
 };
 
 /* Array that associates service type and names */

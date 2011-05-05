@@ -721,13 +721,13 @@ unsigned OSPPMsgElemIsCritical( /* returns non-zero if critical */
 const char *OSPPRoleGetName(    /* returns pointer to the name */
     OSPE_ROLE ospvPart)
 {
-    const char *ospvName = OSPC_OSNULL;
+    const char *name = OSPC_OSNULL;
 
     if ((ospvPart >= OSPC_ROLE_START) && (ospvPart < OSPC_ROLE_NUMBER)) {
-        ospvName = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_RTYPE_DESCS, OSPC_ROLE_NUMBER);
+        name = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_RTYPE_DESCS, OSPC_ROLE_NUMBER);
     }
 
-    return ospvName;
+    return name;
 }
 
 /*
@@ -736,12 +736,42 @@ const char *OSPPRoleGetName(    /* returns pointer to the name */
 OSPE_ROLE OSPPRoleGetPart(  /* returns part */
     const char *ospvName)
 {
-    OSPE_ROLE ospvPart = OSPC_ROLE_UNKNOWN;
+    OSPE_ROLE role = OSPC_ROLE_UNKNOWN;
 
     if (ospvName != OSPC_OSNULL) {
-        ospvPart = (OSPE_ROLE)OSPPMsgDescGetPart(ospvName, OSPV_RTYPE_DESCS, OSPC_ROLE_NUMBER);
+        role = (OSPE_ROLE)OSPPMsgDescGetPart(ospvName, OSPV_RTYPE_DESCS, OSPC_ROLE_NUMBER);
     }
 
-    return ospvPart;
+    return role;
+}
+
+/*
+ * OSPPRoleInfoGetName() - get an role info from a part value
+ */
+const char *OSPPRoleInfoGetName(    /* returns pointer to the name */
+    OSPE_ROLE_INFO ospvPart)
+{
+    const char *info = OSPC_OSNULL;
+
+    if ((ospvPart >= OSPC_RINFO_START) && (ospvPart < OSPC_RINFO_NUMBER)) {
+        info = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_RINFO_DESCS, OSPC_RINFO_NUMBER);
+    }
+
+    return info;
+}
+
+/*
+ * OSPPRoleInfoGetPart() - get a role info value part ID from its name
+ */
+OSPE_ROLE_INFO OSPPRoleInfoGetPart(  /* returns part */
+    const char *ospvName)
+{
+    OSPE_ROLE_INFO info = OSPC_RINFO_UNKNOWN;
+
+    if (ospvName != OSPC_OSNULL) {
+        info = (OSPE_ROLE_INFO)OSPPMsgDescGetPart(ospvName, OSPV_RINFO_DESCS, OSPC_RINFO_NUMBER);
+    }
+
+    return info;
 }
 
