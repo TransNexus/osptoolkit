@@ -751,3 +751,119 @@ unsigned OSPPXMLDereference(            /* returns error code */
 
     return errcode;
 }
+
+/*
+ * Escape XML special char
+ */
+unsigned OSPPXMLEscape(
+    const char* src,
+    int destsize,
+    char* dest)
+{
+    int srcsize, i, j;
+    char buffer[OSPC_XMLDOC_ITEMSIZE];
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+
+    if (src != NULL) {
+        srcsize = strlen(src);
+
+        if (dest == NULL) {
+            errcode = OSPC_ERR_INVALID_POINTER;
+        } else {
+            for (i = 0, j = 0; i < srcsize; i++) {
+                switch (src[i]) {
+                case OSPC_XMLDOC_QUOTE:
+                    strcpy(buffer + j, OSPC_XMLESC_QUOT);
+                    j += OSPC_XMLESC_QUOTLEN;
+                    break;
+                case OSPC_XMLDOC_SINGLEQUOTE:
+                    strcpy(buffer + j, OSPC_XMLESC_SINGLEQUOTE);
+                    j += OSPC_XMLESC_SINGLEQUOTELEN;
+                    break;
+                case OSPC_XMLDOC_OPEN:
+                    strcpy(buffer + j, OSPC_XMLESC_OPEN);
+                    j += OSPC_XMLESC_OPENLEN;
+                    break;
+                case OSPC_XMLDOC_CLOSE:
+                    strcpy(buffer + j, OSPC_XMLESC_CLOSE);
+                    j += OSPC_XMLESC_CLOSELEN;
+                    break;
+                case OSPC_XMLDOC_REF:
+                    strcpy(buffer + j, OSPC_XMLESC_REF);
+                    j += OSPC_XMLESC_REFLEN;
+                    break;
+                default:
+                    buffer[j++] = src[i];
+                    break;
+                }
+            }
+            buffer[j] = 0;
+
+            if (j < destsize) {
+                strcpy(dest, buffer);
+            } else {
+                errcode = OSPC_ERR_XML_BFR_SZ_FAIL;
+            }
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * Unescape XML special char
+ */
+unsigned OSPPXMLUnescape(
+    const char* src,
+    int destsize,
+    char* dest)
+{
+    int srcsize, i, j;
+    char buffer[OSPC_XMLDOC_ITEMSIZE];
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+
+    if (src != NULL) {
+        srcsize = strlen(src);
+
+        if (dest == NULL) {
+            errcode = OSPC_ERR_INVALID_POINTER;
+        } else {
+            i = 0;
+            j = 0;
+            while (i < srcsize) {
+                if (src[i] == '&') {
+                    if (strncmp(src + i, OSPC_XMLESC_QUOT, OSPC_XMLESC_QUOTLEN) == 0) {
+                        i += OSPC_XMLESC_QUOTLEN;
+                        buffer[j++] = OSPC_XMLDOC_QUOTE;
+                    } else if (strncmp(src + i, OSPC_XMLESC_SINGLEQUOTE, OSPC_XMLESC_SINGLEQUOTELEN) == 0) {
+                        i += OSPC_XMLESC_SINGLEQUOTELEN;
+                        buffer[j++] = OSPC_XMLDOC_SINGLEQUOTE;
+                    } else if (strncmp(src + i, OSPC_XMLESC_OPEN, OSPC_XMLESC_OPENLEN) == 0) {
+                        i += OSPC_XMLESC_OPENLEN;
+                        buffer[j++] = OSPC_XMLDOC_OPEN;
+                    } else if (strncmp(src + i, OSPC_XMLESC_CLOSE, OSPC_XMLESC_CLOSELEN) == 0) {
+                        i += OSPC_XMLESC_CLOSELEN;
+                        buffer[j++] = OSPC_XMLDOC_CLOSE;
+                    } else if (strncmp(src + i, OSPC_XMLESC_REF, OSPC_XMLESC_REFLEN) == 0) {
+                        i += OSPC_XMLESC_REFLEN;
+                        buffer[j++] = OSPC_XMLDOC_REF;
+                    } else {
+                        buffer[j++] = src[i++];
+                    }
+                } else {
+                    buffer[j++] = src[i++];
+                }
+            }
+            buffer[j] = 0;
+
+            if (j < destsize) {
+                strcpy(dest, buffer);
+            } else {
+                errcode = OSPC_ERR_XML_BFR_SZ_FAIL;
+            }
+        }
+    }
+
+    return errcode;
+}
+

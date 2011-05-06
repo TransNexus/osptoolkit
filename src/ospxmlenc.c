@@ -78,7 +78,6 @@ int OSPPXMLDocCreate(           /* returns error code */
 /*
  * OSPPXMLDocAddElem() - add an element to a document
  */
-
 int OSPPXMLDocAddElem(          /* returns error code */
     OSPT_XML_ELEM *ospvElem,    /* element to add */
     OSPTBFR **ospvBfrAddr)      /* buffer to add to */
@@ -89,13 +88,13 @@ int OSPPXMLDocAddElem(          /* returns error code */
     const char *val = OSPC_OSNULL;
     unsigned vallen = 0;
     unsigned cnt;
+    char buffer[OSPC_XMLDOC_ITEMSIZE];
 
     /*
      * Because of the length of this routine, it's broken up into the
      * eight major steps involved in encoding an element. Look for the
      * "**** STEP n:" comments that emphasize these steps.
      */
-
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
@@ -114,6 +113,8 @@ int OSPPXMLDocAddElem(          /* returns error code */
          */
         val = OSPPXMLElemGetValue(ospvElem);
         if (val != OSPC_OSNULL) {
+            OSPPXMLEscape(val, OSPC_XMLDOC_ITEMSIZE, buffer);
+            val = buffer;
             vallen = OSPM_STRLEN(val);
         } else {
             vallen = 0;

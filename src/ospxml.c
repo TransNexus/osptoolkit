@@ -69,7 +69,6 @@ int OSPPXMLElementProcess(
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         if ((transferlen = OSPPBfrSize(outbuffer)) > 0) {
-
             OSPM_MALLOC(*ospvMessage, unsigned char, transferlen + 1);
         } else {
             errorcode = OSPC_ERR_XML_BFR_SZ_FAIL;

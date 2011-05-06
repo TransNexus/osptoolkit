@@ -101,6 +101,7 @@ unsigned OSPPXMLDocParseElem(       /* returns error code */
     OSPTLIST attrList = OSPC_OSNULL;
     OSPTLIST childList = OSPC_OSNULL;
     unsigned char readChar = '\0';
+    char buffer[OSPC_XMLDOC_ITEMSIZE];
 
     if (ospvBfrAddr == OSPC_OSNULL) {
         errcode = OSPC_ERR_BUF_EMPTY;
@@ -229,7 +230,8 @@ unsigned OSPPXMLDocParseElem(       /* returns error code */
          * Now that we've got all the pieces, put them together into
          * the element.
          */
-        elem = OSPPXMLElemNew((const char *)OSPPBfrLinearPtr(nameBfr), (const char *)OSPPBfrLinearPtr(valBfr));
+        OSPPXMLUnescape(OSPPBfrLinearPtr(valBfr), OSPC_XMLDOC_ITEMSIZE, buffer);
+        elem = OSPPXMLElemNew((const char *)OSPPBfrLinearPtr(nameBfr), buffer);
         if (elem != OSPC_OSNULL) {
             OSPPListMove(&elem->Attributes, &attrList);
             OSPPListMove(&elem->Children, &childList);

@@ -1860,7 +1860,7 @@ int testSetRPId()
 {
     int errcode = 0;
 
-    errcode = OSPPTransactionSetRemotePartyId(OSPVTransactionHandle, OSPC_NFORMAT_URL, "RemotePartyId");
+    errcode = OSPPTransactionSetRemotePartyId(OSPVTransactionHandle, OSPC_NFORMAT_URL, "\"'Eric Smith' of AT&T\" <sip:2001@att.com>;privacy=off;screen=no");
 
     return errcode;
 }

@@ -95,6 +95,17 @@
 #define OSPC_XMLDOC_CDATABEGLEN        (sizeof(OSPC_XMLDOC_CDATABEG)-1)
 #define OSPC_XMLDOC_CDATAENDLEN        (sizeof(OSPC_XMLDOC_CDATAEND)-1)
 
+#define OSPC_XMLESC_QUOT            "&quot;"
+#define OSPC_XMLESC_QUOTLEN         (sizeof(OSPC_XMLESC_QUOT) - 1)
+#define OSPC_XMLESC_SINGLEQUOTE     "&apos;"
+#define OSPC_XMLESC_SINGLEQUOTELEN  (sizeof(OSPC_XMLESC_SINGLEQUOTE) - 1)
+#define OSPC_XMLESC_OPEN            "&lt;"
+#define OSPC_XMLESC_OPENLEN         (sizeof(OSPC_XMLESC_OPEN) - 1)
+#define OSPC_XMLESC_CLOSE           "&gt;"
+#define OSPC_XMLESC_CLOSELEN        (sizeof(OSPC_XMLESC_CLOSE) - 1)
+#define OSPC_XMLESC_REF             "&amp;"
+#define OSPC_XMLESC_REFLEN          (sizeof(OSPC_XMLESC_REF) - 1)
+
 /*
  * Best guess sizes for element/attribute names and values - These
  * don't have to be strict since we use elastic buffers. They're just
@@ -104,6 +115,7 @@
  */
 #define OSPC_XMLDOC_NAMESIZE   100
 #define OSPC_XMLDOC_VALUESIZE  1000
+#define OSPC_XMLDOC_ITEMSIZE   4096
 
 /* maximum size of entity name  */
 #define OSPC_XMLDOC_ENTITYSIZE 10
@@ -176,6 +188,9 @@ extern "C" {
     unsigned OSPPXMLDocIsCdataEnd(OSPTBFR **, OSPE_XML_ENC, unsigned *);
 
     void OSPPXMLDocPeekCharN(OSPTBFR **, OSPE_XML_ENC, unsigned, unsigned char *, int *);
+
+    unsigned OSPPXMLEscape(const char*, int, char*);
+    unsigned OSPPXMLUnescape(const char*, int, char*);
 
 #ifdef __cplusplus
 }
