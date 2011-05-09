@@ -119,7 +119,7 @@ extern "C" {
     int OSPPTransactionSetAssertedId(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
     int OSPPTransactionSetRemotePartyId(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
     int OSPPTransactionSetApplicationId(OSPTTRANHANDLE, const char *);
-    int OSPPTransactionSetRoleInfo(OSPTTRANHANDLE, OSPE_ROLE_INFO);
+    int OSPPTransactionSetRoleInfo(OSPTTRANHANDLE, OSPE_ROLE_STATE, OSPE_ROLE_FORMAT, OSPE_ROLE_VENDOR);
 
 #ifdef __cplusplus
 }

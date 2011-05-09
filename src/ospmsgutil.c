@@ -746,32 +746,92 @@ OSPE_ROLE OSPPRoleGetPart(  /* returns part */
 }
 
 /*
- * OSPPRoleInfoGetName() - get an role info from a part value
+ * OSPPRoleStateGetName() - get an role state from a part value
  */
-const char *OSPPRoleInfoGetName(    /* returns pointer to the name */
-    OSPE_ROLE_INFO ospvPart)
+const char *OSPPRoleStateGetName(   /* returns pointer to the name */
+    OSPE_ROLE_STATE ospvPart)
 {
-    const char *info = OSPC_OSNULL;
+    const char *state = OSPC_OSNULL;
 
-    if ((ospvPart >= OSPC_RINFO_START) && (ospvPart < OSPC_RINFO_NUMBER)) {
-        info = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_RINFO_DESCS, OSPC_RINFO_NUMBER);
+    if ((ospvPart >= OSPC_RSTATE_START) && (ospvPart < OSPC_RSTATE_NUMBER)) {
+        state = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_RSTATE_DESCS, OSPC_RSTATE_NUMBER);
     }
 
-    return info;
+    return state;
 }
 
 /*
- * OSPPRoleInfoGetPart() - get a role info value part ID from its name
+ * OSPPRoleStateGetPart() - get a role state value part ID from its name
  */
-OSPE_ROLE_INFO OSPPRoleInfoGetPart(  /* returns part */
+OSPE_ROLE_STATE OSPPRoleStateGetPart(   /* returns part */
     const char *ospvName)
 {
-    OSPE_ROLE_INFO info = OSPC_RINFO_UNKNOWN;
+    OSPE_ROLE_STATE state = OSPC_RSTATE_UNKNOWN;
 
     if (ospvName != OSPC_OSNULL) {
-        info = (OSPE_ROLE_INFO)OSPPMsgDescGetPart(ospvName, OSPV_RINFO_DESCS, OSPC_RINFO_NUMBER);
+        state = (OSPE_ROLE_STATE)OSPPMsgDescGetPart(ospvName, OSPV_RSTATE_DESCS, OSPC_RSTATE_NUMBER);
     }
 
-    return info;
+    return state;
+}
+
+/*
+ * OSPPRoleFormatGetName() - get an role format from a part value
+ */
+const char *OSPPRoleFormatGetName(  /* returns pointer to the name */
+    OSPE_ROLE_FORMAT ospvPart)
+{
+    const char *format = OSPC_OSNULL;
+
+    if ((ospvPart >= OSPC_RFORMAT_START) && (ospvPart < OSPC_RFORMAT_NUMBER)) {
+        format = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_RFORMAT_DESCS, OSPC_RFORMAT_NUMBER);
+    }
+
+    return format;
+}
+
+/*
+ * OSPPRoleFormatGetPart() - get a role format value part ID from its name
+ */
+OSPE_ROLE_FORMAT OSPPRoleFormatGetPart( /* returns part */
+    const char *ospvName)
+{
+    OSPE_ROLE_FORMAT format = OSPC_RFORMAT_UNKNOWN;
+
+    if (ospvName != OSPC_OSNULL) {
+        format = (OSPE_ROLE_FORMAT)OSPPMsgDescGetPart(ospvName, OSPV_RFORMAT_DESCS, OSPC_RFORMAT_NUMBER);
+    }
+
+    return format;
+}
+
+/*
+ * OSPPRoleVendorGetName() - get an role vendor from a part value
+ */
+const char *OSPPRoleVendorGetName(  /* returns pointer to the name */
+    OSPE_ROLE_VENDOR ospvPart)
+{
+    const char *vendor = OSPC_OSNULL;
+
+    if ((ospvPart >= OSPC_RVENDOR_START) && (ospvPart < OSPC_RVENDOR_NUMBER)) {
+        vendor = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_RVENDOR_DESCS, OSPC_RVENDOR_NUMBER);
+    }
+
+    return vendor;
+}
+
+/*
+ * OSPPRoleVendorGetPart() - get a role vendor value part ID from its name
+ */
+OSPE_ROLE_VENDOR OSPPRoleVendorGetPart( /* returns part */
+    const char *ospvName)
+{
+    OSPE_ROLE_VENDOR vendor = OSPC_RVENDOR_UNKNOWN;
+
+    if (ospvName != OSPC_OSNULL) {
+        vendor = (OSPE_ROLE_VENDOR)OSPPMsgDescGetPart(ospvName, OSPV_RVENDOR_DESCS, OSPC_RVENDOR_NUMBER);
+    }
+
+    return vendor;
 }
 

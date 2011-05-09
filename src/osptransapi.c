@@ -2155,7 +2155,9 @@ int OSPPTransactionNew(
         trans->RemotePartyIdFormat = OSPC_NFORMAT_E164;
         trans->RemotePartyId[0] = '\0';
         trans->ApplicationId[0] = '\0';
-        trans->RoleInfo = OSPC_RINFO_UNKNOWN;
+        trans->RoleState = OSPC_RSTATE_UNKNOWN;
+        trans->RoleFormat = OSPC_RFORMAT_UNKNOWN;
+        trans->RoleVendor = OSPC_RVENDOR_UNKNOWN;
     }
 
     return errcode;
@@ -4970,17 +4972,24 @@ int OSPPTransactionSetApplicationId(
 
 int OSPPTransactionSetRoleInfo(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    OSPE_ROLE_INFO ospvInfo)        /* In - Role additional info */
+    OSPE_ROLE_STATE ospvState,      /* In - Role state */
+    OSPE_ROLE_FORMAT ospvFormat,    /* In - Role format */
+    OSPE_ROLE_VENDOR ospvVendor)    /* In - Role vendor */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    if ((ospvInfo < OSPC_RINFO_START) || (ospvInfo >= OSPC_RINFO_NUMBER)) {
+    if (((ospvState < OSPC_RSTATE_START) || (ospvState >= OSPC_RSTATE_NUMBER)) ||
+        ((ospvFormat < OSPC_RFORMAT_START) || (ospvFormat >= OSPC_RFORMAT_NUMBER)) ||
+        ((ospvVendor < OSPC_RVENDOR_START) || (ospvVendor >= OSPC_RVENDOR_NUMBER)))
+    {
         errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            trans->RoleInfo = ospvInfo;
+            trans->RoleState = ospvState;
+            trans->RoleFormat = ospvFormat;
+            trans->RoleVendor = ospvVendor;
         }
     }
 
