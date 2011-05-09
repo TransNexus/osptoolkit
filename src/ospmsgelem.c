@@ -102,6 +102,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_SERVICE,              "Service" },
     { OSPC_MELEM_SERVICETYPE,          "ServiceType" },
     { OSPC_MELEM_SESSIONID,            "SessionId" },
+    { OSPC_MELEM_SETUPATTEMPT,         "SetupAttempt" },
     { OSPC_MELEM_SRCALT,               "SourceAlternate" },
     { OSPC_MELEM_SRCINFO,              "SourceInfo" },
     { OSPC_MELEM_SRCREALM,             "SourceRealm" },

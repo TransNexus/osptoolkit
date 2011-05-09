@@ -1062,6 +1062,7 @@ OSPT_USAGE_IND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         usageind->HasPricingInfo = OSPC_FALSE;
         usageind->HasServiceInfo = OSPC_FALSE;
         usageind->DestinationCount = OSPC_OSNULL;
+        usageind->SetupAttempt = 0;
         for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
             usageind->Protocol[cnt] = OSPC_PROTNAME_UNKNOWN;
         }
@@ -1393,6 +1394,13 @@ int OSPPUsageIndToElement(      /* returns error code */
             if ((errcode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndGetDestinationCount(usage) != OSPC_OSNULL)) {
                 altinfo = OSPPUsageIndGetDestinationCount(usage);
                 errcode = OSPPAltInfoToElement(altinfo, &subelem, OSPC_MELEM_DESTALT);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+            if ((errcode == OSPC_ERR_NO_ERROR) && (usage->SetupAttempt != 0)) {
+                OSPPMsgNumToElement(usage->SetupAttempt, OSPPMsgElemGetName(OSPC_MELEM_SETUPATTEMPT), &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;
@@ -1777,6 +1785,7 @@ void OSPPUsageIndSetDestinationCount(
     if (ospvDestinationCount > 0) {
         sprintf(buf, "%d", ospvDestinationCount);
         ospvUsageInd->DestinationCount = OSPPAltInfoNew(OSPM_STRLEN(buf), buf, OSPC_ALTINFO_DEVICEID);
+        ospvUsageInd->SetupAttempt = ospvDestinationCount;
     }
 }
 

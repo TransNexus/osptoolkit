@@ -58,6 +58,7 @@ typedef struct {
     OSPTBOOL HasServiceInfo;
     OSPE_SERVICE ServiceType;
     OSPT_ALTINFO *DestinationCount;
+    int SetupAttempt;
     OSPE_PROTOCOL_NAME Protocol[OSPC_PROTTYPE_NUMBER];
     char Codec[OSPC_CODEC_NUMBER][OSPC_SIZE_CODEC];
     OSPT_CALL_ID *SessionId[OSPC_SESSIONID_NUMBER];

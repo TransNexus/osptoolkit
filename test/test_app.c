@@ -2475,6 +2475,9 @@ int testAPI(int apinumber)
             errcode = testOSPPTransactionGetFirstDestination();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = OSPPTransactionSetDestinationCount(OSPVTransactionHandle, 2);
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetRoleInfo();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
