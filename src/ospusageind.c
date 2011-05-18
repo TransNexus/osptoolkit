@@ -1677,11 +1677,6 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(*ospvElem, usageindelem);
-                usageindelem = OSPC_OSNULL;
-            }
-
             /* Add role additional info */
             if (errcode == OSPC_ERR_NO_ERROR) {
                 roleinfoelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ROLEINFO), "");
@@ -1717,8 +1712,13 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
             if (errcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(*ospvElem, roleinfoelem);
+                OSPPXMLElemAddChild(usageindelem, roleinfoelem);
                 roleinfoelem = OSPC_OSNULL;
+            }
+
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, usageindelem);
+                usageindelem = OSPC_OSNULL;
             }
         }   /* end for */
     }
