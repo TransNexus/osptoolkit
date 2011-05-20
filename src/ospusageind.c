@@ -1668,6 +1668,15 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
+            /* Add charge info */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->ChargeInfo[0] != '\0')) {
+                errcode = OSPPCallPartyNumToElement(OSPC_MELEM_CHARGEINFO, trans->ChargeInfo, trans->ChargeInfoFormat, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
             /* Add application ID */
             if ((errcode == OSPC_ERR_NO_ERROR) && (trans->ApplicationId[0] != '\0')) {
                 errcode = OSPPStringToElement(OSPC_MELEM_APPLID, trans->ApplicationId, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);

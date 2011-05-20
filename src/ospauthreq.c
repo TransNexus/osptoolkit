@@ -840,9 +840,17 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
 
         /* Add remote party ID */
-        if ((error == OSPC_ERR_NO_ERROR) && (trans->RemotePartyId[0] != '\0'))
-        {
+        if ((error == OSPC_ERR_NO_ERROR) && (trans->RemotePartyId[0] != '\0')) {
             error = OSPPCallPartyNumToElement(OSPC_MELEM_RPID, trans->RemotePartyId, trans->RemotePartyIdFormat, &elem);
+            if (error == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
+        /* Add charge info */
+        if ((error == OSPC_ERR_NO_ERROR) && (trans->ChargeInfo[0] != '\0')) {
+            error = OSPPCallPartyNumToElement(OSPC_MELEM_CHARGEINFO, trans->ChargeInfo, trans->ChargeInfoFormat, &elem);
             if (error == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(authreqelem, elem);
                 elem = OSPC_OSNULL;

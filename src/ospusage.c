@@ -351,6 +351,7 @@ unsigned OSPPCallPartyNumToElement(
         case OSPC_MELEM_DIVSRCINFO:
         case OSPC_MELEM_ASSERTEDID:
         case OSPC_MELEM_RPID:
+        case OSPC_MELEM_CHARGEINFO:
             *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ElemType), CallPartyNum);
             if (*ospvElem == OSPC_OSNULL) {
                 errcode = OSPC_ERR_XML_NO_ELEMENT;

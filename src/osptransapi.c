@@ -2154,6 +2154,8 @@ int OSPPTransactionNew(
         trans->AssertedId[0] = '\0';
         trans->RemotePartyIdFormat = OSPC_NFORMAT_E164;
         trans->RemotePartyId[0] = '\0';
+        trans->ChargeInfoFormat = OSPC_NFORMAT_E164;
+        trans->ChargeInfo[0] = '\0';
         trans->ApplicationId[0] = '\0';
         trans->RoleState = OSPC_RSTATE_UNKNOWN;
         trans->RoleFormat = OSPC_RFORMAT_UNKNOWN;
@@ -4945,6 +4947,29 @@ int OSPPTransactionSetRemotePartyId(
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
             trans->RemotePartyIdFormat = ospvFormat;
             OSPM_STRNCPY(trans->RemotePartyId, ospvRPId, sizeof(trans->RemotePartyId) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetChargeInfo(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_NUMBER_FORMAT ospvFormat,  /* In - Charge info format */
+    const char *ospvChargeInfo)     /* In - Charge info */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if (((ospvFormat < OSPC_NFORMAT_START) || (ospvFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvChargeInfo == NULL) || (ospvChargeInfo[0] == '\0')))
+    {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            trans->ChargeInfoFormat = ospvFormat;
+            OSPM_STRNCPY(trans->ChargeInfo, ospvChargeInfo, sizeof(trans->ChargeInfo) - 1);
         }
     }
 

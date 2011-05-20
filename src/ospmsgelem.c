@@ -43,6 +43,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_AUTHURL,              "AuthorityURL" },
     { OSPC_MELEM_CALLID,               "CallId" },
     { OSPC_MELEM_CAPIND,               "CapabilitiesIndication" },
+    { OSPC_MELEM_CHARGEINFO,           "ChargeInfoSourceInfo" },
     { OSPC_MELEM_CODE,                 "Code" },
     { OSPC_MELEM_CODEC,                "Codec" },
     { OSPC_MELEM_CONNECTTIME,          "ConnectTime" },

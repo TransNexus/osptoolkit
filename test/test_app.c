@@ -1866,6 +1866,15 @@ int testSetRPId()
     return errcode;
 }
 
+int testSetChargeInfo()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetChargeInfo(OSPVTransactionHandle, OSPC_NFORMAT_E164, "1234567890");
+
+    return errcode;
+}
+
 int testSetDiversion()
 {
     int errcode = 0;
@@ -2385,12 +2394,15 @@ int testAPI(int apinumber)
         errcode = testSetRPId();
         break;
     case 214:
-        errcode = testSetDiversion();
+        errcode = testSetChargeInfo();
         break;
     case 215:
-        errcode = testSetRealm();
+        errcode = testSetDiversion();
         break;
     case 216:
+        errcode = testSetRealm();
+        break;
+    case 217:
         errcode = testSetApplicationId();
         break;
     case 220:
@@ -2459,6 +2471,9 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetRPId();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetChargeInfo();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetDiversion();
@@ -2642,8 +2657,8 @@ int testMenu()
         printf("200) Set Role Info                    201) Termination Cause\n");
         printf("210) Set NP Parameters                211) Set Operator Names\n");
         printf("212) Set Asserted ID                  213) Set Remote Party ID\n");
-        printf("214) Set Diversion                    215) Set Realms\n");
-        printf("216) Set Application ID\n");
+        printf("214) Set Charge Info                  215) Set Diversion\n");
+        printf("216) Set Realms                       217) Set Application ID\n");
         printf("220) Set Signaling Protocol           221) Set Codec\n");
         printf("222) Set Network ID                   223) Set Session ID\n");
         printf("224) Set Custom Info\n");
