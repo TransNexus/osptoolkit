@@ -1687,7 +1687,11 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Add role additional info */
-            if (errcode == OSPC_ERR_NO_ERROR) {
+            if ((errcode == OSPC_ERR_NO_ERROR) &&
+                (((trans->RoleState >= OSPC_RSTATE_START) && (trans->RoleState < OSPC_RSTATE_NUMBER)) ||
+                ((trans->RoleFormat >= OSPC_RFORMAT_START) && (trans->RoleFormat < OSPC_RFORMAT_NUMBER)) ||
+                ((trans->RoleVendor >= OSPC_RVENDOR_START) && (trans->RoleVendor < OSPC_RVENDOR_NUMBER))))
+            {
                 roleinfoelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ROLEINFO), "");
                 if (roleinfoelem == OSPC_OSNULL) {
                     errcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -1700,6 +1704,9 @@ int OSPPUsageIndToElement(      /* returns error code */
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(roleinfoelem, subelem);
                     subelem = OSPC_OSNULL;
+                } else {
+                    OSPPXMLElemDelete(&roleinfoelem);
+                    roleinfoelem = OSPC_OSNULL;
                 }
             }
             if ((errcode == OSPC_ERR_NO_ERROR) &&
@@ -1709,6 +1716,9 @@ int OSPPUsageIndToElement(      /* returns error code */
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(roleinfoelem, subelem);
                     subelem = OSPC_OSNULL;
+                } else {
+                    OSPPXMLElemDelete(&roleinfoelem);
+                    roleinfoelem = OSPC_OSNULL;
                 }
             }
             if ((errcode == OSPC_ERR_NO_ERROR) &&
@@ -1718,6 +1728,9 @@ int OSPPUsageIndToElement(      /* returns error code */
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(roleinfoelem, subelem);
                     subelem = OSPC_OSNULL;
+                } else {
+                    OSPPXMLElemDelete(&roleinfoelem);
+                    roleinfoelem = OSPC_OSNULL;
                 }
             }
             if (errcode == OSPC_ERR_NO_ERROR) {
