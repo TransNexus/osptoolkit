@@ -1202,7 +1202,9 @@ int OSPPUsageIndToElement(      /* returns error code */
     void *ospvtrans)
 {
     int errcode = OSPC_ERR_NO_ERROR;
-    OSPT_XML_ELEM *usageindelem = OSPC_OSNULL, *usagedetailelem = OSPC_OSNULL, *roleinfoelem = OSPC_OSNULL;
+    OSPT_XML_ELEM *usageindelem = OSPC_OSNULL;
+    OSPT_XML_ELEM *usagedetailelem = OSPC_OSNULL;
+    OSPT_XML_ELEM *roleinfoelem = OSPC_OSNULL;
     OSPT_XML_ELEM *subelem = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
     int len = 0;
@@ -1259,7 +1261,6 @@ int OSPPUsageIndToElement(      /* returns error code */
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
-
         /* Build multiple usage ind if there are more than one */
         for (usage = (OSPT_USAGE_IND *)OSPPListFirst(ospvUsageInd);
             (errcode == OSPC_ERR_NO_ERROR) &&
@@ -1892,7 +1893,7 @@ void OSPPUsageIndSetProtocol(
         ((ospvType >= OSPC_PROTTYPE_START) && (ospvType < OSPC_PROTTYPE_NUMBER)) &&
         ((ospvName >= OSPC_PROTNAME_START) && (ospvName < OSPC_PROTNAME_NUMBER)))
     {
-            ospvUsageInd->Protocol[ospvType] = ospvName;
+        ospvUsageInd->Protocol[ospvType] = ospvName;
     }
 }
 

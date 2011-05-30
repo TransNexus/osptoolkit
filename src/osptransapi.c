@@ -2475,6 +2475,7 @@ int OSPPTransactionReportUsage(
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
     OSPTBOOL usageallowed = OSPC_FALSE;
     OSPT_STATS stats;
+    OSPE_PROTOCOL_NAME protocol;
     unsigned cnt;
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
@@ -2517,7 +2518,6 @@ int OSPPTransactionReportUsage(
 
     /* Are we originating or terminating */
     if (errcode == OSPC_ERR_NO_ERROR) {
-
         /* Warning! Do not change the order of these checks without
          * looking at OSPPTransactionInitializeAtDevice first
          */
@@ -2591,10 +2591,6 @@ int OSPPTransactionReportUsage(
                                 OSPPUsageIndSetStatistics(usage, &stats);
                             }
 
-                            for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
-                                OSPPUsageIndSetProtocol(usage, cnt, trans->Protocol[cnt]);
-                            }
-
                             for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
                                 if (trans->Codec[cnt][0] != '\0') {
                                     OSPPUsageIndSetCodec(usage, cnt, trans->Codec[cnt]);
@@ -2641,6 +2637,20 @@ int OSPPTransactionReportUsage(
                 if (OSPPDestHasTermCauseAny(trans->CurrentDest)) {
                     /* Set failure reason */
                     OSPPUsageIndCopyTermCause(usage, OSPPDestGetTermCause(trans->CurrentDest));
+                }
+            }
+
+            /* Move protocols to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                protocol = trans->CurrentDest->Protocol;
+                for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
+                    if ((cnt == OSPC_PROTTYPE_DESTINATION) &&
+                        ((protocol >= OSPC_PROTNAME_START) && (protocol < OSPC_PROTNAME_NUMBER)))
+                    {
+                        OSPPUsageIndSetProtocol(usage, cnt, protocol);
+                    } else {
+                        OSPPUsageIndSetProtocol(usage, cnt, trans->Protocol[cnt]);
+                    }
                 }
             }
 
