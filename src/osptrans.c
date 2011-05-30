@@ -57,7 +57,7 @@ int OSPPTransactionBuildReauthRequest(
         }
     }
 
-    /* Set Role  = OSPC_SOURCE */
+    /* Set Role = OSPC_SOURCE */
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /* Set Timestamp */
         timestamp = time(NULL);

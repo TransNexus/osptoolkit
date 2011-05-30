@@ -1604,7 +1604,7 @@ int OSPPTransactionBuildUsageFromScratch(
      * point to it.
      */
     if (errcode == OSPC_ERR_NO_ERROR) {
-        if ((ospvRole >= OSPC_ROLE_START) && (ospvRole < OSPC_ROLE_NUMBER)) {
+        if (ospvRole == OSPC_ROLE_SOURCE) {
             if (trans->AuthReq != OSPC_OSNULL) {
                 /*
                  * This is the 2nd time that the API is being called.
@@ -1666,8 +1666,13 @@ int OSPPTransactionBuildUsageFromScratch(
                     /* Set correct role */
                     OSPPAuthRspSetRole(trans->AuthRsp, ospvRole);
                 }
+
             }
-        } else if ((ospvRole >= OSPC_ROLE_START) && (ospvRole < OSPC_ROLE_NUMBER)) {
+
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                trans->CurrentDest->Protocol = trans->Protocol[OSPC_PROTTYPE_DESTINATION];
+            }
+        } else if (ospvRole == OSPC_ROLE_DESTINATION) {
             if (trans->AuthInd != OSPC_OSNULL) {
                 errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
                 OSPM_DBGERRORLOG(errcode, "Transaction already initialized");
@@ -1709,6 +1714,8 @@ int OSPPTransactionBuildUsageFromScratch(
                             OSPPDestSetCallId(dest, (const unsigned char *)ospvCallId, ospvSizeOfCallId);
 
                             OSPPDestSetNumber(dest, ospvCalledNumber);
+
+                            dest->Protocol = trans->Protocol[OSPC_PROTTYPE_DESTINATION];
 
                             OSPPAuthIndSetDest(authind, dest);
 
