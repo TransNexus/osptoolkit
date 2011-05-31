@@ -1072,6 +1072,9 @@ OSPT_USAGE_IND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         for (cnt = OSPC_SESSIONID_START; cnt < OSPC_SESSIONID_NUMBER; cnt++) {
             usageind->SessionId[cnt] = OSPC_OSNULL;
         }
+        usageind->RoleState = OSPC_RSTATE_UNKNOWN;
+        usageind->RoleFormat = OSPC_RFORMAT_UNKNOWN;
+        usageind->RoleVendor = OSPC_RVENDOR_UNKNOWN;
     }
 
     return usageind;
@@ -1304,6 +1307,58 @@ int OSPPUsageIndToElement(      /* returns error code */
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;
                 }
+            }
+
+            /* Add role additional info */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&
+                (((usage->RoleState >= OSPC_RSTATE_START) && (usage->RoleState < OSPC_RSTATE_NUMBER)) ||
+                ((usage->RoleFormat >= OSPC_RFORMAT_START) && (usage->RoleFormat < OSPC_RFORMAT_NUMBER)) ||
+                ((usage->RoleVendor >= OSPC_RVENDOR_START) && (usage->RoleVendor < OSPC_RVENDOR_NUMBER))))
+            {
+                roleinfoelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ROLEINFO), "");
+                if (roleinfoelem == OSPC_OSNULL) {
+                    errcode = OSPC_ERR_XML_NO_ELEMENT;
+                }
+            }
+            if ((errcode == OSPC_ERR_NO_ERROR) &&
+                ((usage->RoleState >= OSPC_RSTATE_START) && (usage->RoleState < OSPC_RSTATE_NUMBER)))
+            {
+                errcode = OSPPStringToElement(OSPC_MELEM_ROLESTATE, OSPPRoleStateGetName(usage->RoleState), 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(roleinfoelem, subelem);
+                    subelem = OSPC_OSNULL;
+                } else {
+                    OSPPXMLElemDelete(&roleinfoelem);
+                    roleinfoelem = OSPC_OSNULL;
+                }
+            }
+            if ((errcode == OSPC_ERR_NO_ERROR) &&
+                ((usage->RoleFormat >= OSPC_RFORMAT_START) && (usage->RoleFormat < OSPC_RFORMAT_NUMBER)))
+            {
+                errcode = OSPPStringToElement(OSPC_MELEM_ROLEFORMAT, OSPPRoleFormatGetName(usage->RoleFormat), 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(roleinfoelem, subelem);
+                    subelem = OSPC_OSNULL;
+                } else {
+                    OSPPXMLElemDelete(&roleinfoelem);
+                    roleinfoelem = OSPC_OSNULL;
+                }
+            }
+            if ((errcode == OSPC_ERR_NO_ERROR) &&
+                ((usage->RoleVendor >= OSPC_RVENDOR_START) && (usage->RoleVendor < OSPC_RVENDOR_NUMBER)))
+            {
+                errcode = OSPPStringToElement(OSPC_MELEM_ROLEVENDOR, OSPPRoleVendorGetName(usage->RoleVendor), 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(roleinfoelem, subelem);
+                    subelem = OSPC_OSNULL;
+                } else {
+                    OSPPXMLElemDelete(&roleinfoelem);
+                    roleinfoelem = OSPC_OSNULL;
+                }
+            }
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(usageindelem, roleinfoelem);
+                roleinfoelem = OSPC_OSNULL;
             }
 
             /* add the transaction ID */
@@ -1685,58 +1740,6 @@ int OSPPUsageIndToElement(      /* returns error code */
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;
                 }
-            }
-
-            /* Add role additional info */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&
-                (((trans->RoleState >= OSPC_RSTATE_START) && (trans->RoleState < OSPC_RSTATE_NUMBER)) ||
-                ((trans->RoleFormat >= OSPC_RFORMAT_START) && (trans->RoleFormat < OSPC_RFORMAT_NUMBER)) ||
-                ((trans->RoleVendor >= OSPC_RVENDOR_START) && (trans->RoleVendor < OSPC_RVENDOR_NUMBER))))
-            {
-                roleinfoelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ROLEINFO), "");
-                if (roleinfoelem == OSPC_OSNULL) {
-                    errcode = OSPC_ERR_XML_NO_ELEMENT;
-                }
-            }
-            if ((errcode == OSPC_ERR_NO_ERROR) &&
-                ((trans->RoleState >= OSPC_RSTATE_START) && (trans->RoleState < OSPC_RSTATE_NUMBER)))
-            {
-                errcode = OSPPStringToElement(OSPC_MELEM_ROLESTATE, OSPPRoleStateGetName(trans->RoleState), 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
-                if (errcode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(roleinfoelem, subelem);
-                    subelem = OSPC_OSNULL;
-                } else {
-                    OSPPXMLElemDelete(&roleinfoelem);
-                    roleinfoelem = OSPC_OSNULL;
-                }
-            }
-            if ((errcode == OSPC_ERR_NO_ERROR) &&
-                ((trans->RoleFormat >= OSPC_RFORMAT_START) && (trans->RoleFormat < OSPC_RFORMAT_NUMBER)))
-            {
-                errcode = OSPPStringToElement(OSPC_MELEM_ROLEFORMAT, OSPPRoleFormatGetName(trans->RoleFormat), 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
-                if (errcode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(roleinfoelem, subelem);
-                    subelem = OSPC_OSNULL;
-                } else {
-                    OSPPXMLElemDelete(&roleinfoelem);
-                    roleinfoelem = OSPC_OSNULL;
-                }
-            }
-            if ((errcode == OSPC_ERR_NO_ERROR) &&
-                ((trans->RoleVendor >= OSPC_RVENDOR_START) && (trans->RoleVendor < OSPC_RVENDOR_NUMBER)))
-            {
-                errcode = OSPPStringToElement(OSPC_MELEM_ROLEVENDOR, OSPPRoleVendorGetName(trans->RoleVendor), 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
-                if (errcode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(roleinfoelem, subelem);
-                    subelem = OSPC_OSNULL;
-                } else {
-                    OSPPXMLElemDelete(&roleinfoelem);
-                    roleinfoelem = OSPC_OSNULL;
-                }
-            }
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(usageindelem, roleinfoelem);
-                roleinfoelem = OSPC_OSNULL;
             }
 
             if (errcode == OSPC_ERR_NO_ERROR) {

@@ -658,6 +658,9 @@ OSPT_DEST *OSPPDestNew(void)    /* returns pointer or NULL */
         OSPPListNew(&(dest->UpdatedDeviceInfo));
         dest->HasLimit = OSPC_FALSE;
         dest->Count = 0;
+        dest->RoleState = OSPC_RSTATE_UNKNOWN;
+        dest->RoleFormat = OSPC_RFORMAT_UNKNOWN;
+        dest->RoleVendor = OSPC_RVENDOR_UNKNOWN;
     }
 
     return dest;

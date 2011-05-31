@@ -115,6 +115,9 @@ typedef struct {
     char OpName[OSPC_OPNAME_NUMBER][OSPC_SIZE_NORID];
     OSPTBOOL IsNPQuery;
     char URL[OSPC_URL_NUMBER][OSPC_SIZE_URL];
+    OSPE_ROLE_STATE RoleState;
+    OSPE_ROLE_FORMAT RoleFormat;
+    OSPE_ROLE_VENDOR RoleVendor;
 } OSPT_DEST;
 
 /* Function Prototypes */

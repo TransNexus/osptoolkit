@@ -62,6 +62,9 @@ typedef struct {
     OSPE_PROTOCOL_NAME Protocol[OSPC_PROTTYPE_NUMBER];
     char Codec[OSPC_CODEC_NUMBER][OSPC_SIZE_CODEC];
     OSPT_CALL_ID *SessionId[OSPC_SESSIONID_NUMBER];
+    OSPE_ROLE_STATE RoleState;
+    OSPE_ROLE_FORMAT RoleFormat;
+    OSPE_ROLE_VENDOR RoleVendor;
 } OSPT_USAGE_IND;
 
 /* Function Prototypes */

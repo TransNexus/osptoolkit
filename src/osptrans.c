@@ -347,6 +347,27 @@ int OSPPTransactionBuildUsage(
                 (*ospvUsage)->ServiceType = ospvTrans->ServiceType;
                 (*ospvUsage)->HasServiceInfo = OSPC_TRUE;
             }
+
+            /* Move role info to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                if ((ospvDest->RoleState >= OSPC_RSTATE_START) && (ospvDest->RoleState < OSPC_RSTATE_NUMBER)) {
+                    (*ospvUsage)->RoleState = ospvDest->RoleState;
+                } else {
+                    (*ospvUsage)->RoleState = ospvTrans->RoleState;
+                }
+
+                if ((ospvDest->RoleFormat >= OSPC_RFORMAT_START) && (ospvDest->RoleFormat < OSPC_RFORMAT_NUMBER)) {
+                    (*ospvUsage)->RoleFormat = ospvDest->RoleFormat;
+                } else {
+                    (*ospvUsage)->RoleFormat = ospvTrans->RoleFormat;
+                }
+
+                if ((ospvDest->RoleVendor >= OSPC_RVENDOR_START) && (ospvDest->RoleVendor < OSPC_RVENDOR_NUMBER)) {
+                    (*ospvUsage)->RoleVendor = ospvDest->RoleVendor;
+                } else {
+                    (*ospvUsage)->RoleVendor = ospvTrans->RoleVendor;
+                }
+            }
         } else if (ospvType == OSPC_MSG_AIND) {
             /* Terminating */
             if ((ospvTrans->AuthInd != OSPC_OSNULL) &&

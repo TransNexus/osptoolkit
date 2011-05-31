@@ -1671,6 +1671,10 @@ int OSPPTransactionBuildUsageFromScratch(
 
             if (errcode == OSPC_ERR_NO_ERROR) {
                 trans->CurrentDest->Protocol = trans->Protocol[OSPC_PROTTYPE_DESTINATION];
+
+                trans->CurrentDest->RoleState = trans->RoleState;
+                trans->CurrentDest->RoleFormat = trans->RoleFormat;
+                trans->CurrentDest->RoleVendor = trans->RoleVendor;
             }
         } else if (ospvRole == OSPC_ROLE_DESTINATION) {
             if (trans->AuthInd != OSPC_OSNULL) {
@@ -1716,6 +1720,10 @@ int OSPPTransactionBuildUsageFromScratch(
                             OSPPDestSetNumber(dest, ospvCalledNumber);
 
                             dest->Protocol = trans->Protocol[OSPC_PROTTYPE_DESTINATION];
+
+                            dest->RoleState = trans->RoleState;
+                            dest->RoleFormat = trans->RoleFormat;
+                            dest->RoleVendor = trans->RoleVendor;
 
                             OSPPAuthIndSetDest(authind, dest);
 
@@ -2658,6 +2666,27 @@ int OSPPTransactionReportUsage(
                     } else {
                         OSPPUsageIndSetProtocol(usage, cnt, trans->Protocol[cnt]);
                     }
+                }
+            }
+
+            /* Move role info to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                if ((trans->CurrentDest->RoleState >= OSPC_RSTATE_START) && (trans->CurrentDest->RoleState < OSPC_RSTATE_NUMBER)) {
+                    usage->RoleState = trans->CurrentDest->RoleState;
+                } else {
+                    usage->RoleState = trans->RoleState;
+                }
+
+                if ((trans->CurrentDest->RoleFormat >= OSPC_RFORMAT_START) && (trans->CurrentDest->RoleFormat < OSPC_RFORMAT_NUMBER)) {
+                    usage->RoleFormat = trans->CurrentDest->RoleFormat;
+                } else {
+                    usage->RoleFormat = trans->RoleFormat;
+                }
+
+                if ((trans->CurrentDest->RoleVendor >= OSPC_RVENDOR_START) && (trans->CurrentDest->RoleVendor < OSPC_RVENDOR_NUMBER)) {
+                    usage->RoleVendor = trans->CurrentDest->RoleVendor;
+                } else {
+                    usage->RoleVendor = trans->RoleVendor;
                 }
             }
 
@@ -5019,18 +5048,19 @@ int OSPPTransactionSetRoleInfo(
     OSPE_ROLE_VENDOR ospvVendor)    /* In - Role vendor */
 {
     int errcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPTTRANS *trans;
 
-    if (((ospvState < OSPC_RSTATE_START) || (ospvState >= OSPC_RSTATE_NUMBER)) ||
-        ((ospvFormat < OSPC_RFORMAT_START) || (ospvFormat >= OSPC_RFORMAT_NUMBER)) ||
-        ((ospvVendor < OSPC_RVENDOR_START) || (ospvVendor >= OSPC_RVENDOR_NUMBER)))
-    {
-        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-    } else {
-        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+        if ((ospvState >= OSPC_RSTATE_START) && (ospvState < OSPC_RSTATE_NUMBER)) {
             trans->RoleState = ospvState;
+        }
+
+        if ((ospvFormat >= OSPC_RFORMAT_START) && (ospvFormat < OSPC_RFORMAT_NUMBER)) {
             trans->RoleFormat = ospvFormat;
+        }
+
+        if ((ospvVendor >= OSPC_RVENDOR_START) && (ospvVendor < OSPC_RVENDOR_NUMBER)) {
             trans->RoleVendor = ospvVendor;
         }
     }

@@ -59,11 +59,13 @@ const OSPT_MSG_DESC OSPV_RSTATE_DESCS[OSPC_RSTATE_NUMBER] = {
     { OSPC_RSTATE_END1,             "end1" },
     { OSPC_RSTATE_END2,             "end2" },
     { OSPC_RSTATE_HUNT1,            "hunt1" },
-    { OSPC_RSTATE_HUNT2,            "hunt2" }
+    { OSPC_RSTATE_HUNT2,            "hunt2" },
+    { OSPC_RSTATE_REDIRECT,         "redirect" }
 };
 
 /* Array that associates role state */
 const OSPT_MSG_DESC OSPV_RFORMAT_DESCS[OSPC_RFORMAT_NUMBER] = {
+    { OSPC_RFORMAT_OSP,         "osp" },
     { OSPC_RFORMAT_RADIUS,      "radius" },
     { OSPC_RFORMAT_DIAMETER,    "diameter" },
     { OSPC_RFORMAT_IPDR,        "ipdr" },
@@ -75,7 +77,10 @@ const OSPT_MSG_DESC OSPV_RFORMAT_DESCS[OSPC_RFORMAT_NUMBER] = {
 /* Array that associates role vendor */
 const OSPT_MSG_DESC OSPV_RVENDOR_DESCS[OSPC_RVENDOR_NUMBER] = {
     { OSPC_RVENDOR_ACME,        "acme" },
-    { OSPC_RVENDOR_GENBANDS3,   "genbands3" }
+    { OSPC_RVENDOR_GENBANDS3,   "genbands3" },
+    { OSPC_RVENDOR_OPENSIPS,    "opensips" },
+    { OSPC_RVENDOR_ASTERISK,    "asterisk" },
+    { OSPC_RVENDOR_FREESWITCH,  "freeswitch" }
 };
 
 /* Array that associates service type and names */
