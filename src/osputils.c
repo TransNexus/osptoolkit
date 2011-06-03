@@ -158,6 +158,9 @@ int OSPPUtilGetErrorFromStatus(
         case 441:
             errorcode = OSPC_ERR_TRAN_CALL_RATE_EXCEEDED;
             break;
+        case 484:
+            errorcode = OSPC_ERR_TRAN_CALLED_FILTERING;
+            break;
         case 489:
             errorcode = OSPC_ERR_TRAN_DESTINATION_INFO_INVALID;
             break;
