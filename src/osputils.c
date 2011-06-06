@@ -155,6 +155,9 @@ int OSPPUtilGetErrorFromStatus(
         case 425:
             errorcode = OSPC_ERR_TRAN_ENCRYPTION_REQD;
             break;
+        case 428:
+            errorcode = OSPC_ERR_TRAN_CALLING_INVALID;
+            break;
         case 441:
             errorcode = OSPC_ERR_TRAN_CALL_RATE_EXCEEDED;
             break;
