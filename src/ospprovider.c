@@ -65,14 +65,14 @@ int OSPPProviderGetNewCollectionItem(
     OSPTPROVHANDLE *ospvProvider)   /* Out - Provider handle */
 {
     int count = 0;
-    int tmperror = OSPC_ERR_NO_ERROR, errorcode = OSPC_ERR_NO_ERROR;
+    int tmperror = OSPC_ERR_NO_ERROR, errcode = OSPC_ERR_NO_ERROR;
 
     /*
      * obtain mutex lock on global provider data
      */
-    OSPM_MUTEX_LOCK(OSPVProviderMutex, errorcode);
+    OSPM_MUTEX_LOCK(OSPVProviderMutex, errcode);
 
-    if (errorcode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* go through provider collection looking for next available */
         for (count = 0; count < OSPC_MAX_PROVIDERS; count++) {
             if (OSPVProviderCollection[count].ProviderInUse == 0) {
@@ -88,18 +88,18 @@ int OSPPProviderGetNewCollectionItem(
         OSPM_MUTEX_UNLOCK(OSPVProviderMutex, tmperror);
     }
 
-    if (errorcode != OSPC_ERR_NO_ERROR) {
-        errorcode = OSPC_ERR_PROV_MUTEX_FAILURE;
-        OSPM_DBGERRORLOG(errorcode, "mutex lock/unlock failed");
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        errcode = OSPC_ERR_PROV_MUTEX_FAILURE;
+        OSPM_DBGERRORLOG(errcode, "mutex lock/unlock failed");
     } else {
         /* There are no available provider objects */
         if (count == OSPC_MAX_PROVIDERS) {
-            errorcode = OSPC_ERR_PROV_NO_PROV_SPACE;
-            OSPM_DBGERRORLOG(errorcode, "max providers reached");
+            errcode = OSPC_ERR_PROV_NO_PROV_SPACE;
+            OSPM_DBGERRORLOG(errcode, "max providers reached");
         }
     }
 
-    return errorcode;
+    return errcode;
 }
 
 /* Get New-Transaction-Allowed Flag from Provider Data Structure.

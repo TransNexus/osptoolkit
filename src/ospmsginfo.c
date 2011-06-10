@@ -23,18 +23,18 @@
 static int osppMsgInfoInitSync(
     OSPT_MSG_INFO *ospvMsgInfo)
 {
-    int errorcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: osppMsgInfoInitSync()\n"));
-    OSPM_MUTEX_INIT(ospvMsgInfo->Mutex, NULL, errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPM_CONDVAR_INIT(ospvMsgInfo->CondVar, NULL, errorcode);
-        if (errorcode != OSPC_ERR_NO_ERROR) {
+    OSPM_MUTEX_INIT(ospvMsgInfo->Mutex, NULL, errcode);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        OSPM_CONDVAR_INIT(ospvMsgInfo->CondVar, NULL, errcode);
+        if (errcode != OSPC_ERR_NO_ERROR) {
             OSPM_MUTEX_DESTROY(ospvMsgInfo->Mutex, tmperror);
         }
     }
     OSPM_DBGEXIT(("EXIT : osppMsgInfoInitSync()\n"));
-    return errorcode;
+    return errcode;
 }
 
 int OSPPMsgInfoNew(
@@ -60,7 +60,7 @@ int OSPPMsgInfoNew(
 void OSPPMsgInfoDelete(
     OSPT_MSG_INFO **ospvMsgInfo)
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoDelete()\n"));
     if (*ospvMsgInfo) {
@@ -74,9 +74,9 @@ void OSPPMsgInfoDelete(
             OSPM_FREE((*ospvMsgInfo)->ContentType);
 
 
-        OSPM_MUTEX_DESTROY((*ospvMsgInfo)->Mutex, errorcode);
+        OSPM_MUTEX_DESTROY((*ospvMsgInfo)->Mutex, errcode);
 
-        OSPM_CONDVAR_DESTROY((*ospvMsgInfo)->CondVar, errorcode);
+        OSPM_CONDVAR_DESTROY((*ospvMsgInfo)->CondVar, errcode);
 
         OSPM_FREE(*ospvMsgInfo);
         *ospvMsgInfo = OSPC_OSNULL;
@@ -101,7 +101,7 @@ void OSPPMsgInfoAssignRequestMsg(
 int OSPPMsgInfoProcessResponse(
     OSPT_MSG_INFO *ospvMsgInfo)
 {
-    int errorcode = OSPC_ERR_NO_ERROR, tmperrcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPMsgInfoProcessResponse()\n"));
 
@@ -110,11 +110,11 @@ int OSPPMsgInfoProcessResponse(
          * once signalled, acquire the mutex for the individual
          * transaction.
          */
-        OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errorcode);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        OSPM_MUTEX_LOCK(ospvMsgInfo->Mutex, errcode);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             ospvMsgInfo->HasBeenProcessed = OSPC_TRUE;
-            OSPM_CONDVAR_SIGNAL(ospvMsgInfo->CondVar, errorcode);
-            OSPM_MUTEX_UNLOCK(ospvMsgInfo->Mutex, tmperrcode);
+            OSPM_CONDVAR_SIGNAL(ospvMsgInfo->CondVar, errcode);
+            OSPM_MUTEX_UNLOCK(ospvMsgInfo->Mutex, tmperror);
         }
     } else {
         OSPPMsgInfoDelete(&ospvMsgInfo);
@@ -122,7 +122,7 @@ int OSPPMsgInfoProcessResponse(
 
 
     OSPM_DBGEXIT(("EXIT : OSPPMsgInfoProcessResponse()\n"));
-    return errorcode;
+    return errcode;
 }
 
 int OSPPMsgInfoWaitForMsg(

@@ -366,7 +366,6 @@ int testOSPPProviderGetAuthorityCertificates()
 int testOSPPProviderSetAuthorityCertificates()
 {
     int errcode = 0;
-    int length = 0;
     unsigned int i;
     char searchstr[20];
     OSPT_CERT *authCerts[OSPC_SEC_MAX_AUTH_CERTS];
@@ -375,7 +374,6 @@ int testOSPPProviderSetAuthorityCertificates()
     i = 0;
     while (i < OSPC_SEC_MAX_AUTH_CERTS) {
         sprintf(searchstr, "cacert_%d.pem", i);
-        length = 0;
         errcode = OSPPUtilLoadPEMCert((unsigned char *)searchstr, &(TheAuthCert[i]));
         authCerts[i] = &(TheAuthCert[i]);
         if (errcode == OSPC_ERR_NO_ERROR) {

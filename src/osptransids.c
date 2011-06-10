@@ -311,7 +311,7 @@ void  OSPPTransIdDelete(        /* no return value */
 void OSPPTransIdInit(
     OSPTPROVIDER *ospvProvider)
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
 
     /*initialize transaction tracking
      * initialize the doubly-linked list sentinel */
@@ -322,11 +322,11 @@ void OSPPTransIdInit(
     sentinel->OlderPtr = sentinel;
     sentinel->NewerPtr = sentinel;
 
-    OSPM_MUTEX_INIT(ospvProvider->TransIdMutex, 0, errorcode);
+    OSPM_MUTEX_INIT(ospvProvider->TransIdMutex, 0, errcode);
 
 #ifdef TN_TRANSDBG
-    if (errorcode != OSPC_ERR_NO_ERROR) {
-        fprintf(stderr, "\nMutex Init failed Err=  %d.", errorcode);
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        fprintf(stderr, "\nMutex Init failed Err=  %d.", errcode);
     }
 #endif
     /* initialize binary tree */

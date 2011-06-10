@@ -357,7 +357,7 @@ OSPTTHREADRETURN WorkThread(void *arg)
     NBMONITOR *nbMonitor = (NBMONITOR *)arg;
     NBDATA *transaction = NULL;
     int TimeToExit = 0;
-    int errorcode = 0;
+    int errcode = 0;
     OSPTUINT64 QTime = 0;
     OSPTUINT64 TKTime = 0;
 
@@ -507,7 +507,7 @@ OSPTTHREADRETURN WorkThread(void *arg)
                 /*
                  *  Yes, wake it up
                  */
-                OSPM_CONDVAR_SIGNAL(transaction->CondVar, errorcode);
+                OSPM_CONDVAR_SIGNAL(transaction->CondVar, errcode);
             } else {
                 /*
                  *  No, we are responsible for cleaning up

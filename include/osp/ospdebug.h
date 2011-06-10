@@ -64,13 +64,13 @@
 #ifdef OSP_SDK  /* Use standard OSP SDK debug code */
 
 #ifdef OSPC_DEBUG
-#  ifdef _WIN32
-#    define OSPM_DBG(ospvCond,ospvParams)   ( ospvCond ? OSPM_DBGPRINTF ospvParams : 0 )
-#  else
-#    define OSPM_DBG(ospvCond,ospvParams)   if ( ospvCond ) {  OSPM_DBGPRINTF ospvParams; fflush(stdout); }
-#  endif
+  #ifdef _WIN32
+    #define OSPM_DBG(ospvCond,ospvParams)   (ospvCond ? OSPM_DBGPRINTF ospvParams : 0)
+  #else
+    #define OSPM_DBG(ospvCond,ospvParams)   if (ospvCond) {  OSPM_DBGPRINTF ospvParams; fflush(stdout); }
+  #endif
 #else
-#    define OSPM_DBG(ospvCond,ospvParams)
+  #define OSPM_DBG(ospvCond,ospvParams)     if (0) { if (ospvCond) {  OSPM_DBGPRINTF ospvParams; fflush(stdout); } }
 #endif
 
 /*

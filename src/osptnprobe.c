@@ -267,7 +267,7 @@ void OSPPTNProbeCleanup(
     unsigned uNumHosts)         /* number of hosts */
 {
     register unsigned uCnt; /* simple counter */
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
 
     /*
      * Two things happening here: First, we close all the sockets
@@ -279,7 +279,7 @@ void OSPPTNProbeCleanup(
     for (uCnt = 0; uCnt < uNumHosts; uCnt++) {
         /* if we were able to open a socket, close it */
         if (pProbeList[uCnt].Status > OSPE_PRINIT) {
-            OSPM_CLOSE(pProbeList[uCnt].Socket, errorcode);
+            OSPM_CLOSE(pProbeList[uCnt].Socket, errcode);
         }
 
         /* if an error, set the response time to infinite */

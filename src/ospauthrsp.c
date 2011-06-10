@@ -393,7 +393,6 @@ unsigned OSPPAuthRspFromElement(
     OSPT_DEST* dest = OSPC_OSNULL;
     OSPTTIME t = 0L;
     OSPTTRXID transid = 0L;
-    int len = 0;
     unsigned long delaylimit = 0L;
     unsigned long delaypref = 0L;
     const char* messageId = OSPC_OSNULL;
@@ -468,7 +467,6 @@ unsigned OSPPAuthRspFromElement(
                 error = OSPPStatusFromElement(elem, &(authrsp->Status));
                 break;
             case OSPC_MELEM_TRANSID:
-                len = sizeof(OSPTTRXID);
                 if ((error = OSPPMsgTXFromElement(elem, &transid)) == OSPC_ERR_NO_ERROR) {
                     OSPPAuthRspSetTrxId(authrsp, transid);
                 }

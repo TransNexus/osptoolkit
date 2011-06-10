@@ -143,7 +143,6 @@ int OSPPSSLSessionRead(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     register unsigned bufidx = 0;
-    unsigned char *tmpptr = OSPC_OSNULL;
     unsigned delimitsz = 0, delimitidx = 0;
     unsigned int len = 1;
 
@@ -155,7 +154,6 @@ int OSPPSSLSessionRead(
      */
     if (ospvDelimiter != OSPC_OSNULL) {
         delimitsz = OSPM_STRLEN(ospvDelimiter);
-        tmpptr = (unsigned char *)ospvBuffer;
 
         while (delimitsz != delimitidx && bufidx < *ospvLength && errorcode == OSPC_ERR_NO_ERROR) {
             if (OSPM_COMM_SECURED_IO(ospvHttp->ServicePoint)) {
@@ -173,19 +171,14 @@ int OSPPSSLSessionRead(
                 if (((unsigned char *)ospvBuffer)[bufidx] == ospvDelimiter[delimitidx]) {
                     /*
                      * yes, we have a character match.
-                     * if delimitidx is 0, set the tmpptr to the
-                     * beginning buffer address which may contain the
-                     * delimiter.
                      */
-                    if (!delimitidx) {
-                        tmpptr = &((unsigned char *)ospvBuffer)[bufidx];
-                    }
                     delimitidx++;
-                } else
+                } else {
                     /*
                      * not a match, reset delimitidx
                      */
                     delimitidx = 0;
+                }
 
                 bufidx++;
             }

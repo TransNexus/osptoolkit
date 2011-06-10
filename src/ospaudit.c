@@ -509,7 +509,7 @@ void OSPPAuditInitializeBuffer(
 static OSPTTHREADRETURN OSPPAuditMonitor(
     void *ospvArg)      /* Audit block cast to a void */
 {
-    int errorcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
     OSPT_AUDIT *audit = OSPC_OSNULL;
     OSPTBOOL do_forever = OSPC_TRUE;
 
@@ -519,37 +519,37 @@ static OSPTTHREADRETURN OSPPAuditMonitor(
         /*
          * acquire worker mutex
          */
-        OSPM_MUTEX_LOCK(audit->WorkerMutex, errorcode);
+        OSPM_MUTEX_LOCK(audit->WorkerMutex, errcode);
 
-        if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (errcode == OSPC_ERR_NO_ERROR) {
             /*
              * wait for conditional variable on the flush flag
              */
-            while ((errorcode != OSPC_ERR_OS_CONDVAR_TIMEOUT) && (audit->Flags & OSPC_AUDIT_FLUSH_BUFFER_NOW) == 0) {
-                OSPM_CONDVAR_TIMEDWAIT(audit->WorkerCondVar, audit->WorkerMutex, audit->MaxTime, errorcode);
+            while ((errcode != OSPC_ERR_OS_CONDVAR_TIMEOUT) && (audit->Flags & OSPC_AUDIT_FLUSH_BUFFER_NOW) == 0) {
+                OSPM_CONDVAR_TIMEDWAIT(audit->WorkerCondVar, audit->WorkerMutex, audit->MaxTime, errcode);
             }
 
-            if ((audit->Flags & OSPC_AUDIT_FLUSH_BUFFER_NOW) || (errorcode == OSPC_ERR_OS_CONDVAR_TIMEOUT)) {
-                OSPM_MUTEX_LOCK(audit->AccessMutex, errorcode);
-                if (errorcode == OSPC_ERR_NO_ERROR) {
+            if ((audit->Flags & OSPC_AUDIT_FLUSH_BUFFER_NOW) || (errcode == OSPC_ERR_OS_CONDVAR_TIMEOUT)) {
+                OSPM_MUTEX_LOCK(audit->AccessMutex, errcode);
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     /*
                      * prepare and send the data to the auditurl
                      */
-                    errorcode = OSPPAuditPrepareAndSend(audit);
+                    errcode = OSPPAuditPrepareAndSend(audit);
 
                     /* If all Usage Indications have been confirmed, clear the buffer */
-                    if ((audit->NumMessages == 0) && (errorcode == OSPC_ERR_NO_ERROR)) {
+                    if ((audit->NumMessages == 0) && (errcode == OSPC_ERR_NO_ERROR)) {
                         OSPPAuditComponentIdDelete(audit);
-                        errorcode = OSPPAuditResetDefaults(audit);
+                        errcode = OSPPAuditResetDefaults(audit);
                     }
 
-                    if (errorcode == OSPC_ERR_NO_ERROR) {
+                    if (errcode == OSPC_ERR_NO_ERROR) {
                         audit->Flags |= OSPC_AUDIT_BUFFER_IS_EMPTY;
                         /* signal in case this is auditdelete */
-                        OSPM_CONDVAR_SIGNAL(audit->AccessCondVar, errorcode);
+                        OSPM_CONDVAR_SIGNAL(audit->AccessCondVar, errcode);
                     }
 
-                    OSPM_MUTEX_UNLOCK(audit->AccessMutex, errorcode);
+                    OSPM_MUTEX_UNLOCK(audit->AccessMutex, errcode);
                 }
                 /*               break; */
             }

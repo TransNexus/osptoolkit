@@ -902,7 +902,7 @@ void OSPPDestProtocolFromElement(
     OSPT_DEST *ospvDest)
 {
     OSPT_XML_ATTR* attr = OSPC_OSNULL;
-    OSPE_PROTOCOL_TYPE type = OSPC_ALTINFO_DESTINATION;
+    OSPE_ALTINFO type = OSPC_ALTINFO_DESTINATION;
 
     for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElem);
         (attr != OSPC_OSNULL);

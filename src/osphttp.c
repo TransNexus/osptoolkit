@@ -98,13 +98,13 @@ OSPTSEC *OSPPHttpGetSecurity(
 void OSPPHttpDelete(
     OSPTHTTP **ospvHttp)
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
     OSPTCOMM *comm;
 
     OSPM_DBGENTER(("ENTER: OSPPHttpDelete()\n"));
     if (*ospvHttp) {
-        OSPM_CONDVAR_DESTROY((*ospvHttp)->CondVar, errorcode);
-        OSPM_MUTEX_DESTROY((*ospvHttp)->Mutex, errorcode);
+        OSPM_CONDVAR_DESTROY((*ospvHttp)->CondVar, errcode);
+        OSPM_MUTEX_DESTROY((*ospvHttp)->Mutex, errcode);
 
         OSPPSockClose(OSPC_TRUE, &((*ospvHttp)->SockFd), &((*ospvHttp)->SSLSession));
     }

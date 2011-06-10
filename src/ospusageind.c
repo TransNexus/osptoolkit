@@ -1210,7 +1210,6 @@ int OSPPUsageIndToElement(      /* returns error code */
     OSPT_XML_ELEM *roleinfoelem = OSPC_OSNULL;
     OSPT_XML_ELEM *subelem = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
-    int len = 0;
     OSPTTRXID trxid = 0;
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
     OSPT_USAGE_IND *usage = OSPC_OSNULL;
@@ -1363,7 +1362,6 @@ int OSPPUsageIndToElement(      /* returns error code */
 
             /* add the transaction ID */
             if ((errcode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasTransactionId(usage)) {
-                len = sizeof(OSPTTRXID);
                 trxid = OSPPUsageIndGetTransactionId(usage);
                 errcode = OSPPMsgTXToElement(trxid, OSPPMsgElemGetName(OSPC_MELEM_TRANSID), &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {

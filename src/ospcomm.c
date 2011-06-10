@@ -446,12 +446,12 @@ void OSPPCommSetShutdown(
     OSPTCOMM **ospvComm,
     int ospvTimeLimit)
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
 
     (*ospvComm)->Flags |= OSPC_COMM_SHUTDOWN_BIT;
     (*ospvComm)->ShutdownTimeLimit = ospvTimeLimit;
 
-    OSPM_CONDVAR_SIGNAL(OSPPMsgQueueGetCondVar((*ospvComm)->MsgQueue), errorcode);
+    OSPM_CONDVAR_SIGNAL(OSPPMsgQueueGetCondVar((*ospvComm)->MsgQueue), errcode);
 
     while (*ospvComm != OSPC_OSNULL)
         OSPM_SLEEP(1);
@@ -960,7 +960,7 @@ int OSPPCommSetServicePoints(
 void OSPPCommDelete(
     OSPTCOMM **ospvComm)
 {
-    int errorcode = 0;
+    int errcode = 0;
 
     /*
      * check the communication manager first:
@@ -1001,8 +1001,8 @@ void OSPPCommDelete(
     /*
      * Destroy the mutex and the condition variable.
      */
-    OSPM_MUTEX_DESTROY((*ospvComm)->HttpSelectMutex, errorcode);
-    OSPM_CONDVAR_DESTROY((*ospvComm)->HttpSelCondVar, errorcode);
+    OSPM_MUTEX_DESTROY((*ospvComm)->HttpSelectMutex, errcode);
+    OSPM_CONDVAR_DESTROY((*ospvComm)->HttpSelCondVar, errcode);
 
     /*
      * destroy the comm object

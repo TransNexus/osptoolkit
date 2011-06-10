@@ -37,13 +37,13 @@ int OSPPInit(
     OSPTBOOL hw_enabled)
 {
     int providerindex = 0;
-    int errorcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
 
     /*
      * create global provider mutex
      */
-    OSPM_MUTEX_INIT(OSPVProviderMutex, NULL, errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR) {
+    OSPM_MUTEX_INIT(OSPVProviderMutex, NULL, errcode);
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /*
          * cycle thru collection, initializing each element.
          */
@@ -54,20 +54,20 @@ int OSPPInit(
         /*
          * initialize Winsock Library if necessary
          */
-        OSPM_INITWINSOCK(errorcode);
+        OSPM_INITWINSOCK(errcode);
 
         /*
          * if initialization failed, destroy the mutex and return failure
          */
-        if (errorcode != OSPC_ERR_NO_ERROR)
+        if (errcode != OSPC_ERR_NO_ERROR)
             OSPM_MUTEX_DESTROY(OSPVProviderMutex, tmperror);
     }
 
-    if (errorcode != OSPC_ERR_NO_ERROR)
-        errorcode = OSPC_ERR_PROV_INIT_FAILURE;
+    if (errcode != OSPC_ERR_NO_ERROR)
+        errcode = OSPC_ERR_PROV_INIT_FAILURE;
 
 #ifdef OSPC_GK_SIM
-    if (errorcode == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         OSPVDeleteAllowed = OSPM_GETENV("GKSIM_DELETE_ALLOWED");
     }
 #endif
@@ -77,17 +77,17 @@ int OSPPInit(
      */
     OSPPOpenSSLInit(hw_enabled);
 
-    return errorcode;
+    return errcode;
 }
 
 void OSPPCleanup(void)
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
 
     /*
      * called to cleanup any resources allocated by OSPPinit
      */
-    OSPM_MUTEX_DESTROY(OSPVProviderMutex, errorcode);
+    OSPM_MUTEX_DESTROY(OSPVProviderMutex, errcode);
     OSPM_CLEANUPWINSOCK();
 
     /*

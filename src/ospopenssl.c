@@ -71,7 +71,7 @@ int OSPPSSLWrapInit(
 {
     int errorcode = OSPC_ERR_NO_ERROR, off = 0;
     SSL_CTX **ctx = OSPC_OSNULL;
-    SSL_METHOD *version = OSPC_OSNULL;
+    const SSL_METHOD *version = OSPC_OSNULL;
     OSPTSEC *security = OSPC_OSNULL;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapInit()\n"));
@@ -185,14 +185,14 @@ void win32_locking_callback(
 void thread_setup(void)
 {
     int i;
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
 
     lock_cs = OPENSSL_malloc(CRYPTO_num_locks() * sizeof(OSPTMUTEX));
     lock_count = OPENSSL_malloc(CRYPTO_num_locks() * sizeof(long));
 
     for (i = 0; i < CRYPTO_num_locks(); i++) {
         lock_count[i] = 0;
-        OSPM_MUTEX_INIT(lock_cs[i], NULL, errorcode);
+        OSPM_MUTEX_INIT(lock_cs[i], NULL, errcode);
     }
 
     CRYPTO_set_id_callback((unsigned long (*)()) pthreads_thread_id);
@@ -214,24 +214,24 @@ void pthreads_locking_callback(
     char *file,
     int line)
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
 
     if (mode & CRYPTO_LOCK) {
-        OSPM_MUTEX_LOCK(lock_cs[type], errorcode);
+        OSPM_MUTEX_LOCK(lock_cs[type], errcode);
         lock_count[type]++;
     } else {
-        OSPM_MUTEX_UNLOCK(lock_cs[type], errorcode);
+        OSPM_MUTEX_UNLOCK(lock_cs[type], errcode);
     }
 }
 
 void thread_cleanup(void)
 {
     int i;
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
 
     CRYPTO_set_locking_callback(NULL);
     for (i = 0; i < CRYPTO_num_locks(); i++) {
-        OSPM_MUTEX_DESTROY(lock_cs[i], errorcode);
+        OSPM_MUTEX_DESTROY(lock_cs[i], errcode);
     }
     if (lock_cs != NULL)
         OPENSSL_free(lock_cs);
@@ -261,7 +261,7 @@ void OSPPSSLWrapCleanup(
 {
     SSL_CTX **ctx = OSPC_OSNULL;
     OSPTSEC *security = OSPC_OSNULL;
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapCleanup()\n"));
     security = (OSPTSEC *)ospvRef;
@@ -276,7 +276,7 @@ void OSPPSSLWrapCleanup(
     /*
      * Destroy the CertMutex
      */
-    OSPM_MUTEX_DESTROY(security->SSLCertMutex, errorcode);
+    OSPM_MUTEX_DESTROY(security->SSLCertMutex, errcode);
     OSPM_DBGEXIT(("EXIT : OSPPSSLWrapCleanup()\n"));
 }
 
@@ -396,7 +396,7 @@ int OSPPSSLWrapGetData(
     unsigned int *ospvLength,
     OSPTSSLSESSION *ospvSSLSession)
 {
-    int errorcode = OSPC_ERR_NO_ERROR, expected = 0, sslerr = 0, bytesread = 0;
+    int errcode = OSPC_ERR_NO_ERROR, expected = 0, sslerr = 0, bytesread = 0;
     SSL *conref = OSPC_OSNULL;
 
     OSPM_DBGENTER(("ENTER: OSPPSSLWrapGetData()\n"));
@@ -410,12 +410,12 @@ int OSPPSSLWrapGetData(
     if (expected != (int) *ospvLength) {
         sslerr = SSL_get_error(conref, bytesread);
         OSPM_DBGERRORLOG(sslerr, "SSL_read() failed, Connection Reset by Peer");
-        errorcode = OSPC_ERR_SSL_READ_FAILED;
+        errcode = OSPC_ERR_SSL_READ_FAILED;
     }
 
-    OSPM_DBGEXIT(("EXIT : OSPPSSLWrapGetData() (%d)\n", errorcode));
+    OSPM_DBGEXIT(("EXIT : OSPPSSLWrapGetData() (%d)\n", errcode));
 
-    return errorcode;
+    return errcode;
 }
 
 int OSPPSSLWrapSendData(
@@ -485,7 +485,6 @@ int OSPPSSLVerifyCallback(
     X509_STORE_CTX * ctx)
 {
     int verify_depth = 1;
-    int verify_error = X509_V_OK;
 
     char buf[256];
     X509 *err_cert;
@@ -501,10 +500,8 @@ int OSPPSSLVerifyCallback(
         OSPM_PRINTTOERR((stderr, "verify error:num=%d:%s\n", err, X509_verify_cert_error_string(err)));
         if (verify_depth >= depth || err == X509_V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT) {
             ok = 1;
-            verify_error = X509_V_OK;
         } else {
             ok = 0;
-            verify_error = X509_V_ERR_CERT_CHAIN_TOO_LONG;
         }
     }
     switch (ctx->error) {

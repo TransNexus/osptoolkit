@@ -425,9 +425,7 @@ void OSPPSockProcessRequest(
     unsigned tmpReceiveBufferSz = 0;
     unsigned char *tmpContentBuffer = OSPC_OSNULL;
     unsigned tmpContentBufferSz = 0;
-#ifdef OSPC_DEBUG
     char buffer[INET_ADDRSTRLEN];
-#endif
 
     OSPM_DBGENTER(("ENTER: OSPPSockProcessRequest()\n"));
 

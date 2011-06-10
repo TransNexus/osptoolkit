@@ -25,17 +25,17 @@
 static int osppMsgQueueInitSync(
     OSPTMSGQUEUE *ospvMsgQueue)
 {
-    int errorcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR, tmperror = OSPC_ERR_NO_ERROR;
 
-    OSPM_MUTEX_INIT(ospvMsgQueue->Mutex, OSPC_OSNULL, errorcode);
-    if (errorcode == OSPC_ERR_NO_ERROR) {
-        OSPM_CONDVAR_INIT(ospvMsgQueue->CondVar, OSPC_OSNULL, errorcode);
-        if (errorcode != OSPC_ERR_NO_ERROR) {
+    OSPM_MUTEX_INIT(ospvMsgQueue->Mutex, OSPC_OSNULL, errcode);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        OSPM_CONDVAR_INIT(ospvMsgQueue->CondVar, OSPC_OSNULL, errcode);
+        if (errcode != OSPC_ERR_NO_ERROR) {
             OSPM_MUTEX_DESTROY(ospvMsgQueue->Mutex, tmperror);
         }
     }
 
-    return errorcode;
+    return errcode;
 }
 
 int OSPPMsgQueueNew(
@@ -75,11 +75,11 @@ int OSPPMsgQueueNew(
 void OSPPMsgQueueDelete(
     OSPTMSGQUEUE **ospvMsgQueue)
 {
-    int errorcode = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
 
     if (*ospvMsgQueue != OSPC_OSNULL) {
-        OSPM_MUTEX_DESTROY((*ospvMsgQueue)->Mutex, errorcode);
-        OSPM_CONDVAR_DESTROY((*ospvMsgQueue)->CondVar, errorcode);
+        OSPM_MUTEX_DESTROY((*ospvMsgQueue)->Mutex, errcode);
+        OSPM_CONDVAR_DESTROY((*ospvMsgQueue)->CondVar, errcode);
 
         OSPM_FREE(*ospvMsgQueue);
         *ospvMsgQueue = OSPC_OSNULL;

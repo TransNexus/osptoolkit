@@ -238,7 +238,7 @@ int OSPPXMLMessageParse(
     void **ospvData,                /* Out - pointer to struct w/data from message */
     OSPE_MESSAGE *ospvDataType)     /* Out - what type struct void pointer is pointing to */
 {
-    int error = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *xmlelem = OSPC_OSNULL;
     OSPTBFR *xmlbufr = OSPC_OSNULL;
     unsigned numbyteswritten = 0;
@@ -249,39 +249,39 @@ int OSPPXMLMessageParse(
     if ((ospvXMLMessage == (unsigned char *)NULL) ||
         (ospvSizeOfMessage == 0))
     {
-        error = OSPC_ERR_XML_INVALID_ARGS;
-        OSPM_DBGERRORLOG(errorcode, "invalid arg in osppxmlmessageparse");
+        errcode = OSPC_ERR_XML_INVALID_ARGS;
+        OSPM_DBGERRORLOG(errcode, "invalid arg in osppxmlmessageparse");
     }
 
     /* get a new xml buffer */
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         xmlbufr = OSPPBfrNew(ospvSizeOfMessage);
 
         /* add the message to it */
         if (xmlbufr != NULL) {
             numbyteswritten = OSPPBfrWriteBlock(&xmlbufr, ospvXMLMessage, ospvSizeOfMessage);
             if (numbyteswritten != ospvSizeOfMessage) {
-                error = OSPC_ERR_XML_BFR_WRITE_BLOCK_FAILED;
-                OSPM_DBGERRORLOG(errorcode, "bufrWriteblock failed for xmlmessageparse");
+                errcode = OSPC_ERR_XML_BFR_WRITE_BLOCK_FAILED;
+                OSPM_DBGERRORLOG(errcode, "bufrWriteblock failed for xmlmessageparse");
             }
         } else {
-            error = OSPC_ERR_XML_BUFR_NEW_FAILED;
-            OSPM_DBGERRORLOG(errorcode, "bufrNew failed for xmlmessageparse");
+            errcode = OSPC_ERR_XML_BUFR_NEW_FAILED;
+            OSPM_DBGERRORLOG(errcode, "bufrNew failed for xmlmessageparse");
         }
 
         /* send it to the parser */
-        if (error == OSPC_ERR_NO_ERROR) {
-            error = OSPPXMLDocParse(&xmlbufr, &xmlelem);
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = OSPPXMLDocParse(&xmlbufr, &xmlelem);
         }
 
         /* Get data type */
-        if (error == OSPC_ERR_NO_ERROR) {
-            error = OSPPXMLGetDataType(xmlelem, ospvDataType);
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = OSPPXMLGetDataType(xmlelem, ospvDataType);
         }
 
         /* Process the message depending on the data type */
-        if (error == OSPC_ERR_NO_ERROR) {
-            error = OSPPXMLMessageProcess(xmlelem, ospvData, *ospvDataType);
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = OSPPXMLMessageProcess(xmlelem, ospvData, *ospvDataType);
         }
 
         /* delete buffer */
@@ -313,7 +313,7 @@ int OSPPXMLMessageParse(
         }
     }
 
-    return error;
+    return errcode;
 }
 
 int OSPPXMLMessageProcess(

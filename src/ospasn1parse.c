@@ -1117,9 +1117,6 @@ int PTPAddParseResults(
 {
     int errorcode = OSPC_ERR_NO_ERROR;
     OSPTASN1PARSERESULT *parseResult = OSPC_OSNULL;
-    OSPTASN1ELEMENTINFO *eInfo = OSPC_OSNULL;
-
-    eInfo = ospvElementInfo;
 
     OSPM_ARGUSED(ospvParseRule);
 

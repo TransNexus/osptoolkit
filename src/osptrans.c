@@ -210,7 +210,7 @@ int OSPPTransactionBuildUsage(
     const char *dest = OSPC_OSNULL;
     OSPT_ALTINFO *altinfo = OSPC_OSNULL;
     OSPE_ROLE role;
-    OSPE_PROTOCOL_TYPE protocol;
+    OSPE_PROTOCOL_NAME protocol;
     int cnt;
 
     *ospvUsage = OSPPUsageIndNew();
@@ -229,7 +229,7 @@ int OSPPTransactionBuildUsage(
                 OSPPUsageIndSetCallId(*ospvUsage, OSPPDestGetCallId(ospvDest));
             } else {
                 errcode = OSPC_ERR_TRAN_CALLID_NOT_FOUND;
-                OSPM_DBGERRORLOG(errorcode, "Callid not found");
+                OSPM_DBGERRORLOG(errcode, "Callid not found");
             }
 
             if (errcode == OSPC_ERR_NO_ERROR) {
@@ -240,7 +240,7 @@ int OSPPTransactionBuildUsage(
                     /*
                      * It is now acceptable to report source usage indications w/o calling number
                      * errorcode = OSPC_ERR_TRAN_SOURCE_NUMBER_NOT_FOUND;
-                     * OSPM_DBGERRORLOG(errorcode, "Source number not found");
+                     * OSPM_DBGERRORLOG(errcode, "Source number not found");
                      */
                     if (OSPPAuthReqHasSourceNumber(ospvTrans->AuthReq)) {
                         OSPPUsageIndSetSourceNumber(*ospvUsage, OSPPAuthReqGetSourceNumber(ospvTrans->AuthReq));
@@ -280,7 +280,7 @@ int OSPPTransactionBuildUsage(
                     OSPPUsageIndSetDestNumber(*ospvUsage, OSPPAuthReqGetDestNumber(ospvTrans->AuthReq));
                 } else {
                     errcode = OSPC_ERR_TRAN_DEST_NUMBER_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Dest number not found");
+                    OSPM_DBGERRORLOG(errcode, "Dest number not found");
                 }
             }
 
@@ -414,7 +414,7 @@ int OSPPTransactionBuildUsage(
                     OSPPUsageIndSetDestNumber(*ospvUsage, OSPPAuthIndGetDestNumber(ospvTrans->AuthInd));
                 } else {
                     errcode = OSPC_ERR_TRAN_DEST_NUMBER_NOT_FOUND;
-                    OSPM_DBGERRORLOG(errorcode, "Dest number not found");
+                    OSPM_DBGERRORLOG(errcode, "Dest number not found");
                 }
             }
 
@@ -447,11 +447,11 @@ int OSPPTransactionBuildUsage(
             }
         } else {
             errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-            OSPM_DBGERRORLOG(errorcode, "Usage type not found.");
+            OSPM_DBGERRORLOG(errcode, "Usage type not found.");
         }
     } else {
         errcode = OSPC_ERR_TRAN_MALLOC_FAILED;
-        OSPM_DBGERRORLOG(errorcode, "Malloc failed for usage");
+        OSPM_DBGERRORLOG(errcode, "Malloc failed for usage");
     }
 
     /* set timestamp */
@@ -481,7 +481,7 @@ int OSPPTransactionBuildUsage(
             OSPPTransactionUpdateCounter(ospvTrans);
         } else {
             errcode = OSPC_ERR_TRAN_TXID_NOT_FOUND;
-            OSPM_DBGERRORLOG(errorcode, "Transaction id not found");
+            OSPM_DBGERRORLOG(errcode, "Transaction id not found");
         }
     }
 
@@ -963,7 +963,7 @@ int OSPPTransactionGetDestination(
     unsigned *ospvSizeOfToken,              /* In/Out - Max size of token string Actual size of token string */
     void *ospvToken)                        /* Out - Token string */
 {
-    int error = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
     OSPT_CALL_ID *callid = OSPC_OSNULL;
     OSPT_DEST *dest = OSPC_OSNULL;
     OSPT_STATUS *status = OSPC_OSNULL;
@@ -973,26 +973,26 @@ int OSPPTransactionGetDestination(
     const char *sigaddr = OSPC_OSNULL;
     OSPT_TOKEN *token = OSPC_OSNULL;
 
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* We set this in getFirst and check it in getNext, so if it gets here, it IS getFirst calling */
         if (ospvFailureReason == OSPC_FAIL_NONE) {
             /* Get the status code for first time calls. If the status code < 200 or > 299 then there is no use in continuing. */
             if (OSPPAuthRspHasStatus(ospvTrans->AuthRsp) == OSPC_FALSE) {
-                error = OSPC_ERR_TRAN_STATUS_INVALID;
-                OSPM_DBGERRORLOG(errorcode, "status not found");
+                errcode = OSPC_ERR_TRAN_STATUS_INVALID;
+                OSPM_DBGERRORLOG(errcode, "status not found");
             } else {
                 if ((status = OSPPAuthRspGetStatus(ospvTrans->AuthRsp)) != OSPC_OSNULL) {
                     if (!OSPM_STATUSCODE_SUCCESSFUL(status->Code)) {
-                        error = status->Code;
-                        OSPM_DBGERRORLOG(error, "server returned a status error");
+                        errcode = status->Code;
+                        OSPM_DBGERRORLOG(errcode, "server returned a status error");
                     }
                 } else {
-                    error = OSPC_ERR_TRAN_STATUS_NOT_FOUND;
-                    OSPM_DBGERRORLOG(error, "status not found");
+                    errcode = OSPC_ERR_TRAN_STATUS_NOT_FOUND;
+                    OSPM_DBGERRORLOG(errcode, "status not found");
                 }
             }
 
-            if (error == OSPC_ERR_NO_ERROR) {
+            if (errcode == OSPC_ERR_NO_ERROR) {
                 dest = OSPPAuthRspFirstDest(ospvTrans->AuthRsp);
                 ospvTrans->CurrentDest = dest;
             }
@@ -1022,38 +1022,38 @@ int OSPPTransactionGetDestination(
     }
 
     /* if no errors have occurred, get the destination information */
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if (dest == OSPC_OSNULL) {
-            error = OSPC_ERR_TRAN_DEST_INVALID;
-            OSPM_DBGERRORLOG(error, "destination not found");
+            errcode = OSPC_ERR_TRAN_DEST_INVALID;
+            OSPM_DBGERRORLOG(errcode, "destination not found");
         }
     }
 
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if (ospvSizeOfTimestamp > 0) {
             /* Make sure there is enough space for the timestamp copies. */
             if (ospvSizeOfTimestamp < OSPC_SIZE_TIMESTRING) {
-                error = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                OSPM_DBGERRORLOG(errorcode, "Not enough space for timestrings.");
+                errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                OSPM_DBGERRORLOG(errcode, "Not enough space for timestrings.");
             } else {
                 if (ospvValidAfter != OSPC_OSNULL) {
                     if (OSPPDestHasValidAfter(dest)) {
                         validtime = OSPPDestGetValidAfter(dest);
-                        error = OSPPOSTimeCalToString(validtime, ospvValidAfter);
+                        errcode = OSPPOSTimeCalToString(validtime, ospvValidAfter);
                     } else {
                         validtime = OSPC_TIMEMIN;
-                        error = OSPPOSTimeCalToString(validtime, ospvValidAfter);
+                        errcode = OSPPOSTimeCalToString(validtime, ospvValidAfter);
                     }
                 }
 
-                if (error == OSPC_ERR_NO_ERROR) {
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     if (ospvValidUntil != OSPC_OSNULL) {
                         if (OSPPDestHasValidUntil(dest)) {
                             validtime = OSPPDestGetValidUntil(dest);
-                            error = OSPPOSTimeCalToString(validtime, ospvValidUntil);
+                            errcode = OSPPOSTimeCalToString(validtime, ospvValidUntil);
                         } else {
                             validtime = OSPC_TIMEMAX;
-                            error = OSPPOSTimeCalToString(validtime, ospvValidUntil);
+                            errcode = OSPPOSTimeCalToString(validtime, ospvValidUntil);
                         }
                     }
                 }
@@ -1061,7 +1061,7 @@ int OSPPTransactionGetDestination(
         }
     }
 
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if (ospvTimeLimit != OSPC_OSNULL) {
             if (OSPPDestHasLimit(dest)) {
                 *ospvTimeLimit = OSPPDestGetLimit(dest);
@@ -1071,26 +1071,26 @@ int OSPPTransactionGetDestination(
         }
     }
 
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if ((*ospvSizeOfCallId > 0) && (ospvCallId != OSPC_OSNULL)) {
             if (OSPPDestHasCallId(dest)) {
                 callid = OSPPDestGetCallId(dest);
                 if (OSPPCallIdGetSize(callid) > *ospvSizeOfCallId) {
-                    error = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                    OSPM_DBGERRORLOG(errorcode, "not enough space for callid");
+                    errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                    OSPM_DBGERRORLOG(errcode, "not enough space for callid");
                 } else {
                     /* Get call id */
                     OSPM_MEMCPY(ospvCallId, OSPPCallIdGetValue(callid), OSPPCallIdGetSize(callid));
                     *ospvSizeOfCallId = OSPPCallIdGetSize(callid);
                 }
             } else {
-                error = OSPC_ERR_TRAN_CALL_ID_INVALID;
-                OSPM_DBGERRORLOG(errorcode, "null pointer for callid");
+                errcode = OSPC_ERR_TRAN_CALL_ID_INVALID;
+                OSPM_DBGERRORLOG(errcode, "null pointer for callid");
             }
         }
     }
 
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if ((ospvSizeOfCalledNumber > 0 ) && (ospvCalledNumber != OSPC_OSNULL)) {
             if (!OSPPDestHasNumber(dest)) {
                 /* get dest number from authreq */
@@ -1102,12 +1102,12 @@ int OSPPTransactionGetDestination(
             }
 
             if (callednum == OSPC_OSNULL) {
-                error = OSPC_ERR_TRAN_DEST_INVALID;
-                OSPM_DBGERRORLOG(errorcode, "null pointer for dest number.");
+                errcode = OSPC_ERR_TRAN_DEST_INVALID;
+                OSPM_DBGERRORLOG(errcode, "null pointer for dest number.");
             } else {
                 if (ospvSizeOfCalledNumber < OSPM_STRLEN(callednum) + 1) {
-                    error = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                    OSPM_DBGERRORLOG(errorcode, "not enough space for called number");
+                    errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                    OSPM_DBGERRORLOG(errcode, "not enough space for called number");
                 } else {
                     /* Get the destination number */
                     OSPM_STRCPY(ospvCalledNumber, callednum);
@@ -1117,7 +1117,7 @@ int OSPPTransactionGetDestination(
     }
 
     /* Get the calling number now */
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if ((ospvSizeOfCallingNumber > 0) && (ospvCallingNumber != OSPC_OSNULL)) {
             if (!OSPPDestHasSrcNumber(dest)) {
                 /* The source number is not present in the destination. See if it was present in the AuthReq. */
@@ -1131,8 +1131,8 @@ int OSPPTransactionGetDestination(
             }
 
             if (ospvSizeOfCallingNumber < OSPM_STRLEN(callingnum) + 1) {
-                error = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                OSPM_DBGERRORLOG(errorcode, "not enough space for calling number");
+                errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                OSPM_DBGERRORLOG(errcode, "not enough space for calling number");
             } else {
                 /* Get the calling number */
                 OSPM_STRCPY(ospvCallingNumber, callingnum);
@@ -1140,16 +1140,16 @@ int OSPPTransactionGetDestination(
         }
     }
 
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if ((ospvSizeOfDestination > 0) && (ospvDestination != OSPC_OSNULL)) {
             if (OSPPDestHasAddr(dest)) {
                 if ((sigaddr = OSPPDestGetAddr(dest)) == OSPC_OSNULL) {
-                    error = OSPC_ERR_TRAN_SIGADDR_INVALID;
-                    OSPM_DBGERRORLOG(errorcode, "null pointer for signal address.");
+                    errcode = OSPC_ERR_TRAN_SIGADDR_INVALID;
+                    OSPM_DBGERRORLOG(errcode, "null pointer for signal address.");
                 } else {
                     if (ospvSizeOfDestination < OSPM_STRLEN(sigaddr) + 1) {
-                        error = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                        OSPM_DBGERRORLOG(errorcode, "not enough space for signal addr");
+                        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errcode, "not enough space for signal addr");
                     } else {
                         /* Get the signal address (Destination) */
                         OSPM_STRCPY(ospvDestination, sigaddr);
@@ -1159,24 +1159,24 @@ int OSPPTransactionGetDestination(
                 if (dest->IsNPQuery) {
                     ospvDestination[0] = '\0';
                 } else {
-                    error = OSPC_ERR_TRAN_SIGADDR_INVALID;
-                    OSPM_DBGERRORLOG(errorcode, "null pointer for signal address.");
+                    errcode = OSPC_ERR_TRAN_SIGADDR_INVALID;
+                    OSPM_DBGERRORLOG(errcode, "null pointer for signal address.");
                 }
             }
         }
     }
 
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if ((ospvSizeOfDestinationDevice > 0) && (ospvDestinationDevice != OSPC_OSNULL)) {
             if (OSPPDestDevHasAddr(dest)) {
                 sigaddr = OSPPDestDevGetAddr(dest);
                 if (sigaddr == OSPC_OSNULL) {
-                    error = OSPC_ERR_TRAN_SIGADDR_INVALID;
-                    OSPM_DBGERRORLOG(errorcode, "null pointer for device address.");
+                    errcode = OSPC_ERR_TRAN_SIGADDR_INVALID;
+                    OSPM_DBGERRORLOG(errcode, "null pointer for device address.");
                 } else {
                     if (ospvSizeOfDestinationDevice < OSPM_STRLEN(sigaddr) + 1) {
-                        error = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                        OSPM_DBGERRORLOG(errorcode, "not enough space for device addr");
+                        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errcode, "not enough space for device addr");
                     } else {
                         /* Get the signal address (DestinationDevice) */
                         OSPM_STRCPY(ospvDestinationDevice, sigaddr);
@@ -1188,16 +1188,16 @@ int OSPPTransactionGetDestination(
         }
     }
 
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if ((*ospvSizeOfToken > 0) && (ospvToken != OSPC_OSNULL)) {
             if (OSPPDestHasToken(dest)) {
                 if ((token = OSPPDestFirstToken(dest))== OSPC_OSNULL) {
-                    error = OSPC_ERR_TRAN_TOKEN_INVALID;
-                    OSPM_DBGERRORLOG(errorcode, "null pointer for token.");
+                    errcode = OSPC_ERR_TRAN_TOKEN_INVALID;
+                    OSPM_DBGERRORLOG(errcode, "null pointer for token.");
                 } else {
                     if (*ospvSizeOfToken < OSPPTokenGetSize(token)) {
-                        error = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                        OSPM_DBGERRORLOG(errorcode, "not enough space for token");
+                        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errcode, "not enough space for token");
                     } else {
                         /* Get the token */
                         *ospvSizeOfToken = OSPPTokenGetSize(token);
@@ -1209,14 +1209,14 @@ int OSPPTransactionGetDestination(
                     OSPM_MEMSET(ospvToken, 0, *ospvSizeOfToken);
                     *ospvSizeOfToken = 0;
                 } else {
-                    error = OSPC_ERR_TRAN_TOKEN_INVALID;
-                    OSPM_DBGERRORLOG(errorcode, "null pointer for token.");
+                    errcode = OSPC_ERR_TRAN_TOKEN_INVALID;
+                    OSPM_DBGERRORLOG(errcode, "null pointer for token.");
                 }
             }
         }
     }
 
-    return error;
+    return errcode;
 }
 
 /*
@@ -1460,7 +1460,7 @@ int OSPPTransactionProcessReturn(
     OSPTTRANS *ospvTrans,       /* In - Pointer to transaction */
     OSPT_MSG_INFO *ospvMsgInfo) /* In - Pointer to pointer to msginfo structure */
 {
-    int error = OSPC_ERR_NO_ERROR;
+    int errcode = OSPC_ERR_NO_ERROR;
     unsigned char *incomingmsg = OSPC_OSNULL;
     unsigned char *incomingsignature = OSPC_OSNULL;
     unsigned sizeofmsg = 0;
@@ -1476,37 +1476,37 @@ int OSPPTransactionProcessReturn(
 #endif
 
     if ((ospvTrans == OSPC_OSNULL) || (ospvMsgInfo == OSPC_OSNULL)) {
-        error = OSPC_ERR_TRAN_INVALID_ENTRY;
-        OSPM_DBGERRORLOG(errorcode, "invalid args");
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+        OSPM_DBGERRORLOG(errcode, "invalid args");
     }
 
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         audit = ospvTrans->Provider->Audit;
         /* Parse the incoming message into its MIME components, XML doc and Signature */
-        error = OSPPMimeMessageParse(ospvMsgInfo->ResponseMsg,
+        errcode = OSPPMimeMessageParse(ospvMsgInfo->ResponseMsg,
             ospvMsgInfo->ResponseSz, ospvMsgInfo->ContentType, ospvMsgInfo->ContentSz,
             &incomingmsg, &sizeofmsg, &incomingsignature, &sizeofsig);
     }
 #ifdef ENABLESMIME
     /* Validate the S/MIME signature */
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if (incomingsignature != OSPC_OSNULL) {
-            error = OSPPTransactionGetProvider(ospvTrans, &provider);
-            if (error == OSPC_ERR_NO_ERROR) {
-                error = OSPPProviderGetSecurity(provider, &security);
+            errcode = OSPPTransactionGetProvider(ospvTrans, &provider);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                errcode = OSPPProviderGetSecurity(provider, &security);
             }
 
-            error = OSPPSecSignatureVerify(security, &incomingmsg, &sizeofmsg, incomingsignature, sizeofsig, OSPC_SEC_SIGNATURE_ONLY);
+            errcode = OSPPSecSignatureVerify(security, &incomingmsg, &sizeofmsg, incomingsignature, sizeofsig, OSPC_SEC_SIGNATURE_ONLY);
         } else {
-            error = OSPC_ERR_TRAN_VALUE_NOT_FOUND;
+            errcode = OSPC_ERR_TRAN_VALUE_NOT_FOUND;
         }
     }
 #endif
 
-    if (error == OSPC_ERR_NO_ERROR) {
+    if (errcode == OSPC_ERR_NO_ERROR) {
         /* Send the XML message doc to the XML parser */
-        error = OSPPXMLMessageParse(incomingmsg, sizeofmsg, &resultrsp, &msgtype);
-        if (error == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPXMLMessageParse(incomingmsg, sizeofmsg, &resultrsp, &msgtype);
+        if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPAuditCheck(audit, resultrsp, msgtype);
             switch (msgtype) {
             case OSPC_MSG_ARESP:
@@ -1520,12 +1520,12 @@ int OSPPTransactionProcessReturn(
                 for ((usagecnf = (OSPT_USAGE_CNF *)OSPPListFirst((OSPTLIST *)&(resultrsp)));
                      (usagecnf != OSPC_OSNULL); (usagecnf = (OSPT_USAGE_CNF *)OSPPListNext((OSPTLIST *)&(resultrsp), usagecnf)))
                 {
-                    error = OSPPTransactionVerifyUsageCnf(usagecnf);
+                    errcode = OSPPTransactionVerifyUsageCnf(usagecnf);
                 }
                 break;
             case OSPC_MSG_ACNF:
                 /* Authorization Confirmation received */
-                error = OSPPTransactionVerifyAuthCnf((OSPT_AUTH_CNF *)resultrsp);
+                errcode = OSPPTransactionVerifyAuthCnf((OSPT_AUTH_CNF *)resultrsp);
                 if (resultrsp != OSPC_OSNULL) {
                     OSPPAuthCnfDelete((OSPT_AUTH_CNF **)& resultrsp);
                 }
@@ -1541,7 +1541,7 @@ int OSPPTransactionProcessReturn(
                 break;
             default:
                 /* The Unknown received */
-                error = OSPC_ERR_DATA_INVALID_TYPE;
+                errcode = OSPC_ERR_DATA_INVALID_TYPE;
                 break;
             }
         }
@@ -1574,7 +1574,7 @@ int OSPPTransactionProcessReturn(
         incomingsignature = OSPC_OSNULL;
     }
 
-    return error;
+    return errcode;
 }
 
 /*

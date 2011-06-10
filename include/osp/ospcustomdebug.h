@@ -19,7 +19,7 @@
 #ifndef _OSPCUSTOMDEBUG_H
 #define _OSPCUSTOMDEBUG_H
 
-#define OSPM_DBG(ospvCond, ospvParams)
+#define OSPM_DBG(ospvCond, ospvParams)              if (ospvCond) { }
 #define OSPM_DBGERRORLOG(ospvErrCode, ospvErrText)
 #define OSPM_DBGENTER(ospvParams)
 #define OSPM_DBGEXIT(ospvParams)
