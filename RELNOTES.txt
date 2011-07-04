@@ -526,7 +526,7 @@ Version 3.6.1 - 2010-01-07
 * Added showing time limit for GetDestination test functions.
 ---------------------------------------------------------------------------
 
-Version 4.0.0
+Version 4.0.0 - 2011-07-04
 * Changed the OSP TCP port from 1080 to 5045.
 * Removed 4 deprecated functions.
 * Replaced QoS up/downstream by direction values.
@@ -534,5 +534,7 @@ Version 4.0.0
 * Added session ID types.
 * Added singaling protocol types.
 * Simplified structure element names.
+---------------------------------------------------------------------------
 
+Version 4.0.1 - 
 
