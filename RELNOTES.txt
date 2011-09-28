@@ -536,5 +536,6 @@ Version 4.0.0 - 2011-07-04
 * Simplified structure element names.
 ---------------------------------------------------------------------------
 
-Version 4.0.1 - 
+Version 4.0.1 - 2011-09-28
+* Changed calling number reporting logic. Report original calling number instead of authorized calling number in source CDRs. 
 

@@ -234,6 +234,7 @@ int OSPPTransactionBuildUsage(
 
             if (errcode == OSPC_ERR_NO_ERROR) {
                 /* Get Source Number (Calling) */
+#if 0 /* Change the logic for reporting calling#. Report original calling# instead of authorized calling# */
                 if (OSPPDestHasSrcNumber(ospvDest)) {
                     OSPPUsageIndSetSourceNumber(*ospvUsage, OSPPDestGetSrcNumber(ospvDest));
                 } else {
@@ -242,9 +243,13 @@ int OSPPTransactionBuildUsage(
                      * errorcode = OSPC_ERR_TRAN_SOURCE_NUMBER_NOT_FOUND;
                      * OSPM_DBGERRORLOG(errcode, "Source number not found");
                      */
-                    if (OSPPAuthReqHasSourceNumber(ospvTrans->AuthReq)) {
+                    if (OSPPAuthReqHasSourceNumber(ospvTrans->AuthReq)) {3yy
                         OSPPUsageIndSetSourceNumber(*ospvUsage, OSPPAuthReqGetSourceNumber(ospvTrans->AuthReq));
                     }
+                }
+#endif
+                if (OSPPAuthReqHasSourceNumber(ospvTrans->AuthReq)) {
+                    OSPPUsageIndSetSourceNumber(*ospvUsage, OSPPAuthReqGetSourceNumber(ospvTrans->AuthReq));
                 }
             }
 
