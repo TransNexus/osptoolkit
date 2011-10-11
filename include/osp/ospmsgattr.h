@@ -57,7 +57,7 @@ typedef enum {
     OSPC_PROTTYPE_NUMBER
 } OSPE_PROTOCOL_TYPE;
 
-#define OSPM_VALIDATE_PROTTYPE(t)   (((t>=OSPC_PROTTYPE_START)&&(t<OSPC_PROTYPE_NUMBER)))
+#define OSPM_VALIDATE_PROTTYPE(t)   (((t>=OSPC_PROTTYPE_START)&&(t<OSPC_PROTTYPE_NUMBER)))
 
 /* Codec types */
 typedef enum {
