@@ -108,9 +108,8 @@ typedef struct _OSPTTRANS {
     char Codec[OSPC_CODEC_NUMBER][OSPC_SIZE_CODEC];
     OSPT_CALL_ID *SessionId[OSPC_SESSIONID_NUMBER];
     char *CustomInfo[OSPC_MAX_INDEX];
-    /* These two network ID's are only used to report usage */
+    /* This source network ID is only used to report usage */
     char UsageSrcNetworkId[OSPC_SIZE_NORID];
-    char UsageDestNetworkId[OSPC_SIZE_NORID];
     char SrcRealm[OSPC_SIZE_NORSTR];
     char DestRealm[OSPC_SIZE_NORSTR];
     OSPE_NUMBER_FORMAT AssertedIdFormat;

@@ -523,6 +523,7 @@ int OSPPAuthReqToElement(       /* returns error code */
     OSPTTRANS *trans = (OSPTTRANS *)ospvtrans;
     OSPE_MSG_ATTR attrtype;
     OSPE_ALTINFO attrvalue;
+    OSPE_PROTOCOL_NAME protocol;
     int i;
 
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
@@ -739,15 +740,13 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
 
         /* Add source protocol */
+        protocol = trans->Protocol[OSPC_PROTTYPE_SOURCE];
         if ((errcode == OSPC_ERR_NO_ERROR) &&
-            ((trans->Protocol[OSPC_PROTTYPE_SOURCE] >= OSPC_PROTNAME_START) && (trans->Protocol[OSPC_PROTTYPE_SOURCE] < OSPC_PROTNAME_NUMBER)))
+            ((protocol >= OSPC_PROTNAME_START) && (protocol < OSPC_PROTNAME_NUMBER)))
         {
             attrtype = OSPC_MATTR_TYPE;
             attrvalue = OSPC_ALTINFO_SOURCE;
-            errcode = OSPPStringToElement(OSPC_MELEM_PROTOCOL,
-                OSPPDestProtocolGetName(trans->Protocol[OSPC_PROTTYPE_SOURCE]),
-                1, &attrtype, &attrvalue,
-                &elem);
+            errcode = OSPPStringToElement(OSPC_MELEM_PROTOCOL, OSPPDestProtocolGetName(protocol), 1, &attrtype, &attrvalue, &elem);
             if (errcode == OSPC_ERR_NO_ERROR) {
                  OSPPXMLElemAddChild(authreqelem, elem);
                  elem = OSPC_OSNULL;
