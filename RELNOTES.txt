@@ -540,4 +540,11 @@ Version 4.0.1 - 2011-09-28
 * Changed calling number reporting logic. Report original calling number instead of authorized calling number in source CDRs. 
 ---------------------------------------------------------------------------
 
-Version 4.0.2 - 
+Version 4.0.2 - 2011-10-11
+* Changed setting destination protocol directly in destination structure.
+* Changed setting destination network ID directly in destination structure.
+* Used OSPC_OSNULL instead of NULL.
+---------------------------------------------------------------------------
+
+Version 4.0.3 - 
+

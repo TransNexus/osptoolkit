@@ -335,17 +335,20 @@ int OSPPTransactionBuildUsage(
 
             /* Move protocols to the usage structure */
             if (errcode == OSPC_ERR_NO_ERROR) {
-                protocol = ospvDest->Protocol;
                 for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
-                    if ((cnt == OSPC_PROTTYPE_DESTINATION) &&
-                        ((protocol >= OSPC_PROTNAME_START) && (protocol < OSPC_PROTNAME_NUMBER)))
-                    {
+                    if (cnt == OSPC_PROTTYPE_DESTINATION) {
+                        protocol = ospvDest->Protocol;
+                    } else {
+                        protocol = ospvTrans->Protocol[cnt];
+                    }
+                    if ((protocol >= OSPC_PROTNAME_START) && (protocol < OSPC_PROTNAME_NUMBER)) {
                         OSPPUsageIndSetProtocol(*ospvUsage, cnt, protocol);
                     } else {
-                        OSPPUsageIndSetProtocol(*ospvUsage, cnt, ospvTrans->Protocol[cnt]);
+                        OSPPUsageIndSetProtocol(*ospvUsage, cnt, OSPC_PROTNAME_UNKNOWN);
                     }
                 }
             }
+                        
 
             /* Move Service Info to the usage structure */
             if ((errcode == OSPC_ERR_NO_ERROR) && (ospvTrans->HasServiceInfo)) {

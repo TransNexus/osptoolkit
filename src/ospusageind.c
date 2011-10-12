@@ -1859,9 +1859,8 @@ OSPTBOOL OSPPUsageIndHasProtocol(
     OSPTBOOL has = OSPC_FALSE;
 
     if (ospvUsageInd != OSPC_OSNULL) {
-        if (((ospvType >= OSPC_PROTTYPE_START) && (ospvType < OSPC_PROTTYPE_NUMBER)) &&
-            ((ospvUsageInd->Protocol[ospvType] >= OSPC_PROTNAME_START) &&
-            (ospvUsageInd->Protocol[ospvType] < OSPC_PROTNAME_NUMBER)))
+        if (OSPM_VALIDATE_PROTTYPE(ospvType) &&
+            ((ospvUsageInd->Protocol[ospvType] >= OSPC_PROTNAME_START) && (ospvUsageInd->Protocol[ospvType] < OSPC_PROTNAME_NUMBER)))
         {
             has = OSPC_TRUE;
         }
@@ -1876,9 +1875,7 @@ OSPE_PROTOCOL_NAME OSPPUsageIndGetProtocol(
 {
     OSPE_PROTOCOL_NAME protocol = OSPC_PROTNAME_UNKNOWN;
 
-    if ((ospvUsageInd != OSPC_OSNULL) &&
-        ((ospvType >= OSPC_PROTTYPE_START) && (ospvType < OSPC_PROTTYPE_NUMBER)))
-    {
+    if ((ospvUsageInd != OSPC_OSNULL) && OSPM_VALIDATE_PROTTYPE(ospvType)) {
         protocol = ospvUsageInd->Protocol[ospvType];
     }
 
@@ -1890,10 +1887,7 @@ void OSPPUsageIndSetProtocol(
     OSPE_PROTOCOL_TYPE ospvType,
     OSPE_PROTOCOL_NAME ospvName)
 {
-    if ((ospvUsageInd != OSPC_OSNULL) &&
-        ((ospvType >= OSPC_PROTTYPE_START) && (ospvType < OSPC_PROTTYPE_NUMBER)) &&
-        ((ospvName >= OSPC_PROTNAME_START) && (ospvName < OSPC_PROTNAME_NUMBER)))
-    {
+    if ((ospvUsageInd != OSPC_OSNULL) && OSPM_VALIDATE_PROTTYPE(ospvType) && OSPM_VALIDATE_PROTNAME(ospvName)) {
         ospvUsageInd->Protocol[ospvType] = ospvName;
     }
 }
