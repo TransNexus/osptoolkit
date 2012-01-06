@@ -629,9 +629,11 @@ int OSPPProviderNew(
             ospvHTTPRetryDelay = OSPC_DEFAULT_HTTPRETRYDELAY;
         }
 
+/*
         if (ospvHTTPTimeout < 1000) {
             ospvHTTPTimeout = OSPC_DEFAULT_HTTPTIMEOUT;
         }
+*/
 
         /*
          * get a new Provider handle
