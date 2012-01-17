@@ -547,5 +547,6 @@ Version 4.0.2 - 2011-10-11
 ---------------------------------------------------------------------------
 
 Version 4.0.3 - 
-* Removed HTTP 1000ms check.
+* Removed HTTP timeout 1000ms check.
+* Fixed OSPPSockWaitTillReady tv_usec bug.
 

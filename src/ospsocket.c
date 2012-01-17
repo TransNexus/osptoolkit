@@ -749,7 +749,7 @@ int OSPPSockWaitTillReady(
 #else
     short events;
     struct pollfd fd;
-    int timeout = ospvTimeout->tv_sec * 1000 + ospvTimeout->tv_usec;
+    int timeout = ospvTimeout->tv_sec * 1000 + ospvTimeout->tv_usec / 1000;
     int fdready;
 
     if (ospvWaitForRead) {
