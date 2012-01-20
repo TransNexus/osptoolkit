@@ -546,7 +546,8 @@ Version 4.0.2 - 2011-10-11
 * Used OSPC_OSNULL instead of NULL.
 ---------------------------------------------------------------------------
 
-Version 4.0.3 - 
+Version 4.0.3 - 2012-01-20
 * Removed HTTP timeout 1000ms check.
 * Fixed OSPPSockWaitTillReady tv_usec bug.
+---------------------------------------------------------------------------
 
