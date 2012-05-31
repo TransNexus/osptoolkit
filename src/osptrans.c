@@ -376,6 +376,15 @@ int OSPPTransactionBuildUsage(
                     (*ospvUsage)->RoleVendor = ospvTrans->RoleVendor;
                 }
             }
+
+            /* Move call party info to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
+                    OSPM_STRNCPY((*ospvUsage)->UserName[cnt], ospvDest->UserName[cnt], sizeof((*ospvUsage)->UserName[cnt]));
+                    OSPM_STRNCPY((*ospvUsage)->UserId[cnt], ospvDest->UserId[cnt], sizeof((*ospvUsage)->UserId[cnt]));
+                    OSPM_STRNCPY((*ospvUsage)->UserGroup[cnt], ospvDest->UserGroup[cnt], sizeof((*ospvUsage)->UserGroup[cnt]));
+                }
+            }
         } else if (ospvType == OSPC_MSG_AIND) {
             /* Terminating */
             if ((ospvTrans->AuthInd != OSPC_OSNULL) &&

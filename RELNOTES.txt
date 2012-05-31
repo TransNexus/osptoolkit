@@ -551,4 +551,7 @@ Version 4.0.3 - 2012-01-20
 * Fixed OSPPSockWaitTillReady tv_usec bug.
 ---------------------------------------------------------------------------
 
-Version 4.0.4 - 
+Version 4.1.0 -
+* Added call party info elements.
+* Added local and remote session ID elements.
+* Changed ReleaseSource element values.

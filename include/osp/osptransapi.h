@@ -51,7 +51,7 @@ extern "C" {
     int OSPPTransactionReinitializeAtDevice(OSPTTRANHANDLE, OSPEFAILREASON, unsigned, const char*, const char*,
             const char*, const char*, const char*, const char*, unsigned, const void*, unsigned, const void*, unsigned*,
             unsigned*, unsigned*, void*, unsigned);
-    int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, unsigned,
+    int OSPPTransactionReportUsage(OSPTTRANHANDLE, unsigned, OSPTTIME, OSPTTIME, OSPTTIME, OSPTTIME, unsigned, unsigned, OSPE_RELEASE,
             const char *, int, int, int, int, unsigned *, void *);
     int OSPPTransactionRequestAuthorisation(OSPTTRANHANDLE, const char *, const char *, const char *, OSPE_NUMBER_FORMAT, const char *,
             OSPE_NUMBER_FORMAT, const char *, unsigned, OSPT_CALL_ID *[], const char *[], unsigned *, unsigned *, void *);
@@ -121,6 +121,7 @@ extern "C" {
     int OSPPTransactionSetChargeInfo(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
     int OSPPTransactionSetApplicationId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetRoleInfo(OSPTTRANHANDLE, OSPE_ROLE_STATE, OSPE_ROLE_FORMAT, OSPE_ROLE_VENDOR);
+    int OSPPTransactionSetCallPartyInfo(OSPTTRANHANDLE, OSPE_CALL_PARTY, const char*, const char*, const char*);
 
 #ifdef __cplusplus
 }

@@ -1644,9 +1644,9 @@ int testOSPPTransactionReportUsage()
 
         errcode = OSPPTransactionReportUsage(OSPVTransactionHandle,
             duration, call_start_time, call_end_time, call_alert_time, call_connect_time,
-            IS_PDD_INFO_AVAILABLE, 1010,    /* PDD */
-            0,    /* Release Source */
-            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            IS_PDD_INFO_AVAILABLE, 1010,            /* PDD */
+            OSPC_RELEASE_UNKNOWN,                   /* Release Source */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id */
             1,
             2,
             100,
@@ -1660,9 +1660,9 @@ int testOSPPTransactionReportUsage()
 
         errcode = OSPPTransactionReportUsage(tranhandle2,
             duration, call_start_time, call_end_time, call_alert_time, call_connect_time,
-            IS_PDD_INFO_AVAILABLE, 1020,    /* PDD */
-            0,    /* Release Source */
-            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            IS_PDD_INFO_AVAILABLE, 1020,            /* PDD */
+            OSPC_RELEASE_UNKNOWN,                   /* Release Source */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id */
             1,
             2,
             100,
@@ -3215,9 +3215,9 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
             &OErrorCodes[i],
             OTransactionHandles[i],
             duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8,
-            IS_PDD_INFO_AVAILABLE, 1030,    /* PDD */
-            3,    /* Release Source */
-            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            IS_PDD_INFO_AVAILABLE, 1030,            /* PDD */
+            OSPC_RELEASE_UNKNOWN,                   /* Release Source */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id */
             1,
             2,
             100,
@@ -3233,9 +3233,9 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
             &TErrorCodes[i],
             TTransactionHandles[i],
             duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8,
-            IS_PDD_INFO_AVAILABLE, 1040,    /* PDD */
-            3,    /* Release Source */
-            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            IS_PDD_INFO_AVAILABLE, 1040,            /* PDD */
+            OSPC_RELEASE_UNKNOWN,                   /* Release Source */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id */
             1,
             2,
             100,

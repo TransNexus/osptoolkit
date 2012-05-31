@@ -1573,6 +1573,7 @@ int OSPPTransactionBuildUsageFromScratch(
     unsigned *ospvSizeOfDetailLog,              /* In/Out - Max size of detail log\ Actual size of detail log */
     void *ospvDetailLog)                        /* In - Pointer to storage for detail log */
 {
+    int cnt;
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
     unsigned numcallids = 1;
@@ -1666,13 +1667,20 @@ int OSPPTransactionBuildUsageFromScratch(
                     /* Set correct role */
                     OSPPAuthRspSetRole(trans->AuthRsp, ospvRole);
                 }
-
             }
 
             if (errcode == OSPC_ERR_NO_ERROR) {
                 trans->CurrentDest->RoleState = trans->RoleState;
                 trans->CurrentDest->RoleFormat = trans->RoleFormat;
                 trans->CurrentDest->RoleVendor = trans->RoleVendor;
+            }
+
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
+                    OSPM_STRNCPY(trans->CurrentDest->UserName[cnt], trans->UserName[cnt], sizeof(trans->CurrentDest->UserName[cnt]));
+                    OSPM_STRNCPY(trans->CurrentDest->UserId[cnt], trans->UserId[cnt], sizeof(trans->CurrentDest->UserId[cnt]));
+                    OSPM_STRNCPY(trans->CurrentDest->UserGroup[cnt], trans->UserGroup[cnt], sizeof(trans->CurrentDest->UserGroup[cnt]));
+                }
             }
         } else if (ospvRole == OSPC_ROLE_DESTINATION) {
             if (trans->AuthInd != OSPC_OSNULL) {
@@ -1720,6 +1728,12 @@ int OSPPTransactionBuildUsageFromScratch(
                             dest->RoleState = trans->RoleState;
                             dest->RoleFormat = trans->RoleFormat;
                             dest->RoleVendor = trans->RoleVendor;
+
+                            for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
+                                OSPM_STRNCPY(dest->UserName[cnt], trans->UserName[cnt], sizeof(dest->UserName[cnt]));
+                                OSPM_STRNCPY(dest->UserId[cnt], trans->UserId[cnt], sizeof(dest->UserId[cnt]));
+                                OSPM_STRNCPY(dest->UserGroup[cnt], trans->UserGroup[cnt], sizeof(dest->UserGroup[cnt]));
+                            }
 
                             OSPPAuthIndSetDest(authind, dest);
 
@@ -2170,6 +2184,11 @@ int OSPPTransactionNew(
         trans->RoleState = OSPC_RSTATE_UNKNOWN;
         trans->RoleFormat = OSPC_RFORMAT_UNKNOWN;
         trans->RoleVendor = OSPC_RVENDOR_UNKNOWN;
+        for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
+            trans->UserName[cnt][0] = '\0';
+            trans->UserId[cnt][0] = '\0';
+            trans->UserGroup[cnt][0] = '\0';
+        }
     }
 
     return errcode;
@@ -2465,7 +2484,7 @@ int OSPPTransactionReportUsage(
     OSPTTIME ospvConnectTime,           /* In - Call connect time */
     OSPTBOOL ospvHasPDDInfo,            /* In - Is PDD Info present */
     unsigned ospvPostDialDelay,         /* In - Post Dial Delay, in milliseconds */
-    unsigned ospvReleaseSource,         /* In - EP that released the call */
+    OSPE_RELEASE ospvReleaseSource,     /* In - EP that released the call */
     const char *ospvConferenceId,       /* In - conference Id. Max 100 char long */
     int ospvLossPacketsSent,            /* In - Packets not received by peer */
     int ospvLossFractionSent,           /* In - Fraction of packets not received by peer */
@@ -2690,6 +2709,15 @@ int OSPPTransactionReportUsage(
                     usage->RoleVendor = trans->CurrentDest->RoleVendor;
                 } else {
                     usage->RoleVendor = trans->RoleVendor;
+                }
+            }
+
+            /* Move call party info to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
+                    OSPM_STRNCPY(usage->UserName[cnt], trans->CurrentDest->UserName[cnt], sizeof(usage->UserName[cnt]));
+                    OSPM_STRNCPY(usage->UserId[cnt], trans->CurrentDest->UserId[cnt], sizeof(usage->UserId[cnt]));
+                    OSPM_STRNCPY(usage->UserGroup[cnt], trans->CurrentDest->UserGroup[cnt], sizeof(usage->UserGroup[cnt]));
                 }
             }
 
@@ -5076,4 +5104,40 @@ int OSPPTransactionSetRoleInfo(
     return errcode;
 }
 
+int OSPPTransactionSetCallPartyInfo(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_CALL_PARTY ospvParty,      /* In - Call party */
+    const char *ospvUserName,       /* In - User name */
+    const char *ospvUserId,         /* In - User ID */
+    const char *ospvUserGroup)      /* In - User group */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans;
 
+    if ((ospvParty < OSPC_CPARTY_START) || (ospvParty >= OSPC_CPARTY_NUMBER)) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            if (ospvUserName != OSPC_OSNULL) {
+                OSPM_STRNCPY(trans->UserName[ospvParty], ospvUserName, sizeof(trans->UserName[ospvParty]) - 1);
+            } else {
+                trans->UserName[ospvParty][0] = '\0';
+            }
+
+            if (ospvUserId != OSPC_OSNULL) {
+                OSPM_STRNCPY(trans->UserId[ospvParty], ospvUserId, sizeof(trans->UserId[ospvParty]) - 1);
+            } else {
+                trans->UserId[ospvParty][0] = '\0';
+            }
+
+            if (ospvUserGroup != OSPC_OSNULL) {
+                OSPM_STRNCPY(trans->UserGroup[ospvParty], ospvUserGroup, sizeof(trans->UserGroup[ospvParty]) - 1);
+            } else {
+                trans->UserGroup[ospvParty][0] = '\0';
+            }
+        }
+    }
+
+    return errcode;
+}

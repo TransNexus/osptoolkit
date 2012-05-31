@@ -261,6 +261,7 @@ unsigned OSPPSessionIdToElement(    /* returns error code */
     OSPTBOOL ospvIsBase64,          /* indicates base64 or cdata */
     OSPT_XML_ELEM **ospvElem)       /* where to put XML element pointer */
 {
+    OSPE_ALTINFO type = OSPC_ALTINFO_UNKNOWN;
     unsigned errcode = OSPC_ERR_NO_ERROR;
 
     if (ospvElem == OSPC_OSNULL) {
@@ -270,26 +271,29 @@ unsigned OSPPSessionIdToElement(    /* returns error code */
     } else {
         switch (ospvType) {
         case OSPC_SESSIONID_SOURCE:
-            errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
-                OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
-                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_SOURCE), ospvIsBase64,
-                ospvElem);
+            type = OSPC_ALTINFO_SOURCE;
             break;
         case OSPC_SESSIONID_DESTINATION:
-            errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
-                OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
-                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_DESTINATION), ospvIsBase64,
-                ospvElem);
+            type = OSPC_ALTINFO_DESTINATION;
             break;
         case OSPC_SESSIONID_CORRELATION:
-            errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
-                OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
-                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_CORRELATION), ospvIsBase64,
-                ospvElem);
+            type = OSPC_ALTINFO_CORRELATION;
+            break;
+        case OSPC_SESSIONID_LOCAL:
+            type = OSPC_ALTINFO_LOCAL;
+            break;
+        case OSPC_SESSIONID_REMOTE:
+            type = OSPC_ALTINFO_REMOTE;
             break;
         default:
             errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
            break;
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SESSIONID),
+                OSPPCallIdGetSize(ospvSessionId), OSPPCallIdGetValue(ospvSessionId),
+                OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(type), ospvIsBase64,
+                ospvElem);
         }
     }
 

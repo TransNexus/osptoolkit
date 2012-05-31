@@ -62,6 +62,8 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_SOURCE,          "source" },
     { OSPC_ALTINFO_DESTINATION,     "destination" },
     { OSPC_ALTINFO_CORRELATION,     "correlation" },
+    { OSPC_ALTINFO_LOCAL,           "local" },
+    { OSPC_ALTINFO_REMOTE,          "remote" },
     { OSPC_ALTINFO_NA,              "na" },
     { OSPC_ALTINFO_RTP,             "rtp" },
     { OSPC_ALTINFO_RTCP,            "rtcp" },

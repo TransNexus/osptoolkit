@@ -80,6 +80,8 @@ typedef enum {
     OSPC_SESSIONID_SOURCE = OSPC_SESSIONID_START,
     OSPC_SESSIONID_DESTINATION,
     OSPC_SESSIONID_CORRELATION,
+    OSPC_SESSIONID_LOCAL,
+    OSPC_SESSIONID_REMOTE,
     /* Number of session ID types */
     OSPC_SESSIONID_NUMBER
 } OSPE_SESSION_ID;
@@ -97,6 +99,16 @@ typedef enum {
     OSPC_SERVICE_NUMBER
 } OSPE_SERVICE;
 
+typedef enum {
+    OSPC_RELEASE_UNKNOWN = OSPC_MPART_UNKNOWN,
+    /* Message attribute start */
+    OSPC_RELEASE_START = OSPC_MPART_START,
+    OSPC_RELEASE_SOURCE = OSPC_SERVICE_START,
+    OSPC_RELEASE_DESTINATION,
+    /* Number of release party types */
+    OSPC_RELEASE_NUMBER
+} OSPE_RELEASE;
+
 /* externally declared global variables */
 extern const OSPT_MSG_DESC OSPV_MATTR_DESCS[];
 extern const OSPT_MSG_DESC OSPV_STYPE_DESCS[];
@@ -106,5 +118,6 @@ OSPE_MSG_ATTR OSPPMsgAttrGetPart(const char *);
 const char *OSPPMsgAttrGetName(OSPE_MSG_ATTR);
 OSPE_SERVICE OSPPServiceGetPart(const char *);
 const char *OSPPServiceGetName(OSPE_SERVICE);
+const char *OSPPReleaseGetName(OSPE_RELEASE);
 
 #endif /* _OSPMSGATTR_H */
