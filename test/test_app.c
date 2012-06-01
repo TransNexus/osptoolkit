@@ -113,6 +113,7 @@ static time_t call_alert_time = 0;
 static time_t call_connect_time = 0;
 static NBMONITOR *nbMonitor = NULL;
 static int WORK_THREAD_NUM = 30;        /* make sure that this number does not exceed DEF_HTTP_MAXCONN */
+static OSPE_RELEASE release = OSPC_RELEASE_UNKNOWN;
 
 #define TOKEN_SIZE          2000
 #define TEST_ERROR          1
@@ -1644,9 +1645,9 @@ int testOSPPTransactionReportUsage()
 
         errcode = OSPPTransactionReportUsage(OSPVTransactionHandle,
             duration, call_start_time, call_end_time, call_alert_time, call_connect_time,
-            IS_PDD_INFO_AVAILABLE, 1010,    /* PDD */
-            0,    /* Release Source */
-            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            IS_PDD_INFO_AVAILABLE, 1010,            /* PDD */
+            release,                                /* Release Source */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id */
             1,
             2,
             100,
@@ -1660,9 +1661,9 @@ int testOSPPTransactionReportUsage()
 
         errcode = OSPPTransactionReportUsage(tranhandle2,
             duration, call_start_time, call_end_time, call_alert_time, call_connect_time,
-            IS_PDD_INFO_AVAILABLE, 1020,    /* PDD */
-            0,    /* Release Source */
-            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            IS_PDD_INFO_AVAILABLE, 1020,            /* PDD */
+            release,                                /* Release Source */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id */
             1,
             2,
             100,
@@ -1936,6 +1937,12 @@ int testSetSessionId()
     callid = OSPPCallIdNew(17, (const unsigned char *)"correlationcallid");
     errcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_SESSIONID_CORRELATION, callid);
     OSPPCallIdDelete(&callid);
+    callid = OSPPCallIdNew(11, (const unsigned char *)"localcallid");
+    errcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_SESSIONID_LOCAL, callid);
+    OSPPCallIdDelete(&callid);
+    callid = OSPPCallIdNew(12, (const unsigned char *)"remotecallid");
+    errcode = OSPPTransactionSetSessionId(OSPVTransactionHandle, OSPC_SESSIONID_REMOTE, callid);
+    OSPPCallIdDelete(&callid);
 
     return errcode;
 }
@@ -1946,6 +1953,33 @@ int testSetCustomInfo()
 
     errcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
     errcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
+
+    return errcode;
+}
+
+int testSetReleaseSource()
+{
+    int errcode = 0;
+
+    if (release == OSPC_RELEASE_UNKNOWN) {
+        release = OSPC_RELEASE_SOURCE;
+    } else if (release == OSPC_RELEASE_SOURCE) {
+        release = OSPC_RELEASE_DESTINATION;
+    } else if (release == OSPC_RELEASE_DESTINATION) {
+        release = OSPC_RELEASE_UNKNOWN;
+    } else {
+        release = OSPC_RELEASE_UNKNOWN;
+    }
+
+    return errcode;
+}
+
+int testSetCallPartyInfo()
+{
+    int errcode = 0;
+
+    OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_SOURCE, "callingusername", "callinguserid", "callingusergroup");
+    OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_DESTINATION, "calledusername", "calleduserid", "calledusergroup");
 
     return errcode;
 }
@@ -2418,6 +2452,12 @@ int testAPI(int apinumber)
     case 224:
         errcode = testSetCustomInfo();
         break;
+    case 225:
+        errcode = testSetReleaseSource();
+        break;
+    case 226:
+        errcode = testSetCallPartyInfo();
+        break;
     case 250:
         errcode = testGetNumberPortability();
         break;
@@ -2659,7 +2699,8 @@ int testMenu()
         printf("216) Set Realms                       217) Set Application ID\n");
         printf("220) Set Signaling Protocol           221) Set Codec\n");
         printf("222) Set Network ID                   223) Set Session ID\n");
-        printf("224) Set Custom Info\n");
+        printf("224) Set Custom Info                  225) Set Release Source\n");
+        printf("226) Set Call Party Info\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs\n");
         printf("300) Set Lost                         301) Set Jitter\n");
@@ -3215,9 +3256,9 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
             &OErrorCodes[i],
             OTransactionHandles[i],
             duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8,
-            IS_PDD_INFO_AVAILABLE, 1030,    /* PDD */
-            3,    /* Release Source */
-            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            IS_PDD_INFO_AVAILABLE, 1030,            /* PDD */
+            OSPC_RELEASE_UNKNOWN,                   /* Release Source */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id */
             1,
             2,
             100,
@@ -3233,9 +3274,9 @@ OSPTTHREADRETURN testNonBlockingPerformanceTest(void *arg)
             &TErrorCodes[i],
             TTransactionHandles[i],
             duration, time(NULL) - 10, time(NULL) + 20, time(NULL) - 10, time(NULL) - 8,
-            IS_PDD_INFO_AVAILABLE, 1040,    /* PDD */
-            3,    /* Release Source */
-            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06",    /*Conf id */
+            IS_PDD_INFO_AVAILABLE, 1040,            /* PDD */
+            OSPC_RELEASE_UNKNOWN,                   /* Release Source */
+            "E4596A7B-2C27-11D9-816A-EA39F2B2CD06", /*Conf id */
             1,
             2,
             100,

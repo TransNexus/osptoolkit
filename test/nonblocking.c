@@ -55,7 +55,7 @@ typedef struct _NBUSEIND {
     OSPTTIME ospvConnectTime;                   /* In - ConnectTime of call */
     OSPTBOOL ospvHasPDDInfo;                    /* In - Is PDD info present */
     unsigned ospvPostDialDelay;                 /* In - PDD in milliseconds */
-    unsigned ospvReleaseSource;                 /* In - Rel Src */
+    OSPE_RELEASE ospvReleaseSource;             /* In - Rel Src */
     char ospvConferenceId[OSPC_SIZE_CONFID];    /* In - ConferenceId */
     int ospvLossPacketsSent;                    /* In - Packets not received by peer */
     int ospvLossFractionSent;                   /* In - Fraction of packets not received by peer */
@@ -735,7 +735,7 @@ int OSPPTransactionReportUsage_nb(
     OSPTTIME ospvConnectTime,       /* In - ConnectTime of call */
     OSPTBOOL ospvHasPDDInfo,        /* In - Is PDD info available */
     unsigned ospvPostDialDelay,     /* In - PDD in milliseconds */
-    unsigned ospvReleaseSource,     /* In - Release Src */
+    OSPE_RELEASE ospvReleaseSource, /* In - Release Src */
     const char *ospvConferenceId,   /* In - ConferenceId */
     int ospvLossPacketsSent,        /* In - Packets not received by peer */
     int ospvLossFractionSent,       /* In - Fraction of packets not received by peer */

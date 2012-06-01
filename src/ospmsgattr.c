@@ -91,6 +91,13 @@ const OSPT_MSG_DESC OSPV_STYPE_DESCS[OSPC_SERVICE_NUMBER] = {
     { OSPC_SERVICE_NPQUERY, "portedNumberQuery" }
 };
 
+/* Array that associates release source type and names */
+const OSPT_MSG_DESC OSPV_RELEASE_DESCS[OSPC_RELEASE_NUMBER + 1] = {
+    { OSPC_RELEASE_UNKNOWN,     "unknown" },
+    { OSPC_RELEASE_SOURCE,      "source" },
+    { OSPC_RELEASE_DESTINATION, "destination" }
+};
+
 /*
  * OSPPMsgAttrGetName() - get an attribute name from a part value
  */
@@ -146,6 +153,21 @@ const char *OSPPServiceGetName(     /* returns pointer to the name */
 
     if ((ospvType >= OSPC_SERVICE_START) && (ospvType < OSPC_SERVICE_NUMBER)) {
         name = OSPPMsgDescGetName((OSPT_MSG_PART)ospvType, OSPV_STYPE_DESCS, OSPC_SERVICE_NUMBER);
+    }
+
+    return name;
+}
+
+/*
+ * OSPPReleaseGetName() - get an release source name from a part value
+ */
+const char *OSPPReleaseGetName(     /* returns pointer to the name */
+    OSPE_RELEASE ospvType)
+{
+    const char *name = OSPC_OSNULL;
+
+    if ((ospvType == OSPC_RELEASE_UNKNOWN) || ((ospvType >= OSPC_RELEASE_START) && (ospvType < OSPC_RELEASE_NUMBER))) {
+        name = OSPPMsgDescGetName((OSPT_MSG_PART)ospvType, OSPV_RELEASE_DESCS, OSPC_RELEASE_NUMBER + 1);
     }
 
     return name;

@@ -405,22 +405,20 @@ OSPTBOOL OSPPUsageIndHasPDD(
  */
 void OSPPUsageIndSetReleaseSource(  /* nothing returned */
     OSPT_USAGE_IND *ospvUsageInd,   /* usage indication to set */
-    unsigned ospvReleaseSource)     /* Rel Src to set to */
+    OSPE_RELEASE ospvReleaseSource) /* Rel Src to set to */
 {
     if (ospvUsageInd != OSPC_OSNULL) {
-        if (ospvReleaseSource >= 0) {
-            ospvUsageInd->ReleaseSource = ospvReleaseSource;
-        }
+        ospvUsageInd->ReleaseSource = ospvReleaseSource;
     }
 }
 
 /*
  * OSPPUsageIndGetReleaseSource() - returns the Rel Src for a usage ind
  */
-unsigned OSPPUsageIndGetReleaseSource(
+OSPE_RELEASE OSPPUsageIndGetReleaseSource(
     OSPT_USAGE_IND *ospvUsageInd)   /* usage ind */
 {
-    int ospvReleaseSource = 0;
+    OSPE_RELEASE ospvReleaseSource = OSPC_RELEASE_UNKNOWN;
 
     if (ospvUsageInd != OSPC_OSNULL) {
         ospvReleaseSource = ospvUsageInd->ReleaseSource;
@@ -1039,7 +1037,7 @@ OSPT_USAGE_IND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         usageind->ConnectTime = (OSPTTIME) 0;
         usageind->HasPDD = OSPC_FALSE;
         usageind->PostDialDelay = 0;
-        usageind->ReleaseSource = 0;
+        usageind->ReleaseSource = OSPC_RELEASE_UNKNOWN;
         usageind->ConferenceId[0] = '\0';
         usageind->Role = OSPC_ROLE_UNDEFINED;
         usageind->HasRole = OSPC_FALSE;
@@ -1075,6 +1073,11 @@ OSPT_USAGE_IND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         usageind->RoleState = OSPC_RSTATE_UNKNOWN;
         usageind->RoleFormat = OSPC_RFORMAT_UNKNOWN;
         usageind->RoleVendor = OSPC_RVENDOR_UNKNOWN;
+        for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
+            usageind->UserName[cnt][0] = '\0';
+            usageind->UserId[cnt][0] = '\0';
+            usageind->UserGroup[cnt][0] = '\0';
+        }
     }
 
     return usageind;
@@ -1208,6 +1211,7 @@ int OSPPUsageIndToElement(      /* returns error code */
     OSPT_XML_ELEM *usageindelem = OSPC_OSNULL;
     OSPT_XML_ELEM *usagedetailelem = OSPC_OSNULL;
     OSPT_XML_ELEM *roleinfoelem = OSPC_OSNULL;
+    OSPT_XML_ELEM *callpartyelem = OSPC_OSNULL;
     OSPT_XML_ELEM *subelem = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
     OSPTTRXID trxid = 0;
@@ -1216,6 +1220,7 @@ int OSPPUsageIndToElement(      /* returns error code */
     char random[OSPC_MAX_RANDOM];
     OSPTBOOL isbase64 = OSPC_TRUE;
     OSPTTRANS *trans = (OSPTTRANS *)ospvtrans;
+    OSPE_MSG_ELEM elemtype;
     OSPE_MSG_ATTR attrtype;
     OSPE_ALTINFO attrvalue;
     OSPE_TERM_CAUSE tctype;
@@ -1523,6 +1528,59 @@ int OSPPUsageIndToElement(      /* returns error code */
                         OSPPXMLElemAddChild(usageindelem, subelem);
                         subelem = OSPC_OSNULL;
                     }
+                }
+            }
+
+            /* Add call party info */
+            for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
+                if ((errcode == OSPC_ERR_NO_ERROR) &&
+                    ((usage->UserName[cnt][0] != '\0') || (usage->UserId[cnt][0] != '\0') || (usage->UserGroup[cnt][0] != '\0')))
+                {
+                    if (cnt == OSPC_CPARTY_SOURCE) {
+                        elemtype = OSPC_MELEM_CALLINGPARTYINFO;
+                    } else if (cnt == OSPC_CPARTY_DESTINATION){
+                        elemtype = OSPC_MELEM_CALLEDPARTYINFO;
+                    } else {
+                        continue;
+                    }
+                    callpartyelem = OSPPXMLElemNew(OSPPMsgElemGetName(elemtype), "");
+                    if (callpartyelem == OSPC_OSNULL) {
+                        errcode = OSPC_ERR_XML_NO_ELEMENT;
+                    }
+                }
+                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserName[cnt][0] != '\0')) {
+                    errcode = OSPPStringToElement(OSPC_MELEM_USERNAME, usage->UserName[cnt], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                    if (errcode == OSPC_ERR_NO_ERROR) {
+                        OSPPXMLElemAddChild(callpartyelem, subelem);
+                        subelem = OSPC_OSNULL;
+                    } else {
+                        OSPPXMLElemDelete(&callpartyelem);
+                        callpartyelem = OSPC_OSNULL;
+                    }
+                }
+                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserId[cnt][0] != '\0')) {
+                    errcode = OSPPStringToElement(OSPC_MELEM_USERID, usage->UserId[cnt], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                    if (errcode == OSPC_ERR_NO_ERROR) {
+                        OSPPXMLElemAddChild(callpartyelem, subelem);
+                        subelem = OSPC_OSNULL;
+                    } else {
+                        OSPPXMLElemDelete(&callpartyelem);
+                        callpartyelem = OSPC_OSNULL;
+                    }
+                }
+                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserGroup[cnt][0] != '\0')) {
+                    errcode = OSPPStringToElement(OSPC_MELEM_USERGROUP, usage->UserGroup[cnt], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                    if (errcode == OSPC_ERR_NO_ERROR) {
+                        OSPPXMLElemAddChild(callpartyelem, subelem);
+                        subelem = OSPC_OSNULL;
+                    } else {
+                        OSPPXMLElemDelete(&callpartyelem);
+                        callpartyelem = OSPC_OSNULL;
+                    }
+                }
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, callpartyelem);
+                    callpartyelem = OSPC_OSNULL;
                 }
             }
 

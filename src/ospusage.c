@@ -224,7 +224,7 @@ unsigned OSPPUsageToElement(        /* returns error code */
     OSPTTIME ospvConnectTime,       /* optional, if not 0, call connect time */
     OSPTBOOL ospvHasPDDInfo,        /* Is PDD info present variable */
     unsigned ospvPostDialDelay,     /* PDD value, in milliseconds */
-    unsigned ospvReleaseSource,     /* Release source value */
+    OSPE_RELEASE ospvReleaseSource, /* Release source value */
     OSPT_XML_ELEM *ospvElem)        /* where to put XML element pointer */
 {
     unsigned errcode = OSPC_ERR_NO_ERROR;
@@ -310,7 +310,7 @@ unsigned OSPPUsageToElement(        /* returns error code */
 
     /* now add the Rel src */
     if (errcode == OSPC_ERR_NO_ERROR) {
-        errcode = OSPPMsgNumToElement(ospvReleaseSource, OSPPMsgElemGetName(OSPC_MELEM_RELEASESOURCE), &elem);
+        errcode = OSPPStringToElement(OSPC_MELEM_RELEASE, OSPPReleaseGetName(ospvReleaseSource), 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
         if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;

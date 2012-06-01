@@ -35,7 +35,7 @@ typedef struct {
     OSPTTIME ConnectTime;
     unsigned PostDialDelay;                 /* In milliseconds */
     OSPTBOOL HasPDD;
-    unsigned ReleaseSource;
+    OSPE_RELEASE ReleaseSource;
     char ConferenceId[OSPC_SIZE_CONFID];    /* This is in chararcters */
     char *MessageId;
     char *ComponentId;
@@ -65,6 +65,9 @@ typedef struct {
     OSPE_ROLE_STATE RoleState;
     OSPE_ROLE_FORMAT RoleFormat;
     OSPE_ROLE_VENDOR RoleVendor;
+    char UserName[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
+    char UserId[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
+    char UserGroup[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
 } OSPT_USAGE_IND;
 
 /* Function Prototypes */
@@ -140,8 +143,8 @@ extern "C" {
     void OSPPUsageIndSetPostDialDelay(OSPT_USAGE_IND *, unsigned ospvPostDialDelay);
     unsigned OSPPUsageIndGetPostDialDelay(OSPT_USAGE_IND *);
     OSPTBOOL OSPPUsageIndHasPDD(OSPT_USAGE_IND *);
-    void OSPPUsageIndSetReleaseSource(OSPT_USAGE_IND *, unsigned ospvReleaseSource);
-    unsigned OSPPUsageIndGetReleaseSource(OSPT_USAGE_IND *);
+    void OSPPUsageIndSetReleaseSource(OSPT_USAGE_IND *, OSPE_RELEASE ospvReleaseSource);
+    OSPE_RELEASE OSPPUsageIndGetReleaseSource(OSPT_USAGE_IND *);
     void OSPPUsageIndSetConferenceId(OSPT_USAGE_IND *, const char *);
     const char *OSPPUsageIndGetConferenceId(OSPT_USAGE_IND *);
     void OSPPUsageIndSetDestinationCount(OSPT_USAGE_IND *, unsigned ospvDestinationCount);

@@ -89,6 +89,14 @@ typedef enum {
     OSPC_URL_NUMBER
 } OSPE_URL_TYPE;
 
+/* Call party type */
+typedef enum {
+    OSPC_CPARTY_START = 0,
+    OSPC_CPARTY_SOURCE = OSPC_CPARTY_START,
+    OSPC_CPARTY_DESTINATION,
+    OSPC_CPARTY_NUMBER
+} OSPE_CALL_PARTY;
+
 #define DEFAULT_GETNEXTDEST_NO_ERROR    99999
 
 typedef struct {
@@ -120,6 +128,9 @@ typedef struct {
     OSPE_ROLE_STATE RoleState;
     OSPE_ROLE_FORMAT RoleFormat;
     OSPE_ROLE_VENDOR RoleVendor;
+    char UserName[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
+    char UserId[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
+    char UserGroup[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
 } OSPT_DEST;
 
 /* Function Prototypes */
