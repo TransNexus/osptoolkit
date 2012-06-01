@@ -5121,20 +5121,14 @@ int OSPPTransactionSetCallPartyInfo(
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
             if (ospvUserName != OSPC_OSNULL) {
                 OSPM_STRNCPY(trans->UserName[ospvParty], ospvUserName, sizeof(trans->UserName[ospvParty]) - 1);
-            } else {
-                trans->UserName[ospvParty][0] = '\0';
             }
 
             if (ospvUserId != OSPC_OSNULL) {
                 OSPM_STRNCPY(trans->UserId[ospvParty], ospvUserId, sizeof(trans->UserId[ospvParty]) - 1);
-            } else {
-                trans->UserId[ospvParty][0] = '\0';
             }
 
             if (ospvUserGroup != OSPC_OSNULL) {
                 OSPM_STRNCPY(trans->UserGroup[ospvParty], ospvUserGroup, sizeof(trans->UserGroup[ospvParty]) - 1);
-            } else {
-                trans->UserGroup[ospvParty][0] = '\0';
             }
         }
     }
