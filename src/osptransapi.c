@@ -1674,14 +1674,6 @@ int OSPPTransactionBuildUsageFromScratch(
                 trans->CurrentDest->RoleFormat = trans->RoleFormat;
                 trans->CurrentDest->RoleVendor = trans->RoleVendor;
             }
-
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
-                    OSPM_STRNCPY(trans->CurrentDest->UserName[cnt], trans->UserName[cnt], sizeof(trans->CurrentDest->UserName[cnt]));
-                    OSPM_STRNCPY(trans->CurrentDest->UserId[cnt], trans->UserId[cnt], sizeof(trans->CurrentDest->UserId[cnt]));
-                    OSPM_STRNCPY(trans->CurrentDest->UserGroup[cnt], trans->UserGroup[cnt], sizeof(trans->CurrentDest->UserGroup[cnt]));
-                }
-            }
         } else if (ospvRole == OSPC_ROLE_DESTINATION) {
             if (trans->AuthInd != OSPC_OSNULL) {
                 errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
@@ -1728,12 +1720,6 @@ int OSPPTransactionBuildUsageFromScratch(
                             dest->RoleState = trans->RoleState;
                             dest->RoleFormat = trans->RoleFormat;
                             dest->RoleVendor = trans->RoleVendor;
-
-                            for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
-                                OSPM_STRNCPY(dest->UserName[cnt], trans->UserName[cnt], sizeof(dest->UserName[cnt]));
-                                OSPM_STRNCPY(dest->UserId[cnt], trans->UserId[cnt], sizeof(dest->UserId[cnt]));
-                                OSPM_STRNCPY(dest->UserGroup[cnt], trans->UserGroup[cnt], sizeof(dest->UserGroup[cnt]));
-                            }
 
                             OSPPAuthIndSetDest(authind, dest);
 
@@ -2184,11 +2170,6 @@ int OSPPTransactionNew(
         trans->RoleState = OSPC_RSTATE_UNKNOWN;
         trans->RoleFormat = OSPC_RFORMAT_UNKNOWN;
         trans->RoleVendor = OSPC_RVENDOR_UNKNOWN;
-        for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
-            trans->UserName[cnt][0] = '\0';
-            trans->UserId[cnt][0] = '\0';
-            trans->UserGroup[cnt][0] = '\0';
-        }
     }
 
     return errcode;
@@ -2709,15 +2690,6 @@ int OSPPTransactionReportUsage(
                     usage->RoleVendor = trans->CurrentDest->RoleVendor;
                 } else {
                     usage->RoleVendor = trans->RoleVendor;
-                }
-            }
-
-            /* Move call party info to the usage structure */
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
-                    OSPM_STRNCPY(usage->UserName[cnt], trans->CurrentDest->UserName[cnt], sizeof(usage->UserName[cnt]));
-                    OSPM_STRNCPY(usage->UserId[cnt], trans->CurrentDest->UserId[cnt], sizeof(usage->UserId[cnt]));
-                    OSPM_STRNCPY(usage->UserGroup[cnt], trans->CurrentDest->UserGroup[cnt], sizeof(usage->UserGroup[cnt]));
                 }
             }
 
@@ -5112,23 +5084,24 @@ int OSPPTransactionSetCallPartyInfo(
     const char *ospvUserGroup)      /* In - User group */
 {
     int errcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
 
     if ((ospvParty < OSPC_CPARTY_START) || (ospvParty >= OSPC_CPARTY_NUMBER)) {
         errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            if (ospvUserName != OSPC_OSNULL) {
-                OSPM_STRNCPY(trans->UserName[ospvParty], ospvUserName, sizeof(trans->UserName[ospvParty]) - 1);
-            }
-
-            if (ospvUserId != OSPC_OSNULL) {
-                OSPM_STRNCPY(trans->UserId[ospvParty], ospvUserId, sizeof(trans->UserId[ospvParty]) - 1);
-            }
-
-            if (ospvUserGroup != OSPC_OSNULL) {
-                OSPM_STRNCPY(trans->UserGroup[ospvParty], ospvUserGroup, sizeof(trans->UserGroup[ospvParty]) - 1);
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            if ((trans != OSPC_OSNULL) && (trans->AuthReq != OSPC_OSNULL) && ((dest = trans->CurrentDest) != OSPC_OSNULL)) {
+                if (ospvUserName != OSPC_OSNULL) {
+                    OSPM_STRNCPY(dest->UserName[ospvParty], ospvUserName, sizeof(dest->UserName[ospvParty]) - 1);
+                }
+                if (ospvUserId != OSPC_OSNULL) {
+                    OSPM_STRNCPY(dest->UserId[ospvParty], ospvUserId, sizeof(dest->UserId[ospvParty]) - 1);
+                }
+                if (ospvUserGroup != OSPC_OSNULL) {
+                    OSPM_STRNCPY(dest->UserGroup[ospvParty], ospvUserGroup, sizeof(dest->UserGroup[ospvParty]) - 1);
+                }
             }
         }
     }

@@ -1073,11 +1073,6 @@ OSPT_USAGE_IND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         usageind->RoleState = OSPC_RSTATE_UNKNOWN;
         usageind->RoleFormat = OSPC_RFORMAT_UNKNOWN;
         usageind->RoleVendor = OSPC_RVENDOR_UNKNOWN;
-        for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
-            usageind->UserName[cnt][0] = '\0';
-            usageind->UserId[cnt][0] = '\0';
-            usageind->UserGroup[cnt][0] = '\0';
-        }
     }
 
     return usageind;
