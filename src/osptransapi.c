@@ -1573,7 +1573,6 @@ int OSPPTransactionBuildUsageFromScratch(
     unsigned *ospvSizeOfDetailLog,              /* In/Out - Max size of detail log\ Actual size of detail log */
     void *ospvDetailLog)                        /* In - Pointer to storage for detail log */
 {
-    int cnt;
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
     unsigned numcallids = 1;
@@ -2647,7 +2646,7 @@ int OSPPTransactionReportUsage(
         } else if (trans->AuthInd != OSPC_OSNULL) {
             datatype = OSPC_MSG_AIND;
 
-            errcode = OSPPTransactionBuildUsage(trans, &usage, dest, datatype);
+            errcode = OSPPTransactionBuildUsage(trans, &usage, trans->CurrentDest, datatype);
 
             if (errcode == OSPC_ERR_NO_ERROR) {
                 if (OSPPDestHasTermCauseAny(trans->CurrentDest)) {
@@ -2669,27 +2668,6 @@ int OSPPTransactionReportUsage(
                     } else {
                         OSPPUsageIndSetProtocol(usage, cnt, OSPC_PROTNAME_UNKNOWN);
                     }
-                }
-            }
-
-            /* Move role info to the usage structure */
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                if ((trans->CurrentDest->RoleState >= OSPC_RSTATE_START) && (trans->CurrentDest->RoleState < OSPC_RSTATE_NUMBER)) {
-                    usage->RoleState = trans->CurrentDest->RoleState;
-                } else {
-                    usage->RoleState = trans->RoleState;
-                }
-
-                if ((trans->CurrentDest->RoleFormat >= OSPC_RFORMAT_START) && (trans->CurrentDest->RoleFormat < OSPC_RFORMAT_NUMBER)) {
-                    usage->RoleFormat = trans->CurrentDest->RoleFormat;
-                } else {
-                    usage->RoleFormat = trans->RoleFormat;
-                }
-
-                if ((trans->CurrentDest->RoleVendor >= OSPC_RVENDOR_START) && (trans->CurrentDest->RoleVendor < OSPC_RVENDOR_NUMBER)) {
-                    usage->RoleVendor = trans->CurrentDest->RoleVendor;
-                } else {
-                    usage->RoleVendor = trans->RoleVendor;
                 }
             }
 
