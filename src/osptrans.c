@@ -380,21 +380,9 @@ int OSPPTransactionBuildUsage(
             /* Move call party info to the usage structure */
             if (errcode == OSPC_ERR_NO_ERROR) {
                 for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
-                    if (ospvDest->UserName[cnt][0] != '\0') {
-                        OSPM_STRNCPY((*ospvUsage)->UserName[cnt], ospvDest->UserName[cnt], sizeof((*ospvUsage)->UserName[cnt]));
-                    } else {
-                        OSPM_STRNCPY((*ospvUsage)->UserName[cnt], ospvTrans->UserName[cnt], sizeof((*ospvUsage)->UserName[cnt]));
-                    }
-                    if (ospvDest->UserId[cnt][0] != '\0') {
-                        OSPM_STRNCPY((*ospvUsage)->UserId[cnt], ospvDest->UserId[cnt], sizeof((*ospvUsage)->UserId[cnt]));
-                    } else {
-                        OSPM_STRNCPY((*ospvUsage)->UserId[cnt], ospvTrans->UserId[cnt], sizeof((*ospvUsage)->UserId[cnt]));
-                    }
-                    if (ospvDest->UserGroup[cnt][0] != '\0') {
-                        OSPM_STRNCPY((*ospvUsage)->UserGroup[cnt], ospvDest->UserGroup[cnt], sizeof((*ospvUsage)->UserGroup[cnt]));
-                    } else {
-                        OSPM_STRNCPY((*ospvUsage)->UserGroup[cnt], ospvTrans->UserGroup[cnt], sizeof((*ospvUsage)->UserGroup[cnt]));
-                    }
+                    OSPM_STRNCPY((*ospvUsage)->UserName[cnt], ospvDest->UserName[cnt], sizeof((*ospvUsage)->UserName[cnt]));
+                    OSPM_STRNCPY((*ospvUsage)->UserId[cnt], ospvDest->UserId[cnt], sizeof((*ospvUsage)->UserId[cnt]));
+                    OSPM_STRNCPY((*ospvUsage)->UserGroup[cnt], ospvDest->UserGroup[cnt], sizeof((*ospvUsage)->UserGroup[cnt]));
                 }
             }
         } else if (ospvType == OSPC_MSG_AIND) {
