@@ -1807,7 +1807,7 @@ int testSetRoleInfo()
     int errcode = 0;
 
     errcode = OSPPTransactionSetRoleInfo(
-        OSPVTransactionHandle, OSPC_RSTATE_HUNT1, OSPC_RFORMAT_CSV, OSPC_RVENDOR_GENBANDS3);
+        OSPVTransactionHandle, OSPC_RSTATE_STOP1, OSPC_RFORMAT_RADIUS, OSPC_RVENDOR_BROADWORKS);
 
     return errcode;
 }
