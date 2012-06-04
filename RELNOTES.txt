@@ -557,6 +557,8 @@ Version 4.1.0 - 2012-06-01
 * Changed ReleaseSource element values.
 ---------------------------------------------------------------------------
 
-Version 4.1.1 - 
+Version 4.1.1 - 2012-06-04
 * Changed call party info implementation.
 * Fixed a NULL pointer bug.
+* Added BroadWorks vendor info.
+---------------------------------------------------------------------------
