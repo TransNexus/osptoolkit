@@ -96,7 +96,9 @@ const OSPT_MSG_DESC OSPV_STYPE_DESCS[OSPC_SERVICE_NUMBER] = {
 const OSPT_MSG_DESC OSPV_RELEASE_DESCS[OSPC_RELEASE_NUMBER + 1] = {
     { OSPC_RELEASE_UNKNOWN,     "unknown" },
     { OSPC_RELEASE_SOURCE,      "source" },
-    { OSPC_RELEASE_DESTINATION, "destination" }
+    { OSPC_RELEASE_DESTINATION, "destination" },
+    { OSPC_RELEASE_INTERNAL,    "internal" },
+    { OSPC_RELEASE_EXTERNAL,    "external" }
 };
 
 /*

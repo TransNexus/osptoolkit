@@ -1961,14 +1961,23 @@ int testSetReleaseSource()
 {
     int errcode = 0;
 
-    if (release == OSPC_RELEASE_UNKNOWN) {
+    switch (release) {
+    case OSPC_RELEASE_UNKNOWN:
         release = OSPC_RELEASE_SOURCE;
-    } else if (release == OSPC_RELEASE_SOURCE) {
+        break;
+    case OSPC_RELEASE_SOURCE:
         release = OSPC_RELEASE_DESTINATION;
-    } else if (release == OSPC_RELEASE_DESTINATION) {
+        break;
+    case OSPC_RELEASE_DESTINATION:
+        release = OSPC_RELEASE_INTERNAL;
+        break;
+    case OSPC_RELEASE_INTERNAL:
+        release = OSPC_RELEASE_EXTERNAL;
+        break;
+    case OSPC_RELEASE_EXTERNAL:
+    default:
         release = OSPC_RELEASE_UNKNOWN;
-    } else {
-        release = OSPC_RELEASE_UNKNOWN;
+        break;
     }
 
     return errcode;
