@@ -5086,3 +5086,47 @@ int OSPPTransactionSetCallPartyInfo(
 
     return errcode;
 }
+
+int OSPPTransactionSetTransferId(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvTransferId)     /* In - Transfer ID  */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) &&
+        (trans != OSPC_OSNULL) &&
+        (trans->AuthReq != OSPC_OSNULL) &&
+        ((dest = trans->CurrentDest) != OSPC_OSNULL))
+    {
+        if (ospvTransferId != OSPC_OSNULL) {
+            OSPM_STRNCPY(dest->TransferId, ospvTransferId, sizeof(dest->TransferId) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetTransferStatus(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    OSPE_TRANSFER_STATUS ospvStatus)    /* In - Transfer status  */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) &&
+        (trans != OSPC_OSNULL) &&
+        (trans->AuthReq != OSPC_OSNULL) &&
+        ((dest = trans->CurrentDest) != OSPC_OSNULL))
+    {
+        if ((ospvStatus >= OSPC_TSTATUS_START) && (ospvStatus < OSPC_TSTATUS_NUMBER)) {
+            dest->TransferStatus = ospvStatus;
+        }
+    }
+
+    return errcode;
+}

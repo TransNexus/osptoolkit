@@ -101,6 +101,17 @@ const OSPT_MSG_DESC OSPV_RELEASE_DESCS[OSPC_RELEASE_NUMBER + 1] = {
     { OSPC_RELEASE_EXTERNAL,    "external" }
 };
 
+/* Array that associates transfer status type and names */
+const OSPT_MSG_DESC OSPV_TSTATUS_DESCS[OSPC_TSTATUS_NUMBER] = {
+    { OSPC_TSTATUS_TRANSFER,            "transfer" },
+    { OSPC_TSTATUS_TRANSFERFROM,        "transferfrom" },
+    { OSPC_TSTATUS_TRANSFERTO,          "transferto" },
+    { OSPC_TSTATUS_SRCTRANSFERFROM,     "sourcetransferfrom" },
+    { OSPC_TSTATUS_SRCTRANSFERTO,       "sourcetransferto" },
+    { OSPC_TSTATUS_DESTTRANSFERFROM,    "destinationtransferfrom" },
+    { OSPC_TSTATUS_DESTTRANSFERTO,      "destinationtransferto" }
+};
+
 /*
  * OSPPMsgAttrGetName() - get an attribute name from a part value
  */
@@ -129,50 +140,5 @@ OSPE_MSG_ATTR OSPPMsgAttrGetPart(   /* returns part */
     }
 
     return ospvPart;
-}
-
-/*
- * OSPPServiceGetPart() - get an service type from a part name
- */
-OSPE_SERVICE OSPPServiceGetPart(
-    const char *ospvName)
-{
-    OSPE_MSG_ATTR part = OSPC_SERVICE_UNKNOWN;
-
-    if (ospvName != OSPC_OSNULL) {
-        part = (OSPE_SERVICE)OSPPMsgDescGetPart(ospvName, OSPV_STYPE_DESCS, OSPC_SERVICE_NUMBER);
-    }
-
-    return part;
-}
-
-/*
- * OSPPServiceGetName() - get an service name from a part value
- */
-const char *OSPPServiceGetName(     /* returns pointer to the name */
-    OSPE_SERVICE ospvType)
-{
-    const char *name = OSPC_OSNULL;
-
-    if ((ospvType >= OSPC_SERVICE_START) && (ospvType < OSPC_SERVICE_NUMBER)) {
-        name = OSPPMsgDescGetName((OSPT_MSG_PART)ospvType, OSPV_STYPE_DESCS, OSPC_SERVICE_NUMBER);
-    }
-
-    return name;
-}
-
-/*
- * OSPPReleaseGetName() - get an release source name from a part value
- */
-const char *OSPPReleaseGetName(     /* returns pointer to the name */
-    OSPE_RELEASE ospvType)
-{
-    const char *name = OSPC_OSNULL;
-
-    if ((ospvType == OSPC_RELEASE_UNKNOWN) || ((ospvType >= OSPC_RELEASE_START) && (ospvType < OSPC_RELEASE_NUMBER))) {
-        name = OSPPMsgDescGetName((OSPT_MSG_PART)ospvType, OSPV_RELEASE_DESCS, OSPC_RELEASE_NUMBER + 1);
-    }
-
-    return name;
 }
 

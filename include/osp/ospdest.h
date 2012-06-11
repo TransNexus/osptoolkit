@@ -131,6 +131,8 @@ typedef struct {
     char UserName[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
     char UserId[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
     char UserGroup[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
+    char TransferId[OSPC_SIZE_NORSTR];
+    OSPE_TRANSFER_STATUS TransferStatus;
 } OSPT_DEST;
 
 /* Function Prototypes */

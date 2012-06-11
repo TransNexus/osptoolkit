@@ -124,6 +124,8 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_TOTALOCTETS,          "TotalOctets" },
     { OSPC_MELEM_TOTALPACKETS,         "TotalPackets" },
     { OSPC_MELEM_TRANSID,              "TransactionId" },
+    { OSPC_MELEM_TRANSFERID,           "TransferId" },
+    { OSPC_MELEM_TRANSFERSTATUS,       "TransferStatus" },
     { OSPC_MELEM_TWOWAYDELAY,          "TwoWayDelay" },
     { OSPC_MELEM_UNIT,                 "Unit" },
     { OSPC_MELEM_USAGECNF,             "UsageConfirmation" },

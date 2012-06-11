@@ -1993,6 +1993,24 @@ int testSetCallPartyInfo()
     return errcode;
 }
 
+int testSetTransferId()
+{
+    int errcode = 0;
+
+    OSPPTransactionSetTransferId(OSPVTransactionHandle, "transferid");
+
+    return errcode;
+}
+
+int testSetTransferStatus()
+{
+    int errcode = 0;
+
+    OSPPTransactionSetTransferStatus(OSPVTransactionHandle, OSPC_TSTATUS_DESTTRANSFERFROM);
+
+    return errcode;
+}
+
 int testGetNumberPortability()
 {
     int errcode = 0;
@@ -2467,6 +2485,12 @@ int testAPI(int apinumber)
     case 226:
         errcode = testSetCallPartyInfo();
         break;
+    case 227:
+        errcode = testSetTransferId();
+        break;
+    case 228:
+        errcode = testSetTransferStatus();
+        break;
     case 250:
         errcode = testGetNumberPortability();
         break;
@@ -2709,7 +2733,8 @@ int testMenu()
         printf("220) Set Signaling Protocol           221) Set Codec\n");
         printf("222) Set Network ID                   223) Set Session ID\n");
         printf("224) Set Custom Info                  225) Set Release Source\n");
-        printf("226) Set Call Party Info\n");
+        printf("226) Set Call Party Info              227) Set Transfer ID\n");
+        printf("228) Set Transfer Status\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs\n");
         printf("300) Set Lost                         301) Set Jitter\n");
