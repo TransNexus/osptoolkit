@@ -1591,7 +1591,9 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Transfer Status */
-            if ((errcode == OSPC_ERR_NO_ERROR) && (usage->TransferId[0] != '\0')) {
+            if ((errcode == OSPC_ERR_NO_ERROR) &&
+                ((usage->TransferStatus >= OSPC_TSTATUS_START) && (usage->TransferStatus < OSPC_TSTATUS_NUMBER)))
+            {
                 errcode = OSPPStringToElement(OSPC_MELEM_TRANSFERSTATUS,
                    OSPPTransferStatusGetName(usage->TransferStatus),
                    0, OSPC_OSNULL, OSPC_OSNULL,

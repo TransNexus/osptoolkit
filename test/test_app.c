@@ -1987,8 +1987,8 @@ int testSetCallPartyInfo()
 {
     int errcode = 0;
 
-    OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_SOURCE, "callingusername", "callinguserid", "callingusergroup");
-    OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_DESTINATION, "calledusername", "calleduserid", "calledusergroup");
+    errcode = OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_SOURCE, "callingusername", "callinguserid", "callingusergroup");
+    errcode = OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_DESTINATION, "calledusername", "calleduserid", "calledusergroup");
 
     return errcode;
 }
@@ -1997,7 +1997,7 @@ int testSetTransferId()
 {
     int errcode = 0;
 
-    OSPPTransactionSetTransferId(OSPVTransactionHandle, "transferid");
+    errcode = OSPPTransactionSetTransferId(OSPVTransactionHandle, "transferid");
 
     return errcode;
 }
@@ -2006,7 +2006,7 @@ int testSetTransferStatus()
 {
     int errcode = 0;
 
-    OSPPTransactionSetTransferStatus(OSPVTransactionHandle, OSPC_TSTATUS_DESTTRANSFERFROM);
+    errcode = OSPPTransactionSetTransferStatus(OSPVTransactionHandle, OSPC_TSTATUS_DESTTRANSFERFROM);
 
     return errcode;
 }
