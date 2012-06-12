@@ -661,6 +661,7 @@ OSPT_DEST *OSPPDestNew(void)    /* returns pointer or NULL */
         dest->RoleState = OSPC_RSTATE_UNKNOWN;
         dest->RoleFormat = OSPC_RFORMAT_UNKNOWN;
         dest->RoleVendor = OSPC_RVENDOR_UNKNOWN;
+        dest->TransferStatus = OSPC_TSTATUS_UNKNOWN;
     }
 
     return dest;

@@ -1073,6 +1073,8 @@ OSPT_USAGE_IND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         usageind->RoleState = OSPC_RSTATE_UNKNOWN;
         usageind->RoleFormat = OSPC_RFORMAT_UNKNOWN;
         usageind->RoleVendor = OSPC_RVENDOR_UNKNOWN;
+        usageind->TransferId[0] = '\0';
+        usageind->TransferStatus = OSPC_TSTATUS_UNKNOWN;
     }
 
     return usageind;
@@ -1576,6 +1578,29 @@ int OSPPUsageIndToElement(      /* returns error code */
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, callpartyelem);
                     callpartyelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Transfer ID */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (usage->TransferId[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_TRANSFERID, usage->TransferId, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Transfer Status */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&
+                ((usage->TransferStatus >= OSPC_TSTATUS_START) && (usage->TransferStatus < OSPC_TSTATUS_NUMBER)))
+            {
+                errcode = OSPPStringToElement(OSPC_MELEM_TRANSFERSTATUS,
+                   OSPPTransferStatusGetName(usage->TransferStatus),
+                   0, OSPC_OSNULL, OSPC_OSNULL,
+                   &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
                 }
             }
 

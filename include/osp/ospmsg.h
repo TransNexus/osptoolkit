@@ -111,6 +111,22 @@ typedef enum {
     OSPC_RVENDOR_NUMBER
 } OSPE_ROLE_VENDOR;
 
+typedef enum {
+    OSPC_TSTATUS_UNKNOWN = OSPC_MPART_UNKNOWN,
+    OSPC_TSTATUS_UNDEFINED,
+    /* Transfer status start */
+    OSPC_TSTATUS_START = 0,
+    OSPC_TSTATUS_TRANSFER = OSPC_TSTATUS_START,
+    OSPC_TSTATUS_TRANSFERFROM,
+    OSPC_TSTATUS_TRANSFERTO,
+    OSPC_TSTATUS_SRCTRANSFERFROM,
+    OSPC_TSTATUS_SRCTRANSFERTO,
+    OSPC_TSTATUS_DESTTRANSFERFROM,
+    OSPC_TSTATUS_DESTTRANSFERTO,
+   /* Number of role vendors */
+    OSPC_TSTATUS_NUMBER
+} OSPE_TRANSFER_STATUS;
+
 /*
  * externally declared global variables
  */
@@ -118,6 +134,8 @@ extern const OSPT_MSG_DESC OSPV_RTYPE_DESCS[];
 extern const OSPT_MSG_DESC OSPV_RSTATE_DESCS[];
 extern const OSPT_MSG_DESC OSPV_RFORMAT_DESCS[];
 extern const OSPT_MSG_DESC OSPV_RVENDOR_DESCS[];
+extern const OSPT_MSG_DESC OSPV_RELEASE_DESCS[];
+extern const OSPT_MSG_DESC OSPV_TSTATUS_DESCS[];
 
 /* general constants */
 
@@ -158,6 +176,7 @@ extern "C" {
     const char *OSPPRoleFormatGetName(OSPE_ROLE_FORMAT);
     OSPE_ROLE_VENDOR OSPPRoleVendorGetPart(const char *);
     const char *OSPPRoleVendorGetName(OSPE_ROLE_VENDOR);
+    const char *OSPPTransferStatusGetName(OSPE_TRANSFER_STATUS);
 
 #ifdef __cplusplus
 }

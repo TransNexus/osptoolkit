@@ -348,7 +348,6 @@ int OSPPTransactionBuildUsage(
                     }
                 }
             }
-                        
 
             /* Move Service Info to the usage structure */
             if ((errcode == OSPC_ERR_NO_ERROR) && (ospvTrans->HasServiceInfo)) {
@@ -384,6 +383,13 @@ int OSPPTransactionBuildUsage(
                     OSPM_STRNCPY((*ospvUsage)->UserId[cnt], ospvDest->UserId[cnt], sizeof((*ospvUsage)->UserId[cnt]));
                     OSPM_STRNCPY((*ospvUsage)->UserGroup[cnt], ospvDest->UserGroup[cnt], sizeof((*ospvUsage)->UserGroup[cnt]));
                 }
+            }
+
+            /* Move transfer id and status to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPM_STRNCPY((*ospvUsage)->TransferId, ospvDest->TransferId, sizeof((*ospvUsage)->TransferId));
+
+                (*ospvUsage)->TransferStatus = ospvDest->TransferStatus;
             }
         } else if (ospvType == OSPC_MSG_AIND) {
             /* Terminating */

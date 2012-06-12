@@ -1961,14 +1961,23 @@ int testSetReleaseSource()
 {
     int errcode = 0;
 
-    if (release == OSPC_RELEASE_UNKNOWN) {
+    switch (release) {
+    case OSPC_RELEASE_UNKNOWN:
         release = OSPC_RELEASE_SOURCE;
-    } else if (release == OSPC_RELEASE_SOURCE) {
+        break;
+    case OSPC_RELEASE_SOURCE:
         release = OSPC_RELEASE_DESTINATION;
-    } else if (release == OSPC_RELEASE_DESTINATION) {
+        break;
+    case OSPC_RELEASE_DESTINATION:
+        release = OSPC_RELEASE_INTERNAL;
+        break;
+    case OSPC_RELEASE_INTERNAL:
+        release = OSPC_RELEASE_EXTERNAL;
+        break;
+    case OSPC_RELEASE_EXTERNAL:
+    default:
         release = OSPC_RELEASE_UNKNOWN;
-    } else {
-        release = OSPC_RELEASE_UNKNOWN;
+        break;
     }
 
     return errcode;
@@ -1978,8 +1987,26 @@ int testSetCallPartyInfo()
 {
     int errcode = 0;
 
-    OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_SOURCE, "callingusername", "callinguserid", "callingusergroup");
-    OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_DESTINATION, "calledusername", "calleduserid", "calledusergroup");
+    errcode = OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_SOURCE, "callingusername", "callinguserid", "callingusergroup");
+    errcode = OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_DESTINATION, "calledusername", "calleduserid", "calledusergroup");
+
+    return errcode;
+}
+
+int testSetTransferId()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetTransferId(OSPVTransactionHandle, "transferid");
+
+    return errcode;
+}
+
+int testSetTransferStatus()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetTransferStatus(OSPVTransactionHandle, OSPC_TSTATUS_DESTTRANSFERFROM);
 
     return errcode;
 }
@@ -2458,6 +2485,12 @@ int testAPI(int apinumber)
     case 226:
         errcode = testSetCallPartyInfo();
         break;
+    case 227:
+        errcode = testSetTransferId();
+        break;
+    case 228:
+        errcode = testSetTransferStatus();
+        break;
     case 250:
         errcode = testGetNumberPortability();
         break;
@@ -2700,7 +2733,8 @@ int testMenu()
         printf("220) Set Signaling Protocol           221) Set Codec\n");
         printf("222) Set Network ID                   223) Set Session ID\n");
         printf("224) Set Custom Info                  225) Set Release Source\n");
-        printf("226) Set Call Party Info\n");
+        printf("226) Set Call Party Info              227) Set Transfer ID\n");
+        printf("228) Set Transfer Status\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs\n");
         printf("300) Set Lost                         301) Set Jitter\n");
