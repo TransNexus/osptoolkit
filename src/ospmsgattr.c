@@ -71,7 +71,8 @@ const OSPT_MSG_DESC OSPV_RFORMAT_DESCS[OSPC_RFORMAT_NUMBER] = {
     { OSPC_RFORMAT_IPDR,        "ipdr" },
     { OSPC_RFORMAT_CSV,         "textcsv" },
     { OSPC_RFORMAT_TSV,         "texttsv" },
-    { OSPC_RFORMAT_ASCII,       "ascii" }
+    { OSPC_RFORMAT_ASCII,       "ascii" },
+    { OSPC_RFORMAT_XML,         "xml" }
 };
 
 /* Array that associates role vendor */

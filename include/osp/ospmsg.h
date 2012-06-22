@@ -92,6 +92,7 @@ typedef enum {
     OSPC_RFORMAT_CSV,
     OSPC_RFORMAT_TSV,
     OSPC_RFORMAT_ASCII,
+    OSPC_RFORMAT_XML,
     /* Number of role formats */
     OSPC_RFORMAT_NUMBER
 } OSPE_ROLE_FORMAT;
