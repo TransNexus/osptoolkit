@@ -408,7 +408,11 @@ void OSPPUsageIndSetReleaseSource(  /* nothing returned */
     OSPE_RELEASE ospvReleaseSource) /* Rel Src to set to */
 {
     if (ospvUsageInd != OSPC_OSNULL) {
-        ospvUsageInd->ReleaseSource = ospvReleaseSource;
+        if ((ospvReleaseSource == OSPC_RELEASE_UNKNOWN) || ((ospvReleaseSource >= OSPC_RELEASE_START) && (ospvReleaseSource < OSPC_RELEASE_NUMBER))) {
+            ospvUsageInd->ReleaseSource = ospvReleaseSource;
+        } else {
+            ospvUsageInd->ReleaseSource = OSPC_RELEASE_UNDEFINED;
+        }
     }
 }
 
@@ -418,10 +422,14 @@ void OSPPUsageIndSetReleaseSource(  /* nothing returned */
 OSPE_RELEASE OSPPUsageIndGetReleaseSource(
     OSPT_USAGE_IND *ospvUsageInd)   /* usage ind */
 {
-    OSPE_RELEASE ospvReleaseSource = OSPC_RELEASE_UNKNOWN;
+    OSPE_RELEASE ospvReleaseSource = OSPC_RELEASE_UNDEFINED;
 
     if (ospvUsageInd != OSPC_OSNULL) {
-        ospvReleaseSource = ospvUsageInd->ReleaseSource;
+        if ((ospvUsageInd->ReleaseSource == OSPC_RELEASE_UNKNOWN) || 
+            ((ospvUsageInd->ReleaseSource >= OSPC_RELEASE_START) && (ospvUsageInd->ReleaseSource < OSPC_RELEASE_NUMBER))) 
+        {
+            ospvReleaseSource = ospvUsageInd->ReleaseSource;
+        }
     }
 
     return ospvReleaseSource;
@@ -1037,7 +1045,7 @@ OSPT_USAGE_IND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         usageind->ConnectTime = (OSPTTIME) 0;
         usageind->HasPDD = OSPC_FALSE;
         usageind->PostDialDelay = 0;
-        usageind->ReleaseSource = OSPC_RELEASE_UNKNOWN;
+        usageind->ReleaseSource = OSPC_RELEASE_UNDEFINED;
         usageind->ConferenceId[0] = '\0';
         usageind->Role = OSPC_ROLE_UNDEFINED;
         usageind->HasRole = OSPC_FALSE;
