@@ -1828,7 +1828,7 @@ int testSetNumberPortability()
 {
     int errcode = 0;
 
-    errcode = OSPPTransactionSetNumberPortability(OSPVTransactionHandle, "NPRn", "NPCic", 1);
+    errcode = OSPPTransactionSetNumberPortability(OSPVTransactionHandle, "13243546576", "NPCic", 1);
 
     return errcode;
 }

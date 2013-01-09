@@ -1441,6 +1441,33 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
+            /* add the routing number */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->NPRn[0] != '\0')) {
+                errcode = OSPPNPRnToElement(trans->NPRn, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* add the carrier identification code */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->NPCic[0] != '\0')) {
+                errcode = OSPPNPCicToElement(trans->NPCic, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* add the npdi flag */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->NPNpdi == OSPC_TRUE)) {
+                errcode = OSPPNPNpdiToElement(OSPC_TRUE, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
             /* add the destination alternates */
             if ((errcode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasDestinationAlt(usage)) {
                 for (altinfo = (OSPT_ALTINFO *)OSPPUsageIndFirstDestinationAlt(usage);
