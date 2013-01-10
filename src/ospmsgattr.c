@@ -71,7 +71,8 @@ const OSPT_MSG_DESC OSPV_RFORMAT_DESCS[OSPC_RFORMAT_NUMBER] = {
     { OSPC_RFORMAT_IPDR,        "ipdr" },
     { OSPC_RFORMAT_CSV,         "textcsv" },
     { OSPC_RFORMAT_TSV,         "texttsv" },
-    { OSPC_RFORMAT_ASCII,       "ascii" }
+    { OSPC_RFORMAT_ASCII,       "ascii" },
+    { OSPC_RFORMAT_XML,         "xml" }
 };
 
 /* Array that associates role vendor */
@@ -79,6 +80,7 @@ const OSPT_MSG_DESC OSPV_RVENDOR_DESCS[OSPC_RVENDOR_NUMBER] = {
     { OSPC_RVENDOR_ACME,        "acme" },
     { OSPC_RVENDOR_GENBANDS3,   "genbands3" },
     { OSPC_RVENDOR_BROADWORKS,  "broadworks" },
+    { OSPC_RVENDOR_PERIMETA,    "perimeta" },
     { OSPC_RVENDOR_OPENSIPS,    "opensips" },
     { OSPC_RVENDOR_ASTERISK,    "asterisk" },
     { OSPC_RVENDOR_FREESWITCH,  "freeswitch" }

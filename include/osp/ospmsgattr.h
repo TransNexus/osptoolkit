@@ -101,6 +101,7 @@ typedef enum {
 
 typedef enum {
     OSPC_RELEASE_UNKNOWN = OSPC_MPART_UNKNOWN,
+    OSPC_RELEASE_UNDEFINED,
     /* Message attribute start */
     OSPC_RELEASE_START = OSPC_MPART_START,
     OSPC_RELEASE_SOURCE = OSPC_SERVICE_START,

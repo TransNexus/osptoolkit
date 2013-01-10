@@ -309,7 +309,9 @@ unsigned OSPPUsageToElement(        /* returns error code */
     }
 
     /* now add the Rel src */
-    if (errcode == OSPC_ERR_NO_ERROR) {
+    if ((errcode == OSPC_ERR_NO_ERROR) &&
+        ((ospvReleaseSource == OSPC_RELEASE_UNKNOWN) || ((ospvReleaseSource >= OSPC_RELEASE_START) && (ospvReleaseSource < OSPC_RELEASE_NUMBER))))
+    {
         errcode = OSPPStringToElement(OSPC_MELEM_RELEASE, OSPPReleaseGetName(ospvReleaseSource), 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
         if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);

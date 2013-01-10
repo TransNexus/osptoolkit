@@ -4044,18 +4044,12 @@ int OSPPTransactionSetNumberPortability(
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
-    OSPT_DEST *dest = OSPC_OSNULL;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
     if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
         if (trans->State == OSPC_REPORT_USAGE_SUCCESS) {
             errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-        } else if ((trans->AuthReq == OSPC_OSNULL) && (trans->AuthInd == OSPC_OSNULL)) {
-            /*
-             * Neither Authorization Request nor Validate Authorization has
-             * been called. We dont care if it is the source or destination in
-             * this case. Just add the info to the transaction handler
-             */
+        } else {
             if (ospvRn != OSPC_OSNULL) {
                 OSPM_STRNCPY(trans->NPRn, ospvRn, sizeof(trans->NPRn) - 1);
             }
@@ -4069,35 +4063,7 @@ int OSPPTransactionSetNumberPortability(
             } else {
                 trans->NPNpdi = OSPC_FALSE;
             }
-        } else if ((trans->AuthReq != OSPC_OSNULL) && (trans->AuthInd == OSPC_OSNULL)) {
-            /*
-             * End point is a source, however it is calling the
-             * function out of sequence as it has already called
-             * AuthReq, return an error
-             */
-            errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errcode, "Calling OSPPTransactionSetNumberPortability after Authorization has been requested");
-        } else {
-            /*
-             * For the other two cases in which AuthInd!= OSPC_OSNULL
-             * End point is a destination, and Validate Authorization has already been called
-             * Since out of sequence calls are allowed on the destination, add this to the Authind req
-             */
-            dest = trans->AuthInd->Destination;
-            if (ospvRn != OSPC_OSNULL) {
-                OSPM_STRNCPY(dest->NPRn, ospvRn, sizeof(dest->NPRn) - 1);
-            }
-
-            if (ospvCic != OSPC_OSNULL) {
-                OSPM_STRNCPY(dest->NPCic, ospvRn, sizeof(dest->NPCic) - 1);
-            }
-
-            if (ospvNpdi) {
-                dest->NPNpdi = OSPC_TRUE;
-            } else {
-                dest->NPNpdi = OSPC_FALSE;
-            }
-        }
+		}
     }
 
     return errcode;
