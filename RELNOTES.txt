@@ -573,4 +573,7 @@ Version 4.1.3 - 2013-01-10
 * Added Metaswitch Perimeta vendor type.
 * Updated release source logic.
 * Added reporting LNP in UsageInd.
+---------------------------------------------------------------------------
+
+Version 4.1.4 - 
 
