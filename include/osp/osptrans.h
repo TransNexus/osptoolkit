@@ -122,6 +122,9 @@ typedef struct _OSPTTRANS {
     OSPE_ROLE_STATE RoleState;
     OSPE_ROLE_FORMAT RoleFormat;
     OSPE_ROLE_VENDOR RoleVendor;
+    OSPE_NUMBER_FORMAT NetworkTranslatedCalledFormat;
+    char NetworkTranslatedCalled[OSPC_SIZE_E164NUM];
+    char ServiceProviderId[OSPC_SIZE_NORSTR];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

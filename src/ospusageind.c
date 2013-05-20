@@ -1853,6 +1853,24 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
+            /* add network translated called number */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->NetworkTranslatedCalled[0] != '\0')) {
+                errcode = OSPPCallPartyNumToElement(OSPC_MELEM_NETTRANSCALLED, trans->NetworkTranslatedCalled, trans->NetworkTranslatedCalledFormat, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add service provider ID */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->ServiceProviderId[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDERID, trans->ServiceProviderId, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, usageindelem);
                 usageindelem = OSPC_OSNULL;

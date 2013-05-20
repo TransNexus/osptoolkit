@@ -2169,6 +2169,9 @@ int OSPPTransactionNew(
         trans->RoleState = OSPC_RSTATE_UNKNOWN;
         trans->RoleFormat = OSPC_RFORMAT_UNKNOWN;
         trans->RoleVendor = OSPC_RVENDOR_UNKNOWN;
+        trans->NetworkTranslatedCalledFormat = OSPC_NFORMAT_E164;
+        trans->NetworkTranslatedCalled[0] = '\0';
+        trans->ServiceProviderId[0] = '\0';
     }
 
     return errcode;
@@ -5096,3 +5099,46 @@ int OSPPTransactionSetTransferStatus(
 
     return errcode;
 }
+
+int OSPPTransactionSetNetworkTranslatedCalledNumber(
+    OSPTTRANHANDLE ospvTransaction,             /* In - Transaction handle */
+    OSPE_NUMBER_FORMAT ospvFormat,              /* In - Network translated called number format */
+    const char *ospvNetworkTranslatedCalled)    /* In - Network translated called number */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if (((ospvFormat < OSPC_NFORMAT_START) || (ospvFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvNetworkTranslatedCalled == OSPC_OSNULL) || (ospvNetworkTranslatedCalled[0] == '\0')))
+    {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            trans->NetworkTranslatedCalledFormat = ospvFormat;
+            OSPM_STRNCPY(trans->NetworkTranslatedCalled, ospvNetworkTranslatedCalled, sizeof(trans->NetworkTranslatedCalled) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetServiceProviderId(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvServiceProviderId)  /* In - Service provider ID */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvServiceProviderId == OSPC_OSNULL) || (ospvServiceProviderId[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+               OSPM_STRNCPY(trans->ServiceProviderId, ospvServiceProviderId, sizeof(trans->ServiceProviderId) - 1);
+        }
+    }
+
+    return errcode;
+}
+
