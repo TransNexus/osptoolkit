@@ -124,6 +124,8 @@ extern "C" {
     int OSPPTransactionSetCallPartyInfo(OSPTTRANHANDLE, OSPE_CALL_PARTY, const char*, const char*, const char*);
     int OSPPTransactionSetTransferId(OSPTTRANHANDLE, const char*);
     int OSPPTransactionSetTransferStatus(OSPTTRANHANDLE, OSPE_TRANSFER_STATUS);
+    int OSPPTransactionSetNetworkTranslatedCalledNumber(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
+    int OSPPTransactionSetServiceProviderId(OSPTTRANHANDLE, const char *);
 
 #ifdef __cplusplus
 }
