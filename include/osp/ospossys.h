@@ -531,7 +531,7 @@ const char *OSPM_INET_NTOA(OSPTIPADDR ip, char *buf, socklen_t len);
 #define OSPM_STRNCMP(s1,s2,n)       strncmp((s1), (s2), (n))
 #define OSPM_STRLEN(s)              ((s != OSPC_OSNULL)? strlen(s) : 0)
 #define OSPM_STRNCAT(s1,s2,n)       strncat((s1), (s2), (n))
-#define OSPM_STRNCPY(s1,s2,n)       strncpy((char *)(s1), (const char *)(s2), (n))
+#define OSPM_STRNCPY(s1,s2,n);      { strncpy((char *)(s1), (const char *)(s2), (n)); (s1)[n - 1] = '\0'; }
 #define OSPM_STRNCASECMP(s1,s2,n)   strncasecmp((s1), (s2), (n))
 #define OSPM_STRTOUL(s1,a1,b)       strtoul((s1), (a1), (b))
 #define OSPM_STRSTR(s1,s2)          strstr((s1),(s2))
