@@ -37,10 +37,13 @@ typedef enum {
     OSPC_MATTR_DIR,
     OSPC_MATTR_VERSION,
     OSPC_MATTR_INDEX,
+    OSPC_MATTR_SERVICE,
     OSPC_MATTR_REPORTER,
     /* Number of message attribtes */
     OSPC_MATTR_NUMBER
 } OSPE_MSG_ATTR;
+
+#define OSPC_MAX_ATTR   4
 
 #define OSPC_MAX_INDEX  32
 

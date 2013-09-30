@@ -2116,7 +2116,12 @@ int OSPPTransactionNew(
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
-    unsigned cnt;
+    OSPE_OPERATOR_NAME opname;
+    OSPE_PROTOCOL_TYPE prot;
+    OSPE_SERVICE svc;
+    OSPE_CODEC_TYPE codec;
+    OSPE_SESSION_ID sess;
+    int index;
 
     errcode = OSPPTransactionGetNewContext(ospvProvider, ospvTransaction);
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -2141,20 +2146,22 @@ int OSPPTransactionNew(
         trans->NPRn[0] = '\0';
         trans->NPCic[0] = '\0';
         trans->NPNpdi = OSPC_FALSE;
-        for (cnt = 0; cnt < OSPC_OPNAME_NUMBER; cnt++) {
-            trans->OpName[cnt][0] = '\0';
+        for (opname = OSPC_OPNAME_START; opname < OSPC_OPNAME_NUMBER; opname++) {
+            trans->OpName[opname][0] = '\0';
         }
-        for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
-            trans->Protocol[cnt] = OSPC_PROTNAME_UNKNOWN;
+        for (prot = OSPC_PROTTYPE_START; prot < OSPC_PROTTYPE_NUMBER; prot++) {
+            trans->Protocol[prot] = OSPC_PROTNAME_UNKNOWN;
         }
-        for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
-            trans->Codec[cnt][0] = '\0';
+        for (svc = OSPC_SERVICE_START; svc < OSPC_SERVICE_NUMBER; svc++) {
+            for (codec = OSPC_CODEC_START; codec < OSPC_CODEC_NUMBER; codec++) {
+                trans->Codec[svc][codec][0] = '\0';
+            }
         }
-        for (cnt = OSPC_SESSIONID_START; cnt < OSPC_SESSIONID_NUMBER; cnt++) {
-            trans->SessionId[cnt] = OSPC_OSNULL;
+        for (sess = OSPC_SESSIONID_START; sess < OSPC_SESSIONID_NUMBER; sess++) {
+            trans->SessionId[sess] = OSPC_OSNULL;
         }
-        for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
-            trans->CustomInfo[cnt] = OSPC_OSNULL;
+        for (index = 0; index < OSPC_MAX_INDEX; index++) {
+            trans->CustomInfo[index] = OSPC_OSNULL;
         }
         trans->UsageSrcNetworkId[0] = '\0';
         trans->SrcRealm[0] = '\0';
@@ -2172,6 +2179,8 @@ int OSPPTransactionNew(
         trans->NetworkTranslatedCalledFormat = OSPC_NFORMAT_E164;
         trans->NetworkTranslatedCalled[0] = '\0';
         trans->ServiceProviderId[0] = '\0';
+        trans->SystemId[0] = '\0';
+        trans->RelatedReason[0] = '\0';
     }
 
     return errcode;
@@ -2488,7 +2497,10 @@ int OSPPTransactionReportUsage(
     OSPTBOOL usageallowed = OSPC_FALSE;
     OSPT_STATS stats;
     OSPE_PROTOCOL_NAME protocol;
-    unsigned cnt;
+    OSPE_SERVICE svc;
+    OSPE_CODEC_TYPE codec;
+    OSPE_SESSION_ID sess;
+    OSPE_PROTOCOL_TYPE prot;
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
@@ -2613,15 +2625,17 @@ int OSPPTransactionReportUsage(
                                 OSPPUsageIndSetStatistics(usage, &stats);
                             }
 
-                            for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
-                                if (trans->Codec[cnt][0] != '\0') {
-                                    OSPPUsageIndSetCodec(usage, cnt, trans->Codec[cnt]);
+                            for (svc = OSPC_SERVICE_START; svc < OSPC_SERVICE_NUMBER; svc++) {
+                                for (codec = OSPC_CODEC_START; codec < OSPC_CODEC_NUMBER; codec++) {
+                                    if (trans->Codec[svc][codec][0] != '\0') {
+                                        OSPPUsageIndSetCodec(usage, svc, codec, trans->Codec[svc][codec]);
+                                    }
                                 }
                             }
 
-                            for (cnt = OSPC_SESSIONID_START; cnt < OSPC_SESSIONID_NUMBER; cnt++) {
-                                if (trans->SessionId[cnt] != OSPC_OSNULL) {
-                                    OSPPUsageIndSetSessionId(usage, cnt, trans->SessionId[cnt]);
+                            for (sess = OSPC_SESSIONID_START; sess < OSPC_SESSIONID_NUMBER; sess++) {
+                                if (trans->SessionId[sess] != OSPC_OSNULL) {
+                                    OSPPUsageIndSetSessionId(usage, sess, trans->SessionId[sess]);
                                 }
                             }
 
@@ -2660,16 +2674,16 @@ int OSPPTransactionReportUsage(
 
             /* Move protocols to the usage structure */
             if (errcode == OSPC_ERR_NO_ERROR) {
-                for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
-                    if (cnt == OSPC_PROTTYPE_DESTINATION) {
+                for (prot = OSPC_PROTTYPE_START; prot < OSPC_PROTTYPE_NUMBER; prot++) {
+                    if (prot == OSPC_PROTTYPE_DESTINATION) {
                         protocol = trans->CurrentDest->Protocol;
                     } else {
-                        protocol = trans->Protocol[cnt];
+                        protocol = trans->Protocol[prot];
                     }
                     if ((protocol >= OSPC_PROTNAME_START) && (protocol < OSPC_PROTNAME_NUMBER)) {
-                        OSPPUsageIndSetProtocol(usage, cnt, protocol);
+                        OSPPUsageIndSetProtocol(usage, prot, protocol);
                     } else {
-                        OSPPUsageIndSetProtocol(usage, cnt, OSPC_PROTNAME_UNKNOWN);
+                        OSPPUsageIndSetProtocol(usage, prot, OSPC_PROTNAME_UNKNOWN);
                     }
                 }
             }
@@ -4066,7 +4080,7 @@ int OSPPTransactionSetNumberPortability(
             } else {
                 trans->NPNpdi = OSPC_FALSE;
             }
-		}
+        }
     }
 
     return errcode;
@@ -4146,26 +4160,44 @@ int OSPPTransactionSetProtocol(
     return errcode;
 }
 
-int OSPPTransactionSetCodec(
+int OSPPTransSetCodec(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_SERVICE ospvService,       /* In - Service type */
     OSPE_CODEC_TYPE ospvType,       /* In - Codec type */
     const char *ospvCodec)          /* In - Codec */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    if (((ospvType < OSPC_CODEC_START) || (ospvType >= OSPC_CODEC_NUMBER)) ||
+    if (((ospvService < OSPC_SERVICE_START) || (ospvService >= OSPC_SERVICE_NUMBER)) ||
+        ((ospvType < OSPC_CODEC_START) || (ospvType >= OSPC_CODEC_NUMBER)) ||
         ((ospvCodec == OSPC_OSNULL) || (ospvCodec[0] == '\0')))
     {
         errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            OSPM_STRNCPY(trans->Codec[ospvType], ospvCodec, sizeof(trans->Codec[ospvType]));
+            OSPM_STRNCPY(trans->Codec[ospvService][ospvType], ospvCodec, sizeof(trans->Codec[ospvService][ospvType]));
         }
     }
 
     return errcode;
+}
+
+int OSPPTransactionSetCodec(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_CODEC_TYPE ospvType,       /* In - Codec type */
+    const char *ospvCodec)          /* In - Codec */
+{
+    return OSPPTransSetCodec(ospvTransaction, OSPC_SERVICE_VOICE, ospvType, ospvCodec);
+}
+
+int OSPPTransactionSetVideoCodec(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_CODEC_TYPE ospvType,       /* In - Codec type */
+    const char *ospvCodec)          /* In - Codec */
+{
+    return OSPPTransSetCodec(ospvTransaction, OSPC_SERVICE_VIDEO, ospvType, ospvCodec);
 }
 
 int OSPPTransactionSetSessionId(
@@ -4264,8 +4296,9 @@ int OSPPTransactionSetDestNetworkId(
     return errcode;
 }
 
-int OSPPTransactionSetLost(
+int OSPPTransSetLost(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_SERVICE ospvService,       /* In - Service type */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
     OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     int ospvPackets,                /* In - Packets, -1 means unavailable */
@@ -4285,15 +4318,36 @@ int OSPPTransactionSetLost(
         }
 
         if (errcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetPacket(trans->Statistics, OSPC_STATS_LOST, ospvMetric, ospvDir, ospvPackets, ospvFraction);
+            OSPPStatsSetPacket(trans->Statistics, OSPC_STATS_LOST, ospvService, ospvMetric, ospvDir, ospvPackets, ospvFraction);
         }
     }
 
     return errcode;
 }
 
-int OSPPTransactionSetJitter(
+int OSPPTransactionSetLost(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
+    int ospvPackets,                /* In - Packets, -1 means unavailable */
+    int ospvFraction)               /* In - Fraction, -1 means unavailable */
+{
+    return OSPPTransSetLost(ospvTransaction, OSPC_SERVICE_VOICE, ospvMetric, ospvDir, ospvPackets, ospvFraction);
+}
+
+int OSPPTransactionSetVideoLost(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
+    int ospvPackets,                /* In - Packets, -1 means unavailable */
+    int ospvFraction)               /* In - Fraction, -1 means unavailable */
+{
+    return OSPPTransSetLost(ospvTransaction, OSPC_SERVICE_VIDEO, ospvMetric, ospvDir, ospvPackets, ospvFraction);
+}
+
+int OSPPTransSetJitter(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_SERVICE ospvService,       /* In - Service type */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
     OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     int ospvSamples,                /* In - Samples of Jitter, -1 means unavailable */
@@ -4319,6 +4373,7 @@ int OSPPTransactionSetJitter(
             OSPPStatsSetMetrics(
                 trans->Statistics,
                 OSPC_STATS_JITTER,
+                ospvService,
                 ospvMetric,
                 ospvDir,
                 OSPC_SLEG_UNDEFINED,
@@ -4333,8 +4388,35 @@ int OSPPTransactionSetJitter(
     return errcode;
 }
 
-int OSPPTransactionSetDelay(
+int OSPPTransactionSetJitter(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
+    int ospvSamples,                /* In - Samples of Jitter, -1 means unavailable */
+    int ospvMin,                    /* In - Minimum of Jitter in milliseconds, -1 means unavailable */
+    int ospvMax,                    /* In - Maximum of Jitter in milliseconds, -1 means unavailable */
+    int ospvMean,                   /* In - Mean of Jitter in milliseconds, -1 means unavailable */
+    float ospvVariance)             /* In - Variance of delay, -1 means unavailable */
+{
+    return OSPPTransSetJitter(ospvTransaction, OSPC_SERVICE_VOICE, ospvMetric, ospvDir, ospvSamples, ospvMin, ospvMax, ospvMean, ospvVariance);
+}
+
+int OSPPTransactionSetVideoJitter(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
+    int ospvSamples,                /* In - Samples of Jitter, -1 means unavailable */
+    int ospvMin,                    /* In - Minimum of Jitter in milliseconds, -1 means unavailable */
+    int ospvMax,                    /* In - Maximum of Jitter in milliseconds, -1 means unavailable */
+    int ospvMean,                   /* In - Mean of Jitter in milliseconds, -1 means unavailable */
+    float ospvVariance)             /* In - Variance of delay, -1 means unavailable */
+{
+    return OSPPTransSetJitter(ospvTransaction, OSPC_SERVICE_VIDEO, ospvMetric, ospvDir, ospvSamples, ospvMin, ospvMax, ospvMean, ospvVariance);
+}
+
+int OSPPTransSetDelay(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_SERVICE ospvService,       /* In - Service type */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
     OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     int ospvSamples,                /* In - Samples of Delay, -1 means unavailable */
@@ -4360,6 +4442,7 @@ int OSPPTransactionSetDelay(
             OSPPStatsSetMetrics(
                 trans->Statistics,
                 OSPC_STATS_DELAY,
+                ospvService,
                 ospvMetric,
                 ospvDir,
                 OSPC_SLEG_UNDEFINED,
@@ -4374,8 +4457,35 @@ int OSPPTransactionSetDelay(
     return errcode;
 }
 
-int OSPPTransactionSetRTDelay(
+int OSPPTransactionSetDelay(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
+    int ospvSamples,                /* In - Samples of Delay, -1 means unavailable */
+    int ospvMin,                    /* In - Minimum of Delay in milliseconds, -1 means unavailable */
+    int ospvMax,                    /* In - Maximum of Delay in milliseconds, -1 means unavailable */
+    int ospvMean,                   /* In - Mean of Delay in milliseconds, -1 means unavailable */
+    float ospvVariance)             /* In - Variance of delay, -1 means unavailable */
+{
+    return OSPPTransSetDelay(ospvTransaction, OSPC_SERVICE_VOICE, ospvMetric, ospvDir, ospvSamples, ospvMin, ospvMax, ospvMean, ospvVariance);
+}
+
+int OSPPTransactionSetVideoDelay(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
+    int ospvSamples,                /* In - Samples of Delay, -1 means unavailable */
+    int ospvMin,                    /* In - Minimum of Delay in milliseconds, -1 means unavailable */
+    int ospvMax,                    /* In - Maximum of Delay in milliseconds, -1 means unavailable */
+    int ospvMean,                   /* In - Mean of Delay in milliseconds, -1 means unavailable */
+    float ospvVariance)             /* In - Variance of delay, -1 means unavailable */
+{
+    return OSPPTransSetDelay(ospvTransaction, OSPC_SERVICE_VIDEO, ospvMetric, ospvDir, ospvSamples, ospvMin, ospvMax, ospvMean, ospvVariance);
+}
+
+int OSPPTransSetRTDelay(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_SERVICE ospvService,       /* In - Service type */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
     OSPE_SESSION_LEG ospvLeg,       /* In - Session leg */
     int ospvSamples,                /* In - Samples of RTDelay, -1 means unavailable */
@@ -4401,6 +4511,7 @@ int OSPPTransactionSetRTDelay(
             OSPPStatsSetMetrics(
                 trans->Statistics,
                 OSPC_STATS_RTDELAY,
+                ospvService,
                 ospvMetric,
                 OSPC_SDIR_UNDEFINED,
                 ospvLeg,
@@ -4415,8 +4526,35 @@ int OSPPTransactionSetRTDelay(
     return errcode;
 }
 
-int OSPPTransactionSetOctets(
+int OSPPTransactionSetRTDelay(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_SESSION_LEG ospvLeg,       /* In - Session leg */
+    int ospvSamples,                /* In - Samples of RTDelay, -1 means unavailable */
+    int ospvMin,                    /* In - Minimum of RTDelay in milliseconds, -1 means unavailable */
+    int ospvMax,                    /* In - Maximum of RTDelay in milliseconds, -1 means unavailable */
+    int ospvMean,                   /* In - Mean of RTDelay in milliseconds, -1 means unavailable */
+    float ospvVariance)             /* In - Variance of round trip delay, -1 means unavailable */
+{
+    return OSPPTransSetRTDelay(ospvTransaction, OSPC_SERVICE_VOICE, ospvMetric, ospvLeg, ospvSamples, ospvMin, ospvMax, ospvMean, ospvVariance);
+}
+
+int OSPPTransactionSetVideoRTDelay(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_SESSION_LEG ospvLeg,       /* In - Session leg */
+    int ospvSamples,                /* In - Samples of RTDelay, -1 means unavailable */
+    int ospvMin,                    /* In - Minimum of RTDelay in milliseconds, -1 means unavailable */
+    int ospvMax,                    /* In - Maximum of RTDelay in milliseconds, -1 means unavailable */
+    int ospvMean,                   /* In - Mean of RTDelay in milliseconds, -1 means unavailable */
+    float ospvVariance)             /* In - Variance of round trip delay, -1 means unavailable */
+{
+    return OSPPTransSetRTDelay(ospvTransaction, OSPC_SERVICE_VIDEO, ospvMetric, ospvLeg, ospvSamples, ospvMin, ospvMax, ospvMean, ospvVariance);
+}
+
+int OSPPTransSetOctets(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_SERVICE ospvService,       /* In - Service type */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
     OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     int ospvOctets)                 /* In - Octets, -1 means unavailable */
@@ -4435,15 +4573,34 @@ int OSPPTransactionSetOctets(
         }
 
         if (errcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_OCTETS, ospvMetric, ospvDir, ospvOctets);
+            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_OCTETS, ospvService, ospvMetric, ospvDir, ospvOctets);
         }
     }
 
     return errcode;
 }
 
-int OSPPTransactionSetPackets(
+int OSPPTransactionSetOctets(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
+    int ospvOctets)                 /* In - Octets, -1 means unavailable */
+{
+    return OSPPTransSetOctets(ospvTransaction, OSPC_SERVICE_VOICE, ospvMetric, ospvDir, ospvOctets);
+}
+
+int OSPPTransactionSetVideoOctets(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
+    int ospvOctets)                 /* In - Octets, -1 means unavailable */
+{
+    return OSPPTransSetOctets(ospvTransaction, OSPC_SERVICE_VIDEO, ospvMetric, ospvDir, ospvOctets);
+}
+
+int OSPPTransSetPackets(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_SERVICE ospvService,       /* In - Service type */
     OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
     OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
     int ospvPackets)                /* In - Packets, -1 means unavailable */
@@ -4462,11 +4619,29 @@ int OSPPTransactionSetPackets(
         }
 
         if (errcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_PACKETS, ospvMetric, ospvDir, ospvPackets);
+            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_PACKETS, ospvService, ospvMetric, ospvDir, ospvPackets);
         }
     }
 
     return errcode;
+}
+
+int OSPPTransactionSetPackets(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
+    int ospvPackets)                /* In - Packets, -1 means unavailable */
+{
+    return OSPPTransSetPackets(ospvTransaction, OSPC_SERVICE_VOICE, ospvMetric, ospvDir, ospvPackets);
+}
+
+int OSPPTransactionSetVideoPackets(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_STATS_METRIC ospvMetric,   /* In - Statistics metric */
+    OSPE_STATS_DIR ospvDir,         /* In - Statistics direction */
+    int ospvPackets)                /* In - Packets, -1 means unavailable */
+{
+    return OSPPTransSetPackets(ospvTransaction, OSPC_SERVICE_VIDEO, ospvMetric, ospvDir, ospvPackets);
 }
 
 int OSPPTransactionSetRFactor(
@@ -4566,7 +4741,7 @@ int OSPPTransactionSetICPIF(
         }
 
         if (errcode == OSPC_ERR_NO_ERROR) {
-            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_ICPIF, OSPC_SMETRIC_UNDEFINED, ospvDir, ospvICPIF);
+            OSPPStatsSetInteger(trans->Statistics, OSPC_STATS_ICPIF, OSPC_SERVICE_UNDEFINED, OSPC_SMETRIC_UNDEFINED, ospvDir, ospvICPIF);
         }
     }
 
@@ -5142,3 +5317,40 @@ int OSPPTransactionSetServiceProviderId(
     return errcode;
 }
 
+int OSPPTransactionSetSystemId(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvSystemId)           /* In - System ID */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvSystemId == OSPC_OSNULL) || (ospvSystemId[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+               OSPM_STRNCPY(trans->SystemId, ospvSystemId, sizeof(trans->SystemId) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetRelatedReason(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvRelatedReason)      /* In - Related reason */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvRelatedReason == OSPC_OSNULL) || (ospvRelatedReason[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+               OSPM_STRNCPY(trans->RelatedReason, ospvRelatedReason, sizeof(trans->RelatedReason) - 1);
+        }
+    }
+
+    return errcode;
+}

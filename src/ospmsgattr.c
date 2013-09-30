@@ -34,6 +34,7 @@ const OSPT_MSG_DESC OSPV_MATTR_DESCS[OSPC_MATTR_NUMBER] = {
     { OSPC_MATTR_DIR,           "direction" },
     { OSPC_MATTR_VERSION,       "version" },
     { OSPC_MATTR_INDEX,         "index" },
+    { OSPC_MATTR_SERVICE,       "service" },
     { OSPC_MATTR_REPORTER,      "reporter" }
 };
 
@@ -82,6 +83,7 @@ const OSPT_MSG_DESC OSPV_RVENDOR_DESCS[OSPC_RVENDOR_NUMBER] = {
     { OSPC_RVENDOR_BROADWORKS,  "broadworks" },
     { OSPC_RVENDOR_PERIMETA,    "perimeta" },
     { OSPC_RVENDOR_OPENSIPS,    "opensips" },
+    { OSPC_RVENDOR_KAMAILIO,    "kamailio" },
     { OSPC_RVENDOR_ASTERISK,    "asterisk" },
     { OSPC_RVENDOR_FREESWITCH,  "freeswitch" }
 };

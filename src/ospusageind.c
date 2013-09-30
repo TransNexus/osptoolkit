@@ -1031,7 +1031,11 @@ void OSPPUsageIndMoveDestinationAlt(    /* nothing returned */
 OSPT_USAGE_IND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
 {
     OSPT_USAGE_IND *usageind = OSPC_OSNULL;
-    unsigned cnt;
+    OSPE_TERM_CAUSE cause;
+    OSPE_PROTOCOL_TYPE prot;
+    OSPE_SERVICE svc;
+    OSPE_CODEC_TYPE codec;
+    OSPE_SESSION_ID sess;
 
     OSPM_MALLOC(usageind, OSPT_USAGE_IND, sizeof(OSPT_USAGE_IND));
     if (usageind != OSPC_OSNULL) {
@@ -1056,8 +1060,8 @@ OSPT_USAGE_IND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         usageind->Duration = -1;
         usageind->CustomerId = 0L;
         usageind->DeviceId = 0L;
-        for (cnt = 0; cnt < OSPC_TCAUSE_NUMBER; cnt++) {
-            usageind->TermCause.hastermcause[cnt] = OSPC_FALSE;
+        for (cause = OSPC_TCAUSE_START; cause < OSPC_TCAUSE_NUMBER; cause++) {
+            usageind->TermCause.hastermcause[cause] = OSPC_FALSE;
         }
         OSPPListNew(&(usageind->SourceAlternate));
         OSPPListNew(&(usageind->DestinationAlternate));
@@ -1069,14 +1073,16 @@ OSPT_USAGE_IND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         usageind->HasServiceInfo = OSPC_FALSE;
         usageind->DestinationCount = OSPC_OSNULL;
         usageind->SetupAttempt = 0;
-        for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
-            usageind->Protocol[cnt] = OSPC_PROTNAME_UNKNOWN;
+        for (prot = OSPC_PROTTYPE_START; prot < OSPC_PROTTYPE_NUMBER; prot++) {
+            usageind->Protocol[prot] = OSPC_PROTNAME_UNKNOWN;
         }
-        for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
-            usageind->Codec[cnt][0] = '\0';
+        for (svc = OSPC_SERVICE_START; svc < OSPC_SERVICE_NUMBER; svc++) {
+            for (codec = OSPC_CODEC_START; codec < OSPC_CODEC_NUMBER; codec++) {
+                usageind->Codec[svc][codec][0] = '\0';
+            }
         }
-        for (cnt = OSPC_SESSIONID_START; cnt < OSPC_SESSIONID_NUMBER; cnt++) {
-            usageind->SessionId[cnt] = OSPC_OSNULL;
+        for (sess = OSPC_SESSIONID_START; sess < OSPC_SESSIONID_NUMBER; sess++) {
+            usageind->SessionId[sess] = OSPC_OSNULL;
         }
         usageind->RoleState = OSPC_RSTATE_UNKNOWN;
         usageind->RoleFormat = OSPC_RFORMAT_UNKNOWN;
@@ -1226,10 +1232,15 @@ int OSPPUsageIndToElement(      /* returns error code */
     OSPTBOOL isbase64 = OSPC_TRUE;
     OSPTTRANS *trans = (OSPTTRANS *)ospvtrans;
     OSPE_MSG_ELEM elemtype;
-    OSPE_MSG_ATTR attrtype;
-    OSPE_ALTINFO attrvalue;
+    OSPE_MSG_ATTR attrtype[OSPC_MAX_ATTR];
+    OSPE_ALTINFO attrvalue[OSPC_MAX_ATTR];
     OSPE_TERM_CAUSE tctype;
-    unsigned cnt;
+    int index;
+    OSPE_SERVICE svc;
+    OSPE_CALL_PARTY party;
+    OSPE_PROTOCOL_TYPE prot;
+    OSPE_CODEC_TYPE codec;
+    OSPE_SESSION_ID sess;
     char *tmp;
 
     OSPM_MEMSET(random, 0, OSPC_MAX_RANDOM);
@@ -1308,10 +1319,7 @@ int OSPPUsageIndToElement(      /* returns error code */
 
             /* add role  */
             if ((errcode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasRole(usage)) {
-                errcode = OSPPStringToElement(OSPC_MELEM_ROLE,
-                    OSPPRoleGetName(OSPPUsageIndGetRole(usage)),
-                    0, OSPC_OSNULL, OSPC_OSNULL,
-                    &subelem);
+                errcode = OSPPStringToElement(OSPC_MELEM_ROLE, OSPPRoleGetName(OSPPUsageIndGetRole(usage)), 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;
@@ -1515,9 +1523,9 @@ int OSPPUsageIndToElement(      /* returns error code */
             if (errcode == OSPC_ERR_NO_ERROR) {
                 tmp = trans->DivDevInfo;
                 if (tmp[0] != '\0') {
-                    attrtype = OSPC_MATTR_TYPE;
-                    attrvalue = OSPC_ALTINFO_TRANSPORT;
-                    errcode = OSPPStringToElement(OSPC_MELEM_DIVDEVINFO, tmp, 1, &attrtype, &attrvalue, &subelem);
+                    attrtype[0] = OSPC_MATTR_TYPE;
+                    attrvalue[0] = OSPC_ALTINFO_TRANSPORT;
+                    errcode = OSPPStringToElement(OSPC_MELEM_DIVDEVINFO, tmp, 1, attrtype, attrvalue, &subelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(usageindelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1553,9 +1561,9 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Add user-defined info */
-            for (cnt = 0; cnt < OSPC_MAX_INDEX; cnt++) {
-                if ((errcode == OSPC_ERR_NO_ERROR) && (trans->CustomInfo[cnt] != OSPC_OSNULL) && (trans->CustomInfo[cnt][0] != '\0')) {
-                    errcode = OSPPCustomInfoToElement(cnt, trans->CustomInfo[cnt], &subelem);
+            for (index = 0; index < OSPC_MAX_INDEX; index++) {
+                if ((errcode == OSPC_ERR_NO_ERROR) && (trans->CustomInfo[index] != OSPC_OSNULL) && (trans->CustomInfo[index][0] != '\0')) {
+                    errcode = OSPPCustomInfoToElement(index, trans->CustomInfo[index], &subelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(usageindelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1564,13 +1572,13 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Add call party info */
-            for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
+            for (party = OSPC_CPARTY_START; party < OSPC_CPARTY_NUMBER; party++) {
                 if ((errcode == OSPC_ERR_NO_ERROR) &&
-                    ((usage->UserName[cnt][0] != '\0') || (usage->UserId[cnt][0] != '\0') || (usage->UserGroup[cnt][0] != '\0')))
+                    ((usage->UserName[party][0] != '\0') || (usage->UserId[party][0] != '\0') || (usage->UserGroup[party][0] != '\0')))
                 {
-                    if (cnt == OSPC_CPARTY_SOURCE) {
+                    if (party == OSPC_CPARTY_SOURCE) {
                         elemtype = OSPC_MELEM_CALLINGPARTYINFO;
-                    } else if (cnt == OSPC_CPARTY_DESTINATION){
+                    } else if (party == OSPC_CPARTY_DESTINATION){
                         elemtype = OSPC_MELEM_CALLEDPARTYINFO;
                     } else {
                         continue;
@@ -1580,8 +1588,8 @@ int OSPPUsageIndToElement(      /* returns error code */
                         errcode = OSPC_ERR_XML_NO_ELEMENT;
                     }
                 }
-                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserName[cnt][0] != '\0')) {
-                    errcode = OSPPStringToElement(OSPC_MELEM_USERNAME, usage->UserName[cnt], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserName[party][0] != '\0')) {
+                    errcode = OSPPStringToElement(OSPC_MELEM_USERNAME, usage->UserName[party], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(callpartyelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1590,8 +1598,8 @@ int OSPPUsageIndToElement(      /* returns error code */
                         callpartyelem = OSPC_OSNULL;
                     }
                 }
-                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserId[cnt][0] != '\0')) {
-                    errcode = OSPPStringToElement(OSPC_MELEM_USERID, usage->UserId[cnt], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserId[party][0] != '\0')) {
+                    errcode = OSPPStringToElement(OSPC_MELEM_USERID, usage->UserId[party], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(callpartyelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1600,8 +1608,8 @@ int OSPPUsageIndToElement(      /* returns error code */
                         callpartyelem = OSPC_OSNULL;
                     }
                 }
-                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserGroup[cnt][0] != '\0')) {
-                    errcode = OSPPStringToElement(OSPC_MELEM_USERGROUP, usage->UserGroup[cnt], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserGroup[party][0] != '\0')) {
+                    errcode = OSPPStringToElement(OSPC_MELEM_USERGROUP, usage->UserGroup[party], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(callpartyelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1629,10 +1637,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             if ((errcode == OSPC_ERR_NO_ERROR) &&
                 ((usage->TransferStatus >= OSPC_TSTATUS_START) && (usage->TransferStatus < OSPC_TSTATUS_NUMBER)))
             {
-                errcode = OSPPStringToElement(OSPC_MELEM_TRANSFERSTATUS,
-                   OSPPTransferStatusGetName(usage->TransferStatus),
-                   0, OSPC_OSNULL, OSPC_OSNULL,
-                   &subelem);
+                errcode = OSPPStringToElement(OSPC_MELEM_TRANSFERSTATUS, OSPPTransferStatusGetName(usage->TransferStatus), 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;
@@ -1666,26 +1671,23 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Protocol */
-            for (cnt = OSPC_PROTTYPE_START; cnt < OSPC_PROTTYPE_NUMBER; cnt++) {
-                if ((errcode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndHasProtocol(usage, cnt))) {
-                    attrtype = OSPC_MATTR_TYPE;
-                    switch (cnt) {
+            for (prot = OSPC_PROTTYPE_START; prot < OSPC_PROTTYPE_NUMBER; prot++) {
+                if ((errcode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndHasProtocol(usage, prot))) {
+                    attrtype[0] = OSPC_MATTR_TYPE;
+                    switch (prot) {
                     case OSPC_PROTTYPE_SOURCE:
-                        attrvalue = OSPC_ALTINFO_SOURCE;
+                        attrvalue[0] = OSPC_ALTINFO_SOURCE;
                         break;
                     case OSPC_PROTTYPE_DESTINATION:
-                        attrvalue = OSPC_ALTINFO_DESTINATION;
+                        attrvalue[0] = OSPC_ALTINFO_DESTINATION;
                         break;
                     case OSPC_PROTTYPE_NA:
-                        attrvalue = OSPC_ALTINFO_NA;
+                        attrvalue[0] = OSPC_ALTINFO_NA;
                         break;
                     default:
                         continue;
                     }
-                    errcode = OSPPStringToElement(OSPC_MELEM_PROTOCOL,
-                       OSPPDestProtocolGetName(OSPPUsageIndGetProtocol(usage, cnt)),
-                       1, &attrtype, &attrvalue,
-                       &subelem);
+                    errcode = OSPPStringToElement(OSPC_MELEM_PROTOCOL, OSPPDestProtocolGetName(OSPPUsageIndGetProtocol(usage, prot)), 1, attrtype, attrvalue, &subelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(usagedetailelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1694,35 +1696,44 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Codecs */
-            for (cnt = OSPC_CODEC_START; cnt < OSPC_CODEC_NUMBER; cnt++) {
-                if ((errcode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndHasCodec(usage, cnt))) {
-                    attrtype = OSPC_MATTR_TYPE;
-                    switch (cnt) {
+            for (svc = OSPC_SERVICE_START; svc < OSPC_SERVICE_NUMBER; svc++) {
+                attrtype[0] = OSPC_MATTR_SERVICE;
+                switch (svc) {
+                case OSPC_SERVICE_VOICE:
+                    attrvalue[0] = OSPC_ALTINFO_VOICE;
+                    break;
+                case OSPC_SERVICE_VIDEO:
+                    attrvalue[0] = OSPC_ALTINFO_VIDEO;
+                    break;
+                default:
+                    continue;
+                }
+                for (codec = OSPC_CODEC_START; codec < OSPC_CODEC_NUMBER; codec++) {
+                    attrtype[1] = OSPC_MATTR_TYPE;
+                    switch (codec) {
                     case OSPC_CODEC_SOURCE:
-                        attrvalue = OSPC_ALTINFO_SOURCE;
+                        attrvalue[1] = OSPC_ALTINFO_SOURCE;
                         break;
                     case OSPC_CODEC_DESTINATION:
-                        attrvalue = OSPC_ALTINFO_DESTINATION;
+                        attrvalue[1] = OSPC_ALTINFO_DESTINATION;
                         break;
                     default:
                         continue;
                     }
-                    errcode = OSPPStringToElement(OSPC_MELEM_CODEC,
-                        OSPPUsageIndGetCodec(usage, cnt),
-                        1, &attrtype, &attrvalue,
-                        &subelem);
-                    if (errcode == OSPC_ERR_NO_ERROR) {
-                        OSPPXMLElemAddChild(usagedetailelem, subelem);
-                        subelem = OSPC_OSNULL;
+                    if ((errcode == OSPC_ERR_NO_ERROR) && (OSPPUsageIndHasCodec(usage, svc, codec))) {
+                        errcode = OSPPStringToElement(OSPC_MELEM_CODEC, OSPPUsageIndGetCodec(usage, svc, codec), 2, attrtype, attrvalue, &subelem);
+                        if (errcode == OSPC_ERR_NO_ERROR) {
+                            OSPPXMLElemAddChild(usagedetailelem, subelem);
+                            subelem = OSPC_OSNULL;
+                        }
                     }
                 }
             }
 
             /* Add Session IDs */
-            for (cnt = OSPC_SESSIONID_START; cnt < OSPC_SESSIONID_NUMBER; cnt ++) {
-                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasSessionId(usage, cnt)) {
-                    errcode = OSPPSessionIdToElement(OSPPUsageIndGetSessionId(usage, cnt),
-                        cnt, isbase64, &subelem);
+            for (sess = OSPC_SESSIONID_START; sess < OSPC_SESSIONID_NUMBER; sess ++) {
+                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasSessionId(usage, sess)) {
+                    errcode = OSPPSessionIdToElement(OSPPUsageIndGetSessionId(usage, sess), sess, isbase64, &subelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(usagedetailelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1865,6 +1876,24 @@ int OSPPUsageIndToElement(      /* returns error code */
             /* Add service provider ID */
             if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->ServiceProviderId[0] != '\0')) {
                 errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDERID, trans->ServiceProviderId, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add system ID */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->SystemId[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_SYSTEMID, trans->SystemId, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add related reason */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->RelatedReason[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_RELATEDREASON, trans->RelatedReason, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;
@@ -2025,14 +2054,16 @@ void OSPPUsageIndSetProtocol(
 
 OSPTBOOL OSPPUsageIndHasCodec(
     OSPT_USAGE_IND *ospvUsageInd,
+    OSPE_SERVICE ospvService,
     OSPE_CODEC_TYPE ospvType)
 {
     OSPTBOOL has = OSPC_FALSE;
 
     if ((ospvUsageInd != OSPC_OSNULL) &&
+        ((ospvService >= OSPC_SERVICE_START) && (ospvType < OSPC_SERVICE_NUMBER)) &&
         ((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)))
     {
-        has = (ospvUsageInd->Codec[ospvType][0] != '\0');
+        has = (ospvUsageInd->Codec[ospvService][ospvType][0] != '\0');
     }
 
     return has;
@@ -2040,14 +2071,16 @@ OSPTBOOL OSPPUsageIndHasCodec(
 
 const char *OSPPUsageIndGetCodec(
     OSPT_USAGE_IND *ospvUsageInd,
+    OSPE_SERVICE ospvService,
     OSPE_CODEC_TYPE ospvType)
 {
     const char *ospvCodec = OSPC_OSNULL;
 
     if ((ospvUsageInd != OSPC_OSNULL) &&
+        ((ospvService >= OSPC_SERVICE_START) && (ospvType < OSPC_SERVICE_NUMBER)) &&
         ((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)))
     {
-        ospvCodec = ospvUsageInd->Codec[ospvType];
+        ospvCodec = ospvUsageInd->Codec[ospvService][ospvType];
     }
 
     return ospvCodec;
@@ -2055,15 +2088,16 @@ const char *OSPPUsageIndGetCodec(
 
 void OSPPUsageIndSetCodec(
     OSPT_USAGE_IND *ospvUsageInd,
+    OSPE_SERVICE ospvService,
     OSPE_CODEC_TYPE ospvType,
     const char *ospvCodec)
 {
     if ((ospvUsageInd != OSPC_OSNULL) &&
+        ((ospvService >= OSPC_SERVICE_START) && (ospvType < OSPC_SERVICE_NUMBER)) &&
         ((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)) &&
         (ospvCodec != OSPC_OSNULL))
     {
-        OSPM_STRNCPY(ospvUsageInd->Codec[ospvType],
-            ospvCodec, sizeof(ospvUsageInd->Codec[ospvType]));
+        OSPM_STRNCPY(ospvUsageInd->Codec[ospvService][ospvType], ospvCodec, sizeof(ospvUsageInd->Codec[ospvService][ospvType]));
     }
 }
 

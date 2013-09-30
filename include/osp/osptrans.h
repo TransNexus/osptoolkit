@@ -105,7 +105,7 @@ typedef struct _OSPTTRANS {
     char DivSrcInfo[OSPC_SIZE_E164NUM];
     char DivDevInfo[OSPC_SIZE_SIGNALADDR];
     OSPE_PROTOCOL_NAME Protocol[OSPC_PROTTYPE_NUMBER];
-    char Codec[OSPC_CODEC_NUMBER][OSPC_SIZE_CODEC];
+    char Codec[OSPC_SERVICE_NUMBER][OSPC_CODEC_NUMBER][OSPC_SIZE_CODEC];
     OSPT_CALL_ID *SessionId[OSPC_SESSIONID_NUMBER];
     char *CustomInfo[OSPC_MAX_INDEX];
     /* This source network ID is only used to report usage */
@@ -125,6 +125,8 @@ typedef struct _OSPTTRANS {
     OSPE_NUMBER_FORMAT NetworkTranslatedCalledFormat;
     char NetworkTranslatedCalled[OSPC_SIZE_E164NUM];
     char ServiceProviderId[OSPC_SIZE_NORSTR];
+    char SystemId[OSPC_SIZE_NORSTR];
+    char RelatedReason[OSPC_SIZE_NORSTR];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000
