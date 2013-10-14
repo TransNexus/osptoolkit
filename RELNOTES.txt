@@ -587,3 +587,6 @@ Version 4.2.0 - 2013-10-14
 * Added support for video QoS.
 * Added support for RelatedCallIdReason and SystemId.
 * Added vendor Kamailio.
+---------------------------------------------------------------------------
+
+Version 4.2.1 - 
