@@ -29,15 +29,18 @@ OSPT_STATS *OSPPStatsNew(void)
     OSPE_STATS_METRIC metric;
     OSPE_STATS_DIR dir;
     OSPT_STATS *ospvStats = OSPC_OSNULL;
+    OSPE_SERVICE svc;
 
     OSPM_MALLOC(ospvStats, OSPT_STATS, sizeof(OSPT_STATS));
     if (ospvStats != OSPC_OSNULL) {
         OSPM_MEMSET(ospvStats, 0, sizeof(OSPT_STATS));
 
-        for (metric = OSPC_SMETRIC_START; metric < OSPC_SMETRIC_NUMBER; metric++) {
-            for (dir = OSPC_SDIR_START; dir < OSPC_SDIR_NUMBER; dir++) {
-                ospvStats->Octets[metric][dir] = -1;
-                ospvStats->Packets[metric][dir] = -1;
+        for (svc = OSPC_SERVICE_START; svc < OSPC_SERVICE_NUMBER; svc++) {
+            for (metric = OSPC_SMETRIC_START; metric < OSPC_SMETRIC_NUMBER; metric++) {
+                for (dir = OSPC_SDIR_START; dir < OSPC_SDIR_NUMBER; dir++) {
+                    ospvStats->Octets[svc][metric][dir] = -1;
+                    ospvStats->Packets[svc][metric][dir] = -1;
+                }
             }
         }
 
@@ -69,6 +72,7 @@ int OSPPStatsToElement(
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPE_STATS type;
+    OSPE_SERVICE service;
     OSPE_STATS_METRIC metric;
     OSPE_STATS_DIR dir;
     OSPE_SESSION_LEG leg;
@@ -134,36 +138,41 @@ int OSPPStatsToElement(
     }
 
     /* Lost/Jitter/Delay/RoundTripDelay/TotalOctets/TotalPackets */
-    for (metric = OSPC_SMETRIC_START; (metric < OSPC_SMETRIC_NUMBER) && (errcode == OSPC_ERR_NO_ERROR); metric++) {
-        for (type = OSPC_STATS_START; (type <= OSPC_STATS_NUMBER) && (errcode == OSPC_ERR_NO_ERROR); type++) {
-            switch (type) {
-            case OSPC_STATS_LOST:
-            case OSPC_STATS_JITTER:
-            case OSPC_STATS_DELAY:
-            case OSPC_STATS_OCTETS:
-            case OSPC_STATS_PACKETS:
-                leg = OSPC_SLEG_UNDEFINED;
-                for (dir = OSPC_SDIR_START; (dir < OSPC_SDIR_NUMBER) && (errcode == OSPC_ERR_NO_ERROR); dir++) {
-                    errcode = OSPPStatsValueToElement(ospvStats, type, metric, dir, leg, &elem);
-                }
-                break;
-            case OSPC_STATS_RTDELAY:
-                dir = OSPC_SDIR_UNDEFINED;
-                for (leg = OSPC_SLEG_START; (leg < OSPC_SLEG_NUMBER) && (errcode == OSPC_ERR_NO_ERROR); leg++) {
-                    errcode = OSPPStatsValueToElement(ospvStats, type, metric, dir, leg, &elem);
-                }
-                break;
-            case OSPC_STATS_RFACTOR:
-            case OSPC_STATS_MOSCQ:
-            case OSPC_STATS_MOSLQ:
-            case OSPC_STATS_ICPIF:
-            default:
-                break;
-            }
+    for (service = OSPC_SERVICE_START; (service < OSPC_SERVICE_NUMBER) && (errcode == OSPC_ERR_NO_ERROR); service++) {
+        if ((service != OSPC_SERVICE_VOICE) && (service != OSPC_SERVICE_VIDEO)) {
+            continue;
         }
-        if ((errcode == OSPC_ERR_NO_ERROR) && (elem != OSPC_OSNULL)) {
-            OSPPXMLElemAddChild(*ospvElem, elem);
-            elem = OSPC_OSNULL;
+        for (metric = OSPC_SMETRIC_START; (metric < OSPC_SMETRIC_NUMBER) && (errcode == OSPC_ERR_NO_ERROR); metric++) {
+            for (type = OSPC_STATS_START; (type <= OSPC_STATS_NUMBER) && (errcode == OSPC_ERR_NO_ERROR); type++) {
+                switch (type) {
+                case OSPC_STATS_LOST:
+                case OSPC_STATS_JITTER:
+                case OSPC_STATS_DELAY:
+                case OSPC_STATS_OCTETS:
+                case OSPC_STATS_PACKETS:
+                    leg = OSPC_SLEG_UNDEFINED;
+                    for (dir = OSPC_SDIR_START; (dir < OSPC_SDIR_NUMBER) && (errcode == OSPC_ERR_NO_ERROR); dir++) {
+                        errcode = OSPPStatsValueToElement(ospvStats, type, service, metric, dir, leg, &elem);
+                    }
+                    break;
+                case OSPC_STATS_RTDELAY:
+                    dir = OSPC_SDIR_UNDEFINED;
+                    for (leg = OSPC_SLEG_START; (leg < OSPC_SLEG_NUMBER) && (errcode == OSPC_ERR_NO_ERROR); leg++) {
+                        errcode = OSPPStatsValueToElement(ospvStats, type, service, metric, dir, leg, &elem);
+                    }
+                    break;
+                case OSPC_STATS_RFACTOR:
+                case OSPC_STATS_MOSCQ:
+                case OSPC_STATS_MOSLQ:
+                case OSPC_STATS_ICPIF:
+                default:
+                    break;
+                }
+            }
+            if ((errcode == OSPC_ERR_NO_ERROR) && (elem != OSPC_OSNULL)) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
         }
     }
 
@@ -175,7 +184,7 @@ int OSPPStatsToElement(
         case OSPC_STATS_MOSLQ:
         case OSPC_STATS_ICPIF:
             for (dir = OSPC_SDIR_START; (dir < OSPC_SDIR_NUMBER) && (errcode == OSPC_ERR_NO_ERROR); dir++) {
-                errcode = OSPPStatsValueToElement(ospvStats, type, OSPC_SMETRIC_UNDEFINED, dir, OSPC_SLEG_UNDEFINED, &elem);
+                errcode = OSPPStatsValueToElement(ospvStats, type, OSPC_SERVICE_UNDEFINED, OSPC_SMETRIC_UNDEFINED, dir, OSPC_SLEG_UNDEFINED, &elem);
                 if ((errcode == OSPC_ERR_NO_ERROR) && (elem != OSPC_OSNULL)) {
                     OSPPXMLElemAddChild(*ospvElem, elem);
                     elem = OSPC_OSNULL;
@@ -965,6 +974,7 @@ int OSPPStatsLossReceivedToElement(
 OSPTBOOL OSPPStatsHasValue(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
+    OSPE_SERVICE ospvService,
     OSPE_STATS_METRIC ospvMetric,
     OSPE_STATS_DIR ospvDir,
     OSPE_SESSION_LEG ospvLeg,
@@ -975,45 +985,51 @@ OSPTBOOL OSPPStatsHasValue(
     if (ospvStats != OSPC_OSNULL) {
         switch (ospvType) {
         case OSPC_STATS_LOST:
-            if (((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
+            if (((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
+                ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
                 ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)))
             {
-                has = ((ospvStats->Lost[ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_PACKET) != 0);
+                has = ((ospvStats->Lost[ospvService][ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_PACKET) != 0);
             }
             break;
         case OSPC_STATS_JITTER:
-            if (((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
+            if (((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
+                ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
                 ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)))
             {
-                has = ((ospvStats->Jitter[ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
+                has = ((ospvStats->Jitter[ospvService][ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
             }
             break;
         case OSPC_STATS_DELAY:
-            if (((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
+            if (((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
+                ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
                 ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)))
             {
-                has = ((ospvStats->Delay[ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
+                has = ((ospvStats->Delay[ospvService][ospvMetric][ospvDir].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
             }
             break;
         case OSPC_STATS_RTDELAY:
-            if (((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
+            if (((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
+                ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
                 ((ospvLeg >= OSPC_SLEG_START) && (ospvLeg < OSPC_SLEG_NUMBER)))
             {
-               has = ((ospvStats->RTDelay[ospvMetric][ospvLeg].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
+               has = ((ospvStats->RTDelay[ospvService][ospvMetric][ospvLeg].hasvalue & ospvValueFlags & OSPC_SVALUE_METRICS) != 0);
            }
            break;
         case OSPC_STATS_OCTETS:
-            if (((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
+            if (((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
+                ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
                 ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)))
             {
-                has = (ospvStats->Octets[ospvMetric][ospvDir] >= 0);
+                has = (ospvStats->Octets[ospvService][ospvMetric][ospvDir] >= 0);
             }
             break;
         case OSPC_STATS_PACKETS:
-            if (((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
+            if (((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
+                ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
                 ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)))
             {
-                has = (ospvStats->Packets[ospvMetric][ospvDir] >= 0);
+                has = (ospvStats->Packets[ospvService][ospvMetric][ospvDir] >= 0);
             }
             break;
         case OSPC_STATS_RFACTOR:
@@ -1047,6 +1063,7 @@ OSPTBOOL OSPPStatsHasValue(
 void OSPPStatsSetPacket(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
+    OSPE_SERVICE ospvService,
     OSPE_STATS_METRIC ospvMetric,
     OSPE_STATS_DIR ospvDir,
     int ospvPackets,
@@ -1055,12 +1072,13 @@ void OSPPStatsSetPacket(
     OSPT_STATS_PACKET *ospvPacket;
 
     if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
         ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
         ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)))
     {
         switch (ospvType) {
         case OSPC_STATS_LOST:
-            ospvPacket = &ospvStats->Lost[ospvMetric][ospvDir];
+            ospvPacket = &ospvStats->Lost[ospvService][ospvMetric][ospvDir];
             break;
         default:
             return;
@@ -1079,6 +1097,7 @@ void OSPPStatsSetPacket(
 void OSPPStatsSetMetrics(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
+    OSPE_SERVICE ospvService,
     OSPE_STATS_METRIC ospvMetric,
     OSPE_STATS_DIR ospvDir,
     OSPE_SESSION_LEG ospvLeg,
@@ -1091,22 +1110,23 @@ void OSPPStatsSetMetrics(
     OSPT_STATS_METRICS *metrics = OSPC_OSNULL;
 
     if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
         ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)))
     {
         switch (ospvType) {
         case OSPC_STATS_JITTER:
             if ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)) {
-                metrics = &ospvStats->Jitter[ospvMetric][ospvDir];
+                metrics = &ospvStats->Jitter[ospvService][ospvMetric][ospvDir];
             }
             break;
         case OSPC_STATS_DELAY:
             if ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)) {
-                metrics = &ospvStats->Delay[ospvMetric][ospvDir];
+                metrics = &ospvStats->Delay[ospvService][ospvMetric][ospvDir];
             }
             break;
         case OSPC_STATS_RTDELAY:
             if ((ospvLeg >= OSPC_SLEG_START) && (ospvLeg < OSPC_SLEG_NUMBER)) {
-                metrics = &ospvStats->RTDelay[ospvMetric][ospvLeg];
+                metrics = &ospvStats->RTDelay[ospvService][ospvMetric][ospvLeg];
             }
             break;
         default:
@@ -1141,6 +1161,7 @@ void OSPPStatsSetMetrics(
 void OSPPStatsSetInteger(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
+    OSPE_SERVICE ospvService,
     OSPE_STATS_METRIC ospvMetric,
     OSPE_STATS_DIR ospvDir,
     int ospvValue)
@@ -1150,17 +1171,21 @@ void OSPPStatsSetInteger(
     {
         switch (ospvType) {
         case OSPC_STATS_OCTETS:
-            if ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) {
-                ospvStats->Octets[ospvMetric][ospvDir] = ospvValue;
+            if (((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
+                ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)))
+            {
+                ospvStats->Octets[ospvService][ospvMetric][ospvDir] = ospvValue;
             }
             break;
         case OSPC_STATS_PACKETS:
-            if ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) {
-                ospvStats->Packets[ospvMetric][ospvDir] = ospvValue;
+            if (((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
+                ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)))
+            {
+                ospvStats->Packets[ospvService][ospvMetric][ospvDir] = ospvValue;
             }
             break;
         case OSPC_STATS_ICPIF:
-            if (ospvMetric == OSPC_SMETRIC_UNDEFINED) {
+            if ((ospvService == OSPC_SERVICE_UNDEFINED) && (ospvMetric == OSPC_SMETRIC_UNDEFINED)) {
                 ospvStats->ICPIF[ospvDir] = ospvValue;
             }
             break;
@@ -1198,6 +1223,7 @@ void OSPPStatsSetFloat(
 void OSPPStatsGetPacket(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
+    OSPE_SERVICE ospvService,
     OSPE_STATS_METRIC ospvMetric,
     OSPE_STATS_DIR ospvDir,
     int *ospvPackets,
@@ -1209,12 +1235,13 @@ void OSPPStatsGetPacket(
     *ospvFraction = -1;
 
     if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
         ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) &&
         ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)))
     {
         switch (ospvType) {
         case OSPC_STATS_LOST:
-            ospvPacket = &ospvStats->Lost[ospvMetric][ospvDir];
+            ospvPacket = &ospvStats->Lost[ospvService][ospvMetric][ospvDir];
             break;
         default:
             return;
@@ -1231,6 +1258,7 @@ void OSPPStatsGetPacket(
 void OSPPStatsGetMetrics(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
+    OSPE_SERVICE ospvService,
     OSPE_STATS_METRIC ospvMetric,
     OSPE_STATS_DIR ospvDir,
     OSPE_SESSION_LEG ospvLeg,
@@ -1249,22 +1277,23 @@ void OSPPStatsGetMetrics(
     *ospvVariance = -1.0;
 
     if ((ospvStats != OSPC_OSNULL) &&
+        ((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
         ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)))
     {
         switch (ospvType) {
         case OSPC_STATS_JITTER:
             if ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)) {
-                metrics = &ospvStats->Jitter[ospvMetric][ospvDir];
+                metrics = &ospvStats->Jitter[ospvService][ospvMetric][ospvDir];
             }
             break;
         case OSPC_STATS_DELAY:
             if ((ospvDir >= OSPC_SDIR_START) && (ospvDir < OSPC_SDIR_NUMBER)) {
-                metrics = &ospvStats->Delay[ospvMetric][ospvDir];
+                metrics = &ospvStats->Delay[ospvService][ospvMetric][ospvDir];
             }
             break;
         case OSPC_STATS_RTDELAY:
             if ((ospvLeg >= OSPC_SLEG_START) && (ospvLeg < OSPC_SLEG_NUMBER)) {
-                metrics = &ospvStats->RTDelay[ospvMetric][ospvLeg];
+                metrics = &ospvStats->RTDelay[ospvService][ospvMetric][ospvLeg];
             }
             break;
         default:
@@ -1294,6 +1323,7 @@ void OSPPStatsGetMetrics(
 int OSPPStatsGetInteger(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
+    OSPE_SERVICE ospvService,
     OSPE_STATS_METRIC ospvMetric,
     OSPE_STATS_DIR ospvDir)
 {
@@ -1304,13 +1334,17 @@ int OSPPStatsGetInteger(
     {
         switch (ospvType) {
         case OSPC_STATS_OCTETS:
-            if ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) {
-                ospvValue = ospvStats->Octets[ospvMetric][ospvDir];
+            if (((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
+               ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)))
+            {
+                ospvValue = ospvStats->Octets[ospvService][ospvMetric][ospvDir];
             }
             break;
         case OSPC_STATS_PACKETS:
-            if ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)) {
-                ospvValue = ospvStats->Packets[ospvMetric][ospvDir];
+            if (((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
+               ((ospvMetric >= OSPC_SMETRIC_START) && (ospvMetric < OSPC_SMETRIC_NUMBER)))
+            {
+                ospvValue = ospvStats->Packets[ospvService][ospvMetric][ospvDir];
             }
             break;
         case OSPC_STATS_ICPIF:
@@ -1357,6 +1391,7 @@ float OSPPStatsGetFloat(
 int OSPPStatsValueToElement(
     OSPT_STATS *ospvStats,
     OSPE_STATS ospvType,
+    OSPE_SERVICE ospvService,
     OSPE_STATS_METRIC ospvMetric,
     OSPE_STATS_DIR ospvDir,
     OSPE_SESSION_LEG ospvLeg,
@@ -1365,6 +1400,7 @@ int OSPPStatsValueToElement(
     unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPE_STATS_STRUCT stype = -1;
     OSPE_MSG_ELEM stats = OSPC_MELEM_UNKNOWN;
+    OSPE_ALTINFO service = OSPC_ALTINFO_UNKNOWN;
     OSPE_ALTINFO metric = OSPC_ALTINFO_UNKNOWN;
     OSPE_ALTINFO dir = OSPC_ALTINFO_UNKNOWN;
     OSPE_ALTINFO leg = OSPC_ALTINFO_UNKNOWN;
@@ -1383,6 +1419,23 @@ int OSPPStatsValueToElement(
 
     if (ospvStats == OSPC_OSNULL) {
         errcode = OSPC_ERR_DATA_NO_STATS;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        switch (ospvService) {
+        case OSPC_SERVICE_UNDEFINED:
+            service = OSPC_ALTINFO_UNDEFINED;
+            break;
+        case OSPC_SERVICE_VOICE:
+            service = OSPC_ALTINFO_VOICE;
+            break;
+        case OSPC_SERVICE_VIDEO:
+            service = OSPC_ALTINFO_VIDEO;
+            break;
+        default:
+            errcode = OSPC_ERR_DATA_INVALID_TYPE;
+            break;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -1451,7 +1504,7 @@ int OSPPStatsValueToElement(
     if (errcode == OSPC_ERR_NO_ERROR) {
         switch (ospvType) {
         case OSPC_STATS_LOST:
-            if ((metric == OSPC_ALTINFO_UNDEFINED) || (dir == OSPC_ALTINFO_UNDEFINED)) {
+            if ((service == OSPC_ALTINFO_UNDEFINED) || (metric == OSPC_ALTINFO_UNDEFINED) || (dir == OSPC_ALTINFO_UNDEFINED)) {
                 errcode = OSPC_ERR_DATA_INVALID_TYPE;
             } else {
                 stype = OSPC_SSTRUCT_PACKET;
@@ -1459,7 +1512,7 @@ int OSPPStatsValueToElement(
             }
             break;
         case OSPC_STATS_JITTER:
-            if ((metric == OSPC_ALTINFO_UNDEFINED) || (dir == OSPC_ALTINFO_UNDEFINED)) {
+            if ((service == OSPC_ALTINFO_UNDEFINED) || (metric == OSPC_ALTINFO_UNDEFINED) || (dir == OSPC_ALTINFO_UNDEFINED)) {
                 errcode = OSPC_ERR_DATA_INVALID_TYPE;
             } else {
                 stype = OSPC_SSTRUCT_METRICS;
@@ -1467,7 +1520,7 @@ int OSPPStatsValueToElement(
             }
             break;
         case OSPC_STATS_DELAY:
-            if ((metric == OSPC_ALTINFO_UNDEFINED) || (dir == OSPC_ALTINFO_UNDEFINED)) {
+            if ((service == OSPC_ALTINFO_UNDEFINED) || (metric == OSPC_ALTINFO_UNDEFINED) || (dir == OSPC_ALTINFO_UNDEFINED)) {
                 errcode = OSPC_ERR_DATA_INVALID_TYPE;
             } else {
                 stype = OSPC_SSTRUCT_METRICS;
@@ -1475,7 +1528,7 @@ int OSPPStatsValueToElement(
             }
             break;
         case OSPC_STATS_RTDELAY:
-            if ((metric ==OSPC_ALTINFO_UNDEFINED) || (leg == OSPC_ALTINFO_UNDEFINED)) {
+            if ((service == OSPC_ALTINFO_UNDEFINED) || (metric ==OSPC_ALTINFO_UNDEFINED) || (leg == OSPC_ALTINFO_UNDEFINED)) {
                 errcode = OSPC_ERR_DATA_INVALID_TYPE;
             } else {
                 stype = OSPC_SSTRUCT_METRICS;
@@ -1483,7 +1536,7 @@ int OSPPStatsValueToElement(
             }
             break;
         case OSPC_STATS_OCTETS:
-            if ((metric == OSPC_ALTINFO_UNDEFINED) || (dir == OSPC_ALTINFO_UNDEFINED)) {
+            if ((service == OSPC_ALTINFO_UNDEFINED) || (metric == OSPC_ALTINFO_UNDEFINED) || (dir == OSPC_ALTINFO_UNDEFINED)) {
                 errcode = OSPC_ERR_DATA_INVALID_TYPE;
             } else {
                 stype = OSPC_SSTRUCT_INTEGER;
@@ -1491,7 +1544,7 @@ int OSPPStatsValueToElement(
             }
             break;
         case OSPC_STATS_PACKETS:
-            if ((metric == OSPC_ALTINFO_UNDEFINED) || (dir == OSPC_ALTINFO_UNDEFINED)) {
+            if ((service == OSPC_ALTINFO_UNDEFINED) || (metric == OSPC_ALTINFO_UNDEFINED) || (dir == OSPC_ALTINFO_UNDEFINED)) {
                 errcode = OSPC_ERR_DATA_INVALID_TYPE;
             } else {
                 stype = OSPC_SSTRUCT_INTEGER;
@@ -1544,8 +1597,8 @@ int OSPPStatsValueToElement(
     if (errcode == OSPC_ERR_NO_ERROR) {
         switch (stype) {
         case OSPC_SSTRUCT_PACKET:
-            if (OSPPStatsHasValue(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_PACKET)) {
-                OSPPStatsGetPacket(ospvStats, ospvType, ospvMetric, ospvDir, &packets, &fraction);
+            if (OSPPStatsHasValue(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_PACKET)) {
+                OSPPStatsGetPacket(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, &packets, &fraction);
 
                 statselem = OSPPXMLElemNew(OSPPMsgElemGetName(stats), "");
                 if (statselem == OSPC_OSNULL) {
@@ -1561,7 +1614,7 @@ int OSPPStatsValueToElement(
                 }
 
                 /* Packets */
-                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_PACKETS)) {
+                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_PACKETS)) {
                     errcode = OSPPMsgNumToElement(packets, OSPPMsgElemGetName(OSPC_MELEM_PACKETS), &valueelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(statselem, valueelem);
@@ -1572,7 +1625,7 @@ int OSPPStatsValueToElement(
                 }
 
                 /* Fraction */
-                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_FRACTION)) {
+                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_FRACTION)) {
                     errcode = OSPPMsgNumToElement(fraction, OSPPMsgElemGetName(OSPC_MELEM_FRACTION), &valueelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(statselem, valueelem);
@@ -1584,8 +1637,8 @@ int OSPPStatsValueToElement(
             }
             break;
         case OSPC_SSTRUCT_METRICS:
-            if (OSPPStatsHasValue(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_METRICS)) {
-                OSPPStatsGetMetrics(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, &samples, &min, &max, &mean, &variance);
+            if (OSPPStatsHasValue(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_METRICS)) {
+                OSPPStatsGetMetrics(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, &samples, &min, &max, &mean, &variance);
 
                 statselem = OSPPXMLElemNew(OSPPMsgElemGetName(stats), "");
                 if (statselem == OSPC_OSNULL) {
@@ -1612,7 +1665,7 @@ int OSPPStatsValueToElement(
                 }
 
                 /* Samples */
-                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_SAMPLES)) {
+                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_SAMPLES)) {
                     errcode = OSPPMsgNumToElement(samples, OSPPMsgElemGetName(OSPC_MELEM_SAMPLES), &valueelem);
                     if ((errcode == OSPC_ERR_NO_ERROR) && (valueelem != OSPC_OSNULL)) {
                         OSPPXMLElemAddChild(statselem, valueelem);
@@ -1623,7 +1676,7 @@ int OSPPStatsValueToElement(
                 }
 
                 /* Minimum */
-                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_MINIMUM)) {
+                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_MINIMUM)) {
                     errcode = OSPPMsgNumToElement(min, OSPPMsgElemGetName(OSPC_MELEM_MINIMUM), &valueelem);
                     if ((errcode == OSPC_ERR_NO_ERROR) && (valueelem != OSPC_OSNULL)) {
                         OSPPXMLElemAddChild(statselem, valueelem);
@@ -1634,7 +1687,7 @@ int OSPPStatsValueToElement(
                 }
 
                 /* Maximum */
-                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_MAXIMUM)) {
+                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_MAXIMUM)) {
                     errcode = OSPPMsgNumToElement(max, OSPPMsgElemGetName(OSPC_MELEM_MAXIMUM), &valueelem);
                     if ((errcode == OSPC_ERR_NO_ERROR) && (valueelem != OSPC_OSNULL)) {
                         OSPPXMLElemAddChild(statselem, valueelem);
@@ -1645,7 +1698,7 @@ int OSPPStatsValueToElement(
                 }
 
                 /* Mean */
-                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_MEAN)) {
+                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_MEAN)) {
                     errcode = OSPPMsgNumToElement(mean, OSPPMsgElemGetName(OSPC_MELEM_MEAN), &valueelem);
                     if ((errcode == OSPC_ERR_NO_ERROR) && (valueelem != OSPC_OSNULL)) {
                         OSPPXMLElemAddChild(statselem, valueelem);
@@ -1656,7 +1709,7 @@ int OSPPStatsValueToElement(
                 }
 
                 /* Variance */
-                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_VARIANCE)) {
+                if ((errcode == OSPC_ERR_NO_ERROR) && OSPPStatsHasValue(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_VARIANCE)) {
                     errcode = OSPPMsgFloatToElement(variance, OSPPMsgElemGetName(OSPC_MELEM_VARIANCE), &valueelem);
                     if ((errcode == OSPC_ERR_NO_ERROR) && (valueelem != OSPC_OSNULL)) {
                         OSPPXMLElemAddChild(statselem, valueelem);
@@ -1668,8 +1721,8 @@ int OSPPStatsValueToElement(
             }
             break;
         case OSPC_SSTRUCT_INTEGER:
-            if (OSPPStatsHasValue(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_VALUE)) {
-                ivalue = OSPPStatsGetInteger(ospvStats, ospvType, ospvMetric, ospvDir);
+            if (OSPPStatsHasValue(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_VALUE)) {
+                ivalue = OSPPStatsGetInteger(ospvStats, ospvType, ospvService, ospvMetric, ospvDir);
 
                 errcode = OSPPMsgNumToElement(ivalue, OSPPMsgElemGetName(stats), &statselem);
                 if ((errcode != OSPC_ERR_NO_ERROR) || (statselem == OSPC_OSNULL)) {
@@ -1686,7 +1739,7 @@ int OSPPStatsValueToElement(
             }
             break;
         case OSPC_SSTRUCT_FLOAT:
-            if (OSPPStatsHasValue(ospvStats, ospvType, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_VALUE)) {
+            if (OSPPStatsHasValue(ospvStats, ospvType, ospvService, ospvMetric, ospvDir, ospvLeg, OSPC_SVALUE_VALUE)) {
                 fvalue = OSPPStatsGetFloat(ospvStats, ospvType, ospvDir);
 
                 errcode = OSPPMsgFloatToElement(fvalue, OSPPMsgElemGetName(stats), &statselem);
@@ -1721,7 +1774,18 @@ int OSPPStatsValueToElement(
                 *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_METRICS), "");
                 if (*ospvElem == OSPC_OSNULL) {
                     errcode = OSPC_ERR_XML_NO_ELEMENT;
-                } else {
+                }
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_SERVICE), OSPPAltInfoTypeGetName(service));
+                    if (attr == OSPC_OSNULL) {
+                        OSPPXMLElemDelete(ospvElem);
+                        errcode = OSPC_ERR_XML_NO_ATTR;
+                    } else {
+                        OSPPXMLElemAddAttr(*ospvElem, attr);
+                        attr = OSPC_OSNULL;
+                    }
+                }
+                if (errcode == OSPC_ERR_NO_ERROR) {
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(metric));
                     if (attr == OSPC_OSNULL) {
                         OSPPXMLElemDelete(ospvElem);

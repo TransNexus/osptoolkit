@@ -96,6 +96,7 @@ extern "C" {
     int OSPPTransactionSetDiversion(OSPTTRANHANDLE, const char *, const char *);
     int OSPPTransactionSetProtocol(OSPTTRANHANDLE, OSPE_PROTOCOL_TYPE, OSPE_PROTOCOL_NAME);
     int OSPPTransactionSetCodec(OSPTTRANHANDLE, OSPE_CODEC_TYPE, const char *);
+    int OSPPTransactionSetVideoCodec(OSPTTRANHANDLE, OSPE_CODEC_TYPE, const char *);
     int OSPPTransactionSetSessionId(OSPTTRANHANDLE, OSPE_SESSION_ID, OSPT_CALL_ID *);
     int OSPPTransactionSetCustomInfo(OSPTTRANHANDLE, unsigned, const char *);
     int OSPPTransactionSetSrcNetworkId(OSPTTRANHANDLE, const char *);
@@ -106,6 +107,12 @@ extern "C" {
     int OSPPTransactionSetRTDelay(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_SESSION_LEG, int, int, int, int, float);
     int OSPPTransactionSetOctets(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int);
     int OSPPTransactionSetPackets(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int);
+    int OSPPTransactionSetVideoLost(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int, int);
+    int OSPPTransactionSetVideoJitter(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int, int, int, int, float);
+    int OSPPTransactionSetVideoDelay(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int, int, int, int, float);
+    int OSPPTransactionSetVideoRTDelay(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_SESSION_LEG, int, int, int, int, float);
+    int OSPPTransactionSetVideoOctets(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int);
+    int OSPPTransactionSetVideoPackets(OSPTTRANHANDLE, OSPE_STATS_METRIC, OSPE_STATS_DIR, int);
     int OSPPTransactionSetRFactor(OSPTTRANHANDLE, OSPE_STATS_DIR, float);
     int OSPPTransactionSetMOSCQ(OSPTTRANHANDLE, OSPE_STATS_DIR, float);
     int OSPPTransactionSetMOSLQ(OSPTTRANHANDLE, OSPE_STATS_DIR, float);
@@ -126,6 +133,8 @@ extern "C" {
     int OSPPTransactionSetTransferStatus(OSPTTRANHANDLE, OSPE_TRANSFER_STATUS);
     int OSPPTransactionSetNetworkTranslatedCalledNumber(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
     int OSPPTransactionSetServiceProviderId(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetSystemId(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetRelatedReason(OSPTTRANHANDLE, const char *);
 
 #ifdef __cplusplus
 }

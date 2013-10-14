@@ -1909,6 +1909,8 @@ int testSetCodec()
 
     errcode = OSPPTransactionSetCodec(OSPVTransactionHandle, OSPC_CODEC_SOURCE, "g729");
     errcode = OSPPTransactionSetCodec(OSPVTransactionHandle, OSPC_CODEC_DESTINATION, "g723");
+    errcode = OSPPTransactionSetVideoCodec(OSPVTransactionHandle, OSPC_CODEC_SOURCE, "ulaw");
+    errcode = OSPPTransactionSetVideoCodec(OSPVTransactionHandle, OSPC_CODEC_DESTINATION, "alaw");
 
     return errcode;
 }
@@ -2029,6 +2031,24 @@ int testSetServiceProvider()
     return errcode;
 }
 
+int testSetSystemId()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetSystemId(OSPVTransactionHandle, "systemid");
+
+    return errcode;
+}
+
+int testSetRelatedReason()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetRelatedReason(OSPVTransactionHandle, "relatedcallidreason");
+
+    return errcode;
+}
+
 int testGetNumberPortability()
 {
     int errcode = 0;
@@ -2088,6 +2108,10 @@ int testStatsLost()
     errcode = OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_DESTREP, 3, -1);
     errcode = OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_SRCDEST, -1, 4);
     errcode = OSPPTransactionSetLost(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_DESTSRC, -1, -1);
+    errcode = OSPPTransactionSetVideoLost(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_SRCREP, 2, 4);
+    errcode = OSPPTransactionSetVideoLost(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_DESTREP, 6, -1);
+    errcode = OSPPTransactionSetVideoLost(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_SRCDEST, -1, 8);
+    errcode = OSPPTransactionSetVideoLost(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_DESTSRC, -1, -1);
 
     return errcode;
 }
@@ -2100,6 +2124,10 @@ int testStatsJitter()
     errcode = OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_DESTREP, -1, 6, 7, 8, 9);
     errcode = OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_SRCDEST, 10, -1, 11, 12, 13);
     errcode = OSPPTransactionSetJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_DESTSRC, 14, 15, -1, 16, 17);
+    errcode = OSPPTransactionSetVideoJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_SRCREP, 1, 2, 3, 4, 5);
+    errcode = OSPPTransactionSetVideoJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_DESTREP, -1, 12, 14, 16, 18);
+    errcode = OSPPTransactionSetVideoJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_SRCDEST, 20, -1, 22, 24, 26);
+    errcode = OSPPTransactionSetVideoJitter(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_DESTSRC, 28, 30, -1, 32, 34);
 
     return errcode;
 }
@@ -2112,6 +2140,10 @@ int testStatsDelay()
     errcode = OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_DESTREP, -1, 6, 7, 8, 9);
     errcode = OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_SRCDEST, 10, -1, 11, 12, 13);
     errcode = OSPPTransactionSetDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_DESTSRC, 14, 15, -1, 16, 17);
+    errcode = OSPPTransactionSetVideoDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_SRCREP, 2, 4, 6, 8, 10);
+    errcode = OSPPTransactionSetVideoDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_DESTREP, -1, 12, 14, 16, 18);
+    errcode = OSPPTransactionSetVideoDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_SRCDEST, 20, -1, 22, 24, 26);
+    errcode = OSPPTransactionSetVideoDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_DESTSRC, 28, 30, -1, 32, 34);
 
     return errcode;
 }
@@ -2124,6 +2156,10 @@ int testStatsRTDelay()
     errcode = OSPPTransactionSetRTDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SLEG_DESTINATION, -1, 6, 7, 8, 9);
     errcode = OSPPTransactionSetRTDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SLEG_SOURCE, 10, -1, 11, 12, 13);
     errcode = OSPPTransactionSetRTDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SLEG_DESTINATION, 14, 15, -1, 16, 17);
+    errcode = OSPPTransactionSetVideoRTDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SLEG_SOURCE, 2, 4, 6, 8, 10);
+    errcode = OSPPTransactionSetVideoRTDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SLEG_DESTINATION, -1, 12, 14, 16, 18);
+    errcode = OSPPTransactionSetVideoRTDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SLEG_SOURCE, 20, -1, 22, 24, 26);
+    errcode = OSPPTransactionSetVideoRTDelay(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SLEG_DESTINATION, 28, 30, -1, 32, 34);
 
     return errcode;
 }
@@ -2136,6 +2172,10 @@ int testStatsOctets()
     errcode = OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_DESTREP, 2);
     errcode = OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_SRCDEST, -1);
     errcode = OSPPTransactionSetOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_DESTSRC, 3);
+    errcode = OSPPTransactionSetVideoOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_SRCREP, 2);
+    errcode = OSPPTransactionSetVideoOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_DESTREP, 4);
+    errcode = OSPPTransactionSetVideoOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_SRCDEST, -1);
+    errcode = OSPPTransactionSetVideoOctets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_DESTSRC, 6);
 
     return errcode;
 }
@@ -2148,6 +2188,10 @@ int testStatsPackets()
     errcode = OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_DESTREP, 2);
     errcode = OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_SRCDEST, 3);
     errcode = OSPPTransactionSetPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_DESTSRC, -1);
+    errcode = OSPPTransactionSetVideoPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_SRCREP, 2);
+    errcode = OSPPTransactionSetVideoPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTP, OSPC_SDIR_DESTREP, 4);
+    errcode = OSPPTransactionSetVideoPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_SRCDEST, 6);
+    errcode = OSPPTransactionSetVideoPackets(OSPVTransactionHandle, OSPC_SMETRIC_RTCP, OSPC_SDIR_DESTSRC, -1);
 
     return errcode;
 }
@@ -2515,6 +2559,12 @@ int testAPI(int apinumber)
     case 230:
         errcode = testSetServiceProvider();
         break;
+    case 231:
+        errcode = testSetSystemId();
+        break;
+    case 232:
+        errcode = testSetRelatedReason();
+        break;
     case 250:
         errcode = testGetNumberPortability();
         break;
@@ -2574,10 +2624,10 @@ int testAPI(int apinumber)
             errcode = testSetDiversion();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetRealm();
+            errcode = testSetApplicationId();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetApplicationId();
+            errcode = testSetRealm();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionRequestAuthorisation();
@@ -2614,6 +2664,30 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetCustomInfo();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetReleaseSource();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetCallPartyInfo();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetTransferId();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetTransferStatus();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetNetTransCalled();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetServiceProvider();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetSystemId();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetRelatedReason();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testStatsLost();
@@ -2759,7 +2833,8 @@ int testMenu()
         printf("224) Set Custom Info                  225) Set Release Source\n");
         printf("226) Set Call Party Info              227) Set Transfer ID\n");
         printf("228) Set Transfer Status              229) Set Network Translated Called Number\n");
-        printf("230) Set Service Provider ID\n");
+        printf("230) Set Service Provider ID          231) Set System ID\n");
+        printf("232) Set Related Call-ID Reason\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs\n");
         printf("300) Set Lost                         301) Set Jitter\n");
