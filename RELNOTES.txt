@@ -583,4 +583,5 @@ Version 4.1.5 - 2013-08-19
 * Fixed codec buffer size issue.
 ---------------------------------------------------------------------------
 
-Version 4.1.6 - 
+Version 4.1.6 - 2014-02-24
+* Added vendor CUCM, MetaSphere and Sansay.
