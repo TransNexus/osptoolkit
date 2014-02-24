@@ -589,4 +589,6 @@ Version 4.2.0 - 2013-10-14
 * Added vendor Kamailio.
 ---------------------------------------------------------------------------
 
-Version 4.2.1 - 
+Version 4.2.1 - 2014-02-24
+* Added vendor CUCM, MetaSphere and Sansay.
+
