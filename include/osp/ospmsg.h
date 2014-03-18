@@ -113,6 +113,7 @@ typedef enum {
     OSPC_RVENDOR_OPENSIPS,
     OSPC_RVENDOR_PERIMETA,
     OSPC_RVENDOR_SANSAY,
+    OSPC_RVENDOR_TAQUA,
     /* Number of role vendors */
     OSPC_RVENDOR_NUMBER
 } OSPE_ROLE_VENDOR;
