@@ -103,12 +103,17 @@ typedef enum {
     /* Role vendor start */
     OSPC_RVENDOR_START = 0,
     OSPC_RVENDOR_ACME = OSPC_RVENDOR_START,
-    OSPC_RVENDOR_GENBANDS3,
-    OSPC_RVENDOR_BROADWORKS,
-    OSPC_RVENDOR_PERIMETA,
-    OSPC_RVENDOR_OPENSIPS,
     OSPC_RVENDOR_ASTERISK,
+    OSPC_RVENDOR_BROADWORKS,
+    OSPC_RVENDOR_CUCM,
     OSPC_RVENDOR_FREESWITCH,
+    OSPC_RVENDOR_GENBANDS3,
+    OSPC_RVENDOR_KAMAILIO,
+    OSPC_RVENDOR_METASPHERE,
+    OSPC_RVENDOR_OPENSIPS,
+    OSPC_RVENDOR_PERIMETA,
+    OSPC_RVENDOR_SANSAY,
+    OSPC_RVENDOR_TAQUA,
     /* Number of role vendors */
     OSPC_RVENDOR_NUMBER
 } OSPE_ROLE_VENDOR;
@@ -147,7 +152,7 @@ extern const OSPT_MSG_DESC OSPV_TSTATUS_DESCS[];
 #define OSPC_SIZE_ROLESTR       16  /* max characters in role string */
 #define OSPC_SIZE_NORSTR        256 /* max characters in normal string */
 #define OSPC_SIZE_NORID         256 /* max characters in normal ID */
-#define OSPC_SIZE_CODEC         16  /* max characters in codec */
+#define OSPC_SIZE_CODEC         64  /* max characters in codec */
 #define OSPC_SIZE_CUSTINFO      256 /* max characters in user-defined info */
 
 /* Function Prototypes */
