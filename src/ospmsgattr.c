@@ -89,7 +89,7 @@ const OSPT_MSG_DESC OSPV_RVENDOR_DESCS[OSPC_RVENDOR_NUMBER] = {
     { OSPC_RVENDOR_OPENSIPS,    "opensips" },
     { OSPC_RVENDOR_PERIMETA,    "perimeta" },
     { OSPC_RVENDOR_SANSAY,      "sansay" },
-    { OSPC_RVENDOR_SANSAY,      "taqua" }
+    { OSPC_RVENDOR_TAQUA,       "taqua" }
 };
 
 /* Array that associates service type and names */
