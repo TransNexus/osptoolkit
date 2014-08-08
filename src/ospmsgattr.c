@@ -79,6 +79,7 @@ const OSPT_MSG_DESC OSPV_RFORMAT_DESCS[OSPC_RFORMAT_NUMBER] = {
 const OSPT_MSG_DESC OSPV_RVENDOR_DESCS[OSPC_RVENDOR_NUMBER] = {
     { OSPC_RVENDOR_ACME,        "acme" },
     { OSPC_RVENDOR_ASTERISK,    "asterisk" },
+    { OSPC_RVENDOR_AUDIOCODES,  "audiocodes" },
     { OSPC_RVENDOR_BROADWORKS,  "broadworks" },
     { OSPC_RVENDOR_CUCM,        "cucm" },
     { OSPC_RVENDOR_FREESWITCH,  "freeswitch" },
