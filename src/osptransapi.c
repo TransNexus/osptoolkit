@@ -2122,6 +2122,7 @@ int OSPPTransactionNew(
     OSPE_CODEC_TYPE codec;
     OSPE_SESSION_ID sess;
     int index;
+    OSPE_NUMBER_FORMAT format;
 
     errcode = OSPPTransactionGetNewContext(ospvProvider, ospvTransaction);
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -2166,12 +2167,14 @@ int OSPPTransactionNew(
         trans->UsageSrcNetworkId[0] = '\0';
         trans->SrcRealm[0] = '\0';
         trans->DestRealm[0] = '\0';
-        trans->AssertedIdFormat = OSPC_NFORMAT_E164;
-        trans->AssertedId[0] = '\0';
-        trans->RemotePartyIdFormat = OSPC_NFORMAT_E164;
-        trans->RemotePartyId[0] = '\0';
-        trans->ChargeInfoFormat = OSPC_NFORMAT_E164;
-        trans->ChargeInfo[0] = '\0';
+        for (format = OSPC_NFORMAT_START; format < OSPC_NFORMAT_NUMBER; format++) {
+            trans->From[format][0] = '\0';
+            trans->AssertedId[format][0] = '\0';
+            trans->RemotePartyId[format][0] = '\0';
+            trans->ChargeInfo[format][0] = '\0';
+            trans->DivSrcInfo[format][0] = '\0';
+        }
+        trans->DivDevInfo[0] = '\0';
         trans->ApplicationId[0] = '\0';
         trans->RoleState = OSPC_RSTATE_UNKNOWN;
         trans->RoleFormat = OSPC_RFORMAT_UNKNOWN;
@@ -2181,6 +2184,10 @@ int OSPPTransactionNew(
         trans->ServiceProviderId[0] = '\0';
         trans->SystemId[0] = '\0';
         trans->RelatedReason[0] = '\0';
+        trans->TotalSetupAttempts = -1;
+        trans->CDRProxyHost[0] = '\0';
+        trans->CDRProxyFolder[0] = '\0';
+        trans->CDRProxySubfolder[0] = '\0';
     }
 
     return errcode;
@@ -4124,7 +4131,7 @@ int OSPPTransactionSetDiversion(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            OSPM_STRNCPY(trans->DivSrcInfo, ospvNumber, sizeof(trans->DivSrcInfo) - 1);
+            OSPM_STRNCPY(trans->DivSrcInfo[OSPC_NFORMAT_E164], ospvNumber, sizeof(trans->DivSrcInfo[OSPC_NFORMAT_E164]) - 1);
             OSPM_STRNCPY(trans->DivDevInfo, ospvDomain, sizeof(trans->DivDevInfo) - 1);
         }
     }
@@ -5083,6 +5090,28 @@ int OSPPTransactionGetURL(
     return errcode;
 }
 
+int OSPPTransactionSetFrom(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_NUMBER_FORMAT ospvFormat,  /* In - From format */
+    const char *ospvFrom)           /* In - From */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if (((ospvFormat < OSPC_NFORMAT_START) || (ospvFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvFrom == OSPC_OSNULL) || (ospvFrom[0] == '\0')))
+    {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->From[ospvFormat], ospvFrom, sizeof(trans->From[ospvFormat]) - 1);
+        }
+    }
+
+    return errcode;
+}
+
 int OSPPTransactionSetAssertedId(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     OSPE_NUMBER_FORMAT ospvFormat,  /* In - Asserted ID format */
@@ -5098,8 +5127,7 @@ int OSPPTransactionSetAssertedId(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            trans->AssertedIdFormat = ospvFormat;
-            OSPM_STRNCPY(trans->AssertedId, ospvAssertedId, sizeof(trans->AssertedId) - 1);
+            OSPM_STRNCPY(trans->AssertedId[ospvFormat], ospvAssertedId, sizeof(trans->AssertedId[ospvFormat]) - 1);
         }
     }
 
@@ -5121,8 +5149,7 @@ int OSPPTransactionSetRemotePartyId(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            trans->RemotePartyIdFormat = ospvFormat;
-            OSPM_STRNCPY(trans->RemotePartyId, ospvRPId, sizeof(trans->RemotePartyId) - 1);
+            OSPM_STRNCPY(trans->RemotePartyId[ospvFormat], ospvRPId, sizeof(trans->RemotePartyId[ospvFormat]) - 1);
         }
     }
 
@@ -5144,8 +5171,29 @@ int OSPPTransactionSetChargeInfo(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            trans->ChargeInfoFormat = ospvFormat;
-            OSPM_STRNCPY(trans->ChargeInfo, ospvChargeInfo, sizeof(trans->ChargeInfo) - 1);
+            OSPM_STRNCPY(trans->ChargeInfo[ospvFormat], ospvChargeInfo, sizeof(trans->ChargeInfo[ospvFormat]) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetDivSrcInfo(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_NUMBER_FORMAT ospvFormat,  /* In - Diversion format */
+    const char *ospvSrcInfo)        /* In - Diversion */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if (((ospvFormat < OSPC_NFORMAT_START) || (ospvFormat >= OSPC_NFORMAT_NUMBER)) ||
+        ((ospvSrcInfo == OSPC_OSNULL) || (ospvSrcInfo[0] == '\0')))
+    {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->DivSrcInfo[ospvFormat], ospvSrcInfo, sizeof(trans->DivSrcInfo[ospvFormat]) - 1);
         }
     }
 
@@ -5310,7 +5358,7 @@ int OSPPTransactionSetServiceProviderId(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-               OSPM_STRNCPY(trans->ServiceProviderId, ospvServiceProviderId, sizeof(trans->ServiceProviderId) - 1);
+           OSPM_STRNCPY(trans->ServiceProviderId, ospvServiceProviderId, sizeof(trans->ServiceProviderId) - 1);
         }
     }
 
@@ -5329,7 +5377,7 @@ int OSPPTransactionSetSystemId(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-               OSPM_STRNCPY(trans->SystemId, ospvSystemId, sizeof(trans->SystemId) - 1);
+           OSPM_STRNCPY(trans->SystemId, ospvSystemId, sizeof(trans->SystemId) - 1);
         }
     }
 
@@ -5348,7 +5396,57 @@ int OSPPTransactionSetRelatedReason(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-               OSPM_STRNCPY(trans->RelatedReason, ospvRelatedReason, sizeof(trans->RelatedReason) - 1);
+            OSPM_STRNCPY(trans->RelatedReason, ospvRelatedReason, sizeof(trans->RelatedReason) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetTotalSetupAttempts(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    int ospvTotal)                      /* In - Total setup attempts */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if (ospvTotal < 0) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            trans->TotalSetupAttempts = ospvTotal;
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetCDRProxy(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvHost,           /* In - CDR proxy host */
+    const char *ospvFolder,         /* In - CDR proxy folder */
+    const char *ospvSubfolder)      /* In - CDR proxy subfolder */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans;
+
+    if (((ospvHost == OSPC_OSNULL) || (ospvHost[0] == '\0')) && ((ospvFolder == OSPC_OSNULL) || (ospvFolder[0] == '\0')) && ((ospvSubfolder == OSPC_OSNULL) || (ospvSubfolder[0] == '\0'))) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            if ((ospvHost != OSPC_OSNULL) && (ospvHost[0] != '\0')) {
+                OSPM_STRNCPY(trans->CDRProxyHost, ospvHost, sizeof(trans->CDRProxyHost) - 1);
+            }
+
+            if ((ospvFolder != OSPC_OSNULL) && (ospvFolder[0] != '\0')) {
+                OSPM_STRNCPY(trans->CDRProxyFolder, ospvFolder, sizeof(trans->CDRProxyFolder) - 1);
+            }
+
+            if ((ospvSubfolder != OSPC_OSNULL) && (ospvSubfolder[0] != '\0')) {
+                OSPM_STRNCPY(trans->CDRProxySubfolder, ospvSubfolder, sizeof(trans->CDRProxySubfolder) - 1);
+            }
         }
     }
 

@@ -687,11 +687,13 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
 
         /* add diversion */
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->DivSrcInfo[0] != '\0')) {
-            errcode = OSPPCallPartyNumToElement(OSPC_MELEM_DIVSRCINFO, trans->DivSrcInfo, OSPC_NFORMAT_E164, &elem);
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(authreqelem, elem);
-                elem = OSPC_OSNULL;
+        for (i = 0; i < OSPC_NFORMAT_NUMBER; i++) {
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->DivSrcInfo[i][0] != '\0')) {
+                errcode = OSPPCallPartyNumToElement(OSPC_MELEM_DIVSRCINFO, trans->DivSrcInfo[i], i, &elem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(authreqelem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans->DivDevInfo[0] != '\0')) {
@@ -848,30 +850,47 @@ int OSPPAuthReqToElement(       /* returns error code */
             }
         }
 
+        /* Add From */
+        for (i = 0; i < OSPC_NFORMAT_NUMBER; i++) {
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->From[i][0] != '\0')) {
+                errcode = OSPPCallPartyNumToElement(OSPC_MELEM_FROM, trans->From[i], i, &elem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(authreqelem, elem);
+                    elem = OSPC_OSNULL;
+                }
+            }
+        }
+
         /* Add asserted ID */
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->AssertedId[0] != '\0')) {
-            errcode = OSPPCallPartyNumToElement(OSPC_MELEM_ASSERTEDID, trans->AssertedId, trans->AssertedIdFormat, &elem);
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(authreqelem, elem);
-                elem = OSPC_OSNULL;
+        for (i = 0; i < OSPC_NFORMAT_NUMBER; i++) {
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->AssertedId[i][0] != '\0')) {
+                errcode = OSPPCallPartyNumToElement(OSPC_MELEM_ASSERTEDID, trans->AssertedId[i], i, &elem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(authreqelem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
 
         /* Add remote party ID */
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->RemotePartyId[0] != '\0')) {
-            errcode = OSPPCallPartyNumToElement(OSPC_MELEM_RPID, trans->RemotePartyId, trans->RemotePartyIdFormat, &elem);
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(authreqelem, elem);
-                elem = OSPC_OSNULL;
+        for (i = 0; i < OSPC_NFORMAT_NUMBER; i++) {
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->RemotePartyId[i][0] != '\0')) {
+                errcode = OSPPCallPartyNumToElement(OSPC_MELEM_RPID, trans->RemotePartyId[i], i, &elem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(authreqelem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
 
         /* Add charge info */
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->ChargeInfo[0] != '\0')) {
-            errcode = OSPPCallPartyNumToElement(OSPC_MELEM_CHARGEINFO, trans->ChargeInfo, trans->ChargeInfoFormat, &elem);
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(authreqelem, elem);
-                elem = OSPC_OSNULL;
+        for (i = 0; i < OSPC_NFORMAT_NUMBER; i++) {
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->ChargeInfo[i][0] != '\0')) {
+                errcode = OSPPCallPartyNumToElement(OSPC_MELEM_CHARGEINFO, trans->ChargeInfo[i], i, &elem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(authreqelem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
 

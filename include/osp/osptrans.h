@@ -102,7 +102,7 @@ typedef struct _OSPTTRANS {
     char NPCic[OSPC_SIZE_NORID];
     int NPNpdi;
     char OpName[OSPC_OPNAME_NUMBER][OSPC_SIZE_NORID];
-    char DivSrcInfo[OSPC_SIZE_E164NUM];
+    char DivSrcInfo[OSPC_NFORMAT_NUMBER ][OSPC_SIZE_URL];
     char DivDevInfo[OSPC_SIZE_SIGNALADDR];
     OSPE_PROTOCOL_NAME Protocol[OSPC_PROTTYPE_NUMBER];
     char Codec[OSPC_SERVICE_NUMBER][OSPC_CODEC_NUMBER][OSPC_SIZE_CODEC];
@@ -112,12 +112,10 @@ typedef struct _OSPTTRANS {
     char UsageSrcNetworkId[OSPC_SIZE_NORID];
     char SrcRealm[OSPC_SIZE_NORSTR];
     char DestRealm[OSPC_SIZE_NORSTR];
-    OSPE_NUMBER_FORMAT AssertedIdFormat;
-    char AssertedId[OSPC_SIZE_URL];
-    OSPE_NUMBER_FORMAT RemotePartyIdFormat;
-    char RemotePartyId[OSPC_SIZE_URL];
-    OSPE_NUMBER_FORMAT ChargeInfoFormat;
-    char ChargeInfo[OSPC_SIZE_URL];
+    char From[OSPC_NFORMAT_NUMBER][OSPC_SIZE_URL];
+    char AssertedId[OSPC_NFORMAT_NUMBER][OSPC_SIZE_URL];
+    char RemotePartyId[OSPC_NFORMAT_NUMBER][OSPC_SIZE_URL];
+    char ChargeInfo[OSPC_NFORMAT_NUMBER][OSPC_SIZE_URL];
     char ApplicationId[OSPC_SIZE_NORSTR];
     OSPE_ROLE_STATE RoleState;
     OSPE_ROLE_FORMAT RoleFormat;
@@ -127,6 +125,10 @@ typedef struct _OSPTTRANS {
     char ServiceProviderId[OSPC_SIZE_NORSTR];
     char SystemId[OSPC_SIZE_NORSTR];
     char RelatedReason[OSPC_SIZE_NORSTR];
+    int TotalSetupAttempts;
+    char CDRProxyHost[OSPC_SIZE_NORSTR];
+    char CDRProxyFolder[OSPC_SIZE_NORSTR];
+    char CDRProxySubfolder[OSPC_SIZE_NORSTR];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

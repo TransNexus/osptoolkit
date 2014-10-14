@@ -351,6 +351,7 @@ unsigned OSPPCallPartyNumToElement(
         case OSPC_MELEM_SRCINFO:
         case OSPC_MELEM_DESTINFO:
         case OSPC_MELEM_DIVSRCINFO:
+        case OSPC_MELEM_FROM:
         case OSPC_MELEM_ASSERTEDID:
         case OSPC_MELEM_RPID:
         case OSPC_MELEM_CHARGEINFO:
