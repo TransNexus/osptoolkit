@@ -1847,11 +1847,22 @@ int testSetOperatorName()
     return errcode;
 }
 
+int testSetFrom()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetFrom(OSPVTransactionHandle, OSPC_NFORMAT_E164, "FromE164");
+    errcode = OSPPTransactionSetFrom(OSPVTransactionHandle, OSPC_NFORMAT_DISPLAYNAME, "FromDisplayName");
+
+    return errcode;
+}
+
 int testSetAssertedId()
 {
     int errcode = 0;
 
-    errcode = OSPPTransactionSetAssertedId(OSPVTransactionHandle, OSPC_NFORMAT_DISPLAYNAME, "AssertedId");
+    errcode = OSPPTransactionSetAssertedId(OSPVTransactionHandle, OSPC_NFORMAT_E164, "AssertedIdE164");
+    errcode = OSPPTransactionSetAssertedId(OSPVTransactionHandle, OSPC_NFORMAT_URL, "AssertedIdURL");
 
     return errcode;
 }
@@ -1860,6 +1871,7 @@ int testSetRPId()
 {
     int errcode = 0;
 
+    errcode = OSPPTransactionSetRemotePartyId(OSPVTransactionHandle, OSPC_NFORMAT_DISPLAYNAME, "RPIdDisplayName");
     errcode = OSPPTransactionSetRemotePartyId(OSPVTransactionHandle, OSPC_NFORMAT_URL, "\"'Eric Smith' of AT&T\" <sip:2001@att.com>;privacy=off;screen=no");
 
     return errcode;
@@ -1869,7 +1881,8 @@ int testSetChargeInfo()
 {
     int errcode = 0;
 
-    errcode = OSPPTransactionSetChargeInfo(OSPVTransactionHandle, OSPC_NFORMAT_E164, "1234567890");
+    errcode = OSPPTransactionSetChargeInfo(OSPVTransactionHandle, OSPC_NFORMAT_E164, "ChargeInfoE164");
+    errcode = OSPPTransactionSetChargeInfo(OSPVTransactionHandle, OSPC_NFORMAT_DISPLAYNAME, "ChargeInfoDisplayName");
 
     return errcode;
 }
@@ -1878,7 +1891,8 @@ int testSetDiversion()
 {
     int errcode = 0;
 
-    errcode = OSPPTransactionSetDiversion(OSPVTransactionHandle, "DiversionSrcInfo", "DiversionDevInfo");
+    errcode = OSPPTransactionSetDiversion(OSPVTransactionHandle, "DiversionSrcInfoE164", "DiversionDevInfo");
+    errcode = OSPPTransactionSetDivSrcInfo(OSPVTransactionHandle, OSPC_NFORMAT_URL, "DivSrcInfoURL");
 
     return errcode;
 }
@@ -1981,6 +1995,15 @@ int testSetReleaseSource()
         release = OSPC_RELEASE_UNKNOWN;
         break;
     }
+
+    return errcode;
+}
+
+int testSetTotalSetupAttempts()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetTotalSetupAttempts(OSPVTransactionHandle, 12);
 
     return errcode;
 }
@@ -2248,6 +2271,15 @@ int testSetRealm()
 
     errcode = OSPPTransactionSetSrcRealm(OSPVTransactionHandle, "SourceRealm");
     errcode = OSPPTransactionSetDestRealm(OSPVTransactionHandle, "DestinationRealm");
+
+    return errcode;
+}
+
+int testSetCDRProxy()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetCDRProxy(OSPVTransactionHandle, "CDRProxyHost", "CDRProxyFolder", "CDRProxySubfolder");
 
     return errcode;
 }
@@ -2526,6 +2558,12 @@ int testAPI(int apinumber)
     case 217:
         errcode = testSetApplicationId();
         break;
+    case 218:
+        errcode = testSetFrom();
+        break;
+    case 219:
+        errcode = testSetTotalSetupAttempts();
+        break;
     case 220:
         errcode = testSetProtocol();
         break;
@@ -2564,6 +2602,9 @@ int testAPI(int apinumber)
         break;
     case 232:
         errcode = testSetRelatedReason();
+        break;
+    case 233:
+        errcode = testSetCDRProxy();
         break;
     case 250:
         errcode = testGetNumberPortability();
@@ -2615,6 +2656,9 @@ int testAPI(int apinumber)
             errcode = testSetAssertedId();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetFrom();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetRPId();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
@@ -2625,6 +2669,9 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetApplicationId();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetTotalSetupAttempts();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetRealm();
@@ -2688,6 +2735,9 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetRelatedReason();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetCDRProxy();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testStatsLost();
@@ -2828,13 +2878,14 @@ int testMenu()
         printf("212) Set Asserted ID                  213) Set Remote Party ID\n");
         printf("214) Set Charge Info                  215) Set Diversion\n");
         printf("216) Set Realms                       217) Set Application ID\n");
+        printf("218) Set From                         219) Set Total Setup Attempts\n");
         printf("220) Set Signaling Protocol           221) Set Codec\n");
         printf("222) Set Network ID                   223) Set Session ID\n");
         printf("224) Set Custom Info                  225) Set Release Source\n");
         printf("226) Set Call Party Info              227) Set Transfer ID\n");
         printf("228) Set Transfer Status              229) Set Network Translated Called Number\n");
         printf("230) Set Service Provider ID          231) Set System ID\n");
-        printf("232) Set Related Call-ID Reason\n");
+        printf("232) Set Related Call-ID Reason       233) Set CDR Proxy\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs\n");
         printf("300) Set Lost                         301) Set Jitter\n");

@@ -123,9 +123,11 @@ extern "C" {
     int OSPPTransactionSetSrcRealm(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetDestRealm(OSPTTRANHANDLE, const char *);
     int OSPPTransactionGetURL(OSPTTRANHANDLE, OSPE_URL_TYPE, unsigned, char *);
+    int OSPPTransactionSetFrom(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
     int OSPPTransactionSetAssertedId(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
     int OSPPTransactionSetRemotePartyId(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
     int OSPPTransactionSetChargeInfo(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
+    int OSPPTransactionSetDivSrcInfo(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
     int OSPPTransactionSetApplicationId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetRoleInfo(OSPTTRANHANDLE, OSPE_ROLE_STATE, OSPE_ROLE_FORMAT, OSPE_ROLE_VENDOR);
     int OSPPTransactionSetCallPartyInfo(OSPTTRANHANDLE, OSPE_CALL_PARTY, const char*, const char*, const char*);
@@ -135,6 +137,8 @@ extern "C" {
     int OSPPTransactionSetServiceProviderId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetSystemId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetRelatedReason(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetTotalSetupAttempts(OSPTTRANHANDLE, int);
+    int OSPPTransactionSetCDRProxy(OSPTTRANHANDLE, const char *, const char *, const char *);
 
 #ifdef __cplusplus
 }
