@@ -141,6 +141,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_USAGECNF,             "UsageConfirmation" },
     { OSPC_MELEM_USAGEDETAIL,          "UsageDetail" },
     { OSPC_MELEM_USAGEIND,             "UsageIndication" },
+    { OSPC_MELEM_USERAGENT,            "UserAgent" },
     { OSPC_MELEM_USERGROUP,            "UserGroup" },
     { OSPC_MELEM_USERID,               "UserId" },
     { OSPC_MELEM_USERNAME,             "UserName" },

@@ -903,6 +903,15 @@ int OSPPAuthReqToElement(       /* returns error code */
             }
         }
 
+        /* Add user agent */
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->UserAgent[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_USERAGENT, trans->UserAgent, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
         if (errcode == OSPC_ERR_NO_ERROR) {
             /* Now add the authreqelem to the main elem */
             OSPPXMLElemAddChild(*ospvElem, authreqelem);
