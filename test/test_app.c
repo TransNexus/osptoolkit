@@ -2072,6 +2072,15 @@ int testSetRelatedReason()
     return errcode;
 }
 
+int testSetUserAgent()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetUserAgent(OSPVTransactionHandle, "Cisco-SIPGateway/IOS-12.x");
+
+    return errcode;
+}
+
 int testGetNumberPortability()
 {
     int errcode = 0;
@@ -2606,6 +2615,9 @@ int testAPI(int apinumber)
     case 233:
         errcode = testSetCDRProxy();
         break;
+    case 234:
+        errcode = testSetUserAgent();
+        break;
     case 250:
         errcode = testGetNumberPortability();
         break;
@@ -2671,10 +2683,10 @@ int testAPI(int apinumber)
             errcode = testSetApplicationId();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetTotalSetupAttempts();
+            errcode = testSetRealm();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetRealm();
+            errcode = testSetUserAgent();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionRequestAuthorisation();
@@ -2684,6 +2696,9 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = OSPPTransactionSetDestinationCount(OSPVTransactionHandle, 2);
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetTotalSetupAttempts();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetRoleInfo();
@@ -2886,6 +2901,7 @@ int testMenu()
         printf("228) Set Transfer Status              229) Set Network Translated Called Number\n");
         printf("230) Set Service Provider ID          231) Set System ID\n");
         printf("232) Set Related Call-ID Reason       233) Set CDR Proxy\n");
+        printf("234) Set User Agent\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs\n");
         printf("300) Set Lost                         301) Set Jitter\n");

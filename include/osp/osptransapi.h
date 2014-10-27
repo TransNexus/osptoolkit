@@ -139,6 +139,7 @@ extern "C" {
     int OSPPTransactionSetRelatedReason(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetTotalSetupAttempts(OSPTTRANHANDLE, int);
     int OSPPTransactionSetCDRProxy(OSPTTRANHANDLE, const char *, const char *, const char *);
+    int OSPPTransactionSetUserAgent(OSPTTRANHANDLE, const char *);
 
 #ifdef __cplusplus
 }

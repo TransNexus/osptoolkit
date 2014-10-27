@@ -2188,6 +2188,7 @@ int OSPPTransactionNew(
         trans->CDRProxyHost[0] = '\0';
         trans->CDRProxyFolder[0] = '\0';
         trans->CDRProxySubfolder[0] = '\0';
+        trans->UserAgent[0] = '\0';
     }
 
     return errcode;
@@ -5447,6 +5448,25 @@ int OSPPTransactionSetCDRProxy(
             if ((ospvSubfolder != OSPC_OSNULL) && (ospvSubfolder[0] != '\0')) {
                 OSPM_STRNCPY(trans->CDRProxySubfolder, ospvSubfolder, sizeof(trans->CDRProxySubfolder) - 1);
             }
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetUserAgent(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvUserAgent)          /* In - User-Agent */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvUserAgent == OSPC_OSNULL) || (ospvUserAgent[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->UserAgent, ospvUserAgent, sizeof(trans->UserAgent) - 1);
         }
     }
 

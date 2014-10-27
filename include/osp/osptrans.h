@@ -129,6 +129,7 @@ typedef struct _OSPTTRANS {
     char CDRProxyHost[OSPC_SIZE_NORSTR];
     char CDRProxyFolder[OSPC_SIZE_NORSTR];
     char CDRProxySubfolder[OSPC_SIZE_NORSTR];
+    char UserAgent[OSPC_SIZE_NORSTR];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000
