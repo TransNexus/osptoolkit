@@ -613,4 +613,5 @@ Version 4.4.0 - 2014-10-27
 * Added support for User-Agent.
 ---------------------------------------------------------------------------
 
-Version 4.4.1 - 
+Version 4.4.1 - 2014-11-13
+* Fixed 0 destination count issue.

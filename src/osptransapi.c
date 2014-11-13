@@ -1859,14 +1859,8 @@ int OSPPTransactionSetDestinationCount(
     OSPTTRANS *trans = OSPC_OSNULL;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
-    if (errcode == OSPC_ERR_NO_ERROR) {
-        if ((trans->AuthReq != OSPC_OSNULL) && (trans->CurrentDest != OSPC_OSNULL)) {
-            OSPPDestSetDestinationCount(trans->CurrentDest, ospvDestinationCount);
-        } else {
-            errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-            OSPM_DBGERRORLOG(errcode,
-                "OSPPTransactionSetDestinationCount should be called after OSPPTransactionBuildUsageFromScratch for the source CDR");
-        }
+    if ((errcode == OSPC_ERR_NO_ERROR) && (trans->AuthReq != OSPC_OSNULL) && (trans->CurrentDest != OSPC_OSNULL)) {
+        OSPPDestSetDestinationCount(trans->CurrentDest, ospvDestinationCount);
     } else {
         errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
         OSPM_DBGERRORLOG(errcode,
@@ -2509,6 +2503,8 @@ int OSPPTransactionReportUsage(
     OSPE_CODEC_TYPE codec;
     OSPE_SESSION_ID sess;
     OSPE_PROTOCOL_TYPE prot;
+    unsigned destcount;
+    int attempt;
 
     OSPM_ARGUSED(ospvSizeOfDetailLog);
     OSPM_ARGUSED(ospvDetailLog);
@@ -2576,8 +2572,14 @@ int OSPPTransactionReportUsage(
                     }
 
                     if (errcode == OSPC_ERR_NO_ERROR) {
-                        /* Add destiantion count */
-                        OSPPUsageIndSetDestinationCount(usage, OSPPDestGetDestinationCount(dest));
+                        /* Add destination count and setup attempt */
+                        destcount = OSPPDestGetDestinationCount(dest);
+                        attempt = OSPPDestGetSetupAttempt(dest);
+                        if (attempt >= 0) {
+                            OSPPUsageIndSetDestinationCount(usage, attempt);
+                        } else if (destcount > 0) {
+                            OSPPUsageIndSetDestinationCount(usage, destcount);
+                        }
 
                         /* Add conference Id */
                         if (ospvConferenceId && (ospvConferenceId[0] != '\0') && (OSPM_STRLEN(ospvConferenceId) < OSPC_SIZE_CONFID)) {
@@ -2608,7 +2610,13 @@ int OSPPTransactionReportUsage(
                                 OSPPUsageIndCopyTermCause(usage, OSPPDestGetTermCause(dest));
                             }
 
-                            OSPPUsageIndSetDestinationCount(usage, OSPPDestGetDestinationCount(dest));
+                            destcount = OSPPDestGetDestinationCount(dest);
+                            attempt = OSPPDestGetSetupAttempt(dest);
+                            if (attempt >= 0) {
+                                OSPPUsageIndSetDestinationCount(usage, attempt);
+                            } else if (destcount > 0) {
+                                OSPPUsageIndSetDestinationCount(usage, destcount);
+                            }
 
                             /* Set Duration */
                             OSPPUsageIndSetDuration(usage, (int)ospvDuration);
@@ -5399,6 +5407,25 @@ int OSPPTransactionSetRelatedReason(
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
             OSPM_STRNCPY(trans->RelatedReason, ospvRelatedReason, sizeof(trans->RelatedReason) - 1);
         }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetSetupAttempt(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    int ospvAttempt)                    /* In - Setup attempt */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) && (trans->AuthReq != OSPC_OSNULL) && (trans->CurrentDest != OSPC_OSNULL)) {
+        OSPPDestSetSetupAttempt(trans->CurrentDest, ospvAttempt);
+    } else {
+        errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+        OSPM_DBGERRORLOG(errcode,
+            "OSPPTransactionSetSetupAttempt should be called after OSPPTransactionBuildUsageFromScratch for the source CDR");
     }
 
     return errcode;

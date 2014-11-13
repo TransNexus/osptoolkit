@@ -137,6 +137,7 @@ extern "C" {
     int OSPPTransactionSetServiceProviderId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetSystemId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetRelatedReason(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetSetupAttempt(OSPTTRANHANDLE, int);
     int OSPPTransactionSetTotalSetupAttempts(OSPTTRANHANDLE, int);
     int OSPPTransactionSetCDRProxy(OSPTTRANHANDLE, const char *, const char *, const char *);
     int OSPPTransactionSetUserAgent(OSPTTRANHANDLE, const char *);
