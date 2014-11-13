@@ -119,6 +119,7 @@ typedef struct {
     OSPE_DEST_OSPENABLED OSPVersion;
     char NetworkId[OSPC_SIZE_NORID];
     unsigned Count;
+    int SetupAttempt;
     char NPRn[OSPC_SIZE_E164NUM];
     char NPCic[OSPC_SIZE_NORID];
     int NPNpdi;
@@ -186,6 +187,8 @@ extern "C" {
     const char *OSPPDestGetTCDesc(OSPT_DEST *, OSPE_TERM_CAUSE);
     void OSPPDestSetDestinationCount(OSPT_DEST *, unsigned);
     unsigned OSPPDestGetDestinationCount(OSPT_DEST *);
+    void OSPPDestSetSetupAttempt(OSPT_DEST *, int);
+    int OSPPDestGetSetupAttempt(OSPT_DEST *);
     OSPE_PROTOCOL_NAME OSPPDestProtocolGetPart(const char *);
     const char *OSPPDestProtocolGetName(OSPE_PROTOCOL_NAME);
     void OSPPDestProtocolFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
