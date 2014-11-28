@@ -617,4 +617,6 @@ Version 4.4.1 - 2014-11-13
 * Fixed 0 destination count issue.
 ---------------------------------------------------------------------------
 
-Version 4.4.2 - 
+Version 4.4.2 - 2014-11-27
+* Added vendor Cisco.
+
