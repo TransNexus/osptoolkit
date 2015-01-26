@@ -123,7 +123,6 @@ int OSPPUtilGetErrorFromStatus(
             break;
         case 404:
             errorcode = OSPC_ERR_TRAN_ROUTE_NOT_FOUND;
-            OSPM_DBGERRORLOG(errorcode, "OSP Response Status: 404 Route Not Found");
             break;
         case 405:
             errorcode = OSPC_ERR_TRAN_MAY_NOT_ORIGINATE;
@@ -191,14 +190,19 @@ int OSPPUtilGetErrorFromStatus(
         case 532:
             errorcode = OSPC_ERR_TRAN_TIME_INTERVAL_TOO_SMALL;
             break;
+        case 603:
+            errorcode = OSPC_ERR_TRAN_DECLINE;
+            break;
         case 999:
             errorcode = OSPC_ERR_TRAN_GENERIC_FAILURE;
             break;
         default:
-            if ((ospvStatusCode > 401) && (ospvStatusCode < 500)) {
+            if ((ospvStatusCode >= 400) && (ospvStatusCode < 500)) {
                 errorcode = OSPC_ERR_TRAN_CLIENT_ERROR;
-            } else if ((ospvStatusCode > 501) && (ospvStatusCode < 600)) {
+            } else if ((ospvStatusCode >= 500) && (ospvStatusCode < 600)) {
                 errorcode = OSPC_ERR_TRAN_SERVER_ERROR;
+            } else if ((ospvStatusCode >= 600) && (ospvStatusCode < 700)) {
+                errorcode = OSPC_ERR_TRAN_GLOBAL_ERROR;
             } else {
                 errorcode = OSPC_ERR_TRAN_GENERIC_FAILURE;
             }
