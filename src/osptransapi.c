@@ -2589,7 +2589,7 @@ int OSPPTransactionReportUsage(
                         /* Add source network ID */
                         if (trans->UsageSrcNetworkId[0] != '\0') {
                             altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->UsageSrcNetworkId),
-                                trans->UsageSrcNetworkId, 
+                                trans->UsageSrcNetworkId,
                                 OSPC_ALTINFO_NETWORK);
                             OSPPUsageIndAddSourceAlt(usage, altinfo);
                             altinfo = OSPC_OSNULL;
@@ -2657,7 +2657,7 @@ int OSPPTransactionReportUsage(
 
                             if (trans->UsageSrcNetworkId[0] != '\0') {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->UsageSrcNetworkId),
-                                    trans->UsageSrcNetworkId, 
+                                    trans->UsageSrcNetworkId,
                                     OSPC_ALTINFO_NETWORK);
                                 OSPPUsageIndAddSourceAlt(usage, altinfo);
                                 altinfo = OSPC_OSNULL;

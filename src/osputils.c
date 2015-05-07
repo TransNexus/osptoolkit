@@ -75,36 +75,8 @@ int OSPPUtilBuildString(
     return errorcode;
 }
 
-/* Get the proper errorcode based on the status code returned from
-   the server.
-OSPC_ERR_TRAN_CLIENT_ERROR                  (11481)
-OSPC_ERR_TRAN_BAD_REQUEST                   (11482)
-OSPC_ERR_TRAN_UNAUTHORIZED                  (11483)
-OSPC_ERR_TRAN_CHAR_ENC_NOT_SUPD             (11484)
-OSPC_ERR_TRAN_PARS_UNSUCCESSFUL             (11485)
-OSPC_ERR_TRAN_UNSUPD_CRIT_ELEM              (11486)
-OSPC_ERR_TRAN_SECURITY_PROBLEM              (11487)
-OSPC_ERR_TRAN_SIG_INVALID                   (11488)
-OSPC_ERR_TRAN_CRYPTO_ALG_NOT_SUPD           (11489)
-OSPC_ERR_TRAN_CERT_INVALID                  (11490)
-OSPC_ERR_TRAN_CERT_REVOKED                  (11491)
-OSPC_ERR_TRAN_ENCRYPTION_REQD               (11492)
-OSPC_ERR_TRAN_SERVER_ERROR                  (11493)
-OSPC_ERR_TRAN_INTERNAL_SRVR_ERR             (11494)
-OSPC_ERR_TRAN_NOT_IMPLEMENTED               (11495)
-OSPC_ERR_TRAN_SERVICE_NOT_AVAIL             (11496)
-OSPC_ERR_TRAN_TRANSIENT_SRVR_PROB           (11497)
-OSPC_ERR_TRAN_LONG_TERM_SRVR_PROB           (11498)
-OSPC_ERR_TRAN_TIME_PROB                     (11499)
-OSPC_ERR_TRAN_VALID_TIME_TOO_SOON           (11500)
-OSPC_ERR_TRAN_TIME_INTERVAL_TOO_SMALL       (11501)
-OSPC_ERR_TRAN_GENERIC_FAILURE               (11502)
-OSPC_ERR_TRAN_ROUTE_NOT_FOUND               (11503)
-OSPC_ERR_TRAN_ROUTE_BLOCKED                 (11510)
-OSPC_ERR_TRAN_MAY_NOT_ORIGINATE             (11511)
-OSPC_ERR_TRAN_CALL_RATE_EXCEEDED            (11512)
-OSPC_ERR_TRAN_DESTINATION_INFO_INVALID      (11513)
-*/
+/* Get the proper errorcode based on the status code returned from the server.
+ */
 int OSPPUtilGetErrorFromStatus(
     unsigned ospvStatusCode)
 {

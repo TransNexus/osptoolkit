@@ -479,10 +479,7 @@ void OSPPSockProcessRequest(
             if ((*ospvError != OSPC_ERR_SOCK_SELECT_FAILED) && (*ospvError != OSPC_ERR_SOCK_RECV_FAILED) && (*ospvError != OSPC_ERR_SSL_READ_FAILED)) {
                 OSPM_DBGERRORLOG(*ospvError, "http recv init header failed");
             }
-        } else if ((*ospvError = OSPPHttpVerifyResponse(recvheadbuf, &responsetype, ospvHttp)) != OSPC_ERR_NO_ERROR) {
-            if (*ospvError == OSPC_ERR_HTTP_BAD_REQUEST)
-                OSPM_DBGERRORLOG(*ospvError, "http response unexpected: Server unavailable at the URL specified.Modify URL and try again.");
-        } else {
+        } else if ((*ospvError = OSPPHttpVerifyResponse(recvheadbuf, &responsetype, ospvHttp)) == OSPC_ERR_NO_ERROR) {
             if (responsetype == 100) {
                 /*
                  * Read again for the 200 header.
