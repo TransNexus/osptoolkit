@@ -625,27 +625,35 @@ int OSPPHttpVerifyResponse(
      * 1xx or 2xx will be considered and error.
      */
 
-    if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_200_OK) != OSPC_OSNULL) {
+    if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_100_CONTINUE) != OSPC_OSNULL) {
+        *ospvResponseType = 100;
+    } else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_200_OK) != OSPC_OSNULL) {
         *ospvResponseType = 200;
     } else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_400_BAD_REQUEST) != OSPC_OSNULL) {
         errorcode = OSPC_ERR_HTTP_BAD_REQUEST;
-        sprintf(ErrStr, "HTTP Status: 400 Bad Request, IP Address: %s", OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
+        sprintf(ErrStr, "HTTP Status: 400 Bad Request, IP Address: %s",
+                OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
         OSPM_DBGERRORLOG(errorcode, ErrStr);
     } else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_401_UNAUTHORIZED) != OSPC_OSNULL) {
         errorcode = OSPC_ERR_HTTP_UNAUTHORIZED;
-        sprintf(ErrStr, "HTTP Status: 401 Unauthorized, IP Address: %s", OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
+        sprintf(ErrStr, "HTTP Status: 401 Unauthorized, IP Address: %s",
+                OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
         OSPM_DBGERRORLOG(errorcode, ErrStr);
     } else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_404_NOT_FOUND) != OSPC_OSNULL) {
         errorcode = OSPC_ERR_HTTP_NOT_FOUND;
-        sprintf(ErrStr, "HTTP Status: 404 Not Found, IP Address: %s", OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
+        sprintf(ErrStr, "HTTP Status: 404 Not Found, IP Address: %s",
+                OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
         OSPM_DBGERRORLOG(errorcode, ErrStr);
     } else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_503_SERV_UNAVAIL) != OSPC_OSNULL) {
         errorcode = OSPC_ERR_HTTP_SERVICE_UNAVAILABLE;
         sprintf(ErrStr, "HTTP Status: 503 Service Unavailable, IP Address: %s",
                 OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
         OSPM_DBGERRORLOG(errorcode, ErrStr);
-    } else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_100_CONTINUE) != OSPC_OSNULL) {
-        *ospvResponseType = 100;
+    } else if (OSPM_STRSTR(ospvResponse, OSPC_HTTP_504_SERV_NOT_READY) != OSPC_OSNULL) {
+        errorcode = OSPC_ERR_HTTP_SERVER_NOT_READY;
+        sprintf(ErrStr, "HTTP Status: 504 Server Not Ready, IP Address: %s",
+                OSPM_INET_NTOA(ospvHttp->ServicePoint->IpAddr, buffer, INET_ADDRSTRLEN));
+        OSPM_DBGERRORLOG(errorcode, ErrStr);
     } else {
         errorcode = OSPC_ERR_HTTP_SERVER_ERROR;
     }

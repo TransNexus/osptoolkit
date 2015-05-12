@@ -425,8 +425,8 @@ OSPE_RELEASE OSPPUsageIndGetReleaseSource(
     OSPE_RELEASE ospvReleaseSource = OSPC_RELEASE_UNDEFINED;
 
     if (ospvUsageInd != OSPC_OSNULL) {
-        if ((ospvUsageInd->ReleaseSource == OSPC_RELEASE_UNKNOWN) || 
-            ((ospvUsageInd->ReleaseSource >= OSPC_RELEASE_START) && (ospvUsageInd->ReleaseSource < OSPC_RELEASE_NUMBER))) 
+        if ((ospvUsageInd->ReleaseSource == OSPC_RELEASE_UNKNOWN) ||
+            ((ospvUsageInd->ReleaseSource >= OSPC_RELEASE_START) && (ospvUsageInd->ReleaseSource < OSPC_RELEASE_NUMBER)))
         {
             ospvReleaseSource = ospvUsageInd->ReleaseSource;
         }
