@@ -625,5 +625,5 @@ Version 4.4.3 - 2015-01-26
 * Updated to support 603 Decline status code.
 ---------------------------------------------------------------------------
 
-Version 4.5.0 -
-* Updated to support more SIP response codes. 
+Version 4.5.0 - 2015-05-12
+* Updated to support more OSP server response codes. 
