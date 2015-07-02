@@ -2081,6 +2081,37 @@ int testSetUserAgent()
     return errcode;
 }
 
+int testSetMediaAddresses()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetSrcAudioAddr(OSPVTransactionHandle, "[172.16.0.1]:6000");
+    errcode = OSPPTransactionSetSrcVideoAddr(OSPVTransactionHandle, "gateway.transnexus.com:6001");
+    errcode = OSPPTransactionSetDestAudioAddr(OSPVTransactionHandle, "[172.16.0.1]:6002");
+    errcode = OSPPTransactionSetDestVideoAddr(OSPVTransactionHandle, "gateway.transnexus.com:6003");
+
+    return errcode;
+}
+
+int testSetProxyAddresses()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetProxyIngressAddr(OSPVTransactionHandle, "[172.16.0.1]:5060");
+    errcode = OSPPTransactionSetProxyEgressAddr(OSPVTransactionHandle, "[192.168.0.1]:5070");
+
+    return errcode;
+}
+
+int testSetProviderPDD(int pdd)
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetProviderPDD(OSPVTransactionHandle, pdd);
+
+    return errcode;
+}
+
 int testGetNumberPortability()
 {
     int errcode = 0;
@@ -2128,6 +2159,17 @@ int testGetURL()
     printf("sms = '%s'\n", url);
     errcode = OSPPTransactionGetURL(OSPVTransactionHandle, OSPC_URL_MMS, sizeof(url), url);
     printf("mms = '%s'\n", url);
+
+    return errcode;
+}
+
+int testGetCNAM()
+{
+    int errcode = 0;
+    char cnam[OSPC_SIZE_NORID];
+
+    errcode = OSPPTransactionGetCNAM(OSPVTransactionHandle, sizeof(cnam), cnam);
+    printf("CNAM = '%s'\n", cnam);
 
     return errcode;
 }
@@ -2289,6 +2331,15 @@ int testSetCDRProxy()
     int errcode = 0;
 
     errcode = OSPPTransactionSetCDRProxy(OSPVTransactionHandle, "CDRProxyHost", "CDRProxyFolder", "CDRProxySubfolder");
+
+    return errcode;
+}
+
+int testSetJIP()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetJIP(OSPVTransactionHandle, "404526");
 
     return errcode;
 }
@@ -2618,6 +2669,18 @@ int testAPI(int apinumber)
     case 234:
         errcode = testSetUserAgent();
         break;
+    case 235:
+        errcode = testSetMediaAddresses();
+        break;
+    case 236:
+        errcode = testSetProxyAddresses();
+        break;
+    case 237:
+        errcode = testSetProviderPDD(2010);
+        break;
+    case 238:
+        errcode = testSetJIP();
+        break;
     case 250:
         errcode = testGetNumberPortability();
         break;
@@ -2626,6 +2689,9 @@ int testAPI(int apinumber)
         break;
     case 252:
         errcode = testGetURL();
+        break;
+    case 253:
+        errcode = testGetCNAM();
         break;
     case 300:
         errcode = testStatsLost();
@@ -2689,10 +2755,28 @@ int testAPI(int apinumber)
             errcode = testSetUserAgent();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetMediaAddresses();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetProxyAddresses();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetJIP();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionRequestAuthorisation();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionGetFirstDestination();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetProviderPDD(3010);
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testOSPPTransactionRecordFailure();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testOSPPTransactionGetNextDestination();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = OSPPTransactionSetDestinationCount(OSPVTransactionHandle, 2);
@@ -2714,6 +2798,9 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetProtocol();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetProviderPDD(4010);
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetCodec();
@@ -2785,6 +2872,10 @@ int testAPI(int apinumber)
             errcode = testStatsICPIF();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
+            call_start_time = time(NULL);
+            call_alert_time = call_start_time + 3;
+            call_connect_time = call_start_time + 14;
+            call_end_time = call_start_time + 38;
             errcode = testOSPPTransactionReportUsage();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
@@ -2901,9 +2992,11 @@ int testMenu()
         printf("228) Set Transfer Status              229) Set Network Translated Called Number\n");
         printf("230) Set Service Provider ID          231) Set System ID\n");
         printf("232) Set Related Call-ID Reason       233) Set CDR Proxy\n");
-        printf("234) Set User Agent\n");
+        printf("234) Set User Agent                   235) Set Media Addresses\n");
+        printf("236) Set Proxy Addresses              237) Set Provider PDD\n");
+        printf("238) Set JIP\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
-        printf("252) Get URLs\n");
+        printf("252) Get URLs                         253) Get CNAM\n");
         printf("300) Set Lost                         301) Set Jitter\n");
         printf("302) Set Delay                        303) Set Round Trip Delay\n");
         printf("304) Set Octets                       305) Set Packets\n");

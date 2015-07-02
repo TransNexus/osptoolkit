@@ -663,6 +663,7 @@ OSPT_DEST *OSPPDestNew(void)    /* returns pointer or NULL */
         dest->RoleFormat = OSPC_RFORMAT_UNKNOWN;
         dest->RoleVendor = OSPC_RVENDOR_UNKNOWN;
         dest->TransferStatus = OSPC_TSTATUS_UNKNOWN;
+        dest->ProviderPDD = -1;
     }
 
     return dest;
@@ -760,7 +761,7 @@ int OSPPDestFromElement(        /* returns error code */
                 OSPPDestSetOSPVersion(dest, OSPPXMLElemGetValue(elem));
                 break;
             case OSPC_MELEM_SRCINFO:
-                OSPPDestSetSrcNumber(dest, OSPPXMLElemGetValue(elem));
+                OSPPSrcInfoFromElement(elem, dest);
                 break;
             case OSPC_MELEM_DESTINFO:
                 OSPPDestInfoFromElement(elem, dest);
@@ -943,6 +944,31 @@ void OSPPDestProtocolFromElement(
     case OSPC_ALTINFO_SOURCE:
     default:
         break;
+    }
+}
+
+void OSPPSrcInfoFromElement(
+    OSPT_XML_ELEM *ospvElem,
+    OSPT_DEST *ospvDest)
+{
+    OSPT_XML_ATTR* attr = OSPC_OSNULL;
+
+    for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElem);
+        (attr != OSPC_OSNULL);
+        attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElem, attr))
+    {
+        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_TYPE) {
+            switch (OSPPAltInfoTypeGetPart(OSPPXMLAttrGetValue(attr))) {
+            case OSPC_ALTINFO_E164:
+                OSPPDestSetSrcNumber(ospvDest, OSPPXMLElemGetValue(ospvElem));
+                break;
+            case OSPC_ALTINFO_CNAM:
+                OSPM_STRNCPY(ospvDest->CNAM, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->CNAM) - 1);
+                break;
+            default:
+                break;
+            }
+        }
     }
 }
 

@@ -141,6 +141,15 @@ extern "C" {
     int OSPPTransactionSetTotalSetupAttempts(OSPTTRANHANDLE, int);
     int OSPPTransactionSetCDRProxy(OSPTTRANHANDLE, const char *, const char *, const char *);
     int OSPPTransactionSetUserAgent(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetSrcAudioAddr(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetSrcVideoAddr(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetDestAudioAddr(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetDestVideoAddr(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetProxyIngressAddr(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetProxyEgressAddr(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetProviderPDD(OSPTTRANHANDLE, int);
+    int OSPPTransactionSetJIP(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionGetCNAM(OSPTTRANHANDLE, unsigned, char *);
 
 #ifdef __cplusplus
 }

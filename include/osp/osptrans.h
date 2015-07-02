@@ -130,6 +130,13 @@ typedef struct _OSPTTRANS {
     char CDRProxyFolder[OSPC_SIZE_NORSTR];
     char CDRProxySubfolder[OSPC_SIZE_NORSTR];
     char UserAgent[OSPC_SIZE_NORSTR];
+    char SrcAudioAddr[OSPC_SIZE_NORSTR];
+    char SrcVideoAddr[OSPC_SIZE_NORSTR];
+    char DestAudioAddr[OSPC_SIZE_NORSTR];
+    char DestVideoAddr[OSPC_SIZE_NORSTR];
+    char ProxyIngressAddr[OSPC_SIZE_NORSTR];
+    char ProxyEgressAddr[OSPC_SIZE_NORSTR];
+    char JIP[OSPC_SIZE_NORSTR];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

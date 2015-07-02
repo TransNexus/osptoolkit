@@ -54,6 +54,9 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_SMS,             "sms" },
     { OSPC_ALTINFO_MMS,             "mms" },
     { OSPC_ALTINFO_DISPLAYNAME,     "displayname" },
+    { OSPC_ALTINFO_INGRESS,         "ingress" },
+    { OSPC_ALTINFO_EGRESS,          "egress" },
+    { OSPC_ALTINFO_CNAM,            "cnam" },
     /* For other attributes */
     { OSPC_ALTINFO_TRUE,            "true" },
     { OSPC_ALTINFO_FALSE,           "false" },

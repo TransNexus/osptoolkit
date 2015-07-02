@@ -1049,6 +1049,7 @@ OSPT_USAGE_IND *OSPPUsageIndNew(void)    /* returns pointer or NULL */
         usageind->ConnectTime = (OSPTTIME) 0;
         usageind->HasPDD = OSPC_FALSE;
         usageind->PostDialDelay = 0;
+        usageind->ProviderPDD = -1;
         usageind->ReleaseSource = OSPC_RELEASE_UNDEFINED;
         usageind->ConferenceId[0] = '\0';
         usageind->Role = OSPC_ROLE_UNDEFINED;
@@ -1747,6 +1748,21 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
+            /* Add Provider Post Dial Delay */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (usage->ProviderPDD >= 0)) {
+                errcode = OSPPMsgFloatToElement((float)(usage->ProviderPDD) / 1000, OSPPMsgElemGetName(OSPC_MELEM_POSTDIALDELAY), &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_DESTINATION));
+                    if (attr == OSPC_OSNULL) {
+                        OSPPXMLElemDelete(&subelem);
+                    } else {
+                       OSPPXMLElemAddAttr(subelem, attr);
+                       OSPPXMLElemAddChild(usagedetailelem, subelem);
+                       subelem = OSPC_OSNULL;
+                    }
+                }
+            }
+
             /* add usage detail (if appropriate) */
             if (errcode == OSPC_ERR_NO_ERROR) {
                 if (OSPPUsageIndHasDuration(usage)) {
@@ -1965,6 +1981,51 @@ int OSPPUsageIndToElement(      /* returns error code */
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(usageindelem, cdrproxyelem);
                 cdrproxyelem = OSPC_OSNULL;
+            }
+
+            /* Add source audio address */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->SrcAudioAddr[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_SRCAUDIOADDR, trans->SrcAudioAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add source video address */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->SrcVideoAddr[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_SRCVIDEOADDR, trans->SrcVideoAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add destination audio address */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->DestAudioAddr[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_DESTAUDIOADDR, trans->DestAudioAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add destination video address */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->DestVideoAddr[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_DESTVIDEOADDR, trans->DestVideoAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add Jurisdiction Information Parameter */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->JIP[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_JIP, trans->JIP, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
             }
 
             if (errcode == OSPC_ERR_NO_ERROR) {

@@ -134,6 +134,8 @@ typedef struct {
     char UserGroup[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
     char TransferId[OSPC_SIZE_NORSTR];
     OSPE_TRANSFER_STATUS TransferStatus;
+    int ProviderPDD;                /* In milliseconds */
+    char CNAM[OSPC_SIZE_NORSTR];
 } OSPT_DEST;
 
 /* Function Prototypes */
@@ -192,6 +194,7 @@ extern "C" {
     OSPE_PROTOCOL_NAME OSPPDestProtocolGetPart(const char *);
     const char *OSPPDestProtocolGetName(OSPE_PROTOCOL_NAME);
     void OSPPDestProtocolFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
+    void OSPPSrcInfoFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
     void OSPPDestInfoFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
     int OSPPUsageDetailFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
     void OSPPServiceFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
