@@ -33,8 +33,9 @@ typedef struct {
     OSPTTIME EndTime;
     OSPTTIME AlertTime;
     OSPTTIME ConnectTime;
-    unsigned PostDialDelay;                 /* In milliseconds */
     OSPTBOOL HasPDD;
+    unsigned PostDialDelay;                 /* In milliseconds */
+    int ProviderPDD;                        /* In milliseconds */
     OSPE_RELEASE ReleaseSource;
     char ConferenceId[OSPC_SIZE_CONFID];    /* This is in chararcters */
     char *MessageId;

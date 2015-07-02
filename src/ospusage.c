@@ -229,6 +229,7 @@ unsigned OSPPUsageToElement(        /* returns error code */
 {
     unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -303,8 +304,14 @@ unsigned OSPPUsageToElement(        /* returns error code */
     if ((errcode == OSPC_ERR_NO_ERROR) && (ospvHasPDDInfo)) {
         errcode = OSPPMsgFloatToElement((float)ospvPostDialDelay / 1000, OSPPMsgElemGetName(OSPC_MELEM_POSTDIALDELAY), &elem);
         if (errcode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(ospvElem, elem);
-            elem = OSPC_OSNULL;
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_SOURCE));
+            if (attr == OSPC_OSNULL) {
+                OSPPXMLElemDelete(&elem);
+            } else {
+               OSPPXMLElemAddAttr(elem, attr);
+               OSPPXMLElemAddChild(ospvElem, elem);
+               elem = OSPC_OSNULL;
+            }
         }
     }
 
@@ -369,6 +376,9 @@ unsigned OSPPCallPartyNumToElement(
                     break;
                 case OSPC_NFORMAT_URL:
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_URL));
+                    break;
+                case OSPC_NFORMAT_CNAM:
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_CNAM));
                     break;
                 default:
                     errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;

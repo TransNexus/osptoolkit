@@ -2183,6 +2183,13 @@ int OSPPTransactionNew(
         trans->CDRProxyFolder[0] = '\0';
         trans->CDRProxySubfolder[0] = '\0';
         trans->UserAgent[0] = '\0';
+        trans->SrcAudioAddr[0] = '\0';
+        trans->SrcVideoAddr[0] = '\0';
+        trans->DestAudioAddr[0] = '\0';
+        trans->DestVideoAddr[0] = '\0';
+        trans->ProxyIngressAddr[0] = '\0';
+        trans->ProxyEgressAddr[0] = '\0';
+        trans->JIP[0] = '\0';
     }
 
     return errcode;
@@ -2659,6 +2666,22 @@ int OSPPTransactionReportUsage(
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->UsageSrcNetworkId),
                                     trans->UsageSrcNetworkId,
                                     OSPC_ALTINFO_NETWORK);
+                                OSPPUsageIndAddSourceAlt(usage, altinfo);
+                                altinfo = OSPC_OSNULL;
+                            }
+
+                            if (trans->ProxyIngressAddr[0] != '\0') {
+                                altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->ProxyIngressAddr),
+                                    trans->ProxyIngressAddr,
+                                    OSPC_ALTINFO_INGRESS);
+                                OSPPUsageIndAddSourceAlt(usage, altinfo);
+                                altinfo = OSPC_OSNULL;
+                            }
+
+                            if (trans->ProxyEgressAddr[0] != '\0') {
+                                altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->ProxyEgressAddr),
+                                    trans->ProxyEgressAddr,
+                                    OSPC_ALTINFO_EGRESS);
                                 OSPPUsageIndAddSourceAlt(usage, altinfo);
                                 altinfo = OSPC_OSNULL;
                             }
@@ -5494,6 +5517,211 @@ int OSPPTransactionSetUserAgent(
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
             OSPM_STRNCPY(trans->UserAgent, ospvUserAgent, sizeof(trans->UserAgent) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetSrcAudioAddr(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvSrcAudioAddr)       /* In - Source audio address */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvSrcAudioAddr == OSPC_OSNULL) || (ospvSrcAudioAddr[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->SrcAudioAddr, ospvSrcAudioAddr, sizeof(trans->SrcAudioAddr) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetSrcVideoAddr(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvSrcVideoAddr)       /* In - Source video address */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvSrcVideoAddr == OSPC_OSNULL) || (ospvSrcVideoAddr[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->SrcVideoAddr, ospvSrcVideoAddr, sizeof(trans->SrcVideoAddr) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetDestAudioAddr(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvDestAudioAddr)      /* In - Destination audio address */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvDestAudioAddr == OSPC_OSNULL) || (ospvDestAudioAddr[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->DestAudioAddr, ospvDestAudioAddr, sizeof(trans->DestAudioAddr) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetDestVideoAddr(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvDestVideoAddr)      /* In - Destination video address */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvDestVideoAddr == OSPC_OSNULL) || (ospvDestVideoAddr[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->DestVideoAddr, ospvDestVideoAddr, sizeof(trans->DestVideoAddr) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetProxyIngressAddr(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvProxyIngressAddr)   /* In - Proxy ingress address */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvProxyIngressAddr == OSPC_OSNULL) || (ospvProxyIngressAddr[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->ProxyIngressAddr, ospvProxyIngressAddr, sizeof(trans->ProxyIngressAddr) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetProxyEgressAddr(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvProxyEgressAddr)    /* In - Proxy ingress address */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvProxyEgressAddr == OSPC_OSNULL) || (ospvProxyEgressAddr[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->ProxyEgressAddr, ospvProxyEgressAddr, sizeof(trans->ProxyEgressAddr) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetProviderPDD(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    int ospvProviderPDD)                /* In - Provider post dial delay in milliseconds */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) &&
+        (trans != OSPC_OSNULL) &&
+        (trans->AuthReq != OSPC_OSNULL) &&
+        ((dest = trans->CurrentDest) != OSPC_OSNULL) &&
+        (ospvProviderPDD >= 0))
+    {
+        dest->ProviderPDD = ospvProviderPDD;
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetJIP(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvJIP)                /* In - Jurisdiction Information Parameter */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvJIP == OSPC_OSNULL) || (ospvJIP[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->JIP, ospvJIP, sizeof(trans->JIP) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionGetCNAM(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvSizeOfCNAM,        /* In - Max size of CNAM */
+    char *ospvCNAM)                 /* Out - CNAM */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    ospvCNAM[0] = '\0';
+    if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+        if (trans->AuthReq != OSPC_OSNULL) {
+            /* We are the source.  Get the information from the destination structure. */
+            if (trans->State == OSPC_GET_DEST_SUCCESS) {
+                if ((dest = trans->CurrentDest) == OSPC_OSNULL) {
+                    errcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                    OSPM_DBGERRORLOG(errcode, "Could not find Destination for this Transaction\n");
+                } else {
+                    if (ospvSizeOfCNAM > OSPM_STRLEN(dest->CNAM)) {
+                        OSPM_STRNCPY(ospvCNAM, dest->CNAM, ospvSizeOfCNAM);
+                    } else {
+                        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy CNAM.");
+                    }
+                }
+            } else {
+                errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
+            }
+        } else if (trans->AuthInd != OSPC_OSNULL) {
+            /* We are the destination.  Get the information from the AuthInd structure. */
+            if ((dest = trans->AuthInd->Destination) == OSPC_OSNULL) {
+                errcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
+                OSPM_DBGERRORLOG(errcode, "Could not find Destination for this Transaction\n");
+            } else {
+                if (ospvSizeOfCNAM > OSPM_STRLEN(dest->CNAM)) {
+                    OSPM_STRNCPY(ospvCNAM, dest->CNAM, ospvSizeOfCNAM);
+                } else {
+                    errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                    OSPM_DBGERRORLOG(errcode, "No enough buffer to copy CNAM.");
+                }
+            }
+        } else {
+            errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
         }
     }
 

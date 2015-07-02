@@ -391,6 +391,11 @@ int OSPPTransactionBuildUsage(
 
                 (*ospvUsage)->TransferStatus = ospvDest->TransferStatus;
             }
+
+            /* Move provider post dial delay to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                (*ospvUsage)->ProviderPDD = ospvDest->ProviderPDD;
+            }
         } else if (ospvType == OSPC_MSG_AIND) {
             /* Terminating */
             if ((ospvTrans->AuthInd != OSPC_OSNULL) &&

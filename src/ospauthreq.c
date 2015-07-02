@@ -912,6 +912,33 @@ int OSPPAuthReqToElement(       /* returns error code */
             }
         }
 
+        /* Add source audio address */
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->SrcAudioAddr[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_SRCAUDIOADDR, trans->SrcAudioAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
+        /* Add source video address */
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->SrcVideoAddr[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_SRCVIDEOADDR, trans->SrcVideoAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
+        /* Add Jurisdiction Information Parameter */
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->JIP[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_JIP, trans->JIP, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
         if (errcode == OSPC_ERR_NO_ERROR) {
             /* Now add the authreqelem to the main elem */
             OSPPXMLElemAddChild(*ospvElem, authreqelem);
