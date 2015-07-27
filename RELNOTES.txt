@@ -636,4 +636,5 @@ Version 4.6.0 - 2015-07-02
 * Added CNAM support
 ---------------------------------------------------------------------------
 
-Version 4.6.1 - 
+Version 4.6.1 - 2015-07-27 
+* Fixed post dial delay reporting issue.
