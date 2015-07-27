@@ -309,6 +309,7 @@ unsigned OSPPUsageToElement(        /* returns error code */
                 OSPPXMLElemDelete(&elem);
             } else {
                OSPPXMLElemAddAttr(elem, attr);
+               attr = OSPC_OSNULL;
                OSPPXMLElemAddChild(ospvElem, elem);
                elem = OSPC_OSNULL;
             }

@@ -1757,6 +1757,7 @@ int OSPPUsageIndToElement(      /* returns error code */
                         OSPPXMLElemDelete(&subelem);
                     } else {
                        OSPPXMLElemAddAttr(subelem, attr);
+                       attr = OSPC_OSNULL;
                        OSPPXMLElemAddChild(usagedetailelem, subelem);
                        subelem = OSPC_OSNULL;
                     }

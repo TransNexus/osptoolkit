@@ -634,4 +634,7 @@ Version 4.6.0 - 2015-07-02
 * Added proxy address support
 * Added provider post dial delay and JIP support
 * Added CNAM support
+---------------------------------------------------------------------------
 
+Version 4.6.1 - 2015-07-27 
+* Fixed post dial delay reporting issue.
