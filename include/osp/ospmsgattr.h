@@ -98,6 +98,7 @@ typedef enum {
     OSPC_SERVICE_VIDEO,
     OSPC_SERVICE_DATA,
     OSPC_SERVICE_NPQUERY,
+    OSPC_SERVICE_CNAMQUERY,
     /* Number of service types */
     OSPC_SERVICE_NUMBER
 } OSPE_SERVICE;

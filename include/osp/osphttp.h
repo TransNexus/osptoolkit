@@ -34,6 +34,12 @@
 #define OSPC_HTTP_503_SERV_UNAVAIL      " 503"
 #define OSPC_HTTP_504_SERV_NOT_READY    " 504"
 #define OSPC_HTTP_HEADER_MSG_FMT        "POST %s HTTP/1.1\r\nHost: %s\r\ncontent-type: %s\r\nContent-Length: %d\r\nConnection: Keep-Alive\r\n\r\n"
+/*
+ * Instead of using Content-Type and Content-Length in the header and payload in the message,
+ * use URI?queryString in the header.
+ */
+#define OSPC_HTTP_HEADER_MSG_FMT_GET "GET %s?%s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n"
+
 
 #define OSPC_SOCK_CONNECTED_MASK    0xFE
 #define OSPC_SOCK_CONNECTED_BIT     0x01

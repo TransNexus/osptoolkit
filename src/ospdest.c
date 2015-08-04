@@ -1101,7 +1101,7 @@ int OSPPUsageDetailFromElement(
         if (hasamount && hasincrement && hasunit) {
             OSPPDestSetLimit(ospvDest, (unsigned)(increment * amount));
         } else {
-            if (ospvDest->IsNPQuery) {
+            if ((ospvDest->IsNPQuery) || (ospvDest->IsCNAMQuery)) {
                 OSPPDestSetLimit(ospvDest, 0);
             } else {
                 error = OSPC_ERR_XML_BAD_ELEMENT;
@@ -1131,6 +1131,9 @@ void OSPPServiceFromElement(
                     switch (OSPPServiceGetPart(OSPPXMLAttrGetValue(attr))) {
                     case OSPC_SERVICE_NPQUERY:
                         ospvDest->IsNPQuery = OSPC_TRUE;
+                        break;
+                    case OSPC_SERVICE_CNAMQUERY:
+                        ospvDest->IsCNAMQuery = OSPC_TRUE;
                         break;
                     default:
                         break;
