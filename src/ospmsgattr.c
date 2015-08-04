@@ -100,7 +100,8 @@ const OSPT_MSG_DESC OSPV_STYPE_DESCS[OSPC_SERVICE_NUMBER] = {
     { OSPC_SERVICE_VOICE,   "voice" },
     { OSPC_SERVICE_VIDEO,   "video" },
     { OSPC_SERVICE_DATA,    "data" },
-    { OSPC_SERVICE_NPQUERY, "portedNumberQuery" }
+    { OSPC_SERVICE_NPQUERY, "portedNumberQuery" },
+    { OSPC_SERVICE_CNAMQUERY, "cnamQuery" }
 };
 
 /* Array that associates release source type and names */

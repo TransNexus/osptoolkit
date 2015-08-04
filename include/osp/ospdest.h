@@ -136,6 +136,7 @@ typedef struct {
     OSPE_TRANSFER_STATUS TransferStatus;
     int ProviderPDD;                /* In milliseconds */
     char CNAM[OSPC_SIZE_NORSTR];
+    OSPTBOOL IsCNAMQuery;
 } OSPT_DEST;
 
 /* Function Prototypes */

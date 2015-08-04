@@ -66,6 +66,7 @@ int OSPPTransactionSetServiceType(
         case OSPC_SERVICE_VIDEO:
         case OSPC_SERVICE_DATA:
         case OSPC_SERVICE_NPQUERY:
+        case OSPC_SERVICE_CNAMQUERY:
             trans->HasServiceInfo = OSPC_TRUE;
             trans->ServiceType = ospvType;
             break;

@@ -1184,7 +1184,7 @@ int OSPPTransactionGetDestination(
                     }
                 }
             } else {
-                if (dest->IsNPQuery) {
+                if ((dest->IsNPQuery) || (dest->IsCNAMQuery)) {
                     ospvDestination[0] = '\0';
                 } else {
                     errcode = OSPC_ERR_TRAN_SIGADDR_INVALID;
@@ -1233,7 +1233,7 @@ int OSPPTransactionGetDestination(
                     }
                 }
             } else {
-                if (dest->IsNPQuery) {
+                if ((dest->IsNPQuery) || (dest->IsCNAMQuery)) {
                     OSPM_MEMSET(ospvToken, 0, *ospvSizeOfToken);
                     *ospvSizeOfToken = 0;
                 } else {

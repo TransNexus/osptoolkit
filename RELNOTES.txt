@@ -640,5 +640,6 @@ Version 4.6.1 - 2015-07-27
 * Fixed post dial delay reporting issue.
 ---------------------------------------------------------------------------
 
-Version 4.7.0 -  
-* 
+Version 4.7.0 - 2015-08-04 
+* Extended HTTP module to support GET method.
+* Added CNAM query service type. 

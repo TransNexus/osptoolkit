@@ -146,7 +146,8 @@ static int osppHttpBuildMsg(
     unsigned ospvRequestSz,
     OSPTSVCPT *ospvSvcPt,
     unsigned char *ospvContentType,
-    unsigned ospvContentTypeSz)
+    unsigned ospvContentTypeSz,
+    OSPTBOOL ospvUseGet)
 {
     int headersz = 0, errorcode = OSPC_ERR_NO_ERROR;
     char *header = OSPC_OSNULL;
@@ -156,7 +157,11 @@ static int osppHttpBuildMsg(
     /*
      * determine the maximum size of the HTTP header
      */
-    headersz = OSPM_STRLEN(ospvSvcPt->URI) + OSPM_STRLEN(ospvSvcPt->HostName) + ospvContentTypeSz + OSPM_STRLEN(OSPC_HTTP_HEADER_MSG_FMT) + 1;
+    if (OSPC_FALSE == ospvUseGet) {
+        headersz = OSPM_STRLEN(ospvSvcPt->URI) + OSPM_STRLEN(ospvSvcPt->HostName) + ospvContentTypeSz + OSPM_STRLEN(OSPC_HTTP_HEADER_MSG_FMT) + 1;
+    } else {
+        headersz = OSPM_STRLEN(ospvSvcPt->URI) + OSPM_STRLEN(ospvSvcPt->HostName) + ospvRequestSz + OSPM_STRLEN(OSPC_HTTP_HEADER_MSG_FMT_GET) + 1;
+    }
 
     /*
      * create space for the header
@@ -167,13 +172,21 @@ static int osppHttpBuildMsg(
          * format the header with the information from the Service Point
          * structure
          */
-        OSPM_SPRINTF(header, OSPC_HTTP_HEADER_MSG_FMT, ospvSvcPt->URI, ospvSvcPt->HostName, ospvContentType, ospvRequestSz);
+        if (OSPC_FALSE == ospvUseGet) {
+            OSPM_SPRINTF(header, OSPC_HTTP_HEADER_MSG_FMT,     ospvSvcPt->URI, ospvSvcPt->HostName, ospvContentType, ospvRequestSz);
+        } else {
+            OSPM_SPRINTF(header, OSPC_HTTP_HEADER_MSG_FMT_GET, ospvSvcPt->URI, ospvRequestMsg, ospvSvcPt->HostName);
+        }
 
         /*
          * adjust headersz to be exact size
          */
         headersz = OSPM_STRLEN(header);
-        *ospvHttpMsgSz = headersz + ospvRequestSz;
+        if (OSPC_FALSE == ospvUseGet) {
+            *ospvHttpMsgSz = headersz + ospvRequestSz;
+        } else {
+            *ospvHttpMsgSz = headersz;
+        }
 
         /*
          * create space for the entire message
@@ -192,7 +205,11 @@ static int osppHttpBuildMsg(
             /*
              * copy in the body
              */
-            OSPM_MEMCPY(((*ospvHttpMsg) + headersz), ospvRequestMsg, ospvRequestSz);
+            if (OSPC_FALSE == ospvUseGet) {
+                OSPM_MEMCPY(((*ospvHttpMsg) + headersz), ospvRequestMsg, ospvRequestSz);
+            } else {
+                /* Do nothing, the RequestMsg is a part of the header */
+            }
 
             /*
              * free the temporary header string
@@ -262,7 +279,7 @@ static int osppHttpBuildAndSend(
 
     errorcode = osppHttpBuildMsg(&httpmsg, &httpmsgsz,
         ospvMsginfo->RequestMsg, ospvMsginfo->RequestSz,
-        ospvHttp->ServicePoint, ospvMsginfo->ContentType, OSPM_STRLEN((const char *)ospvMsginfo->ContentType));
+        ospvHttp->ServicePoint, ospvMsginfo->ContentType, OSPM_STRLEN((const char *)ospvMsginfo->ContentType), ospvMsginfo->UseGet);
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         OSPM_DBGNET(("MISC : osppHttpBuildAndSend() sending\n[%s]\n", httpmsg));

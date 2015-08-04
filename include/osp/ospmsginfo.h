@@ -46,6 +46,15 @@ typedef struct {
      */
     int IsNonBlocking;
     OSPTBOOL HasBeenProcessed;
+    /*
+     * Similar to IsNonBlocking.
+     * By default the flag is set to False (memset to 0s in OSPPMsgInfoNew)
+     * and does not alter current behavior.  However, when the flag is set to True
+     * then the osppHttpBuildMsg function should use the HTTP Get (query in
+     * the URI of the header) instead of POST (in the body of the message) for
+     * sending the RequestMsg
+     */
+    OSPTBOOL UseGet;
 } OSPT_MSG_INFO;
 
 #define OSPC_MINFO_AUDITTYPE 0x01    /* bit 1 - Message type flag */
