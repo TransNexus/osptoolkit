@@ -71,6 +71,8 @@ typedef struct {
     char UserGroup[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
     char TransferId[OSPC_SIZE_NORSTR];
     OSPE_TRANSFER_STATUS TransferStatus;
+    char DestAudioAddr[OSPC_SIZE_NORSTR];
+    char DestVideoAddr[OSPC_SIZE_NORSTR];
 } OSPT_USAGE_IND;
 
 /* Function Prototypes */

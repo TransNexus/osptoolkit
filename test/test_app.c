@@ -2081,24 +2081,47 @@ int testSetUserAgent()
     return errcode;
 }
 
-int testSetMediaAddresses()
+int testSetSrcMediaAddresses()
 {
     int errcode = 0;
 
     errcode = OSPPTransactionSetSrcAudioAddr(OSPVTransactionHandle, "[172.16.0.1]:6000");
     errcode = OSPPTransactionSetSrcVideoAddr(OSPVTransactionHandle, "gateway.transnexus.com:6001");
-    errcode = OSPPTransactionSetDestAudioAddr(OSPVTransactionHandle, "[172.16.0.1]:6002");
-    errcode = OSPPTransactionSetDestVideoAddr(OSPVTransactionHandle, "gateway.transnexus.com:6003");
 
     return errcode;
 }
 
-int testSetProxyAddresses()
+int testSetDestMediaAddresses()
+{
+    static int index = 6002;
+    char buf[64];
+    int errcode = 0;
+
+    sprintf(buf, "[172.16.0.1]:%d", index++);
+    errcode = OSPPTransactionSetDestAudioAddr(OSPVTransactionHandle, buf);
+    sprintf(buf, "gateway.transnexus.com:%d", index++);
+    errcode = OSPPTransactionSetDestVideoAddr(OSPVTransactionHandle, buf);
+
+    return errcode;
+}
+
+int testSetProxyIngressAddresses()
 {
     int errcode = 0;
 
     errcode = OSPPTransactionSetProxyIngressAddr(OSPVTransactionHandle, "[172.16.0.1]:5060");
-    errcode = OSPPTransactionSetProxyEgressAddr(OSPVTransactionHandle, "[192.168.0.1]:5070");
+
+    return errcode;
+}
+
+int testSetProxyEgressAddresses()
+{
+    static int index = 5070;
+    char buf[64];
+    int errcode = 0;
+
+    sprintf(buf, "[192.168.0.1]:%d", index++);
+    errcode = OSPPTransactionSetProxyEgressAddr(OSPVTransactionHandle, buf);
 
     return errcode;
 }
@@ -2670,10 +2693,12 @@ int testAPI(int apinumber)
         errcode = testSetUserAgent();
         break;
     case 235:
-        errcode = testSetMediaAddresses();
+        errcode = testSetSrcMediaAddresses();
+        errcode = testSetDestMediaAddresses();
         break;
     case 236:
-        errcode = testSetProxyAddresses();
+        errcode = testSetProxyIngressAddresses();
+        errcode = testSetProxyEgressAddresses();
         break;
     case 237:
         errcode = testSetProviderPDD(2010);
@@ -2755,10 +2780,10 @@ int testAPI(int apinumber)
             errcode = testSetUserAgent();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetMediaAddresses();
+            errcode = testSetSrcMediaAddresses();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetProxyAddresses();
+            errcode = testSetProxyIngressAddresses();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetJIP();
@@ -2766,8 +2791,15 @@ int testAPI(int apinumber)
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionRequestAuthorisation();
         }
+        /* 1st destination */
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionGetFirstDestination();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetDestMediaAddresses();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetProxyEgressAddresses();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetProviderPDD(3010);
@@ -2775,6 +2807,7 @@ int testAPI(int apinumber)
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionRecordFailure();
         }
+        /* 2nd destination */
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionGetNextDestination();
         }
@@ -2798,6 +2831,12 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetProtocol();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetDestMediaAddresses();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetProxyEgressAddresses();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetProviderPDD(4010);
