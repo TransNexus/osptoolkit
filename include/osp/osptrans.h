@@ -132,10 +132,7 @@ typedef struct _OSPTTRANS {
     char UserAgent[OSPC_SIZE_NORSTR];
     char SrcAudioAddr[OSPC_SIZE_NORSTR];
     char SrcVideoAddr[OSPC_SIZE_NORSTR];
-    char DestAudioAddr[OSPC_SIZE_NORSTR];
-    char DestVideoAddr[OSPC_SIZE_NORSTR];
     char ProxyIngressAddr[OSPC_SIZE_NORSTR];
-    char ProxyEgressAddr[OSPC_SIZE_NORSTR];
     char JIP[OSPC_SIZE_NORSTR];
 } OSPTTRANS;
 

@@ -2186,10 +2186,7 @@ int OSPPTransactionNew(
         trans->UserAgent[0] = '\0';
         trans->SrcAudioAddr[0] = '\0';
         trans->SrcVideoAddr[0] = '\0';
-        trans->DestAudioAddr[0] = '\0';
-        trans->DestVideoAddr[0] = '\0';
         trans->ProxyIngressAddr[0] = '\0';
-        trans->ProxyEgressAddr[0] = '\0';
         trans->JIP[0] = '\0';
     }
 
@@ -2603,6 +2600,24 @@ int OSPPTransactionReportUsage(
                             altinfo = OSPC_OSNULL;
                         }
 
+                        /* Add local ingress address */
+                        if (trans->ProxyIngressAddr[0] != '\0') {
+                            altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->ProxyIngressAddr),
+                                trans->ProxyIngressAddr,
+                                OSPC_ALTINFO_INGRESS);
+                            OSPPUsageIndAddSourceAlt(usage, altinfo);
+                            altinfo = OSPC_OSNULL;
+                        }
+
+                        /* Add local egress address */
+                        if (dest->ProxyEgressAddr[0] != '\0') {
+                            altinfo = OSPPAltInfoNew(OSPM_STRLEN(dest->ProxyEgressAddr),
+                                dest->ProxyEgressAddr,
+                                OSPC_ALTINFO_EGRESS);
+                            OSPPUsageIndAddSourceAlt(usage, altinfo);
+                            altinfo = OSPC_OSNULL;
+                        }
+
                         OSPPListAppend(&(trans->UsageInd), usage);
                         usage = OSPC_OSNULL;
                     }
@@ -2649,6 +2664,7 @@ int OSPPTransactionReportUsage(
                                 OSPPUsageIndSetStatistics(usage, &stats);
                             }
 
+                            /* Add codec */
                             for (svc = OSPC_SERVICE_START; svc < OSPC_SERVICE_NUMBER; svc++) {
                                 for (codec = OSPC_CODEC_START; codec < OSPC_CODEC_NUMBER; codec++) {
                                     if (trans->Codec[svc][codec][0] != '\0') {
@@ -2657,12 +2673,14 @@ int OSPPTransactionReportUsage(
                                 }
                             }
 
+                            /* Add session IDs */
                             for (sess = OSPC_SESSIONID_START; sess < OSPC_SESSIONID_NUMBER; sess++) {
                                 if (trans->SessionId[sess] != OSPC_OSNULL) {
                                     OSPPUsageIndSetSessionId(usage, sess, trans->SessionId[sess]);
                                 }
                             }
 
+                            /* Add source network ID */
                             if (trans->UsageSrcNetworkId[0] != '\0') {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->UsageSrcNetworkId),
                                     trans->UsageSrcNetworkId,
@@ -2671,6 +2689,7 @@ int OSPPTransactionReportUsage(
                                 altinfo = OSPC_OSNULL;
                             }
 
+                            /* Add local ingress address */
                             if (trans->ProxyIngressAddr[0] != '\0') {
                                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->ProxyIngressAddr),
                                     trans->ProxyIngressAddr,
@@ -2679,17 +2698,18 @@ int OSPPTransactionReportUsage(
                                 altinfo = OSPC_OSNULL;
                             }
 
-                            if (trans->ProxyEgressAddr[0] != '\0') {
-                                altinfo = OSPPAltInfoNew(OSPM_STRLEN(trans->ProxyEgressAddr),
-                                    trans->ProxyEgressAddr,
+                            /* Add local egress address */
+                            if (dest->ProxyEgressAddr[0] != '\0') {
+                                altinfo = OSPPAltInfoNew(OSPM_STRLEN(dest->ProxyEgressAddr),
+                                    dest->ProxyEgressAddr,
                                     OSPC_ALTINFO_EGRESS);
                                 OSPPUsageIndAddSourceAlt(usage, altinfo);
                                 altinfo = OSPC_OSNULL;
                             }
-                        }
 
-                        OSPPListAppend(&(trans->UsageInd), usage);
-                        usage = OSPC_OSNULL;
+                            OSPPListAppend(&(trans->UsageInd), usage);
+                            usage = OSPC_OSNULL;
+                        }
                     } else {
                         errcode = OSPC_ERR_TRAN_DEST_NOT_FOUND;
                         OSPM_DBGERRORLOG(errcode, "No current destination found.");
@@ -5568,13 +5588,18 @@ int OSPPTransactionSetDestAudioAddr(
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
 
     if ((ospvDestAudioAddr == OSPC_OSNULL) || (ospvDestAudioAddr[0] == '\0')) {
         errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            OSPM_STRNCPY(trans->DestAudioAddr, ospvDestAudioAddr, sizeof(trans->DestAudioAddr) - 1);
+        if ((errcode == OSPC_ERR_NO_ERROR) &&
+            (trans != OSPC_OSNULL) &&
+            (trans->AuthReq != OSPC_OSNULL) &&
+            ((dest = trans->CurrentDest) != OSPC_OSNULL))
+        {
+            OSPM_STRNCPY(dest->DestAudioAddr, ospvDestAudioAddr, sizeof(dest->DestAudioAddr) - 1);
         }
     }
 
@@ -5587,13 +5612,18 @@ int OSPPTransactionSetDestVideoAddr(
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
 
     if ((ospvDestVideoAddr == OSPC_OSNULL) || (ospvDestVideoAddr[0] == '\0')) {
         errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            OSPM_STRNCPY(trans->DestVideoAddr, ospvDestVideoAddr, sizeof(trans->DestVideoAddr) - 1);
+        if ((errcode == OSPC_ERR_NO_ERROR) &&
+            (trans != OSPC_OSNULL) &&
+            (trans->AuthReq != OSPC_OSNULL) &&
+            ((dest = trans->CurrentDest) != OSPC_OSNULL))
+        {
+            OSPM_STRNCPY(dest->DestVideoAddr, ospvDestVideoAddr, sizeof(dest->DestVideoAddr) - 1);
         }
     }
 
@@ -5625,13 +5655,18 @@ int OSPPTransactionSetProxyEgressAddr(
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
 
     if ((ospvProxyEgressAddr == OSPC_OSNULL) || (ospvProxyEgressAddr[0] == '\0')) {
         errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            OSPM_STRNCPY(trans->ProxyEgressAddr, ospvProxyEgressAddr, sizeof(trans->ProxyEgressAddr) - 1);
+        if ((errcode == OSPC_ERR_NO_ERROR) &&
+            (trans != OSPC_OSNULL) &&
+            (trans->AuthReq != OSPC_OSNULL) &&
+            ((dest = trans->CurrentDest) != OSPC_OSNULL))
+        {
+            OSPM_STRNCPY(dest->ProxyEgressAddr, ospvProxyEgressAddr, sizeof(dest->ProxyEgressAddr) - 1);
         }
     }
 

@@ -2003,8 +2003,8 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Add destination audio address */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->DestAudioAddr[0] != '\0')) {
-                errcode = OSPPStringToElement(OSPC_MELEM_DESTAUDIOADDR, trans->DestAudioAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (usage->DestAudioAddr[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_DESTAUDIOADDR, usage->DestAudioAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;
@@ -2012,8 +2012,8 @@ int OSPPUsageIndToElement(      /* returns error code */
             }
 
             /* Add destination video address */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->DestVideoAddr[0] != '\0')) {
-                errcode = OSPPStringToElement(OSPC_MELEM_DESTVIDEOADDR, trans->DestVideoAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (usage->DestVideoAddr[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_DESTVIDEOADDR, usage->DestVideoAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;

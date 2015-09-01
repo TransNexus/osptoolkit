@@ -392,6 +392,16 @@ int OSPPTransactionBuildUsage(
                 (*ospvUsage)->TransferStatus = ospvDest->TransferStatus;
             }
 
+            /* Move destination audio address to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPM_STRNCPY((*ospvUsage)->DestAudioAddr, ospvDest->DestAudioAddr, sizeof((*ospvUsage)->DestAudioAddr));
+            }
+
+            /* Move destination video address to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPM_STRNCPY((*ospvUsage)->DestVideoAddr, ospvDest->DestVideoAddr, sizeof((*ospvUsage)->DestVideoAddr));
+            }
+
             /* Move provider post dial delay to the usage structure */
             if (errcode == OSPC_ERR_NO_ERROR) {
                 (*ospvUsage)->ProviderPDD = ospvDest->ProviderPDD;
