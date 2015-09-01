@@ -647,3 +647,6 @@ Version 4.7.0 - 2015-08-04
 
 Version 4.7.1 - 2015-09-01
 * Fixed destination media addresses and proxy egress address reporting issue.
+---------------------------------------------------------------------------
+
+Version 4.7.2 - 
