@@ -1154,6 +1154,18 @@ int testSetServiceType()
     return errcode;
 }
 
+int testGetServiceType()
+{
+    OSPE_SERVICE srvtype = OSPC_SERVICE_UNKNOWN;
+    int errcode;
+
+    if ((errcode = OSPPTransactionGetServiceType(OSPVTransactionHandle, &srvtype)) == OSPC_ERR_NO_ERROR) {
+        printf("The Service Tpye is : %d\n", srvtype);
+    }
+
+    return errcode;
+}
+
 int testOSPPTransactionInitializeAtDevice(int IsSource)
 {
     int errcode = 0;
@@ -2569,6 +2581,9 @@ int testAPI(int apinumber)
     case 62:
         errcode = testSetServiceType();
         break;
+    case 63:
+        errcode = testGetServiceType();
+        break;
     case 100:
         printf("Enter the number of Providers to be created .. ");
         scanf("%d", &num_providers);
@@ -3009,7 +3024,7 @@ int testMenu()
         printf("56) Set Duration                      57) Set TC Code\n");
         printf("58) Set Start Time                    59) Set End Time\n");
         printf("60) Set Alert Time                    61) Set Connect Time\n");
-        printf("62) Set Service Type\n");
+        printf("62) Set Service Type                  63) Get Service Type\n");
         printf("---------------------------------------------------------------------\n");
         printf("Performance tests\n");
         printf("---------------------------------------------------------------------\n");

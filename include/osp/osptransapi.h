@@ -150,6 +150,7 @@ extern "C" {
     int OSPPTransactionSetProviderPDD(OSPTTRANHANDLE, int);
     int OSPPTransactionSetJIP(OSPTTRANHANDLE, const char *);
     int OSPPTransactionGetCNAM(OSPTTRANHANDLE, unsigned, char *);
+    int OSPPTransactionGetServiceType(OSPTTRANHANDLE, OSPE_SERVICE *);
 
 #ifdef __cplusplus
 }

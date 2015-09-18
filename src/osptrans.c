@@ -1194,7 +1194,7 @@ int OSPPTransactionGetDestination(
                     }
                 }
             } else {
-                if ((dest->IsNPQuery) || (dest->IsCNAMQuery)) {
+                if ((dest->ServiceType == OSPC_SERVICE_NPQUERY) || (dest->ServiceType == OSPC_SERVICE_CNAMQUERY)) {
                     ospvDestination[0] = '\0';
                 } else {
                     errcode = OSPC_ERR_TRAN_SIGADDR_INVALID;
@@ -1243,7 +1243,7 @@ int OSPPTransactionGetDestination(
                     }
                 }
             } else {
-                if ((dest->IsNPQuery) || (dest->IsCNAMQuery)) {
+                if ((dest->ServiceType == OSPC_SERVICE_NPQUERY) || (dest->ServiceType == OSPC_SERVICE_CNAMQUERY)) {
                     OSPM_MEMSET(ospvToken, 0, *ospvSizeOfToken);
                     *ospvSizeOfToken = 0;
                 } else {
