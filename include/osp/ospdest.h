@@ -124,7 +124,6 @@ typedef struct {
     char NPCic[OSPC_SIZE_NORID];
     int NPNpdi;
     char OpName[OSPC_OPNAME_NUMBER][OSPC_SIZE_NORID];
-    OSPTBOOL IsNPQuery;
     char URL[OSPC_URL_NUMBER][OSPC_SIZE_URL];
     OSPE_ROLE_STATE RoleState;
     OSPE_ROLE_FORMAT RoleFormat;
@@ -139,7 +138,7 @@ typedef struct {
     char ProxyEgressAddr[OSPC_SIZE_NORSTR];
     int ProviderPDD;                /* In milliseconds */
     char CNAM[OSPC_SIZE_NORSTR];
-    OSPTBOOL IsCNAMQuery;
+    OSPE_SERVICE ServiceType;
 } OSPT_DEST;
 
 /* Function Prototypes */

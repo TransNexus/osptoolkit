@@ -664,6 +664,7 @@ OSPT_DEST *OSPPDestNew(void)    /* returns pointer or NULL */
         dest->RoleVendor = OSPC_RVENDOR_UNKNOWN;
         dest->TransferStatus = OSPC_TSTATUS_UNKNOWN;
         dest->ProviderPDD = -1;
+        dest->ServiceType = OSPC_SERVICE_UNKNOWN;
     }
 
     return dest;
@@ -1101,7 +1102,7 @@ int OSPPUsageDetailFromElement(
         if (hasamount && hasincrement && hasunit) {
             OSPPDestSetLimit(ospvDest, (unsigned)(increment * amount));
         } else {
-            if ((ospvDest->IsNPQuery) || (ospvDest->IsCNAMQuery)) {
+            if ((ospvDest->ServiceType == OSPC_SERVICE_NPQUERY) || (ospvDest->ServiceType == OSPC_SERVICE_CNAMQUERY)) {
                 OSPPDestSetLimit(ospvDest, 0);
             } else {
                 error = OSPC_ERR_XML_BAD_ELEMENT;
@@ -1128,16 +1129,8 @@ void OSPPServiceFromElement(
         case OSPC_MELEM_SERVICETYPE:
             for (attr = OSPPXMLElemFirstAttr(elem); (attr != OSPC_OSNULL); attr = OSPPXMLElemNextAttr(elem, attr)) {
                 if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_TYPE) {
-                    switch (OSPPServiceGetPart(OSPPXMLAttrGetValue(attr))) {
-                    case OSPC_SERVICE_NPQUERY:
-                        ospvDest->IsNPQuery = OSPC_TRUE;
-                        break;
-                    case OSPC_SERVICE_CNAMQUERY:
-                        ospvDest->IsCNAMQuery = OSPC_TRUE;
-                        break;
-                    default:
-                        break;
-                    }
+                    ospvDest->ServiceType = OSPPServiceGetPart(OSPPXMLAttrGetValue(attr));
+                    break;
                 }
             }
             break;
