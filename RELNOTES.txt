@@ -651,3 +651,7 @@ Version 4.7.1 - 2015-09-01
 
 Version 4.8.0 - 2015-09-18
 * Added support for getting service type.
+---------------------------------------------------------------------------
+
+Version 4.8.1 - 2015-10-06
+* Use TLS 1.0 instead of SSL 3.0.
