@@ -73,7 +73,8 @@ const OSPT_MSG_DESC OSPV_RFORMAT_DESCS[OSPC_RFORMAT_NUMBER] = {
     { OSPC_RFORMAT_CSV,         "textcsv" },
     { OSPC_RFORMAT_TSV,         "texttsv" },
     { OSPC_RFORMAT_ASCII,       "ascii" },
-    { OSPC_RFORMAT_XML,         "xml" }
+    { OSPC_RFORMAT_XML,         "xml" },
+    { OSPC_RFORMAT_FW,          "fixedwidth" }
 };
 
 /* Array that associates role vendor */
@@ -81,6 +82,7 @@ const OSPT_MSG_DESC OSPV_RVENDOR_DESCS[OSPC_RVENDOR_NUMBER] = {
     { OSPC_RVENDOR_ACME,        "acme" },
     { OSPC_RVENDOR_ASTERISK,    "asterisk" },
     { OSPC_RVENDOR_AUDIOCODES,  "audiocodes" },
+    { OSPC_RVENDOR_AVAYA,       "avaya" },
     { OSPC_RVENDOR_BROADWORKS,  "broadworks" },
     { OSPC_RVENDOR_CISCO,       "cisco" },
     { OSPC_RVENDOR_CUCM,        "cucm" },
