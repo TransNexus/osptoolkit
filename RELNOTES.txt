@@ -657,4 +657,5 @@ Version 4.8.1 - 2015-10-06
 * Use TLS 1.0 instead of SSL 3.0.
 ---------------------------------------------------------------------------
 
-Version 4.8.2 - 
+Version 4.8.2 - 2015-10-08
+* Added RoleInfo Format fixedwidth and VendorInfo avaya.
