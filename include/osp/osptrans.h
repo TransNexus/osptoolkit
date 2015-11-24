@@ -134,6 +134,7 @@ typedef struct _OSPTTRANS {
     char SrcVideoAddr[OSPC_SIZE_NORSTR];
     char ProxyIngressAddr[OSPC_SIZE_NORSTR];
     char JIP[OSPC_SIZE_NORSTR];
+    OSPT_CALL_PARTY CallingParty;
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

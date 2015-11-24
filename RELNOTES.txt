@@ -659,3 +659,9 @@ Version 4.8.1 - 2015-10-06
 
 Version 4.8.2 - 2015-10-08
 * Added RoleInfo Format fixedwidth and VendorInfo avaya.
+---------------------------------------------------------------------------
+
+Version 4.9.0 - 2015-11-24
+* Added service provider ID and calling party info into AuthReq.
+* Added build option to disable SSL certificate verify.
+* Fixed hardcoded receive buffer size issue.

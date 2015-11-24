@@ -2020,11 +2020,19 @@ int testSetTotalSetupAttempts()
     return errcode;
 }
 
-int testSetCallPartyInfo()
+int testSetCallingPartyInfo()
 {
     int errcode = 0;
 
     errcode = OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_SOURCE, "callingusername", "callinguserid", "callingusergroup");
+
+    return errcode;
+}
+
+int testSetCalledPartyInfo()
+{
+    int errcode = 0;
+
     errcode = OSPPTransactionSetCallPartyInfo(OSPVTransactionHandle, OSPC_CPARTY_DESTINATION, "calledusername", "calleduserid", "calledusergroup");
 
     return errcode;
@@ -2681,7 +2689,8 @@ int testAPI(int apinumber)
         errcode = testSetReleaseSource();
         break;
     case 226:
-        errcode = testSetCallPartyInfo();
+        errcode = testSetCallingPartyInfo();
+        errcode = testSetCalledPartyInfo();
         break;
     case 227:
         errcode = testSetTransferId();
@@ -2804,6 +2813,12 @@ int testAPI(int apinumber)
             errcode = testSetJIP();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetServiceProvider();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetCallingPartyInfo();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionRequestAuthorisation();
         }
         /* 1st destination */
@@ -2872,7 +2887,7 @@ int testAPI(int apinumber)
             errcode = testSetReleaseSource();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetCallPartyInfo();
+            errcode = testSetCalledPartyInfo();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetTransferId();
@@ -2882,9 +2897,6 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetNetTransCalled();
-        }
-        if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetServiceProvider();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetSystemId();

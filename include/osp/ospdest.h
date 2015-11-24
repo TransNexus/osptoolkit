@@ -99,6 +99,13 @@ typedef enum {
 
 #define DEFAULT_GETNEXTDEST_NO_ERROR    99999
 
+/* Call party info */
+typedef struct {
+    char UserName[OSPC_SIZE_NORSTR];
+    char UserId[OSPC_SIZE_NORSTR];
+    char UserGroup[OSPC_SIZE_NORSTR];
+} OSPT_CALL_PARTY;
+
 typedef struct {
     OSPTLISTLINK Link;
     char SourceNumber[OSPC_SIZE_E164NUM];
@@ -128,9 +135,7 @@ typedef struct {
     OSPE_ROLE_STATE RoleState;
     OSPE_ROLE_FORMAT RoleFormat;
     OSPE_ROLE_VENDOR RoleVendor;
-    char UserName[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
-    char UserId[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
-    char UserGroup[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
+    OSPT_CALL_PARTY CalledParty;
     char TransferId[OSPC_SIZE_NORSTR];
     OSPE_TRANSFER_STATUS TransferStatus;
     char DestAudioAddr[OSPC_SIZE_NORSTR];

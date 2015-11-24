@@ -376,13 +376,20 @@ int OSPPTransactionBuildUsage(
                 }
             }
 
-            /* Move call party info to the usage structure */
+            /* Move calling party info to the usage structure */
             if (errcode == OSPC_ERR_NO_ERROR) {
-                for (cnt = 0; cnt < OSPC_CPARTY_NUMBER; cnt++) {
-                    OSPM_STRNCPY((*ospvUsage)->UserName[cnt], ospvDest->UserName[cnt], sizeof((*ospvUsage)->UserName[cnt]));
-                    OSPM_STRNCPY((*ospvUsage)->UserId[cnt], ospvDest->UserId[cnt], sizeof((*ospvUsage)->UserId[cnt]));
-                    OSPM_STRNCPY((*ospvUsage)->UserGroup[cnt], ospvDest->UserGroup[cnt], sizeof((*ospvUsage)->UserGroup[cnt]));
-                }
+            	OSPT_CALL_PARTY *calling = &((*ospvUsage)->CallParty[OSPC_CPARTY_SOURCE]);
+                OSPM_STRNCPY(calling->UserName, ospvTrans->CallingParty.UserName, sizeof(calling->UserName));
+                OSPM_STRNCPY(calling->UserId, ospvTrans->CallingParty.UserId, sizeof(calling->UserId));
+                OSPM_STRNCPY(calling->UserGroup, ospvTrans->CallingParty.UserGroup, sizeof(calling->UserGroup));
+            }
+
+            /* Move called party info to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+            	OSPT_CALL_PARTY *called = &((*ospvUsage)->CallParty[OSPC_CPARTY_DESTINATION]);
+                OSPM_STRNCPY(called->UserName, ospvDest->CalledParty.UserName, sizeof(called->UserName));
+                OSPM_STRNCPY(called->UserId, ospvDest->CalledParty.UserId, sizeof(called->UserId));
+                OSPM_STRNCPY(called->UserGroup, ospvDest->CalledParty.UserGroup, sizeof(called->UserGroup));
             }
 
             /* Move transfer id and status to the usage structure */
