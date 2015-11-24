@@ -90,7 +90,11 @@ int OSPPSSLWrapInit(
         if (*ctx != OSPC_OSNULL) {
             SSL_CTX_set_options(*ctx, off);
             SSL_CTX_set_timeout(*ctx, OSPPSecGetSSLLifetime(security));
+#ifdef OSP_SSL_VERIFY_NONE
+            SSL_CTX_set_verify(*ctx, SSL_VERIFY_NONE, NULL);
+#else
             SSL_CTX_set_verify(*ctx, SSL_VERIFY_PEER | SSL_VERIFY_CLIENT_ONCE, OSPPSSLVerifyCallback);
+#endif
         }
 
         /*

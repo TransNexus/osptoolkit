@@ -514,6 +514,7 @@ int OSPPAuthReqToElement(       /* returns error code */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPT_XML_ELEM *subelem = OSPC_OSNULL;
     OSPT_XML_ELEM *authreqelem = OSPC_OSNULL;
     OSPT_XML_ATTR *attr = OSPC_OSNULL;
     OSPT_CALL_ID *callid = OSPC_OSNULL;
@@ -937,6 +938,60 @@ int OSPPAuthReqToElement(       /* returns error code */
                 OSPPXMLElemAddChild(authreqelem, elem);
                 elem = OSPC_OSNULL;
             }
+        }
+
+        /* Add service provider ID */
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->ServiceProviderId[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDERID, trans->ServiceProviderId, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+
+        /* Add calling party info */
+        OSPT_CALL_PARTY *cparty = &(trans->CallingParty);
+        if ((errcode == OSPC_ERR_NO_ERROR) &&
+            ((cparty->UserName[0] != '\0') || (cparty->UserId[0] != '\0') || (cparty->UserGroup[0] != '\0')))
+        {
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CALLINGPARTYINFO), "");
+            if (elem == OSPC_OSNULL) {
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
+            }
+        }
+        if ((errcode == OSPC_ERR_NO_ERROR) && (cparty->UserName[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_USERNAME, cparty->UserName, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(elem, subelem);
+                subelem = OSPC_OSNULL;
+            } else {
+                OSPPXMLElemDelete(&elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+        if ((errcode == OSPC_ERR_NO_ERROR) && (cparty->UserId[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_USERID, cparty->UserId, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(elem, subelem);
+                subelem = OSPC_OSNULL;
+            } else {
+                OSPPXMLElemDelete(&elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+        if ((errcode == OSPC_ERR_NO_ERROR) && (cparty->UserGroup[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_USERGROUP, cparty->UserGroup, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(elem, subelem);
+                subelem = OSPC_OSNULL;
+            } else {
+                OSPPXMLElemDelete(&elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            OSPPXMLElemAddChild(authreqelem, elem);
+            elem = OSPC_OSNULL;
         }
 
         if (errcode == OSPC_ERR_NO_ERROR) {

@@ -1580,23 +1580,24 @@ int OSPPUsageIndToElement(      /* returns error code */
 
             /* Add call party info */
             for (party = OSPC_CPARTY_START; party < OSPC_CPARTY_NUMBER; party++) {
+            	OSPT_CALL_PARTY *cparty = &(usage->CallParty[party]);
                 if ((errcode == OSPC_ERR_NO_ERROR) &&
-                    ((usage->UserName[party][0] != '\0') || (usage->UserId[party][0] != '\0') || (usage->UserGroup[party][0] != '\0')))
+                    ((cparty->UserName[0] != '\0') || (cparty->UserId[0] != '\0') || (cparty->UserGroup[0] != '\0')))
                 {
-                    if (party == OSPC_CPARTY_SOURCE) {
-                        elemtype = OSPC_MELEM_CALLINGPARTYINFO;
-                    } else if (party == OSPC_CPARTY_DESTINATION){
+                	if (party == OSPC_CPARTY_SOURCE) {
+                    elemtype = OSPC_MELEM_CALLINGPARTYINFO;
+                	} else if (party == OSPC_CPARTY_DESTINATION) {
                         elemtype = OSPC_MELEM_CALLEDPARTYINFO;
-                    } else {
-                        continue;
-                    }
+                	} else {
+                		continue;
+                	}
                     callpartyelem = OSPPXMLElemNew(OSPPMsgElemGetName(elemtype), "");
                     if (callpartyelem == OSPC_OSNULL) {
                         errcode = OSPC_ERR_XML_NO_ELEMENT;
                     }
                 }
-                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserName[party][0] != '\0')) {
-                    errcode = OSPPStringToElement(OSPC_MELEM_USERNAME, usage->UserName[party], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if ((errcode == OSPC_ERR_NO_ERROR) && (cparty->UserName[0] != '\0')) {
+                    errcode = OSPPStringToElement(OSPC_MELEM_USERNAME, cparty->UserName, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(callpartyelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1605,8 +1606,8 @@ int OSPPUsageIndToElement(      /* returns error code */
                         callpartyelem = OSPC_OSNULL;
                     }
                 }
-                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserId[party][0] != '\0')) {
-                    errcode = OSPPStringToElement(OSPC_MELEM_USERID, usage->UserId[party], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if ((errcode == OSPC_ERR_NO_ERROR) && (cparty->UserId[0] != '\0')) {
+                    errcode = OSPPStringToElement(OSPC_MELEM_USERID, cparty->UserId, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(callpartyelem, subelem);
                         subelem = OSPC_OSNULL;
@@ -1615,8 +1616,8 @@ int OSPPUsageIndToElement(      /* returns error code */
                         callpartyelem = OSPC_OSNULL;
                     }
                 }
-                if ((errcode == OSPC_ERR_NO_ERROR) && (usage->UserGroup[party][0] != '\0')) {
-                    errcode = OSPPStringToElement(OSPC_MELEM_USERGROUP, usage->UserGroup[party], 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if ((errcode == OSPC_ERR_NO_ERROR) && (cparty->UserGroup[0] != '\0')) {
+                    errcode = OSPPStringToElement(OSPC_MELEM_USERGROUP, cparty->UserGroup, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(callpartyelem, subelem);
                         subelem = OSPC_OSNULL;

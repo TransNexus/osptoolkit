@@ -2188,6 +2188,9 @@ int OSPPTransactionNew(
         trans->SrcVideoAddr[0] = '\0';
         trans->ProxyIngressAddr[0] = '\0';
         trans->JIP[0] = '\0';
+        trans->CallingParty.UserName[0] = '\0';
+        trans->CallingParty.UserId[0] = '\0';
+        trans->CallingParty.UserGroup[0] = '\0';
     }
 
     return errcode;
@@ -5315,16 +5318,28 @@ int OSPPTransactionSetCallPartyInfo(
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if (errcode == OSPC_ERR_NO_ERROR) {
-            if ((trans != OSPC_OSNULL) && (trans->AuthReq != OSPC_OSNULL) && ((dest = trans->CurrentDest) != OSPC_OSNULL)) {
-                if (ospvUserName != OSPC_OSNULL) {
-                    OSPM_STRNCPY(dest->UserName[ospvParty], ospvUserName, sizeof(dest->UserName[ospvParty]) - 1);
-                }
-                if (ospvUserId != OSPC_OSNULL) {
-                    OSPM_STRNCPY(dest->UserId[ospvParty], ospvUserId, sizeof(dest->UserId[ospvParty]) - 1);
-                }
-                if (ospvUserGroup != OSPC_OSNULL) {
-                    OSPM_STRNCPY(dest->UserGroup[ospvParty], ospvUserGroup, sizeof(dest->UserGroup[ospvParty]) - 1);
-                }
+            if ((trans != OSPC_OSNULL)) {
+            	if (ospvParty == OSPC_CPARTY_SOURCE) {
+                    if (ospvUserName != OSPC_OSNULL) {
+                        OSPM_STRNCPY(trans->CallingParty.UserName, ospvUserName, sizeof(trans->CallingParty.UserName) - 1);
+                    }
+                    if (ospvUserId != OSPC_OSNULL) {
+                        OSPM_STRNCPY(trans->CallingParty.UserId, ospvUserId, sizeof(trans->CallingParty.UserId) - 1);
+                    }
+                    if (ospvUserGroup != OSPC_OSNULL) {
+                        OSPM_STRNCPY(trans->CallingParty.UserGroup, ospvUserGroup, sizeof(trans->CallingParty.UserGroup) - 1);
+                    }
+            	} else if ((ospvParty == OSPC_CPARTY_DESTINATION)&& (trans->AuthReq != OSPC_OSNULL) && ((dest = trans->CurrentDest) != OSPC_OSNULL)) {
+                    if (ospvUserName != OSPC_OSNULL) {
+                        OSPM_STRNCPY(dest->CalledParty.UserName, ospvUserName, sizeof(dest->CalledParty.UserName) - 1);
+                    }
+                    if (ospvUserId != OSPC_OSNULL) {
+                        OSPM_STRNCPY(dest->CalledParty.UserId, ospvUserId, sizeof(dest->CalledParty.UserId) - 1);
+                    }
+                    if (ospvUserGroup != OSPC_OSNULL) {
+                        OSPM_STRNCPY(dest->CalledParty.UserGroup, ospvUserGroup, sizeof(dest->CalledParty.UserGroup) - 1);
+                    }
+            	}
             }
         }
     }

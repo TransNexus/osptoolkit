@@ -413,7 +413,7 @@ void OSPPSockProcessRequest(
     unsigned *ospvContentBufferSz,
     int *ospvError)
 {
-#define OSPC_RECVBUF_SZ    256
+#define OSPC_RECVBUF_SZ 1024
 
     char recvheadbuf[OSPC_RECVBUF_SZ] = { "" };
     unsigned recvheadbufsz = OSPC_RECVBUF_SZ;
@@ -484,7 +484,7 @@ void OSPPSockProcessRequest(
                 /*
                  * Read again for the 200 header.
                  */
-                recvheadbufsz = 256;
+                recvheadbufsz = OSPC_RECVBUF_SZ;
                 *ospvError = OSPPSSLSessionRead(ospvHttp, (unsigned char *)recvheadbuf, &recvheadbufsz, "\r\n\r\n");
 
                 responsetype = 0;
