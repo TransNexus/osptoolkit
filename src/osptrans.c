@@ -378,7 +378,7 @@ int OSPPTransactionBuildUsage(
 
             /* Move calling party info to the usage structure */
             if (errcode == OSPC_ERR_NO_ERROR) {
-            	OSPT_CALL_PARTY *calling = &((*ospvUsage)->CallParty[OSPC_CPARTY_SOURCE]);
+                OSPT_CALL_PARTY *calling = &((*ospvUsage)->CallParty[OSPC_CPARTY_SOURCE]);
                 OSPM_STRNCPY(calling->UserName, ospvTrans->CallingParty.UserName, sizeof(calling->UserName));
                 OSPM_STRNCPY(calling->UserId, ospvTrans->CallingParty.UserId, sizeof(calling->UserId));
                 OSPM_STRNCPY(calling->UserGroup, ospvTrans->CallingParty.UserGroup, sizeof(calling->UserGroup));
@@ -386,7 +386,7 @@ int OSPPTransactionBuildUsage(
 
             /* Move called party info to the usage structure */
             if (errcode == OSPC_ERR_NO_ERROR) {
-            	OSPT_CALL_PARTY *called = &((*ospvUsage)->CallParty[OSPC_CPARTY_DESTINATION]);
+                OSPT_CALL_PARTY *called = &((*ospvUsage)->CallParty[OSPC_CPARTY_DESTINATION]);
                 OSPM_STRNCPY(called->UserName, ospvDest->CalledParty.UserName, sizeof(called->UserName));
                 OSPM_STRNCPY(called->UserId, ospvDest->CalledParty.UserId, sizeof(called->UserId));
                 OSPM_STRNCPY(called->UserGroup, ospvDest->CalledParty.UserGroup, sizeof(called->UserGroup));
@@ -412,6 +412,21 @@ int OSPPTransactionBuildUsage(
             /* Move provider post dial delay to the usage structure */
             if (errcode == OSPC_ERR_NO_ERROR) {
                 (*ospvUsage)->ProviderPDD = ospvDest->ProviderPDD;
+            }
+
+            /* Move call type to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPM_STRNCPY((*ospvUsage)->CallType, ospvDest->CallType, sizeof((*ospvUsage)->CallType));
+            }
+
+            /* Move call category to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPM_STRNCPY((*ospvUsage)->CallCategory, ospvDest->CallCategory, sizeof((*ospvUsage)->CallCategory));
+            }
+
+            /* Move network type to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPM_STRNCPY((*ospvUsage)->NetworkType, ospvDest->NetworkType, sizeof((*ospvUsage)->NetworkType));
             }
         } else if (ospvType == OSPC_MSG_AIND) {
             /* Terminating */

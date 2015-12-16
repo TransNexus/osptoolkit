@@ -68,6 +68,7 @@ typedef enum {
     OSPC_OPNAME_UNDEFINED,                      /* Not Configured at Server */
     OSPC_OPNAME_START = 0,                      /* Operator Name start */
     OSPC_OPNAME_SPID = OSPC_OPNAME_START,       /* Service Provider ID */
+    OSPC_OPNAME_ALTSPID,                        /* Alternative SPID */
     OSPC_OPNAME_OCN,                            /* Operating Company Number */
     OSPC_OPNAME_SPN,                            /* Service Provider Name */
     OSPC_OPNAME_ALTSPN,                         /* Alternate SPN */
@@ -144,6 +145,9 @@ typedef struct {
     int ProviderPDD;                /* In milliseconds */
     char CNAM[OSPC_SIZE_NORSTR];
     OSPE_SERVICE ServiceType;
+    char CallType[OSPC_SIZE_NORSTR];
+    char CallCategory[OSPC_SIZE_NORSTR];
+    char NetworkType[OSPC_SIZE_NORSTR];
 } OSPT_DEST;
 
 /* Function Prototypes */

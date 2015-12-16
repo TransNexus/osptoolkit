@@ -669,3 +669,8 @@ Version 4.9.0 - 2015-11-24
 
 Version 4.9.1 - 2015-11-24
 * Fixed version number error.
+---------------------------------------------------------------------------
+
+Version 4.10.0 - 2015-12-16
+* Added call type, call category and network type support.
+* Added SPID and AltSPID support.

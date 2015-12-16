@@ -1478,6 +1478,17 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
+            /* add the operator names */
+             for (index = 0; index < OSPC_OPNAME_NUMBER; index++) {
+                 if ((errcode == OSPC_ERR_NO_ERROR) && trans->OpName[index][0] != '\0') {
+                     errcode = OSPPOperatorNameToElement(index, trans->OpName[index], &subelem);
+                     if (errcode == OSPC_ERR_NO_ERROR) {
+                         OSPPXMLElemAddChild(usageindelem, subelem);
+                         subelem = OSPC_OSNULL;
+                     }
+                 }
+             }
+
             /* add the destination alternates */
             if ((errcode == OSPC_ERR_NO_ERROR) && OSPPUsageIndHasDestinationAlt(usage)) {
                 for (altinfo = (OSPT_ALTINFO *)OSPPUsageIndFirstDestinationAlt(usage);
@@ -1580,17 +1591,17 @@ int OSPPUsageIndToElement(      /* returns error code */
 
             /* Add call party info */
             for (party = OSPC_CPARTY_START; party < OSPC_CPARTY_NUMBER; party++) {
-            	OSPT_CALL_PARTY *cparty = &(usage->CallParty[party]);
+                OSPT_CALL_PARTY *cparty = &(usage->CallParty[party]);
                 if ((errcode == OSPC_ERR_NO_ERROR) &&
                     ((cparty->UserName[0] != '\0') || (cparty->UserId[0] != '\0') || (cparty->UserGroup[0] != '\0')))
                 {
-                	if (party == OSPC_CPARTY_SOURCE) {
-                    elemtype = OSPC_MELEM_CALLINGPARTYINFO;
-                	} else if (party == OSPC_CPARTY_DESTINATION) {
+                    if (party == OSPC_CPARTY_SOURCE) {
+                        elemtype = OSPC_MELEM_CALLINGPARTYINFO;
+                    } else if (party == OSPC_CPARTY_DESTINATION) {
                         elemtype = OSPC_MELEM_CALLEDPARTYINFO;
-                	} else {
-                		continue;
-                	}
+                    } else {
+                        continue;
+                    }
                     callpartyelem = OSPPXMLElemNew(OSPPMsgElemGetName(elemtype), "");
                     if (callpartyelem == OSPC_OSNULL) {
                         errcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -1914,9 +1925,9 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
-            /* Add service provider ID */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->ServiceProviderId[0] != '\0')) {
-                errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDERID, trans->ServiceProviderId, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+            /* Add service provider */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->ServiceProvider[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDER, trans->ServiceProvider, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;
@@ -2024,6 +2035,33 @@ int OSPPUsageIndToElement(      /* returns error code */
             /* Add Jurisdiction Information Parameter */
             if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->JIP[0] != '\0')) {
                 errcode = OSPPStringToElement(OSPC_MELEM_JIP, trans->JIP, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add call type */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (usage->CallType[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_CALLTYPE, usage->CallType, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add call category */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (usage->CallCategory[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_CALLCATEGORY, usage->CallCategory, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add network type */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (usage->NetworkType[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_NETWORKTYPE, usage->NetworkType, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;

@@ -1004,6 +1004,9 @@ void OSPPDestInfoFromElement(
             case OSPC_ALTINFO_SPID:
                 OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_SPID], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_SPID]) - 1);
                 break;
+            case OSPC_ALTINFO_ALTSPID:
+                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_ALTSPID], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_ALTSPID]) - 1);
+                break;
             case OSPC_ALTINFO_OCN:
                 OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_OCN], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_OCN]) - 1);
                 break;

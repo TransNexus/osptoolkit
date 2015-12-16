@@ -1850,6 +1850,7 @@ int testSetOperatorName()
     int errcode = 0;
 
     errcode = OSPPTransactionSetOperatorName(OSPVTransactionHandle, OSPC_OPNAME_SPID, "spid");
+    errcode = OSPPTransactionSetOperatorName(OSPVTransactionHandle, OSPC_OPNAME_ALTSPID, "altspid");
     errcode = OSPPTransactionSetOperatorName(OSPVTransactionHandle, OSPC_OPNAME_OCN, "ocn");
     errcode = OSPPTransactionSetOperatorName(OSPVTransactionHandle, OSPC_OPNAME_SPN, "spn");
     errcode = OSPPTransactionSetOperatorName(OSPVTransactionHandle, OSPC_OPNAME_ALTSPN, "altspn");
@@ -1875,6 +1876,7 @@ int testSetAssertedId()
 
     errcode = OSPPTransactionSetAssertedId(OSPVTransactionHandle, OSPC_NFORMAT_E164, "AssertedIdE164");
     errcode = OSPPTransactionSetAssertedId(OSPVTransactionHandle, OSPC_NFORMAT_URL, "AssertedIdURL");
+    errcode = OSPPTransactionSetAssertedId(OSPVTransactionHandle, OSPC_NFORMAT_DISPLAYNAME, "AssertedIdDisplayName");
 
     return errcode;
 }
@@ -1975,12 +1977,15 @@ int testSetSessionId()
     return errcode;
 }
 
-int testSetCustomInfo()
+int testSetCustomInfo(int flag)
 {
     int errcode = 0;
 
-    errcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
-    errcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
+    if (flag) { 
+        errcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
+    } else {
+        errcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
+    }
 
     return errcode;
 }
@@ -2069,7 +2074,7 @@ int testSetServiceProvider()
 {
     int errcode = 0;
 
-    errcode = OSPPTransactionSetServiceProviderId(OSPVTransactionHandle, "providerofservice");
+    errcode = OSPPTransactionSetServiceProvider(OSPVTransactionHandle, "providerofservice");
 
     return errcode;
 }
@@ -2155,6 +2160,17 @@ int testSetProviderPDD(int pdd)
     return errcode;
 }
 
+int testSetCallType()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetCallType(OSPVTransactionHandle, "calltype");
+    errcode = OSPPTransactionSetCallCategory(OSPVTransactionHandle, "callcategory");
+    errcode = OSPPTransactionSetNetworkType(OSPVTransactionHandle, "networktype");
+
+    return errcode;
+}
+
 int testGetNumberPortability()
 {
     int errcode = 0;
@@ -2177,6 +2193,8 @@ int testGetOperatorName()
 
     errcode = OSPPTransactionGetOperatorName(OSPVTransactionHandle, OSPC_OPNAME_SPID, sizeof(opname), opname);
     printf("spid = '%s'\n", opname);
+    errcode = OSPPTransactionGetOperatorName(OSPVTransactionHandle, OSPC_OPNAME_ALTSPID, sizeof(opname), opname);
+    printf("altspid = '%s'\n", opname);
     errcode = OSPPTransactionGetOperatorName(OSPVTransactionHandle, OSPC_OPNAME_OCN, sizeof(opname), opname);
     printf("ocn = '%s'\n", opname);
     errcode = OSPPTransactionGetOperatorName(OSPVTransactionHandle, OSPC_OPNAME_SPN, sizeof(opname), opname);
@@ -2683,7 +2701,7 @@ int testAPI(int apinumber)
         errcode = testSetSessionId();
         break;
     case 224:
-        errcode = testSetCustomInfo();
+        errcode = testSetCustomInfo(true);
         break;
     case 225:
         errcode = testSetReleaseSource();
@@ -2729,6 +2747,9 @@ int testAPI(int apinumber)
         break;
     case 238:
         errcode = testSetJIP();
+        break;
+    case 239:
+        errcode = testSetCallType();
         break;
     case 250:
         errcode = testGetNumberPortability();
@@ -2780,6 +2801,9 @@ int testAPI(int apinumber)
             errcode = testOSPPTransactionNew();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetOperatorName();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetAssertedId();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
@@ -2817,6 +2841,9 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetCallingPartyInfo();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetCustomInfo(true);
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionRequestAuthorisation();
@@ -2881,7 +2908,7 @@ int testAPI(int apinumber)
             errcode = testSetSessionId();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetCustomInfo();
+            errcode = testSetCustomInfo(false);
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetReleaseSource();
@@ -2906,6 +2933,9 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetCDRProxy();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetCallType();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testStatsLost();
@@ -3060,7 +3090,7 @@ int testMenu()
         printf("232) Set Related Call-ID Reason       233) Set CDR Proxy\n");
         printf("234) Set User Agent                   235) Set Media Addresses\n");
         printf("236) Set Proxy Addresses              237) Set Provider PDD\n");
-        printf("238) Set JIP\n");
+        printf("238) Set JIP                          239) Set Call Type\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
         printf("300) Set Lost                         301) Set Jitter\n");
