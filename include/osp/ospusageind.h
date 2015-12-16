@@ -71,6 +71,9 @@ typedef struct {
     OSPE_TRANSFER_STATUS TransferStatus;
     char DestAudioAddr[OSPC_SIZE_NORSTR];
     char DestVideoAddr[OSPC_SIZE_NORSTR];
+    char CallType[OSPC_SIZE_NORSTR];
+    char CallCategory[OSPC_SIZE_NORSTR];
+    char NetworkType[OSPC_SIZE_NORSTR];
 } OSPT_USAGE_IND;
 
 /* Function Prototypes */

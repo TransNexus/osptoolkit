@@ -134,7 +134,8 @@ extern "C" {
     int OSPPTransactionSetTransferId(OSPTTRANHANDLE, const char*);
     int OSPPTransactionSetTransferStatus(OSPTTRANHANDLE, OSPE_TRANSFER_STATUS);
     int OSPPTransactionSetNetworkTranslatedCalledNumber(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
-    int OSPPTransactionSetServiceProviderId(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetServiceProvider(OSPTTRANHANDLE, const char *);
+#define OSPPTransactionSetServiceProviderId OSPPTransactionSetServiceProvider
     int OSPPTransactionSetSystemId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetRelatedReason(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetSetupAttempt(OSPTTRANHANDLE, int);
@@ -151,6 +152,9 @@ extern "C" {
     int OSPPTransactionSetJIP(OSPTTRANHANDLE, const char *);
     int OSPPTransactionGetCNAM(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionGetServiceType(OSPTTRANHANDLE, OSPE_SERVICE *);
+    int OSPPTransactionSetCallType(OSPTTRANHANDLE, const char*);
+    int OSPPTransactionSetCallCategory(OSPTTRANHANDLE, const char*);
+    int OSPPTransactionSetNetworkType(OSPTTRANHANDLE, const char*);
 
 #ifdef __cplusplus
 }

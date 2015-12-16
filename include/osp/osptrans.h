@@ -122,7 +122,7 @@ typedef struct _OSPTTRANS {
     OSPE_ROLE_VENDOR RoleVendor;
     OSPE_NUMBER_FORMAT NetworkTranslatedCalledFormat;
     char NetworkTranslatedCalled[OSPC_SIZE_E164NUM];
-    char ServiceProviderId[OSPC_SIZE_NORSTR];
+    char ServiceProvider[OSPC_SIZE_NORSTR];
     char SystemId[OSPC_SIZE_NORSTR];
     char RelatedReason[OSPC_SIZE_NORSTR];
     int TotalSetupAttempts;

@@ -2176,7 +2176,7 @@ int OSPPTransactionNew(
         trans->RoleVendor = OSPC_RVENDOR_UNKNOWN;
         trans->NetworkTranslatedCalledFormat = OSPC_NFORMAT_E164;
         trans->NetworkTranslatedCalled[0] = '\0';
-        trans->ServiceProviderId[0] = '\0';
+        trans->ServiceProvider[0] = '\0';
         trans->SystemId[0] = '\0';
         trans->RelatedReason[0] = '\0';
         trans->TotalSetupAttempts = -1;
@@ -5319,7 +5319,7 @@ int OSPPTransactionSetCallPartyInfo(
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if (errcode == OSPC_ERR_NO_ERROR) {
             if ((trans != OSPC_OSNULL)) {
-            	if (ospvParty == OSPC_CPARTY_SOURCE) {
+                if (ospvParty == OSPC_CPARTY_SOURCE) {
                     if (ospvUserName != OSPC_OSNULL) {
                         OSPM_STRNCPY(trans->CallingParty.UserName, ospvUserName, sizeof(trans->CallingParty.UserName) - 1);
                     }
@@ -5329,7 +5329,7 @@ int OSPPTransactionSetCallPartyInfo(
                     if (ospvUserGroup != OSPC_OSNULL) {
                         OSPM_STRNCPY(trans->CallingParty.UserGroup, ospvUserGroup, sizeof(trans->CallingParty.UserGroup) - 1);
                     }
-            	} else if ((ospvParty == OSPC_CPARTY_DESTINATION)&& (trans->AuthReq != OSPC_OSNULL) && ((dest = trans->CurrentDest) != OSPC_OSNULL)) {
+                } else if ((ospvParty == OSPC_CPARTY_DESTINATION)&& (trans->AuthReq != OSPC_OSNULL) && ((dest = trans->CurrentDest) != OSPC_OSNULL)) {
                     if (ospvUserName != OSPC_OSNULL) {
                         OSPM_STRNCPY(dest->CalledParty.UserName, ospvUserName, sizeof(dest->CalledParty.UserName) - 1);
                     }
@@ -5339,7 +5339,7 @@ int OSPPTransactionSetCallPartyInfo(
                     if (ospvUserGroup != OSPC_OSNULL) {
                         OSPM_STRNCPY(dest->CalledParty.UserGroup, ospvUserGroup, sizeof(dest->CalledParty.UserGroup) - 1);
                     }
-            	}
+                }
             }
         }
     }
@@ -5414,19 +5414,19 @@ int OSPPTransactionSetNetworkTranslatedCalledNumber(
     return errcode;
 }
 
-int OSPPTransactionSetServiceProviderId(
+int OSPPTransactionSetServiceProvider(
     OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
-    const char *ospvServiceProviderId)  /* In - Service provider ID */
+    const char *ospvServiceProvider)    /* In - Service provider */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    if ((ospvServiceProviderId == OSPC_OSNULL) || (ospvServiceProviderId[0] == '\0')) {
+    if ((ospvServiceProvider == OSPC_OSNULL) || (ospvServiceProvider[0] == '\0')) {
         errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-           OSPM_STRNCPY(trans->ServiceProviderId, ospvServiceProviderId, sizeof(trans->ServiceProviderId) - 1);
+           OSPM_STRNCPY(trans->ServiceProvider, ospvServiceProvider, sizeof(trans->ServiceProvider) - 1);
         }
     }
 
@@ -5813,6 +5813,72 @@ int OSPPTransactionGetServiceType(
         } else {
             errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
             OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetCallType(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvCallType)       /* In - Call type  */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) &&
+        (trans != OSPC_OSNULL) &&
+        (trans->AuthReq != OSPC_OSNULL) &&
+        ((dest = trans->CurrentDest) != OSPC_OSNULL))
+    {
+        if (ospvCallType != OSPC_OSNULL) {
+            OSPM_STRNCPY(dest->CallType, ospvCallType, sizeof(dest->CallType) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetCallCategory(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvCallCategory)       /* In - Call type  */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) &&
+        (trans != OSPC_OSNULL) &&
+        (trans->AuthReq != OSPC_OSNULL) &&
+        ((dest = trans->CurrentDest) != OSPC_OSNULL))
+    {
+        if (ospvCallCategory != OSPC_OSNULL) {
+            OSPM_STRNCPY(dest->CallCategory, ospvCallCategory, sizeof(dest->CallCategory) - 1);
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetNetworkType(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvNetworkType)       /* In - Call type  */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) &&
+        (trans != OSPC_OSNULL) &&
+        (trans->AuthReq != OSPC_OSNULL) &&
+        ((dest = trans->CurrentDest) != OSPC_OSNULL))
+    {
+        if (ospvNetworkType != OSPC_OSNULL) {
+            OSPM_STRNCPY(dest->NetworkType, ospvNetworkType, sizeof(dest->NetworkType) - 1);
         }
     }
 

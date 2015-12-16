@@ -940,9 +940,9 @@ int OSPPAuthReqToElement(       /* returns error code */
             }
         }
 
-        /* Add service provider ID */
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->ServiceProviderId[0] != '\0')) {
-            errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDERID, trans->ServiceProviderId, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+        /* Add service provider */
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans->ServiceProvider[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDER, trans->ServiceProvider, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(authreqelem, elem);
                 elem = OSPC_OSNULL;
@@ -1156,6 +1156,9 @@ int OSPPOperatorNameToElement(
                 switch (ospvType) {
                 case OSPC_OPNAME_SPID:
                     alt = OSPC_ALTINFO_SPID;
+                    break;
+                case OSPC_OPNAME_ALTSPID:
+                    alt = OSPC_ALTINFO_ALTSPID;
                     break;
                 case OSPC_OPNAME_OCN:
                     alt = OSPC_ALTINFO_OCN;
