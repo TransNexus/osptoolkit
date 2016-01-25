@@ -38,7 +38,7 @@ void OSPPTokenInfoSetLookAheadDestAlt(              /* nothing returned */
 {
     if (ospvTokenLookAheadInfo != OSPC_OSNULL) {
         if (ospvLookAheadRoute != OSPC_OSNULL) {
-            OSPM_STRNCPY(ospvTokenLookAheadInfo->lookAheadDest, ospvLookAheadRoute, OSPC_SIZE_SIGNALADDR - 1);
+            OSPM_STRNCPY(ospvTokenLookAheadInfo->lookAheadDest, ospvLookAheadRoute, OSPC_SIZE_SIGNALADDR);
         }
     }
 }
@@ -127,7 +127,7 @@ void OSPPTokenInfoSetSourceNumber(  /* nothing returned */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
         if (ospvSourceNumber != OSPC_OSNULL) {
-            OSPM_STRNCPY(ospvTokenInfo->SourceNumber, ospvSourceNumber, OSPC_SIZE_E164NUM - 1);
+            OSPM_STRNCPY(ospvTokenInfo->SourceNumber, ospvSourceNumber, OSPC_SIZE_E164NUM);
         }
     }
 }
@@ -156,7 +156,7 @@ void OSPPTokenInfoSetDestNumber(    /* nothing returned */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
         if (ospvDestNumber != OSPC_OSNULL) {
-            OSPM_STRNCPY(ospvTokenInfo->DestinationNumber, ospvDestNumber, OSPC_SIZE_E164NUM - 1);
+            OSPM_STRNCPY(ospvTokenInfo->DestinationNumber, ospvDestNumber, OSPC_SIZE_E164NUM);
         }
     }
 }
@@ -185,7 +185,7 @@ void OSPPTokenInfoSetDestNetworkId( /* nothing returned */
 {
     if (ospvTokenInfo != OSPC_OSNULL) {
         if (ospvDestId != OSPC_OSNULL) {
-            OSPM_STRNCPY(ospvTokenInfo->DestinationNetworkId, ospvDestId, OSPC_SIZE_E164NUM - 1);
+            OSPM_STRNCPY(ospvTokenInfo->DestinationNetworkId, ospvDestId, OSPC_SIZE_E164NUM);
         }
     }
 }
@@ -468,18 +468,21 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvTokenInfo == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NO_TOKEN;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvTokenInfo == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_TOKEN;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
         /* create the token info object */
         tokeninfo = OSPPTokenInfoNew();
-
         if (tokeninfo == OSPC_OSNULL) {
             errcode = OSPC_ERR_DATA_NO_TOKENINFO;
         }
     }
+
     /*
      * The Token Info element should consist of several child
      * elements. We'll run through what's there and pick out
@@ -487,9 +490,9 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
      */
     if (errcode == OSPC_ERR_NO_ERROR) {
         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
-             (elem != OSPC_OSNULL) &&
-             (errcode == OSPC_ERR_NO_ERROR);
-             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) {
+             (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
+             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem))
+        {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_MESSAGE:
                 break;
@@ -575,6 +578,10 @@ unsigned OSPPTokenInfoFromElement(  /* returns error code */
 
     if (errcode == OSPC_ERR_NO_ERROR) {
         *ospvTokenInfo = tokeninfo;
+    } else {
+        if (tokeninfo != OSPC_OSNULL) {
+            OSPPTokenInfoDelete(&tokeninfo);
+        }
     }
 
     return errcode;

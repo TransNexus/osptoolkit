@@ -674,3 +674,7 @@ Version 4.9.1 - 2015-11-24
 Version 4.10.0 - 2015-12-16
 * Added call type, call category and network type support.
 * Added SPID and AltSPID support.
+---------------------------------------------------------------------------
+
+Version 4.11.0 - 2016-01-25
+* Added Identity token support.

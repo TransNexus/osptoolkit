@@ -151,14 +151,16 @@ extern const OSPT_MSG_DESC OSPV_TSTATUS_DESCS[];
 
 /* general constants */
 
-#define OSPC_SIZE_E164NUM       132 /* max digits in E.164 number */
-#define OSPC_SIZE_SIGNALADDR    262 /* max characters in [name]:port */
-#define OSPC_SIZE_URL           512 /* max characters in URL */
-#define OSPC_SIZE_ROLESTR       16  /* max characters in role string */
-#define OSPC_SIZE_NORSTR        256 /* max characters in normal string */
-#define OSPC_SIZE_NORID         256 /* max characters in normal ID */
-#define OSPC_SIZE_CODEC         64  /* max characters in codec */
-#define OSPC_SIZE_CUSTINFO      256 /* max characters in user-defined info */
+#define OSPC_SIZE_E164NUM       132     /* max digits in E.164 number */
+#define OSPC_SIZE_SIGNALADDR    262     /* max characters in [name]:port */
+#define OSPC_SIZE_URL           512     /* max characters in URL */
+#define OSPC_SIZE_ROLESTR       16      /* max characters in role string */
+#define OSPC_SIZE_NORSTR        256     /* max characters in normal string */
+#define OSPC_SIZE_NORID         256     /* max characters in normal ID */
+#define OSPC_SIZE_CODEC         64      /* max characters in codec */
+#define OSPC_SIZE_CUSTINFO      256     /* max characters in user-defined info */
+#define OSPC_SIZE_SIGNSTR       4096    /* max characters in Identity token */
+#define OSPC_SIZE_ALGSTR        16      /* max characters in Identity token algorithm */
 
 /* Function Prototypes */
 #ifdef __cplusplus

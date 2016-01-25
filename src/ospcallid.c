@@ -118,26 +118,29 @@ unsigned OSPPCallIdFromASCIIElement(    /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_ASCII_NO_ELEMENT;
     }
-    if (ospvCallId == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NOCALLID;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvCallId == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NOCALLID;
+        }
     }
 
-    /* start by assuming we will fail */
-    *ospvCallId = OSPC_OSNULL;
     if (errcode == OSPC_ERR_NO_ERROR) {
-        errcode = OSPPMsgBinFromASCIIElement(ospvElem, &callIdLen, &callIdValue);
+        /* start by assuming we will fail */
+        *ospvCallId = OSPC_OSNULL;
 
         /* create the CallId structure */
+        errcode = OSPPMsgBinFromASCIIElement(ospvElem, &callIdLen, &callIdValue);
         if (errcode == OSPC_ERR_NO_ERROR) {
             *ospvCallId = OSPPCallIdNew(callIdLen, callIdValue);
             if (*ospvCallId == OSPC_OSNULL) {
                 errcode = OSPC_ERR_DATA_NOCALLID;
             }
         }
-    }
 
-    if (callIdValue != OSPC_OSNULL) {
-        OSPM_FREE(callIdValue);
+        if (callIdValue != OSPC_OSNULL) {
+            OSPM_FREE(callIdValue);
+        }
     }
 
     return errcode;
@@ -157,27 +160,29 @@ unsigned OSPPCallIdFromElement( /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvCallId == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NOCALLID;
-    }
-    /* assert(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_CALLID); */
 
-    /* start by assuming we will fail */
-    *ospvCallId = OSPC_OSNULL;
     if (errcode == OSPC_ERR_NO_ERROR) {
-        errcode = OSPPMsgBinFromElement(ospvElem, &callIdLen, &callIdValue);
+        if (ospvCallId == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NOCALLID;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        /* start by assuming we will fail */
+        *ospvCallId = OSPC_OSNULL;
 
         /* create the CallId structure */
+        errcode = OSPPMsgBinFromElement(ospvElem, &callIdLen, &callIdValue);
         if (errcode == OSPC_ERR_NO_ERROR) {
             *ospvCallId = OSPPCallIdNew(callIdLen, callIdValue);
             if (*ospvCallId == OSPC_OSNULL) {
                 errcode = OSPC_ERR_DATA_NOCALLID;
             }
         }
-    }
 
-    if (callIdValue != OSPC_OSNULL) {
-        OSPM_FREE(callIdValue);
+        if (callIdValue != OSPC_OSNULL) {
+            OSPM_FREE(callIdValue);
+        }
     }
 
     return errcode;
@@ -209,9 +214,13 @@ unsigned OSPPCallIdToElement(   /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvCallId == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NOCALLID;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvCallId == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NOCALLID;
+        }
     }
+
     if (errcode == OSPC_ERR_NO_ERROR) {
         errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CALLID),
             OSPPCallIdGetSize(ospvCallId), OSPPCallIdGetValue(ospvCallId),
@@ -266,9 +275,15 @@ unsigned OSPPSessionIdToElement(    /* returns error code */
 
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
-    } else if (ospvSessionId == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NOCALLID;
-    } else {
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvSessionId == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NOCALLID;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
         switch (ospvType) {
         case OSPC_SESSIONID_SOURCE:
             type = OSPC_ALTINFO_SOURCE;

@@ -38,11 +38,17 @@ int OSPPXMLDocCreate(           /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvBfrAddr == OSPC_OSNULL) {
-        errcode = OSPC_ERR_BUF_EMPTY;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvBfrAddr == OSPC_OSNULL) {
+            errcode = OSPC_ERR_BUF_EMPTY;
+        }
     }
-    if (*ospvBfrAddr == OSPC_OSNULL) {
-        errcode = OSPC_ERR_BUF_EMPTY;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (*ospvBfrAddr == OSPC_OSNULL) {
+            errcode = OSPC_ERR_BUF_EMPTY;
+        }
     }
 
     /*
@@ -58,7 +64,6 @@ int OSPPXMLDocCreate(           /* returns error code */
              * If the declaration was successfully added, go ahead and
              * construct the root element.
              */
-
             errcode = OSPC_ERR_BUF_INCOMPLETE;
 
             errcode = OSPPXMLDocAddElem(ospvElem, ospvBfrAddr);
@@ -98,11 +103,17 @@ int OSPPXMLDocAddElem(          /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvBfrAddr == OSPC_OSNULL) {
-        errcode = OSPC_ERR_BUF_EMPTY;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvBfrAddr == OSPC_OSNULL) {
+            errcode = OSPC_ERR_BUF_EMPTY;
+        }
     }
-    if (*ospvBfrAddr == OSPC_OSNULL) {
-        errcode = OSPC_ERR_BUF_EMPTY;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (*ospvBfrAddr == OSPC_OSNULL) {
+            errcode = OSPC_ERR_BUF_EMPTY;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -120,6 +131,7 @@ int OSPPXMLDocAddElem(          /* returns error code */
             vallen = 0;
         }
     }
+
     if (errcode == OSPC_ERR_NO_ERROR) {
         /**** STEP 1: begin with the opening bracket */
         errcode = OSPPXMLDocAddChar(ospvBfrAddr, OSPC_XMLDOC_OPEN);
@@ -251,11 +263,17 @@ int OSPPXMLDocAddElemName(      /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvBfrAddr == OSPC_OSNULL) {
-        errcode = OSPC_ERR_BUF_EMPTY;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvBfrAddr == OSPC_OSNULL) {
+            errcode = OSPC_ERR_BUF_EMPTY;
+        }
     }
-    if (*ospvBfrAddr == OSPC_OSNULL) {
-        errcode = OSPC_ERR_BUF_EMPTY;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (*ospvBfrAddr == OSPC_OSNULL) {
+            errcode = OSPC_ERR_BUF_EMPTY;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {

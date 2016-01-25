@@ -238,113 +238,111 @@ unsigned OSPPUsageCnfFromElement(   /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvUsageCnf == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NO_USAGECNF;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvUsageCnf == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_USAGECNF;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
         OSPPListNew(ospvUsageCnf);
 
-        if (errcode == OSPC_ERR_NO_ERROR) {
-            if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) ==
-                OSPC_MELEM_MESSAGE) {
-                OSPPUsageCnfMessageIdFromElement(ospvElem, &messageId);
+        if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) ==
+            OSPC_MELEM_MESSAGE)
+        {
+            OSPPUsageCnfMessageIdFromElement(ospvElem, &messageId);
 
-                /* ospvElem is pointing to the Message element.
-                 * The first child contains the Component element.
-                 * The following two lines of code change ospvElem from
-                 * pointing to the Message element to the Component element.
+            /* ospvElem is pointing to the Message element.
+             * The first child contains the Component element.
+             * The following two lines of code change ospvElem from
+             * pointing to the Message element to the Component element.
+             */
+            parent = ospvElem;
+            ospvElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(parent);
+        }
+
+        for (elem1 = (OSPT_XML_ELEM *)OSPPListFirst((OSPTLIST *)ospvElem);
+             (elem1 != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
+             elem1 = (OSPT_XML_ELEM *)OSPPListNext((OSPTLIST *)ospvElem, elem1))
+        {
+            /* create the usage confirmation object */
+            usagecnf = OSPPUsageCnfNew();
+            if (usagecnf == OSPC_OSNULL) {
+                errcode = OSPC_ERR_DATA_NO_USAGECNF;
+            } else {
+                /*
+                 * The Usage Confirmation element should consist of several child
+                 * elements. We'll run through what's there and pick out
+                 * the information we need.
                  */
-                parent = ospvElem;
-                ospvElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(parent);
-            }
+                if (messageId != OSPC_OSNULL) {
+                    OSPPUsageCnfSetMessageId(usagecnf, messageId);
+                }
 
-            for (elem1 = (OSPT_XML_ELEM *)OSPPListFirst((OSPTLIST *)ospvElem);
-                 (elem1 != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
-                 elem1 = (OSPT_XML_ELEM *)OSPPListNext((OSPTLIST *)ospvElem, elem1))
-            {
-                /* create the usage confirmation object */
-                usagecnf = OSPPUsageCnfNew();
-
-                if (usagecnf == OSPC_OSNULL) {
-                    errcode = OSPC_ERR_DATA_NO_USAGECNF;
-                } else {
-                    /*
-                     * The Usage Confirmation element should consist of several child
-                     * elements. We'll run through what's there and pick out
-                     * the information we need.
-                     */
-
-                    if (messageId != OSPC_OSNULL) {
-                        OSPPUsageCnfSetMessageId(usagecnf, messageId);
+                if (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem1)) == OSPC_MELEM_USAGECNF) {
+                    /* Get ComponentId */
+                    if (elem1 != OSPC_OSNULL) {
+                        OSPPUsageCnfComponentIdFromElement(elem1, &compid);
+                        if (compid != OSPC_OSNULL) {
+                            OSPPUsageCnfSetComponentId(usagecnf, compid);
+                        }
                     }
 
-                    if (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem1)) ==
-                        OSPC_MELEM_USAGECNF) {
-                        /* Get ComponentId */
-                        if (elem1 != OSPC_OSNULL) {
-                            OSPPUsageCnfComponentIdFromElement(elem1, &compid);
+                    for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(elem1);
+                        (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
+                         elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(elem1, elem))
+                    {
+                        switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
+                        case OSPC_MELEM_MESSAGE:
+                            if (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)) == OSPC_MELEM_MESSAGE) {
+                                OSPPUsageCnfMessageIdFromElement(elem, &messageId);
+                                if (messageId != OSPC_OSNULL) {
+                                    OSPPUsageCnfSetMessageId(usagecnf, messageId);
+                                }
+                            }
+                            break;
+                        case OSPC_MELEM_USAGECNF:
+                            OSPPUsageCnfComponentIdFromElement(elem, &compid);
                             if (compid != OSPC_OSNULL) {
                                 OSPPUsageCnfSetComponentId(usagecnf, compid);
                             }
-                        }
-
-                        for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(elem1);
-                            (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
-                             elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(elem1, elem))
-                        {
-                            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
-                            case OSPC_MELEM_MESSAGE:
-                                if (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem)) == OSPC_MELEM_MESSAGE) {
-                                    OSPPUsageCnfMessageIdFromElement(elem, &messageId);
-                                    if (messageId != OSPC_OSNULL) {
-                                        OSPPUsageCnfSetMessageId(usagecnf, messageId);
-                                    }
-                                }
-                                break;
-                            case OSPC_MELEM_USAGECNF:
-                                OSPPUsageCnfComponentIdFromElement(elem, &compid);
-                                if (compid != OSPC_OSNULL) {
-                                    OSPPUsageCnfSetComponentId(usagecnf, compid);
-                                }
-                                break;
-                            case OSPC_MELEM_TIMESTAMP:
-                                errcode = OSPPMsgTimeFromElement(elem, &t);
-                                if (errcode == OSPC_ERR_NO_ERROR) {
-                                    OSPPUsageCnfSetTimestamp(usagecnf, t);
-                                }
-                                break;
-                            case OSPC_MELEM_STATUS:
-                                if (usagecnf->Status == OSPC_OSNULL) {
-                                    /* usagecnf->ospmUsageCnfStatus = OSPPStatusNew(); */
-                                    errcode = OSPPStatusFromElement(elem, &(usagecnf->Status));
-                                }
-                                break;
-                            case OSPC_MELEM_AUDIT:
-                                errcode = OSPPTNAuditFromElement(elem, &(usagecnf->TNAudit));
-                                break;
-                            case OSPC_MELEM_CSAUDITTRIGGER:
-                                errcode = OSPPCSAuditFromElement(elem, &(usagecnf->CSAudit));
-                                break;
-                            default:
-                                /*
-                                 * This is an element we don't understand. If it's
-                                 * critical, then we have to report an error.
-                                 * Otherwise we can ignore it.
-                                 */
-                                if (OSPPMsgElemIsCritical(elem)) {
-                                    errcode = OSPC_ERR_XML_BAD_ELEMENT;
-                                }
-                                break;
+                            break;
+                        case OSPC_MELEM_TIMESTAMP:
+                            errcode = OSPPMsgTimeFromElement(elem, &t);
+                            if (errcode == OSPC_ERR_NO_ERROR) {
+                                OSPPUsageCnfSetTimestamp(usagecnf, t);
                             }
+                            break;
+                        case OSPC_MELEM_STATUS:
+                            if (usagecnf->Status == OSPC_OSNULL) {
+                                /* usagecnf->ospmUsageCnfStatus = OSPPStatusNew(); */
+                                errcode = OSPPStatusFromElement(elem, &(usagecnf->Status));
+                            }
+                            break;
+                        case OSPC_MELEM_AUDIT:
+                            errcode = OSPPTNAuditFromElement(elem, &(usagecnf->TNAudit));
+                            break;
+                        case OSPC_MELEM_CSAUDITTRIGGER:
+                            errcode = OSPPCSAuditFromElement(elem, &(usagecnf->CSAudit));
+                            break;
+                        default:
+                            /*
+                             * This is an element we don't understand. If it's
+                             * critical, then we have to report an error.
+                             * Otherwise we can ignore it.
+                             */
+                            if (OSPPMsgElemIsCritical(elem)) {
+                                errcode = OSPC_ERR_XML_BAD_ELEMENT;
+                            }
+                            break;
                         }
                     }
-
-                    if (errcode == OSPC_ERR_NO_ERROR) {
-                        if (usagecnf != OSPC_OSNULL) {
-                            OSPPListAppend(ospvUsageCnf, usagecnf);
-                            usagecnf = OSPC_OSNULL;
-                        }
+                }
+                 if (errcode == OSPC_ERR_NO_ERROR) {
+                    if (usagecnf != OSPC_OSNULL) {
+                        OSPPListAppend(ospvUsageCnf, usagecnf);
+                        usagecnf = OSPC_OSNULL;
                     }
                 }
             }

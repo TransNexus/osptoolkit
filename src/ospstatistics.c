@@ -92,14 +92,16 @@ int OSPPStatsToElement(
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_STATISTICS), "");
         if (*ospvElem == OSPC_OSNULL) {
             errcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+        if (attr == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_NO_ATTR;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(*ospvElem, attr);
-                attr = OSPC_OSNULL;
-            }
+            OSPPXMLElemAddAttr(*ospvElem, attr);
+            attr = OSPC_OSNULL;
         }
     }
 
@@ -203,17 +205,15 @@ int OSPPStatsToElement(
     }
 
     if (errcode != OSPC_ERR_NO_ERROR) {
+        if (attr != OSPC_OSNULL) {
+            OSPPXMLAttrDelete(&attr);
+        }
+        if (elem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(&elem);
+        }
         if (*ospvElem != OSPC_OSNULL) {
             OSPPXMLElemDelete(ospvElem);
         }
-    }
-
-    if (elem != OSPC_OSNULL) {
-        OSPPXMLElemDelete(&elem);
-    }
-
-    if (attr != OSPC_OSNULL) {
-        OSPPXMLAttrDelete(&attr);
     }
 
     return errcode;
@@ -545,124 +545,134 @@ int OSPPStatsOneWayToElement(
         errorcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvStats == OSPC_OSNULL) {
-        errorcode = OSPC_ERR_DATA_NO_STATS;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (ospvStats == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_DATA_NO_STATS;
+        }
     }
+
     if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ONEWAYDELAY), "");
         if (*ospvElem == OSPC_OSNULL) {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+        if (attr == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_XML_NO_ATTR;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(*ospvElem, attr);
-                attr = OSPC_OSNULL;
-            }
+            OSPPXMLElemAddAttr(*ospvElem, attr);
+            attr = OSPC_OSNULL;
         }
     }
 
     /* Minimum */
-    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_MINIMUM))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetOneWayMinimum(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_MINIMUM),
-            &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_MINIMUM)) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetOneWayMinimum(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_MINIMUM), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                   attr = OSPC_OSNULL;
+                   OSPPXMLElemAddChild(*ospvElem, elem);
+                   elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* Maximum */
-    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_MAXIMUM))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetOneWayMaximum(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_MAXIMUM),
-            &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_MAXIMUM)) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetOneWayMaximum(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_MAXIMUM), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* Mean */
-    if ((errorcode == OSPC_ERR_NO_ERROR)  && (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_MEAN))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetOneWayMean(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_MEAN), &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_MEAN)) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetOneWayMean(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_MEAN), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* Variance */
-    if ((errorcode == OSPC_ERR_NO_ERROR)  && (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_VARIANCE))) {
-        errorcode = OSPPMsgFloatToElement(OSPPStatsGetOneWayVariance(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_VARIANCE),
-            &elem);
-
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_VARIANCE)) {
+            errorcode = OSPPMsgFloatToElement(OSPPStatsGetOneWayVariance(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_VARIANCE), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* Samples */
-    if ((errorcode == OSPC_ERR_NO_ERROR)  && (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_SAMPLES))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetOneWaySamples(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_SAMPLES),
-            &elem);
-
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasOneWay(ospvStats, OSPC_SVALUE_SAMPLES)) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetOneWaySamples(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_SAMPLES), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* clean up */
-    if (attr != OSPC_OSNULL) {
-        OSPM_FREE(attr);
-        attr = OSPC_OSNULL;
-    }
-
-    if (elem != OSPC_OSNULL) {
-        OSPM_FREE(elem);
-        elem = OSPC_OSNULL;
+    if (errorcode != OSPC_ERR_NO_ERROR) {
+        if (attr != OSPC_OSNULL) {
+            OSPM_FREE(attr);
+            attr = OSPC_OSNULL;
+        }
+        if (elem != OSPC_OSNULL) {
+            OSPM_FREE(elem);
+            elem = OSPC_OSNULL;
+        }
     }
 
     return errorcode;
@@ -681,127 +691,134 @@ int OSPPStatsTwoWayToElement(
         errorcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvStats == OSPC_OSNULL) {
-        errorcode = OSPC_ERR_DATA_NO_STATS;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (ospvStats == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_DATA_NO_STATS;
+        }
     }
+
     if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TWOWAYDELAY), "");
         if (*ospvElem == OSPC_OSNULL) {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+        if (attr == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_XML_NO_ATTR;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(*ospvElem, attr);
-                attr = OSPC_OSNULL;
-            }
+            OSPPXMLElemAddAttr(*ospvElem, attr);
+            attr = OSPC_OSNULL;
         }
     }
 
     /* Minimum */
-    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasTwoWay(ospvStats, OSPC_SVALUE_MINIMUM))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetTwoWayMinimum(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_MINIMUM),
-            &elem);
-
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasTwoWay(ospvStats, OSPC_SVALUE_MINIMUM)) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetTwoWayMinimum(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_MINIMUM), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* Maximum */
-    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasTwoWay(ospvStats, OSPC_SVALUE_MAXIMUM))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetTwoWayMaximum(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_MAXIMUM),
-            &elem);
-
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasTwoWay(ospvStats, OSPC_SVALUE_MAXIMUM))) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetTwoWayMaximum(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_MAXIMUM), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* Mean */
-    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasTwoWay(ospvStats, OSPC_SVALUE_MEAN))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetTwoWayMean(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_MEAN), &elem);
-
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasTwoWay(ospvStats, OSPC_SVALUE_MEAN)) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetTwoWayMean(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_MEAN), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* Variance */
-    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasTwoWay(ospvStats, OSPC_SVALUE_VARIANCE))) {
-        errorcode = OSPPMsgFloatToElement(OSPPStatsGetTwoWayVariance(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_VARIANCE),
-            &elem);
-
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasTwoWay(ospvStats, OSPC_SVALUE_VARIANCE)) {
+            errorcode = OSPPMsgFloatToElement(OSPPStatsGetTwoWayVariance(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_VARIANCE), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* Samples */
-    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasTwoWay(ospvStats, OSPC_SVALUE_SAMPLES))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetTwoWaySamples(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_SAMPLES),
-            &elem);
-
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasTwoWay(ospvStats, OSPC_SVALUE_SAMPLES))) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetTwoWaySamples(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_SAMPLES), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* clean up */
-    if (attr != OSPC_OSNULL) {
-        OSPM_FREE(attr);
-        attr = OSPC_OSNULL;
-    }
-
-    if (elem != OSPC_OSNULL) {
-        OSPM_FREE(elem);
-        elem = OSPC_OSNULL;
+    if (errorcode != OSPC_ERR_NO_ERROR) {
+        if (attr != OSPC_OSNULL) {
+            OSPM_FREE(attr);
+            attr = OSPC_OSNULL;
+        }
+        if (elem != OSPC_OSNULL) {
+            OSPM_FREE(elem);
+            elem = OSPC_OSNULL;
+        }
     }
 
     return errorcode;
@@ -820,70 +837,77 @@ int OSPPStatsLossSentToElement(
         errorcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvStats == OSPC_OSNULL) {
-        errorcode = OSPC_ERR_DATA_NO_STATS;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (ospvStats == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_DATA_NO_STATS;
+        }
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_LOSSSENT), "");
         if (*ospvElem == OSPC_OSNULL) {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+        if (attr == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_XML_NO_ATTR;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(*ospvElem, attr);
-                attr = OSPC_OSNULL;
-            }
+            OSPPXMLElemAddAttr(*ospvElem, attr);
+            attr = OSPC_OSNULL;
         }
     }
 
     /* Loss Packets Sent */
-    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasLossSent(ospvStats, OSPC_SVALUE_PACKETS))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetPktSent(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_PACKETS),
-            &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasLossSent(ospvStats, OSPC_SVALUE_PACKETS)) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetPktSent(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_PACKETS), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* Loss Fraction Sent */
-    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasLossSent(ospvStats, OSPC_SVALUE_FRACTION))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetFracSent(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_FRACTION),
-            &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasLossSent(ospvStats, OSPC_SVALUE_FRACTION)) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetFracSent(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_FRACTION), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* clean up */
-    if (attr != OSPC_OSNULL) {
-        OSPM_FREE(attr);
-        attr = OSPC_OSNULL;
-    }
-
-    if (elem != OSPC_OSNULL) {
-        OSPM_FREE(elem);
-        elem = OSPC_OSNULL;
+    if (errorcode != OSPC_ERR_NO_ERROR) {
+        if (attr != OSPC_OSNULL) {
+            OSPM_FREE(attr);
+            attr = OSPC_OSNULL;
+        }
+        if (elem != OSPC_OSNULL) {
+            OSPM_FREE(elem);
+            elem = OSPC_OSNULL;
+        }
     }
 
     return errorcode;
@@ -902,70 +926,77 @@ int OSPPStatsLossReceivedToElement(
         errorcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvStats == OSPC_OSNULL) {
-        errorcode = OSPC_ERR_DATA_NO_STATS;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (ospvStats == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_DATA_NO_STATS;
+        }
     }
 
     if (errorcode == OSPC_ERR_NO_ERROR) {
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_LOSSRCVD), "");
         if (*ospvElem == OSPC_OSNULL) {
             errorcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+        if (attr == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_XML_NO_ATTR;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(*ospvElem, attr);
-                attr = OSPC_OSNULL;
-            }
+            OSPPXMLElemAddAttr(*ospvElem, attr);
+            attr = OSPC_OSNULL;
         }
     }
 
     /* Loss Packets Received */
-    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasLossReceived(ospvStats, OSPC_SVALUE_PACKETS))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetPktReceived(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_PACKETS),
-            &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasLossReceived(ospvStats, OSPC_SVALUE_PACKETS)) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetPktReceived(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_PACKETS), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* Loss Fraction Received */
-    if ((errorcode == OSPC_ERR_NO_ERROR) && (OSPPStatsHasLossReceived(ospvStats, OSPC_SVALUE_FRACTION))) {
-        errorcode = OSPPMsgNumToElement(OSPPStatsGetFracReceived(ospvStats),
-            OSPPMsgElemGetName(OSPC_MELEM_FRACTION),
-            &elem);
-        if (errorcode == OSPC_ERR_NO_ERROR) {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
-            if (attr == OSPC_OSNULL) {
-                errorcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(elem, attr);
-                attr = OSPC_OSNULL;
-                OSPPXMLElemAddChild(*ospvElem, elem);
-                elem = OSPC_OSNULL;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPStatsHasLossReceived(ospvStats, OSPC_SVALUE_FRACTION)) {
+            errorcode = OSPPMsgNumToElement(OSPPStatsGetFracReceived(ospvStats),
+                OSPPMsgElemGetName(OSPC_MELEM_FRACTION), &elem);
+            if (errorcode == OSPC_ERR_NO_ERROR) {
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_CRITICAL), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+                if (attr == OSPC_OSNULL) {
+                    errorcode = OSPC_ERR_XML_NO_ATTR;
+                } else {
+                    OSPPXMLElemAddAttr(elem, attr);
+                    attr = OSPC_OSNULL;
+                    OSPPXMLElemAddChild(*ospvElem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
-    /* clean up */
-    if (attr != OSPC_OSNULL) {
-        OSPM_FREE(attr);
-        attr = OSPC_OSNULL;
-    }
-
-    if (elem != OSPC_OSNULL) {
-        OSPM_FREE(elem);
-        elem = OSPC_OSNULL;
+     /* clean up */
+    if (errorcode != OSPC_ERR_NO_ERROR) {
+        if (attr != OSPC_OSNULL) {
+            OSPM_FREE(attr);
+            attr = OSPC_OSNULL;
+        }
+        if (elem != OSPC_OSNULL) {
+            OSPM_FREE(elem);
+            elem = OSPC_OSNULL;
+        }
     }
 
     return errorcode;
@@ -1417,8 +1448,14 @@ int OSPPStatsValueToElement(
     int ivalue;
     float fvalue;
 
-    if (ospvStats == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NO_STATS;
+    if (ospvElem == OSPC_OSNULL) {
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvStats == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_STATS;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -1585,12 +1622,6 @@ int OSPPStatsValueToElement(
             break;
         default:
             errcode = OSPC_ERR_DATA_INVALID_TYPE;
-        }
-    }
-
-    if (errcode == OSPC_ERR_NO_ERROR) {
-        if (ospvElem == OSPC_OSNULL) {
-            errcode = OSPC_ERR_XML_NO_ELEMENT;
         }
     }
 
@@ -1803,16 +1834,16 @@ int OSPPStatsValueToElement(
         }
     }
 
-    if (statselem != OSPC_OSNULL) {
-        OSPPXMLElemDelete(&statselem);
-    }
-
-    if (valueelem != OSPC_OSNULL) {
-        OSPPXMLElemDelete(&valueelem);
-    }
-
-    if (attr != OSPC_OSNULL) {
-        OSPPXMLAttrDelete(&attr);
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        if (attr != OSPC_OSNULL) {
+            OSPPXMLAttrDelete(&attr);
+        }
+        if (statselem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(&statselem);
+        }
+        if (valueelem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(&valueelem);
+        }
     }
 
     return errcode;

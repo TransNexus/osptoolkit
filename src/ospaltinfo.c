@@ -225,21 +225,32 @@ unsigned OSPPAltInfoToElement(      /* returns error code */
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvAltInfo == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NO_ALTINFO;
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvAltInfo == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_ALTINFO;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ospvPart), OSPPAltInfoGetValue(ospvAltInfo));
-        if (ospvElem == OSPC_OSNULL) {
+        if (*ospvElem == OSPC_OSNULL) {
             errcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->Type));
+        if (attr == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_NO_ATTR;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(ospvAltInfo->Type));
-            if (attr == OSPC_OSNULL) {
-                errcode = OSPC_ERR_XML_NO_ATTR;
-            } else {
-                OSPPXMLElemAddAttr(*ospvElem, attr);
-            }
+            OSPPXMLElemAddAttr(*ospvElem, attr);
+        }
+    }
+
+    /* if for any reason we found an error - destroy any elements created */
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
         }
     }
 

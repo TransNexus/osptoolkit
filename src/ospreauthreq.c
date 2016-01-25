@@ -118,7 +118,7 @@ void OSPPReauthReqSetSourceNumber(  /* nothing returned */
     if (ospvReauthReq != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
             if (OSPM_STRLEN(ospvNum) < OSPC_SIZE_E164NUM) {
-                OSPM_STRNCPY(ospvReauthReq->SourceNumber, ospvNum, OSPC_SIZE_E164NUM - 1);
+                OSPM_STRNCPY(ospvReauthReq->SourceNumber, ospvNum, OSPC_SIZE_E164NUM);
             }
         }
     }
@@ -151,7 +151,7 @@ void OSPPReauthReqSetDestNumber(    /* nothing returned */
     if (ospvReauthReq != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
             if (OSPM_STRLEN(ospvNum) < OSPC_SIZE_E164NUM) {
-                OSPM_STRNCPY(ospvReauthReq->DestinationNumber, ospvNum, OSPC_SIZE_E164NUM - 1);
+                OSPM_STRNCPY(ospvReauthReq->DestinationNumber, ospvNum, OSPC_SIZE_E164NUM);
             }
         }
     }
@@ -612,48 +612,54 @@ int OSPPReauthReqToElement(         /* returns error code */
 
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
-    } else {
-        *ospvElem = OSPC_OSNULL;
-    }
-    if (ospvReauthReq == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NO_REAUTHREQ;
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
-        /* create the "Message" element as the parent */
+        if (ospvReauthReq == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_REAUTHREQ;
+        }
+    }
+
+    /* create the "Message" element as the parent */
+    if (errcode == OSPC_ERR_NO_ERROR) {
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_MESSAGE), "");
         if (*ospvElem == OSPC_OSNULL) {
             errcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID),
+            OSPPReauthReqHasMessageId(ospvReauthReq) ? (const char *)(ospvReauthReq->MessageId) : "NULL");
+        if (attr == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_NO_ATTR;
         } else {
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_MESSAGEID),
-                OSPPReauthReqHasMessageId(ospvReauthReq) ? (const char *)(ospvReauthReq->MessageId) : "NULL");
+            OSPPXMLElemAddAttr(*ospvElem, attr);
+            attr = OSPC_OSNULL;
+        }
+    }
+
+    /* random */
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((OSPPUtilGetRandom(random, 0) > 0) && (errcode == OSPC_ERR_NO_ERROR)) {
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_RANDOM), (const char *)random);
             if (attr == OSPC_OSNULL) {
                 errcode = OSPC_ERR_XML_NO_ATTR;
             } else {
                 OSPPXMLElemAddAttr(*ospvElem, attr);
                 attr = OSPC_OSNULL;
             }
-
-            /* random */
-            if ((OSPPUtilGetRandom(random, 0) > 0) && (errcode == OSPC_ERR_NO_ERROR)) {
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_RANDOM), (const char *)random);
-                if (attr == OSPC_OSNULL) {
-                    errcode = OSPC_ERR_XML_NO_ATTR;
-                } else {
-                    OSPPXMLElemAddAttr(*ospvElem, attr);
-                    attr = OSPC_OSNULL;
-                }
-            }
         }
     }
 
+    /* now the message type element */
     if (errcode == OSPC_ERR_NO_ERROR) {
-        /* now the message type element */
         reauthelem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_REAUTHREQ), "");
         if (*ospvElem == OSPC_OSNULL) {
             errcode = OSPC_ERR_XML_NO_ELEMENT;
         }
     }
+
     /*
      * now add the attributes to the type element -- in this case the component id
      */
@@ -668,29 +674,36 @@ int OSPPReauthReqToElement(         /* returns error code */
     }
 
     /* now add the children */
+
     /* add timestamp  */
-    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasTimestamp(ospvReauthReq)) {
-        errcode = OSPPMsgTimeToElement(OSPPReauthReqGetTimestamp(ospvReauthReq), OSPPMsgElemGetName(OSPC_MELEM_TIMESTAMP), &elem);
-    }
     if (errcode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddChild(reauthelem, elem);
+        if (OSPPReauthReqHasTimestamp(ospvReauthReq)) {
+            errcode = OSPPMsgTimeToElement(OSPPReauthReqGetTimestamp(ospvReauthReq), OSPPMsgElemGetName(OSPC_MELEM_TIMESTAMP), &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(reauthelem, elem);
+            }
+        }
     }
 
     /* add role  */
-    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasRole(ospvReauthReq)) {
-        errcode = OSPPStringToElement(OSPC_MELEM_ROLE, OSPPRoleGetName(OSPPReauthReqGetRole(ospvReauthReq)), 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
-        if (errcode == OSPC_ERR_NO_ERROR) {
-            OSPPXMLElemAddChild(reauthelem, elem);
-            elem = OSPC_OSNULL;
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPReauthReqHasRole(ospvReauthReq)) {
+            errcode = OSPPStringToElement(OSPC_MELEM_ROLE, OSPPRoleGetName(OSPPReauthReqGetRole(ospvReauthReq)), 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(reauthelem, elem);
+                elem = OSPC_OSNULL;
+            }
         }
     }
 
     /* add the call ID */
-    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasCallId(ospvReauthReq)) {
-        errcode = OSPPCallIdToElement(OSPPReauthReqGetCallId(ospvReauthReq), &elem, isbase64);
-    }
     if (errcode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddChild(reauthelem, elem);
+        if (OSPPReauthReqHasCallId(ospvReauthReq)) {
+            errcode = OSPPCallIdToElement(OSPPReauthReqGetCallId(ospvReauthReq), &elem, isbase64);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(reauthelem, elem);
+            }
+        }
     }
 
     /* add the source number */
@@ -703,26 +716,33 @@ int OSPPReauthReqToElement(         /* returns error code */
     }
 
     /* add the device info element */
-    if ((errcode == OSPC_ERR_NO_ERROR) && (ospvReauthReq->DeviceInfo != NULL)) {
-        for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvReauthReq->DeviceInfo));
-             ((altinfo != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR));
-             altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvReauthReq->DeviceInfo), altinfo)) {
-            errcode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(reauthelem, elem);
-                elem = OSPC_OSNULL;
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvReauthReq->DeviceInfo != NULL) {
+            for (altinfo = (OSPT_ALTINFO *)OSPPListFirst(&(ospvReauthReq->DeviceInfo));
+                ((altinfo != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR));
+                altinfo = (OSPT_ALTINFO *)OSPPListNext(&(ospvReauthReq->DeviceInfo), altinfo))
+            {
+                errcode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DEVICEINFO);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(reauthelem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* add the source alternates */
-    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasSourceAlt(ospvReauthReq)) {
-        for (altinfo = OSPPReauthReqFirstSourceAlt(ospvReauthReq);
-             ((altinfo != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR)); altinfo = OSPPReauthReqNextSourceAlt(ospvReauthReq, altinfo)) {
-            errcode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(reauthelem, elem);
-                elem = OSPC_OSNULL;
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasSourceAlt(ospvReauthReq)) {
+            for (altinfo = OSPPReauthReqFirstSourceAlt(ospvReauthReq);
+                ((altinfo != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR));
+                altinfo = OSPPReauthReqNextSourceAlt(ospvReauthReq, altinfo))
+            {
+                errcode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_SRCALT);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(reauthelem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
@@ -737,47 +757,57 @@ int OSPPReauthReqToElement(         /* returns error code */
     }
 
     /* add the destination alternates */
-    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasDestinationAlt(ospvReauthReq)) {
-        for (altinfo = OSPPReauthReqFirstDestinationAlt(ospvReauthReq);
-             ((altinfo != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR)); altinfo = OSPPReauthReqNextDestinationAlt(ospvReauthReq, altinfo)) {
-            errcode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DESTALT);
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(reauthelem, elem);
-                elem = OSPC_OSNULL;
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPReauthReqHasDestinationAlt(ospvReauthReq)) {
+            for (altinfo = OSPPReauthReqFirstDestinationAlt(ospvReauthReq);
+                ((altinfo != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR));
+                altinfo = OSPPReauthReqNextDestinationAlt(ospvReauthReq, altinfo))
+            {
+                errcode = OSPPAltInfoToElement(altinfo, &elem, OSPC_MELEM_DESTALT);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(reauthelem, elem);
+                    elem = OSPC_OSNULL;
+                }
             }
         }
     }
 
     /* add the transaction ID */
-    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasTrxId(ospvReauthReq)) {
-        trxid = OSPPReauthReqGetTrxId(ospvReauthReq);
-        errcode = OSPPMsgTXToElement(trxid, OSPPMsgElemGetName(OSPC_MELEM_TRANSID), &elem);
-    }
     if (errcode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddChild(reauthelem, elem);
+        if (OSPPReauthReqHasTrxId(ospvReauthReq)) {
+            trxid = OSPPReauthReqGetTrxId(ospvReauthReq);
+            errcode = OSPPMsgTXToElement(trxid, OSPPMsgElemGetName(OSPC_MELEM_TRANSID), &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(reauthelem, elem);
+            }
+        }
     }
 
     /* add usage detail (if appropriate) */
-    if ((errcode == OSPC_ERR_NO_ERROR) && OSPPReauthReqHasDuration(ospvReauthReq)) {
-        /* Create usage detail element */
-        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_USAGEDETAIL), "");
-        if (elem == OSPC_OSNULL) {
-            errcode = OSPC_ERR_XML_NO_ELEMENT;
-        } else {
-            errcode = OSPPUsageToElement((unsigned)OSPPReauthReqGetDuration(ospvReauthReq), 0, 0, 0, 0, 0, 0, 0, elem);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPReauthReqHasDuration(ospvReauthReq)) {
+            /* Create usage detail element */
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_USAGEDETAIL), "");
+            if (elem == OSPC_OSNULL) {
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
+            }
         }
+    }
 
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPUsageToElement((unsigned)OSPPReauthReqGetDuration(ospvReauthReq), 0, 0, 0, 0, 0, 0, 0, elem);
         if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(reauthelem, elem);
             elem = OSPC_OSNULL;
         }
     }
 
+
+    /* add any tokens */
     if (errcode == OSPC_ERR_NO_ERROR) {
-        /* add any tokens */
         for (token = (OSPT_TOKEN *)OSPPReauthReqFirstToken(ospvReauthReq);
-             ((token != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR)); token =
-             (OSPT_TOKEN *)OSPPReauthReqNextToken(ospvReauthReq, token))
+            ((token != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR));
+            token = (OSPT_TOKEN *)OSPPReauthReqNextToken(ospvReauthReq, token))
         {
             errcode = OSPPTokenToElement(token, &elem);
             if (errcode == OSPC_ERR_NO_ERROR) {
@@ -790,14 +820,12 @@ int OSPPReauthReqToElement(         /* returns error code */
     if (errcode == OSPC_ERR_NO_ERROR) {
         if (OSPPReauthReqHasCustId(ospvReauthReq)) {
             errcode = OSPPMsgNumToElement(OSPPReauthReqGetCustId(ospvReauthReq), OSPPMsgElemGetName(OSPC_MELEM_CUSTID), &elem);
-
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(reauthelem, elem);
                 elem = OSPC_OSNULL;
 
                 if (OSPPReauthReqHasDeviceId(ospvReauthReq)) {
                     errcode = OSPPMsgNumToElement(OSPPReauthReqGetDeviceId(ospvReauthReq), OSPPMsgElemGetName(OSPC_MELEM_DEVICEID), &elem);
-
                     if (errcode == OSPC_ERR_NO_ERROR) {
                         OSPPXMLElemAddChild(reauthelem, elem);
                         elem = OSPC_OSNULL;
@@ -826,20 +854,17 @@ int OSPPReauthReqToElement(         /* returns error code */
 
     /* if for any reason we found an error - destroy any elements created */
     if (errcode != OSPC_ERR_NO_ERROR) {
-        if (*ospvElem != OSPC_OSNULL) {
-            OSPPXMLElemDelete(ospvElem);
+        if (attr != OSPC_OSNULL) {
+            OSPPXMLAttrDelete(&attr);
         }
-
         if (elem != OSPC_OSNULL) {
             OSPPXMLElemDelete(&elem);
         }
-
         if (reauthelem != OSPC_OSNULL) {
             OSPPXMLElemDelete(&reauthelem);
         }
-
-        if (attr != OSPC_OSNULL) {
-            OSPPXMLAttrDelete(&attr);
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
         }
     }
 

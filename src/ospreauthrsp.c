@@ -182,12 +182,22 @@ int OSPPReauthRspFromElement(       /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvReauthRsp == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NO_REAUTHRSP;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvReauthRsp == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_REAUTHRSP;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
+        /* create the reauthorization response object */
+        reauthrsp = OSPPReauthRspNew();
+        if (reauthrsp == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_REAUTHRSP;
+        }
+    }
 
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_MESSAGE) {
             OSPPReauthRspMessageIdFromElement(ospvElem, &messageId);
             OSPPReauthRspSetMessageId(reauthrsp, messageId);
@@ -201,72 +211,58 @@ int OSPPReauthRspFromElement(       /* returns error code */
             ospvElem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(parent);
         }
 
-        /* create the reauthorization response object */
-        reauthrsp = OSPPReauthRspNew();
-
-        if (reauthrsp == OSPC_OSNULL) {
-
-            errcode = OSPC_ERR_DATA_NO_REAUTHRSP;
-        } else {
-            /* Have to get ComponentId here */
-            if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_REAUTHREQ) {
-                OSPPReauthRspComponentIdFromElement(ospvElem, &compid);
-                if (compid != OSPC_OSNULL) {
-                    OSPPReauthRspSetComponentId(reauthrsp, compid);
-                }
+        /* Have to get ComponentId here */
+        if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_REAUTHREQ) {
+            OSPPReauthRspComponentIdFromElement(ospvElem, &compid);
+            if (compid != OSPC_OSNULL) {
+                OSPPReauthRspSetComponentId(reauthrsp, compid);
             }
         }
-    }
-    /*
-     * The Reauthorization Response element should consist of several
-     * child elements. We'll run through what's there and pick out
-     * the information we need.
-     */
-    if (errcode == OSPC_ERR_NO_ERROR) {
+
+        /*
+         * The Reauthorization Response element should consist of several
+         * child elements. We'll run through what's there and pick out
+         * the information we need.
+         */
         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
-             (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR); elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) {
+            (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem))
+        {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_MESSAGE:
                 if (messageId != OSPC_OSNULL) {
                     OSPPReauthRspSetMessageId(reauthrsp, messageId);
                 }
                 break;
-
             case OSPC_MELEM_REAUTHREQ:
                 if (compid != OSPC_OSNULL) {
                     OSPPReauthRspSetComponentId(reauthrsp, compid);
                 }
                 break;
-
             case OSPC_MELEM_TIMESTAMP:
                 errcode = OSPPMsgTimeFromElement(elem, &t);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPReauthRspSetTimestamp(reauthrsp, t);
                 }
                 break;
-
             case OSPC_MELEM_STATUS:
                 if (reauthrsp->Status == OSPC_OSNULL) {
                     errcode = OSPPStatusFromElement(elem, &(reauthrsp->Status));
                 }
                 break;
-
             case OSPC_MELEM_TRANSID:
                 errcode = OSPPMsgTXFromElement(elem, &transid);
                 OSPPReauthRspSetTrxId(reauthrsp, transid);
                 break;
-
             case OSPC_MELEM_AUDIT:
                 errcode = OSPPTNAuditFromElement(elem, &(reauthrsp->TNAudit));
                 break;
-
             case OSPC_MELEM_DEST:
                 errcode = OSPPDestFromElement(elem, &dest);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPReauthRspSetDest(reauthrsp, dest);
                 }
                 break;
-
             default:
                 /*
                  * This is an element we don't understand. If it's
@@ -285,8 +281,12 @@ int OSPPReauthRspFromElement(       /* returns error code */
         }
     }
 
-    if (errcode != OSPC_ERR_DATA_NO_REAUTHRSP) {
+    if (errcode != OSPC_ERR_NO_ERROR) {
         *ospvReauthRsp = reauthrsp;
+    } else {
+        if (reauthrsp != OSPC_OSNULL) {
+            OSPPReauthRspDelete(&reauthrsp);
+        }
     }
 
     return errcode;

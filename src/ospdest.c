@@ -116,7 +116,7 @@ void OSPPDestSetSrcNumber(  /* nothing returned */
 {
     if (ospvDest != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
-            OSPM_MEMCPY(ospvDest->SourceNumber, ospvNum, tr_min(OSPC_SIZE_E164NUM, OSPM_STRLEN(ospvNum) + 1));
+            OSPM_MEMCPY(ospvDest->SourceNumber, ospvNum, OSPM_MIN(OSPM_STRLEN(ospvNum) + 1, OSPC_SIZE_E164NUM));
         }
     }
 }
@@ -145,7 +145,7 @@ void OSPPDestSetNumber(     /* nothing returned */
 {
     if (ospvDest != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
-            OSPM_MEMCPY(ospvDest->DestinationNumber, ospvNum, tr_min(OSPC_SIZE_E164NUM, OSPM_STRLEN(ospvNum) + 1));
+            OSPM_MEMCPY(ospvDest->DestinationNumber, ospvNum, OSPM_MIN(OSPM_STRLEN(ospvNum) + 1, OSPC_SIZE_E164NUM));
         }
     }
 }
@@ -189,7 +189,7 @@ void OSPPDestSetAddr(       /* nothing returned */
 {
     if (ospvDest != OSPC_OSNULL) {
         if (ospvAddr != OSPC_OSNULL) {
-            OSPM_MEMCPY(ospvDest->DestinationAddr, ospvAddr, tr_min(OSPC_SIZE_SIGNALADDR, OSPM_STRLEN(ospvAddr) + 1));
+            OSPM_MEMCPY(ospvDest->DestinationAddr, ospvAddr, OSPM_MIN(OSPM_STRLEN(ospvAddr) + 1, OSPC_SIZE_SIGNALADDR));
         }
     }
 }
@@ -249,7 +249,7 @@ void OSPPDestSetNetworkAddr(    /* nothing returned */
 {
     if (ospvDest != OSPC_OSNULL) {
         if (ospvAddr != OSPC_OSNULL) {
-            OSPM_MEMCPY(ospvDest->NetworkId, ospvAddr, tr_min(OSPC_SIZE_NORID, OSPM_STRLEN(ospvAddr) + 1));
+            OSPM_MEMCPY(ospvDest->NetworkId, ospvAddr, OSPM_MIN(OSPM_STRLEN(ospvAddr) + 1, OSPC_SIZE_NORID));
         }
     }
 }
@@ -278,7 +278,7 @@ void OSPPDestDevSetAddr(    /* nothing returned */
 {
     if (ospvDest != OSPC_OSNULL) {
         if (ospvAddr != OSPC_OSNULL) {
-            OSPM_MEMCPY(ospvDest->DestinationDevAddr, ospvAddr, tr_min(OSPC_SIZE_SIGNALADDR, OSPM_STRLEN(ospvAddr) + 1));
+            OSPM_MEMCPY(ospvDest->DestinationDevAddr, ospvAddr, OSPM_MIN(OSPM_STRLEN(ospvAddr) + 1, OSPC_SIZE_SIGNALADDR));
         }
     }
 }
@@ -406,7 +406,7 @@ void OSPPDestSetAuthority(  /* nothing returned */
 {
     if (ospvDest != OSPC_OSNULL) {
         if (ospvAuth != OSPC_OSNULL) {
-            OSPM_STRNCPY(ospvDest->Authority, ospvAuth, tr_min(OSPM_STRLEN(ospvAuth) + 1, OSPC_SIZE_URL - 1));
+            OSPM_STRNCPY(ospvDest->Authority, ospvAuth, OSPM_MIN(OSPM_STRLEN(ospvAuth) + 1, OSPC_SIZE_URL));
         }
     }
 }
@@ -734,8 +734,11 @@ int OSPPDestFromElement(        /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         error = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvDest == OSPC_OSNULL) {
-        error = OSPC_ERR_DATA_NO_DEST;
+
+    if (error == OSPC_ERR_NO_ERROR) {
+        if (ospvDest == OSPC_OSNULL) {
+            error = OSPC_ERR_DATA_NO_DEST;
+        }
     }
 
     if (error == OSPC_ERR_NO_ERROR) {
@@ -744,7 +747,9 @@ int OSPPDestFromElement(        /* returns error code */
         if (dest == OSPC_OSNULL) {
             error = OSPC_ERR_DATA_NO_DEST;
         }
+    }
 
+    if (error == OSPC_ERR_NO_ERROR) {
         /*
          * The Destination element should consist of several child
          * elements. We'll run through what's there and pick out
@@ -829,9 +834,13 @@ int OSPPDestFromElement(        /* returns error code */
                 break;
             }
         }
+    }
 
-        if (error == OSPC_ERR_NO_ERROR) {
-            *ospvDest = dest;
+    if (error == OSPC_ERR_NO_ERROR) {
+        *ospvDest = dest;
+    } else {
+        if (dest != OSPC_OSNULL) {
+            OSPPDestDelete(&dest);
         }
     }
 
@@ -964,7 +973,7 @@ void OSPPSrcInfoFromElement(
                 OSPPDestSetSrcNumber(ospvDest, OSPPXMLElemGetValue(ospvElem));
                 break;
             case OSPC_ALTINFO_CNAM:
-                OSPM_STRNCPY(ospvDest->CNAM, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->CNAM) - 1);
+                OSPM_STRNCPY(ospvDest->CNAM, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->CNAM));
                 break;
             default:
                 break;
@@ -986,13 +995,13 @@ void OSPPDestInfoFromElement(
         if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_TYPE) {
             switch (OSPPAltInfoTypeGetPart(OSPPXMLAttrGetValue(attr))) {
             case OSPC_ALTINFO_E164:
-                OSPM_STRNCPY(ospvDest->DestinationNumber, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->DestinationNumber) - 1);
+                OSPM_STRNCPY(ospvDest->DestinationNumber, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->DestinationNumber));
                 break;
             case OSPC_ALTINFO_NPRN:
-                OSPM_STRNCPY(ospvDest->NPRn, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->NPRn) - 1);
+                OSPM_STRNCPY(ospvDest->NPRn, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->NPRn));
                 break;
             case OSPC_ALTINFO_NPCIC:
-                OSPM_STRNCPY(ospvDest->NPCic, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->NPCic) - 1);
+                OSPM_STRNCPY(ospvDest->NPCic, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->NPCic));
                 break;
             case OSPC_ALTINFO_NPDI:
                 if (OSPM_STRCASECMP(OSPPXMLElemGetValue(ospvElem), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE)) == 0) {
@@ -1002,34 +1011,34 @@ void OSPPDestInfoFromElement(
                 }
                 break;
             case OSPC_ALTINFO_SPID:
-                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_SPID], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_SPID]) - 1);
+                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_SPID], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_SPID]));
                 break;
             case OSPC_ALTINFO_ALTSPID:
-                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_ALTSPID], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_ALTSPID]) - 1);
+                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_ALTSPID], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_ALTSPID]));
                 break;
             case OSPC_ALTINFO_OCN:
-                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_OCN], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_OCN]) - 1);
+                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_OCN], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_OCN]));
                 break;
             case OSPC_ALTINFO_SPN:
-                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_SPN], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_SPN]) - 1);
+                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_SPN], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_SPN]));
                 break;
             case OSPC_ALTINFO_ALTSPN:
-                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_ALTSPN], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_ALTSPN]) - 1);
+                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_ALTSPN], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_ALTSPN]));
                 break;
             case OSPC_ALTINFO_MCC:
-                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_MCC], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_MCC]) - 1);
+                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_MCC], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_MCC]));
                 break;
             case OSPC_ALTINFO_MNC:
-                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_MNC], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_MNC]) - 1);
+                OSPM_STRNCPY(ospvDest->OpName[OSPC_OPNAME_MNC], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->OpName[OSPC_OPNAME_MNC]));
                 break;
             case OSPC_ALTINFO_SIP:
-                OSPM_STRNCPY(ospvDest->URL[OSPC_URL_SIP], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->URL[OSPC_URL_SIP]) - 1);
+                OSPM_STRNCPY(ospvDest->URL[OSPC_URL_SIP], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->URL[OSPC_URL_SIP]));
                 break;
             case OSPC_ALTINFO_SMS:
-                OSPM_STRNCPY(ospvDest->URL[OSPC_URL_SMS], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->URL[OSPC_URL_SMS]) - 1);
+                OSPM_STRNCPY(ospvDest->URL[OSPC_URL_SMS], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->URL[OSPC_URL_SMS]));
                 break;
             case OSPC_ALTINFO_MMS:
-                OSPM_STRNCPY(ospvDest->URL[OSPC_URL_MMS], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->URL[OSPC_URL_MMS]) - 1);
+                OSPM_STRNCPY(ospvDest->URL[OSPC_URL_MMS], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->URL[OSPC_URL_MMS]));
                 break;
             default:
                 break;

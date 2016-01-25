@@ -169,7 +169,7 @@ void OSPPAuthIndSetSourceNumber(
 {
     if (ospvAuthInd != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
-            OSPM_STRNCPY(ospvAuthInd->SourceNumber, ospvNum, tr_min(OSPM_STRLEN(ospvNum) + 1, OSPC_SIZE_E164NUM - 1));
+            OSPM_STRNCPY(ospvAuthInd->SourceNumber, ospvNum, OSPM_MIN(OSPM_STRLEN(ospvNum) + 1, OSPC_SIZE_E164NUM));
         }
     }
 }
@@ -213,7 +213,7 @@ void OSPPAuthIndSetDestNumber(
 {
     if (ospvAuthInd != OSPC_OSNULL) {
         if (ospvNum != OSPC_OSNULL) {
-            OSPM_STRNCPY(ospvAuthInd->DestinationNumber, ospvNum, tr_min(OSPM_STRLEN(ospvNum) + 1, OSPC_SIZE_E164NUM - 1));
+            OSPM_STRNCPY(ospvAuthInd->DestinationNumber, ospvNum, OSPM_MIN(OSPM_STRLEN(ospvNum) + 1, OSPC_SIZE_E164NUM));
         }
     }
 }

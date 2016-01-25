@@ -123,11 +123,13 @@ extern "C" {
     int OSPPTransactionSetSrcRealm(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetDestRealm(OSPTTRANHANDLE, const char *);
     int OSPPTransactionGetURL(OSPTTRANHANDLE, OSPE_URL_TYPE, unsigned, char *);
-    int OSPPTransactionSetFrom(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
-    int OSPPTransactionSetAssertedId(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
-    int OSPPTransactionSetRemotePartyId(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
-    int OSPPTransactionSetChargeInfo(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
-    int OSPPTransactionSetDivSrcInfo(OSPTTRANHANDLE, OSPE_NUMBER_FORMAT, const char *);
+    int OSPPTransactionSetSIPHeader(OSPTTRANHANDLE, OSPE_SIP_HEADER, OSPE_NUMBER_FORMAT, const char *);
+#define OSPPTransactionSetFrom(transaction, format, value)  OSPPTransactionSetSIPHeader(transaction, OSPC_SIPHEADER_FROM, format, value);
+#define OSPPTransactionSetTo(transaction, format, value)  OSPPTransactionSetSIPHeader(transaction, OSPC_SIPHEADER_TO, format, value);
+#define OSPPTransactionSetAssertedId(transaction, format, value)  OSPPTransactionSetSIPHeader(transaction, OSPC_SIPHEADER_PAI, format, value);
+#define OSPPTransactionSetRemotePartyId(transaction, format, value)  OSPPTransactionSetSIPHeader(transaction, OSPC_SIPHEADER_RPID, format, value);
+#define OSPPTransactionSetChargeInfo(transaction, format, value)  OSPPTransactionSetSIPHeader(transaction, OSPC_SIPHEADER_PCI, format, value);
+#define OSPPTransactionSetDivSrcInfo(transaction, format, value)  OSPPTransactionSetSIPHeader(transaction, OSPC_SIPHEADER_DIV, format, value);
     int OSPPTransactionSetApplicationId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetRoleInfo(OSPTTRANHANDLE, OSPE_ROLE_STATE, OSPE_ROLE_FORMAT, OSPE_ROLE_VENDOR);
     int OSPPTransactionSetCallPartyInfo(OSPTTRANHANDLE, OSPE_CALL_PARTY, const char*, const char*, const char*);
@@ -155,6 +157,10 @@ extern "C" {
     int OSPPTransactionSetCallType(OSPTTRANHANDLE, const char*);
     int OSPPTransactionSetCallCategory(OSPTTRANHANDLE, const char*);
     int OSPPTransactionSetNetworkType(OSPTTRANHANDLE, const char*);
+    int OSPPTransactionSetInviteDate(OSPTTRANHANDLE, OSPTTIME);
+    int OSPPTransactionSetFingerPrint(OSPTTRANHANDLE, unsigned, const char **);
+    int OSPPTransactionSetIdentity(OSPTTRANHANDLE, unsigned, const unsigned char *, const char *, const char *, const char *, const char*);
+    int OSPPTransactionGetIdentity(OSPTTRANHANDLE, unsigned *, unsigned char *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned, char*);
 
 #ifdef __cplusplus
 }

@@ -114,25 +114,32 @@ unsigned OSPPTokenFromElement(  /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvToken == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NO_TOKEN;
-    }
-    if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) != OSPC_MELEM_TOKEN) {
-        errcode = OSPC_ERR_DATA_INVALID_TYPE;
-    }
+
     if (errcode == OSPC_ERR_NO_ERROR) {
-        errcode = OSPPMsgBinFromElement(ospvElem, &tokenLen, &tokenValue);
-    }
-    /* create the Token structure */
-    if (errcode == OSPC_ERR_NO_ERROR) {
-        *ospvToken = OSPPTokenNew(tokenLen, tokenValue);
-        if (*ospvToken == OSPC_OSNULL) {
+        if (ospvToken == OSPC_OSNULL) {
             errcode = OSPC_ERR_DATA_NO_TOKEN;
         }
     }
 
-    if (tokenValue != OSPC_OSNULL) {
-        OSPM_FREE(tokenValue);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) != OSPC_MELEM_TOKEN) {
+            errcode = OSPC_ERR_DATA_INVALID_TYPE;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        errcode = OSPPMsgBinFromElement(ospvElem, &tokenLen, &tokenValue);
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            /* create the Token structure */
+            *ospvToken = OSPPTokenNew(tokenLen, tokenValue);
+            if (*ospvToken == OSPC_OSNULL) {
+                errcode = OSPC_ERR_DATA_NO_TOKEN;
+            }
+        }
+
+        if (tokenValue != OSPC_OSNULL) {
+            OSPM_FREE(tokenValue);
+        }
     }
 
     return errcode;
@@ -189,14 +196,19 @@ unsigned OSPPTokenToElement(    /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvToken == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NO_TOKEN;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvToken == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_TOKEN;
+        }
     }
+
     if (errcode == OSPC_ERR_NO_ERROR) {
         errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_TOKEN),
             OSPPTokenGetSize(ospvToken), (unsigned char *)OSPPTokenGetValue(ospvToken),
             OSPC_OSNULL, OSPC_OSNULL, OSPC_TRUE,
             ospvElem);
     }
+
     return errcode;
 }

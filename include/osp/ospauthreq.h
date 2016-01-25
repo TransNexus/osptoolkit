@@ -82,7 +82,7 @@ extern "C" {
     int OSPPNPNpdiToElement(int, OSPT_XML_ELEM **);
     int OSPPOperatorNameToElement(OSPE_OPERATOR_NAME, const char *, OSPT_XML_ELEM **);
     int OSPPServiceTypeToElement(OSPE_SERVICE, OSPT_XML_ELEM **);
-    int OSPPPricingInfoToElement(OSPT_PRICING_INFO, OSPT_XML_ELEM **);
+    int OSPPPricingInfoToElement(OSPT_PRICING_INFO *, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

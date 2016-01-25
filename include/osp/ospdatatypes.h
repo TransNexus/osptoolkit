@@ -97,9 +97,7 @@ typedef unsigned OSPTBOOL;
 typedef int OSPTPROVHANDLE;
 typedef int OSPTTRANHANDLE;
 
-#ifndef tr_min
-#define tr_min(a,b) ((a) < (b) ? (a) : (b))
-#endif
+#define OSPM_MIN(a,b) ((a) < (b) ? (a) : (b))
 
 /* Transaction Id typedef */
 typedef OSPTUINT64 OSPTTRXID;
@@ -166,6 +164,18 @@ typedef enum {
     /* Number of termination cause types */
     OSPC_TCAUSE_NUMBER
 } OSPE_TERM_CAUSE;
+
+typedef enum {
+    OSPC_SIPHEADER_START = 0,
+    OSPC_SIPHEADER_FROM = OSPC_SIPHEADER_START,
+    OSPC_SIPHEADER_TO,
+    OSPC_SIPHEADER_PAI,
+    OSPC_SIPHEADER_RPID,
+    OSPC_SIPHEADER_PCI,
+    OSPC_SIPHEADER_DIV,
+    /* Number of termination cause types */
+    OSPC_SIPHEADER_NUMBER
+} OSPE_SIP_HEADER;
 
 typedef struct {
     float amount;

@@ -46,8 +46,10 @@ int OSPPCSAuditFromElement(
         errorcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvCSAudit == OSPC_OSNULL) {
-        errorcode = OSPC_ERR_DATA_NO_STATUS;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (ospvCSAudit == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_DATA_NO_STATUS;
+        }
     }
 
     /* create the CSAudit structure */
@@ -61,7 +63,6 @@ int OSPPCSAuditFromElement(
     if (errorcode == OSPC_ERR_NO_ERROR) {
         /*
          * The CSAudit element should consist of one element.
-         *
          */
         if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_CSAUDITTRIGGER) {
             OSPPCSAuditSetTrigger(*ospvCSAudit, (unsigned char *)OSPPXMLElemGetValue(ospvElem));
