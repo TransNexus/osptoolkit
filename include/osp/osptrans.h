@@ -34,6 +34,7 @@
 #include "osp/ospmsg.h"
 #include "osp/ospfail.h"
 #include "osp/osptokeninfo.h"
+#include "osp/ospstir.h"
 
 /* Transaction States */
 typedef enum {
@@ -102,8 +103,6 @@ typedef struct _OSPTTRANS {
     char NPCic[OSPC_SIZE_NORID];
     int NPNpdi;
     char OpName[OSPC_OPNAME_NUMBER][OSPC_SIZE_NORID];
-    char DivSrcInfo[OSPC_NFORMAT_NUMBER ][OSPC_SIZE_URL];
-    char DivDevInfo[OSPC_SIZE_SIGNALADDR];
     OSPE_PROTOCOL_NAME Protocol[OSPC_PROTTYPE_NUMBER];
     char Codec[OSPC_SERVICE_NUMBER][OSPC_CODEC_NUMBER][OSPC_SIZE_CODEC];
     OSPT_CALL_ID *SessionId[OSPC_SESSIONID_NUMBER];
@@ -112,10 +111,8 @@ typedef struct _OSPTTRANS {
     char UsageSrcNetworkId[OSPC_SIZE_NORID];
     char SrcRealm[OSPC_SIZE_NORSTR];
     char DestRealm[OSPC_SIZE_NORSTR];
-    char From[OSPC_NFORMAT_NUMBER][OSPC_SIZE_URL];
-    char AssertedId[OSPC_NFORMAT_NUMBER][OSPC_SIZE_URL];
-    char RemotePartyId[OSPC_NFORMAT_NUMBER][OSPC_SIZE_URL];
-    char ChargeInfo[OSPC_NFORMAT_NUMBER][OSPC_SIZE_URL];
+    char SipHeader[OSPC_SIPHEADER_NUMBER][OSPC_NFORMAT_NUMBER][OSPC_SIZE_URL];
+    char DivDevInfo[OSPC_SIZE_SIGNALADDR];
     char ApplicationId[OSPC_SIZE_NORSTR];
     OSPE_ROLE_STATE RoleState;
     OSPE_ROLE_FORMAT RoleFormat;
@@ -135,6 +132,9 @@ typedef struct _OSPTTRANS {
     char ProxyIngressAddr[OSPC_SIZE_NORSTR];
     char JIP[OSPC_SIZE_NORSTR];
     OSPT_CALL_PARTY CallingParty;
+    OSPTTIME InviteDate;
+    OSPTLIST SDPFingerPrint;
+    OSPT_IDENTITY Identity;
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

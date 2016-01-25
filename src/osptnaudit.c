@@ -47,8 +47,10 @@ int OSPPTNAuditFromElement(
         errorcode = OSPC_ERR_XML_NO_ELEMENT;
     }
 
-    if (ospvTNAudit == OSPC_OSNULL) {
-        errorcode = OSPC_ERR_DATA_NO_STATUS;
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        if (ospvTNAudit == OSPC_OSNULL) {
+            errorcode = OSPC_ERR_DATA_NO_STATUS;
+        }
     }
 
     /* create the TNAudit structure */

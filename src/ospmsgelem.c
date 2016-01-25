@@ -77,12 +77,20 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_DIVSRCINFO,           "DiversionSourceInfo" },
     { OSPC_MELEM_ENDPOINT,             "EndPoint" },
     { OSPC_MELEM_ENDTIME,              "EndTime" },
+    { OSPC_MELEM_FINGERPRINT,          "SdpFingerPrint" },
     { OSPC_MELEM_FRACTION,             "Fraction" },
+    { OSPC_MELEM_FROM,                 "FromSourceInfo" },
     { OSPC_MELEM_GROUP,                "Group" },
     { OSPC_MELEM_GROUPID,              "GroupId" },
-    { OSPC_MELEM_FROM,                 "FromSourceInfo" },
     { OSPC_MELEM_ICPIF,                "ICPIF" },
+    { OSPC_MELEM_IDALG,                "IdAlg" },
+    { OSPC_MELEM_IDCANON,              "IdCanon" },
+    { OSPC_MELEM_IDENTITY,             "Identity" },
+    { OSPC_MELEM_IDINFO,               "IdInfo" },
+    { OSPC_MELEM_IDSPEC,               "IdSpec" },
+    { OSPC_MELEM_IDSIGN,               "IdSign" },
     { OSPC_MELEM_INCREMENT,            "Increment" },
+    { OSPC_MELEM_INVITEDATE,           "SipInviteDate" },
     { OSPC_MELEM_JIP,                  "JIP" },
     { OSPC_MELEM_JITTER,               "Jitter" },
     { OSPC_MELEM_LOSSRCVD,             "LossReceived" },
@@ -136,6 +144,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_TCCODE,               "TCCode" },
     { OSPC_MELEM_TERMCAUSE,            "TerminationCause" },
     { OSPC_MELEM_TIMESTAMP,            "Timestamp" },
+    { OSPC_MELEM_TO,                   "ToDestinationInfo" },
     { OSPC_MELEM_TOKEN,                "Token" },
     { OSPC_MELEM_TOKENINFO,            "TokenInfo" },
     { OSPC_MELEM_TOTALOCTETS,          "TotalOctets" },
@@ -156,6 +165,15 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_VALIDAFTER,           "ValidAfter" },
     { OSPC_MELEM_VALIDUNTIL,           "ValidUntil" },
     { OSPC_MELEM_VARIANCE,             "Variance" },
+};
+
+const OSPE_MSG_ELEM OSPV_MELEM_SIPHEADER[OSPC_SIPHEADER_NUMBER] = {
+    OSPC_MELEM_FROM,
+    OSPC_MELEM_TO,
+    OSPC_MELEM_ASSERTEDID,
+    OSPC_MELEM_RPID,
+    OSPC_MELEM_CHARGEINFO,
+    OSPC_MELEM_DIVSRCINFO
 };
 
 /*

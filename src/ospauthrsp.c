@@ -283,7 +283,6 @@ OSPT_AUTH_RSP* OSPPAuthRspNew(void)
 
         authrsp->Timestamp = OSPC_TIMEMIN;
         authrsp->Status = OSPC_OSNULL;
-        authrsp->TrxId = 0;
         authrsp->CSAudit = OSPC_OSNULL;
         OSPPListNew(&(authrsp->Destination));
     }
@@ -404,30 +403,38 @@ unsigned OSPPAuthRspFromElement(
     }
 
     if (error == OSPC_ERR_NO_ERROR) {
+        if (ospvAuthRsp == OSPC_OSNULL) {
+            error = OSPC_ERR_DATA_NO_AUTHRSP;
+        }
+    }
+
+    if (error == OSPC_ERR_NO_ERROR) {
         /* create the authorization response object */
         authrsp = OSPPAuthRspNew();
         if (authrsp == OSPC_OSNULL) {
             error = OSPC_ERR_DATA_NO_AUTHRSP;
-        } else {
-            if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem))==OSPC_MELEM_MESSAGE) {
-                OSPPAuthRspMessageIdFromElement(ospvElem, &messageId);
-                if (messageId != OSPC_OSNULL) {
-                    OSPPAuthRspSetMessageId(authrsp, messageId);
-                }
+        }
+    }
 
-                /* ospvElem is pointing to the Message element.
-                 * The first child contains the Component element.
-                 * The following two lines of code change ospvElem from
-                 * pointing to the Message element to the Component element.
-                 */
-                ospvParent = ospvElem;
-                ospvElem = (OSPT_XML_ELEM*)OSPPXMLElemFirstChild(ospvParent);
+    if (error == OSPC_ERR_NO_ERROR) {
+        if (OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem))==OSPC_MELEM_MESSAGE) {
+            OSPPAuthRspMessageIdFromElement(ospvElem, &messageId);
+            if (messageId != OSPC_OSNULL) {
+                OSPPAuthRspSetMessageId(authrsp, messageId);
             }
 
-            OSPPAuthRspComponentIdFromElement(ospvElem, &compid);
-            if (compid != OSPC_OSNULL) {
-                OSPPAuthRspSetComponentId(authrsp, compid);
-            }
+            /* ospvElem is pointing to the Message element.
+             * The first child contains the Component element.
+             * The following two lines of code change ospvElem from
+             * pointing to the Message element to the Component element.
+             */
+            ospvParent = ospvElem;
+            ospvElem = (OSPT_XML_ELEM*)OSPPXMLElemFirstChild(ospvParent);
+        }
+
+        OSPPAuthRspComponentIdFromElement(ospvElem, &compid);
+        if (compid != OSPC_OSNULL) {
+            OSPPAuthRspSetComponentId(authrsp, compid);
         }
 
         /*
@@ -496,6 +503,9 @@ unsigned OSPPAuthRspFromElement(
                     }
                 }
                 break;
+            case OSPC_MELEM_IDENTITY:
+            	error = OSPPIdentityFromElement(elem, &(authrsp->Identity));
+            	break;
             default:
                 /*
                  * This is an element we don't understand. If it's
@@ -508,9 +518,13 @@ unsigned OSPPAuthRspFromElement(
                 break;
             }
         }
+    }
 
-        if (error == OSPC_ERR_NO_ERROR) {
-            *ospvAuthRsp = authrsp;
+    if (error == OSPC_ERR_NO_ERROR) {
+        *ospvAuthRsp = authrsp;
+    } else {
+        if (authrsp != OSPC_OSNULL) {
+            OSPPAuthRspDelete(&authrsp);
         }
     }
 

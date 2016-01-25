@@ -46,8 +46,11 @@ unsigned OSPPUsageFromElement(  /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvUsage == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NO_USAGE;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvUsage == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_USAGE;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -163,8 +166,10 @@ unsigned OSPPAddPricingInfoToUsageElement(
     }
 
     /* if for any reason we found an error - destroy any elements created */
-    if ((errcode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
-        OSPPXMLElemDelete(ospvElem);
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
+        }
     }
 
     return errcode;
@@ -197,17 +202,17 @@ unsigned OSPPAddConfIdToUsageElement(
             elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_GROUPID), (const char *)ospvConferenceId);
             if (elem == OSPC_OSNULL) {
                 errcode = OSPC_ERR_XML_NO_ELEMENT;
+            } else {
+                OSPPXMLElemAddChild(*ospvElem, elem);
             }
         }
     }
 
-    if (errcode == OSPC_ERR_NO_ERROR) {
-        OSPPXMLElemAddChild(*ospvElem, elem);
-    }
-
     /* if for any reason we found an error - destroy any elements created */
-    if ((errcode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
-        OSPPXMLElemDelete(ospvElem);
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
+        }
     }
 
     return errcode;
@@ -354,12 +359,15 @@ unsigned OSPPCallPartyNumToElement(
 
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
-    } else {
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
         switch (ElemType) {
         case OSPC_MELEM_SRCINFO:
         case OSPC_MELEM_DESTINFO:
         case OSPC_MELEM_DIVSRCINFO:
         case OSPC_MELEM_FROM:
+        case OSPC_MELEM_TO:
         case OSPC_MELEM_ASSERTEDID:
         case OSPC_MELEM_RPID:
         case OSPC_MELEM_CHARGEINFO:
@@ -426,30 +434,32 @@ unsigned OSPPTermCauseToElement(
         *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_TERMCAUSE), "");
         if (*ospvElem == OSPC_OSNULL) {
             errcode = OSPC_ERR_XML_NO_ELEMENT;
-        } else {
-            switch (TCType) {
-            case OSPC_TCAUSE_Q850:
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_Q850));
-                break;
-            case OSPC_TCAUSE_H323:
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_H323));
-                break;
-            case OSPC_TCAUSE_SIP:
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_SIP));
-                break;
-            case OSPC_TCAUSE_XMPP:
-                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_XMPP));
-                break;
-            default:
-                errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
-                break;
-            }
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                if (attr == OSPC_OSNULL) {
-                    errcode = OSPC_ERR_XML_NO_ATTR;
-                } else {
-                    OSPPXMLElemAddAttr(*ospvElem, attr);
-                }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        switch (TCType) {
+        case OSPC_TCAUSE_Q850:
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_Q850));
+            break;
+        case OSPC_TCAUSE_H323:
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_H323));
+            break;
+        case OSPC_TCAUSE_SIP:
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_SIP));
+            break;
+        case OSPC_TCAUSE_XMPP:
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_XMPP));
+            break;
+        default:
+            errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+            break;
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            if (attr == OSPC_OSNULL) {
+                errcode = OSPC_ERR_XML_NO_ATTR;
+            } else {
+                OSPPXMLElemAddAttr(*ospvElem, attr);
             }
         }
     }
@@ -463,18 +473,22 @@ unsigned OSPPTermCauseToElement(
         }
     }
 
-    if ((errcode == OSPC_ERR_NO_ERROR) && (TCDesc != OSPC_OSNULL) && (TCDesc[0] != '\0')) {
-        elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DESC), TCDesc);
-        if (elem == OSPC_OSNULL) {
-            errcode = OSPC_ERR_XML_NO_ELEMENT;
-        } else {
-            OSPPXMLElemAddChild(*ospvElem, elem);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((TCDesc != OSPC_OSNULL) && (TCDesc[0] != '\0')) {
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DESC), TCDesc);
+            if (elem == OSPC_OSNULL) {
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
+            } else {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+            }
         }
     }
 
     /* if for any reason we found an error - destroy any elements created */
-    if ((errcode != OSPC_ERR_NO_ERROR) && (*ospvElem != OSPC_OSNULL)) {
-        OSPPXMLElemDelete(ospvElem);
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
+        }
     }
 
     return errcode;
@@ -497,31 +511,37 @@ unsigned OSPPStringToElement(
 
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
-    } else {
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if ((ElemType < OSPC_MELEM_START) || (ElemType >= OSPC_MELEM_NUMBER)) {
             errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
-        } else {
-            *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ElemType), ElemValue);
-            if (*ospvElem == OSPC_OSNULL) {
-                errcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ElemType), ElemValue);
+        if (*ospvElem == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        for (cnt = 0; cnt < AttrNum; cnt++) {
+            if (((AttrType[cnt] < OSPC_MATTR_START) || (AttrType[cnt] >= OSPC_MATTR_NUMBER)) ||
+                ((AttrValue[cnt] < OSPC_ALTINFO_START) || (AttrValue[cnt] >= OSPC_ALTINFO_NUMBER)))
+            {
+                OSPPXMLElemDelete(ospvElem);
+                errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
+                break;
             } else {
-                for (cnt = 0; cnt < AttrNum; cnt++) {
-                    if (((AttrType[cnt] < OSPC_MATTR_START) || (AttrType[cnt] >= OSPC_MATTR_NUMBER)) ||
-                        ((AttrValue[cnt] < OSPC_ALTINFO_START) || (AttrValue[cnt] >= OSPC_ALTINFO_NUMBER)))
-                    {
-                        OSPPXMLElemDelete(ospvElem);
-                        errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
-                        break;
-                    } else {
-                        attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(AttrType[cnt]), OSPPAltInfoTypeGetName(AttrValue[cnt]));
-                        if (attr == OSPC_OSNULL) {
-                            OSPPXMLElemDelete(ospvElem);
-                            errcode = OSPC_ERR_XML_NO_ATTR;
-                            break;
-                        } else {
-                           OSPPXMLElemAddAttr(*ospvElem, attr);
-                        }
-                    }
+                attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(AttrType[cnt]), OSPPAltInfoTypeGetName(AttrValue[cnt]));
+                if (attr == OSPC_OSNULL) {
+                    OSPPXMLElemDelete(ospvElem);
+                    errcode = OSPC_ERR_XML_NO_ATTR;
+                    break;
+                } else {
+                   OSPPXMLElemAddAttr(*ospvElem, attr);
                 }
             }
         }
@@ -544,16 +564,20 @@ unsigned OSPPCustomInfoToElement(
 
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
-    } else {
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
         if ((Index > OSPC_MAX_INDEX) || (CustomInfo == OSPC_OSNULL) || (CustomInfo[0] == '\0')) {
             errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
-        } else {
-            snprintf(buffer, sizeof(buffer), "%d", Index + 1);
-            errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO),
-                OSPM_STRLEN(CustomInfo), (unsigned char *)CustomInfo,
-                OSPPMsgAttrGetName(OSPC_MATTR_INDEX), buffer, isbase64,
-                ospvElem);
         }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        snprintf(buffer, sizeof(buffer), "%d", Index + 1);
+        errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO),
+            OSPM_STRLEN(CustomInfo), (unsigned char *)CustomInfo,
+            OSPPMsgAttrGetName(OSPC_MATTR_INDEX), buffer, isbase64,
+            ospvElem);
     }
 
     return errcode;

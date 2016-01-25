@@ -122,21 +122,25 @@ unsigned OSPPStatusFromElement( /* returns error code */
     unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
     unsigned long temp = 0;
+    OSPT_STATUS *status = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvStatus == OSPC_OSNULL) {
-        errcode = OSPC_ERR_DATA_NO_STATUS;
-    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
 #if 0
     assert(OSPPMsgElemGetPart(OSPPXMLElemGetName(ospvElem)) == OSPC_MELEM_STATUS);
 #endif
+        if (ospvStatus == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_STATUS;
+        }
+    }
 
     /* create the Status structure */
     if (errcode == OSPC_ERR_NO_ERROR) {
-        *ospvStatus = OSPPStatusNew();
-        if (*ospvStatus == OSPC_OSNULL) {
+        status = OSPPStatusNew();
+        if (status == OSPC_OSNULL) {
             errcode = OSPC_ERR_DATA_NO_STATUS;
         }
     }
@@ -149,14 +153,16 @@ unsigned OSPPStatusFromElement( /* returns error code */
          * the values that we expect to find.
          */
         for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
-             (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR); elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem)) {
+            (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem))
+        {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_CODE:
                 errcode = OSPPMsgCodeFromElement(elem, &temp);
-                OSPPStatusSetCode(*ospvStatus, temp);
+                OSPPStatusSetCode(status, temp);
                 break;
             case OSPC_MELEM_DESC:
-                OSPPStatusSetDesc(*ospvStatus, OSPPXMLElemGetValue(elem));
+                OSPPStatusSetDesc(status, OSPPXMLElemGetValue(elem));
                 break;
             default:
                 /*
@@ -169,6 +175,14 @@ unsigned OSPPStatusFromElement( /* returns error code */
                 }
                 break;
             }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        *ospvStatus = status;
+    } else {
+        if (status != OSPC_OSNULL) {
+            OSPPStatusDelete(&status);
         }
     }
 

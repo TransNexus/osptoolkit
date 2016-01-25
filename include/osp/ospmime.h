@@ -40,8 +40,6 @@
 #define OSPC_BODY                   0x88
 #define OSPC_SIGNATURE              0x99
 
-#define OSPM_MIN(a,b) ((a) <= (b) ? (a) : (b))
-
 typedef struct _OSPTMIMEPART {
     unsigned Length;
     unsigned char *Content;

@@ -86,7 +86,7 @@ void OSPPSetTermCause(  /* nothing returned */
         if ((ospvType >= OSPC_TCAUSE_START) && (ospvType < OSPC_TCAUSE_NUMBER)) {
             ospvTermCause->tccode[ospvType] = ospvTCCode;
             if ((ospvTCDesc != OSPC_OSNULL) && (ospvTCDesc[0] != '\0')) {
-                OSPM_STRNCPY(ospvTermCause->tcdesc[ospvType], ospvTCDesc, sizeof(ospvTermCause->tcdesc[ospvType]) - 1);
+                OSPM_STRNCPY(ospvTermCause->tcdesc[ospvType], ospvTCDesc, sizeof(ospvTermCause->tcdesc[ospvType]));
             }
             ospvTermCause->hastermcause[ospvType] = OSPC_TRUE;
         }

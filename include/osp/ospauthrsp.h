@@ -29,6 +29,7 @@
 #include "osp/ospstatus.h"
 #include "osp/osptnaudit.h"
 #include "osp/ospciscoext.h"
+#include "osp/ospstir.h"
 
 typedef struct {
     OSPTTIME Timestamp;
@@ -44,6 +45,7 @@ typedef struct {
     OSPTCSAUDIT *CSAudit;
     OSPE_ROLE Role;
     OSPTBOOL HasRole;
+    OSPT_IDENTITY Identity;
 } OSPT_AUTH_RSP;
 
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)

@@ -372,8 +372,11 @@ unsigned OSPPMsgNumFromElement( /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvNumber == OSPC_OSNULL) {
-        errcode = OSPC_ERR_XML_INVALID_ARGS;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvNumber == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -404,8 +407,11 @@ unsigned OSPPMsgNumToElement(   /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvName == OSPC_OSNULL) {
-        errcode = OSPC_ERR_XML_INVALID_ARGS;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvName == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -450,8 +456,11 @@ int OSPPMsgFloatFromElement(    /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvNumber == OSPC_OSNULL) {
-        errcode = OSPC_ERR_XML_INVALID_ARGS;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvNumber == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -477,8 +486,11 @@ int OSPPMsgFloatToElement(      /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvName == OSPC_OSNULL) {
-        errcode = OSPC_ERR_XML_INVALID_ARGS;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvName == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -522,8 +534,11 @@ unsigned OSPPMsgCodeToElement(  /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvName == OSPC_OSNULL) {
-        errcode = OSPC_ERR_XML_INVALID_ARGS;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvName == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -556,8 +571,11 @@ unsigned OSPPMsgTXFromElement(  /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvTX == OSPC_OSNULL) {
-        errcode = OSPC_ERR_XML_INVALID_ARGS;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvTX == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -566,6 +584,7 @@ unsigned OSPPMsgTXFromElement(  /* returns error code */
             errcode = OSPC_ERR_DATA_BAD_NUMBER;
         }
     }
+
     if (errcode == OSPC_ERR_NO_ERROR) {
         /* get the number - must be decimal */
         *ospvTX = 0;
@@ -593,8 +612,11 @@ unsigned OSPPMsgTXToElement(    /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvName == OSPC_OSNULL) {
-        errcode = OSPC_ERR_XML_INVALID_ARGS;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvName == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -639,8 +661,11 @@ unsigned OSPPMsgTimeFromElement(/* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvTime == OSPC_OSNULL) {
-        errcode = OSPC_ERR_XML_INVALID_ARGS;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvTime == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -664,8 +689,11 @@ unsigned OSPPMsgTimeToElement(  /* returns error code */
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
     }
-    if (ospvName == OSPC_OSNULL) {
-        errcode = OSPC_ERR_XML_INVALID_ARGS;
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvName == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
+        }
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -673,7 +701,6 @@ unsigned OSPPMsgTimeToElement(  /* returns error code */
         *ospvElem = OSPC_OSNULL;
 
         errcode = OSPPOSTimeCalToString(ospvTime, tstr);
-
         if (errcode == OSPC_ERR_NO_ERROR) {
             /* create the element */
             *ospvElem = OSPPXMLElemNew(ospvName, tstr);

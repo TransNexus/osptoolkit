@@ -53,7 +53,7 @@ OSPOBJS = osppkcs1.o osppkcs8.o osppkcs7.o ospcryptowrap.o ospasn1ids.o \
           ospauthcnf.o ospreauthreq.o ospreauthrsp.o ospusagecnf.o ospb64.o \
           ospbfr.o osptokeninfo.o ospfail.o ospaltinfo.o ospssl.o \
           ospstatistics.o osptnprobe.o ospaudit.o osptnaudit.o osptransids.o \
-          ospciscoext.o ospcapind.o ospcapcnf.o $(SSLOBJ)
+          ospciscoext.o ospcapind.o ospcapcnf.o ospstir.o $(SSLOBJ)
           
 OSPLIB = $(LIBDIR)/libosptk.a
 
