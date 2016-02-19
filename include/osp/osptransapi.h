@@ -157,10 +157,10 @@ extern "C" {
     int OSPPTransactionSetCallType(OSPTTRANHANDLE, const char*);
     int OSPPTransactionSetCallCategory(OSPTTRANHANDLE, const char*);
     int OSPPTransactionSetNetworkType(OSPTTRANHANDLE, const char*);
-    int OSPPTransactionSetInviteDate(OSPTTRANHANDLE, OSPTTIME);
+    int OSPPTransactionSetRequestDate(OSPTTRANHANDLE, OSPTTIME);
     int OSPPTransactionSetFingerPrint(OSPTTRANHANDLE, unsigned, const char **);
-    int OSPPTransactionSetIdentity(OSPTTRANHANDLE, unsigned, const unsigned char *, const char *, const char *, const char *, const char*);
-    int OSPPTransactionGetIdentity(OSPTTRANHANDLE, unsigned *, unsigned char *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned, char*);
+    int OSPPTransactionSetIdentity(OSPTTRANHANDLE, unsigned, const unsigned char *, const char *, const char *, const char *, unsigned, const unsigned char *);
+    int OSPPTransactionGetIdentity(OSPTTRANHANDLE, unsigned *, unsigned char *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned *, unsigned char *);
 
 #ifdef __cplusplus
 }

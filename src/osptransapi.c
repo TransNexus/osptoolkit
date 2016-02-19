@@ -2200,13 +2200,13 @@ int OSPPTransactionNew(
         trans->CallingParty.UserName[0] = '\0';
         trans->CallingParty.UserId[0] = '\0';
         trans->CallingParty.UserGroup[0] = '\0';
-        trans->InviteDate = OSPC_TIMEMIN;
+        trans->RequestDate = OSPC_TIMEMIN;
         OSPPListNew(&(trans->SDPFingerPrint));
         trans->Identity.SignSize = 0;
         trans->Identity.IdAlg[0] = '\0';
         trans->Identity.IdInfo[0] = '\0';
-        trans->Identity.IdSpec[0] = '\0';
-        trans->Identity.IdCanon[0] = '\0';
+        trans->Identity.IdType[0] = '\0';
+        trans->Identity.CanonSize = 0;
     }
 
     return errcode;
@@ -5815,16 +5815,16 @@ int OSPPTransactionSetNetworkType(
     return errcode;
 }
 
-int OSPPTransactionSetInviteDate(
+int OSPPTransactionSetRequestDate(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    OSPTTIME ospvInviteDate)        /* In - SIP INVITE Date  */
+    OSPTTIME ospvRequestDate)       /* In - SIP request Date  */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
     if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-        trans->InviteDate = ospvInviteDate;
+        trans->RequestDate = ospvRequestDate;
     }
 
     return errcode;
@@ -5868,8 +5868,9 @@ int OSPPTransactionSetIdentity(
     const unsigned char *ospvSign,  /* In - Signature */
     const char *ospvAlg,            /* In - Algorithm */
     const char *ospvInfo,           /* In - Information */
-    const char *ospvSpec,           /* In - Specification */
-    const char *ospvCanon)          /* In - Canon */
+    const char *ospvType,           /* In - Type */
+    unsigned ospvSizeOfCanon,       /* In - Size of canon */
+    const unsigned char *ospvCanon) /* In - Canon */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -5888,11 +5889,12 @@ int OSPPTransactionSetIdentity(
         if (ospvInfo != OSPC_OSNULL) {
             OSPM_STRNCPY(id->IdInfo, ospvInfo, sizeof(id->IdInfo));
         }
-        if (ospvSpec != OSPC_OSNULL) {
-            OSPM_STRNCPY(id->IdSpec, ospvSpec, sizeof(id->IdSpec));
+        if (ospvType != OSPC_OSNULL) {
+            OSPM_STRNCPY(id->IdType, ospvType, sizeof(id->IdType));
         }
-        if (ospvCanon != OSPC_OSNULL) {
-            OSPM_STRNCPY(id->IdCanon, ospvCanon, sizeof(id->IdCanon));
+        if (ospvSizeOfCanon != 0) {
+            OSPM_MEMCPY(id->IdCanon, ospvCanon, ospvSizeOfCanon);
+            id->CanonSize = ospvSizeOfCanon;
         }
     }
 
@@ -5900,17 +5902,17 @@ int OSPPTransactionSetIdentity(
 }
 
 int OSPPTransactionGetIdentity(
-	OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-	unsigned *ospvSizeOfSign,       /* In/Out - Size of signature */
-	unsigned char *ospvSign,        /* Out - Signature */
-	unsigned ospvSizeOfAlg,         /* In - Size of algorithm buffer */
-	char *ospvAlg,                  /* Out - Algorithm */
-	unsigned ospvSizeOfInfo,        /* In - Size of information buffer */
-	char *ospvInfo,                 /* Out - Information */
-	unsigned ospvSizeOfSpec,        /* In - Size of specification buffer */
-	char *ospvSpec,                 /* Out - Specification */
-	unsigned ospvSizeOfCanon,       /* In - Size of canon buffer */
-	char *ospvCanon)                /* Out - Canon */
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned *ospvSizeOfSign,       /* In/Out - Size of signature */
+    unsigned char *ospvSign,        /* Out - Signature */
+    unsigned ospvSizeOfAlg,         /* In - Size of algorithm buffer */
+    char *ospvAlg,                  /* Out - Algorithm */
+    unsigned ospvSizeOfInfo,        /* In - Size of information buffer */
+    char *ospvInfo,                 /* Out - Information */
+    unsigned ospvSizeOfType,        /* In - Size of type buffer */
+    char *ospvType,                 /* Out - Type */
+    unsigned *ospvSizeOfCanon,      /* In/Out - Size of canon buffer */
+    unsigned char *ospvCanon)       /* Out - Canon */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -5919,23 +5921,24 @@ int OSPPTransactionGetIdentity(
     trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
     if (errcode == OSPC_ERR_NO_ERROR) {
         if (trans->AuthRsp != OSPC_OSNULL) {
-        	id = &(trans->AuthRsp->Identity);
-        	if (ospvSign != OSPC_OSNULL) {
-    		    *ospvSizeOfSign = OSPM_MIN(id->SignSize, *ospvSizeOfSign);
-    		    OSPM_MEMCPY(ospvSign, id->IdSign, *ospvSizeOfSign);
-    	    }
-    	    if (ospvAlg != OSPC_OSNULL) {
-    		    OSPM_STRNCPY(ospvAlg, id->IdAlg, ospvSizeOfAlg);
-    	    }
-    	    if (ospvInfo != OSPC_OSNULL) {
-        		OSPM_STRNCPY(ospvInfo, id->IdInfo, ospvSizeOfInfo);
-    	    }
-    	    if (ospvSpec != OSPC_OSNULL) {
-        		OSPM_STRNCPY(ospvSpec, id->IdSpec, ospvSizeOfSpec);
-    	    }
-    	    if (ospvCanon != OSPC_OSNULL) {
-        		OSPM_STRNCPY(ospvCanon, id->IdCanon, ospvSizeOfCanon);
-    	    }
+            id = &(trans->AuthRsp->Identity);
+            if (ospvSign != OSPC_OSNULL) {
+                *ospvSizeOfSign = OSPM_MIN(id->SignSize, *ospvSizeOfSign);
+                OSPM_MEMCPY(ospvSign, id->IdSign, *ospvSizeOfSign);
+            }
+            if (ospvAlg != OSPC_OSNULL) {
+                OSPM_STRNCPY(ospvAlg, id->IdAlg, ospvSizeOfAlg);
+            }
+            if (ospvInfo != OSPC_OSNULL) {
+                OSPM_STRNCPY(ospvInfo, id->IdInfo, ospvSizeOfInfo);
+            }
+            if (ospvType != OSPC_OSNULL) {
+                OSPM_STRNCPY(ospvType, id->IdType, ospvSizeOfType);
+            }
+            if (ospvCanon != OSPC_OSNULL) {
+                *ospvSizeOfCanon = OSPM_MIN(id->CanonSize, *ospvSizeOfCanon);
+                OSPM_MEMCPY(ospvCanon, id->IdCanon, *ospvSizeOfCanon);
+            }
         }
     }
 

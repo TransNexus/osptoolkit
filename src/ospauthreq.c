@@ -1012,10 +1012,10 @@ int OSPPAuthReqToElement(       /* returns error code */
         elem = OSPC_OSNULL;
     }
 
-    /* Add SIP INVITE Date  */
+    /* Add SIP request Date  */
     if (errcode == OSPC_ERR_NO_ERROR) {
-        if (trans->InviteDate != OSPC_TIMEMIN) {
-            errcode = OSPPMsgTimeToElement(trans->InviteDate, OSPPMsgElemGetName(OSPC_MELEM_INVITEDATE), &elem);
+        if (trans->RequestDate != OSPC_TIMEMIN) {
+            errcode = OSPPMsgTimeToElement(trans->RequestDate, OSPPMsgElemGetName(OSPC_MELEM_REQUESTDATE), &elem);
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(authreqelem, elem);
                 elem = OSPC_OSNULL;

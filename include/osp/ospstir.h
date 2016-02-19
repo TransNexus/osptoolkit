@@ -31,8 +31,9 @@ typedef struct {
     unsigned char IdSign[OSPC_SIZE_SIGNSTR];
     char IdAlg[OSPC_SIZE_ALGSTR];
     char IdInfo[OSPC_SIZE_NORSTR];
-    char IdSpec[OSPC_SIZE_NORSTR];
-    char IdCanon[OSPC_SIZE_NORSTR];
+    char IdType[OSPC_SIZE_NORSTR];
+    unsigned CanonSize;
+    unsigned char IdCanon[OSPC_SIZE_NORSTR];
 } OSPT_IDENTITY;
 
 /* Function Prototypes */
