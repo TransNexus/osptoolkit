@@ -1886,7 +1886,7 @@ int testSetSIPHeaders()
     errcode = OSPPTransactionSetDivSrcInfo(OSPVTransactionHandle, OSPC_NFORMAT_URL, "DivSrcInfoURL");
     errcode = OSPPTransactionSetDiversion(OSPVTransactionHandle, "DiversionSrcInfoE164", "DiversionDevInfo");
 
-    errcode = OSPPTransactionSetInviteDate(OSPVTransactionHandle, time(OSPC_OSNULL));
+    errcode = OSPPTransactionSetRequestDate(OSPVTransactionHandle, time(OSPC_OSNULL));
 
     errcode = OSPPTransactionSetFingerPrint(OSPVTransactionHandle, number, fingerprints);
 
@@ -1963,7 +1963,7 @@ int testSetCustomInfo(int flag)
 {
     int errcode = 0;
 
-    if (flag) { 
+    if (flag) {
         errcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
     } else {
         errcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
@@ -2392,32 +2392,33 @@ int testSetIdentity()
     const char *sign = "Signature";
     const char *alg = "Algorithm";
     const char *info = "Information";
-    const char *spec = "Specification";
+    const char *type = "Type";
     const char *canon = "Canon";
     int errcode = 0;
+errcode = OSPPTransactionSetIdentity(OSPVTransactionHandle, strlen(sign), (const unsigned char *)sign, alg, info, type, strlen(canon), (const unsigned char *)canon);
 
-    errcode = OSPPTransactionSetIdentity(OSPVTransactionHandle, strlen(sign), (const unsigned char *)sign, alg, info, spec, canon);
 
     return errcode;
 }
 
 int testGetIdentity()
 {
-	unsigned char sign[OSPC_SIZE_SIGNSTR];
-	char alg[OSPC_SIZE_ALGSTR];
-	char info[OSPC_SIZE_NORSTR];
-	char spec[OSPC_SIZE_NORSTR];
-	char canon[OSPC_SIZE_NORSTR];
-	unsigned size = sizeof(sign);
+    unsigned char sign[OSPC_SIZE_SIGNSTR];
+    char alg[OSPC_SIZE_ALGSTR];
+    char info[OSPC_SIZE_NORSTR];
+    char type[OSPC_SIZE_NORSTR];
+    unsigned char canon[OSPC_SIZE_NORSTR];
+    unsigned signsize = sizeof(sign);
+    unsigned canonsize = sizeof(canon);
     int errcode = OSPC_ERR_NO_ERROR;
 
-    errcode = OSPPTransactionGetIdentity(OSPVTransactionHandle, &size, sign, sizeof(alg), alg, sizeof(info), info, sizeof(spec), spec, sizeof(canon), canon);
+    errcode = OSPPTransactionGetIdentity(OSPVTransactionHandle, &signsize, sign, sizeof(alg), alg, sizeof(info), info, sizeof(type), type, &canonsize, canon);
     if (errcode == OSPC_ERR_NO_ERROR) {
-        printf("Identity signature size: %d\n", size);
+        printf("Identity signature size: %d\n", signsize);
         printf("Identity algorithm: %s\n", alg);
         printf("Identity information: %s\n", info);
-        printf("Identity specification: %s\n", spec);
-        printf("Identity canon: %s\n", canon);
+        printf("Identity type: %s\n", type);
+        printf("Identity canon: size: %d\n", canonsize);
     }
 
     return errcode;
@@ -2773,8 +2774,8 @@ int testAPI(int apinumber)
         errcode = testGetCNAM();
         break;
     case 254:
-    	errcode = testGetIdentity();
-    	break;
+        errcode = testGetIdentity();
+        break;
     case 300:
         errcode = testStatsLost();
         break;

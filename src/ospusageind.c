@@ -1792,6 +1792,42 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
+            /* Add source audio address */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->SrcAudioAddr[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_SRCAUDIOADDR, trans->SrcAudioAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usagedetailelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add source video address */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->SrcVideoAddr[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_SRCVIDEOADDR, trans->SrcVideoAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usagedetailelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add destination audio address */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (usage->DestAudioAddr[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_DESTAUDIOADDR, usage->DestAudioAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usagedetailelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add destination video address */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (usage->DestVideoAddr[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_DESTVIDEOADDR, usage->DestVideoAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usagedetailelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(usageindelem, usagedetailelem);
                 usagedetailelem = OSPC_OSNULL;
@@ -1965,42 +2001,6 @@ int OSPPUsageIndToElement(      /* returns error code */
                 cdrproxyelem = OSPC_OSNULL;
             }
 
-            /* Add source audio address */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->SrcAudioAddr[0] != '\0')) {
-                errcode = OSPPStringToElement(OSPC_MELEM_SRCAUDIOADDR, trans->SrcAudioAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
-                if (errcode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(usageindelem, subelem);
-                    subelem = OSPC_OSNULL;
-                }
-            }
-
-            /* Add source video address */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->SrcVideoAddr[0] != '\0')) {
-                errcode = OSPPStringToElement(OSPC_MELEM_SRCVIDEOADDR, trans->SrcVideoAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
-                if (errcode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(usageindelem, subelem);
-                    subelem = OSPC_OSNULL;
-                }
-            }
-
-            /* Add destination audio address */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&  (usage->DestAudioAddr[0] != '\0')) {
-                errcode = OSPPStringToElement(OSPC_MELEM_DESTAUDIOADDR, usage->DestAudioAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
-                if (errcode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(usageindelem, subelem);
-                    subelem = OSPC_OSNULL;
-                }
-            }
-
-            /* Add destination video address */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&  (usage->DestVideoAddr[0] != '\0')) {
-                errcode = OSPPStringToElement(OSPC_MELEM_DESTVIDEOADDR, usage->DestVideoAddr, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
-                if (errcode == OSPC_ERR_NO_ERROR) {
-                    OSPPXMLElemAddChild(usageindelem, subelem);
-                    subelem = OSPC_OSNULL;
-                }
-            }
-
             /* Add Jurisdiction Information Parameter */
             if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->JIP[0] != '\0')) {
                 errcode = OSPPStringToElement(OSPC_MELEM_JIP, trans->JIP, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
@@ -2037,9 +2037,9 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
-            /* Add SIP INVITE Date */
-            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->InviteDate != OSPC_TIMEMIN)) {
-                errcode = OSPPMsgTimeToElement(trans->InviteDate, OSPPMsgElemGetName(OSPC_MELEM_INVITEDATE), &subelem);
+            /* Add SIP request Date */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->RequestDate != OSPC_TIMEMIN)) {
+                errcode = OSPPMsgTimeToElement(trans->RequestDate, OSPPMsgElemGetName(OSPC_MELEM_REQUESTDATE), &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;

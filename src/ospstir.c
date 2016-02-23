@@ -120,8 +120,8 @@ int OSPPIdentityToElement(
     }
 
     if (error == OSPC_ERR_NO_ERROR) {
-        if (ospvIdentity->IdSpec[0] != '\0') {
-            error = OSPPStringToElement(OSPC_MELEM_IDSPEC, ospvIdentity->IdSpec, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+        if (ospvIdentity->IdType[0] != '\0') {
+            error = OSPPStringToElement(OSPC_MELEM_IDTYPE, ospvIdentity->IdType, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
             if (error == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
@@ -130,13 +130,15 @@ int OSPPIdentityToElement(
     }
 
     if (error == OSPC_ERR_NO_ERROR) {
-        if (ospvIdentity->IdCanon[0] != '\0') {
-            error = OSPPStringToElement(OSPC_MELEM_IDCANON, ospvIdentity->IdCanon, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+        if (ospvIdentity->CanonSize != 0) {
+            error = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_IDCANON),
+                ospvIdentity->CanonSize, ospvIdentity->IdCanon,
+                OSPC_OSNULL, OSPC_OSNULL, OSPC_TRUE, &elem);
             if (error == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, elem);
                 elem = OSPC_OSNULL;
             }
-        }
+         }
     }
 
     /* if for any reason we found an error - destroy any elements created */
@@ -148,13 +150,13 @@ int OSPPIdentityToElement(
 }
 
 int OSPPIdentityFromElement(
-	OSPT_XML_ELEM *ospvElem,
-	OSPT_IDENTITY *ospvIdentity)
+    OSPT_XML_ELEM *ospvElem,
+    OSPT_IDENTITY *ospvIdentity)
 {
-	unsigned char *value = OSPC_OSNULL;
-	unsigned size = 0;
-	OSPT_XML_ELEM *elem = OSPC_OSNULL;
-	int error = OSPC_ERR_NO_ERROR;
+    unsigned char *value = OSPC_OSNULL;
+    unsigned size = 0;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    int error = OSPC_ERR_NO_ERROR;
 
     if (ospvElem == OSPC_OSNULL) {
         error = OSPC_ERR_XML_NO_ELEMENT;
@@ -173,28 +175,37 @@ int OSPPIdentityFromElement(
         {
             switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
             case OSPC_MELEM_IDSIGN:
-            	size = sizeof(ospvIdentity->IdSign);
-            	error = OSPPMsgBinFromElement(elem, &size, &value);
+                size = sizeof(ospvIdentity->IdSign);
+                error = OSPPMsgBinFromElement(elem, &size, &value);
                 if (error == OSPC_ERR_NO_ERROR) {
-                	ospvIdentity->SignSize = size;
-                	OSPM_MEMCPY(ospvIdentity->IdSign, value, size);
-                	OSPM_FREE(value);
+                    ospvIdentity->SignSize = size;
+                    OSPM_MEMCPY(ospvIdentity->IdSign, value, size);
+                    OSPM_FREE(value);
                 } else {
-                	ospvIdentity->SignSize = 0;
-                	error = OSPC_ERR_XML_BAD_ELEMENT;
+                    ospvIdentity->SignSize = 0;
+                    error = OSPC_ERR_XML_BAD_ELEMENT;
                 }
                 break;
             case OSPC_MELEM_IDALG:
-            	OSPM_STRNCPY(ospvIdentity->IdAlg, OSPPXMLElemGetValue(elem), sizeof(ospvIdentity->IdAlg));
+                OSPM_STRNCPY(ospvIdentity->IdAlg, OSPPXMLElemGetValue(elem), sizeof(ospvIdentity->IdAlg));
                 break;
             case OSPC_MELEM_IDINFO:
-            	OSPM_STRNCPY(ospvIdentity->IdInfo, OSPPXMLElemGetValue(elem), sizeof(ospvIdentity->IdInfo));
+                OSPM_STRNCPY(ospvIdentity->IdInfo, OSPPXMLElemGetValue(elem), sizeof(ospvIdentity->IdInfo));
                 break;
-            case OSPC_MELEM_IDSPEC:
-            	OSPM_STRNCPY(ospvIdentity->IdSpec, OSPPXMLElemGetValue(elem), sizeof(ospvIdentity->IdSpec));
+            case OSPC_MELEM_IDTYPE:
+                OSPM_STRNCPY(ospvIdentity->IdType, OSPPXMLElemGetValue(elem), sizeof(ospvIdentity->IdType));
                 break;
             case OSPC_MELEM_IDCANON:
-            	OSPM_STRNCPY(ospvIdentity->IdCanon, OSPPXMLElemGetValue(elem), sizeof(ospvIdentity->IdCanon));
+                size = sizeof(ospvIdentity->IdCanon);
+                error = OSPPMsgBinFromElement(elem, &size, &value);
+                if (error == OSPC_ERR_NO_ERROR) {
+                    ospvIdentity->CanonSize = size;
+                    OSPM_MEMCPY(ospvIdentity->IdCanon, value, size);
+                    OSPM_FREE(value);
+                } else {
+                    ospvIdentity->CanonSize = 0;
+                    error = OSPC_ERR_XML_BAD_ELEMENT;
+                }
                 break;
             default:
                 /*

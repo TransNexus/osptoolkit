@@ -132,7 +132,7 @@ typedef struct _OSPTTRANS {
     char ProxyIngressAddr[OSPC_SIZE_NORSTR];
     char JIP[OSPC_SIZE_NORSTR];
     OSPT_CALL_PARTY CallingParty;
-    OSPTTIME InviteDate;
+    OSPTTIME RequestDate;
     OSPTLIST SDPFingerPrint;
     OSPT_IDENTITY Identity;
 } OSPTTRANS;

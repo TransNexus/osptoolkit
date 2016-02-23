@@ -678,3 +678,8 @@ Version 4.10.0 - 2015-12-16
 
 Version 4.11.0 - 2016-01-25
 * Added Identity token support.
+---------------------------------------------------------------------------
+
+Version 4.11.1 - 2016-02-23
+* Updated SipRequestDate element.
+* Updated Identity related elements.

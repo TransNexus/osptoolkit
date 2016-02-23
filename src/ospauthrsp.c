@@ -504,8 +504,8 @@ unsigned OSPPAuthRspFromElement(
                 }
                 break;
             case OSPC_MELEM_IDENTITY:
-            	error = OSPPIdentityFromElement(elem, &(authrsp->Identity));
-            	break;
+                error = OSPPIdentityFromElement(elem, &(authrsp->Identity));
+                break;
             default:
                 /*
                  * This is an element we don't understand. If it's
