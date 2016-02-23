@@ -683,3 +683,6 @@ Version 4.11.0 - 2016-01-25
 Version 4.11.1 - 2016-02-23
 * Updated SipRequestDate element.
 * Updated Identity related elements.
+---------------------------------------------------------------------------
+
+Version 4.11.2 - 
