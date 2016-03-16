@@ -75,6 +75,7 @@ typedef enum {
     OSPC_RSTATE_END2,
     OSPC_RSTATE_HUNT1,
     OSPC_RSTATE_HUNT2,
+    OSPC_RSTATE_MEDIA,
     OSPC_RSTATE_REDIRECT,
     /* Number of role states */
     OSPC_RSTATE_NUMBER
