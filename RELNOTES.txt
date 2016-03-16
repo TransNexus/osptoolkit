@@ -685,4 +685,5 @@ Version 4.11.1 - 2016-02-23
 * Updated Identity related elements.
 ---------------------------------------------------------------------------
 
-Version 4.11.2 - 
+Version 4.11.2 - 2016-03-16
+* Added RoleInfo State value.

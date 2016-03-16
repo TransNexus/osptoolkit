@@ -61,6 +61,7 @@ const OSPT_MSG_DESC OSPV_RSTATE_DESCS[OSPC_RSTATE_NUMBER] = {
     { OSPC_RSTATE_END2,             "end2" },
     { OSPC_RSTATE_HUNT1,            "hunt1" },
     { OSPC_RSTATE_HUNT2,            "hunt2" },
+    { OSPC_RSTATE_MEDIA,            "media" },
     { OSPC_RSTATE_REDIRECT,         "redirect" }
 };
 
