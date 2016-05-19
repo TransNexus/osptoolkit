@@ -689,4 +689,5 @@ Version 4.11.2 - 2016-03-16
 * Added RoleInfo State value.
 ---------------------------------------------------------------------------
 
-Version 4.11.3 - 
+Version 4.11.3 - 2016-05-19
+* Fixed codec API typos.
