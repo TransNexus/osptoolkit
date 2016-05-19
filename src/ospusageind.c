@@ -2218,7 +2218,7 @@ OSPTBOOL OSPPUsageIndHasCodec(
     OSPTBOOL has = OSPC_FALSE;
 
     if ((ospvUsageInd != OSPC_OSNULL) &&
-        ((ospvService >= OSPC_SERVICE_START) && (ospvType < OSPC_SERVICE_NUMBER)) &&
+        ((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
         ((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)))
     {
         has = (ospvUsageInd->Codec[ospvService][ospvType][0] != '\0');
@@ -2235,7 +2235,7 @@ const char *OSPPUsageIndGetCodec(
     const char *ospvCodec = OSPC_OSNULL;
 
     if ((ospvUsageInd != OSPC_OSNULL) &&
-        ((ospvService >= OSPC_SERVICE_START) && (ospvType < OSPC_SERVICE_NUMBER)) &&
+        ((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
         ((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)))
     {
         ospvCodec = ospvUsageInd->Codec[ospvService][ospvType];
@@ -2251,7 +2251,7 @@ void OSPPUsageIndSetCodec(
     const char *ospvCodec)
 {
     if ((ospvUsageInd != OSPC_OSNULL) &&
-        ((ospvService >= OSPC_SERVICE_START) && (ospvType < OSPC_SERVICE_NUMBER)) &&
+        ((ospvService >= OSPC_SERVICE_START) && (ospvService < OSPC_SERVICE_NUMBER)) &&
         ((ospvType >= OSPC_CODEC_START) && (ospvType < OSPC_CODEC_NUMBER)) &&
         (ospvCodec != OSPC_OSNULL))
     {
