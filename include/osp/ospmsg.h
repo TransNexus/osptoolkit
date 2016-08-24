@@ -77,6 +77,8 @@ typedef enum {
     OSPC_RSTATE_HUNT2,
     OSPC_RSTATE_MEDIA,
     OSPC_RSTATE_REDIRECT,
+    OSPC_RSTATE_INVITE,
+    OSPC_RSTATE_REGISTER,
     /* Number of role states */
     OSPC_RSTATE_NUMBER
 } OSPE_ROLE_STATE;
@@ -95,6 +97,7 @@ typedef enum {
     OSPC_RFORMAT_ASCII,
     OSPC_RFORMAT_XML,
     OSPC_RFORMAT_FW,
+    OSPC_RFORMAT_MESSAGE,
     /* Number of role formats */
     OSPC_RFORMAT_NUMBER
 } OSPE_ROLE_FORMAT;
@@ -118,6 +121,7 @@ typedef enum {
     OSPC_RVENDOR_OPENSIPS,
     OSPC_RVENDOR_PERIMETA,
     OSPC_RVENDOR_SANSAY,
+    OSPC_RVENDOR_SIP,
     OSPC_RVENDOR_SONUS,
     OSPC_RVENDOR_TAQUA,
     /* Number of role vendors */
