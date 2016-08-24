@@ -62,7 +62,9 @@ const OSPT_MSG_DESC OSPV_RSTATE_DESCS[OSPC_RSTATE_NUMBER] = {
     { OSPC_RSTATE_HUNT1,            "hunt1" },
     { OSPC_RSTATE_HUNT2,            "hunt2" },
     { OSPC_RSTATE_MEDIA,            "media" },
-    { OSPC_RSTATE_REDIRECT,         "redirect" }
+    { OSPC_RSTATE_REDIRECT,         "redirect" },
+    { OSPC_RSTATE_INVITE,           "invite" },
+    { OSPC_RSTATE_REGISTER,         "register" }
 };
 
 /* Array that associates role state */
@@ -75,7 +77,8 @@ const OSPT_MSG_DESC OSPV_RFORMAT_DESCS[OSPC_RFORMAT_NUMBER] = {
     { OSPC_RFORMAT_TSV,         "texttsv" },
     { OSPC_RFORMAT_ASCII,       "ascii" },
     { OSPC_RFORMAT_XML,         "xml" },
-    { OSPC_RFORMAT_FW,          "fixedwidth" }
+    { OSPC_RFORMAT_FW,          "fixedwidth" },
+    { OSPC_RFORMAT_MESSAGE,     "message" }
 };
 
 /* Array that associates role vendor */
@@ -94,6 +97,7 @@ const OSPT_MSG_DESC OSPV_RVENDOR_DESCS[OSPC_RVENDOR_NUMBER] = {
     { OSPC_RVENDOR_OPENSIPS,    "opensips" },
     { OSPC_RVENDOR_PERIMETA,    "perimeta" },
     { OSPC_RVENDOR_SANSAY,      "sansay" },
+    { OSPC_RVENDOR_SIP,         "sip" },
     { OSPC_RVENDOR_SONUS,       "sonus" },
     { OSPC_RVENDOR_TAQUA,       "taqua" }
 };

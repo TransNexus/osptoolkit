@@ -693,4 +693,7 @@ Version 4.11.3 - 2016-05-19
 * Fixed codec API typos.
 ---------------------------------------------------------------------------
 
-Version 4.11.4 - 
+Version 4.11.4 - 2016-08-24
+* Added RoleInfo values.
+* Imported patch from Debian project.
+

@@ -1075,74 +1075,106 @@ int testSetDestinationCount()
 
     printf("Enter destination count (0 if N/A)");
 
-    scanf("%d", &destinationCount);
+    if (scanf("%d", &destinationCount) == 1) {
+        printf("Setting destination count to %d\n", destinationCount);
+        errcode = OSPPTransactionSetDestinationCount(OSPVTransactionHandle, destinationCount);
+    } else {
+        errcode = -1;
+    }
+
     getchar();
-
-    printf("Setting destination count to %d\n", destinationCount);
-
-    errcode = OSPPTransactionSetDestinationCount(OSPVTransactionHandle, destinationCount);
 
     return errcode;
 }
 
 int testSetDuration()
 {
+    int errcode = 0;
+
     printf("Enter duration (in seconds) : ");
 
-    scanf("%d", &duration);
+    if (scanf("%d", &duration) != 1) {
+        errcode = -1;
+    }
+
     getchar();
 
-    return 0;
+    return errcode;
 }
 
 int testSetTCCode()
 {
+    int errcode = 0;
+
     printf("Enter TC Code: ");
 
-    scanf("%d", &TCcode);
+    if (scanf("%d", &TCcode) != 1) {
+        errcode = -1;
+    }
+
     getchar();
 
-    return 0;
+    return errcode;
 }
 
 int testSetStartTime()
 {
+    int errcode = 0;
+
     printf("Enter Call Start Time (in seconds since 1970 GMT) : ");
 
-    scanf("%ld", &call_start_time);
+    if (scanf("%ld", &call_start_time) != 1) {
+        errcode = -1;
+    }
+
     getchar();
 
-    return 0;
+    return errcode;
 }
 
 int testSetEndTime()
 {
+    int errcode = 0;
+
     printf("Enter Call End Time (in seconds since 1970 GMT) : ");
 
-    scanf("%ld", &call_end_time);
+    if (scanf("%ld", &call_end_time) != 1) {
+        errcode = -1;
+    }
+
     getchar();
 
-    return 0;
+    return errcode;
 }
 
 int testSetAlertTime()
 {
+    int errcode = 0;
+
     printf("Enter Call Alert Time (in seconds since 1970 GMT) : ");
 
-    scanf("%ld", &call_alert_time);
+    if (scanf("%ld", &call_alert_time) != 1) {
+        errcode = -1;
+    }
+
     getchar();
 
-    return 0;
+    return errcode;
 }
 
 int testSetConnectTime()
 {
+    int errcode = 0;
+
     printf("Enter Call Connect Time (in seconds since 1970 GMT) : ");
 
-    scanf("%ld", &call_connect_time);
+    if (scanf("%ld", &call_connect_time) != 1) {
+        errcode = -1;
+    }
+
     getchar();
 
-    return 0;
+    return errcode;
 }
 
 int testSetServiceType()
@@ -1709,11 +1741,14 @@ int testOSPPSecSignatureVerify()
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
-        _Read(tokenfd, (unsigned char *)&signatureLength, 4);
-
-        OSPM_MALLOC(signature, unsigned char, signatureLength);
-
-        _Read(tokenfd, signature, signatureLength);
+        if (_Read(tokenfd, (unsigned char *)&signatureLength, 4) == 4) {
+            OSPM_MALLOC(signature, unsigned char, signatureLength);
+            if (_Read(tokenfd, signature, signatureLength) != signatureLength) {
+                errcode = -1;
+            }
+        } else {
+            errcode = -1;
+        }
 
         _Close(tokenfd);
     }
@@ -1862,7 +1897,7 @@ int testSetOperatorName()
 
 int testSetSIPHeaders()
 {
-    const unsigned number = 3;
+    #define number 3
     const char *fingerprints[number] = { "fingerprint1", "fingerprint2", "fingerprint3" };
     int errcode = 0;
 
@@ -2395,8 +2430,8 @@ int testSetIdentity()
     const char *type = "Type";
     const char *canon = "Canon";
     int errcode = 0;
-errcode = OSPPTransactionSetIdentity(OSPVTransactionHandle, strlen(sign), (const unsigned char *)sign, alg, info, type, strlen(canon), (const unsigned char *)canon);
 
+    errcode = OSPPTransactionSetIdentity(OSPVTransactionHandle, strlen(sign), (const unsigned char *)sign, alg, info, type, strlen(canon), (const unsigned char *)canon);
 
     return errcode;
 }
@@ -2565,16 +2600,21 @@ int testAPI(int apinumber)
         break;
     case 43:
         printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
-        scanf("%d", &build_new_trans);
+        if (scanf("%d", &build_new_trans) == 1) {
+            errcode = testBuildUsageFromScratch(OSPC_ROLE_SOURCE, build_new_trans);
+        } else {
+            errcode = -1;
+        }
         getchar();
-        errcode = testBuildUsageFromScratch(OSPC_ROLE_SOURCE, build_new_trans);
         break;
     case 44:
         printf("Build a new transaction ? Press 1 for Yes, 0 for No : ");
-        scanf("%d", &build_new_trans);
+        if (scanf("%d", &build_new_trans) == 1) {
+            errcode = testBuildUsageFromScratch(OSPC_ROLE_DESTINATION, build_new_trans);
+        } else {
+            errcode = -1;
+        }
         getchar();
-        errcode =
-            testBuildUsageFromScratch(OSPC_ROLE_DESTINATION, build_new_trans);
         break;
     case 45:
         errcode = testOSPPTransactionGetLookAheadInfoIfPresent();
@@ -2631,42 +2671,46 @@ int testAPI(int apinumber)
         break;
     case 100:
         printf("Enter the number of Providers to be created .. ");
-        scanf("%d", &num_providers);
-        getchar();
-        if (num_providers > OSPC_MAX_PROVIDERS) {
-            printf("Cannot run the test. The entered value is greater than the maximum providers allowed\n");
-            errcode = OSPC_ERR_PROV_MAX_PROVIDERS;
+        if (scanf("%d", &num_providers) == 1) {
+            if (num_providers > OSPC_MAX_PROVIDERS) {
+                printf("Cannot run the test. The entered value is greater than the maximum providers allowed\n");
+                errcode = OSPC_ERR_PROV_MAX_PROVIDERS;
+            } else {
+                printf("Enter the number of Transactions to be run .. ");
+                if (scanf("%d", &trans_to_run) == 1) {
+                    if (2 * trans_to_run > OSPC_MAX_TRANS) {
+                        errcode = OSPC_ERR_TRAN_NO_TRANS_SPACE;
+                        printf("Cannot run the test. The entered value is greater than the maximum transactions allowed\n");
+                    }
+
+                    if ((errcode == 0) && (trans_to_run > MAX_QUEUE_SIZE)) {
+                        printf("Warning !!! The toolkit may not be able to process - %d calls because the maximum queue size is - %d\n",
+                             trans_to_run, MAX_QUEUE_SIZE);
+                    }
+
+                    /*
+                     * Launch the threads
+                     */
+                    if (errcode == 0) {
+                        for (i = 0; i < num_providers; i++) {
+                            OSPM_CREATE_THREAD(MultProviderThrId[i],
+                                NULL,
+                                testNonBlockingPerformanceTest,
+                                (void *)&trans_to_run, errcode);
+
+                            printf("Created Thread [%d] with thread id: [%lu]\n", i, (unsigned long int)MultProviderThrId[i]);
+                        }
+                        for (i = 0; i < num_providers; i++) {
+                            OSPM_THR_JOIN(MultProviderThrId[i], NULL);
+                        }
+                    }
+                }
+                getchar();
+            }
         } else {
-            printf("Enter the number of Transactions to be run .. ");
-            scanf("%d", &trans_to_run);
-            getchar();
-            if (2 * trans_to_run > OSPC_MAX_TRANS) {
-                errcode = OSPC_ERR_TRAN_NO_TRANS_SPACE;
-                printf("Cannot run the test. The entered value is greater than the maximum transactions allowed\n");
-            }
-
-            if ((errcode == 0) && (trans_to_run > MAX_QUEUE_SIZE)) {
-                printf("Warning !!! The toolkit may not be able to process - %d calls because the maximum queue size is - %d\n",
-                     trans_to_run, MAX_QUEUE_SIZE);
-            }
-
-            /*
-             * Launch the threads
-             */
-            if (errcode == 0) {
-                for (i = 0; i < num_providers; i++) {
-                    OSPM_CREATE_THREAD(MultProviderThrId[i],
-                        NULL,
-                        testNonBlockingPerformanceTest,
-                        (void *)&trans_to_run, errcode);
-
-                    printf("Created Thread [%d] with thread id: [%lu]\n", i, (unsigned long int)MultProviderThrId[i]);
-                }
-                for (i = 0; i < num_providers; i++) {
-                    OSPM_THR_JOIN(MultProviderThrId[i], NULL);
-                }
-            }
+            errcode = -1;
         }
+        getchar();
         break;
     case 101:
         errcode = testNonBlockingPerformanceTestForCapabilities();
@@ -2711,7 +2755,7 @@ int testAPI(int apinumber)
         errcode = testSetSessionId();
         break;
     case 224:
-        errcode = testSetCustomInfo(true);
+        errcode = testSetCustomInfo(1);
         break;
     case 225:
         errcode = testSetReleaseSource();
@@ -2844,7 +2888,7 @@ int testAPI(int apinumber)
             errcode = testSetCallingPartyInfo();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetCustomInfo(true);
+            errcode = testSetCustomInfo(1);
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetIdentity();
@@ -2909,7 +2953,7 @@ int testAPI(int apinumber)
             errcode = testSetSessionId();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetCustomInfo(false);
+            errcode = testSetCustomInfo(0);
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetReleaseSource();
@@ -3102,11 +3146,15 @@ int testMenu()
         printf("---------------------------------------------------------------------\n");
         printf("Enter function number or 'q' to quit => ");
     }
-    fgets(inbuf, 256, stdin);
-    if (inbuf[0] == 'q' || inbuf[0] == 'Q')
-        funcnum = -1;
-    else
-        funcnum = atoi(inbuf);
+    if (fgets(inbuf, 256, stdin) != NULL) {
+        if (inbuf[0] == 'q' || inbuf[0] == 'Q') {
+            funcnum = -1;
+        } else {
+            funcnum = atoi(inbuf);
+        }
+    } else {
+        funcnum = 0;
+    }
 
     return funcnum;
 }
@@ -3791,9 +3839,11 @@ int testNonBlockingPerformanceTestForCapabilities()
 
     fflush(stdin);
     printf("Enter the number of Simultaneous Calls : ");
-    scanf("%d", &TEST_NUM);
+    if (scanf("%d", &TEST_NUM) != 1) {
+        TEST_NUM = OSPC_MAX_TRANS > MAX_QUEUE_SIZE ? MAX_QUEUE_SIZE : OSPC_MAX_TRANS;
+    }
 
-    if ((TEST_NUM) > OSPC_MAX_TRANS)
+    if (TEST_NUM > OSPC_MAX_TRANS)
         printf("Warning !! The toolkit may not be able to process - %d Calls because the maximum transactions that can be created is - %d\n",
             TEST_NUM, OSPC_MAX_TRANS);
 

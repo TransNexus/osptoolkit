@@ -15,13 +15,6 @@
 ***                                                                     ***
 **************************************************************************/
 
-/*
- * Copyright (c) 1993 Addison-Wesley Publishing Company.
- * All rights reserved.  This source code is provided
- * for its instructional value, and is not guaranteed
- * for any particular purpose.
- */
-
 #include "osp/osptnlog.h"
 #ifndef _WIN32
 #include <stdio.h>
