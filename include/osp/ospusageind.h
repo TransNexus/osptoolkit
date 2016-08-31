@@ -164,6 +164,7 @@ extern "C" {
     OSPTBOOL OSPPUsageIndHasSessionId(OSPT_USAGE_IND *, OSPE_SESSION_ID);
     OSPT_CALL_ID *OSPPUsageIndGetSessionId(OSPT_USAGE_IND *, OSPE_SESSION_ID);
     void OSPPUsageIndSetSessionId(OSPT_USAGE_IND *, OSPE_SESSION_ID, OSPT_CALL_ID *);
+    void OSPPUsageIndSetChargingVevtor(OSPT_USAGE_IND *, const char *, const char *, const char *, const char *);
 
 #ifdef __cplusplus
 }

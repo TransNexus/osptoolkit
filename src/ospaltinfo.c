@@ -58,6 +58,11 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_INGRESS,         "ingress" },
     { OSPC_ALTINFO_EGRESS,          "egress" },
     { OSPC_ALTINFO_CNAM,            "cnam" },
+    { OSPC_ALTINFO_SWITCHID,        "switchId" },
+    { OSPC_ALTINFO_ICID,            "icidvalue" },
+    { OSPC_ALTINFO_GENERATEDAT,     "icidgeneratedat" },
+    { OSPC_ALTINFO_ORIGIOI,         "origioi" },
+    { OSPC_ALTINFO_TERMIOI,         "termioi" },
     /* For other attributes */
     { OSPC_ALTINFO_TRUE,            "true" },
     { OSPC_ALTINFO_FALSE,           "false" },

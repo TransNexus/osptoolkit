@@ -135,6 +135,8 @@ typedef struct _OSPTTRANS {
     OSPTTIME RequestDate;
     OSPTLIST SDPFingerPrint;
     OSPT_IDENTITY Identity;
+    char SrcSwitchId[OSPC_SIZE_NORID];
+    char PCVICID[OSPC_SIZE_NORSTR];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

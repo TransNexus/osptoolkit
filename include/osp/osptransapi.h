@@ -161,6 +161,10 @@ extern "C" {
     int OSPPTransactionSetFingerPrint(OSPTTRANHANDLE, unsigned, const char **);
     int OSPPTransactionSetIdentity(OSPTTRANHANDLE, unsigned, const unsigned char *, const char *, const char *, const char *, unsigned, const unsigned char *);
     int OSPPTransactionGetIdentity(OSPTTRANHANDLE, unsigned *, unsigned char *, unsigned, char *, unsigned, char *, unsigned, char *, unsigned *, unsigned char *);
+    int OSPPTransactionSetSrcSwitchId(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetDestSwitchId(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionGetDestSwitchId(OSPTTRANHANDLE, unsigned, char *);
+    int OSPPTransactionSetChargingVector(OSPTTRANHANDLE, const char *, const char *, const char *, const char *);
 
 #ifdef __cplusplus
 }

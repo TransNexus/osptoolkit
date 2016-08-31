@@ -309,6 +309,12 @@ int OSPPTransactionBuildUsage(
                 OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
                 altinfo = OSPC_OSNULL;
             }
+            if ((errcode == OSPC_ERR_NO_ERROR) && (ospvDest->SwitchId[0] != '\0')) {
+                dest = ospvDest->SwitchId;
+                altinfo = OSPPAltInfoNew(OSPM_STRLEN(dest), dest, OSPC_ALTINFO_SWITCHID);
+                OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
+                altinfo = OSPC_OSNULL;
+            }
 
             /* Get Destination Alternates */
             if ((errcode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasDestinationAlt(ospvTrans->AuthReq)) {
@@ -1727,15 +1733,15 @@ int OSPPTransactionRequestNew(
                 altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSourceDevice), ospvSourceDevice, OSPC_ALTINFO_TRANSPORT);
                 if (altinfo != OSPC_OSNULL) {
                     OSPPListAppend((OSPTLIST *)&(ospvTrans->AuthReq->DeviceInfo), altinfo);
+                    altinfo = OSPC_OSNULL;
                 }
-                altinfo = OSPC_OSNULL;
             }
 
             /* --------------------------------------
              * SourceAlternate
              * --------------------------------------
              */
-            if ((ospvSource != OSPC_OSNULL) || (ospvTrans->SrcNetworkId != OSPC_OSNULL) || (ospvUser != OSPC_OSNULL)) {
+            if ((ospvSource != OSPC_OSNULL) || (ospvTrans->SrcNetworkId != OSPC_OSNULL) || (ospvTrans->SrcSwitchId[0] != '\0') || (ospvUser != OSPC_OSNULL)) {
                 /* source alternates - create a linked list */
                 OSPPListNew((OSPTLIST *)&(ospvTrans->AuthReq->SourceAlternate));
 
@@ -1743,25 +1749,33 @@ int OSPPTransactionRequestNew(
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvTrans->SrcNetworkId), ospvTrans->SrcNetworkId, OSPC_ALTINFO_NETWORK);
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(ospvTrans->AuthReq->SourceAlternate), (void *)altinfo);
+                        altinfo = OSPC_OSNULL;
                     }
                 }
-                altinfo = OSPC_OSNULL;
+
+                if (ospvTrans->SrcSwitchId[0] != '\0') {
+                    altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvTrans->SrcSwitchId), ospvTrans->SrcSwitchId, OSPC_ALTINFO_SWITCHID);
+                    if (altinfo != OSPC_OSNULL) {
+                        OSPPListAppend((OSPTLIST *)&(ospvTrans->AuthReq->SourceAlternate), (void *)altinfo);
+                        altinfo = OSPC_OSNULL;
+                    }
+                }
 
                 if (ospvSource != OSPC_OSNULL) {
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvSource), ospvSource, OSPC_ALTINFO_TRANSPORT);
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(ospvTrans->AuthReq->SourceAlternate), (void *)altinfo);
+                        altinfo = OSPC_OSNULL;
                     }
                 }
-                altinfo = OSPC_OSNULL;
 
                 if (ospvUser != OSPC_OSNULL) {
                     altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvUser), ospvUser, OSPC_ALTINFO_SUBSCRIBER);
                     if (altinfo != OSPC_OSNULL) {
                         OSPPListAppend((OSPTLIST *)&(ospvTrans->AuthReq->SourceAlternate), (void *)altinfo);
+                        altinfo = OSPC_OSNULL;
                     }
                 }
-                altinfo = OSPC_OSNULL;
             } else {
                 errorcode = OSPC_ERR_TRAN_SOURCE_INVALID;
             }
@@ -1790,6 +1804,7 @@ int OSPPTransactionRequestNew(
                         altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvPreferredDestinations[i]), ospvPreferredDestinations[i], OSPC_ALTINFO_TRANSPORT);
                         if (altinfo != OSPC_OSNULL) {
                             OSPPListAppend((OSPTLIST *)&(ospvTrans->AuthReq->DestinationAlternate), (void *)altinfo);
+                            altinfo = OSPC_OSNULL;
                         }
                     } else {
                         /* we're done */
@@ -1797,7 +1812,6 @@ int OSPPTransactionRequestNew(
                     }
 
                     i++;
-                    altinfo = OSPC_OSNULL;
                 }
             }
 
