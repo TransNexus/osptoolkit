@@ -702,8 +702,8 @@ int testOSPPTransactionSetPricingInfo()
 int testOSPPTransactionSetNetworkId()
 {
     int errcode = 0, i = 0;
-    char SrcNetId[128];
-    char DestNetId[128];
+    char SrcNetId[OSPC_SIZE_NORID];
+    char DestNetId[OSPC_SIZE_NORID];
 
     printf("Enter the Source Network Identifier : ");
     fflush(stdin);
@@ -1964,8 +1964,17 @@ int testSetNetworkId()
 {
     int errcode = 0;
 
-    errcode = OSPPTransactionSetSrcNetworkId(OSPVTransactionHandle, "SrcNetworkId");
-    errcode = OSPPTransactionSetDestNetworkId(OSPVTransactionHandle, "DestNetworkId");
+    errcode = OSPPTransactionSetNetworkIds(OSPVTransactionHandle, "SrcNetworkId", "DestNetworkId");
+
+    return errcode;
+}
+
+int testSetSwitchId()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetSrcSwitchId(OSPVTransactionHandle, "SrcSwitchId");
+    errcode = OSPPTransactionSetDestSwitchId(OSPVTransactionHandle, "DestSwitchId");
 
     return errcode;
 }
@@ -2459,6 +2468,32 @@ int testGetIdentity()
     return errcode;
 }
 
+int testGetDestSwitchId()
+{
+    char swid[OSPC_SIZE_NORID];
+    int errcode = OSPC_ERR_NO_ERROR;
+
+    errcode = OSPPTransactionGetDestSwitchId(OSPVTransactionHandle, sizeof(swid), swid);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        printf("Destination switch ID: %s\n", swid);
+    }
+
+    return errcode;
+}
+
+int testSetChargingVector()
+{
+    const char *icid = "PCVICID";
+    const char *genat = "PCVGENAT";
+    const char *origioi = "PCVORIGIOI";
+    const char *termioi = "PCVTERMIOI";
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetChargingVector(OSPVTransactionHandle, icid, genat, origioi, termioi);
+
+    return errcode;
+}
+
 int testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
@@ -2750,6 +2785,7 @@ int testAPI(int apinumber)
         break;
     case 222:
         errcode = testSetNetworkId();
+        errcode = testSetSwitchId();
         break;
     case 223:
         errcode = testSetSessionId();
@@ -2805,6 +2841,9 @@ int testAPI(int apinumber)
     case 239:
         errcode = testSetCallType();
         break;
+    case 240:
+        errcode = testSetChargingVector();
+        break;
     case 250:
         errcode = testGetNumberPortability();
         break;
@@ -2819,6 +2858,9 @@ int testAPI(int apinumber)
         break;
     case 254:
         errcode = testGetIdentity();
+        break;
+    case 255:
+        errcode = testGetDestSwitchId();
         break;
     case 300:
         errcode = testStatsLost();
@@ -2858,6 +2900,10 @@ int testAPI(int apinumber)
             errcode = testOSPPTransactionNew();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetNetworkId();
+            errcode = testSetSwitchId();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetOperatorName();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
@@ -2892,6 +2938,9 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetIdentity();
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetChargingVector();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionRequestAuthorisation();
@@ -2945,9 +2994,6 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetCodec();
-        }
-        if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetNetworkId();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetSessionId();
@@ -3126,7 +3172,7 @@ int testMenu()
         printf("216) Set Realms                       217) Set Application ID\n");
         printf("218) Set SIP Headers                  219) Set Total Setup Attempts\n");
         printf("220) Set Signaling Protocol           221) Set Codec\n");
-        printf("222) Set Network ID                   223) Set Session ID\n");
+        printf("222) Set Network/Switch ID            223) Set Session ID\n");
         printf("224) Set Custom Info                  225) Set Release Source\n");
         printf("226) Set Call Party Info              227) Set Transfer ID\n");
         printf("228) Set Transfer Status              229) Set Network Translated Called Number\n");
@@ -3135,9 +3181,10 @@ int testMenu()
         printf("234) Set User Agent                   235) Set Media Addresses\n");
         printf("236) Set Proxy Addresses              237) Set Provider PDD\n");
         printf("238) Set JIP                          239) Set Call Type\n");
+        printf("240) Set Charging Vector\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
-        printf("254) Get Identity\n");
+        printf("254) Get Identity                     255) Get Destination Switch ID\n");
         printf("300) Set Lost                         301) Set Jitter\n");
         printf("302) Set Delay                        303) Set Round Trip Delay\n");
         printf("304) Set Octets                       305) Set Packets\n");

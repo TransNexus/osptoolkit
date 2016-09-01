@@ -52,6 +52,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_CDRPROXYHOST,         "Host" },
     { OSPC_MELEM_CDRPROXYSUBFOLDER,    "SubfolderName" },
     { OSPC_MELEM_CHARGEINFO,           "ChargeInfoSourceInfo" },
+    { OSPC_MELEM_CHARGINGVECTOR,       "ChargingVector" },
     { OSPC_MELEM_CODE,                 "Code" },
     { OSPC_MELEM_CODEC,                "Codec" },
     { OSPC_MELEM_CONNECTTIME,          "ConnectTime" },

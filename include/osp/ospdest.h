@@ -148,6 +148,7 @@ typedef struct {
     char CallType[OSPC_SIZE_NORSTR];
     char CallCategory[OSPC_SIZE_NORSTR];
     char NetworkType[OSPC_SIZE_NORSTR];
+    char SwitchId[OSPC_SIZE_NORID];
 } OSPT_DEST;
 
 /* Function Prototypes */
@@ -208,6 +209,7 @@ extern "C" {
     void OSPPDestProtocolFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
     void OSPPSrcInfoFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
     void OSPPDestInfoFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
+    void OSPPDestAltFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
     int OSPPUsageDetailFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
     void OSPPServiceFromElement(OSPT_XML_ELEM *, OSPT_DEST *);
 

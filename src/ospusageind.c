@@ -2062,6 +2062,17 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
+            /* Add charging vector */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->PCVICID[0] != '\0')) {
+                attrtype[0] = OSPC_MATTR_TYPE;
+                attrvalue[0] = OSPC_ALTINFO_ICID;
+                errcode = OSPPStringToElement(OSPC_MELEM_CHARGINGVECTOR, trans->PCVICID, 1, attrtype, attrvalue, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, usageindelem);
                 usageindelem = OSPC_OSNULL;

@@ -773,7 +773,7 @@ int OSPPDestFromElement(        /* returns error code */
                 OSPPDestInfoFromElement(elem, dest);
                 break;
             case OSPC_MELEM_DESTALT:
-                OSPPDestSetNetworkAddr(dest, OSPPXMLElemGetValue(elem));
+                OSPPDestAltFromElement(elem, dest);
                 break;
             case OSPC_MELEM_DESTSIGADDR:
                 OSPPDestSetAddr(dest, OSPPXMLElemGetValue(elem));
@@ -1039,6 +1039,31 @@ void OSPPDestInfoFromElement(
                 break;
             case OSPC_ALTINFO_MMS:
                 OSPM_STRNCPY(ospvDest->URL[OSPC_URL_MMS], OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->URL[OSPC_URL_MMS]));
+                break;
+            default:
+                break;
+            }
+        }
+    }
+}
+
+void OSPPDestAltFromElement(
+    OSPT_XML_ELEM *ospvElem,
+    OSPT_DEST *ospvDest)
+{
+    OSPT_XML_ATTR* attr = OSPC_OSNULL;
+
+    for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElem);
+        (attr != OSPC_OSNULL);
+        attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElem, attr))
+    {
+        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_TYPE) {
+            switch (OSPPAltInfoTypeGetPart(OSPPXMLAttrGetValue(attr))) {
+            case OSPC_ALTINFO_NETWORK:
+                OSPPDestSetNetworkAddr(ospvDest, OSPPXMLElemGetValue(ospvElem));
+                break;
+            case OSPC_ALTINFO_SWITCHID:
+                OSPM_STRNCPY(ospvDest->SwitchId, OSPPXMLElemGetValue(ospvElem), sizeof(ospvDest->SwitchId));
                 break;
             default:
                 break;

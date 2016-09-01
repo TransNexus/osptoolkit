@@ -1050,6 +1050,19 @@ int OSPPAuthReqToElement(       /* returns error code */
          }
     }
 
+    /* Add charging vector  */
+    if (errcode == OSPC_ERR_NO_ERROR) {
+         if (trans->PCVICID[0] != '\0') {
+            attrtype = OSPC_MATTR_TYPE;
+            attrvalue = OSPC_ALTINFO_ICID;
+            errcode = OSPPStringToElement(OSPC_MELEM_CHARGINGVECTOR, trans->PCVICID, 1, &attrtype, &attrvalue, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+         }
+    }
+
     /* Now add the authreqelem to the main elem */
     if (errcode == OSPC_ERR_NO_ERROR) {
         OSPPXMLElemAddChild(*ospvElem, authreqelem);
