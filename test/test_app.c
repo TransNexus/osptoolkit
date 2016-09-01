@@ -2468,6 +2468,19 @@ int testGetIdentity()
     return errcode;
 }
 
+int testGetDestSwitchId()
+{
+    char swid[OSPC_SIZE_NORID];
+    int errcode = OSPC_ERR_NO_ERROR;
+
+    errcode = OSPPTransactionGetDestSwitchId(OSPVTransactionHandle, sizeof(swid), swid);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        printf("Destination switch ID: %s\n", swid);
+    }
+
+    return errcode;
+}
+
 int testSetChargingVector()
 {
     const char *icid = "PCVICID";
@@ -2846,6 +2859,9 @@ int testAPI(int apinumber)
     case 254:
         errcode = testGetIdentity();
         break;
+    case 255:
+        errcode = testGetDestSwitchId();
+        break;
     case 300:
         errcode = testStatsLost();
         break;
@@ -3168,7 +3184,7 @@ int testMenu()
         printf("240) Set Charging Vector\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
-        printf("254) Get Identity\n");
+        printf("254) Get Identity                     255) Get Destination Switch ID\n");
         printf("300) Set Lost                         301) Set Jitter\n");
         printf("302) Set Delay                        303) Set Round Trip Delay\n");
         printf("304) Set Octets                       305) Set Packets\n");
