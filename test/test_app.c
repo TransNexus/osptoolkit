@@ -2100,7 +2100,8 @@ int testSetServiceProvider()
 {
     int errcode = 0;
 
-    errcode = OSPPTransactionSetServiceProvider(OSPVTransactionHandle, "providerofservice");
+    errcode = OSPPTransactionSetServiceProvider(OSPVTransactionHandle, OSPC_SLG_SOURCE, "srcproviderofservice");
+    errcode = OSPPTransactionSetServiceProvider(OSPVTransactionHandle, OSPC_SLEG_DESTINATION, "dstproviderofservice");
 
     return errcode;
 }

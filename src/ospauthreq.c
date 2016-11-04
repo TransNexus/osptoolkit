@@ -950,11 +950,24 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
     }
 
-    /* Add service provider */
+    /* Add source service provider */
     if (errcode == OSPC_ERR_NO_ERROR) {
-        if (trans->ServiceProvider[0] != '\0') {
-            errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDER, trans->ServiceProvider, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+        if (trans->SrcServiceProvider[0] != '\0') {
+            errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDER, trans->SrcServiceProvider, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
             if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* Add destination service provider */
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (trans->DestServiceProvider[0] != '\0') {
+            attrtype = OSPC_MATTR_TYPE;
+            attrvalue = OSPC_ALTINFO_DESTINATION;
+            errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDER, trans->DestServiceProvider, 1, &attrtype, &attrvalue, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {            
                 OSPPXMLElemAddChild(authreqelem, elem);
                 elem = OSPC_OSNULL;
             }
