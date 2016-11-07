@@ -2096,11 +2096,20 @@ int testSetNetTransCalled()
     return errcode;
 }
 
-int testSetServiceProvider()
+int testSetSrcServiceProvider()
 {
     int errcode = 0;
 
-    errcode = OSPPTransactionSetServiceProvider(OSPVTransactionHandle, "providerofservice");
+    errcode = OSPPTransactionSetSrcServiceProvider(OSPVTransactionHandle, "srcproviderofservice");
+ 
+    return errcode;
+}
+
+int testSetDestServiceProvider()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetDestServiceProvider(OSPVTransactionHandle, "dstproviderofservice");
 
     return errcode;
 }
@@ -2810,7 +2819,8 @@ int testAPI(int apinumber)
         errcode = testSetNetTransCalled();
         break;
     case 230:
-        errcode = testSetServiceProvider();
+        errcode = testSetSrcServiceProvider();
+        errcode = testSetDestServiceProvider();
         break;
     case 231:
         errcode = testSetSystemId();
@@ -2928,7 +2938,7 @@ int testAPI(int apinumber)
             errcode = testSetJIP();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetServiceProvider();
+            errcode = testSetSrcServiceProvider();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetCallingPartyInfo();
@@ -2957,6 +2967,9 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetProviderPDD(3010);
+        }
+        if (errcode == OSPC_ERR_NO_ERROR) {
+            errcode = testSetDestServiceProvider();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testOSPPTransactionRecordFailure();

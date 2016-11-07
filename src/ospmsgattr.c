@@ -64,6 +64,7 @@ const OSPT_MSG_DESC OSPV_RSTATE_DESCS[OSPC_RSTATE_NUMBER] = {
     { OSPC_RSTATE_MEDIA,            "media" },
     { OSPC_RSTATE_REDIRECT,         "redirect" },
     { OSPC_RSTATE_INVITE,           "invite" },
+    { OSPC_RSTATE_REFER,            "refer" },
     { OSPC_RSTATE_REGISTER,         "register" }
 };
 
@@ -83,23 +84,24 @@ const OSPT_MSG_DESC OSPV_RFORMAT_DESCS[OSPC_RFORMAT_NUMBER] = {
 
 /* Array that associates role vendor */
 const OSPT_MSG_DESC OSPV_RVENDOR_DESCS[OSPC_RVENDOR_NUMBER] = {
-    { OSPC_RVENDOR_ACME,        "acme" },
-    { OSPC_RVENDOR_ASTERISK,    "asterisk" },
-    { OSPC_RVENDOR_AUDIOCODES,  "audiocodes" },
-    { OSPC_RVENDOR_AVAYA,       "avaya" },
-    { OSPC_RVENDOR_BROADWORKS,  "broadworks" },
-    { OSPC_RVENDOR_CISCO,       "cisco" },
-    { OSPC_RVENDOR_CUCM,        "cucm" },
-    { OSPC_RVENDOR_FREESWITCH,  "freeswitch" },
-    { OSPC_RVENDOR_GENBANDS3,   "genbands3" },
-    { OSPC_RVENDOR_KAMAILIO,    "kamailio" },
-    { OSPC_RVENDOR_METASPHERE,  "metasphere" },
-    { OSPC_RVENDOR_OPENSIPS,    "opensips" },
-    { OSPC_RVENDOR_PERIMETA,    "perimeta" },
-    { OSPC_RVENDOR_SANSAY,      "sansay" },
-    { OSPC_RVENDOR_SIP,         "sip" },
-    { OSPC_RVENDOR_SONUS,       "sonus" },
-    { OSPC_RVENDOR_TAQUA,       "taqua" }
+    { OSPC_RVENDOR_ACME,            "acme" },
+    { OSPC_RVENDOR_ASTERISK,        "asterisk" },
+    { OSPC_RVENDOR_AUDIOCODES,      "audiocodes" },
+    { OSPC_RVENDOR_AVAYA,           "avaya" },
+    { OSPC_RVENDOR_BROADWORKS,      "broadworks" },
+    { OSPC_RVENDOR_CISCO,           "cisco" },
+    { OSPC_RVENDOR_CUCM,            "cucm" },
+    { OSPC_RVENDOR_FREESWITCH,      "freeswitch" },
+    { OSPC_RVENDOR_GENBANDS3,       "genbands3" },
+    { OSPC_RVENDOR_KAMAILIO,        "kamailio" },
+    { OSPC_RVENDOR_METASPHERE,      "metasphere" },
+    { OSPC_RVENDOR_OPENSIPS,        "opensips" },
+    { OSPC_RVENDOR_PERIMETA,        "perimeta" },
+    { OSPC_RVENDOR_SANSAY,          "sansay" },
+    { OSPC_RVENDOR_SIP,             "sip" },
+    { OSPC_RVENDOR_SONUS,           "sonus" },
+    { OSPC_RVENDOR_TAQUA,           "taqua" },
+    { OSPC_RVENDOR_TELCOBRIDGES,    "telcobridges" }
 };
 
 /* Array that associates service type and names */

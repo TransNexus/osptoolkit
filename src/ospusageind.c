@@ -1930,9 +1930,20 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
-            /* Add service provider */
-            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->ServiceProvider[0] != '\0')) {
-                errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDER, trans->ServiceProvider, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+            /* Add source service provider */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->SrcServiceProvider[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDER, trans->SrcServiceProvider, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
+            /* Add destination service provider */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (usage->DestServiceProvider[0] != '\0')) {
+                attrtype[0] = OSPC_MATTR_TYPE;
+                attrvalue[0] = OSPC_ALTINFO_DESTINATION;
+                errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDER, usage->DestServiceProvider, 1, attrtype, attrvalue, &subelem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(usageindelem, subelem);
                     subelem = OSPC_OSNULL;

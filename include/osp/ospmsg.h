@@ -78,6 +78,7 @@ typedef enum {
     OSPC_RSTATE_MEDIA,
     OSPC_RSTATE_REDIRECT,
     OSPC_RSTATE_INVITE,
+    OSPC_RSTATE_REFER,
     OSPC_RSTATE_REGISTER,
     /* Number of role states */
     OSPC_RSTATE_NUMBER
@@ -124,6 +125,7 @@ typedef enum {
     OSPC_RVENDOR_SIP,
     OSPC_RVENDOR_SONUS,
     OSPC_RVENDOR_TAQUA,
+    OSPC_RVENDOR_TELCOBRIDGES,
     /* Number of role vendors */
     OSPC_RVENDOR_NUMBER
 } OSPE_ROLE_VENDOR;

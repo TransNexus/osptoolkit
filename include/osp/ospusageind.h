@@ -74,6 +74,7 @@ typedef struct {
     char CallType[OSPC_SIZE_NORSTR];
     char CallCategory[OSPC_SIZE_NORSTR];
     char NetworkType[OSPC_SIZE_NORSTR];
+    char DestServiceProvider[OSPC_SIZE_NORSTR];
 } OSPT_USAGE_IND;
 
 /* Function Prototypes */
