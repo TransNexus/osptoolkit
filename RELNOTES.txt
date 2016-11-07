@@ -706,3 +706,6 @@ Version 4.13.0 - 2016-11-07
 * Added TelcoBridges vendor info.
 * Added REFER state info.
 * Added destination service provider ID support.
+---------------------------------------------------------------------------
+
+Version 4.13.1 - 
