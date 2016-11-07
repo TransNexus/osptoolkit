@@ -149,6 +149,7 @@ typedef struct {
     char CallCategory[OSPC_SIZE_NORSTR];
     char NetworkType[OSPC_SIZE_NORSTR];
     char SwitchId[OSPC_SIZE_NORID];
+    char DestServiceProvider[OSPC_SIZE_NORSTR];
 } OSPT_DEST;
 
 /* Function Prototypes */

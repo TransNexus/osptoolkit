@@ -702,6 +702,7 @@ Version 4.12.0 - 2016-09-01
 * Added switch ID and P-Charging-Vector support.
 ---------------------------------------------------------------------------
 
-Version 4.13.0 - 
+Version 4.13.0 - 2016-11-07
 * Added TelcoBridges vendor info.
+* Added REFER state info.
 * Added destination service provider ID support.

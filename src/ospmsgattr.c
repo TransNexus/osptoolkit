@@ -64,6 +64,7 @@ const OSPT_MSG_DESC OSPV_RSTATE_DESCS[OSPC_RSTATE_NUMBER] = {
     { OSPC_RSTATE_MEDIA,            "media" },
     { OSPC_RSTATE_REDIRECT,         "redirect" },
     { OSPC_RSTATE_INVITE,           "invite" },
+    { OSPC_RSTATE_REFER,            "refer" },
     { OSPC_RSTATE_REGISTER,         "register" }
 };
 

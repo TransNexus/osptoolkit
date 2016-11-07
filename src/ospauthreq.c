@@ -961,19 +961,6 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
     }
 
-    /* Add destination service provider */
-    if (errcode == OSPC_ERR_NO_ERROR) {
-        if (trans->DestServiceProvider[0] != '\0') {
-            attrtype = OSPC_MATTR_TYPE;
-            attrvalue = OSPC_ALTINFO_DESTINATION;
-            errcode = OSPPStringToElement(OSPC_MELEM_SERVICEPROVIDER, trans->DestServiceProvider, 1, &attrtype, &attrvalue, &elem);
-            if (errcode == OSPC_ERR_NO_ERROR) {            
-                OSPPXMLElemAddChild(authreqelem, elem);
-                elem = OSPC_OSNULL;
-            }
-        }
-    }
-
     /* Add calling party info */
     OSPT_CALL_PARTY *cparty = &(trans->CallingParty);
     if (errcode == OSPC_ERR_NO_ERROR) {

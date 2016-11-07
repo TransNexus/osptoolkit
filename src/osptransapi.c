@@ -2135,7 +2135,6 @@ int OSPPTransactionNew(
         trans->NetworkTranslatedCalledFormat = OSPC_NFORMAT_E164;
         trans->NetworkTranslatedCalled[0] = '\0';
         trans->SrcServiceProvider[0] = '\0';
-        trans->DestServiceProvider[0] = '\0';
         trans->SystemId[0] = '\0';
         trans->RelatedReason[0] = '\0';
         trans->TotalSetupAttempts = -1;
@@ -5298,24 +5297,43 @@ int OSPPTransactionSetNetworkTranslatedCalledNumber(
     return errcode;
 }
 
-int OSPPTransactionSetServiceProvider(
+int OSPPTransactionSetSrcServiceProvider(
     OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
-    OSPE_SESSION_LEG ospvLeg,			/* In - Call leg */
     const char *ospvServiceProvider)    /* In - Service provider */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-	if ((ospvServiceProvider == OSPC_OSNULL) || (ospvServiceProvider[0] == '\0')) {
+    if ((ospvServiceProvider == OSPC_OSNULL) || (ospvServiceProvider[0] == '\0')) {
         errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            if (ospvLeg == OSPC_SLEG_DESTINATION) {
-                OSPM_STRNCPY(trans->DestServiceProvider, ospvServiceProvider, sizeof(trans->DestServiceProvider));
-            } else {
-                OSPM_STRNCPY(trans->SrcServiceProvider, ospvServiceProvider, sizeof(trans->SrcServiceProvider));
-            }
+            OSPM_STRNCPY(trans->SrcServiceProvider, ospvServiceProvider, sizeof(trans->SrcServiceProvider));
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetDestServiceProvider(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvServiceProvider)    /* In - Service provider */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    OSPT_DEST *dest = OSPC_OSNULL;
+
+    if ((ospvServiceProvider == OSPC_OSNULL) || (ospvServiceProvider[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) &&
+            (trans != OSPC_OSNULL) &&
+            (trans->AuthReq != OSPC_OSNULL) &&
+            ((dest = trans->CurrentDest) != OSPC_OSNULL))
+        {
+            OSPM_STRNCPY(dest->DestServiceProvider, ospvServiceProvider, sizeof(dest->DestServiceProvider));
         }
     }
 
@@ -6038,4 +6056,3 @@ int OSPPTransactionGetDestSwitchId(
 
     return errcode;
 }
-

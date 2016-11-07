@@ -434,6 +434,11 @@ int OSPPTransactionBuildUsage(
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPM_STRNCPY((*ospvUsage)->NetworkType, ospvDest->NetworkType, sizeof((*ospvUsage)->NetworkType));
             }
+
+            /* Move destination service provider to the usage structure */
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPM_STRNCPY((*ospvUsage)->DestServiceProvider, ospvDest->DestServiceProvider, sizeof((*ospvUsage)->DestServiceProvider));
+            }
         } else if (ospvType == OSPC_MSG_AIND) {
             /* Terminating */
             if ((ospvTrans->AuthInd != OSPC_OSNULL) &&
