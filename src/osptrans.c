@@ -1227,7 +1227,10 @@ int OSPPTransactionGetDestination(
                     }
                 }
             } else {
-                if ((dest->ServiceType == OSPC_SERVICE_NPQUERY) || (dest->ServiceType == OSPC_SERVICE_CNAMQUERY)) {
+                if ((dest->ServiceType == OSPC_SERVICE_NPQUERY) ||
+                    (dest->ServiceType == OSPC_SERVICE_CNAMQUERY) ||
+                    (dest->ServiceType == OSPC_SERVICE_STIRQUERY))
+                {
                     ospvDestination[0] = '\0';
                 } else {
                     errcode = OSPC_ERR_TRAN_SIGADDR_INVALID;
@@ -1276,7 +1279,10 @@ int OSPPTransactionGetDestination(
                     }
                 }
             } else {
-                if ((dest->ServiceType == OSPC_SERVICE_NPQUERY) || (dest->ServiceType == OSPC_SERVICE_CNAMQUERY)) {
+                if ((dest->ServiceType == OSPC_SERVICE_NPQUERY) ||
+                    (dest->ServiceType == OSPC_SERVICE_CNAMQUERY) ||
+                    (dest->ServiceType == OSPC_SERVICE_STIRQUERY))
+                {
                     OSPM_MEMSET(ospvToken, 0, *ospvSizeOfToken);
                     *ospvSizeOfToken = 0;
                 } else {

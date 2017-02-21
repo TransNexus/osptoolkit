@@ -504,7 +504,6 @@ unsigned OSPPAuthRspFromElement(
                 }
                 break;
             case OSPC_MELEM_IDENTITY:
-                error = OSPPIdentityFromElement(elem, &(authrsp->Identity));
                 break;
             default:
                 /*
@@ -672,4 +671,3 @@ OSPE_ROLE OSPPAuthRspGetRole(
 
     return role;
 }
-

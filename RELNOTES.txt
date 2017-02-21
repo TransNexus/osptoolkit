@@ -706,3 +706,11 @@ Version 4.13.0 - 2016-11-07
 * Added TelcoBridges vendor info.
 * Added REFER state info.
 * Added destination service provider ID support.
+---------------------------------------------------------------------------
+
+Version 4.14.0 - 
+* Added STIR query service type. 
+* Updated STIR implementation.
+* Fixed compiling errors for OpenSIPS 1.1.0.
+* Fixed compiling error for isnan.
+

@@ -127,10 +127,7 @@ int OSPPCryptoWrapDecrypt(
     unsigned char decryptedData[OSPC_CRYPTO_ENCRYPT_BUFFER_MAXLENGTH];
     unsigned int decryptedDataLength = 0;
 
-    X509_PUBKEY *pX509PubKey = OSPC_OSNULL;
     RSA *pRSAPubKey = OSPC_OSNULL;
-    unsigned char *pData = OSPC_OSNULL;
-    unsigned int len = 0;
 
     OSPM_ARGUSED(ospvFlags);
     OSPM_ARGUSED(ospvBERAlgorithm);
@@ -139,33 +136,20 @@ int OSPPCryptoWrapDecrypt(
     OSPTNLOGDUMP(ospvEncryptedData, ospvEncryptedDataLength, "DECRYPT: ospvEncryptedData");
     OSPTNLOGDUMP(ospvBERReaderKey, ospvBERReaderKeyLength, "DECRYPT: ospvBERReaderKey");
 
-    pX509PubKey = d2i_X509_PUBKEY(NULL, (const unsigned char **)(&ospvBERReaderKey), ospvBERReaderKeyLength);
-
-    if (pX509PubKey) {
-        pData = pX509PubKey->public_key->data;
-        len = pX509PubKey->public_key->length;
-        pRSAPubKey = d2i_RSAPublicKey(NULL, (const unsigned char **)&pData, len);
-
-        if (pRSAPubKey) {
-            decryptedDataLength = RSA_public_decrypt(ospvEncryptedDataLength, ospvEncryptedData, decryptedData, pRSAPubKey, RSA_PKCS1_PADDING);
-            if (decryptedDataLength != -1) {
-                errorcode = OSPC_ERR_NO_ERROR;
-            } else {
-                OSPM_DBGERRORLOG(errorcode, "Failed to decrypt message");
-            }
-
-            /* Free up mem */
-            RSA_free(pRSAPubKey);
+    pRSAPubKey = d2i_RSA_PUBKEY(NULL, (const unsigned char **)(&ospvBERReaderKey), ospvBERReaderKeyLength);
+    if (pRSAPubKey) {
+        decryptedDataLength = RSA_public_decrypt(ospvEncryptedDataLength, ospvEncryptedData, decryptedData, pRSAPubKey, RSA_PKCS1_PADDING);
+        if (decryptedDataLength != -1) {
+            errorcode = OSPC_ERR_NO_ERROR;
         } else {
-            OSPM_DBGERRORLOG(errorcode, "Failed to init RSA key");
+            OSPM_DBGERRORLOG(errorcode, "Failed to decrypt message");
         }
 
         /* Free up mem */
-        X509_PUBKEY_free(pX509PubKey);
+        RSA_free(pRSAPubKey);
     } else {
-        OSPM_DBGERRORLOG(errorcode, "Failed to init X509_PUBKEY");
+        OSPM_DBGERRORLOG(errorcode, "Failed to init RSA key");
     }
-
 
     /* Copy results to OUT params */
     if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -202,10 +186,7 @@ int OSPPCryptoWrapVerify(
     int errorcode = OSPC_ERR_CRYPTO_IMPLEMENTATION_SPECIFIC_ERROR;
     unsigned char digestedData[OSPC_CRYPTO_DIGEST_BUFFER_MAXLENGTH];
     unsigned int digestedDataLength = OSPC_CRYPTO_DIGEST_BUFFER_MAXLENGTH;
-    X509_PUBKEY *pX509PubKey = OSPC_OSNULL;
     RSA *pRSAPubKey = OSPC_OSNULL;
-    unsigned char *pData = OSPC_OSNULL;
-    unsigned int len = 0;
     int type = NID_md5;
 
     OSPM_ARGUSED(ospvFlags);
@@ -214,34 +195,22 @@ int OSPPCryptoWrapVerify(
     OSPTNLOGDUMP(ospvSignature, ospvSignatureLength, "VERIFY: ospvSignature");
     OSPTNLOGDUMP(ospvBERReaderKey, ospvBERReaderKeyLength, "VERIFY: ospvBERReaderKey");
 
-    pX509PubKey = d2i_X509_PUBKEY(NULL, (const unsigned char **)(&ospvBERReaderKey), ospvBERReaderKeyLength);
-
-    if (pX509PubKey) {
-        pData = pX509PubKey->public_key->data;
-        len = pX509PubKey->public_key->length;
-        pRSAPubKey = d2i_RSAPublicKey(NULL, (const unsigned char **)&pData, len);
-
-        if (pRSAPubKey) {
-            if (OSPC_ERR_NO_ERROR == OSPPCryptoWrapDigest(digestedData, &digestedDataLength, OSPC_OSNULL, 0, ospvData, ospvDataLength, 0)) {
-                if (1 == RSA_verify(type, digestedData, digestedDataLength, ospvSignature, ospvSignatureLength, pRSAPubKey)) {
-                    errorcode = OSPC_ERR_NO_ERROR;
-                } else {
-                    OSPM_DBGERRORLOG(errorcode, "Open-SSL error occurred in Verify");
-                }
+    pRSAPubKey = d2i_RSA_PUBKEY(NULL, (const unsigned char **)(&ospvBERReaderKey), ospvBERReaderKeyLength);
+    if (pRSAPubKey) {
+        if (OSPC_ERR_NO_ERROR == OSPPCryptoWrapDigest(digestedData, &digestedDataLength, OSPC_OSNULL, 0, ospvData, ospvDataLength, 0)) {
+            if (1 == RSA_verify(type, digestedData, digestedDataLength, ospvSignature, ospvSignatureLength, pRSAPubKey)) {
+                errorcode = OSPC_ERR_NO_ERROR;
             } else {
-                OSPM_DBGERRORLOG(errorcode, "Failed to calculate digest");
+                OSPM_DBGERRORLOG(errorcode, "Open-SSL error occurred in Verify");
             }
-
-            /* Free up mem */
-            RSA_free(pRSAPubKey);
         } else {
-            OSPM_DBGERRORLOG(errorcode, "Failed to init RSA key");
+            OSPM_DBGERRORLOG(errorcode, "Failed to calculate digest");
         }
 
         /* Free up mem */
-        X509_PUBKEY_free(pX509PubKey);
+        RSA_free(pRSAPubKey);
     } else {
-        OSPM_DBGERRORLOG(errorcode, "Failed to init X509_PUBKEY");
+        OSPM_DBGERRORLOG(errorcode, "Failed to init RSA key");
     }
 
     return errorcode;

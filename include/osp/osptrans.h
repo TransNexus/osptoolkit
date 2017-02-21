@@ -111,7 +111,7 @@ typedef struct _OSPTTRANS {
     char UsageSrcNetworkId[OSPC_SIZE_NORID];
     char SrcRealm[OSPC_SIZE_NORSTR];
     char DestRealm[OSPC_SIZE_NORSTR];
-    char SipHeader[OSPC_SIPHEADER_NUMBER][OSPC_NFORMAT_NUMBER][OSPC_SIZE_URL];
+    char SipHeader[OSPC_SIPHEADER_NUMBER][OSPC_NFORMAT_NUMBER][OSPC_SIZE_HEADER];
     char DivDevInfo[OSPC_SIZE_SIGNALADDR];
     char ApplicationId[OSPC_SIZE_NORSTR];
     OSPE_ROLE_STATE RoleState;
@@ -133,8 +133,7 @@ typedef struct _OSPTTRANS {
     char JIP[OSPC_SIZE_NORSTR];
     OSPT_CALL_PARTY CallingParty;
     OSPTTIME RequestDate;
-    OSPTLIST SDPFingerPrint;
-    OSPT_IDENTITY Identity;
+    OSPTLIST SDPFingerprint;
     char SrcSwitchId[OSPC_SIZE_NORID];
     char PCVICID[OSPC_SIZE_NORSTR];
 } OSPTTRANS;

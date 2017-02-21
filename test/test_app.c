@@ -1901,29 +1901,28 @@ int testSetSIPHeaders()
     const char *fingerprints[number] = { "fingerprint1", "fingerprint2", "fingerprint3" };
     int errcode = 0;
 
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_E164, "FromE164");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_SIP, "FromHeader");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_DISPLAYNAME, "FromDisplayName");
 
-    errcode = OSPPTransactionSetFrom(OSPVTransactionHandle, OSPC_NFORMAT_E164, "FromE164");
-    errcode = OSPPTransactionSetFrom(OSPVTransactionHandle, OSPC_NFORMAT_URL, "FromURL");
-    errcode = OSPPTransactionSetFrom(OSPVTransactionHandle, OSPC_NFORMAT_DISPLAYNAME, "FromDisplayName");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_TO, OSPC_NFORMAT_SIP, "ToHeader");
 
-    errcode = OSPPTransactionSetTo(OSPVTransactionHandle, OSPC_NFORMAT_URL, "ToURL");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PAI, OSPC_NFORMAT_E164, "AssertedIdE164");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PAI, OSPC_NFORMAT_SIP, "AssertedIdHeader");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PAI, OSPC_NFORMAT_DISPLAYNAME, "AssertedIdDisplayName");
 
-    errcode = OSPPTransactionSetAssertedId(OSPVTransactionHandle, OSPC_NFORMAT_E164, "AssertedIdE164");
-    errcode = OSPPTransactionSetAssertedId(OSPVTransactionHandle, OSPC_NFORMAT_URL, "AssertedIdURL");
-    errcode = OSPPTransactionSetAssertedId(OSPVTransactionHandle, OSPC_NFORMAT_DISPLAYNAME, "AssertedIdDisplayName");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_RPID, OSPC_NFORMAT_DISPLAYNAME, "RPIDDisplayName");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_RPID, OSPC_NFORMAT_SIP, "\"'Eric Smith' of AT&T\" <sip:2001@att.com>;privacy=off;screen=no");
 
-    errcode = OSPPTransactionSetRemotePartyId(OSPVTransactionHandle, OSPC_NFORMAT_DISPLAYNAME, "RPIDDisplayName");
-    errcode = OSPPTransactionSetRemotePartyId(OSPVTransactionHandle, OSPC_NFORMAT_URL, "\"'Eric Smith' of AT&T\" <sip:2001@att.com>;privacy=off;screen=no");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PCI, OSPC_NFORMAT_E164, "ChargeInfoE164");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PCI, OSPC_NFORMAT_DISPLAYNAME, "ChargeInfoDisplayName");
 
-    errcode = OSPPTransactionSetChargeInfo(OSPVTransactionHandle, OSPC_NFORMAT_E164, "ChargeInfoE164");
-    errcode = OSPPTransactionSetChargeInfo(OSPVTransactionHandle, OSPC_NFORMAT_DISPLAYNAME, "ChargeInfoDisplayName");
-
-    errcode = OSPPTransactionSetDivSrcInfo(OSPVTransactionHandle, OSPC_NFORMAT_URL, "DivSrcInfoURL");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_DIV, OSPC_NFORMAT_URL, "DivSrcInfoURL");
     errcode = OSPPTransactionSetDiversion(OSPVTransactionHandle, "DiversionSrcInfoE164", "DiversionDevInfo");
 
     errcode = OSPPTransactionSetRequestDate(OSPVTransactionHandle, time(OSPC_OSNULL));
-
-    errcode = OSPPTransactionSetFingerPrint(OSPVTransactionHandle, number, fingerprints);
+    errcode = OSPPTransactionSetFingerprint(OSPVTransactionHandle, number, fingerprints);
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_IDENTITY, OSPC_NFORMAT_SIP, "IdentityHeader");
 
     return errcode;
 }
@@ -2101,7 +2100,7 @@ int testSetSrcServiceProvider()
     int errcode = 0;
 
     errcode = OSPPTransactionSetSrcServiceProvider(OSPVTransactionHandle, "srcproviderofservice");
- 
+
     return errcode;
 }
 
@@ -2440,43 +2439,6 @@ int testSetJIP()
     return errcode;
 }
 
-int testSetIdentity()
-{
-    const char *sign = "Signature";
-    const char *alg = "Algorithm";
-    const char *info = "Information";
-    const char *type = "Type";
-    const char *canon = "Canon";
-    int errcode = 0;
-
-    errcode = OSPPTransactionSetIdentity(OSPVTransactionHandle, strlen(sign), (const unsigned char *)sign, alg, info, type, strlen(canon), (const unsigned char *)canon);
-
-    return errcode;
-}
-
-int testGetIdentity()
-{
-    unsigned char sign[OSPC_SIZE_SIGNSTR];
-    char alg[OSPC_SIZE_ALGSTR];
-    char info[OSPC_SIZE_NORSTR];
-    char type[OSPC_SIZE_NORSTR];
-    unsigned char canon[OSPC_SIZE_NORSTR];
-    unsigned signsize = sizeof(sign);
-    unsigned canonsize = sizeof(canon);
-    int errcode = OSPC_ERR_NO_ERROR;
-
-    errcode = OSPPTransactionGetIdentity(OSPVTransactionHandle, &signsize, sign, sizeof(alg), alg, sizeof(info), info, sizeof(type), type, &canonsize, canon);
-    if (errcode == OSPC_ERR_NO_ERROR) {
-        printf("Identity signature size: %d\n", signsize);
-        printf("Identity algorithm: %s\n", alg);
-        printf("Identity information: %s\n", info);
-        printf("Identity type: %s\n", type);
-        printf("Identity canon: size: %d\n", canonsize);
-    }
-
-    return errcode;
-}
-
 int testGetDestSwitchId()
 {
     char swid[OSPC_SIZE_NORID];
@@ -2771,9 +2733,6 @@ int testAPI(int apinumber)
     case 211:
         errcode = testSetOperatorName();
         break;
-    case 212:
-        errcode = testSetIdentity();
-        break;
     case 216:
         errcode = testSetRealm();
         break;
@@ -2867,9 +2826,6 @@ int testAPI(int apinumber)
         errcode = testGetCNAM();
         break;
     case 254:
-        errcode = testGetIdentity();
-        break;
-    case 255:
         errcode = testGetDestSwitchId();
         break;
     case 300:
@@ -2945,9 +2901,6 @@ int testAPI(int apinumber)
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetCustomInfo(1);
-        }
-        if (errcode == OSPC_ERR_NO_ERROR) {
-            errcode = testSetIdentity();
         }
         if (errcode == OSPC_ERR_NO_ERROR) {
             errcode = testSetChargingVector();
@@ -3181,7 +3134,6 @@ int testMenu()
         printf("---------------------------------------------------------------------\n");
         printf("200) Set Role Info                    201) Termination Cause\n");
         printf("210) Set NP Parameters                211) Set Operator Names\n");
-        printf("212) Set Identity\n");
         printf("216) Set Realms                       217) Set Application ID\n");
         printf("218) Set SIP Headers                  219) Set Total Setup Attempts\n");
         printf("220) Set Signaling Protocol           221) Set Codec\n");
@@ -3197,7 +3149,7 @@ int testMenu()
         printf("240) Set Charging Vector\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
-        printf("254) Get Identity                     255) Get Destination Switch ID\n");
+        printf("254) Get Destination Switch ID\n");
         printf("300) Set Lost                         301) Set Jitter\n");
         printf("302) Set Delay                        303) Set Round Trip Delay\n");
         printf("304) Set Octets                       305) Set Packets\n");

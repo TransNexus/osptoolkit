@@ -45,7 +45,7 @@ typedef struct {
     OSPTCSAUDIT *CSAudit;
     OSPE_ROLE Role;
     OSPTBOOL HasRole;
-    OSPT_IDENTITY Identity;
+    char Identity[OSPC_SIZE_HEADER];
 } OSPT_AUTH_RSP;
 
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)

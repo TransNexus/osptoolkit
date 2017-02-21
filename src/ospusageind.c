@@ -2059,12 +2059,12 @@ int OSPPUsageIndToElement(      /* returns error code */
 
             if (errcode == OSPC_ERR_NO_ERROR) {
                 /* Add SDP finger print */
-                if (OSPPHasFingerPrint(trans->SDPFingerPrint)) {
-                    for (fingerprint = OSPPFirstFingerPrint(trans->SDPFingerPrint);
+                if (OSPPHasFingerprint(trans->SDPFingerprint)) {
+                    for (fingerprint = OSPPFirstFingerprint(trans->SDPFingerprint);
                         ((fingerprint != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR));
-                        fingerprint = OSPPNextFingerPrint(trans->SDPFingerPrint, fingerprint))
+                        fingerprint = OSPPNextFingerprint(trans->SDPFingerprint, fingerprint))
                     {
-                        errcode = OSPPFingerPrintToElement(fingerprint, &subelem);
+                        errcode = OSPPFingerprintToElement(fingerprint, &subelem);
                         if (errcode == OSPC_ERR_NO_ERROR) {
                             OSPPXMLElemAddChild(usageindelem, subelem);
                             subelem = OSPC_OSNULL;

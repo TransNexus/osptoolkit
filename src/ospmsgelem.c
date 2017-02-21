@@ -78,18 +78,13 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_DIVSRCINFO,           "DiversionSourceInfo" },
     { OSPC_MELEM_ENDPOINT,             "EndPoint" },
     { OSPC_MELEM_ENDTIME,              "EndTime" },
-    { OSPC_MELEM_FINGERPRINT,          "SdpFingerPrint" },
+    { OSPC_MELEM_FINGERPRINT,          "SdpFingerprint" },
     { OSPC_MELEM_FRACTION,             "Fraction" },
     { OSPC_MELEM_FROM,                 "FromSourceInfo" },
     { OSPC_MELEM_GROUP,                "Group" },
     { OSPC_MELEM_GROUPID,              "GroupId" },
     { OSPC_MELEM_ICPIF,                "ICPIF" },
-    { OSPC_MELEM_IDALG,                "IdAlg" },
-    { OSPC_MELEM_IDCANON,              "IdCanon" },
-    { OSPC_MELEM_IDENTITY,             "Identity" },
-    { OSPC_MELEM_IDINFO,               "IdInfo" },
-    { OSPC_MELEM_IDSIGN,               "IdSign" },
-    { OSPC_MELEM_IDTYPE,               "IdType" },
+    { OSPC_MELEM_IDENTITY,             "IdentitySourceInfo" },
     { OSPC_MELEM_INCREMENT,            "Increment" },
     { OSPC_MELEM_REQUESTDATE,          "SipRequestDate" },
     { OSPC_MELEM_JIP,                  "JIP" },
@@ -169,12 +164,13 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
 };
 
 const OSPE_MSG_ELEM OSPV_MELEM_SIPHEADER[OSPC_SIPHEADER_NUMBER] = {
+    OSPC_MELEM_DIVSRCINFO,
     OSPC_MELEM_FROM,
-    OSPC_MELEM_TO,
+    OSPC_MELEM_IDENTITY,
     OSPC_MELEM_ASSERTEDID,
-    OSPC_MELEM_RPID,
     OSPC_MELEM_CHARGEINFO,
-    OSPC_MELEM_DIVSRCINFO
+    OSPC_MELEM_RPID,
+    OSPC_MELEM_TO
 };
 
 /*
