@@ -84,7 +84,11 @@ int OSPPSSLWrapInit(
          * function. It will be done only once now, rather than with every ProviderNew
          */
         ctx = (SSL_CTX **)&(security->ContextRef);
+#if (OPENSSL_VERSION_NUMBER >= 0x010100000)
+        version = TLS_client_method();
+#else
         version = TLSv1_client_method();
+#endif
         *ctx = SSL_CTX_new(version);
 
         if (*ctx != OSPC_OSNULL) {

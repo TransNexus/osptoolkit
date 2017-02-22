@@ -45,7 +45,12 @@ int OSPPCryptoWrapDigest(
     unsigned char digestedData[OSPC_CRYPTO_DIGEST_BUFFER_MAXLENGTH];
     unsigned int digestedDataLength = 0;
 
-    EVP_MD_CTX ctx;
+#if (OPENSSL_VERSION_NUMBER >= 0x010100000)
+    EVP_MD_CTX *ctx;
+#else
+    EVP_MD_CTX ctxbuf;
+    EVP_MD_CTX *ctx = &ctxbuf;
+#endif
     EVP_MD *type = OSPC_OSNULL;
 
     OSPM_ARGUSED(ospvFlags);
@@ -60,9 +65,15 @@ int OSPPCryptoWrapDigest(
 
     if (type) {
         /* Calcualte digest */
-        EVP_DigestInit(&ctx, type);
-        EVP_DigestUpdate(&ctx, ospvData, ospvDataLength);
-        EVP_DigestFinal(&ctx, digestedData, &digestedDataLength);
+#if (OPENSSL_VERSION_NUMBER >= 0x010100000)
+        ctx = EVP_MD_CTX_new();
+#endif
+        EVP_DigestInit(ctx, type);
+        EVP_DigestUpdate(ctx, ospvData, ospvDataLength);
+        EVP_DigestFinal(ctx, digestedData, &digestedDataLength);
+#if (OPENSSL_VERSION_NUMBER >= 0x010100000)
+        EVP_MD_CTX_free(ctx);
+#endif
         errorcode = OSPC_ERR_NO_ERROR;
     } else {
         OSPM_DBGERRORLOG(errorcode, "Error setting digest type");
