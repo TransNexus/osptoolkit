@@ -5970,25 +5970,6 @@ int OSPPTransactionGetDestSwitchId(
     return errcode;
 }
 
-int OSPPTransactionSetIdentity(
-    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    const char *ospvIdentity)       /* In - Identity */
-{
-    int errcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans = OSPC_OSNULL;
-
-    if ((ospvIdentity == OSPC_OSNULL) || (ospvIdentity[0] == '\0')) {
-        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-    } else {
-        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            // TODO: set identity
-        }
-    }
-
-    return errcode;
-}
-
 /*
  * OSPPTransactionGetIdentity() :
  * Reports the Identity as returned in AuthRsp
