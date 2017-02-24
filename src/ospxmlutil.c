@@ -847,6 +847,21 @@ unsigned OSPPXMLUnescape(
                     } else if (strncmp(src + i, OSPC_XMLESC_REF, OSPC_XMLESC_REFLEN) == 0) {
                         i += OSPC_XMLESC_REFLEN;
                         buffer[j++] = OSPC_XMLDOC_REF;
+                    } else if (strncmp(src + i, OSPC_XMLESCNUM_QUOT, OSPC_XMLESCNUM_QUOTLEN) == 0) {
+                        i += OSPC_XMLESCNUM_QUOTLEN;
+                        buffer[j++] = OSPC_XMLDOC_QUOTE;
+                    } else if (strncmp(src + i, OSPC_XMLESCNUM_SINGLEQUOTE, OSPC_XMLESCNUM_SINGLEQUOTELEN) == 0) {
+                        i += OSPC_XMLESCNUM_SINGLEQUOTELEN;
+                        buffer[j++] = OSPC_XMLDOC_SINGLEQUOTE;
+                    } else if (strncmp(src + i, OSPC_XMLESCNUM_OPEN, OSPC_XMLESCNUM_OPENLEN) == 0) {
+                        i += OSPC_XMLESCNUM_OPENLEN;
+                        buffer[j++] = OSPC_XMLDOC_OPEN;
+                    } else if (strncmp(src + i, OSPC_XMLESCNUM_CLOSE, OSPC_XMLESCNUM_CLOSELEN) == 0) {
+                        i += OSPC_XMLESCNUM_CLOSELEN;
+                        buffer[j++] = OSPC_XMLDOC_CLOSE;
+                    } else if (strncmp(src + i, OSPC_XMLESCNUM_REF, OSPC_XMLESCNUM_REFLEN) == 0) {
+                        i += OSPC_XMLESCNUM_REFLEN;
+                        buffer[j++] = OSPC_XMLDOC_REF;
                     } else {
                         buffer[j++] = src[i++];
                     }

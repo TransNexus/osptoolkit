@@ -5969,3 +5969,67 @@ int OSPPTransactionGetDestSwitchId(
 
     return errcode;
 }
+
+int OSPPTransactionSetIdentity(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvIdentity)       /* In - Identity */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvIdentity == OSPC_OSNULL) || (ospvIdentity[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            // TODO: set identity
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionGetIdentity() :
+ * Reports the Identity as returned in AuthRsp
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionGetIdentity(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvSizeOfIdentity,    /* In - Max size of Identity */
+    char *ospvIdentity)             /* In - Identity */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    char *identity = OSPC_OSNULL;
+
+    if (ospvSizeOfIdentity == 0) {
+        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy Identity.");
+    } else {
+        ospvIdentity[0] = '\0';
+        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+            if (trans->AuthReq != OSPC_OSNULL) {
+                if (trans->State == OSPC_AUTH_REQUEST_SUCCESS) {
+                    identity = trans->AuthRsp->Identity;
+                    if (identity != OSPC_OSNULL) {
+                        if (ospvSizeOfIdentity > OSPM_STRLEN(identity)) {
+                            OSPM_STRNCPY(ospvIdentity, identity, ospvSizeOfIdentity);
+                        } else {
+                            errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errcode, "No enough buffer to copy Identity.");
+                        }
+                    }
+                } else {
+                    errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                    OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
+                }
+            } else {
+                errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+            }
+        }
+    }
+
+    return errcode;
+}

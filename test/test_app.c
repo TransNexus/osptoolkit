@@ -1181,7 +1181,7 @@ int testSetServiceType()
 {
     int errcode;
 
-    errcode = OSPPTransactionSetServiceType(OSPVTransactionHandle, OSPC_SERVICE_NPQUERY);
+    errcode = OSPPTransactionSetServiceType(OSPVTransactionHandle, OSPC_SERVICE_STIRQUERY);
 
     return errcode;
 }
@@ -1902,13 +1902,13 @@ int testSetSIPHeaders()
     int errcode = 0;
 
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_E164, "FromE164");
-    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_SIP, "FromHeader");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_SIP, "<sip:1001@sip.transnexus.com>");
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_DISPLAYNAME, "FromDisplayName");
 
-    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_TO, OSPC_NFORMAT_SIP, "ToHeader");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_TO, OSPC_NFORMAT_SIP, "<sips:1002@transnexus.com>");
 
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PAI, OSPC_NFORMAT_E164, "AssertedIdE164");
-    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PAI, OSPC_NFORMAT_SIP, "AssertedIdHeader");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PAI, OSPC_NFORMAT_SIP, "<sip:1003@sip.transnexus.com>");
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PAI, OSPC_NFORMAT_DISPLAYNAME, "AssertedIdDisplayName");
 
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_RPID, OSPC_NFORMAT_DISPLAYNAME, "RPIDDisplayName");
@@ -2465,6 +2465,19 @@ int testSetChargingVector()
     return errcode;
 }
 
+int testGetIdentity()
+{
+    char identity[OSPC_SIZE_HEADER];
+    int errcode = OSPC_ERR_NO_ERROR;
+
+    errcode = OSPPTransactionGetIdentity(OSPVTransactionHandle, sizeof(identity), identity);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        printf("Identity: %s\n", identity);
+    }
+
+    return errcode;
+}
+
 int testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
@@ -2828,6 +2841,9 @@ int testAPI(int apinumber)
     case 254:
         errcode = testGetDestSwitchId();
         break;
+    case 255:
+        errcode = testGetIdentity();
+        break;
     case 300:
         errcode = testStatsLost();
         break;
@@ -3149,7 +3165,7 @@ int testMenu()
         printf("240) Set Charging Vector\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
-        printf("254) Get Destination Switch ID\n");
+        printf("254) Get Destination Switch ID        255) Get Identity\n");
         printf("300) Set Lost                         301) Set Jitter\n");
         printf("302) Set Delay                        303) Set Round Trip Delay\n");
         printf("304) Set Octets                       305) Set Packets\n");
