@@ -708,9 +708,8 @@ Version 4.13.0 - 2016-11-07
 * Added destination service provider ID support.
 ---------------------------------------------------------------------------
 
-Version 4.14.0 - 
+Version 4.14.0 - 2017-04-19
 * Added STIR query service type. 
 * Updated STIR implementation.
 * Fixed compiling errors for OpenSSL 1.1.0.
 * Fixed compiling error for isnan.
-
