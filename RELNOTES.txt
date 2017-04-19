@@ -713,3 +713,6 @@ Version 4.14.0 - 2017-04-19
 * Updated STIR implementation.
 * Fixed compiling errors for OpenSSL 1.1.0.
 * Fixed compiling error for isnan.
+---------------------------------------------------------------------------
+
+Version 4.14.1 - 
