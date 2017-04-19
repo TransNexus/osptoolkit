@@ -372,22 +372,26 @@ unsigned OSPPCallPartyNumToElement(
         case OSPC_MELEM_RPID:
         case OSPC_MELEM_CHARGEINFO:
         case OSPC_MELEM_NETTRANSCALLED:
+        case OSPC_MELEM_IDENTITY:
             *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ElemType), CallPartyNum);
             if (*ospvElem == OSPC_OSNULL) {
                 errcode = OSPC_ERR_XML_NO_ELEMENT;
             } else {
                 switch (CallPartyFormat) {
-                case OSPC_NFORMAT_E164:
-                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_E164));
+                case OSPC_NFORMAT_CNAM:
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_CNAM));
                     break;
                 case OSPC_NFORMAT_DISPLAYNAME:
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_DISPLAYNAME));
                     break;
+                case OSPC_NFORMAT_E164:
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_E164));
+                    break;
+                case OSPC_NFORMAT_SIP:
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_SIP));
+                    break;
                 case OSPC_NFORMAT_URL:
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_URL));
-                    break;
-                case OSPC_NFORMAT_CNAM:
-                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_CNAM));
                     break;
                 default:
                     errcode = OSPC_ERR_XML_DATA_TYPE_NOT_FOUND;
@@ -439,11 +443,11 @@ unsigned OSPPTermCauseToElement(
 
     if (errcode == OSPC_ERR_NO_ERROR) {
         switch (TCType) {
-        case OSPC_TCAUSE_Q850:
-            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_Q850));
-            break;
         case OSPC_TCAUSE_H323:
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_H323));
+            break;
+        case OSPC_TCAUSE_Q850:
+            attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_Q850));
             break;
         case OSPC_TCAUSE_SIP:
             attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_SIP));

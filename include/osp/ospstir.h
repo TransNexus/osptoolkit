@@ -25,31 +25,17 @@ typedef struct {
     char Value[OSPC_SIZE_NORSTR];
 } OSPT_SDP_FINGERPRINT;
 
-/* Identity structure */
-typedef struct {
-    unsigned SignSize;
-    unsigned char IdSign[OSPC_SIZE_SIGNSTR];
-    char IdAlg[OSPC_SIZE_ALGSTR];
-    char IdInfo[OSPC_SIZE_NORSTR];
-    char IdType[OSPC_SIZE_NORSTR];
-    unsigned CanonSize;
-    unsigned char IdCanon[OSPC_SIZE_NORSTR];
-} OSPT_IDENTITY;
-
 /* Function Prototypes */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define OSPPHasFingerPrint(list)                (OSPPFirstFingerPrint(list) != OSPC_OSNULL)
-#define OSPPFirstFingerPrint(list)              ((OSPT_SDP_FINGERPRINT *)OSPPListFirst(&list))
-#define OSPPNextFingerPrint(list, fingerprint)  ((OSPT_SDP_FINGERPRINT *)OSPPListNext(&list, fingerprint))
+#define OSPPHasFingerprint(list)                (OSPPFirstFingerprint(list) != OSPC_OSNULL)
+#define OSPPFirstFingerprint(list)              ((OSPT_SDP_FINGERPRINT *)OSPPListFirst(&list))
+#define OSPPNextFingerprint(list, fingerprint)  ((OSPT_SDP_FINGERPRINT *)OSPPListNext(&list, fingerprint))
 
-OSPT_SDP_FINGERPRINT *OSPPFingerPrintNew(const char *);
-int OSPPFingerPrintToElement(OSPT_SDP_FINGERPRINT *, OSPT_XML_ELEM **);
-
-int OSPPIdentityToElement(OSPT_IDENTITY *, OSPT_XML_ELEM **);
-int OSPPIdentityFromElement(OSPT_XML_ELEM *, OSPT_IDENTITY *);
+OSPT_SDP_FINGERPRINT *OSPPFingerprintNew(const char *);
+int OSPPFingerprintToElement(OSPT_SDP_FINGERPRINT *, OSPT_XML_ELEM **);
 
 #ifdef __cplusplus
 }

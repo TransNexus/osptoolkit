@@ -99,6 +99,7 @@ typedef enum {
     OSPC_SERVICE_DATA,
     OSPC_SERVICE_NPQUERY,
     OSPC_SERVICE_CNAMQUERY,
+    OSPC_SERVICE_STIRQUERY,
     /* Number of service types */
     OSPC_SERVICE_NUMBER
 } OSPE_SERVICE;

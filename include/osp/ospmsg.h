@@ -166,8 +166,7 @@ extern const OSPT_MSG_DESC OSPV_TSTATUS_DESCS[];
 #define OSPC_SIZE_NORID         256     /* max characters in normal ID */
 #define OSPC_SIZE_CODEC         64      /* max characters in codec */
 #define OSPC_SIZE_CUSTINFO      256     /* max characters in user-defined info */
-#define OSPC_SIZE_SIGNSTR       4096    /* max characters in Identity token */
-#define OSPC_SIZE_ALGSTR        16      /* max characters in Identity token algorithm */
+#define OSPC_SIZE_HEADER        4096    /* max characters in SIP header */
 
 /* Function Prototypes */
 #ifdef __cplusplus

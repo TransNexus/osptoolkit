@@ -335,6 +335,12 @@ void OSPPAuthRspDelete(
             }
         }
 
+        /* remove Identity */
+        if (OSPPAuthRspHasIdentity(*ospvAuthRsp)) {
+            OSPM_FREE((*ospvAuthRsp)->Identity);
+            (*ospvAuthRsp)->Identity = OSPC_OSNULL;
+        }
+
         /* now delete the authrsp itself */
         OSPM_FREE(*ospvAuthRsp);
         *ospvAuthRsp = OSPC_OSNULL;
@@ -397,6 +403,7 @@ unsigned OSPPAuthRspFromElement(
     const char* messageId = OSPC_OSNULL;
     const char* compid = OSPC_OSNULL;
     OSPT_XML_ELEM *ospvParent = OSPC_OSNULL;
+    const char* identity = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
         error = OSPC_ERR_XML_NO_ELEMENT;
@@ -497,14 +504,16 @@ unsigned OSPPAuthRspFromElement(
             case OSPC_MELEM_DEST:
                 if ((error = OSPPDestFromElement(elem, &dest)) == OSPC_ERR_NO_ERROR) {
                     if (dest != OSPC_OSNULL) {
-                        OSPPAuthRspAddDest(authrsp,dest);
+                        OSPPAuthRspAddDest(authrsp, dest);
                         OSPPAuthRspIncNumDests(authrsp);
                         dest = OSPC_OSNULL;
                     }
                 }
                 break;
             case OSPC_MELEM_IDENTITY:
-                error = OSPPIdentityFromElement(elem, &(authrsp->Identity));
+                if ((identity = OSPPXMLElemGetValue(elem)) != OSPC_OSNULL) {
+                    OSPPAuthRspSetIdentity(authrsp, identity);
+                }
                 break;
             default:
                 /*
@@ -671,5 +680,38 @@ OSPE_ROLE OSPPAuthRspGetRole(
     }
 
     return role;
+}
+
+/*
+ * OSPPAuthRspHasIdentity() - is the Identity set ?
+ */
+OSPTBOOL OSPPAuthRspHasIdentity(
+    OSPT_AUTH_RSP *ospvAuthRsp)
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        return(ospvAuthRsp->Identity != OSPC_OSNULL);
+    } else {
+        return OSPC_FALSE;
+    }
+}
+
+/*
+ * OSPPAuthRspSetIdentity() - creates space and copies in the string.
+ */
+void OSPPAuthRspSetIdentity(
+    OSPT_AUTH_RSP *ospvAuthRsp, /* In - pointer to Usage Indication struct */
+    const char *ospvIdentity)   /* In - pointer to Identity string */
+{
+    unsigned len = OSPM_STRLEN(ospvIdentity);
+
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        if (ospvAuthRsp->Identity != OSPC_OSNULL) {
+            OSPM_FREE(ospvAuthRsp->Identity);
+        }
+
+        OSPM_MALLOC(ospvAuthRsp->Identity, char, len + 1);
+        OSPM_MEMSET(ospvAuthRsp->Identity, 0, len + 1);
+        OSPM_MEMCPY(ospvAuthRsp->Identity, ospvIdentity, len);
+    }
 }
 

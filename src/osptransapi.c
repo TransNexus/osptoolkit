@@ -67,6 +67,7 @@ int OSPPTransactionSetServiceType(
         case OSPC_SERVICE_DATA:
         case OSPC_SERVICE_NPQUERY:
         case OSPC_SERVICE_CNAMQUERY:
+        case OSPC_SERVICE_STIRQUERY:
             trans->HasServiceInfo = OSPC_TRUE;
             trans->ServiceType = ospvType;
             break;
@@ -983,7 +984,7 @@ int OSPPTransactionAccumulateTwoWayDelay(
             /* sample mean - have to cast Samples to a float to get some precision on the mean */
             mean = ((metrics.mean * currnumber) + (ospvMean * ospvSamples)) / (float)metrics.samples;
 
-            OSPM_ISNAN(metrics.mean, tnisnan);
+            OSPM_ISNAN(((float)metrics.mean), tnisnan);
 
             if (tnisnan) {
                 errcode = OSPC_ERR_TRAN_INVALID_CALC;
@@ -1107,14 +1108,14 @@ int OSPPTransactionDelete(
                 }
             }
 
-            while (!OSPPListEmpty(&(trans->SDPFingerPrint))) {
-                fingerprint = (OSPT_SDP_FINGERPRINT *)OSPPListRemove(&(trans->SDPFingerPrint));
+            while (!OSPPListEmpty(&(trans->SDPFingerprint))) {
+                fingerprint = (OSPT_SDP_FINGERPRINT *)OSPPListRemove(&(trans->SDPFingerprint));
                 if (fingerprint != OSPC_OSNULL) {
                     OSPM_FREE(fingerprint);
                     fingerprint = OSPC_OSNULL;
                 }
             }
-            OSPPListDelete(&(trans->SDPFingerPrint));
+            OSPPListDelete(&(trans->SDPFingerprint));
 
             OSPM_FREE(trans);
             trans = OSPC_OSNULL;
@@ -2150,12 +2151,7 @@ int OSPPTransactionNew(
         trans->CallingParty.UserId[0] = '\0';
         trans->CallingParty.UserGroup[0] = '\0';
         trans->RequestDate = OSPC_TIMEMIN;
-        OSPPListNew(&(trans->SDPFingerPrint));
-        trans->Identity.SignSize = 0;
-        trans->Identity.IdAlg[0] = '\0';
-        trans->Identity.IdInfo[0] = '\0';
-        trans->Identity.IdType[0] = '\0';
-        trans->Identity.CanonSize = 0;
+        OSPPListNew(&(trans->SDPFingerprint));
         trans->SrcSwitchId[0] = '\0';
         trans->PCVICID[0] = '\0';
     }
@@ -5807,10 +5803,10 @@ int OSPPTransactionSetRequestDate(
     return errcode;
 }
 
-int OSPPTransactionSetFingerPrint(
+int OSPPTransactionSetFingerprint(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     unsigned ospvNumber,            /* In - Number of SDP finger print items */
-    const char **ospvFingerPrints)  /* In - SDP finger print items  */
+    const char **ospvFingerprints)  /* In - SDP finger print items  */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -5819,8 +5815,8 @@ int OSPPTransactionSetFingerPrint(
 
     trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
     if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-        while (!OSPPListEmpty(&(trans->SDPFingerPrint))) {
-            fingerprint = (OSPT_SDP_FINGERPRINT *)OSPPListRemove(&(trans->SDPFingerPrint));
+        while (!OSPPListEmpty(&(trans->SDPFingerprint))) {
+            fingerprint = (OSPT_SDP_FINGERPRINT *)OSPPListRemove(&(trans->SDPFingerprint));
             if (fingerprint != OSPC_OSNULL) {
                 OSPM_FREE(fingerprint);
                 fingerprint = OSPC_OSNULL;
@@ -5828,93 +5824,10 @@ int OSPPTransactionSetFingerPrint(
         }
 
         for (i = 0; i < ospvNumber; i++) {
-            fingerprint = OSPPFingerPrintNew(ospvFingerPrints[i]);
+            fingerprint = OSPPFingerprintNew(ospvFingerprints[i]);
             if (fingerprint != OSPC_OSNULL) {
-                OSPPListAppend(&(trans->SDPFingerPrint), (void *)fingerprint);
+                OSPPListAppend(&(trans->SDPFingerprint), (void *)fingerprint);
                 fingerprint = OSPC_OSNULL;
-            }
-        }
-    }
-
-    return errcode;
-}
-
-int OSPPTransactionSetIdentity(
-    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    unsigned ospvSizeOfSign,        /* In - Size of signature */
-    const unsigned char *ospvSign,  /* In - Signature */
-    const char *ospvAlg,            /* In - Algorithm */
-    const char *ospvInfo,           /* In - Information */
-    const char *ospvType,           /* In - Type */
-    unsigned ospvSizeOfCanon,       /* In - Size of canon */
-    const unsigned char *ospvCanon) /* In - Canon */
-{
-    int errcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans = OSPC_OSNULL;
-    OSPT_IDENTITY *id;
-
-    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
-    if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-        id = &(trans->Identity);
-        if (ospvSizeOfSign != 0) {
-            OSPM_MEMCPY(id->IdSign, ospvSign, ospvSizeOfSign);
-            id->SignSize = ospvSizeOfSign;
-        }
-        if (ospvAlg != OSPC_OSNULL) {
-            OSPM_STRNCPY(id->IdAlg, ospvAlg, sizeof(id->IdAlg));
-        }
-        if (ospvInfo != OSPC_OSNULL) {
-            OSPM_STRNCPY(id->IdInfo, ospvInfo, sizeof(id->IdInfo));
-        }
-        if (ospvType != OSPC_OSNULL) {
-            OSPM_STRNCPY(id->IdType, ospvType, sizeof(id->IdType));
-        }
-        if (ospvSizeOfCanon != 0) {
-            OSPM_MEMCPY(id->IdCanon, ospvCanon, ospvSizeOfCanon);
-            id->CanonSize = ospvSizeOfCanon;
-        }
-    }
-
-    return errcode;
-}
-
-int OSPPTransactionGetIdentity(
-    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    unsigned *ospvSizeOfSign,       /* In/Out - Size of signature */
-    unsigned char *ospvSign,        /* Out - Signature */
-    unsigned ospvSizeOfAlg,         /* In - Size of algorithm buffer */
-    char *ospvAlg,                  /* Out - Algorithm */
-    unsigned ospvSizeOfInfo,        /* In - Size of information buffer */
-    char *ospvInfo,                 /* Out - Information */
-    unsigned ospvSizeOfType,        /* In - Size of type buffer */
-    char *ospvType,                 /* Out - Type */
-    unsigned *ospvSizeOfCanon,      /* In/Out - Size of canon buffer */
-    unsigned char *ospvCanon)       /* Out - Canon */
-{
-    int errcode = OSPC_ERR_NO_ERROR;
-    OSPTTRANS *trans = OSPC_OSNULL;
-    OSPT_IDENTITY *id = OSPC_OSNULL;
-
-    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
-    if (errcode == OSPC_ERR_NO_ERROR) {
-        if (trans->AuthRsp != OSPC_OSNULL) {
-            id = &(trans->AuthRsp->Identity);
-            if (ospvSign != OSPC_OSNULL) {
-                *ospvSizeOfSign = OSPM_MIN(id->SignSize, *ospvSizeOfSign);
-                OSPM_MEMCPY(ospvSign, id->IdSign, *ospvSizeOfSign);
-            }
-            if (ospvAlg != OSPC_OSNULL) {
-                OSPM_STRNCPY(ospvAlg, id->IdAlg, ospvSizeOfAlg);
-            }
-            if (ospvInfo != OSPC_OSNULL) {
-                OSPM_STRNCPY(ospvInfo, id->IdInfo, ospvSizeOfInfo);
-            }
-            if (ospvType != OSPC_OSNULL) {
-                OSPM_STRNCPY(ospvType, id->IdType, ospvSizeOfType);
-            }
-            if (ospvCanon != OSPC_OSNULL) {
-                *ospvSizeOfCanon = OSPM_MIN(id->CanonSize, *ospvSizeOfCanon);
-                OSPM_MEMCPY(ospvCanon, id->IdCanon, *ospvSizeOfCanon);
             }
         }
     }
@@ -6046,6 +5959,51 @@ int OSPPTransactionGetDestSwitchId(
                     } else {
                         altinfo = (OSPT_ALTINFO *)OSPPAuthIndNextDestinationAlt(trans->AuthInd, altinfo);
                     }
+                }
+            } else {
+                errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+            }
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionGetIdentity() :
+ * Reports the Identity as returned in AuthRsp
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionGetIdentity(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvSizeOfIdentity,    /* In - Max size of Identity */
+    char *ospvIdentity)             /* In - Identity */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    char *identity = OSPC_OSNULL;
+
+    if (ospvSizeOfIdentity == 0) {
+        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy Identity.");
+    } else {
+        ospvIdentity[0] = '\0';
+        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+            if (trans->AuthReq != OSPC_OSNULL) {
+                if (trans->State == OSPC_AUTH_REQUEST_SUCCESS) {
+                    identity = trans->AuthRsp->Identity;
+                    if (identity != OSPC_OSNULL) {
+                        if (ospvSizeOfIdentity > OSPM_STRLEN(identity)) {
+                            OSPM_STRNCPY(ospvIdentity, identity, ospvSizeOfIdentity);
+                        } else {
+                            errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errcode, "No enough buffer to copy Identity.");
+                        }
+                    }
+                } else {
+                    errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                    OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
                 }
             } else {
                 errcode = OSPC_ERR_TRAN_INVALID_ENTRY;

@@ -1139,7 +1139,10 @@ int OSPPUsageDetailFromElement(
         if (hasamount && hasincrement && hasunit) {
             OSPPDestSetLimit(ospvDest, (unsigned)(increment * amount));
         } else {
-            if ((ospvDest->ServiceType == OSPC_SERVICE_NPQUERY) || (ospvDest->ServiceType == OSPC_SERVICE_CNAMQUERY)) {
+            if ((ospvDest->ServiceType == OSPC_SERVICE_NPQUERY) ||
+                (ospvDest->ServiceType == OSPC_SERVICE_CNAMQUERY) ||
+                (ospvDest->ServiceType == OSPC_SERVICE_STIRQUERY))
+            {
                 OSPPDestSetLimit(ospvDest, 0);
             } else {
                 error = OSPC_ERR_XML_BAD_ELEMENT;

@@ -106,6 +106,17 @@
 #define OSPC_XMLESC_REF             "&amp;"
 #define OSPC_XMLESC_REFLEN          (sizeof(OSPC_XMLESC_REF) - 1)
 
+#define OSPC_XMLESCNUM_QUOT            "&#34;"
+#define OSPC_XMLESCNUM_QUOTLEN         (sizeof(OSPC_XMLESCNUM_QUOT) - 1)
+#define OSPC_XMLESCNUM_SINGLEQUOTE     "&#39;"
+#define OSPC_XMLESCNUM_SINGLEQUOTELEN  (sizeof(OSPC_XMLESCNUM_SINGLEQUOTE) - 1)
+#define OSPC_XMLESCNUM_OPEN            "&#60;"
+#define OSPC_XMLESCNUM_OPENLEN         (sizeof(OSPC_XMLESCNUM_OPEN) - 1)
+#define OSPC_XMLESCNUM_CLOSE           "&#62;"
+#define OSPC_XMLESCNUM_CLOSELEN        (sizeof(OSPC_XMLESCNUM_CLOSE) - 1)
+#define OSPC_XMLESCNUM_REF             "&#38;"
+#define OSPC_XMLESCNUM_REFLEN          (sizeof(OSPC_XMLESCNUM_REF) - 1)
+
 /*
  * Best guess sizes for element/attribute names and values - These
  * don't have to be strict since we use elastic buffers. They're just

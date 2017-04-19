@@ -1023,31 +1023,20 @@ int OSPPAuthReqToElement(       /* returns error code */
         }
     }
 
-    /* Add SDP finger print */
+    /* Add SDP fingerprint */
     if (errcode == OSPC_ERR_NO_ERROR) {
-        if (OSPPHasFingerPrint(trans->SDPFingerPrint)) {
-            for (fingerprint = OSPPFirstFingerPrint(trans->SDPFingerPrint);
+        if (OSPPHasFingerprint(trans->SDPFingerprint)) {
+            for (fingerprint = OSPPFirstFingerprint(trans->SDPFingerprint);
                 ((fingerprint != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR));
-                fingerprint = OSPPNextFingerPrint(trans->SDPFingerPrint, fingerprint))
+                fingerprint = OSPPNextFingerprint(trans->SDPFingerprint, fingerprint))
             {
-                errcode = OSPPFingerPrintToElement(fingerprint, &elem);
+                errcode = OSPPFingerprintToElement(fingerprint, &elem);
                 if (errcode == OSPC_ERR_NO_ERROR) {
                     OSPPXMLElemAddChild(authreqelem, elem);
                     elem = OSPC_OSNULL;
                 }
             }
         }
-    }
-
-    /* Add Identity  */
-    if (errcode == OSPC_ERR_NO_ERROR) {
-         if (trans->Identity.SignSize != 0) {
-            errcode = OSPPIdentityToElement(&(trans->Identity), &elem);
-            if (errcode == OSPC_ERR_NO_ERROR) {
-                OSPPXMLElemAddChild(authreqelem, elem);
-                elem = OSPC_OSNULL;
-            }
-         }
     }
 
     /* Add charging vector  */

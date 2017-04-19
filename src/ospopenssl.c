@@ -84,7 +84,11 @@ int OSPPSSLWrapInit(
          * function. It will be done only once now, rather than with every ProviderNew
          */
         ctx = (SSL_CTX **)&(security->ContextRef);
+#if (OPENSSL_VERSION_NUMBER >= 0x010100000)
+        version = TLS_client_method();
+#else
         version = TLSv1_client_method();
+#endif
         *ctx = SSL_CTX_new(version);
 
         if (*ctx != OSPC_OSNULL) {
@@ -508,21 +512,21 @@ int OSPPSSLVerifyCallback(
             ok = 0;
         }
     }
-    switch (ctx->error) {
+    switch (err) {
     case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
-        X509_NAME_oneline(X509_get_issuer_name(ctx->current_cert), buf, 256);
+        X509_NAME_oneline(X509_get_issuer_name(err_cert), buf, 256);
         BIO_printf(bio_stdout, "issuer= %s\n", buf);
         break;
     case X509_V_ERR_CERT_NOT_YET_VALID:
     case X509_V_ERR_ERROR_IN_CERT_NOT_BEFORE_FIELD:
         BIO_printf(bio_stdout, "notBefore=");
-        ASN1_TIME_print(bio_stdout, X509_get_notBefore(ctx->current_cert));
+        ASN1_TIME_print(bio_stdout, X509_get_notBefore(err_cert));
         BIO_printf(bio_stdout, "\n");
         break;
     case X509_V_ERR_CERT_HAS_EXPIRED:
     case X509_V_ERR_ERROR_IN_CERT_NOT_AFTER_FIELD:
         BIO_printf(bio_stdout, "notAfter=");
-        ASN1_TIME_print(bio_stdout, X509_get_notAfter(ctx->current_cert));
+        ASN1_TIME_print(bio_stdout, X509_get_notAfter(err_cert));
         BIO_printf(bio_stdout, "\n");
         break;
     }
