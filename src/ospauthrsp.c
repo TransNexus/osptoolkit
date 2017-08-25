@@ -515,6 +515,9 @@ unsigned OSPPAuthRspFromElement(
                     OSPPAuthRspSetIdentity(authrsp, identity);
                 }
                 break;
+            case OSPC_MELEM_TERMCAUSE:
+                error = OSPPTermCauseFromElement(elem, &(authrsp->TermCause));
+                break;
             default:
                 /*
                  * This is an element we don't understand. If it's
@@ -699,7 +702,7 @@ OSPTBOOL OSPPAuthRspHasIdentity(
  * OSPPAuthRspSetIdentity() - creates space and copies in the string.
  */
 void OSPPAuthRspSetIdentity(
-    OSPT_AUTH_RSP *ospvAuthRsp, /* In - pointer to Usage Indication struct */
+    OSPT_AUTH_RSP *ospvAuthRsp, /* In - pointer to AuthRsp struct */
     const char *ospvIdentity)   /* In - pointer to Identity string */
 {
     unsigned len = OSPM_STRLEN(ospvIdentity);
@@ -712,6 +715,17 @@ void OSPPAuthRspSetIdentity(
         OSPM_MALLOC(ospvAuthRsp->Identity, char, len + 1);
         OSPM_MEMSET(ospvAuthRsp->Identity, 0, len + 1);
         OSPM_MEMCPY(ospvAuthRsp->Identity, ospvIdentity, len);
+    }
+}
+
+void OSPPAuthRspSetTermCause(
+    OSPT_AUTH_RSP *ospvAuthRsp, /* In - pointer to AuthRsp struct */
+    OSPE_TERM_CAUSE ospvType,   /* In - TC type */
+    unsigned ospvTCCode,        /* In - TC code */
+    const char *ospvTCDesc)     /* In - TC description */
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        OSPPSetTermCause(&ospvAuthRsp->TermCause, ospvType, ospvTCCode, ospvTCDesc);
     }
 }
 

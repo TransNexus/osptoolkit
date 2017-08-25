@@ -115,5 +115,6 @@ OSPTBOOL OSPPHasTermCauseAny(OSPT_TERM_CAUSE *);
 void OSPPSetTermCause(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE, unsigned, const char *);
 unsigned OSPPGetTCCode(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);
 const char *OSPPGetTCDesc(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);
+unsigned OSPPTermCauseFromElement(OSPT_XML_ELEM *, OSPT_TERM_CAUSE *);
 
 #endif /* _OSPFAIL_H */

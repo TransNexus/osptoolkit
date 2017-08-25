@@ -133,3 +133,69 @@ const char *OSPPGetTCDesc(
     return ospvTCDesc;
 }
 
+/*
+ OSPPTermCauseFromElement() - create a termination cause from an XML element
+ */
+unsigned OSPPTermCauseFromElement(  /* returns error code */
+    OSPT_XML_ELEM *ospvElem,        /* input is XML element */
+    OSPT_TERM_CAUSE *ospvTermCause) /* termination cause */
+{
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ATTR* attr = OSPC_OSNULL;
+    OSPE_ALTINFO type = OSPC_ALTINFO_SIP;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    unsigned long code = 0;
+    const char *desc = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvTermCause == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_STATUS;
+        }
+    }
+
+    for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElem);
+        (attr != OSPC_OSNULL);
+        attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElem, attr))
+    {
+        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_TYPE) {
+            type = OSPPAltInfoTypeGetPart(OSPPXMLAttrGetValue(attr));
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
+            (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem))
+        {
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
+            case OSPC_MELEM_TCCODE:
+                errcode = OSPPMsgCodeFromElement(elem, &code);
+                break;
+            case OSPC_MELEM_DESC:
+                desc = OSPPXMLElemGetValue(elem);
+                break;
+            default:
+                /*
+                 * This is an element we don't understand. If it's
+                 * critical, then we have to report an error.
+                 * Otherwise we can ignore it.
+                 */
+                if (OSPPMsgElemIsCritical(elem)) {
+                    errcode = OSPC_ERR_XML_BAD_ELEMENT;
+                }
+                break;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        OSPPSetTermCause(ospvTermCause, type, code, desc);
+    }
+
+    return errcode;
+}
+

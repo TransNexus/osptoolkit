@@ -2478,6 +2478,33 @@ int testGetIdentity()
     return errcode;
 }
 
+int testGetTermCause()
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTBOOL has = OSPC_FALSE;
+    unsigned code = 0;
+    char desc[OSPC_SIZE_NORSTR] = {0};
+
+    errcode = OSPPTransactionHasTermCause(OSPVTransactionHandle, OSPC_TCAUSE_SIP, &has);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (has) {
+            errcode = OSPPTransactionGetTCCode(OSPVTransactionHandle, OSPC_TCAUSE_SIP, &code);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                printf("TCCode: %d\n", code);
+
+                errcode = OSPPTransactionGetTCDesc(OSPVTransactionHandle, OSPC_TCAUSE_SIP, sizeof(desc), desc);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    printf("TCDesc: %s\n", desc);
+                }
+            }
+        } else {
+            printf("Without termination cause\n");
+        }
+    }
+
+    return errcode;
+}
+
 int testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
@@ -2844,6 +2871,9 @@ int testAPI(int apinumber)
     case 255:
         errcode = testGetIdentity();
         break;
+    case 256:
+        errcode = testGetTermCause();
+        break;
     case 300:
         errcode = testStatsLost();
         break;
@@ -3166,6 +3196,7 @@ int testMenu()
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
         printf("254) Get Destination Switch ID        255) Get Identity\n");
+        printf("256) Get Termination Cause\n");
         printf("300) Set Lost                         301) Set Jitter\n");
         printf("302) Set Delay                        303) Set Round Trip Delay\n");
         printf("304) Set Octets                       305) Set Packets\n");
