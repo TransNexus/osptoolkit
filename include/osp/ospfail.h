@@ -104,6 +104,8 @@ typedef struct {
     char tcdesc[OSPC_TCAUSE_NUMBER][OSPC_SIZE_NORSTR];
 } OSPT_TERM_CAUSE;
 
+OSPE_TERM_CAUSE OSPPTCTypeGetPart(const char *);
+    
 /*
  * Will return success as long as ospvFailureReason is between
  * OSPC_FAIL_NONE (0) and OSPC_FAIL_GENERAL (999)

@@ -6049,11 +6049,11 @@ int OSPPTransactionGetTCCode(
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    ospvTCCode = 0;
+    *ospvTCCode = 0;
     if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
         if (trans->AuthReq != OSPC_OSNULL) {
             if (trans->State == OSPC_AUTH_REQUEST_FAIL) {
-                OSPPGetTCCode(&trans->AuthRsp->TermCause, ospvTCType);
+                *ospvTCCode = OSPPGetTCCode(&trans->AuthRsp->TermCause, ospvTCType);
             } else {
                 errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
                 OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");

@@ -20,6 +20,28 @@
 #include "osp/osp.h"
 #include "osp/ospfail.h"
 
+const OSPT_MSG_DESC OSPV_TCTYPE_DESCS[OSPC_TCAUSE_NUMBER] = {
+    { OSPC_TCAUSE_H323, "h323" },
+    { OSPC_TCAUSE_Q850, "q850" },
+    { OSPC_TCAUSE_SIP,  "sip" },
+    { OSPC_TCAUSE_XMPP, "xmpp" }
+};
+
+/*
+ * OSPPTCTypeGetPart() - get type from an termination cause type name
+ */
+OSPE_TERM_CAUSE OSPPTCTypeGetPart(
+    const char *ospvName)
+{
+    OSPE_TERM_CAUSE ospvPart = OSPC_TCAUSE_SIP;
+
+    if (ospvName != OSPC_OSNULL) {
+        ospvPart = (OSPE_TERM_CAUSE)OSPPMsgDescGetPart(ospvName, OSPV_TCTYPE_DESCS, OSPC_TCAUSE_NUMBER);
+    }
+
+    return ospvPart;
+}
+
 /*
  * Will return success as long as ospvFailureReason is between
  * OSPC_FAIL_NONE (0) and OSPC_FAIL_GENERAL (999)
@@ -142,7 +164,7 @@ unsigned OSPPTermCauseFromElement(  /* returns error code */
 {
     unsigned errcode = OSPC_ERR_NO_ERROR;
     OSPT_XML_ATTR* attr = OSPC_OSNULL;
-    OSPE_ALTINFO type = OSPC_ALTINFO_SIP;
+    OSPE_TERM_CAUSE type = OSPC_TCAUSE_SIP;
     OSPT_XML_ELEM *elem = OSPC_OSNULL;
     unsigned long code = 0;
     const char *desc = OSPC_OSNULL;
@@ -157,12 +179,14 @@ unsigned OSPPTermCauseFromElement(  /* returns error code */
         }
     }
 
-    for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElem);
-        (attr != OSPC_OSNULL);
-        attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElem, attr))
-    {
-        if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_TYPE) {
-            type = OSPPAltInfoTypeGetPart(OSPPXMLAttrGetValue(attr));
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElem);
+            (attr != OSPC_OSNULL);
+            attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElem, attr))
+        {
+            if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_TYPE) {
+                type = OSPPTCTypeGetPart(OSPPXMLAttrGetValue(attr));
+            }
         }
     }
 
