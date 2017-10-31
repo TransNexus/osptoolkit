@@ -20,6 +20,28 @@
 #include "osp/osp.h"
 #include "osp/ospfail.h"
 
+const OSPT_MSG_DESC OSPV_TCTYPE_DESCS[OSPC_TCAUSE_NUMBER] = {
+    { OSPC_TCAUSE_H323, "h323" },
+    { OSPC_TCAUSE_Q850, "q850" },
+    { OSPC_TCAUSE_SIP,  "sip" },
+    { OSPC_TCAUSE_XMPP, "xmpp" }
+};
+
+/*
+ * OSPPTCTypeGetPart() - get type from an termination cause type name
+ */
+OSPE_TERM_CAUSE OSPPTCTypeGetPart(
+    const char *ospvName)
+{
+    OSPE_TERM_CAUSE ospvPart = OSPC_TCAUSE_SIP;
+
+    if (ospvName != OSPC_OSNULL) {
+        ospvPart = (OSPE_TERM_CAUSE)OSPPMsgDescGetPart(ospvName, OSPV_TCTYPE_DESCS, OSPC_TCAUSE_NUMBER);
+    }
+
+    return ospvPart;
+}
+
 /*
  * Will return success as long as ospvFailureReason is between
  * OSPC_FAIL_NONE (0) and OSPC_FAIL_GENERAL (999)
@@ -131,5 +153,73 @@ const char *OSPPGetTCDesc(
     }
 
     return ospvTCDesc;
+}
+
+/*
+ OSPPTermCauseFromElement() - create a termination cause from an XML element
+ */
+unsigned OSPPTermCauseFromElement(  /* returns error code */
+    OSPT_XML_ELEM *ospvElem,        /* input is XML element */
+    OSPT_TERM_CAUSE *ospvTermCause) /* termination cause */
+{
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ATTR* attr = OSPC_OSNULL;
+    OSPE_TERM_CAUSE type = OSPC_TCAUSE_SIP;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    unsigned long code = 0;
+    const char *desc = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvTermCause == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_STATUS;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        for (attr = (OSPT_XML_ATTR*)OSPPXMLElemFirstAttr(ospvElem);
+            (attr != OSPC_OSNULL);
+            attr = (OSPT_XML_ATTR*)OSPPXMLElemNextAttr(ospvElem, attr))
+        {
+            if (OSPPMsgAttrGetPart(OSPPXMLAttrGetName(attr)) == OSPC_MATTR_TYPE) {
+                type = OSPPTCTypeGetPart(OSPPXMLAttrGetValue(attr));
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
+            (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem))
+        {
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
+            case OSPC_MELEM_TCCODE:
+                errcode = OSPPMsgCodeFromElement(elem, &code);
+                break;
+            case OSPC_MELEM_DESC:
+                desc = OSPPXMLElemGetValue(elem);
+                break;
+            default:
+                /*
+                 * This is an element we don't understand. If it's
+                 * critical, then we have to report an error.
+                 * Otherwise we can ignore it.
+                 */
+                if (OSPPMsgElemIsCritical(elem)) {
+                    errcode = OSPC_ERR_XML_BAD_ELEMENT;
+                }
+                break;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        OSPPSetTermCause(ospvTermCause, type, code, desc);
+    }
+
+    return errcode;
 }
 

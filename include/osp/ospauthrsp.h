@@ -46,6 +46,7 @@ typedef struct {
     OSPE_ROLE Role;
     OSPTBOOL HasRole;
     char *Identity;
+    OSPT_TERM_CAUSE TermCause;
 } OSPT_AUTH_RSP;
 
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)
@@ -116,6 +117,7 @@ extern "C" {
     OSPE_ROLE OSPPAuthRspGetRole(OSPT_AUTH_RSP *);
     OSPTBOOL OSPPAuthRspHasIdentity(OSPT_AUTH_RSP *);
     void OSPPAuthRspSetIdentity(OSPT_AUTH_RSP *, const char *);   
+    void OSPPAuthRspSetTermCause(OSPT_AUTH_RSP *, OSPE_TERM_CAUSE, unsigned, const char *);
 
 #ifdef __cplusplus
 }

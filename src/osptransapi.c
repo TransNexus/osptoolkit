@@ -6014,3 +6014,97 @@ int OSPPTransactionGetIdentity(
 
     return errcode;
 }
+
+int OSPPTransactionHasTermCause(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_TERM_CAUSE ospvTCType,     /* In - Termination cause type */ 
+    OSPTBOOL *ospvHasTermCause)     /* Out - Has termination cause */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    *ospvHasTermCause = OSPC_FALSE;
+    if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+        if (trans->AuthReq != OSPC_OSNULL) {
+            if (trans->State == OSPC_AUTH_REQUEST_FAIL) {
+                *ospvHasTermCause = OSPPHasTermCause(&trans->AuthRsp->TermCause, ospvTCType);
+            } else {
+                errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
+            }
+        } else {
+            errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionGetTCCode(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_TERM_CAUSE ospvTCType,     /* In - Termination cause type */ 
+    unsigned *ospvTCCode)           /* Out - Termination cause code */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    *ospvTCCode = 0;
+    if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+        if (trans->AuthReq != OSPC_OSNULL) {
+            if (trans->State == OSPC_AUTH_REQUEST_FAIL) {
+                *ospvTCCode = OSPPGetTCCode(&trans->AuthRsp->TermCause, ospvTCType);
+            } else {
+                errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
+            }
+        } else {
+            errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionGetTCDesc(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_TERM_CAUSE ospvTCType,     /* In - Termination cause type */ 
+    unsigned ospvSizeOfDesc,        /* In - Max size of description */
+    char *ospvTCDesc)               /* Out - Termination cause description */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    const char *desc = OSPC_OSNULL;
+
+    if (ospvSizeOfDesc == 0) {
+        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy Identity.");
+    } else {
+        ospvTCDesc[0] = '\0';
+        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+            if (trans->AuthReq != OSPC_OSNULL) {
+                if (trans->State == OSPC_AUTH_REQUEST_FAIL) {
+                    desc = OSPPGetTCDesc(&trans->AuthRsp->TermCause, ospvTCType);
+                    if (desc != OSPC_OSNULL) {
+                        if (ospvSizeOfDesc > OSPM_STRLEN(desc)) {
+                            OSPM_STRNCPY(ospvTCDesc, desc, ospvSizeOfDesc);
+                        } else {
+                            errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errcode, "No enough buffer to copy description.");
+                        }
+                    }
+                } else {
+                    errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                    OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
+                }
+            } else {
+                errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+            }
+        }
+    }
+
+    return errcode;
+}
+

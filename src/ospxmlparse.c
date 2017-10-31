@@ -467,7 +467,9 @@ unsigned OSPPXMLDocGetContent(  /* returns error code */
     /* loop while parsing the content */
     while (errcode == OSPC_ERR_NO_ERROR) {
         /* first take care of any whitespace */
+/*
         errcode = OSPPXMLDocSkipWhite(ospvBfrAddr, ospvEncoding);
+*/
 
 #ifdef COMPLETE_XML_PARSING
         /* see if there's a comment - if so, skip it */

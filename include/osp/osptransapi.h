@@ -158,6 +158,9 @@ extern "C" {
     int OSPPTransactionGetDestSwitchId(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionSetChargingVector(OSPTTRANHANDLE, const char *, const char *, const char *, const char *);
     int OSPPTransactionGetIdentity(OSPTTRANHANDLE, unsigned, char *);
+    int OSPPTransactionHasTermCause(OSPTTRANHANDLE, OSPE_TERM_CAUSE, OSPTBOOL *);
+    int OSPPTransactionGetTCCode(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned *);
+    int OSPPTransactionGetTCDesc(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned, char *);
 
 #ifdef __cplusplus
 }
