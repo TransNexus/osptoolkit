@@ -715,6 +715,6 @@ Version 4.14.0 - 2017-04-19
 * Fixed compiling error for isnan.
 ---------------------------------------------------------------------------
 
-Version 4.14.1 - 
+Version 4.14.1 - 2017-10-31
 * Added termination cause in AuthRsp.
 
