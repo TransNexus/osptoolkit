@@ -717,4 +717,7 @@ Version 4.14.0 - 2017-04-19
 
 Version 4.14.1 - 2017-10-31
 * Added termination cause in AuthRsp.
+---------------------------------------------------------------------------
 
+Version 4.15.0 - 2017-12-05
+* Added filter for UTF-8 in XML element.

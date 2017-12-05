@@ -26,6 +26,7 @@
 #define OSPC_ERR_MODULE                                 9000
 #define OSPC_ERR_INVALID_POINTER                        (OSPC_ERR_MODULE + 10)
 #define OSPC_ERR_TIME_ERROR                             (OSPC_ERR_MODULE + 20)
+#define OSPC_ERR_NORMALIZE_FAILED                       (OSPC_ERR_MODULE + 30)
 
 #define OSPC_ERR_PROV_MODULE                            10000
 #define OSPC_ERR_PROV_INIT_FAILURE                      (OSPC_ERR_PROV_MODULE + 10)

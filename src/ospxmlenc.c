@@ -93,6 +93,7 @@ int OSPPXMLDocAddElem(          /* returns error code */
     const char *val = OSPC_OSNULL;
     unsigned vallen = 0;
     unsigned cnt;
+    char normalized[OSPC_XMLDOC_ITEMSIZE];
     char buffer[OSPC_XMLDOC_ITEMSIZE];
 
     /*
@@ -124,7 +125,8 @@ int OSPPXMLDocAddElem(          /* returns error code */
          */
         val = OSPPXMLElemGetValue(ospvElem);
         if (val != OSPC_OSNULL) {
-            OSPPXMLEscape(val, OSPC_XMLDOC_ITEMSIZE, buffer);
+            OSPPXMLProcessUTF8(val, OSPC_XMLDOC_ITEMSIZE, normalized);
+            OSPPXMLEscape(normalized, OSPC_XMLDOC_ITEMSIZE, buffer);
             val = buffer;
             vallen = OSPM_STRLEN(val);
         } else {

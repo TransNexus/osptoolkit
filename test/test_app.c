@@ -1903,7 +1903,7 @@ int testSetSIPHeaders()
 
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_E164, "FromE164");
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_SIP, "<sip:1001@sip.transnexus.com>");
-    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_DISPLAYNAME, "FromDisplayName");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_DISPLAYNAME, "Hello Günter ");
 
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_TO, OSPC_NFORMAT_SIP, "<sips:1002@transnexus.com>");
 
