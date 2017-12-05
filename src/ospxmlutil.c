@@ -17,6 +17,7 @@
 
 /* ospxmlutil.c - Utility functions for parsing and encoding XML documents. */
 
+#include <utf8proc.h>
 #include "osp/osp.h"
 #include "osp/ospbfr.h"
 #include "osp/ospxmltype.h"
@@ -747,6 +748,41 @@ unsigned OSPPXMLDereference(            /* returns error code */
     *ospvDataSize = dataCnt;
     if (flag == OSPC_TRUE) {
         ospvRawData = start;
+    }
+
+    return errcode;
+}
+
+/*
+ * Process UTF-8 string
+ */
+unsigned OSPPXMLProcessUTF8(
+    const char* src,
+    int destsize,
+    char* dest)
+{
+    utf8proc_uint8_t *normalized = OSPC_OSNULL;
+    int i, j, size = 0;
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+
+    if (src != NULL) {
+        if (dest == NULL) {
+            errcode = OSPC_ERR_INVALID_POINTER;
+        } else {
+            normalized = utf8proc_NFKD((utf8proc_uint8_t *)src);
+            if (normalized != OSPC_OSNULL) {
+                size = OSPM_STRLEN((char *)normalized);
+                for (i = 0, j = 0; ((i < size) && (j < destsize - 1)); i++) {
+                    if (normalized[i] < 0x80) {
+                        dest[j++] = normalized[i];
+                    }
+            	}
+                dest[j] = '\0';
+                free(normalized);
+            } else {
+                errcode = OSPC_ERR_NORMALIZE_FAILED;
+            }
+        }
     }
 
     return errcode;

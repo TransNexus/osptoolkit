@@ -63,8 +63,9 @@ int OSPPInit(
             OSPM_MUTEX_DESTROY(OSPVProviderMutex, tmperror);
     }
 
-    if (errcode != OSPC_ERR_NO_ERROR)
+    if (errcode != OSPC_ERR_NO_ERROR) {
         errcode = OSPC_ERR_PROV_INIT_FAILURE;
+    }
 
 #ifdef OSPC_GK_SIM
     if (errcode == OSPC_ERR_NO_ERROR) {
@@ -75,7 +76,9 @@ int OSPPInit(
     /*
      * Initialize openssl global parameters
      */
-    OSPPOpenSSLInit(hw_enabled);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        OSPPOpenSSLInit(hw_enabled);
+    }
 
     return errcode;
 }

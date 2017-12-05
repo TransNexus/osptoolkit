@@ -200,6 +200,7 @@ extern "C" {
 
     void OSPPXMLDocPeekCharN(OSPTBFR **, OSPE_XML_ENC, unsigned, unsigned char *, int *);
 
+    unsigned OSPPXMLProcessUTF8(const char*, int, char*);
     unsigned OSPPXMLEscape(const char*, int, char*);
     unsigned OSPPXMLUnescape(const char*, int, char*);
 
