@@ -56,6 +56,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_CODE,                 "Code" },
     { OSPC_MELEM_CODEC,                "Codec" },
     { OSPC_MELEM_CONNECTTIME,          "ConnectTime" },
+    { OSPC_MELEM_CONTACT,              "ContactSourceInfo" },
     { OSPC_MELEM_CSAUDITTRIGGER,       "cisco.com:AuditSignal" },
     { OSPC_MELEM_CURRENCY,             "Currency" },
     { OSPC_MELEM_CUSTID,               "CustomerId" },
@@ -164,6 +165,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
 };
 
 const OSPE_MSG_ELEM OSPV_MELEM_SIPHEADER[OSPC_SIPHEADER_NUMBER] = {
+    OSPC_MELEM_CONTACT,
     OSPC_MELEM_DIVSRCINFO,
     OSPC_MELEM_FROM,
     OSPC_MELEM_IDENTITY,
