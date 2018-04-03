@@ -39,8 +39,8 @@ CFLAGS = $(MFLAGS) $(DFLAGS) $(GCCFLAGS)
 IFLAGS = -I./ -I$(INCDIR) -I$(SSLINCDIR)
 
 # Library flags
-LIBS = $(OSPLIB) $(SSLLIBS) -lpthread -ldl -lm -lnsl -lsocket
-LIBS_LINUX = $(OSPLIB) $(SSLLIBS) -lpthread -ldl -lm
+LIBS = $(OSPLIB) $(SSLLIBS) -lutf8proc -lpthread -ldl -lm -lnsl -lsocket
+LIBS_LINUX = $(OSPLIB) $(SSLLIBS) -lutf8proc -lpthread -ldl -lm
 
 ################################################################################
 
