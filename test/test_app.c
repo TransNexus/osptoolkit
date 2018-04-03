@@ -1904,21 +1904,29 @@ int testSetSIPHeaders()
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_E164, "FromE164");
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_SIP, "<sip:1001@sip.transnexus.com>");
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_DISPLAYNAME, "Hello Günter ");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_TRANSPORT, "1.2.3.4");
 
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_TO, OSPC_NFORMAT_SIP, "<sips:1002@transnexus.com>");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_TO, OSPC_NFORMAT_TRANSPORT, "transnexus.com");
 
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PAI, OSPC_NFORMAT_E164, "AssertedIdE164");
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PAI, OSPC_NFORMAT_SIP, "<sip:1003@sip.transnexus.com>");
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PAI, OSPC_NFORMAT_DISPLAYNAME, "AssertedIdDisplayName");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PAI, OSPC_NFORMAT_TRANSPORT, "sip.transnexus.com");
 
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_RPID, OSPC_NFORMAT_DISPLAYNAME, "RPIDDisplayName");
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_RPID, OSPC_NFORMAT_SIP, "\"'Eric Smith' of AT&T\" <sip:2001@att.com>;privacy=off;screen=no");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_RPID, OSPC_NFORMAT_TRANSPORT, "att.com");
 
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PCI, OSPC_NFORMAT_E164, "ChargeInfoE164");
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PCI, OSPC_NFORMAT_DISPLAYNAME, "ChargeInfoDisplayName");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_PCI, OSPC_NFORMAT_TRANSPORT, "a.b.c.d");
 
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_DIV, OSPC_NFORMAT_URL, "DivSrcInfoURL");
     errcode = OSPPTransactionSetDiversion(OSPVTransactionHandle, "DiversionSrcInfoE164", "DiversionDevInfo");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_DIV, OSPC_NFORMAT_TRANSPORT, "2.3.4.5");
+
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_CONTACT, OSPC_NFORMAT_TRANSPORT, "3.4.5.6");
 
     errcode = OSPPTransactionSetRequestDate(OSPVTransactionHandle, time(OSPC_OSNULL));
     errcode = OSPPTransactionSetFingerprint(OSPVTransactionHandle, number, fingerprints);

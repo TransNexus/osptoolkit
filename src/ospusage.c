@@ -363,16 +363,17 @@ unsigned OSPPCallPartyNumToElement(
 
     if (errcode == OSPC_ERR_NO_ERROR) {
         switch (ElemType) {
-        case OSPC_MELEM_SRCINFO:
+        case OSPC_MELEM_ASSERTEDID:
+        case OSPC_MELEM_CHARGEINFO:
+        case OSPC_MELEM_CONTACT:
         case OSPC_MELEM_DESTINFO:
         case OSPC_MELEM_DIVSRCINFO:
         case OSPC_MELEM_FROM:
-        case OSPC_MELEM_TO:
-        case OSPC_MELEM_ASSERTEDID:
-        case OSPC_MELEM_RPID:
-        case OSPC_MELEM_CHARGEINFO:
-        case OSPC_MELEM_NETTRANSCALLED:
         case OSPC_MELEM_IDENTITY:
+        case OSPC_MELEM_NETTRANSCALLED:
+        case OSPC_MELEM_RPID:
+        case OSPC_MELEM_SRCINFO:
+        case OSPC_MELEM_TO:
             *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(ElemType), CallPartyNum);
             if (*ospvElem == OSPC_OSNULL) {
                 errcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -389,6 +390,9 @@ unsigned OSPPCallPartyNumToElement(
                     break;
                 case OSPC_NFORMAT_SIP:
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_SIP));
+                    break;
+                case OSPC_NFORMAT_TRANSPORT:
+                    attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRANSPORT));
                     break;
                 case OSPC_NFORMAT_URL:
                     attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_URL));
