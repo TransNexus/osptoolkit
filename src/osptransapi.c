@@ -6108,3 +6108,33 @@ int OSPPTransactionGetTCDesc(
     return errcode;
 }
 
+/*
+ * OSPPTransactionGetVerstat() :
+ * Reports the verification status as returned in AuthRsp
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionGetVerstat(
+    OSPTTRANHANDLE ospvTransaction,         /* In - Transaction handle */
+    OSPE_VERIFICATION_STATUS *ospvStatus)   /* In - Verification status */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    *ospvStatus = OSPC_VSTATUS_UNDEFINED;
+    if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+        if (trans->AuthReq != OSPC_OSNULL) {
+            if (trans->State == OSPC_AUTH_REQUEST_SUCCESS) {
+                *ospvStatus = trans->AuthRsp->Verstat;
+            } else {
+                errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
+            }
+        } else {
+            errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+        }
+    }
+
+    return errcode;
+}
+

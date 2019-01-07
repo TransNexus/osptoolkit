@@ -165,6 +165,7 @@ typedef enum {
     OSPC_MELEM_VALIDAFTER,
     OSPC_MELEM_VALIDUNTIL,
     OSPC_MELEM_VARIANCE,
+    OSPC_MELEM_VERSTAT,
     /* Number of message elements */
     OSPC_MELEM_NUMBER
 } OSPE_MSG_ELEM;

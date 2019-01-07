@@ -922,5 +922,33 @@ const char *OSPPReleaseGetName(     /* returns pointer to the name */
     return name;
 }
 
+/*
+ * OSPPVerstatGetName() - get an verification status from a part value
+ */
+const char *OSPPVerstatGetName( /* returns pointer to the name */
+    OSPE_VERIFICATION_STATUS ospvPart)
+{
+    const char *status = OSPC_OSNULL;
 
+    if ((ospvPart >= OSPC_VSTATUS_START) && (ospvPart < OSPC_VSTATUS_NUMBER)) {
+        status = OSPPMsgDescGetName((OSPT_MSG_PART)ospvPart, OSPV_VSTATUS_DESCS, OSPC_VSTATUS_NUMBER);
+    }
+
+    return status;
+}
+
+/*
+ * OSPPVerstatGetPart() - get a verification status value part ID from its name
+ */
+OSPE_VERIFICATION_STATUS OSPPVerstatGetPart(    /* returns part */
+    const char *ospvName)
+{
+    OSPE_VERIFICATION_STATUS status = OSPC_VSTATUS_UNKNOWN;
+
+    if (ospvName != OSPC_OSNULL) {
+        status = (OSPE_VERIFICATION_STATUS)OSPPMsgDescGetPart(ospvName, OSPV_VSTATUS_DESCS, OSPC_VSTATUS_NUMBER);
+    }
+
+    return status;
+}
 

@@ -134,6 +134,13 @@ const OSPT_MSG_DESC OSPV_TSTATUS_DESCS[OSPC_TSTATUS_NUMBER] = {
     { OSPC_TSTATUS_DESTTRANSFERTO,      "destinationtransferto" }
 };
 
+/* Array that associates verification status type and names */
+const OSPT_MSG_DESC OSPV_VSTATUS_DESCS[OSPC_VSTATUS_NUMBER] = {
+    { OSPC_VSTATUS_NO,      "No-TN-Validation" },
+    { OSPC_VSTATUS_FAILED,  "TN-Validation-Failed" },
+    { OSPC_VSTATUS_PASSED,  "TN-ValidationPassed" }
+};
+
 /*
  * OSPPMsgAttrGetName() - get an attribute name from a part value
  */
