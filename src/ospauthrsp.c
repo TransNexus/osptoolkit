@@ -285,6 +285,7 @@ OSPT_AUTH_RSP* OSPPAuthRspNew(void)
         authrsp->Status = OSPC_OSNULL;
         authrsp->CSAudit = OSPC_OSNULL;
         OSPPListNew(&(authrsp->Destination));
+        authrsp->Verstat = OSPC_VSTATUS_UNKNOWN;
     }
 
     return authrsp;
@@ -404,6 +405,7 @@ unsigned OSPPAuthRspFromElement(
     const char* compid = OSPC_OSNULL;
     OSPT_XML_ELEM *ospvParent = OSPC_OSNULL;
     const char* identity = OSPC_OSNULL;
+    const char* verstat = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
         error = OSPC_ERR_XML_NO_ELEMENT;
@@ -517,6 +519,11 @@ unsigned OSPPAuthRspFromElement(
                 break;
             case OSPC_MELEM_TERMCAUSE:
                 error = OSPPTermCauseFromElement(elem, &(authrsp->TermCause));
+                break;
+            case OSPC_MELEM_VERSTAT:
+                if ((verstat = OSPPXMLElemGetValue(elem)) != OSPC_OSNULL) {
+                    OSPPAuthRspSetVerstat(authrsp, OSPPVerstatGetPart(verstat));
+                }
                 break;
             default:
                 /*
@@ -726,6 +733,28 @@ void OSPPAuthRspSetTermCause(
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
         OSPPSetTermCause(&ospvAuthRsp->TermCause, ospvType, ospvTCCode, ospvTCDesc);
+    }
+}
+
+/*
+ * OSPPAuthRspHasVerstat() - is the verification status set ?
+ */
+OSPTBOOL OSPPAuthRspHasVerstat(
+    OSPT_AUTH_RSP *ospvAuthRsp)
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        return((ospvAuthRsp->Verstat >= OSPC_VSTATUS_START) && (ospvAuthRsp->Verstat < OSPC_VSTATUS_NUMBER));
+    } else {
+        return OSPC_FALSE;
+    }
+}
+
+void OSPPAuthRspSetVerstat(
+    OSPT_AUTH_RSP *ospvAuthRsp,             /* In - pointer to AuthRsp struct */
+    OSPE_VERIFICATION_STATUS ospvStatus)    /* In - verification status */
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        ospvAuthRsp->Verstat = ospvStatus;
     }
 }
 

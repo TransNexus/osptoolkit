@@ -162,6 +162,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_VALIDAFTER,           "ValidAfter" },
     { OSPC_MELEM_VALIDUNTIL,           "ValidUntil" },
     { OSPC_MELEM_VARIANCE,             "Variance" },
+    { OSPC_MELEM_VERSTAT,              "VerificationStatus" },
 };
 
 const OSPE_MSG_ELEM OSPV_MELEM_SIPHEADER[OSPC_SIPHEADER_NUMBER] = {

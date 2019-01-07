@@ -161,6 +161,7 @@ extern "C" {
     int OSPPTransactionHasTermCause(OSPTTRANHANDLE, OSPE_TERM_CAUSE, OSPTBOOL *);
     int OSPPTransactionGetTCCode(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned *);
     int OSPPTransactionGetTCDesc(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned, char *);
+    int OSPPTransactionGetVerstat(OSPTTRANHANDLE, OSPE_VERIFICATION_STATUS *);
 
 #ifdef __cplusplus
 }

@@ -2513,6 +2513,19 @@ int testGetTermCause()
     return errcode;
 }
 
+int testGetVerstat()
+{
+    OSPE_VERIFICATION_STATUS status = OSPC_VSTATUS_UNKNOWN;
+    int errcode = OSPC_ERR_NO_ERROR;
+
+    errcode = OSPPTransactionGetVerstat(OSPVTransactionHandle, &status);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        printf("Verstat: %d\n", status);
+    }
+
+    return errcode;
+}
+
 int testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
@@ -2882,6 +2895,9 @@ int testAPI(int apinumber)
     case 256:
         errcode = testGetTermCause();
         break;
+    case 257:
+        errcode = testGetVerstat();
+        break;
     case 300:
         errcode = testStatsLost();
         break;
@@ -3204,7 +3220,7 @@ int testMenu()
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
         printf("254) Get Destination Switch ID        255) Get Identity\n");
-        printf("256) Get Termination Cause\n");
+        printf("256) Get Termination Cause            257) Get Verification status\n");
         printf("300) Set Lost                         301) Set Jitter\n");
         printf("302) Set Delay                        303) Set Round Trip Delay\n");
         printf("304) Set Octets                       305) Set Packets\n");
