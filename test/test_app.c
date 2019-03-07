@@ -2016,6 +2016,7 @@ int testSetCustomInfo(int flag)
 
     if (flag) {
         errcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 0, "CustomInfo_first");
+        errcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 16, "true");
     } else {
         errcode = OSPPTransactionSetCustomInfo(OSPVTransactionHandle, 31, "CustomInfo_32");
     }

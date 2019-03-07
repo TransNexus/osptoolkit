@@ -569,6 +569,8 @@ unsigned OSPPCustomInfoToElement(
     unsigned errcode = OSPC_ERR_NO_ERROR;
     char buffer[OSPC_SIZE_NORSTR];
     OSPTBOOL isbase64 = OSPC_TRUE;
+    OSPE_MSG_ATTR attrtype = OSPC_MATTR_INDEX;
+    OSPE_ALTINFO attrvalue = OSPC_ALTINFO_CAPTCHAINDEX;
 
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
@@ -581,11 +583,18 @@ unsigned OSPPCustomInfoToElement(
     }
 
     if (errcode == OSPC_ERR_NO_ERROR) {
-        snprintf(buffer, sizeof(buffer), "%d", Index + 1);
-        errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO),
-            OSPM_STRLEN(CustomInfo), (unsigned char *)CustomInfo,
-            OSPPMsgAttrGetName(OSPC_MATTR_INDEX), buffer, isbase64,
-            ospvElem);
+        if (Index == OSPC_CAPTCHA_INDEX) {
+            /* For CAPTCHA flag */
+            errcode = OSPPStringToElement(OSPC_MELEM_CUSTINFO, CustomInfo,
+                1, &attrtype, &attrvalue,
+                ospvElem);
+        } else {
+            snprintf(buffer, sizeof(buffer), "%d", Index + 1);
+            errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_CUSTINFO),
+                OSPM_STRLEN(CustomInfo), (unsigned char *)CustomInfo,
+                OSPPMsgAttrGetName(OSPC_MATTR_INDEX), buffer, isbase64,
+                ospvElem);
+        }
     }
 
     return errcode;

@@ -86,7 +86,8 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_CALLED,          "called" },
     { OSPC_ALTINFO_VOICE,           "voice" },
     { OSPC_ALTINFO_VIDEO,           "video" },
-    { OSPC_ALTINFO_PROXY,           "proxy" }
+    { OSPC_ALTINFO_PROXY,           "proxy" },
+    { OSPC_ALTINFO_CAPTCHAINDEX,    "17" }
 };
 
 /*

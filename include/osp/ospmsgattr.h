@@ -45,7 +45,8 @@ typedef enum {
 
 #define OSPC_MAX_ATTR   4
 
-#define OSPC_MAX_INDEX  32
+#define OSPC_MAX_INDEX      32
+#define OSPC_CAPTCHA_INDEX  16
 
 /* Signaling protocol types */
 typedef enum {
