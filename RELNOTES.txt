@@ -732,5 +732,5 @@ Version 4.17.0 - 2019-01-07
 * Added SHAKEN verification status support.
 ---------------------------------------------------------------------------
 
-Version 4.17.1 - 
+Version 4.18.0 - 
 * Fixed a typo in OSPV_ATYPE_DESCS table.
