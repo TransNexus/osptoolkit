@@ -89,6 +89,7 @@ typedef enum {
     OSPC_ALTINFO_VOICE,
     OSPC_ALTINFO_VIDEO,
     OSPC_ALTINFO_PROXY,
+    OSPC_ALTINFO_CAPTCHAINDEX,
     /* Number of element attributes */
     OSPC_ALTINFO_NUMBER
 } OSPE_ALTINFO;
