@@ -1932,6 +1932,9 @@ int testSetSIPHeaders()
     errcode = OSPPTransactionSetFingerprint(OSPVTransactionHandle, number, fingerprints);
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_IDENTITY, OSPC_NFORMAT_SIP, "IdentityHeader");
 
+    errcode = OSPPTransactionSetAttestInfo(OSPVTransactionHandle, "A");
+    errcode = OSPPTransactionSetOrigId(OSPVTransactionHandle, "1b541919-d4e1-42dc-bbc7-a13c06ad45c4");
+
     return errcode;
 }
 
@@ -2527,6 +2530,32 @@ int testGetVerstat()
     return errcode;
 }
 
+int testGetAttest()
+{
+    char attest[OSPC_SIZE_NORSTR];
+    int errcode = OSPC_ERR_NO_ERROR;
+
+    errcode = OSPPTransactionGetAttestInfo(OSPVTransactionHandle, sizeof(attest), attest);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        printf("Attestation: %s\n", attest);
+    }
+
+    return errcode;
+}
+
+int testGetOrigId()
+{
+    char origid[OSPC_SIZE_NORID];
+    int errcode = OSPC_ERR_NO_ERROR;
+
+    errcode = OSPPTransactionGetOrigId(OSPVTransactionHandle, sizeof(origid), origid);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        printf("OriginationId: %s\n", origid);
+    }
+
+    return errcode;
+}
+
 int testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
@@ -2899,6 +2928,12 @@ int testAPI(int apinumber)
     case 257:
         errcode = testGetVerstat();
         break;
+    case 258:
+        errcode = testGetAttest();
+        break;
+    case 259:
+        errcode = testGetOrigId();
+        break;
     case 300:
         errcode = testStatsLost();
         break;
@@ -3222,6 +3257,7 @@ int testMenu()
         printf("252) Get URLs                         253) Get CNAM\n");
         printf("254) Get Destination Switch ID        255) Get Identity\n");
         printf("256) Get Termination Cause            257) Get Verification status\n");
+        printf("258) Get Attestation                  259) Get Origination ID\n");
         printf("300) Set Lost                         301) Set Jitter\n");
         printf("302) Set Delay                        303) Set Round Trip Delay\n");
         printf("304) Set Octets                       305) Set Packets\n");

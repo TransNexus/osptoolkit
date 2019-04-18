@@ -136,6 +136,8 @@ typedef struct _OSPTTRANS {
     OSPTLIST SDPFingerprint;
     char SrcSwitchId[OSPC_SIZE_NORID];
     char PCVICID[OSPC_SIZE_NORSTR];
+    char AttestInfo[OSPC_SIZE_NORSTR];
+    char OrigId[OSPC_SIZE_NORID];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

@@ -48,6 +48,8 @@ typedef struct {
     char *Identity;
     OSPT_TERM_CAUSE TermCause;
     OSPE_VERIFICATION_STATUS Verstat;
+    char AttestInfo[OSPC_SIZE_NORSTR];
+    char OrigId[OSPC_SIZE_NORID];
 } OSPT_AUTH_RSP;
 
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)
@@ -121,6 +123,10 @@ extern "C" {
     void OSPPAuthRspSetTermCause(OSPT_AUTH_RSP *, OSPE_TERM_CAUSE, unsigned, const char *);
     OSPTBOOL OSPPAuthRspHasVerstat(OSPT_AUTH_RSP *);
     void OSPPAuthRspSetVerstat(OSPT_AUTH_RSP *, OSPE_VERIFICATION_STATUS);
+    OSPTBOOL OSPPAuthRspHasAttestInfo(OSPT_AUTH_RSP *);
+    void OSPPAuthRspSetAttestInfo(OSPT_AUTH_RSP *, const char *);
+    OSPTBOOL OSPPAuthRspHasOrigId(OSPT_AUTH_RSP *);
+    void OSPPAuthRspSetOrigId(OSPT_AUTH_RSP *, const char *);
 
 #ifdef __cplusplus
 }

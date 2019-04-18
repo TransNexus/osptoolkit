@@ -406,6 +406,8 @@ unsigned OSPPAuthRspFromElement(
     OSPT_XML_ELEM *ospvParent = OSPC_OSNULL;
     const char* identity = OSPC_OSNULL;
     const char* verstat = OSPC_OSNULL;
+    const char* attest = OSPC_OSNULL;
+    const char* origid = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
         error = OSPC_ERR_XML_NO_ELEMENT;
@@ -523,6 +525,16 @@ unsigned OSPPAuthRspFromElement(
             case OSPC_MELEM_VERSTAT:
                 if ((verstat = OSPPXMLElemGetValue(elem)) != OSPC_OSNULL) {
                     OSPPAuthRspSetVerstat(authrsp, OSPPVerstatGetPart(verstat));
+                }
+                break;
+            case OSPC_MELEM_ATTESTINFO:
+                if ((attest = OSPPXMLElemGetValue(elem)) != OSPC_OSNULL) {
+                    OSPPAuthRspSetAttestInfo(authrsp, attest);
+                }
+                break;
+            case OSPC_MELEM_ORIGID:
+                if ((origid = OSPPXMLElemGetValue(elem)) != OSPC_OSNULL) {
+                    OSPPAuthRspSetOrigId(authrsp, origid);
                 }
                 break;
             default:
@@ -755,6 +767,44 @@ void OSPPAuthRspSetVerstat(
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
         ospvAuthRsp->Verstat = ospvStatus;
+    }
+}
+
+OSPTBOOL OSPPAuthRspHasAttestInfo(
+    OSPT_AUTH_RSP *ospvAuthRsp)
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        return(ospvAuthRsp->AttestInfo[0] != '\0');
+    } else {
+        return OSPC_FALSE;
+    }
+}
+
+void OSPPAuthRspSetAttestInfo(
+    OSPT_AUTH_RSP *ospvAuthRsp, /* In - pointer to AuthRsp struct */
+    const char *ospvAttest)     /* In - Attestation-Info */
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        OSPM_STRNCPY(ospvAuthRsp->AttestInfo, ospvAttest, sizeof(ospvAuthRsp->AttestInfo));
+    }
+}
+
+OSPTBOOL OSPPAuthRspHasOrigId(
+    OSPT_AUTH_RSP *ospvAuthRsp)
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        return(ospvAuthRsp->OrigId[0] != '\0');
+    } else {
+        return OSPC_FALSE;
+    }
+}
+
+void OSPPAuthRspSetOrigId(
+    OSPT_AUTH_RSP *ospvAuthRsp, /* In - pointer to AuthRsp struct */
+    const char *ospvOrigId)     /* In - origination ID */
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        OSPM_STRNCPY(ospvAuthRsp->OrigId, ospvOrigId, sizeof(ospvAuthRsp->OrigId));
     }
 }
 

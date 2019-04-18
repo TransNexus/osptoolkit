@@ -2154,6 +2154,8 @@ int OSPPTransactionNew(
         OSPPListNew(&(trans->SDPFingerprint));
         trans->SrcSwitchId[0] = '\0';
         trans->PCVICID[0] = '\0';
+        trans->AttestInfo[0] = '\0';
+        trans->OrigId[0] = '\0';
     }
 
     return errcode;
@@ -5898,6 +5900,44 @@ int OSPPTransactionSetDestSwitchId(
     return errcode;
 }
 
+int OSPPTransactionSetAttestInfo(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvAttestInfo)     /* In - Attestation-Info */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvAttestInfo == OSPC_OSNULL) || (ospvAttestInfo[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->AttestInfo, ospvAttestInfo, sizeof(trans->AttestInfo));
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionSetOrigId(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvOrigId)         /* In - Origination-Id */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvOrigId == OSPC_OSNULL) || (ospvOrigId[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->OrigId, ospvOrigId, sizeof(trans->OrigId));
+        }
+    }
+
+    return errcode;
+}
+
 /*
  * OSPPTransactionGetDestSwitchId() :
  * Reports the destination switch Id as returned in AuthRsp
@@ -6132,6 +6172,96 @@ int OSPPTransactionGetVerstat(
         } else {
             errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
             OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionGetAttestInfo() :
+ * Reports the attestaion as returned in AuthRsp
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionGetAttestInfo(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvSizeOfAttest,      /* In - Max size of attestation */
+    char *ospvAttest)               /* In - attestation */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    char *attest = OSPC_OSNULL;
+
+    if (ospvSizeOfAttest == 0) {
+        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy attestation.");
+    } else {
+        ospvAttest[0] = '\0';
+        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+            if (trans->AuthReq != OSPC_OSNULL) {
+                if (trans->State == OSPC_AUTH_REQUEST_SUCCESS) {
+                    attest = trans->AuthRsp->AttestInfo;
+                    if (attest[0] != '\0') {
+                        if (ospvSizeOfAttest > OSPM_STRLEN(attest)) {
+                            OSPM_STRNCPY(ospvAttest, attest, ospvSizeOfAttest);
+                        } else {
+                            errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errcode, "No enough buffer to copy attestation.");
+                        }
+                    }
+                } else {
+                    errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                    OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
+                }
+            } else {
+                errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+            }
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionGetOrigId() :
+ * Reports the origination ID as returned in AuthRsp
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionGetOrigId(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvSizeOfOrigId,      /* In - Max size of origination ID */
+    char *ospvOrigId)               /* In - origination ID */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    char *origid = OSPC_OSNULL;
+
+    if (ospvSizeOfOrigId == 0) {
+        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy origination ID.");
+    } else {
+        ospvOrigId[0] = '\0';
+        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+            if (trans->AuthReq != OSPC_OSNULL) {
+                if (trans->State == OSPC_AUTH_REQUEST_SUCCESS) {
+                    origid = trans->AuthRsp->OrigId;
+                    if (origid[0] != '\0') {
+                        if (ospvSizeOfOrigId > OSPM_STRLEN(origid)) {
+                            OSPM_STRNCPY(ospvOrigId, origid, ospvSizeOfOrigId);
+                        } else {
+                            errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errcode, "No enough buffer to copy origination ID.");
+                        }
+                    }
+                } else {
+                    errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                    OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
+                }
+            } else {
+                errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+            }
         }
     }
 
