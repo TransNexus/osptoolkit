@@ -735,3 +735,7 @@ Version 4.17.0 - 2019-01-07
 Version 4.18.0 - 2019-03-07
 * Added CAPTCHA flag support.
 * Fixed a typo in OSPV_ATYPE_DESCS table.
+---------------------------------------------------------------------------
+
+Version 4.18.1 - 2019-05-16
+* Fixed missing GBC3 vendor info.
