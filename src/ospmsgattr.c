@@ -92,6 +92,7 @@ const OSPT_MSG_DESC OSPV_RVENDOR_DESCS[OSPC_RVENDOR_NUMBER] = {
     { OSPC_RVENDOR_CISCO,           "cisco" },
     { OSPC_RVENDOR_CUCM,            "cucm" },
     { OSPC_RVENDOR_FREESWITCH,      "freeswitch" },
+    { OSPC_RVENDOR_GENBANDC3,       "genbandc3" },
     { OSPC_RVENDOR_GENBANDS3,       "genbands3" },
     { OSPC_RVENDOR_KAMAILIO,        "kamailio" },
     { OSPC_RVENDOR_METASPHERE,      "metasphere" },
