@@ -495,7 +495,7 @@ static OSPTTHREADRETURN osppHttpSetupAndMonitor(
                 if (errorcode != OSPC_ERR_NO_ERROR)
                     msginfo->ErrorCode = errorcode;
 
-                if (errorcode == OSPC_ERR_NO_ERROR && attempts < retrylimit && comm->Flags & OSPC_COMM_HTTPSHUTDOWN_BIT)
+                if (errorcode == OSPC_ERR_NO_ERROR && attempts < retrylimit && (comm->Flags & OSPC_COMM_HTTPSHUTDOWN_BIT))
 
                     msginfo->ErrorCode = OSPC_ERR_HTTP_SHUTDOWN;
 

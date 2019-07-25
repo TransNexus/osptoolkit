@@ -2084,6 +2084,23 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
+            /* Add user rate plan */
+            for (index = 0; index < OSPC_CPARTY_NUMBER; index++) {
+                attrtype[0] = OSPC_MATTR_TYPE;
+                if (trans->UserRatePlan[index] != '\0') {
+                    if (index == OSPC_CPARTY_SOURCE) {
+                        attrvalue[0] = OSPC_ALTINFO_SOURCE;
+                    } else {
+                        attrvalue[0] = OSPC_ALTINFO_DESTINATION;
+                    }
+                    errcode = OSPPStringToElement(OSPC_MELEM_USERRATEPLAN, trans->UserRatePlan[index], 1, attrtype, attrvalue, &subelem);
+                    if (errcode == OSPC_ERR_NO_ERROR) {
+                        OSPPXMLElemAddChild(usageindelem, subelem);
+                        subelem = OSPC_OSNULL;
+                    }
+                }
+            }
+
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, usageindelem);
                 usageindelem = OSPC_OSNULL;
@@ -2327,7 +2344,7 @@ void OSPPUsageIndSetSessionId(      /* Nothing returned */
 {
     if ((ospvUsageInd != OSPC_OSNULL) &&
         ((ospvType >= OSPC_SESSIONID_START) && (ospvType < OSPC_SESSIONID_NUMBER)) &&
-        ((ospvSessionId) != OSPC_OSNULL))
+        (ospvSessionId != OSPC_OSNULL))
     {
         if (ospvUsageInd->SessionId[ospvType] != OSPC_OSNULL) {
             OSPPCallIdDelete(&(ospvUsageInd->SessionId[ospvType]));

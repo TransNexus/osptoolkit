@@ -1932,6 +1932,9 @@ int testSetSIPHeaders()
     errcode = OSPPTransactionSetFingerprint(OSPVTransactionHandle, number, fingerprints);
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_IDENTITY, OSPC_NFORMAT_SIP, "IdentityHeader");
 
+    errcode = OSPPTransactionSetAttestInfo(OSPVTransactionHandle, "A");
+    errcode = OSPPTransactionSetOrigId(OSPVTransactionHandle, "1b541919-d4e1-42dc-bbc7-a13c06ad45c4");
+
     return errcode;
 }
 
@@ -2474,6 +2477,16 @@ int testSetChargingVector()
     return errcode;
 }
 
+int testSetUserRatePlan()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetUserRatePlan(OSPVTransactionHandle, OSPC_CPARTY_SOURCE, "SourceUserRatePlan");
+    errcode = OSPPTransactionSetUserRatePlan(OSPVTransactionHandle, OSPC_CPARTY_DESTINATION, "DestinationUserRatePlan");
+
+    return errcode;
+}
+
 int testGetIdentity()
 {
     char identity[OSPC_SIZE_HEADER];
@@ -2522,6 +2535,32 @@ int testGetVerstat()
     errcode = OSPPTransactionGetVerstat(OSPVTransactionHandle, &status);
     if (errcode == OSPC_ERR_NO_ERROR) {
         printf("Verstat: %d\n", status);
+    }
+
+    return errcode;
+}
+
+int testGetAttest()
+{
+    char attest[OSPC_SIZE_NORSTR];
+    int errcode = OSPC_ERR_NO_ERROR;
+
+    errcode = OSPPTransactionGetAttestInfo(OSPVTransactionHandle, sizeof(attest), attest);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        printf("Attestation: %s\n", attest);
+    }
+
+    return errcode;
+}
+
+int testGetOrigId()
+{
+    char origid[OSPC_SIZE_NORID];
+    int errcode = OSPC_ERR_NO_ERROR;
+
+    errcode = OSPPTransactionGetOrigId(OSPVTransactionHandle, sizeof(origid), origid);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        printf("OriginationId: %s\n", origid);
     }
 
     return errcode;
@@ -2710,6 +2749,7 @@ int testAPI(int apinumber)
         break;
     case 54:
         errcode = testSetCallId();
+        break;
     case 55:
         errcode = testOSPPTransactionSetPricingInfo();
         break;
@@ -2875,6 +2915,9 @@ int testAPI(int apinumber)
     case 240:
         errcode = testSetChargingVector();
         break;
+    case 241:
+        errcode = testSetUserRatePlan();
+        break;
     case 250:
         errcode = testGetNumberPortability();
         break;
@@ -2898,6 +2941,12 @@ int testAPI(int apinumber)
         break;
     case 257:
         errcode = testGetVerstat();
+        break;
+    case 258:
+        errcode = testGetAttest();
+        break;
+    case 259:
+        errcode = testGetOrigId();
         break;
     case 300:
         errcode = testStatsLost();
@@ -3217,11 +3266,12 @@ int testMenu()
         printf("234) Set User Agent                   235) Set Media Addresses\n");
         printf("236) Set Proxy Addresses              237) Set Provider PDD\n");
         printf("238) Set JIP                          239) Set Call Type\n");
-        printf("240) Set Charging Vector\n");
+        printf("240) Set Charging Vector              241) Set User Rate Plan\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
         printf("254) Get Destination Switch ID        255) Get Identity\n");
         printf("256) Get Termination Cause            257) Get Verification status\n");
+        printf("258) Get Attestation                  259) Get Origination ID\n");
         printf("300) Set Lost                         301) Set Jitter\n");
         printf("302) Set Delay                        303) Set Round Trip Delay\n");
         printf("304) Set Octets                       305) Set Packets\n");

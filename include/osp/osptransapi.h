@@ -155,13 +155,18 @@ extern "C" {
     int OSPPTransactionSetFingerprint(OSPTTRANHANDLE, unsigned, const char **);
     int OSPPTransactionSetSrcSwitchId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetDestSwitchId(OSPTTRANHANDLE, const char *);
-    int OSPPTransactionGetDestSwitchId(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionSetChargingVector(OSPTTRANHANDLE, const char *, const char *, const char *, const char *);
+    int OSPPTransactionSetAttestInfo(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetOrigId(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionGetDestSwitchId(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionGetIdentity(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionHasTermCause(OSPTTRANHANDLE, OSPE_TERM_CAUSE, OSPTBOOL *);
     int OSPPTransactionGetTCCode(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned *);
     int OSPPTransactionGetTCDesc(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned, char *);
     int OSPPTransactionGetVerstat(OSPTTRANHANDLE, OSPE_VERIFICATION_STATUS *);
+    int OSPPTransactionGetAttestInfo(OSPTTRANHANDLE, unsigned, char *);
+    int OSPPTransactionGetOrigId(OSPTTRANHANDLE, unsigned, char *);
+    int OSPPTransactionSetUserRatePlan(OSPTTRANHANDLE, OSPE_CALL_PARTY, const char *);
 
 #ifdef __cplusplus
 }
