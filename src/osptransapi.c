@@ -2157,7 +2157,7 @@ int OSPPTransactionNew(
         trans->AttestInfo[0] = '\0';
         trans->OrigId[0] = '\0';
         for (index = 0; index < OSPC_CPARTY_NUMBER; index++) {
-            trans->UserRatePlan[index] = '\0';
+            trans->UserRatePlan[index][0] = '\0';
         }
     }
 
