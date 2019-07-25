@@ -2156,6 +2156,9 @@ int OSPPTransactionNew(
         trans->PCVICID[0] = '\0';
         trans->AttestInfo[0] = '\0';
         trans->OrigId[0] = '\0';
+        for (index = 0; index < OSPC_CPARTY_NUMBER; index++) {
+            trans->UserRatePlan[index] = '\0';
+        }
     }
 
     return errcode;
@@ -6268,3 +6271,21 @@ int OSPPTransactionGetOrigId(
     return errcode;
 }
 
+int OSPPTransactionSetUserRatePlan(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    OSPE_CALL_PARTY ospvCallParty,  /* In - Call party value */
+    const char *ospvRatePlan)       /* In - Rate plan */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL) &&
+        ((ospvCallParty >= OSPC_CPARTY_START) && (ospvCallParty < OSPC_CPARTY_NUMBER)) && 
+        (ospvRatePlan != OSPC_OSNULL))
+    {
+        OSPM_STRNCPY(trans->UserRatePlan[ospvCallParty], ospvRatePlan, sizeof(trans->UserRatePlan[ospvCallParty]));
+    }
+
+    return errcode;
+}

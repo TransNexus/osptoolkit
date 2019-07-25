@@ -2477,6 +2477,16 @@ int testSetChargingVector()
     return errcode;
 }
 
+int testSetUserRatePlan()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetUserRatePlan(OSPVTransactionHandle, OSPC_CPARTY_SOURCE, "SourceUserRatePlan");
+    errcode = OSPPTransactionSetUserRatePlan(OSPVTransactionHandle, OSPC_CPARTY_DESTINATION, "DestinationUserRatePlan");
+
+    return errcode;
+}
+
 int testGetIdentity()
 {
     char identity[OSPC_SIZE_HEADER];
@@ -2739,6 +2749,7 @@ int testAPI(int apinumber)
         break;
     case 54:
         errcode = testSetCallId();
+        break;
     case 55:
         errcode = testOSPPTransactionSetPricingInfo();
         break;
@@ -2903,6 +2914,9 @@ int testAPI(int apinumber)
         break;
     case 240:
         errcode = testSetChargingVector();
+        break;
+    case 241:
+        errcode = testSetUserRatePlan();
         break;
     case 250:
         errcode = testGetNumberPortability();
@@ -3252,7 +3266,7 @@ int testMenu()
         printf("234) Set User Agent                   235) Set Media Addresses\n");
         printf("236) Set Proxy Addresses              237) Set Provider PDD\n");
         printf("238) Set JIP                          239) Set Call Type\n");
-        printf("240) Set Charging Vector\n");
+        printf("240) Set Charging Vector              241) Set User Rate Plan\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
         printf("254) Get Destination Switch ID        255) Get Identity\n");

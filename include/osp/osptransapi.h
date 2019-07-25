@@ -166,6 +166,7 @@ extern "C" {
     int OSPPTransactionGetVerstat(OSPTTRANHANDLE, OSPE_VERIFICATION_STATUS *);
     int OSPPTransactionGetAttestInfo(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionGetOrigId(OSPTTRANHANDLE, unsigned, char *);
+    int OSPPTransactionSetUserRatePlan(OSPTTRANHANDLE, OSPE_CALL_PARTY, const char *);
 
 #ifdef __cplusplus
 }

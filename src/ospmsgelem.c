@@ -161,6 +161,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_USERGROUP,            "UserGroup" },
     { OSPC_MELEM_USERID,               "UserId" },
     { OSPC_MELEM_USERNAME,             "UserName" },
+    { OSPC_MELEM_USERRATEPLAN,         "SubscriberRatePlan" },
     { OSPC_MELEM_VALIDAFTER,           "ValidAfter" },
     { OSPC_MELEM_VALIDUNTIL,           "ValidUntil" },
     { OSPC_MELEM_VARIANCE,             "Variance" },

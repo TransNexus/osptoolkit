@@ -776,7 +776,7 @@ unsigned OSPPXMLProcessUTF8(
                     if (normalized[i] < 0x80) {
                         dest[j++] = normalized[i];
                     }
-            	}
+                }
                 dest[j] = '\0';
                 free(normalized);
             } else {
