@@ -2481,7 +2481,6 @@ int testSetUserRatePlan()
 {
     int errcode = 0;
 
-    errcode = OSPPTransactionSetUserRatePlan(OSPVTransactionHandle, OSPC_CPARTY_SOURCE, "SourceUserRatePlan");
     errcode = OSPPTransactionSetUserRatePlan(OSPVTransactionHandle, OSPC_CPARTY_DESTINATION, "DestinationUserRatePlan");
 
     return errcode;

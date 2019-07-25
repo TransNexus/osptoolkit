@@ -744,4 +744,5 @@ Version 4.19.0 - 2019-07-25
 * Added Attestation-Info and Origination-Id into AuthReq and AuthRsp.
 * Added SubscriberRatePlan into UsageInd.
 
-Version 4.19.1 - 
+Version 4.19.1 - 2019-07-25
+* Fixed typo.

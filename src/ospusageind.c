@@ -2087,7 +2087,7 @@ int OSPPUsageIndToElement(      /* returns error code */
             /* Add user rate plan */
             for (index = 0; index < OSPC_CPARTY_NUMBER; index++) {
                 attrtype[0] = OSPC_MATTR_TYPE;
-                if (trans->UserRatePlan[index] != '\0') {
+                if (trans->UserRatePlan[index][0] != '\0') {
                     if (index == OSPC_CPARTY_SOURCE) {
                         attrvalue[0] = OSPC_ALTINFO_SOURCE;
                     } else {
