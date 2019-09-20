@@ -2101,6 +2101,15 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
+            /* Add User-Agnet */
+            if ((errcode == OSPC_ERR_NO_ERROR) &&  (trans->UserAgent[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_USERAGENT, trans->UserAgent, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, usageindelem);
                 usageindelem = OSPC_OSNULL;

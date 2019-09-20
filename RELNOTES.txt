@@ -747,4 +747,5 @@ Version 4.19.0 - 2019-07-25
 Version 4.19.1 - 2019-07-25
 * Fixed typo.
 
-Version 4.19.2 - 
+Version 4.19.2 - 2019-09-20
+* Added User-Agent to UsageIndication messages.
