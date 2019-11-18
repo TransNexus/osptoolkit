@@ -50,6 +50,7 @@ typedef struct {
     OSPE_VERIFICATION_STATUS Verstat;
     char AttestInfo[OSPC_SIZE_NORSTR];
     char OrigId[OSPC_SIZE_NORID];
+    char JurisdictionType[OSPC_SIZE_NORID];
 } OSPT_AUTH_RSP;
 
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)
@@ -127,6 +128,8 @@ extern "C" {
     void OSPPAuthRspSetAttestInfo(OSPT_AUTH_RSP *, const char *);
     OSPTBOOL OSPPAuthRspHasOrigId(OSPT_AUTH_RSP *);
     void OSPPAuthRspSetOrigId(OSPT_AUTH_RSP *, const char *);
+    OSPTBOOL OSPPAuthRspHasJurisdictionType(OSPT_AUTH_RSP *);
+    void OSPPAuthRspSetJurisdictionType(OSPT_AUTH_RSP *, const char *);
 
 #ifdef __cplusplus
 }
