@@ -408,6 +408,7 @@ unsigned OSPPAuthRspFromElement(
     const char* verstat = OSPC_OSNULL;
     const char* attest = OSPC_OSNULL;
     const char* origid = OSPC_OSNULL;
+    const char* jdtype = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
         error = OSPC_ERR_XML_NO_ELEMENT;
@@ -535,6 +536,11 @@ unsigned OSPPAuthRspFromElement(
             case OSPC_MELEM_ORIGID:
                 if ((origid = OSPPXMLElemGetValue(elem)) != OSPC_OSNULL) {
                     OSPPAuthRspSetOrigId(authrsp, origid);
+                }
+                break;
+            case OSPC_MELEM_JURISDICTIONTYPE:
+                if ((jdtype = OSPPXMLElemGetValue(elem)) != OSPC_OSNULL) {
+                    OSPPAuthRspSetJurisdictionType(authrsp, jdtype);
                 }
                 break;
             default:
@@ -801,10 +807,29 @@ OSPTBOOL OSPPAuthRspHasOrigId(
 
 void OSPPAuthRspSetOrigId(
     OSPT_AUTH_RSP *ospvAuthRsp, /* In - pointer to AuthRsp struct */
-    const char *ospvOrigId)     /* In - origination ID */
+    const char *ospvOrigId)     /* In - Origination ID */
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
         OSPM_STRNCPY(ospvAuthRsp->OrigId, ospvOrigId, sizeof(ospvAuthRsp->OrigId));
+    }
+}
+
+OSPTBOOL OSPPAuthRspHasJurisdictionType(
+    OSPT_AUTH_RSP *ospvAuthRsp)
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        return(ospvAuthRsp->JurisdictionType[0] != '\0');
+    } else {
+        return OSPC_FALSE;
+    }
+}
+
+void OSPPAuthRspSetJurisdictionType(
+    OSPT_AUTH_RSP *ospvAuthRsp,         /* In - pointer to AuthRsp struct */
+    const char *ospvJurisdictionType)   /* In - Jurisdiction type */
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        OSPM_STRNCPY(ospvAuthRsp->JurisdictionType, ospvJurisdictionType, sizeof(ospvAuthRsp->JurisdictionType));
     }
 }
 

@@ -2565,6 +2565,19 @@ int testGetOrigId()
     return errcode;
 }
 
+int testGetJurisdictionType()
+{
+    char jdtype[OSPC_SIZE_NORID];
+    int errcode = OSPC_ERR_NO_ERROR;
+
+    errcode = OSPPTransactionGetJurisdictionType(OSPVTransactionHandle, sizeof(jdtype), jdtype);
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        printf("JurusdictionType: %s\n", jdtype);
+    }
+
+    return errcode;
+}
+
 int testAPI(int apinumber)
 {
     OSPTTHREADID MultProviderThrId[OSPC_MAX_PROVIDERS];
@@ -2947,6 +2960,9 @@ int testAPI(int apinumber)
     case 259:
         errcode = testGetOrigId();
         break;
+    case 260:
+        errcode = testGetJurisdictionType();
+        break;
     case 300:
         errcode = testStatsLost();
         break;
@@ -3271,6 +3287,7 @@ int testMenu()
         printf("254) Get Destination Switch ID        255) Get Identity\n");
         printf("256) Get Termination Cause            257) Get Verification status\n");
         printf("258) Get Attestation                  259) Get Origination ID\n");
+        printf("260) Get Jurisdiction Type\n");
         printf("300) Set Lost                         301) Set Jitter\n");
         printf("302) Set Delay                        303) Set Round Trip Delay\n");
         printf("304) Set Octets                       305) Set Packets\n");

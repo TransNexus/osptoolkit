@@ -91,6 +91,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_REQUESTDATE,          "SipRequestDate" },
     { OSPC_MELEM_JIP,                  "JIP" },
     { OSPC_MELEM_JITTER,               "Jitter" },
+    { OSPC_MELEM_JURISDICTIONTYPE,     "JurisdictionType" },
     { OSPC_MELEM_LOSSRCVD,             "LossReceived" },
     { OSPC_MELEM_LOSSSENT,             "LossSent" },
     { OSPC_MELEM_LOST,                 "Lost" },
