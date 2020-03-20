@@ -139,7 +139,7 @@ const OSPT_MSG_DESC OSPV_TSTATUS_DESCS[OSPC_TSTATUS_NUMBER] = {
 const OSPT_MSG_DESC OSPV_VSTATUS_DESCS[OSPC_VSTATUS_NUMBER] = {
     { OSPC_VSTATUS_NO,      "No-TN-Validation" },
     { OSPC_VSTATUS_FAILED,  "TN-Validation-Failed" },
-    { OSPC_VSTATUS_PASSED,  "TN-ValidationPassed" }
+    { OSPC_VSTATUS_PASSED,  "TN-Validation-Passed" }
 };
 
 /*
