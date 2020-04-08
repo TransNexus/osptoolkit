@@ -156,7 +156,7 @@ extern "C" {
     int OSPPTransactionSetSrcSwitchId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetDestSwitchId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetChargingVector(OSPTTRANHANDLE, const char *, const char *, const char *, const char *);
-    int OSPPTransactionSetAttestInfo(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetAttest(OSPTTRANHANDLE, const char);
     int OSPPTransactionSetOrigId(OSPTTRANHANDLE, const char *);
     int OSPPTransactionGetDestSwitchId(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionGetIdentity(OSPTTRANHANDLE, unsigned, char *);
@@ -164,10 +164,11 @@ extern "C" {
     int OSPPTransactionGetTCCode(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned *);
     int OSPPTransactionGetTCDesc(OSPTTRANHANDLE, OSPE_TERM_CAUSE, unsigned, char *);
     int OSPPTransactionGetVerstat(OSPTTRANHANDLE, OSPE_VERIFICATION_STATUS *);
-    int OSPPTransactionGetAttestInfo(OSPTTRANHANDLE, unsigned, char *);
+    int OSPPTransactionGetAttest(OSPTTRANHANDLE, char *);
     int OSPPTransactionGetOrigId(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionSetUserRatePlan(OSPTTRANHANDLE, OSPE_CALL_PARTY, const char *);
     int OSPPTransactionGetJurisdictionType(OSPTTRANHANDLE, unsigned, char *);
+    int OSPPTransactionSetStirInfo(OSPTTRANHANDLE, int, const char *, const char, const char *, int, int, const char *, int, int);
 
 #ifdef __cplusplus
 }

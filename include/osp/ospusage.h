@@ -31,6 +31,12 @@ unsigned OSPPAddConfIdToUsageElement(const char *, OSPT_XML_ELEM **);
 
 unsigned OSPPCallPartyNumToElement(OSPE_MSG_ELEM, const char *, OSPE_NUMBER_FORMAT, OSPT_XML_ELEM **);
 unsigned OSPPTermCauseToElement(OSPE_TERM_CAUSE, unsigned, const char *, OSPT_XML_ELEM **);
+unsigned OSPPStatusToElement(int, const char *, OSPT_XML_ELEM **);
 unsigned OSPPStringToElement(OSPE_MSG_ELEM, const char *, unsigned, OSPE_MSG_ATTR *, OSPE_ALTINFO *, OSPT_XML_ELEM **);
 unsigned OSPPCustomInfoToElement(unsigned, const char *, OSPT_XML_ELEM **);
+unsigned OSPPStiAttestToElement(char, OSPT_XML_ELEM **);
+unsigned OSPPCertInfoToElement(int, int, const char *, OSPT_XML_ELEM **);
+unsigned OSPPOobToElement(int, int, OSPT_XML_ELEM **);
+unsigned OSPPStiAsToElement(const char *, char, const char *, int, int, OSPT_XML_ELEM **);
+unsigned OSPPStiVsToElement(const char *, char, const char *, int, int, const char *, int, int, OSPT_XML_ELEM **ospvElem);
 #endif /* _OSPUSAGE_H */

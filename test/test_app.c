@@ -1932,7 +1932,7 @@ int testSetSIPHeaders()
     errcode = OSPPTransactionSetFingerprint(OSPVTransactionHandle, number, fingerprints);
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_IDENTITY, OSPC_NFORMAT_SIP, "IdentityHeader");
 
-    errcode = OSPPTransactionSetAttestInfo(OSPVTransactionHandle, "A");
+    errcode = OSPPTransactionSetAttest(OSPVTransactionHandle, 'A');
     errcode = OSPPTransactionSetOrigId(OSPVTransactionHandle, "1b541919-d4e1-42dc-bbc7-a13c06ad45c4");
 
     return errcode;
@@ -2486,6 +2486,16 @@ int testSetUserRatePlan()
     return errcode;
 }
 
+int testSetStirInfo()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetStirInfo(OSPVTransactionHandle, OSPC_STISERVICE_AUTH, "Authentication OK", 'A', "148e6fd7-5fca-4349-a826-55980266af69", -1, -1, NULL, 100, 200);
+    errcode = OSPPTransactionSetStirInfo(OSPVTransactionHandle, OSPC_STISERVICE_VERI, "Verification OK", 'B', "e0e51303-226f-499c-9b7e-dd2682211dd5", 0, 200, "http://a.com/cert.crt", 300, 201);
+
+    return errcode;
+}
+
 int testGetIdentity()
 {
     char identity[OSPC_SIZE_HEADER];
@@ -2541,12 +2551,12 @@ int testGetVerstat()
 
 int testGetAttest()
 {
-    char attest[OSPC_SIZE_NORSTR];
+    char attest;
     int errcode = OSPC_ERR_NO_ERROR;
 
-    errcode = OSPPTransactionGetAttestInfo(OSPVTransactionHandle, sizeof(attest), attest);
+    errcode = OSPPTransactionGetAttest(OSPVTransactionHandle, &attest);
     if (errcode == OSPC_ERR_NO_ERROR) {
-        printf("Attestation: %s\n", attest);
+        printf("Attestation: %c\n", attest);
     }
 
     return errcode;
@@ -2930,6 +2940,9 @@ int testAPI(int apinumber)
     case 241:
         errcode = testSetUserRatePlan();
         break;
+    case 242:
+        errcode = testSetStirInfo();
+        break;
     case 250:
         errcode = testGetNumberPortability();
         break;
@@ -3282,6 +3295,7 @@ int testMenu()
         printf("236) Set Proxy Addresses              237) Set Provider PDD\n");
         printf("238) Set JIP                          239) Set Call Type\n");
         printf("240) Set Charging Vector              241) Set User Rate Plan\n");
+        printf("242) Set STIR information\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
         printf("254) Get Destination Switch ID        255) Get Identity\n");

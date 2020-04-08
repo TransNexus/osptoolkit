@@ -136,9 +136,22 @@ typedef struct _OSPTTRANS {
     OSPTLIST SDPFingerprint;
     char SrcSwitchId[OSPC_SIZE_NORID];
     char PCVICID[OSPC_SIZE_NORSTR];
-    char AttestInfo[OSPC_SIZE_NORSTR];
+    char Attest;
     char OrigId[OSPC_SIZE_NORID];
     char UserRatePlan[OSPC_CPARTY_NUMBER][OSPC_SIZE_NORSTR];
+    char StiAsStatus[OSPC_SIZE_NORSTR];
+    char StiAsAttest;
+    char StiAsOrigId[OSPC_SIZE_NORID];
+    char StiVsStatus[OSPC_SIZE_NORSTR];
+    char StiVsAttest;
+    char StiVsOrigId[OSPC_SIZE_NORID];
+    int StiVsCertCached;
+    int StiVsCertLatency;
+    char StiVsCertUrl[OSPC_SIZE_URL];
+    int StiAsCpsLatency;
+    int StiAsCpsRspCode;
+    int StiVsCpsLatency;
+    int StiVsCpsRspCode;
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

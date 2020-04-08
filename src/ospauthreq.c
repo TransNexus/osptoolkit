@@ -1052,10 +1052,11 @@ int OSPPAuthReqToElement(       /* returns error code */
          }
     }
 
-    /* Add Attestation-Info */
+    /* Add Attestation */
     if (errcode == OSPC_ERR_NO_ERROR) {
-         if (trans->AttestInfo[0] != '\0') {
-            errcode = OSPPStringToElement(OSPC_MELEM_ATTESTINFO, trans->AttestInfo, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+         if (trans->Attest != '\0') {
+            const char attest[2] = { trans->Attest, '\0' };
+            errcode = OSPPStringToElement(OSPC_MELEM_ATTEST, attest, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(authreqelem, elem);
                 elem = OSPC_OSNULL;

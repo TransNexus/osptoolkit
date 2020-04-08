@@ -2154,11 +2154,24 @@ int OSPPTransactionNew(
         OSPPListNew(&(trans->SDPFingerprint));
         trans->SrcSwitchId[0] = '\0';
         trans->PCVICID[0] = '\0';
-        trans->AttestInfo[0] = '\0';
+        trans->Attest = '\0';
         trans->OrigId[0] = '\0';
         for (index = 0; index < OSPC_CPARTY_NUMBER; index++) {
             trans->UserRatePlan[index][0] = '\0';
         }
+        trans->StiAsStatus[0] = '\0';
+        trans->StiAsAttest = '\0';
+        trans->StiAsOrigId[0] = '\0';
+        trans->StiVsStatus[0] = '\0';
+        trans->StiVsAttest = '\0';
+        trans->StiVsOrigId[0] = '\0';
+        trans->StiVsCertCached = -1;
+        trans->StiVsCertLatency = -1;
+        trans->StiVsCertUrl[0] = '\0';
+        trans->StiAsCpsLatency = -1;
+        trans->StiAsCpsRspCode = 0;
+        trans->StiVsCpsLatency = -1;
+        trans->StiVsCpsRspCode = 0;
     }
 
     return errcode;
@@ -4152,12 +4165,12 @@ int OSPPTransactionSetDiversion(
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    if (((ospvNumber == OSPC_OSNULL) || (ospvNumber[0] == '\0')) || ((ospvDomain == OSPC_OSNULL) || (ospvDomain[0] == '\0'))) {
-        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-    } else {
-        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
-        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+        if ((ospvNumber != OSPC_OSNULL) && (ospvNumber[0] != '\0')) {
             OSPM_STRNCPY(trans->SipHeader[OSPC_SIPHEADER_DIV][OSPC_NFORMAT_E164], ospvNumber, sizeof(trans->SipHeader[OSPC_SIPHEADER_DIV][OSPC_NFORMAT_E164]));
+        }
+        if ((ospvDomain != OSPC_OSNULL) && (ospvDomain[0] != '\0')) {
             OSPM_STRNCPY(trans->DivDevInfo, ospvDomain, sizeof(trans->DivDevInfo));
         }
     }
@@ -5903,19 +5916,19 @@ int OSPPTransactionSetDestSwitchId(
     return errcode;
 }
 
-int OSPPTransactionSetAttestInfo(
+int OSPPTransactionSetAttest(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    const char *ospvAttestInfo)     /* In - Attestation-Info */
+    const char ospvAttest)          /* In - Attestation */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
 
-    if ((ospvAttestInfo == OSPC_OSNULL) || (ospvAttestInfo[0] == '\0')) {
+    if (ospvAttest == '\0') {
         errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
     } else {
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
-            OSPM_STRNCPY(trans->AttestInfo, ospvAttestInfo, sizeof(trans->AttestInfo));
+            trans->Attest = toupper(ospvAttest);
         }
     }
 
@@ -6182,44 +6195,29 @@ int OSPPTransactionGetVerstat(
 }
 
 /*
- * OSPPTransactionGetAttestInfo() :
+ * OSPPTransactionGetAttest() :
  * Reports the attestaion as returned in AuthRsp
  * returns OSPC_ERR_NO_ERROR if successful.
  */
-int OSPPTransactionGetAttestInfo(
+int OSPPTransactionGetAttest(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    unsigned ospvSizeOfAttest,      /* In - Max size of attestation */
-    char *ospvAttest)               /* In - attestation */
+    char *ospvAttest)               /* In - Attestation */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
-    char *attest = OSPC_OSNULL;
 
-    if (ospvSizeOfAttest == 0) {
-        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy attestation.");
-    } else {
-        ospvAttest[0] = '\0';
-        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
-            if (trans->AuthReq != OSPC_OSNULL) {
-                if (trans->State == OSPC_AUTH_REQUEST_SUCCESS) {
-                    attest = trans->AuthRsp->AttestInfo;
-                    if (attest[0] != '\0') {
-                        if (ospvSizeOfAttest > OSPM_STRLEN(attest)) {
-                            OSPM_STRNCPY(ospvAttest, attest, ospvSizeOfAttest);
-                        } else {
-                            errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
-                            OSPM_DBGERRORLOG(errcode, "No enough buffer to copy attestation.");
-                        }
-                    }
-                } else {
-                    errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
-                    OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
-                }
+    *ospvAttest = '\0';
+    if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+        if (trans->AuthReq != OSPC_OSNULL) {
+            if (trans->State == OSPC_AUTH_REQUEST_SUCCESS) {
+                *ospvAttest = trans->AuthRsp->Attest;
             } else {
-                errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
-                OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+                errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
             }
+        } else {
+            errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
         }
     }
 
@@ -6328,6 +6326,75 @@ int OSPPTransactionGetJurisdictionType(
             } else {
                 errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
                 OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+            }
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionSetStirInfo() :
+ * Reports STI related information
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionSetStirInfo(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    int ospvType,                   /* In - STI service type */
+    const char *ospvStatus,         /* In - STI service status */
+    const char ospvAttest,          /* In - STI attestation indicator */
+    const char *ospvOrigId,         /* In - STI origination identifier */
+    int ospvCertCached,             /* In - STI certificate cached flag */ 
+    int ospvCertLatency,            /* In - STI certificate latency */ 
+    const char *ospvCertUrl,        /* In - STI certificate URL */            
+    int ospvCpsLatency,             /* In - STI CPS latency */ 
+    int ospvCpsRspCode)             /* In - STI CPS response code */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+        if (ospvType == OSPC_STISERVICE_AUTH) {
+            if ((ospvStatus != OSPC_OSNULL) && (ospvStatus[0] != '\0')) {
+                OSPM_STRNCPY(trans->StiAsStatus, ospvStatus, sizeof(trans->StiAsStatus));
+                if (ospvAttest != '\0') {
+                    trans->StiAsAttest = ospvAttest;
+                }
+                if ((ospvOrigId != OSPC_OSNULL) && (ospvOrigId[0] != '\0')) {
+                    OSPM_STRNCPY(trans->StiAsOrigId, ospvOrigId, sizeof(trans->StiAsOrigId));
+                }
+                if (ospvCpsLatency != -1) {
+                    trans->StiAsCpsLatency = ospvCpsLatency;
+                }
+                if (ospvCpsRspCode != 0) {
+                    trans->StiAsCpsRspCode = ospvCpsRspCode;
+                }
+            }
+        } else if (ospvType == OSPC_STISERVICE_VERI) {
+            if ((ospvStatus != OSPC_OSNULL) && (ospvStatus[0] != '\0')) {
+                OSPM_STRNCPY(trans->StiVsStatus, ospvStatus, sizeof(trans->StiVsStatus));
+                if (ospvAttest != '\0') {
+                    trans->StiVsAttest = ospvAttest;
+                }
+                if ((ospvOrigId != OSPC_OSNULL) && (ospvOrigId[0] != '\0')) {
+                    OSPM_STRNCPY(trans->StiVsOrigId, ospvOrigId, sizeof(trans->StiVsOrigId));
+                }
+                if (ospvCertCached != -1) {
+                    trans->StiVsCertCached = ospvCertCached;
+                }
+                if (ospvCertLatency != -1) {
+                    trans->StiVsCertLatency = ospvCertLatency;
+                }
+                if ((ospvCertUrl != OSPC_OSNULL) && (ospvCertUrl[0] != '\0')) {
+                    OSPM_STRNCPY(trans->StiVsCertUrl, ospvCertUrl, sizeof(trans->StiVsCertUrl));
+                }
+                if (ospvCpsLatency != -1) {
+                    trans->StiVsCpsLatency = ospvCpsLatency;
+                }
+                if (ospvCpsRspCode != 0) {
+                    trans->StiVsCpsRspCode = ospvCpsRspCode;
+                }
             }
         }
     }
