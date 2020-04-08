@@ -188,6 +188,14 @@ typedef struct {
     char currency[OSPC_SIZE_CURRENCY];
 } OSPT_PRICING_INFO;
 
+typedef enum {
+    OSPC_STISERVICE_START = 0,
+    OSPC_STISERVICE_AUTH = OSPC_STISERVICE_START,
+    OSPC_STISERVICE_VERI,
+    /* Number of STI service types */
+    OSPC_STISERVICE_NUMBER
+} OSPE_STI_SERVICE;
+
 #include "ospcallid.h"
 
 #endif /* _OSPDATATYPES_H */

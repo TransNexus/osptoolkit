@@ -753,5 +753,7 @@ Version 4.19.2 - 2019-09-20
 Version 4.20.0 - 2019-11-18
 * Added jurisdiction type in AuthRsp. 
 
-Version 4.21.0 - 
+Version 4.21.0 - 2020-04-08
+* Added STI info in UsageInd.
+* Fixed set Diversion user issue.
 

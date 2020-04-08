@@ -528,9 +528,9 @@ unsigned OSPPAuthRspFromElement(
                     OSPPAuthRspSetVerstat(authrsp, OSPPVerstatGetPart(verstat));
                 }
                 break;
-            case OSPC_MELEM_ATTESTINFO:
+            case OSPC_MELEM_ATTEST:
                 if ((attest = OSPPXMLElemGetValue(elem)) != OSPC_OSNULL) {
-                    OSPPAuthRspSetAttestInfo(authrsp, attest);
+                    OSPPAuthRspSetAttest(authrsp, attest);
                 }
                 break;
             case OSPC_MELEM_ORIGID:
@@ -776,22 +776,22 @@ void OSPPAuthRspSetVerstat(
     }
 }
 
-OSPTBOOL OSPPAuthRspHasAttestInfo(
+OSPTBOOL OSPPAuthRspHasAttest(
     OSPT_AUTH_RSP *ospvAuthRsp)
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        return(ospvAuthRsp->AttestInfo[0] != '\0');
+        return(ospvAuthRsp->Attest != '\0');
     } else {
         return OSPC_FALSE;
     }
 }
 
-void OSPPAuthRspSetAttestInfo(
+void OSPPAuthRspSetAttest(
     OSPT_AUTH_RSP *ospvAuthRsp, /* In - pointer to AuthRsp struct */
-    const char *ospvAttest)     /* In - Attestation-Info */
+    const char *ospvAttest)     /* In - Attestation */
 {
     if (ospvAuthRsp != OSPC_OSNULL) {
-        OSPM_STRNCPY(ospvAuthRsp->AttestInfo, ospvAttest, sizeof(ospvAuthRsp->AttestInfo));
+        ospvAuthRsp->Attest = toupper(ospvAttest[0]);
     }
 }
 

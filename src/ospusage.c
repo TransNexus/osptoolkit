@@ -134,6 +134,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
         errcode = OSPPMsgFloatToElement(PricingInfo.amount, OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
         if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(*ospvElem, elem);
+            elem = OSPC_OSNULL;
         }
     }
 
@@ -142,6 +143,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
         errcode = OSPPMsgNumToElement(PricingInfo.increment, OSPPMsgElemGetName(OSPC_MELEM_INCREMENT), &elem);
         if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(*ospvElem, elem);
+            elem = OSPC_OSNULL;
         }
     }
 
@@ -152,6 +154,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
             errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             OSPPXMLElemAddChild(*ospvElem, elem);
+            elem = OSPC_OSNULL;
         }
     }
 
@@ -162,6 +165,7 @@ unsigned OSPPAddPricingInfoToUsageElement(
             errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             OSPPXMLElemAddChild(*ospvElem, elem);
+            elem = OSPC_OSNULL;
         }
     }
 
@@ -204,6 +208,7 @@ unsigned OSPPAddConfIdToUsageElement(
                 errcode = OSPC_ERR_XML_NO_ELEMENT;
             } else {
                 OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
             }
         }
     }
@@ -478,6 +483,7 @@ unsigned OSPPTermCauseToElement(
             errcode = OSPC_ERR_XML_NO_ELEMENT;
         } else {
             OSPPXMLElemAddChild(*ospvElem, elem);
+            elem = OSPC_OSNULL;
         }
     }
 
@@ -488,6 +494,64 @@ unsigned OSPPTermCauseToElement(
                 errcode = OSPC_ERR_XML_NO_ELEMENT;
             } else {
                 OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* if for any reason we found an error - destroy any elements created */
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPStatusToElement() - adds status to an xml element
+ */
+unsigned OSPPStatusToElement(
+    int Code,                   /* Status code */
+    const char *Desc,           /* Status description */
+    OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
+{
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        /* create the parent element */
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_STATUS), "");
+        if (*ospvElem == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (Code != -1) {
+            errcode = OSPPMsgNumToElement(Code, OSPPMsgElemGetName(OSPC_MELEM_CODE), &elem);
+            if (elem == OSPC_OSNULL) {
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
+            } else {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((Desc != OSPC_OSNULL) && (Desc[0] != '\0')) {
+            elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_DESC), Desc);
+            if (elem == OSPC_OSNULL) {
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
+            } else {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
             }
         }
     }
@@ -597,5 +661,360 @@ unsigned OSPPCustomInfoToElement(
         }
     }
 
+    /* if for any reason we found an error - destroy any elements created */
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
+        }
+    }
+
     return errcode;
 }
+
+/*
+ * OSPPStiAttestToElement() - adds STIR attestation to a xml element
+ */
+unsigned OSPPStiAttestToElement(
+    char StiAttest,             /* STI attest */
+    OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
+{
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+
+    if (ospvElem == OSPC_OSNULL) {
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        const char attest[2] = { toupper(StiAttest), '\0' }; 
+        switch (StiAttest) {
+        case 'A':
+        case 'a':
+        case 'B':
+        case 'b':
+        case 'C':
+        case 'c':
+            *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_ATTEST), attest);
+            if (*ospvElem == OSPC_OSNULL) {
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
+            }
+            break;
+        case '\0':
+        default:
+            errcode = OSPC_ERR_XML_BAD_ELEMENT;
+            break;
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPCertInfoToElement() - adds STIR certificate information to an xml element
+ */
+unsigned OSPPCertInfoToElement(
+    int CertCached,             /* STI certificate cached flag */
+    int CertLatency,            /* STI certificate latency in ms */
+    const char *CertUrl,        /* STI certificate URL */
+    OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
+{
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        /* create the parent element */
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CERTINFO), "");
+        if (*ospvElem == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (CertCached != -1) {
+            if (CertCached == 0) {
+                elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CACHED), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+            } else {
+                elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CACHED), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE));
+            }
+            if (elem == OSPC_OSNULL) {
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
+            } else {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (CertLatency != -1) {
+            errcode = OSPPMsgFloatToElement((float)CertLatency / 1000, OSPPMsgElemGetName(OSPC_MELEM_LATENCY), &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((CertUrl != OSPC_OSNULL) && (CertUrl[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_URL, CertUrl, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* if for any reason we found an error - destroy any elements created */
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPOobToElement() - adds STIR OOB to a xml element
+ */
+unsigned OSPPOobToElement(
+    int CpsLatency,             /* STI CPS latency in ms */
+    int CpsResponseCode,        /* STI CPS URL */
+    OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
+{
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        /* create the parent element */
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_OOB), "");
+        if (*ospvElem == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (CpsLatency != -1) {
+            errcode = OSPPMsgFloatToElement((float)CpsLatency / 1000, OSPPMsgElemGetName(OSPC_MELEM_CPSLATENCY), &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (CpsResponseCode != -1) {
+            errcode = OSPPMsgNumToElement(CpsResponseCode, OSPPMsgElemGetName(OSPC_MELEM_CPSRSPCODE), &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* if for any reason we found an error - destroy any elements created */
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPStiAsToElement() - adds STIR information of authentication to an xml element
+ */
+unsigned OSPPStiAsToElement(
+    const char *StiAsStatus,    /* STI AS status */
+    char StiAsAttest,           /* STI AS attest */
+    const char *StiAsOrigId,    /* STI AS origid */
+    int StiAsCpsLatency,        /* STI AS CPS latency */
+    int StiAsCpsRspCode,        /* STI AS CPS response code */
+    OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
+{
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        /* create the parent element */
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_STIRINFO), "");
+        if (*ospvElem == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_AUTHENTICATION));
+        if (attr == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_NO_ATTR;
+        } else {
+            OSPPXMLElemAddAttr(*ospvElem, attr);
+            attr = OSPC_OSNULL;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((StiAsStatus != OSPC_OSNULL) && (StiAsStatus[0] != '\0')) {
+            errcode = OSPPStatusToElement(-1, StiAsStatus, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (StiAsAttest != '\0') {
+            errcode = OSPPStiAttestToElement(StiAsAttest, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((StiAsOrigId != OSPC_OSNULL) &&(StiAsOrigId[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_ORIGID, StiAsOrigId, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((StiAsCpsLatency != -1) || (StiAsCpsRspCode != -1)) {
+            errcode = OSPPOobToElement(StiAsCpsLatency, StiAsCpsRspCode, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* if for any reason we found an error - destroy any elements created */
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPStiVsToElement() - adds STIR information of verification to an xml element
+ */
+unsigned OSPPStiVsToElement(
+    const char *StiVsStatus,    /* STI VS status */
+    char StiVsAttest,           /* STI VS attest */
+    const char *StiVsOrigId,    /* STI VS origid */
+    int StiVsCertCached,        /* STI VS certificate cached flag */
+    int StiVsCertLatency,       /* STI VS certificate latency in ms */
+    const char *StiVsCertUrl,   /* STI VS certificate URL */
+    int StiVsCpsLatency,        /* STI VS CPS latency */
+    int StiVsCpsRspCode,        /* STI VS CPS response code */
+    OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
+{
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPT_XML_ATTR *attr = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        /* create the parent element */
+        *ospvElem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_STIRINFO), "");
+        if (*ospvElem == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_NO_ELEMENT;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        attr = OSPPXMLAttrNew(OSPPMsgAttrGetName(OSPC_MATTR_TYPE), OSPPAltInfoTypeGetName(OSPC_ALTINFO_VERIFICATION));
+        if (attr == OSPC_OSNULL) {
+            errcode = OSPC_ERR_XML_NO_ATTR;
+        } else {
+            OSPPXMLElemAddAttr(*ospvElem, attr);
+            attr = OSPC_OSNULL;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((StiVsStatus != OSPC_OSNULL) && (StiVsStatus[0] != '\0')) {
+            errcode = OSPPStatusToElement(-1, StiVsStatus, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (StiVsAttest != '\0') {
+            errcode = OSPPStiAttestToElement(StiVsAttest, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((StiVsOrigId != OSPC_OSNULL) && (StiVsOrigId[0] != '\0')) {
+            errcode = OSPPStringToElement(OSPC_MELEM_ORIGID, StiVsOrigId, 0, OSPC_OSNULL, OSPC_OSNULL, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((StiVsCertCached != -1) || (StiVsCertLatency != -1) || ((StiVsCertUrl != OSPC_OSNULL) && (StiVsCertUrl[0] != '\0'))) {
+            errcode = OSPPCertInfoToElement(StiVsCertCached, StiVsCertLatency, StiVsCertUrl, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((StiVsCpsLatency != -1) || (StiVsCpsRspCode != -1)) {
+            errcode = OSPPOobToElement(StiVsCpsLatency, StiVsCpsRspCode, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(*ospvElem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* if for any reason we found an error - destroy any elements created */
+    if (errcode != OSPC_ERR_NO_ERROR) {
+        if (*ospvElem != OSPC_OSNULL) {
+            OSPPXMLElemDelete(ospvElem);
+        }
+    }
+
+    return errcode;
+}
+
