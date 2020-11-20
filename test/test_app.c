@@ -2496,6 +2496,15 @@ int testSetStirInfo()
     return errcode;
 }
 
+int testSetCallIdPrivacy()
+{
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetCallIdPrivacy(OSPVTransactionHandle, 0);
+
+    return errcode;
+}
+
 int testGetIdentity()
 {
     char identity[OSPC_SIZE_HEADER];
@@ -2505,6 +2514,16 @@ int testGetIdentity()
     if (errcode == OSPC_ERR_NO_ERROR) {
         printf("Identity: %s\n", identity);
     }
+
+    return errcode;
+}
+
+int testSetSipMessage()
+{
+    const char msg[] = "INVITE sip:17700200001@192.168.0.100:5060 SIP/2.0#015#012Via: SIP/2.0/UDP 192.168.0.100:5050;branch=z9hG4bK-9078-1-0#015#012From: sipp <sip:15551234567;parama=a@192.168.0.100:5050;paramb=b>;tag=9078SIPpTag001#015#012To: sut <sip:17700200001@192.168.0.100:5060>#015#012Call-ID: 1-9078@192.168.0.100#015#012CSeq: 1 INVITE#015#012Contact: sip:15551234567@192.168.0.100:5050#015#012Max-Forwards: 69#015#012Subject: Performance Test#015#012Content-Type: application/sdp#015#012Content-Length:   137#015#012P-Network-ID: 5063#015#012P-Asserted-Identity: \"PAI Display Name\" <sip:+15551234567;paramc=c@172.16.4.113:5060;paramd=d>#015#012Attestation-Info: B#015#012Origination-Id: 329f8580-1d31-4dc4-b221-38276a4a6973#015#012#015#012v=0#015#012o=user1 53655765 2353687637 IN IP4 192.168.0.100#015#012s=-#015#012c=IN IP4 192.168.0.100#015#012t=0 0#015#012m=audio 6000 RTP/AVP 0#015#012a=rtpmap:0 PCMU/8000#015#012";
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetSipMessage(OSPVTransactionHandle, msg);
 
     return errcode;
 }
@@ -2943,6 +2962,12 @@ int testAPI(int apinumber)
     case 242:
         errcode = testSetStirInfo();
         break;
+    case 243:
+        errcode = testSetCallIdPrivacy();
+        break;
+    case 244:
+        errcode = testSetSipMessage();
+        break;
     case 250:
         errcode = testGetNumberPortability();
         break;
@@ -3295,7 +3320,8 @@ int testMenu()
         printf("236) Set Proxy Addresses              237) Set Provider PDD\n");
         printf("238) Set JIP                          239) Set Call Type\n");
         printf("240) Set Charging Vector              241) Set User Rate Plan\n");
-        printf("242) Set STIR information\n");
+        printf("242) Set STIR Information             243) Set Call ID Privacy\n");
+        printf("244) Set SIP Message\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
         printf("254) Get Destination Switch ID        255) Get Identity\n");

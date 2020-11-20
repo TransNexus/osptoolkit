@@ -2172,6 +2172,8 @@ int OSPPTransactionNew(
         trans->StiAsCpsRspCode = 0;
         trans->StiVsCpsLatency = -1;
         trans->StiVsCpsRspCode = 0;
+        trans->CallIdPrivacy = -1;
+        trans->SipMessage[0] = '\0';
     }
 
     return errcode;
@@ -6402,3 +6404,46 @@ int OSPPTransactionSetStirInfo(
     return errcode;
 }
 
+/*
+ * OSPPTransactionSetCallIdPrivacy() :
+ * Reports Call ID privacy
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionSetCallIdPrivacy(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const int ospvCallIdPrivacy)    /* In - Call ID privacy */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+    if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+        trans->CallIdPrivacy = (ospvCallIdPrivacy != 0);
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionSetSipMessage() :
+ * Reports SIP message
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionSetSipMessage(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvSipMessage)     /* In - SIP message */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvSipMessage == OSPC_OSNULL) || (ospvSipMessage[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->SipMessage, ospvSipMessage, sizeof(trans->SipMessage));
+        }
+    }
+
+    return errcode;
+}
