@@ -169,6 +169,8 @@ extern "C" {
     int OSPPTransactionSetUserRatePlan(OSPTTRANHANDLE, OSPE_CALL_PARTY, const char *);
     int OSPPTransactionGetJurisdictionType(OSPTTRANHANDLE, unsigned, char *);
     int OSPPTransactionSetStirInfo(OSPTTRANHANDLE, int, const char *, const char, const char *, int, int, const char *, int, int);
+    int OSPPTransactionSetCallIdPrivacy(OSPTTRANHANDLE, int);
+    int OSPPTransactionSetSipMessage(OSPTTRANHANDLE, const char *);
 
 #ifdef __cplusplus
 }

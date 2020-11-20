@@ -152,6 +152,8 @@ typedef struct _OSPTTRANS {
     int StiAsCpsRspCode;
     int StiVsCpsLatency;
     int StiVsCpsRspCode;
+    int CallIdPrivacy;
+    char SipMessage[OSPC_SIZE_HEADER];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

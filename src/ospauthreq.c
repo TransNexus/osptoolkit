@@ -1075,6 +1075,37 @@ int OSPPAuthReqToElement(       /* returns error code */
          }
     }
 
+    /* Add call ID privacy */
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (trans->CallIdPrivacy != -1) {
+            if (trans->CallIdPrivacy == 0) {
+                elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CALLIDPRIVACY), OSPPAltInfoTypeGetName(OSPC_ALTINFO_FALSE));
+            } else {
+                elem = OSPPXMLElemNew(OSPPMsgElemGetName(OSPC_MELEM_CALLIDPRIVACY), OSPPAltInfoTypeGetName(OSPC_ALTINFO_TRUE));
+            }
+            if (elem == OSPC_OSNULL) {
+                errcode = OSPC_ERR_XML_NO_ELEMENT;
+            } else {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+        }
+    }
+
+    /* Add SIP message*/
+    if (errcode == OSPC_ERR_NO_ERROR) {
+         if (trans->SipMessage[0] != '\0') {
+            errcode = OSPPMsgBinToElement(OSPPMsgElemGetName(OSPC_MELEM_SIPMESSAGE),
+                OSPM_STRLEN(trans->SipMessage), (unsigned char *)trans->SipMessage,
+                OSPC_OSNULL, OSPC_OSNULL, OSPC_TRUE, &elem);
+            if (errcode == OSPC_ERR_NO_ERROR) {
+                OSPPXMLElemAddChild(authreqelem, elem);
+                elem = OSPC_OSNULL;
+            }
+         }
+    }
+
+    /* Now add the authreqelem to the main elem */
     /* Now add the authreqelem to the main elem */
     if (errcode == OSPC_ERR_NO_ERROR) {
         OSPPXMLElemAddChild(*ospvElem, authreqelem);
