@@ -223,3 +223,138 @@ unsigned OSPPTermCauseFromElement(  /* returns error code */
     return errcode;
 }
 
+/*
+ * OSPPSetStatusHeader() - Set SIP status header
+ */
+void OSPPSetStatusHeader(
+    OSPT_STATUS_HEADERS *ospvStatusHeaders, /* Status headers */
+    unsigned ospvHeaderIndex,               /* Status header index */
+    const char *ospvName,                   /* Ststus header name */
+    const char *ospvValue)                  /* Status header value */
+{
+    if (ospvStatusHeaders != OSPC_OSNULL) {
+        if (ospvHeaderIndex < OSPC_SIZE_STATUSHEADER) {
+            if ((ospvName != OSPC_OSNULL) && (ospvName[0] != '\0') && (ospvValue != OSPC_OSNULL) && (ospvValue[0] != '\0')) {
+                OSPM_STRNCPY(ospvStatusHeaders->headers[ospvHeaderIndex].name, ospvName, sizeof(ospvStatusHeaders->headers[ospvHeaderIndex].name));
+                OSPM_STRNCPY(ospvStatusHeaders->headers[ospvHeaderIndex].value, ospvValue, sizeof(ospvStatusHeaders->headers[ospvHeaderIndex].value));
+                if (ospvHeaderIndex >= ospvStatusHeaders->count) {
+                    ospvStatusHeaders->count = ospvHeaderIndex + 1;
+                }
+            }
+        }
+    }
+}
+
+/*
+ * OSPPGetStatusHeaderCount() - return number of status headers
+ */
+unsigned OSPPGetStatusHeaderCount(
+    OSPT_STATUS_HEADERS *ospvStatusHeaders) /* Status headers */
+{
+    unsigned count = 0;
+
+    if (ospvStatusHeaders != OSPC_OSNULL) {
+        count = ospvStatusHeaders->count;
+    }
+
+    return count;
+}
+
+/*
+ * OSPPGetStatusHeaderName() - returns status header name
+ */
+const char *OSPPGetStatusHeaderName(
+    OSPT_STATUS_HEADERS *ospvStatusHeaders, /* Status headers */
+    unsigned ospvHeaderIndex)               /* Status header index */
+{
+    const char *name = OSPC_OSNULL;
+
+    if (ospvStatusHeaders != OSPC_OSNULL) {
+        if (ospvHeaderIndex < ospvStatusHeaders->count) {
+            name = ospvStatusHeaders->headers[ospvHeaderIndex].name;
+        }
+    }
+
+    return name;
+}
+
+/*
+ * OSPPGetStatusHeaderValue() - returns status header value
+ */
+const char *OSPPGetStatusHeaderValue(
+    OSPT_STATUS_HEADERS *ospvStatusHeaders, /* Status headers */
+    unsigned ospvHeaderIndex)               /* Status header index */
+{
+    const char *value = OSPC_OSNULL;
+
+    if (ospvStatusHeaders != OSPC_OSNULL) {
+        if (ospvHeaderIndex < ospvStatusHeaders->count) {
+            value = ospvStatusHeaders->headers[ospvHeaderIndex].value;
+        }
+    }
+
+    return value;
+}
+
+/*
+ OSPPStatusHeaderFromElement() - create a SIP status header from an XML element
+ */
+unsigned OSPPStatusHeadersFromElement(      /* Returns error code */
+    OSPT_XML_ELEM *ospvElem,                /* Input is XML element */
+    OSPT_STATUS_HEADERS *ospvStatusHeaders, /* Status headers */
+    unsigned ospvHeaderIndex)               /* Status header index */
+{
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    const char *name = OSPC_OSNULL;
+    const char *value = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvStatusHeaders == OSPC_OSNULL) {
+            errcode = OSPC_ERR_DATA_NO_HEADER;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if (ospvHeaderIndex >= OSPC_SIZE_STATUSHEADER) {
+            errcode = OSPC_ERR_DATA_BAD_NUMBER;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
+            (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem))
+        {
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
+            case OSPC_MELEM_HEADERNAME:
+                name = OSPPXMLElemGetValue(elem);
+                break;
+            case OSPC_MELEM_HEADERVALUE:
+                value = OSPPXMLElemGetValue(elem);
+                break;
+            default:
+                /*
+                 * This is an element we don't understand. If it's
+                 * critical, then we have to report an error.
+                 * Otherwise we can ignore it.
+                 */
+                if (OSPPMsgElemIsCritical(elem)) {
+                    errcode = OSPC_ERR_XML_BAD_ELEMENT;
+                }
+                break;
+            }
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        OSPPSetStatusHeader(ospvStatusHeaders, ospvHeaderIndex, name, value);
+    }
+
+    return errcode;
+}
+

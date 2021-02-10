@@ -6447,3 +6447,67 @@ int OSPPTransactionSetSipMessage(
 
     return errcode;
 }
+
+int OSPPTransactionGetStatusHeaderCount(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned *ospvHeaderCount)      /* Out - Number of status headers */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    *ospvHeaderCount = 0;
+    if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+        if (trans->AuthReq != OSPC_OSNULL) {
+            *ospvHeaderCount = OSPPGetStatusHeaderCount(&trans->AuthRsp->StatusHeaders);
+        } else {
+            errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+        }
+    }
+
+    return errcode;
+}
+
+int OSPPTransactionGetStatusHeaders(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvHeaderIndex,       /* In - Status header index */
+    unsigned ospvSizeOfName,        /* In - Max size of name */
+    char *ospvName,                 /* Out - Status header name */
+    unsigned ospvSizeOfValue,       /* In - Max size of value */
+    char *ospvValue)                /* Out - Status header value */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+    const char *name = OSPC_OSNULL;
+    const char *value = OSPC_OSNULL;
+
+    if (ospvSizeOfName == 0) {
+        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy Identity.");
+    } else {
+        ospvName[0] = '\0';
+        if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+            if (trans->AuthReq != OSPC_OSNULL) {
+                if (ospvHeaderIndex < trans->AuthRsp->StatusHeaders.count) {
+                    name = OSPPGetStatusHeaderName(&trans->AuthRsp->StatusHeaders, ospvHeaderIndex);
+                    value = OSPPGetStatusHeaderValue(&trans->AuthRsp->StatusHeaders, ospvHeaderIndex);
+                    if ((name != OSPC_OSNULL) && (value != OSPC_OSNULL)) {
+                        if ((ospvSizeOfName > OSPM_STRLEN(name)) && (ospvSizeOfValue > OSPM_STRLEN(value))){
+                            OSPM_STRNCPY(ospvName, name, ospvSizeOfName);
+                            OSPM_STRNCPY(ospvValue, value, ospvSizeOfValue);
+                        } else {
+                            errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                            OSPM_DBGERRORLOG(errcode, "No enough buffer to copy description.");
+                        }
+                    }
+                }
+            } else {
+                errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+                OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
+            }
+        }
+    }
+
+    return errcode;
+}
+

@@ -105,7 +105,20 @@ typedef struct {
 } OSPT_TERM_CAUSE;
 
 OSPE_TERM_CAUSE OSPPTCTypeGetPart(const char *);
-    
+
+typedef struct {
+    char name[OSPC_SIZE_NORSTR];
+    char value[OSPC_SIZE_NORSTR];
+} OSPT_STATUS_HEADER;
+
+typedef struct {
+    unsigned count;
+    struct {
+        char name[OSPC_SIZE_NORSTR];
+        char value[OSPC_SIZE_NORSTR];
+    } headers[OSPC_SIZE_STATUSHEADER];
+} OSPT_STATUS_HEADERS;
+
 /*
  * Will return success as long as ospvFailureReason is between
  * OSPC_FAIL_NONE (0) and OSPC_FAIL_GENERAL (999)
@@ -118,5 +131,10 @@ void OSPPSetTermCause(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE, unsigned, const char *
 unsigned OSPPGetTCCode(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);
 const char *OSPPGetTCDesc(OSPT_TERM_CAUSE *, OSPE_TERM_CAUSE);
 unsigned OSPPTermCauseFromElement(OSPT_XML_ELEM *, OSPT_TERM_CAUSE *);
+void OSPPSetStatusHeader(OSPT_STATUS_HEADERS *, unsigned, const char *, const char *);
+unsigned OSPPGetStatusHeaderCount(OSPT_STATUS_HEADERS *);
+const char *OSPPGetStatusHeaderName(OSPT_STATUS_HEADERS *, unsigned);
+const char *OSPPGetStatusHeaderValue(OSPT_STATUS_HEADERS *, unsigned);
+unsigned OSPPStatusHeadersFromElement(OSPT_XML_ELEM *, OSPT_STATUS_HEADERS *, unsigned);
 
 #endif /* _OSPFAIL_H */

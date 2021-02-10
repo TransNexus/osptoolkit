@@ -51,6 +51,7 @@ typedef struct {
     char Attest;
     char OrigId[OSPC_SIZE_NORID];
     char JurisdictionType[OSPC_SIZE_NORID];
+    OSPT_STATUS_HEADERS StatusHeaders;
 } OSPT_AUTH_RSP;
 
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)

@@ -181,6 +181,7 @@ extern const OSPT_MSG_DESC OSPV_VSTATUS_DESCS[];
 #define OSPC_SIZE_CODEC         64      /* max characters in codec */
 #define OSPC_SIZE_CUSTINFO      256     /* max characters in user-defined info */
 #define OSPC_SIZE_HEADER        4096    /* max characters in SIP header */
+#define OSPC_SIZE_STATUSHEADER  8       /* max number of SIP status headers */
 
 /* Function Prototypes */
 #ifdef __cplusplus
