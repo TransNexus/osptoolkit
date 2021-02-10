@@ -2624,7 +2624,7 @@ int testGetStatusHeaders()
                 }
             }
         } else {
-            printf("Without termination cause\n");
+            printf("Without status header\n");
         }
     }
 
