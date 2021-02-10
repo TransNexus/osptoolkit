@@ -204,6 +204,7 @@
 #define OSPC_ERR_DATA_NO_ALTINFO                        (OSPC_ERR_MSG_MODULE + 500)
 #define OSPC_ERR_DATA_NO_STATS                          (OSPC_ERR_MSG_MODULE + 510)
 #define OSPC_ERR_DATA_NO_DELAY                          (OSPC_ERR_MSG_MODULE + 520)
+#define OSPC_ERR_DATA_NO_HEADER                         (OSPC_ERR_MSG_MODULE + 530)
 
 #define OSPC_ERR_CERT_MALLOC_FAILED                     (OSPC_ERR_MSG_MODULE + 610)
 #define OSPC_ERR_ASCII_NO_ELEMENT                       (OSPC_ERR_MSG_MODULE + 620)

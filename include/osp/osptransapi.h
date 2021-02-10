@@ -171,6 +171,8 @@ extern "C" {
     int OSPPTransactionSetStirInfo(OSPTTRANHANDLE, int, const char *, const char, const char *, int, int, const char *, int, int);
     int OSPPTransactionSetCallIdPrivacy(OSPTTRANHANDLE, int);
     int OSPPTransactionSetSipMessage(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionGetStatusHeaderCount(OSPTTRANHANDLE, unsigned *);
+    int OSPPTransactionGetStatusHeaders(OSPTTRANHANDLE, unsigned, unsigned, char *, unsigned, char *);
 
 #ifdef __cplusplus
 }

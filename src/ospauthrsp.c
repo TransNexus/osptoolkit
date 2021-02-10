@@ -409,6 +409,7 @@ unsigned OSPPAuthRspFromElement(
     const char* attest = OSPC_OSNULL;
     const char* origid = OSPC_OSNULL;
     const char* jdtype = OSPC_OSNULL;
+    unsigned headerIndex = 0;
 
     if (ospvElem == OSPC_OSNULL) {
         error = OSPC_ERR_XML_NO_ELEMENT;
@@ -522,6 +523,12 @@ unsigned OSPPAuthRspFromElement(
                 break;
             case OSPC_MELEM_TERMCAUSE:
                 error = OSPPTermCauseFromElement(elem, &(authrsp->TermCause));
+                break;
+            case OSPC_MELEM_STATUSHEADER:
+                error = OSPPStatusHeadersFromElement(elem, &(authrsp->StatusHeaders), headerIndex);
+                if (error == OSPC_ERR_NO_ERROR) {
+                    headerIndex++;
+                }
                 break;
             case OSPC_MELEM_VERSTAT:
                 if ((verstat = OSPPXMLElemGetValue(elem)) != OSPC_OSNULL) {
