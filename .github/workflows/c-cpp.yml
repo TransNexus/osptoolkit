@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: install dependencies
-      run: sudo yum install -y gcc-c++ openssl-devel utf8proc-devel
+      run: yum install -y gcc-c++ openssl-devel utf8proc-devel
     - name: make osptk
       run: |
         cd $GITHUB_WORKSPACE/src
