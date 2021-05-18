@@ -780,6 +780,7 @@ unsigned OSPPXMLProcessUTF8(
                 dest[j] = '\0';
                 free(normalized);
             } else {
+            	dest[0] = '\0';
                 errcode = OSPC_ERR_NORMALIZE_FAILED;
             }
         }
