@@ -763,3 +763,5 @@ Version 4.22.0 - 2020-11-20
 Version 4.23.0 - 2021-02-10
 * Added SipStatusHeader elements in AuthRsp.
 
+Version 4.23.1 - 2021-05-18
+* Fixed display name in non-UTF8 encoding issue.
