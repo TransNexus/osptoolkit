@@ -723,7 +723,7 @@ int OSPPMimeParamsParse(
     if (bufptr != (unsigned char *)NULL) {
 
         /* Get past the type/subtype string */
-        while ((bufptr[currpos] != ';') && (bufptr[currpos] != '\n') && (currpos < bufend)) {
+        while ((currpos < bufend) && (bufptr[currpos] != ';') && (bufptr[currpos] != '\n')) {
             currpos++;
         }
 

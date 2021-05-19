@@ -546,7 +546,7 @@ unsigned OSPPMsgCodeToElement(  /* returns error code */
         *ospvElem = OSPC_OSNULL;
 
         /* format the status code with leading zeroes */
-        sprintf(val, "%03ld", ospvNumber);
+        sprintf(val, "%03ld", ospvNumber % 1000);
         /* create the element */
         *ospvElem = OSPPXMLElemNew(ospvName, (const char *)val);
         if (*ospvElem == OSPC_OSNULL) {

@@ -765,3 +765,6 @@ Version 4.23.0 - 2021-02-10
 
 Version 4.23.1 - 2021-05-18
 * Fixed display name in non-UTF8 encoding issue.
+
+Version 4.23.2 - 
+* Updated for the issues reported by CodeQL.
