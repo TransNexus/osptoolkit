@@ -529,7 +529,7 @@ unsigned OSPPMsgCodeToElement(  /* returns error code */
     OSPT_XML_ELEM **ospvElem)   /* where to put XML element pointer */
 {
     unsigned errcode = OSPC_ERR_NO_ERROR;
-    char val[4];                /* 39 digits will accomodate 2^128 *//*!!!PS added 1 */
+    char val[32];               /* 39 digits will accomodate 2^128 *//*!!!PS added 1 */
 
     if (ospvElem == OSPC_OSNULL) {
         errcode = OSPC_ERR_XML_NO_ELEMENT;
