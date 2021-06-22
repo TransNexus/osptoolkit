@@ -773,7 +773,7 @@ unsigned OSPPXMLProcessUTF8(
             if (normalized != OSPC_OSNULL) {
                 size = OSPM_STRLEN((char *)normalized);
                 for (i = 0, j = 0; ((i < size) && (j < destsize - 1)); i++) {
-                    if (normalized[i] < 0x80) {
+                    if ((normalized[i] < 0x80) && isprint(normalized[i])){
                         dest[j++] = normalized[i];
                     }
                 }
