@@ -773,3 +773,5 @@ Version 4.24.0 - 2021-05-20
 Version 4.24.1 - 2021-06-22
 * Fixed display name not printable issue.
 
+Version 4.24.2 - 2021-08-23
+* Allow an outside script to export SSLINCDIR for using a nondefult openssl version (git ticket 1544)

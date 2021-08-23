@@ -11,7 +11,7 @@ LIBDIR = ../lib
 
 # SSL library selection 
 # For OpenSSL
-SSLINCDIR = ../crypto
+# Use case, in order to use openssl11 on CentOS export SSLINCDIR=/usr/include/openssl11
 SSLOBJ = ospopenssl.o
 
 # Compiler tools
