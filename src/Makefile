@@ -6,12 +6,12 @@
 INSTALL_PATH = /usr/local
 
 # OSP directory
-INCDIR = ../include
+INCDIR = -I../include
 LIBDIR = ../lib
 
 # SSL library selection 
 # For OpenSSL
-# Use case, in order to use openssl11 on CentOS export SSLINCDIR=/usr/include/openssl11
+# Use case, in order to use openssl11 on CentOS export SSLINCDIR=-I/usr/include/openssl11
 SSLOBJ = ospopenssl.o
 
 # Compiler tools
@@ -36,7 +36,7 @@ DFLAGS = -O
 CFLAGS = $(MFLAGS) $(DFLAGS) $(GCCFLAGS)
 
 # Include flags
-IFLAGS = -I$(SSLINCDIR) -I$(INCDIR)
+IFLAGS = $(SSLINCDIR) $(INCDIR)
 
 ################################################################################
 
