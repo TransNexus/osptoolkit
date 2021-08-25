@@ -6,7 +6,7 @@
 INSTALL_PATH = /usr/local
 
 # OSP directory
-INCDIR = -I../include
+INCDIR = ../include
 LIBDIR = ../lib
 
 # SSL library selection 
@@ -36,7 +36,7 @@ DFLAGS = -O
 CFLAGS = $(MFLAGS) $(DFLAGS) $(GCCFLAGS)
 
 # Include flags
-IFLAGS = $(SSLINCDIR) $(INCDIR)
+IFLAGS = $(SSLINCDIR) -I$(INCDIR)
 
 ################################################################################
 
