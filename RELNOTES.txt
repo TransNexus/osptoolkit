@@ -780,4 +780,8 @@ Version 4.24.3 - 2021-08-24
 * Moved -I to the SSLINCDIR variable
 
 Version 4.24.4 - 2021-08-25
-* Unded movind -I to the INCDIR variable
+* Undid moving -I to the INCDIR variable
+
+Version 4.25.0 - 2023-07-27
+* Added P-Identity-Bypass support.
+

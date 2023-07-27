@@ -1932,6 +1932,8 @@ int testSetSIPHeaders()
     errcode = OSPPTransactionSetFingerprint(OSPVTransactionHandle, number, fingerprints);
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_IDENTITY, OSPC_NFORMAT_SIP, "IdentityHeader");
 
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_IDBYPASS, OSPC_NFORMAT_SIP, "ABCD_0123456789ABCFEF");
+
     errcode = OSPPTransactionSetAttest(OSPVTransactionHandle, 'A');
     errcode = OSPPTransactionSetOrigId(OSPVTransactionHandle, "1b541919-d4e1-42dc-bbc7-a13c06ad45c4");
 
