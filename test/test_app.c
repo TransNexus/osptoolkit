@@ -106,7 +106,7 @@ static char *ModifiedSourceIP = NULL, *ModifiedSourceDevIP = NULL, *ModifiedDest
 static unsigned almostOutOfResources = 0;
 static unsigned hardwareSupport = 0;
 static unsigned TCcode = 0;
-static unsigned duration = 30;
+static unsigned duration = 30000;       /* in milliseconds */
 static time_t call_start_time = 0;
 static time_t call_end_time = 0;
 static time_t call_alert_time = 0;

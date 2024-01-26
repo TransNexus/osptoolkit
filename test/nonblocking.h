@@ -124,7 +124,7 @@ extern "C" {
         int ShouldBlock,                /* In - 1 WILL block, 0 - will NOT block */
         int *OSPErrorCode,              /* Out- Error code returned by the blocking function */
         OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-        unsigned ospvDuration,          /* In - Length of call */
+        unsigned ospvDuration,          /* In - Length of call in milliseconds */
         OSPTTIME ospvStartTime,         /* In - StartTime of call */
         OSPTTIME ospvEndTime,           /* In - EndTime of call */
         OSPTTIME ospvAlertTime,         /* In - AlertTime of call */

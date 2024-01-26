@@ -2427,7 +2427,7 @@ int OSPPTransactionReinitializeAtDevice(
  * Once this function returns successfully, it may not be called again for the
  * life of the transaction object. Parameters to the function are:
  *   ospvTransaction: handle of the transaction object.
- *   ospvDuration: the duration of the call, in seconds.
+ *   ospvDuration: the duration of the call, in milliseconds.
  *   ospvStartTime: the call start time.
  *   ospvLossPacketsSent: a count of the total number of packets sent by the
  *      reporting system that were not received by its peer, as reported in
@@ -2462,7 +2462,7 @@ int OSPPTransactionReinitializeAtDevice(
  */
 int OSPPTransactionReportUsage(
     OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
-    unsigned ospvDuration,              /* In - Length of call */
+    unsigned ospvDuration,              /* In - Length of call, in milliseconds */
     OSPTTIME ospvStartTime,             /* In - Call start time */
     OSPTTIME ospvEndTime,               /* In - Call end time */
     OSPTTIME ospvAlertTime,             /* In - Call alert time */

@@ -785,3 +785,6 @@ Version 4.24.4 - 2021-08-25
 Version 4.25.0 - 2023-07-27
 * Added P-Identity-Bypass support.
 
+Version 4.26.0 - 
+* Updated to support duration in ms.
+

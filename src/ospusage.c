@@ -227,7 +227,7 @@ unsigned OSPPAddConfIdToUsageElement(
  * OSPPUsageToElement() - create an XML element from usage detail
  */
 unsigned OSPPUsageToElement(        /* returns error code */
-    unsigned ospvUsage,             /* usage value */
+    unsigned ospvUsage,             /* usage value, in milliseconds */
     OSPTTIME ospvStartTime,         /* optional, if not 0, call start time */
     OSPTTIME ospvEndTime,           /* optional, if not 0, call end time */
     OSPTTIME ospvAlertTime,         /* optional, if not 0, call alert time */
@@ -247,7 +247,7 @@ unsigned OSPPUsageToElement(        /* returns error code */
 
     /* now add the amount (which is the usage) */
     if (errcode == OSPC_ERR_NO_ERROR) {
-        errcode = OSPPMsgNumToElement(ospvUsage, OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
+        errcode = OSPPMsgFloatToElement((float)ospvUsage / 1000, OSPPMsgElemGetName(OSPC_MELEM_AMOUNT), &elem);
         if (errcode == OSPC_ERR_NO_ERROR) {
             OSPPXMLElemAddChild(ospvElem, elem);
             elem = OSPC_OSNULL;
