@@ -35,8 +35,16 @@ jobs:
       if: ${{ matrix.os == 'rhel8' }}
 
     # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
+    - name: Initialize CodeQL for centos7
+      uses: github/codeql-action/init@v2
+      if: ${{ matrix.os == 'centos7' }}
+      with:
+        queries: security-extended
+        languages: ${{ matrix.language }}
+
+    - name: Initialize CodeQL for rhel8
       uses: github/codeql-action/init@v3
+      if: ${{ matrix.os == 'rhel8' }}
       with:
         queries: security-extended
         languages: ${{ matrix.language }}
@@ -53,5 +61,10 @@ jobs:
         cd $GITHUB_WORKSPACE/test
         make linux
         
-    - name: Perform CodeQL Analysis
+    - name: Perform CodeQL Analysis for centos7
+      uses: github/codeql-action/analyze@v2
+      if: ${{ matrix.os == 'centos7' }}
+
+    - name: Perform CodeQL Analysis for rhel8
       uses: github/codeql-action/analyze@v3
+      if: ${{ matrix.os == 'rhel8' }}
