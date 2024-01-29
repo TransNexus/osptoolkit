@@ -9,12 +9,24 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    container: 'centos:7'
+    strategy:
+      matrix:
+        os: [centos7, rhel8]
+        include:
+          - os: centos7            
+            container: 'centos:7'
+          - os: rhel8            
+            container: 'oraclelinux:8'
+    container: ${{ matrix.container }}
     
     steps:
-    - uses: actions/checkout@v4
+    - name: checkout for centos7
+      uses: actions/checkout@v3
+      if: ${{ matrix.os == 'centos7' }}
+    - name: checkout for rhel8
+      uses: actions/checkout@v4
+      if: ${{ matrix.os == 'rhel8' }}
     - name: install dependencies
       run: |
         yum install -y epel-release
