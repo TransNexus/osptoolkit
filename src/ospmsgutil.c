@@ -498,7 +498,7 @@ int OSPPMsgFloatToElement(      /* returns error code */
         *ospvElem = OSPC_OSNULL;
 
         /* convert number */
-        OSPM_SPRINTF(val, "%.4f", ospvFloat);
+        OSPM_SPRINTF(val, "%.3f", ospvFloat);
 
         /* create the element */
         *ospvElem = OSPPXMLElemNew(ospvName, val);
