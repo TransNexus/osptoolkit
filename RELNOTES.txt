@@ -785,6 +785,7 @@ Version 4.24.4 - 2021-08-25
 Version 4.25.0 - 2023-07-27
 * Added P-Identity-Bypass support.
 
-Version 4.26.0 - 
+Version 4.26.0 - 2024-02-01
 * Updated to support duration in ms.
-
+* Updated XML element float value format.
+* Updated for github action warning messages.
