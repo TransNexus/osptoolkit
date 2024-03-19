@@ -2,13 +2,13 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
   schedule:
-    - cron: '28 21 * * 6'
+    - cron: "28 21 * * 6"
   workflow_dispatch:
-  
+
 jobs:
   analyze:
     name: Analyze
@@ -16,55 +16,55 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'cpp' ]
+        language: ["cpp"]
         os: [centos7, rhel8]
         include:
-          - os: centos7            
-            container: 'centos:7'
-          - os: rhel8            
-            container: 'oraclelinux:8'
+          - os: centos7
+            container: "centos:7"
+          - os: rhel8
+            container: "oraclelinux:8"
     container: ${{ matrix.container }}
 
     steps:
-    - name: Checkout for centos7
-      uses: actions/checkout@v3
-      if: ${{ matrix.os == 'centos7' }}
+      - name: Checkout for centos7
+        if: ${{ matrix.os == 'centos7' }}
+        uses: actions/checkout@v3
 
-    - name: Checkout for rhel8
-      uses: actions/checkout@v4
-      if: ${{ matrix.os == 'rhel8' }}
+      - name: Checkout for rhel8
+        if: ${{ matrix.os == 'rhel8' }}
+        uses: actions/checkout@v4
 
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL for centos7
-      uses: github/codeql-action/init@v2
-      if: ${{ matrix.os == 'centos7' }}
-      with:
-        queries: security-extended
-        languages: ${{ matrix.language }}
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL for centos7
+        if: ${{ matrix.os == 'centos7' }}
+        uses: github/codeql-action/init@v2
+        with:
+          queries: security-extended
+          languages: ${{ matrix.language }}
 
-    - name: Initialize CodeQL for rhel8
-      uses: github/codeql-action/init@v3
-      if: ${{ matrix.os == 'rhel8' }}
-      with:
-        queries: security-extended
-        languages: ${{ matrix.language }}
+      - name: Initialize CodeQL for rhel8
+        if: ${{ matrix.os == 'rhel8' }}
+        uses: github/codeql-action/init@v3
+        with:
+          queries: security-extended
+          languages: ${{ matrix.language }}
 
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 https://git.io/JvXDl
+      # ℹ️ Command-line programs to run using the OS shell.
+      # 📚 https://git.io/JvXDl
 
-    - name: Build osptoolkit
-      run: |
-        yum install -y epel-release
-        yum install -y make gcc-c++ openssl-devel utf8proc-devel
-        cd $GITHUB_WORKSPACE/src
-        make build
-        cd $GITHUB_WORKSPACE/test
-        make linux
-        
-    - name: Perform CodeQL Analysis for centos7
-      uses: github/codeql-action/analyze@v2
-      if: ${{ matrix.os == 'centos7' }}
+      - name: Build osptoolkit
+        run: |
+          yum install -y epel-release
+          yum install -y make gcc-c++ openssl-devel utf8proc-devel
+          cd $GITHUB_WORKSPACE/src
+          make build
+          cd $GITHUB_WORKSPACE/test
+          make linux
 
-    - name: Perform CodeQL Analysis for rhel8
-      uses: github/codeql-action/analyze@v3
-      if: ${{ matrix.os == 'rhel8' }}
+      - name: Perform CodeQL Analysis for centos7
+        if: ${{ matrix.os == 'centos7' }}
+        uses: github/codeql-action/analyze@v2
+
+      - name: Perform CodeQL Analysis for rhel8
+        if: ${{ matrix.os == 'rhel8' }}
+        uses: github/codeql-action/analyze@v3
