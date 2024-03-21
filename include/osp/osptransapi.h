@@ -173,6 +173,12 @@ extern "C" {
     int OSPPTransactionSetSipMessage(OSPTTRANHANDLE, const char *);
     int OSPPTransactionGetStatusHeaderCount(OSPTTRANHANDLE, unsigned *);
     int OSPPTransactionGetStatusHeaders(OSPTTRANHANDLE, unsigned, unsigned, char *, unsigned, char *);
+    int OSPPTransactionSetOriginalCalled(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetRedirectCalled(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetOrigRedirectBehalf(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetLastRedirectBehalf(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetOrigRedirectReason(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionSetLastRedirectReason(OSPTTRANHANDLE, const char *);
 
 #ifdef __cplusplus
 }

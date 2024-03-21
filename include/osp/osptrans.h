@@ -154,6 +154,12 @@ typedef struct _OSPTTRANS {
     int StiVsCpsRspCode;
     int CallIdPrivacy;
     char SipMessage[OSPC_SIZE_HEADER];
+    char OriginalCalled[OSPC_SIZE_E164NUM];
+    char RedirectCalled[OSPC_SIZE_E164NUM];
+    char OrigRedirectBehalf[OSPC_SIZE_NORSTR];
+    char LastRedirectBehalf[OSPC_SIZE_NORSTR];
+    char OrigRedirectReason[OSPC_SIZE_NORSTR];
+    char LastRedirectReason[OSPC_SIZE_NORSTR];
 } OSPTTRANS;
 
 #define OSPC_MAX_TRANS  20000

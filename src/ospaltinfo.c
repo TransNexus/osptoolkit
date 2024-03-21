@@ -63,6 +63,8 @@ const OSPT_MSG_DESC OSPV_ATYPE_DESCS[OSPC_ALTINFO_NUMBER] = {
     { OSPC_ALTINFO_GENERATEDAT,     "icidgeneratedat" },
     { OSPC_ALTINFO_ORIGIOI,         "origioi" },
     { OSPC_ALTINFO_TERMIOI,         "termioi" },
+    { OSPC_ALTINFO_ORIGINAL,         "original" },
+    { OSPC_ALTINFO_REDIRECT,         "redirect" },
     /* For other attributes */
     { OSPC_ALTINFO_TRUE,            "true" },
     { OSPC_ALTINFO_FALSE,           "false" },

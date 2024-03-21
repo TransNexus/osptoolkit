@@ -2126,6 +2126,36 @@ int OSPPUsageIndToElement(      /* returns error code */
                 }
             }
 
+            /* Add redirect info */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->OrigRedirectBehalf[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_ORIGREDIRECTBEHALF, trans->OrigRedirectBehalf, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->LastRedirectBehalf[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_LASTREDIRECTBEHALF, trans->LastRedirectBehalf, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->OrigRedirectReason[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_ORIGREDIRECTREASON, trans->OrigRedirectReason, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+            if ((errcode == OSPC_ERR_NO_ERROR) && (trans->LastRedirectBehalf[0] != '\0')) {
+                errcode = OSPPStringToElement(OSPC_MELEM_LASTREDIRECTREASON, trans->LastRedirectReason, 0, OSPC_OSNULL, OSPC_OSNULL, &subelem);
+                if (errcode == OSPC_ERR_NO_ERROR) {
+                    OSPPXMLElemAddChild(usageindelem, subelem);
+                    subelem = OSPC_OSNULL;
+                }
+            }
+
             if (errcode == OSPC_ERR_NO_ERROR) {
                 OSPPXMLElemAddChild(*ospvElem, usageindelem);
                 usageindelem = OSPC_OSNULL;

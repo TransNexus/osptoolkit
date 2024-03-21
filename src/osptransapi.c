@@ -2174,6 +2174,12 @@ int OSPPTransactionNew(
         trans->StiVsCpsRspCode = 0;
         trans->CallIdPrivacy = -1;
         trans->SipMessage[0] = '\0';
+        trans->OriginalCalled[0] = '\0';
+        trans->RedirectCalled[0] = '\0';
+        trans->OrigRedirectBehalf[0] = '\0';
+        trans->LastRedirectBehalf[0] = '\0';
+        trans->OrigRedirectReason[0] = '\0';
+        trans->LastRedirectReason[0] = '\0';
     }
 
     return errcode;
@@ -6511,3 +6517,146 @@ int OSPPTransactionGetStatusHeaders(
     return errcode;
 }
 
+/*
+ * OSPPTransactionSetOriginalCalled() :
+ * Reports original called number
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionSetOriginalCalled(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvOriginalCalled) /* In - Original called */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvOriginalCalled == OSPC_OSNULL) || (ospvOriginalCalled[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->OriginalCalled, ospvOriginalCalled, sizeof(trans->OriginalCalled));
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionSetRedirectCalled() :
+ * Reports redirect called number
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionSetRedirectCalled(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    const char *ospvRedirectCalled) /* In - Redirect called */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvRedirectCalled == OSPC_OSNULL) || (ospvRedirectCalled[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->RedirectCalled, ospvRedirectCalled, sizeof(trans->RedirectCalled));
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionSetOrigRedirectBehalf() :
+ * Reports original redirect on behalf of
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionSetOrigRedirectBehalf(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvOrigRedirectBehalf) /* In - Original redirect on behalf of */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvOrigRedirectBehalf == OSPC_OSNULL) || (ospvOrigRedirectBehalf[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->OrigRedirectBehalf, ospvOrigRedirectBehalf, sizeof(trans->OrigRedirectBehalf));
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionSetLastRedirectBehalf() :
+ * Reports last redirect on behalf of
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionSetLastRedirectBehalf(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvLastRedirectBehalf) /* In - Last redirect on behalf of */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvLastRedirectBehalf == OSPC_OSNULL) || (ospvLastRedirectBehalf[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->LastRedirectBehalf, ospvLastRedirectBehalf, sizeof(trans->LastRedirectBehalf));
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionSetOrigRedirectReason() :
+ * Reports original redirect reason
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionSetOrigRedirectReason(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvOrigRedirectReason) /* In - Original redirect reason */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvOrigRedirectReason == OSPC_OSNULL) || (ospvOrigRedirectReason[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->OrigRedirectReason, ospvOrigRedirectReason, sizeof(trans->OrigRedirectReason));
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionSetLastRedirectReason() :
+ * Reports last redirect reason
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionSetLastRedirectReason(
+    OSPTTRANHANDLE ospvTransaction,     /* In - Transaction handle */
+    const char *ospvLastRedirectReason) /* In - Last redirect reason */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    if ((ospvLastRedirectReason == OSPC_OSNULL) || (ospvLastRedirectReason[0] == '\0')) {
+        errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+    } else {
+        trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
+        if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
+            OSPM_STRNCPY(trans->LastRedirectReason, ospvLastRedirectReason, sizeof(trans->LastRedirectReason));
+        }
+    }
+
+    return errcode;
+}

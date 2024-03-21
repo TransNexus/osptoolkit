@@ -316,6 +316,18 @@ int OSPPTransactionBuildUsage(
                 altinfo = OSPC_OSNULL;
             }
 
+            /* Add OriginalCalled/RedirectCalled to DestinationAlternates for Usage */
+            if ((errcode == OSPC_ERR_NO_ERROR) && (ospvTrans->OriginalCalled[0] != '\0')) {
+                altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvTrans->OriginalCalled), ospvTrans->OriginalCalled, OSPC_ALTINFO_ORIGINAL);
+                OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
+                altinfo = OSPC_OSNULL;
+            }
+            if ((errcode == OSPC_ERR_NO_ERROR) && (ospvTrans->RedirectCalled[0] != '\0')) {
+                altinfo = OSPPAltInfoNew(OSPM_STRLEN(ospvTrans->RedirectCalled), ospvTrans->RedirectCalled, OSPC_ALTINFO_REDIRECT);
+                OSPPUsageIndAddDestinationAlt(*ospvUsage, altinfo);
+                altinfo = OSPC_OSNULL;
+            }
+
             /* Get Destination Alternates */
             if ((errcode == OSPC_ERR_NO_ERROR) && OSPPAuthReqHasDestinationAlt(ospvTrans->AuthReq)) {
                 OSPPUsageIndMoveDestinationAlt(*ospvUsage, &(ospvTrans->AuthReq->DestinationAlternate));

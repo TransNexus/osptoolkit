@@ -2530,6 +2530,26 @@ int testSetSipMessage()
     return errcode;
 }
 
+int testSetRedirect()
+{
+    const char originalCalled[] = "4045266060";
+    const char redirectCalled[] = "4045266061";
+    const char origRedirectBehalf[] = "Immediate Divert";
+    const char lastRedirectBehalf[] = "Call Forward";
+    const char origRedirectReason[] = "No error";
+    const char lastRedirectReason[] = "No route to specified transit network";
+    int errcode = 0;
+
+    errcode = OSPPTransactionSetOriginalCalled(OSPVTransactionHandle, originalCalled);
+    errcode = OSPPTransactionSetRedirectCalled(OSPVTransactionHandle, redirectCalled);
+    errcode = OSPPTransactionSetOrigRedirectBehalf(OSPVTransactionHandle, origRedirectBehalf);
+    errcode = OSPPTransactionSetLastRedirectBehalf(OSPVTransactionHandle, lastRedirectBehalf);
+    errcode = OSPPTransactionSetOrigRedirectReason(OSPVTransactionHandle, origRedirectReason);
+    errcode = OSPPTransactionSetLastRedirectReason(OSPVTransactionHandle, lastRedirectReason);
+
+    return errcode;
+}
+
 int testGetTermCause()
 {
     int errcode = OSPC_ERR_NO_ERROR;
@@ -2994,6 +3014,9 @@ int testAPI(int apinumber)
     case 244:
         errcode = testSetSipMessage();
         break;
+    case 245:
+        errcode = testSetRedirect();
+        break;
     case 250:
         errcode = testGetNumberPortability();
         break;
@@ -3350,7 +3373,7 @@ int testMenu()
         printf("238) Set JIP                          239) Set Call Type\n");
         printf("240) Set Charging Vector              241) Set User Rate Plan\n");
         printf("242) Set STIR Information             243) Set Call ID Privacy\n");
-        printf("244) Set SIP Message\n");
+        printf("244) Set SIP Message                  245) Set Redirect\n");
         printf("250) Get NP parameters                251) Get Operator Names\n");
         printf("252) Get URLs                         253) Get CNAM\n");
         printf("254) Get Destination Switch ID        255) Get Identity\n");
