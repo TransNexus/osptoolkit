@@ -790,5 +790,5 @@ Version 4.26.0 - 2024-02-01
 * Updated XML element float value format.
 * Updated for github action warning messages.
 
-Version 4.27.0 - 2024-xx-xx
+Version 4.27.0 - 2024-05-01
 * Added redirect info.
