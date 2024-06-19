@@ -12,7 +12,7 @@ OSPLIB = -L$(LIBDIR) -losptk
 
 # For OpenSSL:
 SSLINCDIR = ../crypto
-SSLLIBDIR = ../lib
+SSLLIBDIR = /lib64/openssl11/
 SSLLIBS = -L$(SSLLIBDIR) -lssl -lcrypto
 
 # Compiler tools
@@ -28,9 +28,9 @@ MFLAGS = -DOPENSSL_NO_KRB5 -D_POSIX_THREADS -D_REENTRANT -DOSP_SDK
 
 # Debug flags
 # This is for DEBUG mode of compilation
-#DFLAGS = $(OSPTNLOGDEBUG) -g -DOSPC_DEBUG=1
+DFLAGS = $(OSPTNLOGDEBUG) -g -DOSPC_DEBUG=1
 # This is for PRODUCTION mode of compilation
-DFLAGS = $(OSPTNLOGDEBUG) -O
+#DFLAGS = $(OSPTNLOGDEBUG) -O
 
 # Compile flags
 CFLAGS = $(MFLAGS) $(DFLAGS) $(GCCFLAGS) $(PROFILE)
@@ -39,7 +39,6 @@ CFLAGS = $(MFLAGS) $(DFLAGS) $(GCCFLAGS) $(PROFILE)
 IFLAGS = -I./ -I$(INCDIR) -I$(SSLINCDIR)
 
 # Library flags
-LIBS = $(OSPLIB) $(SSLLIBS) -lutf8proc -lpthread -ldl -lm -lnsl -lsocket -lmtmalloc $(PROFILELIB)
 LIBS_LINUX = $(OSPLIB) $(SSLLIBS) -lutf8proc -lpthread -ldl -lm $(PROFILELIB)
 
 ################################################################################
@@ -54,10 +53,8 @@ TESTAPP = $(BINDIR)/test_app
 	$(PURIFY) $(CC) $(CFLAGS) $(IFLAGS) -c $(<)
 
 default: $(TESTOBJS)
-	$(PURIFY) $(CC) -o $(TESTAPP) $(TESTOBJS) $(LFLAGS) $(LIBS) $(PROFILE)
-
-linux: $(TESTOBJS)
 	$(PURIFY) $(CC) -o $(TESTAPP) $(TESTOBJS) $(LFLAGS) $(LIBS_LINUX) $(PROFILE)
+	$(PURIFY) $(CC) -o connect-test connect-test.c $(LFLAGS) $(LIBS_LINUX) $(PROFILE)
 
 clean :
 	rm -f $(TESTAPP) $(TESTOBJS)
