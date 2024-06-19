@@ -3245,12 +3245,14 @@ int testTestCalls()
     register int i = 0, j = 0;
     int errcode = OSPC_ERR_NO_ERROR;
     time_t start_time, end_time;
-#define NUM_API_OPS 7
-    int apinumber_idx[NUM_API_OPS] = { 23, 29, 27, 28, 31, 32, 24 };
+    time_t start_time2, end_time2;
+#define NUM_API_OPS 3
+    int apinumber_idx[NUM_API_OPS] = { 23, 29, 24 };
 
     time(&start_time);
     quietmode = 1;
     while (i < num_test_calls && errcode == OSPC_ERR_NO_ERROR) {
+        time(&start_time2);
         for (j = 0; j < NUM_API_OPS; j++) {
             if (apinumber_idx[j] == 28 && numdestinations == 1)
                 continue;
@@ -3262,6 +3264,8 @@ int testTestCalls()
             }
         }
         i++;
+        time(&end_time2);
+        fprintf(stderr,"Request %d Time %ld\n", i, end_time2 - start_time2);
     }
     time(&end_time);
     printf("Elapsed Time: %ld seconds\n", end_time - start_time);
