@@ -36,6 +36,7 @@
 #include "osp/ospx509.h"
 #include "osp/osptrans.h"
 #include "osp/osputils.h"
+#include "osp/ospb64.h"
 #include "nonblocking.h"
 
 #ifdef  WIN32
@@ -211,61 +212,46 @@ int testOSPPSetServicePoints()
     return errcode;
 }
 
+const char* B64PKey = "MIIBOgIBAAJBAK8t5l+PUbTC4lvwlNxV5lpl+2dwSZGW46dowTe6y133XyVEwNiiRma2YNk3xKs/TJ3Wl9Wpns2SYEAJsFfSTukCAwEAAQJAPz13vCm2GmZ8Zyp74usTxLCqSJZNyMRLHQWBM0g44Iuy4wE3vpi7Wq+xYuSOH2mu4OddnxswCP4QhaXVQavTAQIhAOBVCKXtppEw9UaOBL4vW0Ed/6EA/1D8hDW6St0h7EXJAiEAx+iRmZKhJD6VT84dtX5ZYNVk3j3dAcIOovpzUj9a0CECIEduTCapmZQ5xqAEsLXuVlxRtQgLTUD4ZxDElPn8x0MhAiBE2HlcND0+qDbvtwJQQOUzDgqg5xk3w8capboVdzAlQQIhAMC+lDL7+gDYkNAft5Mu+NObJmQs4Cr+DkDFsKqoxqrm";
+const char* B64LCert = "MIIBeTCCASMCEHqkOHVRRWr+1COq3CR/xsowDQYJKoZIhvcNAQEEBQAwOzElMCMGA1UEAxMcb3NwdGVzdHNlcnZlci50cmFuc25leHVzLmNvbTESMBAGA1UEChMJT1NQU2VydmVyMB4XDTA1MDYyMzAwMjkxOFoXDTA2MDYyNDAwMjkxOFowRTELMAkGA1UEBhMCQVUxEzARBgNVBAgTClNvbWUtU3RhdGUxITAfBgNVBAoTGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCvLeZfj1G0wuJb8JTcVeZaZftncEmRluOnaME3ustd918lRMDYokZmtmDZN8SrP0yd1pfVqZ7NkmBACbBX0k7pAgMBAAEwDQYJKoZIhvcNAQEEBQADQQDnV8QNFVVJx/+7IselU0wsepqMurivXZzuxOmTEmTVDzCJx1xhA8jd3vGAj7XDIYiPub1PV23eY5a2ARJuw5w9";
+const char* B64CACert = "MIIBYDCCAQoCAQEwDQYJKoZIhvcNAQEEBQAwOzElMCMGA1UEAxMcb3NwdGVzdHNlcnZlci50cmFuc25leHVzLmNvbTESMBAGA1UEChMJT1NQU2VydmVyMB4XDTAyMDIwNDE4MjU1MloXDTEyMDIwMzE4MjU1MlowOzElMCMGA1UEAxMcb3NwdGVzdHNlcnZlci50cmFuc25leHVzLmNvbTESMBAGA1UEChMJT1NQU2VydmVyMFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAPGeGwV41EIhX0jEDFLRXQhDEr50OUQPq+f55VwQd0TQNts06BP29+UiNdRW3c3IRHdZcJdC1Cg68ME9cgeq0h8CAwEAATANBgkqhkiG9w0BAQQFAANBAGkzBSj1EnnmUxbaiG1N4xjIuLAWydun7o3bFk2tV8dBIhnuh445obYyk1EnQ27kI7eACCILBZqi2MHDOIMnoN0=";
+
 int testOSPPProviderNew(OSPTPROVHANDLE *ProvHandle)
 {
-    unsigned int i;
     int errcode = 0;
     const char **servpts;
 
     char customer_id[64];
     char device_id[64];
-    char searchstr[20];
     OSPT_CERT localcert;
     OSPTPRIVATEKEY privatekey;
     OSPT_CERT *authCerts[OSPC_SEC_MAX_AUTH_CERTS];
-    OSPT_CERT TheAuthCert[OSPC_SEC_MAX_AUTH_CERTS];
+    OSPT_CERT TheAuthCert;
 
-    errcode = OSPPUtilLoadPEMPrivateKey((unsigned char *)"pkey.pem", &privatekey);
-    if (errcode != OSPC_ERR_NO_ERROR) {
-        return errcode;
-    }
-    errcode = OSPPUtilLoadPEMCert((unsigned char *)"localcert.pem", &localcert);
-    if (errcode != OSPC_ERR_NO_ERROR) {
-        return errcode;
-    }
-    i = 0;
-    while (i < OSPC_SEC_MAX_AUTH_CERTS) {
-        sprintf(searchstr, "cacert_%d.pem", i);
-        errcode = OSPPUtilLoadPEMCert((unsigned char *)searchstr, &(TheAuthCert[i]));
-        if (errcode == OSPC_ERR_NO_ERROR) {
-            authCerts[i] = &(TheAuthCert[i]);
-            i++;
-            printf("Loaded %d Authorization Certificate\n", i);
-        } else {
-            if (errcode == OSPC_ERR_CRYPTO_FILE_OPEN_ERROR) {
-                /*
-                 * If i!=0 then we have read at least one cacert.
-                 * No problem in that case.
-                 * Otherwise return an error
-                 */
-                if (i == 0) {
-                    printf("Failed to find the File - %s\n", searchstr);
-                    return errcode;
-                } else {
-                    /*
-                     * Break out of thew loop
-                     */
-                    printf("There are no more cert files\n");
-                    break;
-                }
-            } else {
-                return errcode;
-            }
-        }
-    }
-    NUM_CA_CERTS = i;
+    unsigned char privatekeydata[10000];
+    unsigned char localcertdata[10000];
+    unsigned char cacertdata[10000];
+    int errorcode;
 
-    printf("Number of cert files %d\n", NUM_CA_CERTS);
+		privatekey.PrivateKeyData = privatekeydata;
+		privatekey.PrivateKeyLength = sizeof(privatekeydata);
+
+		localcert.CertData = localcertdata;
+		localcert.CertDataLength = sizeof(localcertdata);
+
+		TheAuthCert.CertData = cacertdata;
+		TheAuthCert.CertDataLength = sizeof(cacertdata);
+
+		if ((errorcode = OSPPBase64Decode(B64PKey, strlen(B64PKey), privatekey.PrivateKeyData, &privatekey.PrivateKeyLength)) != OSPC_ERR_NO_ERROR) {
+				printf("failed to decode private key (%d)\n", errorcode);
+		} else if ((errorcode = OSPPBase64Decode(B64LCert, strlen(B64LCert), localcert.CertData, &localcert.CertDataLength)) != OSPC_ERR_NO_ERROR) {
+				printf("failed to decode local cert (%d)\n", errorcode);
+		} else if ((errorcode = OSPPBase64Decode(B64CACert, strlen(B64CACert), TheAuthCert.CertData, &TheAuthCert.CertDataLength)) != OSPC_ERR_NO_ERROR) {
+				printf("failed to decode cacert (%d)\n", errorcode);
+		}
+
+		authCerts[0] = &TheAuthCert;
+    NUM_CA_CERTS = 1;
 
     sprintf(customer_id, "%ld", custid);
     sprintf(device_id, "%ld", devid);
@@ -293,24 +279,8 @@ int testOSPPProviderNew(OSPTPROVHANDLE *ProvHandle)
         device_id,
         ProvHandle);
 
-    /* Free memory allocated while loading crypto information from PEM-encoded files */
-    if (privatekey.PrivateKeyData != NULL) {
-        free(privatekey.PrivateKeyData);
-    }
-
-    if (localcert.CertData != NULL) {
-        free(localcert.CertData);
-    }
-
-    for (i = 0; i < NUM_CA_CERTS; i++) {
-        if (TheAuthCert[i].CertData != NULL) {
-            free(TheAuthCert[i].CertData);
-        }
-    }
-
     return errcode;
 }
-
 int testOSPPProviderDelete()
 {
     int errcode = 0;
