@@ -795,3 +795,4 @@ Version 4.27.0 - 2024-05-01
 
 Version 4.28.0 - 2024-xx-xx
 * Added test features.
+* Enabled without token element.

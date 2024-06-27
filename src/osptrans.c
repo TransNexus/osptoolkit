@@ -1291,7 +1291,10 @@ int OSPPTransactionGetDestination(
                     }
                 }
             } else {
-                if ((dest->ServiceType == OSPC_SERVICE_NPQUERY) ||
+                if ((dest->ServiceType == OSPC_SERVICE_VOICE) ||
+                    (dest->ServiceType == OSPC_SERVICE_VIDEO) ||
+                    (dest->ServiceType == OSPC_SERVICE_DATA) ||
+                    (dest->ServiceType == OSPC_SERVICE_NPQUERY) ||
                     (dest->ServiceType == OSPC_SERVICE_CNAMQUERY) ||
                     (dest->ServiceType == OSPC_SERVICE_STIRQUERY))
                 {
