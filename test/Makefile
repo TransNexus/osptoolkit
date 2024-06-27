@@ -12,7 +12,7 @@ OSPLIB = -L$(LIBDIR) -losptk
 
 # For OpenSSL:
 SSLINCDIR = ../crypto
-SSLLIBDIR = /lib64/openssl11/
+SSLLIBDIR = /lib
 SSLLIBS = -L$(SSLLIBDIR) -lssl -lcrypto
 
 # Compiler tools
@@ -39,6 +39,7 @@ CFLAGS = $(MFLAGS) $(DFLAGS) $(GCCFLAGS) $(PROFILE)
 IFLAGS = -I./ -I$(INCDIR) -I$(SSLINCDIR)
 
 # Library flags
+LIBS = $(OSPLIB) $(SSLLIBS) -lutf8proc -lpthread -ldl -lm -lnsl -lsocket -lmtmalloc $(PROFILELIB)
 LIBS_LINUX = $(OSPLIB) $(SSLLIBS) -lutf8proc -lpthread -ldl -lm $(PROFILELIB)
 
 ################################################################################
@@ -53,6 +54,10 @@ TESTAPP = $(BINDIR)/test_app
 	$(PURIFY) $(CC) $(CFLAGS) $(IFLAGS) -c $(<)
 
 default: $(TESTOBJS)
+	$(PURIFY) $(CC) -o $(TESTAPP) $(TESTOBJS) $(LFLAGS) $(LIBS) $(PROFILE)
+	$(PURIFY) $(CC) -o connect-test connect-test.c $(LFLAGS) $(LIBS) $(PROFILE)
+
+linux: $(TESTOBJS)
 	$(PURIFY) $(CC) -o $(TESTAPP) $(TESTOBJS) $(LFLAGS) $(LIBS_LINUX) $(PROFILE)
 	$(PURIFY) $(CC) -o connect-test connect-test.c $(LFLAGS) $(LIBS_LINUX) $(PROFILE)
 
