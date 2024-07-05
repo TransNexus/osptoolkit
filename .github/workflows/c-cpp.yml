@@ -12,10 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [centos7, rhel8]
+        # os: [centos7, rhel8]
+        os: [rhel8]
         include:
-          - os: centos7
-            container: "centos:7"
+          # - os: centos7
+          #   container: "centos:7"
           - os: rhel8
             container: "oraclelinux:8"
     container: ${{ matrix.container }}
