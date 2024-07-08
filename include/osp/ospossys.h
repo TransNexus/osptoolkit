@@ -358,11 +358,11 @@
 
 #define OSPM_BLOCKIO(s,f,e) { \
     if (f) { \
-        e = fcntl(s, F_SETFD, O_NONBLOCK); \
+        e = fcntl(s, F_SETFL, O_NONBLOCK); \
         OSPM_DBG(e < 0,("%s failed. %s\n", "fcntl", strerror(errno))); \
     } \
     else { \
-        e = fcntl(s, F_SETFD, 0); \
+        e = fcntl(s, F_SETFL, 0); \
         OSPM_DBG(e < 0,("%s failed. %s\n", "fcntl", strerror(errno))); \
     } \
 }
