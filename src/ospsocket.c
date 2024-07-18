@@ -29,6 +29,19 @@
 #include <poll.h>
 #endif
 
+OSPTBOOL OSPVBlockingFlag = OSPC_FALSE;
+
+void OSPPSockSetBlockingFlag(
+    OSPTBOOL ospvBlockingFlag)  /* In - Blocking flag */ 
+{
+    OSPVBlockingFlag = ospvBlockingFlag;
+}    
+
+OSPTBOOL OSPPSockGetBlockingFlag()
+{
+    return OSPVBlockingFlag;
+}    
+
 int OSPPSockClose(
     OSPTBOOL ospvGracefulSSLShutdown,
     OSPTSOCKET *ospvSockFd,
@@ -190,7 +203,7 @@ int OSPPSockConnectAuditURL(
                 /*
                  ** CHANGED OSPCFALSE -> OSPCTRUE in Sock conenct experimental
                  */
-                errorcode = OSPPSockConnect(&(ospvHttp->SockFd), OSPC_DEFAULT_BLOCKING_FLAG,
+                errorcode = OSPPSockConnect(&(ospvHttp->SockFd), OSPVBlockingFlag,
                     ospvHttp->ServicePoint->IpAddr, ospvHttp->ServicePoint->Port, &timeout, &(ospvHttp->SSLSession));
 
                 if (errorcode == OSPC_ERR_NO_ERROR) {
@@ -320,7 +333,7 @@ int OSPPSockConnectServicePoint(
                         /*
                          * CHANGED OSPCFALSE -> TRUE
                          */
-                        errorcode = OSPPSockConnect(&(ospvHttp->SockFd), OSPC_DEFAULT_BLOCKING_FLAG,
+                        errorcode = OSPPSockConnect(&(ospvHttp->SockFd), OSPVBlockingFlag,
                             ospvHttp->ServicePoint->IpAddr, ospvHttp->ServicePoint->Port, &timeout, &(ospvHttp->SSLSession));
 
                         if (errorcode == OSPC_ERR_NO_ERROR) {

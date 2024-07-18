@@ -281,6 +281,7 @@ int testOSPPProviderNew(OSPTPROVHANDLE *ProvHandle)
 
     return errcode;
 }
+
 int testOSPPProviderDelete()
 {
     int errcode = 0;
@@ -639,6 +640,15 @@ int testOSPPProviderGetNumberOfServicePoints()
 
     if (errcode == 0)
         printf("num of svc pts = %u\n", numofsvcpts);
+
+    return errcode;
+}
+
+int testOSPPSockSetBlockingFlag()
+{
+    int errcode = 0;
+
+    OSPPSockSetBlockingFlag(OSPC_TRUE);
 
     return errcode;
 }
@@ -2632,6 +2642,9 @@ int testAPI(int apinumber)
 
     switch (apinumber) {
 
+    case 0:
+        errcode = testOSPPSockSetBlockingFlag();
+        break;
     case 1:
         errcode = testOSPPProviderNew(&OSPVProviderHandle);
         break;
@@ -3279,7 +3292,11 @@ int testMenu()
     int funcnum;
 
     if (!quietmode) {
-        printf("\nProvider API functions\n");
+        printf("\nSocket API functions\n");
+        printf("---------------------------------------------------------------------\n");
+        printf(" 0) SetBlockFlag\n");
+        printf("---------------------------------------------------------------------\n");
+        printf("Provider API functions\n");
         printf("---------------------------------------------------------------------\n");
         printf(" 1) New                                2) Delete\n");
         printf(" 3) For future Enhancements            4) SetServicePoints\n");

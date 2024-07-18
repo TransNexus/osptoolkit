@@ -26,6 +26,7 @@
 #include "osp/ospossys.h"
 
 /* exposed OSP API prototypes and constants */
+#include "osp/ospsocketapi.h"
 #include "osp/ospproviderapi.h"
 #include "osp/osptransapi.h"
 #include "osp/osplibversion.h"

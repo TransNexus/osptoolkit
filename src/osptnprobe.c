@@ -107,6 +107,8 @@ enum socket_stats {
 
 static char tnBuffer[] = "test message";
 
+OSPTBOOL OSPVBlockingFlag;
+
 /* OSPPTNProbe - probe systems and return response times */
 int OSPPTNProbe(                /*0 - normal; < 0 - error code  */
     OSPT_TN_PROBE *pProbeList,  /* list to probe */
@@ -251,7 +253,7 @@ int OSPPTNProbeConnect( /* returns socket descriptor, < 0 == error */
     if ((fdSocket >= 0) && uErr == 0) {
 
         /* connect the socket */
-        uErr = OSPPSockConnect(&fdSocket, OSPC_DEFAULT_BLOCKING_FLAG, ipAddr, htons(OSPC_TN_UDP_ECHOPORT), &timeout, &sslsess);
+        uErr = OSPPSockConnect(&fdSocket, OSPVBlockingFlag, ipAddr, htons(OSPC_TN_UDP_ECHOPORT), &timeout, &sslsess);
 
         if (uErr) {
             fdSocket = -1;
