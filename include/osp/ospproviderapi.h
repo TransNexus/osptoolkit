@@ -33,6 +33,7 @@ extern "C" {
     int OSPPProviderGetHTTPPersistence(OSPTPROVHANDLE, unsigned *);
     int OSPPProviderGetHTTPRetryDelay(OSPTPROVHANDLE, unsigned *);
     int OSPPProviderGetHTTPRetryLimit(OSPTPROVHANDLE, unsigned *);
+    int OSPPProviderGetConnectTimeout(OSPTPROVHANDLE, unsigned *);
     int OSPPProviderGetHTTPTimeout(OSPTPROVHANDLE, unsigned *);
     int OSPPProviderGetLocalKeys(OSPTPROVHANDLE, OSPTPRIVATEKEY *, unsigned, void *);
     int OSPPProviderGetLocalValidation(OSPTPROVHANDLE, unsigned *);
@@ -47,6 +48,7 @@ extern "C" {
     int OSPPProviderSetHTTPPersistence(OSPTPROVHANDLE, unsigned);
     int OSPPProviderSetHTTPRetryDelay(OSPTPROVHANDLE, unsigned);
     int OSPPProviderSetHTTPRetryLimit(OSPTPROVHANDLE, unsigned);
+    int OSPPProviderSetConnectTimeout(OSPTPROVHANDLE, unsigned);
     int OSPPProviderSetHTTPTimeout(OSPTPROVHANDLE, unsigned);
     int OSPPProviderSetLocalKeys(OSPTPROVHANDLE, const OSPTPRIVATEKEY *, const void *);
     int OSPPProviderSetLocalValidation(OSPTPROVHANDLE, unsigned);

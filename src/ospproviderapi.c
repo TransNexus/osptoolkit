@@ -240,6 +240,34 @@ int OSPPProviderGetHTTPRetryLimit(
 }
 
 /*
+ * OSPPProviderGetConnectTimeout()
+ *
+ * Get time, in milliseconds, to wait for connecting to a provider
+ * HTTP connection.
+ *
+ * The OSPPProviderGetConnectTimeout function returns the timeout value
+ * that specifies how long to wait for connecting to HTTP connections
+ * with ospvProvider. The value, returned in the location pointed to by
+ * ospvConnectTimeout, is measured in milliseconds.
+ *
+ * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
+ */
+int OSPPProviderGetConnectTimeout(
+    OSPTPROVHANDLE ospvProvider,    /* In  - Provider handle     */
+    unsigned *ospvConnectTimeout)   /* Out - Ptr to result store */
+{
+    OSPTPROVIDER *provider = OSPC_OSNULL;
+    int errorcode = OSPC_ERR_NO_ERROR;
+
+    provider = OSPPProviderGetContext(ospvProvider, &errorcode);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommGetConnectTimeout(provider->Comm, ospvConnectTimeout);
+    }
+
+    return errorcode;
+}
+
+/*
  * OSPPProviderGetHTTPTimeout()
  *
  * Get time, in milliseconds, to wait for a response from a provider
@@ -969,6 +997,39 @@ int OSPPProviderSetHTTPRetryLimit(
     }
     if (errorcode == OSPC_ERR_NO_ERROR) {
         errorcode = OSPPCommSetRetryLimit(provider->CommForCapabilities, ospvHTTPRetryLimit);
+    }
+
+    return errorcode;
+}
+
+/*
+ * OSPPProviderSetConnectTimeout()
+ *
+ * Configure maximum time in ms to wait for connecting to provider.
+ *
+ * The OSPPProviderSetConnectTimeout function configures the maximum
+ * amount of time to wait for connecting to ospvProvider. That timeout,
+ * expressed in milliseconds, is indicated by the ospvConnectTimeout
+ * parameter. If no connection is established within this time, the current
+ * connection is aborted and the library attempts to connect with another
+ * service point.
+ *
+ * Returns: OSPC_ERR_NO_ERROR if successful, OSPC_ERR_xxx otherwise.
+ */
+int OSPPProviderSetConnectTimeout(
+    OSPTPROVHANDLE ospvProvider,    /* In - Provider handle  */
+    unsigned ospvConnectTimeout)    /* In - New connect timeout */
+{
+    OSPTPROVIDER *provider = OSPC_OSNULL;
+    int errorcode = OSPC_ERR_NO_ERROR;
+
+    provider = OSPPProviderGetContext(ospvProvider, &errorcode);
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommSetConnectTimeout(provider->Comm, ospvConnectTimeout);
+    }
+
+    if (errorcode == OSPC_ERR_NO_ERROR) {
+        errorcode = OSPPCommSetConnectTimeout(provider->CommForCapabilities, ospvConnectTimeout);
     }
 
     return errorcode;

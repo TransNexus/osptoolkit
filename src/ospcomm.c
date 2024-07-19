@@ -279,6 +279,21 @@ int OSPPCommGetRetryLimit(
     return errorcode;
 }
 
+int OSPPCommGetConnectTimeout(
+    OSPTCOMM *ospvComm,
+    unsigned *ospvTimeout)
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+
+    if (ospvComm == OSPC_OSNULL) {
+        errorcode = OSPC_ERR_COMM_INVALID_ARG;
+        OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
+    } else
+        *ospvTimeout = ospvComm->ConnectTimeout;
+
+    return errorcode;
+}
+
 int OSPPCommGetTimeout(
     OSPTCOMM *ospvComm,
     unsigned *ospvTimeout)
@@ -350,6 +365,21 @@ int OSPPCommSetConnSelectionTimeout(
         OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
     } else
         ospvComm->ConnSelectionTimeout = ospvTimeout;
+
+    return errorcode;
+}
+
+int OSPPCommSetConnectTimeout(
+    OSPTCOMM *ospvComm,
+    unsigned ospvTimeout)
+{
+    int errorcode = OSPC_ERR_NO_ERROR;
+
+    if (ospvComm == OSPC_OSNULL) {
+        errorcode = OSPC_ERR_COMM_INVALID_ARG;
+        OSPM_DBGERRORLOG(errorcode, "ospvComm is NULL");
+    } else
+        ospvComm->ConnectTimeout = ospvTimeout;
 
     return errorcode;
 }

@@ -63,3 +63,4 @@ linux: $(TESTOBJS)
 
 clean :
 	rm -f $(TESTAPP) $(TESTOBJS)
+	rm -f connect-test

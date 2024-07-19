@@ -59,6 +59,7 @@
 #define DEF_HTTP_PERSIST        60000
 #define DEF_HTTP_RETRYDELAY     0
 #define DEF_HTTP_RETRYLIMIT     1
+#define DEF_CONNECT_TIMEOUT     (10 * 1000)
 #define DEF_HTTP_TIMEOUT        (60 * 1000)
 #define DEF_TIME_LIMIT          4
 #define DEF_CUST_ID             1000L
@@ -442,6 +443,26 @@ int testOSPPProviderSetHTTPRetryDelay()
     int errcode = 0;
 
     errcode = OSPPProviderSetHTTPRetryDelay(OSPVProviderHandle, DEF_HTTP_RETRYDELAY);
+
+    return errcode;
+}
+
+int testOSPPProviderGetConnectTimeout()
+{
+    int errcode = 0;
+    unsigned timeout;
+
+    errcode = OSPPProviderGetConnectTimeout(OSPVProviderHandle, &timeout);
+
+    printf("connect timeout = %u\n", timeout);
+    return errcode;
+}
+
+int testOSPPProviderSetConnectTimeout()
+{
+    int errcode = 0;
+
+    errcode = OSPPProviderSetConnectTimeout(OSPVProviderHandle, DEF_CONNECT_TIMEOUT);
 
     return errcode;
 }
@@ -2805,6 +2826,12 @@ int testAPI(int apinumber)
     case 48:
         errcode = testSetDestinationCount();
         break;
+    case 81:
+        errcode = testOSPPProviderGetConnectTimeout();
+        break;
+    case 82:
+        errcode = testOSPPProviderSetConnectTimeout();
+        break;
     case 50:
         errcode = testSetCallingNumber();
         break;
@@ -3294,7 +3321,7 @@ int testMenu()
     if (!quietmode) {
         printf("\nSocket API functions\n");
         printf("---------------------------------------------------------------------\n");
-        printf(" 0) SetBlockFlag\n");
+        printf(" 0) SetBlockingFlag\n");
         printf("---------------------------------------------------------------------\n");
         printf("Provider API functions\n");
         printf("---------------------------------------------------------------------\n");
@@ -3328,6 +3355,7 @@ int testMenu()
         printf("43) BuildUsageFromScratch(OGW)        44) BuildUsageFromScratch(TGW)\n");
         printf("45) GetLookAheadInfoIfPresent         46) ModifyDeviceIdentifiers\n");
         printf("47) ModifyDeviceIdentifiersAgain      48) SetDestinationCount\n");
+        printf("81) GetConnectTimeout                 82) SetConnectTimeout\n");
         printf("99) Sleep for 2 seconds\n");
         printf("---------------------------------------------------------------------\n");
         printf("Configuration Parameters\n");

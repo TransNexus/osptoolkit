@@ -193,9 +193,12 @@ int OSPPSockConnectAuditURL(
                     (ospvHttp->Flags & OSPC_SOCK_CONNECTED_MASK);
 
                 /*
-                 * set the response timeout for the socket
+                 * set the connect timeout for the socket
                  */
-                OSPPCommGetTimeout((OSPTCOMM *)ospvHttp->Comm, &socktimeout);
+                OSPPCommGetConnectTimeout((OSPTCOMM *)ospvHttp->Comm, &socktimeout);
+                if (socktimeout == 0) {
+                    OSPPCommGetTimeout((OSPTCOMM *)ospvHttp->Comm, &socktimeout);
+                }
 
                 timeout.tv_sec = socktimeout / 1000;
                 timeout.tv_usec = socktimeout % 1000 * 1000;
@@ -323,9 +326,12 @@ int OSPPSockConnectServicePoint(
                         ospvHttp->Flags = (unsigned char)(ospvHttp->Flags & OSPC_SOCK_CONNECTED_MASK);
 
                         /*
-                         * set the response timeout for the socket
+                         * set the connect timeout for the socket
                          */
-                        OSPPCommGetTimeout((OSPTCOMM *)ospvHttp->Comm, &socktimeout);
+                        OSPPCommGetConnectTimeout((OSPTCOMM *)ospvHttp->Comm, &socktimeout);
+                        if (socktimeout == 0) {
+                            OSPPCommGetTimeout((OSPTCOMM *)ospvHttp->Comm, &socktimeout);
+                        }
 
                         timeout.tv_sec = socktimeout / 1000;
                         timeout.tv_usec = socktimeout % 1000 * 1000;

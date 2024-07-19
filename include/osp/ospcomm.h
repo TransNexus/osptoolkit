@@ -73,6 +73,7 @@ typedef struct {
     unsigned HttpPersistence;
     unsigned HttpRetryDelay;
     unsigned HttpRetryLimit;
+    unsigned ConnectTimeout;
     unsigned HttpTimeout;
     OSPTUINT64 ConnSelectionTimeout;
     OSPTSVCPT *ServicePointList;
@@ -98,10 +99,12 @@ extern "C" {
     int OSPPCommGetPersistence(OSPTCOMM *, unsigned *);
     int OSPPCommGetRetryDelay(OSPTCOMM *, unsigned *);
     int OSPPCommGetRetryLimit(OSPTCOMM *, unsigned *);
+    int OSPPCommGetConnectTimeout(OSPTCOMM *, unsigned *);
     int OSPPCommGetTimeout(OSPTCOMM *, unsigned *);
     int OSPPCommSetPersistence(OSPTCOMM *, unsigned);
     int OSPPCommSetRetryDelay(OSPTCOMM *, unsigned);
     int OSPPCommSetRetryLimit(OSPTCOMM *, unsigned);
+    int OSPPCommSetConnectTimeout(OSPTCOMM *, unsigned);
     int OSPPCommSetTimeout(OSPTCOMM *, unsigned);
     int OSPPCommSetConnSelectionTimeout(OSPTCOMM *, OSPTUINT64);
     int OSPPCommGetMaxConnections(OSPTCOMM *, unsigned *);
