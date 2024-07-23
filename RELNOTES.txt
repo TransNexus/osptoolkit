@@ -798,7 +798,6 @@ Version 4.28.0 - 2024-07-08
 * Enabled without token element.
 * Fixed fcntl typo.
 
-Version 4.29.0 - 2024-07-19
+Version 4.29.0 - 2024-07-23
 * Updated to support setting OSPC_DEFAULT_BLOCKING_FLAG.
 * Added separated connect timeout.
-
