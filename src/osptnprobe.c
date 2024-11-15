@@ -107,7 +107,7 @@ enum socket_stats {
 
 static char tnBuffer[] = "test message";
 
-OSPTBOOL OSPVBlockingFlag;
+extern OSPTBOOL OSPVBlockingFlag;
 
 /* OSPPTNProbe - probe systems and return response times */
 int OSPPTNProbe(                /*0 - normal; < 0 - error code  */
@@ -307,7 +307,7 @@ void OSPPTNProbeEcho(
     register unsigned uHost = 0;    /* element number in pProbeList */
     unsigned uSent = 0;             /* bytes sent */
     int nRecv = 0;                  /* bytes received */
-    register int nCnt = 0;          /* simple counter */
+    int nCnt = 0;                   /* simple counter */
     int nRetVal = 0;                /* return value from select */
     unsigned long uTime1 = 0;       /* temp value for time calculations */
     unsigned long uTime2 = 0;       /* temp value for time calculations */
