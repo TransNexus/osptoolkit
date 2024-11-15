@@ -440,7 +440,7 @@ extern "C" {
     int OSPPASN1AlgorithmIdEncode(OSPTASN1OBJECT **ospvAlgorithIdObject, OSPEASN1ID ospvAlgorithmIdCode, OSPEASN1DATAREFID ospvDataRefId);
     void PTPResultUpdateDataRef(unsigned char ospvDataRef, OSPTASN1PARSERESULT *ospvParseResult);
     int PTPDataRefIdGetValue(OSPEASN1DATAREFID ospvDataRefId, unsigned char **ospvDataRefIdValue);
-    int PTPDataRefAddRef(unsigned char ospvDataReference[OSPC_ASN1_DATAREF_MAXLENGTH], unsigned char ospvNewReference);
+    int PTPDataRefAddRef(unsigned char ospvDataReference[], unsigned char ospvNewReference);
 
     /*
      * If primitive can be a list (max >= 1), then all peers of this element should be the same element and should all be

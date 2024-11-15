@@ -957,14 +957,14 @@ int testOSPPTransactionGetNextDestination()
 
 void testFreeCallIds()
 {
-    register int i = 0;
+    int i = 0;
     for (i = 0; i < NUM_CALL_IDS; i++)
         OSPPCallIdDelete(&(callids[i]));
 }
 
 int testInitializeCallIds()
 {
-    register int i = 0;
+    int i = 0;
     int errcode = 0;
 
     unsigned char *val[NUM_CALL_IDS] = {
@@ -3282,7 +3282,7 @@ int testAPI(int apinumber)
 
 int testTestCalls()
 {
-    register int i = 0, j = 0;
+    int i = 0, j = 0;
     int errcode = OSPC_ERR_NO_ERROR;
     time_t start_time, end_time;
     time_t start_time2, end_time2;
