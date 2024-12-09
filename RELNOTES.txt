@@ -805,3 +805,6 @@ Version 4.29.0 - 2024-07-23
 Version 4.29.1 - 2024-11-15
 * Fixed compiler warning messages.
 * Fixed multiple definition of OSPVBlockingFlag.
+
+Version 4.30.0 - 2024-12-09
+* Added RichCallData into AuthRsp.

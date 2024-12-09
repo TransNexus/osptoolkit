@@ -179,6 +179,7 @@ extern "C" {
     int OSPPTransactionSetLastRedirectBehalf(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetOrigRedirectReason(OSPTTRANHANDLE, const char *);
     int OSPPTransactionSetLastRedirectReason(OSPTTRANHANDLE, const char *);
+    int OSPPTransactionGetRichCallData(OSPTTRANHANDLE, unsigned, char *, unsigned, char *, unsigned, char *);
 
 #ifdef __cplusplus
 }

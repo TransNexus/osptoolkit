@@ -410,6 +410,9 @@ unsigned OSPPAuthRspFromElement(
     const char* origid = OSPC_OSNULL;
     const char* jdtype = OSPC_OSNULL;
     unsigned headerIndex = 0;
+    const char* crn = OSPC_OSNULL;
+    const char* icn = OSPC_OSNULL;
+    const char* icnDigest = OSPC_OSNULL;
 
     if (ospvElem == OSPC_OSNULL) {
         error = OSPC_ERR_XML_NO_ELEMENT;
@@ -548,6 +551,16 @@ unsigned OSPPAuthRspFromElement(
             case OSPC_MELEM_JURISDICTIONTYPE:
                 if ((jdtype = OSPPXMLElemGetValue(elem)) != OSPC_OSNULL) {
                     OSPPAuthRspSetJurisdictionType(authrsp, jdtype);
+                }
+                break;
+            case OSPC_MELEM_RICHCALLDATA:
+                if ((error = OSPPRcdFromElement(elem, &crn, &icn, &icnDigest)) == OSPC_ERR_NO_ERROR) {
+                    if ((crn != OSPC_OSNULL) || (icn != OSPC_OSNULL)) {
+                        OSPPAuthRspSetRcd(authrsp, crn, icn, icnDigest);
+                        crn = OSPC_OSNULL;
+                        icn = OSPC_OSNULL;
+                        icnDigest = OSPC_OSNULL;
+                    }
                 }
                 break;
             default:
@@ -840,3 +853,129 @@ void OSPPAuthRspSetJurisdictionType(
     }
 }
 
+/*
+ * OSPPRcdFromElement() - get rich call data from an XML element
+ */
+unsigned OSPPRcdFromElement(    /* returns error code */
+    OSPT_XML_ELEM *ospvElem,    /* In - input is XML element */
+    const char **ospvCrn,       /* Out - RCD crn */
+    const char **ospvIcn,       /* Out - RCD icn */
+    const char **ospvIcnDigest) /* Out - RCD icn degist */
+{
+    unsigned errcode = OSPC_ERR_NO_ERROR;
+    OSPT_XML_ELEM *elem = OSPC_OSNULL;
+    OSPT_XML_ELEM *subelem = OSPC_OSNULL;
+
+    if (ospvElem == OSPC_OSNULL) {
+        errcode = OSPC_ERR_XML_NO_ELEMENT;
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        if ((ospvCrn == OSPC_OSNULL) || (ospvIcn == OSPC_OSNULL) || (ospvIcnDigest == OSPC_OSNULL)) {
+            errcode = OSPC_ERR_XML_INVALID_ARGS;
+        }
+    }
+
+    if (errcode == OSPC_ERR_NO_ERROR) {
+        *ospvCrn = OSPC_OSNULL;
+        *ospvIcn = OSPC_OSNULL;
+        *ospvIcnDigest = OSPC_OSNULL;
+        for (elem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(ospvElem);
+            (elem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
+            elem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(ospvElem, elem))
+        {
+            switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(elem))) {
+            case OSPC_MELEM_CALLREASON:
+                *ospvCrn = OSPPXMLElemGetValue(elem);
+                break;
+            case OSPC_MELEM_RCD:
+                for (subelem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(elem);
+                    (subelem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
+                    subelem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(elem, subelem))
+                {
+                    switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(subelem))) {
+                    case OSPC_MELEM_DISPLAYNAME:
+                        break;
+                    case OSPC_MELEM_ICONURL:
+                        *ospvIcn = OSPPXMLElemGetValue(subelem);
+                        break;
+                    default:
+                        /*
+                         * This is an element we don't understand. If it's
+                         * critical, then we have to report an error.
+                         * Otherwise we can ignore it.
+                         */
+                        if (OSPPMsgElemIsCritical(subelem)) {
+                            errcode = OSPC_ERR_XML_BAD_ELEMENT;
+                        }
+                        break;
+                    }
+                }
+                break;
+            case OSPC_MELEM_RCDINTEGRITY:
+                for (subelem = (OSPT_XML_ELEM *)OSPPXMLElemFirstChild(elem);
+                    (subelem != OSPC_OSNULL) && (errcode == OSPC_ERR_NO_ERROR);
+                    subelem = (OSPT_XML_ELEM *)OSPPXMLElemNextChild(elem, subelem))
+                {
+                    switch (OSPPMsgElemGetPart(OSPPXMLElemGetName(subelem))) {
+                    case OSPC_MELEM_ICONDIGEST:
+                        *ospvIcnDigest = OSPPXMLElemGetValue(subelem);
+                        break;
+                    default:
+                        /*
+                         * This is an element we don't understand. If it's
+                         * critical, then we have to report an error.
+                         * Otherwise we can ignore it.
+                         */
+                        if (OSPPMsgElemIsCritical(subelem)) {
+                            errcode = OSPC_ERR_XML_BAD_ELEMENT;
+                        }
+                        break;
+                    }
+                }
+                break;
+            default:
+                /*
+                 * This is an element we don't understand. If it's
+                 * critical, then we have to report an error.
+                 * Otherwise we can ignore it.
+                 */
+                if (OSPPMsgElemIsCritical(elem)) {
+                    errcode = OSPC_ERR_XML_BAD_ELEMENT;
+                }
+                break;
+            }
+        }
+    }
+
+    return errcode;
+}
+
+OSPTBOOL OSPPAuthRspHasRcd(
+    OSPT_AUTH_RSP *ospvAuthRsp)
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        return((ospvAuthRsp->RcdCrn[0] != '\0') || (ospvAuthRsp->RcdIcn[0] != '\0'));
+    } else {
+        return OSPC_FALSE;
+    }
+}
+
+void OSPPAuthRspSetRcd(
+    OSPT_AUTH_RSP *ospvAuthRsp, /* In - pointer to AuthRsp struct */
+    const char *ospvCrn,        /* In - RCD crn */
+    const char *ospvIcn,        /* In - RCD icn */
+    const char *ospvIcnDigest)  /* In - RCD icn digest */
+{
+    if (ospvAuthRsp != OSPC_OSNULL) {
+        if (ospvCrn != OSPC_OSNULL) {
+            OSPM_STRNCPY(ospvAuthRsp->RcdCrn, ospvCrn, sizeof(ospvAuthRsp->RcdCrn));
+        }
+        if (ospvIcn != OSPC_OSNULL) {
+            OSPM_STRNCPY(ospvAuthRsp->RcdIcn, ospvIcn, sizeof(ospvAuthRsp->RcdIcn));
+            if (ospvIcnDigest != OSPC_OSNULL) {
+                OSPM_STRNCPY(ospvAuthRsp->RcdIcnDigest, ospvIcnDigest, sizeof(ospvAuthRsp->RcdIcnDigest));
+            }
+        }
+    }
+}

@@ -6179,7 +6179,7 @@ int OSPPTransactionGetTCDesc(
  */
 int OSPPTransactionGetVerstat(
     OSPTTRANHANDLE ospvTransaction,         /* In - Transaction handle */
-    OSPE_VERIFICATION_STATUS *ospvStatus)   /* In - Verification status */
+    OSPE_VERIFICATION_STATUS *ospvStatus)   /* Out - Verification status */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -6209,7 +6209,7 @@ int OSPPTransactionGetVerstat(
  */
 int OSPPTransactionGetAttest(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
-    char *ospvAttest)               /* In - Attestation */
+    char *ospvAttest)               /* Out - Attestation */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -6240,7 +6240,7 @@ int OSPPTransactionGetAttest(
 int OSPPTransactionGetOrigId(
     OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
     unsigned ospvSizeOfOrigId,      /* In - Max size of origination ID */
-    char *ospvOrigId)               /* In - origination ID */
+    char *ospvOrigId)               /* Out - origination ID */
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -6304,7 +6304,7 @@ int OSPPTransactionSetUserRatePlan(
 int OSPPTransactionGetJurisdictionType(
     OSPTTRANHANDLE ospvTransaction,         /* In - Transaction handle */
     unsigned ospvSizeOfJurisdictionType,    /* In - Max size of origination ID */
-    char *ospvJurisdictionType)             /* In - Jurisdiction type*/
+    char *ospvJurisdictionType)             /* Out - Jurisdiction type*/
 {
     int errcode = OSPC_ERR_NO_ERROR;
     OSPTTRANS *trans = OSPC_OSNULL;
@@ -6655,6 +6655,71 @@ int OSPPTransactionSetLastRedirectReason(
         trans = OSPPTransactionGetContext(ospvTransaction, &errcode);
         if ((errcode == OSPC_ERR_NO_ERROR) && (trans != OSPC_OSNULL)) {
             OSPM_STRNCPY(trans->LastRedirectReason, ospvLastRedirectReason, sizeof(trans->LastRedirectReason));
+        }
+    }
+
+    return errcode;
+}
+
+/*
+ * OSPPTransactionGetRichCallData() :
+ * Reports the rich call data as returned in AuthRsp
+ * returns OSPC_ERR_NO_ERROR if successful.
+ */
+int OSPPTransactionGetRichCallData(
+    OSPTTRANHANDLE ospvTransaction, /* In - Transaction handle */
+    unsigned ospvSizeOfCrn,         /* In - RCD call reason buffer size */
+    char *ospvCrn,                  /* Out - RCD call reason */
+    unsigned ospvSizeOfIcn,         /* In - RCD icon URL buffer size */
+    char *ospvIcn,                  /* Out - RCD icon URL */
+    unsigned ospvSizeOfIcnDigest,   /* In - RCD icon URL digest buffer size */
+    char *ospvIcnDigest)            /* Out - RCD icon URL digest */
+{
+    int errcode = OSPC_ERR_NO_ERROR;
+    OSPTTRANS *trans = OSPC_OSNULL;
+
+    ospvCrn[0] = '\0';
+    ospvIcn[0] = '\0';
+    ospvIcnDigest[0] = '\0';
+    if ((trans = OSPPTransactionGetContext(ospvTransaction, &errcode)) != OSPC_OSNULL) {
+        if (trans->AuthReq != OSPC_OSNULL) {
+            if (trans->State == OSPC_AUTH_REQUEST_SUCCESS) {
+                char *crn = trans->AuthRsp->RcdCrn;
+                if (crn[0] != '\0') {
+                    if (ospvSizeOfCrn > OSPM_STRLEN(crn)) {
+                        OSPM_STRNCPY(ospvCrn, crn, ospvSizeOfCrn);
+                    } else {
+                        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy RCD crn.");
+                    }
+                }
+
+                char *icn = trans->AuthRsp->RcdIcn;
+                if (icn[0] != '\0') {
+                    if (ospvSizeOfIcn > OSPM_STRLEN(icn)) {
+                        OSPM_STRNCPY(ospvIcn, icn, ospvSizeOfIcn);
+                    } else {
+                        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy RCD icn.");
+                    }
+                }
+
+                char *digest = trans->AuthRsp->RcdIcnDigest;
+                if (digest[0] != '\0') {
+                    if (ospvSizeOfIcnDigest > OSPM_STRLEN(digest)) {
+                        OSPM_STRNCPY(ospvIcnDigest, digest, ospvSizeOfIcnDigest);
+                    } else {
+                        errcode = OSPC_ERR_TRAN_NOT_ENOUGH_SPACE_FOR_COPY;
+                        OSPM_DBGERRORLOG(errcode, "No enough buffer to copy RCD icn digest.");
+                    }
+                }
+            } else {
+                errcode = OSPC_ERR_TRAN_REQ_OUT_OF_SEQ;
+                OSPM_DBGERRORLOG(errcode, "Called API Not In Sequence\n");
+            }
+        } else {
+            errcode = OSPC_ERR_TRAN_INVALID_ENTRY;
+            OSPM_DBGERRORLOG(errcode, "No information available to process this report.");
         }
     }
 

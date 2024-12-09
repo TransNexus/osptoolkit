@@ -52,6 +52,9 @@ typedef struct {
     char OrigId[OSPC_SIZE_NORID];
     char JurisdictionType[OSPC_SIZE_NORID];
     OSPT_STATUS_HEADERS StatusHeaders;
+    char RcdCrn[OSPC_SIZE_NORSTR];
+    char RcdIcn[OSPC_SIZE_URL];
+    char RcdIcnDigest[OSPC_SIZE_NORSTR];
 } OSPT_AUTH_RSP;
 
 #define OSPPAuthRspDestHasNumber(ospvDest) OSPPDestHasNumber(ospvDest)
@@ -101,7 +104,6 @@ extern "C" {
     OSPTBOOL OSPPAuthRspHasMessageId(OSPT_AUTH_RSP *);
     void OSPPAuthRspSetMessageId(OSPT_AUTH_RSP *, const char *);
     void OSPPAuthRspMessageIdFromElement(OSPT_XML_ELEM *, const char **);
-    const char *OSPPAuthRspGetMessageId(OSPT_AUTH_RSP *);
     void OSPPAuthRspSetTimestamp(OSPT_AUTH_RSP *, OSPTTIME);
     OSPTBOOL OSPPAuthRspHasStatus(OSPT_AUTH_RSP *);
     OSPT_STATUS *OSPPAuthRspGetStatus(OSPT_AUTH_RSP *);
@@ -131,6 +133,9 @@ extern "C" {
     void OSPPAuthRspSetOrigId(OSPT_AUTH_RSP *, const char *);
     OSPTBOOL OSPPAuthRspHasJurisdictionType(OSPT_AUTH_RSP *);
     void OSPPAuthRspSetJurisdictionType(OSPT_AUTH_RSP *, const char *);
+    unsigned OSPPRcdFromElement(OSPT_XML_ELEM *, const char **, const char **, const char **);
+    OSPTBOOL OSPPAuthRspHasRcd(OSPT_AUTH_RSP *);
+    void OSPPAuthRspSetRcd(OSPT_AUTH_RSP *, const char *, const char *, const char *);
 
 #ifdef __cplusplus
 }
