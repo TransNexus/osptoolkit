@@ -82,6 +82,10 @@ int OSPPBase64Decode(
     size_t b64;
 
     Fretval = OSPC_ERR_B64_DECODE_FAILED;
+    if (inSize == 0) {
+        return Fretval;
+    }
+
     for (x = inSize - 1; in[x] == '='; x--);
     b64 = (x + 1) - ((x + 1) / 4);
     if ((in != OSPC_OSNULL) && (out != OSPC_OSNULL) && (inSize > 0) && (outSize != OSPC_OSNULL) && (*outSize >= b64)) {
