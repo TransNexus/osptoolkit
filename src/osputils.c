@@ -165,6 +165,9 @@ int OSPPUtilGetErrorFromStatus(
         case 603:
             errorcode = OSPC_ERR_TRAN_DECLINE;
             break;
+        case 9603:
+            errorcode = OSPC_ERR_TRAN_NETWORK_BLOCKED;
+            break;
         case 999:
             errorcode = OSPC_ERR_TRAN_GENERIC_FAILURE;
             break;
