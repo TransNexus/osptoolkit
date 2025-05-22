@@ -1902,6 +1902,8 @@ int testSetSIPHeaders()
     const char *fingerprints[number] = { "fingerprint1", "fingerprint2", "fingerprint3" };
     int errcode = 0;
 
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_RURI, OSPC_NFORMAT_SIP, "sips:1002@transnexus.com");
+
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_E164, "FromE164");
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_SIP, "<sip:1001@sip.transnexus.com>");
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_FROM, OSPC_NFORMAT_DISPLAYNAME, "Hello Günter ");
@@ -1931,7 +1933,7 @@ int testSetSIPHeaders()
 
     errcode = OSPPTransactionSetRequestDate(OSPVTransactionHandle, time(OSPC_OSNULL));
     errcode = OSPPTransactionSetFingerprint(OSPVTransactionHandle, number, fingerprints);
-    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_IDENTITY, OSPC_NFORMAT_SIP, "IdentityHeader");
+    errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_IDENTITY, OSPC_NFORMAT_SIP, "IdentityHeader,IdentityHeaderOther");
 
     errcode = OSPPTransactionSetSIPHeader(OSPVTransactionHandle, OSPC_SIPHEADER_IDBYPASS, OSPC_NFORMAT_SIP, "ABCD_0123456789ABCFEF");
 

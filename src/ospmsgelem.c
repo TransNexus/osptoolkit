@@ -136,6 +136,7 @@ const OSPT_MSG_DESC OSPV_MELEM_DESCS[OSPC_MELEM_NUMBER] = {
     { OSPC_MELEM_REAUTHRSP,            "ReauthorizationResponse" },
     { OSPC_MELEM_RELATEDREASON,        "RelatedCallIdReason" },
     { OSPC_MELEM_RELEASE,              "ReleaseSource" },
+    { OSPC_MELEM_REQUESTURI,           "RequestDestinationInfo" },
     { OSPC_MELEM_RESOURCES,            "Resources" },
     { OSPC_MELEM_RFACTOR,              "RFactor" },
     { OSPC_MELEM_RICHCALLDATA,         "RichCallData" },
@@ -203,6 +204,7 @@ const OSPE_MSG_ELEM OSPV_MELEM_SIPHEADER[OSPC_SIPHEADER_NUMBER] = {
     OSPC_MELEM_ASSERTEDID,
     OSPC_MELEM_CHARGEINFO,
     OSPC_MELEM_RPID,
+    OSPC_MELEM_REQUESTURI,
     OSPC_MELEM_TO
 };
 
