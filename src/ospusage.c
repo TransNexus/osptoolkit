@@ -377,6 +377,7 @@ unsigned OSPPCallPartyNumToElement(
         case OSPC_MELEM_IDBYPASS:
         case OSPC_MELEM_IDENTITY:
         case OSPC_MELEM_NETTRANSCALLED:
+        case OSPC_MELEM_REQUESTURI:
         case OSPC_MELEM_RPID:
         case OSPC_MELEM_SRCINFO:
         case OSPC_MELEM_TO:

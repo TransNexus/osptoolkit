@@ -177,6 +177,7 @@ typedef enum {
     OSPC_SIPHEADER_PAI,
     OSPC_SIPHEADER_PCI,
     OSPC_SIPHEADER_RPID,
+    OSPC_SIPHEADER_RURI,
     OSPC_SIPHEADER_TO,
     /* Number of termination cause types */
     OSPC_SIPHEADER_NUMBER
