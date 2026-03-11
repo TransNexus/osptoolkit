@@ -84,16 +84,22 @@
 							<formats>
 								<format>tar.gz</format>
 							</formats>
+							<files>
+								<file>
+									<source>${project.basedir}/RELNOTES.txt</source>
+									<outputDirectory>/</outputDirectory>
+								</file>
+							</files>
 							<fileSets>
 								<fileSet>
 									<directory>
 										${project.basedir}/include</directory>
-									<outputDirectory>/</outputDirectory>
+									<outputDirectory>/include</outputDirectory>
 								</fileSet>
 								<fileSet>
 									<directory>
 										${project.basedir}/lib</directory>
-									<outputDirectory>/</outputDirectory>
+									<outputDirectory>/lib</outputDirectory>
 								</fileSet>
 							</fileSets>
 						</inlineDescriptor>

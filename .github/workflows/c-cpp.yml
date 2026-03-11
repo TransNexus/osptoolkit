@@ -25,8 +25,7 @@ jobs:
         with:
           name: osptoolkit
           path: |
-            osptoolkit/include/osp
-            osptoolkit/lib
+            osptoolkit/lib/libosptk.a
           if-no-files-found: error
 
   package:
@@ -46,4 +45,5 @@ jobs:
         with:
           name: osptoolkit
       - run: |
+          mv libosptk.a lib
           mvn -B install
