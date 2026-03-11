@@ -1,11 +1,8 @@
-name: C/C++ CI and Maven Package
+name: C/C++ CI and Maven Deploy
 
 on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
-  workflow_dispatch:
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -33,6 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-java@v5
@@ -46,4 +44,6 @@ jobs:
           name: osptoolkit
       - run: |
           mv libosptk.a lib
-          mvn -B install
+          mvn -B deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
