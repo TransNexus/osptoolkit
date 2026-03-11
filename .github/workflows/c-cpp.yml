@@ -21,6 +21,7 @@ jobs:
       - run: |
           cd $GITHUB_WORKSPACE/src
           make build
+          ls -l $GITHUB_WORKSPACE/lib
       - uses: actions/upload-artifact@v7
         with:
           name: osptoolkit
