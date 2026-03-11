@@ -25,7 +25,7 @@ jobs:
         with:
           name: osptoolkit
           path: |
-            $GITHUB_WORKSPACE/lib/libosptk.a
+            ${{ github.workspace }}/lib/libosptk.a
           if-no-files-found: error
 
   package:
