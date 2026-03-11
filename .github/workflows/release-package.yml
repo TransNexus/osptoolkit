@@ -1,11 +1,8 @@
 name: C/C++ CI and Maven Deploy
 
 on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
-  workflow_dispatch:
+  release:
+    types: [created]
 
 jobs:
   build:
