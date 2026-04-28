@@ -820,3 +820,7 @@ Version 4.32.0 - 2025-05-22
 
 Version 4.33.0 - 2026-03-11
 * Updated to use GitHub Packages.
+
+Version 4.33.1 - 2026-04-28
+* Updated GitHub Actions SHA.
+* Updated dependency.
